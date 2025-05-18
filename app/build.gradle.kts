@@ -2,6 +2,8 @@ plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.kotlin.compose)
+  id("com.google.devtools.ksp")
+  id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -53,4 +55,43 @@ dependencies {
   androidTestImplementation(libs.androidx.ui.test.junit4)
   debugImplementation(libs.androidx.ui.tooling)
   debugImplementation(libs.androidx.ui.test.manifest)
+
+  // Preferences DataStore
+  implementation(libs.androidx.datastore.preferences)
+
+  // Room Database
+  implementation(libs.androidx.room.runtime)
+  ksp(libs.androidx.room.compiler)
+  implementation(libs.androidx.room.ktx)
+
+  // ViewModel
+  implementation(libs.androidx.lifecycle.viewmodel.ktx)
+  implementation(libs.androidx.lifecycle.viewmodel.compose)
+  implementation(libs.androidx.lifecycle.viewmodel.savedstate)
+
+  // Navigation
+  implementation(libs.androidx.navigation.compose)
+  implementation(libs.androidx.navigation.fragment.ktx)
+  implementation(libs.androidx.navigation.ui.ktx)
+  implementation(libs.androidx.navigation.dynamic.features.fragment)
+
+  // Moshi
+  implementation(libs.moshi.kotlin)
+  ksp(libs.moshi.kotlin.codegen)
+
+  // Retrofit
+  implementation(libs.retrofit)
+  implementation(libs.converter.moshi)
+
+  // OkHttp
+  implementation(libs.okhttp)
+  implementation(libs.logging.interceptor)
+
+  // Coil
+  implementation(libs.coil.compose)
+  implementation(libs.coil.network.okhttp)
+
+  // Hilt
+  implementation("com.google.dagger:hilt-android:2.56.2")
+  ksp("com.google.dagger:hilt-android-compiler:2.56.2")
 }
