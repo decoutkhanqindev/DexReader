@@ -29,5 +29,5 @@ data class TagDto(
 
 @JsonClass(generateAdapter = true)
 data class TagAttributesDto(
-  @Json(name = "name") val name: Map<String, String> // Tên thể loại
+  @Json(name = "name") val name: Map<String, String>, // Tên thể loại
 )
