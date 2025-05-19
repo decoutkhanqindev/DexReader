@@ -7,12 +7,7 @@ data class Manga(
   val description: String? = null, // Mô tả
   val author: String? = null, // Tác giả
   val artist: String? = null, // Họa sĩ
-  val genres: List<Tag > = emptyList(), // Thể loại
+  val genres: List<String> = emptyList(), // Thể loại
   val status: String? = null, // Trạng thái (ongoing, completed,...)
   val lastChapter: String? = null // Chương cuối
-)
-
-data class Tag(
-  val id: String,
-  val name: String,
 )
