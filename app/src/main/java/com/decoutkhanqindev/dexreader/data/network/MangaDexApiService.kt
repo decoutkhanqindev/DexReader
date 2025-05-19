@@ -10,12 +10,34 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MangaDexApiService {
-  @GET("/manga")
-  suspend fun getMangaList(
+  suspend fun getLatestUploadedMangaList(
     @Query("limit") limit: Int = 20,
     @Query("offset") offset: Int = 0,
-    @Query("order[title]") title: String = "desc",
-    @Query("includedTags[]") tags: List<String> = emptyList(),
+    @Query("order[latestUploadedChapter]") latestUploadedChapter: String = "desc",
+    @Query("includes[]")
+    includes: List<String> = listOf("cover_art", "author", "artist"),
+  ): MangaListResponse
+
+  suspend fun getTrendingMangaList(
+    @Query("limit") limit: Int = 20,
+    @Query("offset") offset: Int = 0,
+    @Query("order[followedCount]") followedCount: String = "desc",
+    @Query("includes[]")
+    includes: List<String> = listOf("cover_art", "author", "artist"),
+  ): MangaListResponse
+
+  suspend fun getNewReleaseMangaList(
+    @Query("limit") limit: Int = 20,
+    @Query("offset") offset: Int = 0,
+    @Query("order[createdAt]") createdAt: String = "desc",
+    @Query("includes[]")
+    includes: List<String> = listOf("cover_art", "author", "artist"),
+  ): MangaListResponse
+
+  suspend fun getCompletedMangaList(
+    @Query("limit") limit: Int = 20,
+    @Query("offset") offset: Int = 0,
+    @Query("status[]") status: String = "completed",
     @Query("includes[]")
     includes: List<String> = listOf("cover_art", "author", "artist"),
   ): MangaListResponse
