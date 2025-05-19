@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.android)
@@ -18,6 +20,22 @@ android {
     versionName = "1.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+    android.buildFeatures.buildConfig = true
+
+    val properties = Properties()
+    properties.load(project.rootProject.file("local.properties").inputStream())
+
+    buildConfigField(
+      type = "String",
+      name = "BASE_URL",
+      value = properties.getProperty("BASE_URL")
+    )
+    buildConfigField(
+      type = "String",
+      name = "UPLOAD_URL",
+      value = properties.getProperty("UPLOAD_URL")
+    )
   }
 
   buildTypes {
