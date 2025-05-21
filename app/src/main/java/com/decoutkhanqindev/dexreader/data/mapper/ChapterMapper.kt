@@ -5,7 +5,7 @@ import com.decoutkhanqindev.dexreader.domain.model.Chapter
 
 fun ChapterDto.toDomain(): Chapter {
   val mangaId = relationships?.find { it.type == "manga" }?.id ?: "0"
-  val title = attributes.title ?: "Unknown Title"
+  val title = attributes.title ?: "Untitled Chapter"
   val chapterNumber = attributes.chapter ?: "0"
   val volume = attributes.volume ?: "0"
   val publishAt = attributes.publishAt ?: "0"

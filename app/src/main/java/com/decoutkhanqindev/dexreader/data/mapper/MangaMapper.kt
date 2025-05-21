@@ -6,16 +6,16 @@ import com.decoutkhanqindev.dexreader.domain.model.Manga
 fun MangaDto.toDomain(uploadUrl: String): Manga {
   val title = attributes.title["en"]
     ?: attributes.title.values.firstOrNull()
-    ?: "Unknown Title"
+    ?: "Untitled Manga"
   val coverUrl =
     relationships?.find { it.type == "cover_art" }.let { coverArt ->
-      "$uploadUrl/covers/${id}/${coverArt?.attributes?.get("fileName")}"
+      "$uploadUrl/covers/${id}/${coverArt?.attributes?.fileName}"
     }
   val description = attributes.description?.get("en")
     ?: attributes.description?.values?.firstOrNull()
-    ?: "No description available"
-  val authorId = relationships?.find { it.type == "author" }?.id
-  val artistId = relationships?.find { it.type == "artist" }?.id
+    ?: "No description ..."
+  val authorId = relationships?.find { it.type == "author" }?.attributes?.name ?: "Unknown Author"
+  val artistId = relationships?.find { it.type == "artist" }?.attributes?.name ?: "Unknown Artist"
   val genres = attributes.tags?.mapNotNull {
     it.attributes.name["en"]
   } ?: emptyList()
