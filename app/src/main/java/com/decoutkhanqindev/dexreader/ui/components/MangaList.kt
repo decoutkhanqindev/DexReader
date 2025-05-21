@@ -3,6 +3,7 @@ package com.decoutkhanqindev.dexreader.ui.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -35,6 +39,7 @@ import coil3.request.crossfade
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.ui.theme.DexReaderTheme
+import java.util.Locale
 
 @Composable
 fun HorizontalMangaList(
@@ -53,8 +58,8 @@ fun HorizontalMangaList(
           manga = manga,
           onMangaClick = onMangaClick,
           modifier = Modifier
-            .width(180.dp)
-            .height(270.dp)
+            .width(160.dp)
+            .height(300.dp)
             .padding(4.dp)
         )
       }
@@ -63,7 +68,32 @@ fun HorizontalMangaList(
 }
 
 @Composable
-fun VerticalMangaList() {}
+fun VerticalGridMangaList(
+  mangaList: List<Manga>,
+  onMangaClick: (Manga) -> Unit,
+  modifier: Modifier = Modifier,
+) {
+  Box(modifier = modifier) {
+    LazyVerticalGrid(
+      modifier = Modifier.fillMaxSize(),
+      columns = GridCells.Fixed(2),
+      verticalArrangement = Arrangement.spacedBy(8.dp),
+      horizontalArrangement = Arrangement.spacedBy(8.dp),
+      contentPadding = PaddingValues(8.dp)
+    ) {
+      items(mangaList, key = { it.id }) { manga ->
+        MangaItem(
+          manga = manga,
+          onMangaClick = onMangaClick,
+          modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp)
+            .padding(4.dp)
+        )
+      }
+    }
+  }
+}
 
 @Composable
 private fun MangaItem(
@@ -74,7 +104,7 @@ private fun MangaItem(
   Card(
     modifier = modifier,
     onClick = { onMangaClick(manga) },
-    elevation = CardDefaults.cardElevation(8.dp),
+    elevation = CardDefaults.cardElevation(16.dp),
     shape = MaterialTheme.shapes.large,
   ) {
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -86,7 +116,7 @@ private fun MangaItem(
         contentDescription = manga.title,
         error = painterResource(R.drawable.placeholder),
         placeholder = painterResource(R.drawable.placeholder),
-        contentScale = ContentScale.FillHeight,
+        contentScale = ContentScale.FillBounds,
         modifier = Modifier
           .fillMaxSize()
           .weight(2f)
@@ -94,6 +124,7 @@ private fun MangaItem(
       MangaInfo(
         manga = manga,
         modifier = Modifier
+          .padding(horizontal = 4.dp)
           .weight(1f)
           .fillMaxWidth()
       )
@@ -113,10 +144,10 @@ private fun MangaInfo(
   ) {
     Text(
       text = manga.title,
-      fontWeight = FontWeight.ExtraBold,
+      fontWeight = FontWeight.Bold,
       style = MaterialTheme.typography.titleMedium,
       textAlign = TextAlign.Center,
-      maxLines = 2,
+      maxLines = 1,
       overflow = TextOverflow.Ellipsis
     )
     Spacer(modifier = Modifier.height(4.dp))
@@ -130,7 +161,7 @@ private fun MangaInfo(
     )
     Spacer(modifier = Modifier.height(4.dp))
     Text(
-      text = manga.status,
+      text = manga.status.capitalize(Locale.US),
       fontWeight = FontWeight.Bold,
       fontStyle = FontStyle.Italic,
       style = MaterialTheme.typography.bodySmall,
