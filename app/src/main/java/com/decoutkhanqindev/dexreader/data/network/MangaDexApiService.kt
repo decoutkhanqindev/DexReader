@@ -10,6 +10,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MangaDexApiService {
+  @GET("/manga")
   suspend fun getLatestUploadedMangaList(
     @Query("limit") limit: Int = 20,
     @Query("offset") offset: Int = 0,
@@ -18,6 +19,7 @@ interface MangaDexApiService {
     includes: List<String> = listOf("cover_art", "author", "artist"),
   ): MangaListResponse
 
+  @GET("/manga")
   suspend fun getTrendingMangaList(
     @Query("limit") limit: Int = 20,
     @Query("offset") offset: Int = 0,
@@ -26,6 +28,7 @@ interface MangaDexApiService {
     includes: List<String> = listOf("cover_art", "author", "artist"),
   ): MangaListResponse
 
+  @GET("/manga")
   suspend fun getNewReleaseMangaList(
     @Query("limit") limit: Int = 20,
     @Query("offset") offset: Int = 0,
@@ -34,6 +37,7 @@ interface MangaDexApiService {
     includes: List<String> = listOf("cover_art", "author", "artist"),
   ): MangaListResponse
 
+  @GET("/manga")
   suspend fun getCompletedMangaList(
     @Query("limit") limit: Int = 20,
     @Query("offset") offset: Int = 0,
