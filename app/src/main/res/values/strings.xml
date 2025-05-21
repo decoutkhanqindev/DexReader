@@ -1,3 +1,13 @@
 <resources>
   <string name="app_name">DexReader</string>
+  <string name="back_button_content_description">back</string>
+  <string name="menu_button_content_description">menu</string>
+  <string name="search_button_content_description">search</string>
+  <string name="by_author">by %s</string>
+  <string name="latest_uploads">Latest Uploads</string>
+  <string name="trending">Trending</string>
+  <string name="new_releases">New Releases</string>
+  <string name="completed">Completed</string>
+  <string name="retry">Retry</string>
+  <string name="oops_something_went_wrong_please_try_again">Oops, something went wrong\n Please try again</string>
 </resources>
