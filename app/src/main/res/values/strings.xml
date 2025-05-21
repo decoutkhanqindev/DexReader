@@ -7,7 +7,7 @@
   <string name="latest_uploads">Latest Uploads</string>
   <string name="trending">Trending</string>
   <string name="new_releases">New Releases</string>
-  <string name="completed">Completed</string>
+  <string name="completed">Completed Worth Reading</string>
   <string name="retry">Retry</string>
   <string name="oops_something_went_wrong_please_try_again">Oops, something went wrong\n Please try again</string>
 </resources>
