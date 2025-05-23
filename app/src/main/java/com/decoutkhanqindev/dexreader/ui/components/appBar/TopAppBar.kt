@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.ui.components
+package com.decoutkhanqindev.dexreader.ui.components.appBar
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -123,7 +123,7 @@ fun DetailsTopBar(
 @Composable
 fun TopBarPreview() {
   DexReaderTheme(true) {
-    Column() {
+    Column {
       HomeTopBar(
         title = stringResource(R.string.app_name),
         onMenuClick = {},
