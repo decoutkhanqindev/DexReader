@@ -1,7 +1,12 @@
 package com.decoutkhanqindev.dexreader.ui.components
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
@@ -14,10 +19,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.ui.theme.DexReaderTheme
 
@@ -31,17 +39,29 @@ fun HomeTopBar(
 ) {
   CenterAlignedTopAppBar(
     title = {
-      Text(
-        text = title,
-        style = MaterialTheme.typography.titleLarge,
-        fontWeight = FontWeight.Bold
-      )
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Absolute.Center,
+        verticalAlignment = Alignment.CenterVertically
+      ) {
+        Text(
+          text = title,
+          style = MaterialTheme.typography.titleLarge,
+          fontWeight = FontWeight.ExtraBold,
+        )
+        Spacer(modifier = Modifier.width(4.dp))
+        Icon(
+          painter = painterResource(R.drawable.logo),
+          contentDescription = stringResource(R.string.app_name),
+          modifier = Modifier.size(32.dp)
+        )
+      }
     },
     navigationIcon = {
       IconButton(onClick = onMenuClick) {
         Icon(
           imageVector = Icons.Default.Menu,
-          contentDescription = stringResource(R.string.menu_button_content_description)
+          contentDescription = stringResource(R.string.menu)
         )
       }
     },
@@ -49,7 +69,7 @@ fun HomeTopBar(
       IconButton(onClick = onSearchClick) {
         Icon(
           imageVector = Icons.Default.Search,
-          contentDescription = stringResource(R.string.search_button_content_description)
+          contentDescription = stringResource(R.string.search)
         )
       }
     },
@@ -76,7 +96,7 @@ fun DetailsTopBar(
       Text(
         text = title,
         style = MaterialTheme.typography.titleLarge,
-        fontWeight = FontWeight.Bold
+        fontWeight = FontWeight.ExtraBold,
       )
     },
     navigationIcon = {
@@ -84,7 +104,7 @@ fun DetailsTopBar(
         IconButton(onClick = onBackClick) {
           Icon(
             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = stringResource(R.string.back_button_content_description)
+            contentDescription = stringResource(R.string.back)
           )
         }
       }
@@ -102,13 +122,12 @@ fun DetailsTopBar(
 @Preview(showBackground = true)
 @Composable
 fun TopBarPreview() {
-  DexReaderTheme {
+  DexReaderTheme(true) {
     Column() {
       HomeTopBar(
         title = stringResource(R.string.app_name),
         onMenuClick = {},
         onSearchClick = {},
-        modifier = Modifier.background(MaterialTheme.colorScheme.primaryContainer)
       )
 
       DetailsTopBar(
