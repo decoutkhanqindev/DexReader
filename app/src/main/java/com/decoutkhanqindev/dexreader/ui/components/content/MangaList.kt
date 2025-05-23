@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.ui.components
+package com.decoutkhanqindev.dexreader.ui.components.content
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
