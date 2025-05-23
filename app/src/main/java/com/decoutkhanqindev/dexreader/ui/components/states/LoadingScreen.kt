@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.ui.components
+package com.decoutkhanqindev.dexreader.ui.components.states
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
