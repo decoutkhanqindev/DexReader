@@ -1,16 +1,15 @@
 package com.decoutkhanqindev.dexreader.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -49,7 +48,7 @@ fun HorizontalMangaList(
 ) {
   Box(modifier = modifier) {
     LazyRow(
-      modifier = Modifier.wrapContentWidth(),
+      modifier = Modifier.fillMaxWidth(),
       horizontalArrangement = Arrangement.spacedBy(8.dp),
       verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -58,8 +57,8 @@ fun HorizontalMangaList(
           manga = manga,
           onMangaClick = onMangaClick,
           modifier = Modifier
-            .width(160.dp)
-            .height(300.dp)
+            .width(193.dp)
+            .height(250.dp)
             .padding(4.dp)
         )
       }
@@ -79,7 +78,6 @@ fun VerticalGridMangaList(
       columns = GridCells.Fixed(2),
       verticalArrangement = Arrangement.spacedBy(8.dp),
       horizontalArrangement = Arrangement.spacedBy(8.dp),
-      contentPadding = PaddingValues(8.dp)
     ) {
       items(mangaList, key = { it.id }) { manga ->
         MangaItem(
@@ -87,7 +85,7 @@ fun VerticalGridMangaList(
           onMangaClick = onMangaClick,
           modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp)
+            .height(250.dp)
             .padding(4.dp)
         )
       }
@@ -107,7 +105,7 @@ private fun MangaItem(
     elevation = CardDefaults.cardElevation(16.dp),
     shape = MaterialTheme.shapes.large,
   ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Box(modifier = Modifier.fillMaxWidth()) {
       AsyncImage(
         model = ImageRequest.Builder(context = LocalContext.current)
           .data(manga.coverUrl)
@@ -117,17 +115,22 @@ private fun MangaItem(
         error = painterResource(R.drawable.placeholder),
         placeholder = painterResource(R.drawable.placeholder),
         contentScale = ContentScale.FillBounds,
-        modifier = Modifier
-          .fillMaxSize()
-          .weight(2f)
+        modifier = Modifier.fillMaxSize()
       )
-      MangaInfo(
-        manga = manga,
-        modifier = Modifier
-          .padding(horizontal = 4.dp)
-          .weight(1f)
-          .fillMaxWidth()
-      )
+      Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.CenterHorizontally,
+      ) {
+        MangaInfo(
+          manga = manga,
+          modifier = Modifier
+            .fillMaxWidth()
+            .height(90.dp)
+            .background(MaterialTheme.colorScheme.surface.copy(0.8f))
+            .padding(horizontal = 4.dp)
+        )
+      }
     }
   }
 }
@@ -144,10 +147,10 @@ private fun MangaInfo(
   ) {
     Text(
       text = manga.title,
-      fontWeight = FontWeight.Bold,
-      style = MaterialTheme.typography.titleMedium,
+      fontWeight = FontWeight.ExtraBold,
+      style = MaterialTheme.typography.labelLarge,
       textAlign = TextAlign.Center,
-      maxLines = 1,
+      maxLines = 2,
       overflow = TextOverflow.Ellipsis
     )
     Spacer(modifier = Modifier.height(4.dp))
@@ -155,7 +158,7 @@ private fun MangaInfo(
       text = stringResource(R.string.by_author, manga.author),
       fontWeight = FontWeight.Light,
       fontStyle = FontStyle.Italic,
-      style = MaterialTheme.typography.bodySmall,
+      style = MaterialTheme.typography.bodyMedium,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis
     )
@@ -164,7 +167,7 @@ private fun MangaInfo(
       text = manga.status.capitalize(Locale.US),
       fontWeight = FontWeight.Bold,
       fontStyle = FontStyle.Italic,
-      style = MaterialTheme.typography.bodySmall,
+      style = MaterialTheme.typography.bodyMedium,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis
     )
