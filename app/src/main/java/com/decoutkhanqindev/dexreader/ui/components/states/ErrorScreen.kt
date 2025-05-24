@@ -51,7 +51,7 @@ fun ErrorScreen(
     Spacer(modifier = Modifier.height(8.dp))
     Button(
       onClick = onRetryClick,
-      shape = MaterialTheme.shapes.large
+      shape = MaterialTheme.shapes.medium
     ) {
       Text(
         text = stringResource(R.string.retry),
