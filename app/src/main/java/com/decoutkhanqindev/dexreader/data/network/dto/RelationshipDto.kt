@@ -15,6 +15,6 @@ data class RelationshipAttributesDto(
   @Json(name = "name") val name: String? = null, // For author, artist, scanlation_group
   @Json(name = "biography") val biography: Map<String, String>? = null, // For author, artist
   @Json(name = "fileName") val fileName: String? = null, // For cover_art
-  @Json(name = "createdAt") val createdAt: String? = null, // For author, artist, scanlation_group
-  @Json(name = "updatedAt") val updatedAt: String? = null // For author, artist, scanlation_group
+  @Json(name = "createdAt") val createdAt: Long? = null, // For author, artist, scanlation_group
+  @Json(name = "updatedAt") val updatedAt: Long? = null // For author, artist, scanlation_group
 )
