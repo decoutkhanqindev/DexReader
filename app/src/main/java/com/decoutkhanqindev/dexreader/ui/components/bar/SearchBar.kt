@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.ui.components.appBar
+package com.decoutkhanqindev.dexreader.ui.components.bar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -27,7 +27,7 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.ui.theme.DexReaderTheme
 
 @Composable
-fun SearchAppBar(
+fun SearchMangaBar(
   query: String,
   onQueryChange: (String) -> Unit,
   onSearch: (String) -> Unit,
@@ -90,7 +90,7 @@ fun SearchAppBar(
 @Composable
 fun SearchBarPreview() {
   DexReaderTheme(true) {
-    SearchAppBar(
+    SearchMangaBar(
       query = "One",
       onQueryChange = {},
       onSearch = {},

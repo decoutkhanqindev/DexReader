@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.ui.components.appBar
+package com.decoutkhanqindev.dexreader.ui.components.bar
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
@@ -85,10 +86,10 @@ fun HomeTopBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailsTopBar(
+fun MangaDetailsTopBar(
   title: String,
+  onSearchClick: () -> Unit,
   onBackClick: () -> Unit,
-  canNavigateBack: Boolean,
   modifier: Modifier = Modifier
 ) {
   CenterAlignedTopAppBar(
@@ -97,16 +98,24 @@ fun DetailsTopBar(
         text = title,
         style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.ExtraBold,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis
       )
     },
     navigationIcon = {
-      if (canNavigateBack) {
-        IconButton(onClick = onBackClick) {
-          Icon(
-            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = stringResource(R.string.back)
-          )
-        }
+      IconButton(onClick = onBackClick) {
+        Icon(
+          imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+          contentDescription = stringResource(R.string.back)
+        )
+      }
+    },
+    actions = {
+      IconButton(onClick = onSearchClick) {
+        Icon(
+          imageVector = Icons.Default.Search,
+          contentDescription = stringResource(R.string.search)
+        )
       }
     },
     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -130,10 +139,10 @@ fun TopBarPreview() {
         onSearchClick = {},
       )
 
-      DetailsTopBar(
+      MangaDetailsTopBar(
         title = stringResource(R.string.app_name),
         onBackClick = {},
-        canNavigateBack = true,
+        onSearchClick = {},
       )
     }
   }
