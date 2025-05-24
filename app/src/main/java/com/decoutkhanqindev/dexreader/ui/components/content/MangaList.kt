@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -49,7 +48,7 @@ fun HorizontalMangaList(
   Box(modifier = modifier) {
     LazyRow(
       modifier = Modifier.fillMaxWidth(),
-      horizontalArrangement = Arrangement.spacedBy(8.dp),
+      horizontalArrangement = Arrangement.spacedBy(2.dp),
       verticalAlignment = Alignment.CenterVertically,
     ) {
       items(mangaList, key = { it.id }) { manga ->
@@ -57,9 +56,9 @@ fun HorizontalMangaList(
           manga = manga,
           onMangaClick = onMangaClick,
           modifier = Modifier
-            .width(193.dp)
-            .height(250.dp)
             .padding(4.dp)
+            .width(194.dp)
+            .height(250.dp)
         )
       }
     }
@@ -76,17 +75,17 @@ fun VerticalGridMangaList(
     LazyVerticalGrid(
       modifier = Modifier.fillMaxSize(),
       columns = GridCells.Fixed(2),
-      verticalArrangement = Arrangement.spacedBy(8.dp),
-      horizontalArrangement = Arrangement.spacedBy(8.dp),
+      verticalArrangement = Arrangement.spacedBy(2.dp),
+      horizontalArrangement = Arrangement.spacedBy(2.dp),
     ) {
       items(mangaList, key = { it.id }) { manga ->
         MangaItem(
           manga = manga,
           onMangaClick = onMangaClick,
           modifier = Modifier
+            .padding(4.dp)
             .fillMaxWidth()
             .height(250.dp)
-            .padding(4.dp)
         )
       }
     }
@@ -102,15 +101,13 @@ private fun MangaItem(
   Card(
     modifier = modifier,
     onClick = { onMangaClick(manga) },
-    elevation = CardDefaults.cardElevation(16.dp),
-    shape = MaterialTheme.shapes.large,
+    elevation = CardDefaults.cardElevation(8.dp),
+    shape = MaterialTheme.shapes.extraLarge,
   ) {
     Box(modifier = Modifier.fillMaxWidth()) {
       AsyncImage(
-        model = ImageRequest.Builder(context = LocalContext.current)
-          .data(manga.coverUrl)
-          .crossfade(true)
-          .build(),
+        model = ImageRequest.Builder(context = LocalContext.current).data(manga.coverUrl)
+          .crossfade(true).build(),
         contentDescription = manga.title,
         error = painterResource(R.drawable.placeholder),
         placeholder = painterResource(R.drawable.placeholder),
@@ -126,7 +123,7 @@ private fun MangaItem(
           manga = manga,
           modifier = Modifier
             .fillMaxWidth()
-            .height(90.dp)
+            .height(80.dp)
             .background(MaterialTheme.colorScheme.surface.copy(0.8f))
             .padding(horizontal = 4.dp)
         )
@@ -148,28 +145,29 @@ private fun MangaInfo(
     Text(
       text = manga.title,
       fontWeight = FontWeight.ExtraBold,
-      style = MaterialTheme.typography.labelLarge,
+      style = MaterialTheme.typography.titleMedium,
       textAlign = TextAlign.Center,
-      maxLines = 2,
-      overflow = TextOverflow.Ellipsis
+      maxLines = 1,
+      overflow = TextOverflow.Ellipsis,
+      modifier = Modifier.padding(bottom = 4.dp)
     )
-    Spacer(modifier = Modifier.height(4.dp))
     Text(
       text = stringResource(R.string.by_author, manga.author),
       fontWeight = FontWeight.Light,
       fontStyle = FontStyle.Italic,
       style = MaterialTheme.typography.bodyMedium,
       maxLines = 1,
-      overflow = TextOverflow.Ellipsis
+      overflow = TextOverflow.Ellipsis,
+      modifier = Modifier.padding(bottom = 4.dp)
     )
-    Spacer(modifier = Modifier.height(4.dp))
     Text(
       text = manga.status.capitalize(Locale.US),
       fontWeight = FontWeight.Bold,
       fontStyle = FontStyle.Italic,
       style = MaterialTheme.typography.bodyMedium,
       maxLines = 1,
-      overflow = TextOverflow.Ellipsis
+      overflow = TextOverflow.Ellipsis,
+      modifier = Modifier.padding(bottom = 4.dp)
     )
   }
 }
@@ -190,9 +188,10 @@ fun MangaListPreview() {
           artist = "Sample Artist",
           genres = listOf("Action", "Adventure"),
           status = "Ongoing",
-          lastChapter = "Chapter 10",
-        ),
-        Manga(
+          year = "2023",
+          lastChapter = "10",
+          lastUpdated = "2 days ago"
+        ), Manga(
           id = "2",
           title = "Another Sample Manga",
           coverUrl = "",
@@ -201,7 +200,9 @@ fun MangaListPreview() {
           artist = "Another Artist",
           genres = listOf("Fantasy", "Drama"),
           status = "Completed",
-          lastChapter = "Chapter 20",
+          year = "2022",
+          lastChapter = "10",
+          lastUpdated = "1 week ago"
         )
       ),
       onMangaClick = {},
