@@ -16,6 +16,10 @@ val Shapes = Shapes(
   large = RoundedCornerShape(
     topEnd = 16.dp,
     bottomStart = 16.dp,
+  ),
+  extraLarge = RoundedCornerShape(
+    topEnd = 24.dp,
+    bottomStart = 24.dp,
   )
 )
 
