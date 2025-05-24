@@ -9,5 +9,7 @@ data class Manga(
   val artist: String, // Họa sĩ
   val genres: List<String>, // Thể loại
   val status: String, // Trạng thái (ongoing, completed,...)
-  val lastChapter: String // Chương cuối
+  val year: String, // Năm phát hành
+  val lastChapter: String, // Chương cuối
+  val lastUpdated: String, // Thời gian cập nhật dưới dạng "time ago"
 )

@@ -16,6 +16,6 @@ data class ChapterAttributesDto(
   @Json(name = "title") val title: String? = null, // Tên chương
   @Json(name = "chapter") val chapter: String? = null, // Số chương
   @Json(name = "volume") val volume: String? = null, // Tập
-  @Json(name = "publishAt") val publishAt: String? = null, // Ngày xuất bản
+  @Json(name = "publishAt") val publishAt: Long? = null, // Ngày xuất bản
   @Json(name = "translatedLanguage") val translatedLanguage: String? = null // Ngôn ngữ
 )
