@@ -8,6 +8,6 @@ class GetNewReleaseMangaListUseCase @Inject constructor(
   private val mangaRepository: MangaRepository
 ) {
   suspend operator fun invoke(): Result<List<Manga>> {
-    return mangaRepository.getLatestUploadedMangaList()
+    return mangaRepository.getNewReleaseMangaList()
   }
 }
