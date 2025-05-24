@@ -15,9 +15,9 @@ class MangaRepositoryImpl @Inject constructor(
   private val mangaDexApiService: MangaDexApiService,
   @UploadUrlQualifier private val uploadUrl: String
 ) : MangaRepository {
-  override suspend fun getLatestUploadedMangaList(): Result<List<Manga>> =
+  override suspend fun getLatestUpdateMangaList(): Result<List<Manga>> =
     runSuspendCatching(Dispatchers.IO) {
-      mangaDexApiService.getLatestUploadedMangaList().data.map { it.toDomain(uploadUrl) }
+      mangaDexApiService.getLatestUpdateMangaList().data.map { it.toDomain(uploadUrl) }
     }
 
   override suspend fun getTrendingMangaList(): Result<List<Manga>> =
