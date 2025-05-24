@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,8 +43,9 @@ class SearchViewModel @Inject constructor(
       flow {
         _isSuggestionsLoading.value = true
 
-        val cachedResults = searchCachedResults[query]
+        val cachedResults = searchCachedResults[query.toLowerCase(Locale.ROOT)]
         cachedResults?.let { mangaList ->
+          _isSuggestionsLoading.value = false
           val titles = mangaList.map { it.title }
           emit(titles)
         }
@@ -59,7 +61,7 @@ class SearchViewModel @Inject constructor(
           .onFailure {
             _isSuggestionsLoading.value = false
             emit(emptyList())
-            Log.d("SearchViewModel", "suggestions have error: ${it.message}")
+            Log.d("SearchViewModel", "suggestions have error: ${it.stackTraceToString()}")
           }
       }
     }
@@ -75,7 +77,7 @@ class SearchViewModel @Inject constructor(
 
       _uiState.value = SearchUiState.Loading
 
-      val cachedResults = searchCachedResults[query]
+      val cachedResults = searchCachedResults[query.toLowerCase(Locale.ROOT)]
       cachedResults?.let { mangaList ->
         _uiState.value = SearchUiState.Success(mangaList)
       }
@@ -87,7 +89,7 @@ class SearchViewModel @Inject constructor(
         }
         .onFailure {
           _uiState.value = SearchUiState.Error
-          Log.d("SearchViewModel", "searchManga have error: ${it.message}")
+          Log.d("SearchViewModel", "searchManga have error: ${it.stackTraceToString()}")
         }
     }
   }

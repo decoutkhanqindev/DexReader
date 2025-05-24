@@ -15,7 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -24,7 +24,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.ui.components.appBar.SearchAppBar
+import com.decoutkhanqindev.dexreader.ui.components.bar.SearchMangaBar
 import com.decoutkhanqindev.dexreader.ui.components.content.VerticalGridMangaList
 import com.decoutkhanqindev.dexreader.ui.components.states.EmptyScreen
 import com.decoutkhanqindev.dexreader.ui.components.states.ErrorScreen
@@ -42,12 +42,12 @@ fun SearchScreen(
   val query by viewModel.query.collectAsStateWithLifecycle()
   val isSuggestionsLoading by viewModel.isSuggestionsLoading.collectAsStateWithLifecycle()
   val suggestions by viewModel.suggestions.collectAsStateWithLifecycle()
-  var isExpanded by remember { mutableStateOf(false) }
+  var isExpanded by rememberSaveable { mutableStateOf(false) }
 
   Scaffold(
     modifier = modifier,
     topBar = {
-      SearchAppBar(
+      SearchMangaBar(
         query = query,
         onQueryChange = {
           viewModel.onQueryChange(it)
