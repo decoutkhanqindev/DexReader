@@ -2,11 +2,12 @@ package com.decoutkhanqindev.dexreader.data.mapper
 
 import com.decoutkhanqindev.dexreader.data.network.dto.MangaDto
 import com.decoutkhanqindev.dexreader.domain.model.Manga
+import com.decoutkhanqindev.dexreader.utils.toTimeAgo
 
 fun MangaDto.toDomain(uploadUrl: String): Manga {
   val title = attributes.title["en"]
     ?: attributes.title.values.firstOrNull()
-    ?: "Untitled Manga"
+    ?: "Untitled"
   val coverUrl =
     relationships?.find { it.type == "cover_art" }.let { coverArt ->
       "$uploadUrl/covers/${id}/${coverArt?.attributes?.fileName}"
@@ -14,13 +15,18 @@ fun MangaDto.toDomain(uploadUrl: String): Manga {
   val description = attributes.description?.get("en")
     ?: attributes.description?.values?.firstOrNull()
     ?: "No description ..."
-  val authorId = relationships?.find { it.type == "author" }?.attributes?.name ?: "Unknown Author"
-  val artistId = relationships?.find { it.type == "artist" }?.attributes?.name ?: "Unknown Artist"
-  val genres = attributes.tags?.mapNotNull {
-    it.attributes.name["en"]
-  } ?: emptyList()
-  val status = attributes.status ?: "Unknown Status"
-  val lastChapter = attributes.lastChapter ?: "Updating ..."
+  val authorId = relationships?.find { it.type == "author" }?.attributes?.name ?: "Unknown author"
+  val artistId = relationships?.find { it.type == "artist" }?.attributes?.name ?: "Unknown artist"
+  val genres = attributes.tags?.mapNotNull { it.attributes.name["en"] } ?: emptyList()
+  val status = attributes.status ?: "Unknown status"
+  val year = attributes.year ?: 0
+  val lastChapter =
+    if (attributes.lastChapter?.isBlank() == true) {
+      "Updating ..."
+    } else {
+      attributes.lastChapter ?: "Unknown"
+    }
+  val lastUpdated = attributes.updatedAt.toTimeAgo()
 
   return Manga(
     id = id,
@@ -31,6 +37,8 @@ fun MangaDto.toDomain(uploadUrl: String): Manga {
     artist = artistId,
     genres = genres,
     status = status,
-    lastChapter = lastChapter
+    year = year.toString(),
+    lastChapter = lastChapter,
+    lastUpdated = lastUpdated,
   )
 }

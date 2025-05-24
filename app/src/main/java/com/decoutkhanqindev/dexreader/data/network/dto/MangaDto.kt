@@ -17,8 +17,9 @@ data class MangaAttributesDto(
   @Json(name = "description") val description: Map<String, String>? = null, // Mô tả
   @Json(name = "status") val status: String? = null, // Trạng thái
   @Json(name = "tags") val tags: List<TagDto>? = null, // Thể loại
-  @Json(name = "lastChapter") val lastChapter: String? = null, // Chương cuối
-  @Json(name = "lastVolume") val lastVolume: String? = null // Tập cuối
+  @Json(name = "year") val year: Int? = null,
+  @Json(name = "lastChapter") val lastChapter: String? = null, // URL ảnh bìa
+  @Json(name = "updatedAt") val updatedAt: Long? = null, // Ngày cập nhật cuối
 )
 
 @JsonClass(generateAdapter = true)
