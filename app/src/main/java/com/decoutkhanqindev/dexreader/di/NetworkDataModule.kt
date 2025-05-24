@@ -3,6 +3,7 @@ package com.decoutkhanqindev.dexreader.di
 import com.decoutkhanqindev.dexreader.BuildConfig
 import com.decoutkhanqindev.dexreader.data.network.MangaDexApiService
 import com.decoutkhanqindev.dexreader.data.network.interceptor.NetworkInterceptor
+import com.decoutkhanqindev.dexreader.data.utils.IsoDateAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -42,6 +43,7 @@ object NetworkDataModule {
 
   @Provides
   fun provideMoshi(): Moshi = Moshi.Builder()
+    .add(IsoDateAdapter)
     .addLast(KotlinJsonAdapterFactory())
     .build()
 
