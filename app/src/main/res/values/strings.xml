@@ -5,7 +5,7 @@
   <string name="search">search</string>
   <string name="clear">clear</string>
   <string name="by_author">by %s</string>
-  <string name="latest_uploads">Latest Uploads</string>
+  <string name="latest_update">Latest Update</string>
   <string name="trending">Trending</string>
   <string name="new_releases">New Releases</string>
   <string name="completed">Completed</string>
@@ -15,4 +15,10 @@
   <string name="sorry_no_manga_found_with_title">Sorry, no manga with title %s was found.\nPlease try again with a different title.</string>
   <string name="not_found">not found</string>
   <string name="search_your_manga_here">Search your manga here.</string>
+  <string name="author">Author: </string>
+  <string name="artist">Artist: </string>
+  <string name="status">Status: </string>
+  <string name="public_year">Publication year: </string>
+  <string name="last_chapter">Last chapter: </string>
+  <string name="last_updated">Last updated: </string>
 </resources>
