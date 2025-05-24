@@ -11,10 +11,10 @@ import retrofit2.http.Query
 
 interface MangaDexApiService {
   @GET("/manga")
-  suspend fun getLatestUploadedMangaList(
+  suspend fun getLatestUpdateMangaList(
     @Query("limit") limit: Int = 20,
     @Query("offset") offset: Int = 0,
-    @Query("order[latestUploadedChapter]") latestUploadedChapter: String = "desc",
+    @Query("order[updatedAt]") lastUpdated: String = "desc",
     @Query("includes[]")
     includes: List<String> = listOf("cover_art", "author", "artist"),
   ): MangaListResponse
@@ -46,6 +46,16 @@ interface MangaDexApiService {
     includes: List<String> = listOf("cover_art", "author", "artist"),
   ): MangaListResponse
 
+  @GET("/manga")
+  suspend fun searchManga(
+    @Query("title") query: String,
+    @Query("limit") limit: Int = 20,
+    @Query("offset") offset: Int = 0,
+    @Query("order[relevance]") order: String = "desc",
+    @Query("includes[]")
+    includes: List<String> = listOf("cover_art", "author", "artist"),
+  ): MangaListResponse
+
   @GET("manga/{id}")
   suspend fun getMangaDetails(
     @Path("id") mangaId: String,
@@ -59,7 +69,7 @@ interface MangaDexApiService {
     @Query("limit") limit: Int = 20,
     @Query("offset") offset: Int = 0,
     @Query("translatedLanguage[]")
-    languages: List<String> = listOf("en", "vi"),
+    languages: List<String> = listOf("en"),
     @Query("order[volume]") volumeOrder: String = "desc",
     @Query("order[chapter]") chapterOrder: String = "desc",
     @Query("includes[]")
@@ -70,16 +80,6 @@ interface MangaDexApiService {
   suspend fun getChapterPages(
     @Path("id") chapterId: String
   ): AtHomeServerDto
-
-  @GET("/manga")
-  suspend fun searchManga(
-    @Query("title") query: String,
-    @Query("limit") limit: Int = 20,
-    @Query("offset") offset: Int = 0,
-    @Query("order[relevance]") order: String = "desc",
-    @Query("includes[]")
-    includes: List<String> = listOf("cover_art", "author", "artist"),
-  ): MangaListResponse
 
   @GET("manga/tag")
   suspend fun getTags(): TagListResponse
