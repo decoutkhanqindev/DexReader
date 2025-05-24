@@ -102,11 +102,12 @@ private fun MangaItem(
     modifier = modifier,
     onClick = { onMangaClick(manga) },
     elevation = CardDefaults.cardElevation(8.dp),
-    shape = MaterialTheme.shapes.extraLarge,
+    shape = MaterialTheme.shapes.large,
   ) {
     Box(modifier = Modifier.fillMaxWidth()) {
       AsyncImage(
-        model = ImageRequest.Builder(context = LocalContext.current).data(manga.coverUrl)
+        model = ImageRequest.Builder(context = LocalContext.current)
+          .data(manga.coverUrl)
           .crossfade(true).build(),
         contentDescription = manga.title,
         error = painterResource(R.drawable.placeholder),
@@ -123,7 +124,7 @@ private fun MangaItem(
           manga = manga,
           modifier = Modifier
             .fillMaxWidth()
-            .height(80.dp)
+            .height(70.dp)
             .background(MaterialTheme.colorScheme.surface.copy(0.8f))
             .padding(horizontal = 4.dp)
         )

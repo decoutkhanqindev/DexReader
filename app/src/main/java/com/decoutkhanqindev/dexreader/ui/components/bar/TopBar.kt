@@ -24,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
@@ -47,14 +46,14 @@ fun HomeTopBar(
       ) {
         Text(
           text = title,
-          style = MaterialTheme.typography.titleLarge,
+          style = MaterialTheme.typography.headlineSmall,
           fontWeight = FontWeight.ExtraBold,
         )
         Spacer(modifier = Modifier.width(4.dp))
         Icon(
           painter = painterResource(R.drawable.logo),
           contentDescription = stringResource(R.string.app_name),
-          modifier = Modifier.size(32.dp)
+          modifier = Modifier.size(42.dp)
         )
       }
     },
@@ -87,19 +86,16 @@ fun HomeTopBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MangaDetailsTopBar(
-  title: String,
   onSearchClick: () -> Unit,
   onBackClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   CenterAlignedTopAppBar(
     title = {
-      Text(
-        text = title,
-        style = MaterialTheme.typography.titleLarge,
-        fontWeight = FontWeight.ExtraBold,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis
+      Icon(
+        painter = painterResource(R.drawable.logo),
+        contentDescription = stringResource(R.string.app_name),
+        modifier = Modifier.size(42.dp)
       )
     },
     navigationIcon = {
@@ -140,7 +136,6 @@ fun TopBarPreview() {
       )
 
       MangaDetailsTopBar(
-        title = stringResource(R.string.app_name),
         onBackClick = {},
         onSearchClick = {},
       )
