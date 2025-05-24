@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetCompletedMangaListUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetLatestUploadedMangaListUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetLatestUpdateMangaListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetNewReleaseMangaListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetTrendingMangaListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-  private val getLatestUploadedMangaListUseCase: GetLatestUploadedMangaListUseCase,
+  private val getLatestUploadedMangaListUseCase: GetLatestUpdateMangaListUseCase,
   private val getTrendingMangaListUseCase: GetTrendingMangaListUseCase,
   private val getNewReleaseMangaListUseCase: GetNewReleaseMangaListUseCase,
   private val getCompletedMangaListUseCase: GetCompletedMangaListUseCase,
@@ -61,7 +61,7 @@ class HomeViewModel @Inject constructor(
       } else {
         val error = results.firstOrNull { it.isFailure }?.exceptionOrNull()
         _uiState.value = HomeUiState.Error
-        Log.e("HomeViewModel", "loadData have error: ${error?.message}")
+        Log.e("HomeViewModel", "loadData have error: ${error?.stackTraceToString()}")
       }
     }
   }

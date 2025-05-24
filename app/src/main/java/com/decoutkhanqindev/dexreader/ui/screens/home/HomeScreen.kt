@@ -1,7 +1,6 @@
 package com.decoutkhanqindev.dexreader.ui.screens.home
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,7 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.Manga
-import com.decoutkhanqindev.dexreader.ui.components.appBar.HomeTopBar
+import com.decoutkhanqindev.dexreader.ui.components.bar.HomeTopBar
 import com.decoutkhanqindev.dexreader.ui.components.content.HorizontalMangaList
 import com.decoutkhanqindev.dexreader.ui.components.states.ErrorScreen
 import com.decoutkhanqindev.dexreader.ui.components.states.LoadingScreen
@@ -46,12 +45,14 @@ fun HomeScreen(
         modifier = Modifier.fillMaxWidth()
       )
     },
-    content = { paddingValues ->
+    content = { innerPadding ->
       HomeContent(
         uiState = uiState,
         onMangaClick = onMangaClick,
         onRetryClick = { viewModel.loadData() },
-        modifier = Modifier.padding(paddingValues),
+        modifier = Modifier
+          .padding(innerPadding)
+          .fillMaxSize(),
       )
     },
   )
@@ -65,45 +66,41 @@ fun HomeContent(
   modifier: Modifier,
 ) {
   when (uiState) {
-    HomeUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
+    HomeUiState.Loading -> LoadingScreen(modifier = modifier)
 
     is HomeUiState.Success -> {
       LazyColumn(modifier = modifier) {
         item {
-          MangaList(
-            title = stringResource(R.string.latest_uploads),
+          MangaSection(
+            title = stringResource(R.string.latest_update),
             mangaList = uiState.latestUploadedMangaList,
             onMangaClick = { onMangaClick(it.id) },
             modifier = Modifier.fillMaxWidth()
           )
-          Spacer(modifier = Modifier.height(8.dp))
         }
         item {
-          MangaList(
+          MangaSection(
             title = stringResource(R.string.trending),
             mangaList = uiState.trendingMangaList,
             onMangaClick = { onMangaClick(it.id) },
             modifier = Modifier.fillMaxWidth()
           )
-          Spacer(modifier = Modifier.height(8.dp))
         }
         item {
-          MangaList(
+          MangaSection(
             title = stringResource(R.string.new_releases),
             mangaList = uiState.newReleaseMangaList,
             onMangaClick = { onMangaClick(it.id) },
             modifier = Modifier.fillMaxWidth()
           )
-          Spacer(modifier = Modifier.height(8.dp))
         }
         item {
-          MangaList(
+          MangaSection(
             title = stringResource(R.string.completed),
             mangaList = uiState.completedMangaList,
             onMangaClick = { onMangaClick(it.id) },
             modifier = Modifier.fillMaxWidth()
           )
-          Spacer(modifier = Modifier.height(8.dp))
         }
       }
     }
@@ -111,33 +108,31 @@ fun HomeContent(
     HomeUiState.Error -> ErrorScreen(
       errorMessage = stringResource(R.string.oops_something_went_wrong_please_try_again),
       onRetryClick = onRetryClick,
-      modifier = modifier.fillMaxSize()
+      modifier = modifier
     )
   }
 }
 
 @Composable
-private fun MangaList(
+private fun MangaSection(
   title: String,
   mangaList: List<Manga>,
   onMangaClick: (Manga) -> Unit,
   modifier: Modifier = Modifier
 ) {
-  Row(modifier = modifier) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-      Text(
-        text = title,
-        style = MaterialTheme.typography.titleLarge,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier.padding(start = 16.dp, top = 8.dp)
-      )
-      Spacer(modifier = Modifier.height(8.dp))
-      HorizontalMangaList(
-        mangaList = mangaList,
-        onMangaClick = onMangaClick,
-        modifier = Modifier.fillMaxWidth()
-      )
-    }
+  Column(modifier = modifier) {
+    Text(
+      text = title,
+      style = MaterialTheme.typography.titleLarge,
+      fontWeight = FontWeight.Bold,
+      modifier = Modifier.padding(start = 16.dp, top = 8.dp)
+    )
+    Spacer(modifier = Modifier.height(4.dp))
+    HorizontalMangaList(
+      mangaList = mangaList,
+      onMangaClick = onMangaClick,
+      modifier = Modifier.fillMaxWidth()
+    )
   }
 }
 
