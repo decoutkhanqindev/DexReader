@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -32,10 +34,7 @@ import com.decoutkhanqindev.dexreader.ui.theme.DexReaderTheme
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun HomeTopBar(
-  title: String,
-  onMenuClick: () -> Unit,
-  onSearchClick: () -> Unit,
-  modifier: Modifier = Modifier
+  title: String, onMenuClick: () -> Unit, onSearchClick: () -> Unit, modifier: Modifier = Modifier
 ) {
   CenterAlignedTopAppBar(
     title = {
@@ -56,37 +55,32 @@ fun HomeTopBar(
           modifier = Modifier.size(42.dp)
         )
       }
-    },
-    navigationIcon = {
+    }, navigationIcon = {
       IconButton(onClick = onMenuClick) {
         Icon(
-          imageVector = Icons.Default.Menu,
-          contentDescription = stringResource(R.string.menu)
+          imageVector = Icons.Default.Menu, contentDescription = stringResource(R.string.menu)
         )
       }
-    },
-    actions = {
+    }, actions = {
       IconButton(onClick = onSearchClick) {
         Icon(
-          imageVector = Icons.Default.Search,
-          contentDescription = stringResource(R.string.search)
+          imageVector = Icons.Default.Search, contentDescription = stringResource(R.string.search)
         )
       }
-    },
-    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+    }, colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
       containerColor = MaterialTheme.colorScheme.primaryContainer,
       titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
       navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
       actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-    ),
-    modifier = modifier
+    ), modifier = modifier
   )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MangaDetailsTopBar(
-  onSearchClick: () -> Unit,
+  isFavorite: Boolean,
+  onFavoriteClick: () -> Unit,
   onBackClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
@@ -97,30 +91,27 @@ fun MangaDetailsTopBar(
         contentDescription = stringResource(R.string.app_name),
         modifier = Modifier.size(42.dp)
       )
-    },
-    navigationIcon = {
+    }, navigationIcon = {
       IconButton(onClick = onBackClick) {
         Icon(
           imageVector = Icons.AutoMirrored.Filled.ArrowBack,
           contentDescription = stringResource(R.string.back)
         )
       }
-    },
-    actions = {
-      IconButton(onClick = onSearchClick) {
+    }, actions = {
+      IconButton(onClick = onFavoriteClick) {
         Icon(
-          imageVector = Icons.Default.Search,
-          contentDescription = stringResource(R.string.search)
+          imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+          contentDescription = if (isFavorite) stringResource(R.string.unFavorite)
+          else stringResource(R.string.favorite),
         )
       }
-    },
-    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+    }, colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
       containerColor = MaterialTheme.colorScheme.primaryContainer,
       titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
       navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
       actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-    ),
-    modifier = modifier
+    ), modifier = modifier
   )
 }
 
@@ -136,8 +127,9 @@ fun TopBarPreview() {
       )
 
       MangaDetailsTopBar(
+        isFavorite = true,
+        onFavoriteClick = {},
         onBackClick = {},
-        onSearchClick = {},
       )
     }
   }
