@@ -154,7 +154,7 @@ private fun MangaInfo(
     )
     Text(
       text = stringResource(R.string.by_author, manga.author),
-      fontWeight = FontWeight.Light,
+      fontWeight = FontWeight.Bold,
       fontStyle = FontStyle.Italic,
       style = MaterialTheme.typography.bodyMedium,
       maxLines = 1,
