@@ -53,10 +53,10 @@ class HomeViewModel @Inject constructor(
         val completedMangaList = results[3].getOrThrow()
 
         _uiState.value = HomeUiState.Success(
-          latestUploadedMangaList,
-          trendingMangaList,
-          newReleaseMangaList,
-          completedMangaList
+          latestUploadedMangaList = latestUploadedMangaList,
+          trendingMangaList = trendingMangaList,
+          newReleaseMangaList = newReleaseMangaList,
+          completedMangaList = completedMangaList
         )
       } else {
         val error = results.firstOrNull { it.isFailure }?.exceptionOrNull()

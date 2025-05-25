@@ -124,7 +124,7 @@ private fun MangaSection(
     Text(
       text = title,
       style = MaterialTheme.typography.titleLarge,
-      fontWeight = FontWeight.Bold,
+      fontWeight = FontWeight.ExtraBold,
       modifier = Modifier.padding(start = 16.dp, top = 8.dp)
     )
     Spacer(modifier = Modifier.height(4.dp))
