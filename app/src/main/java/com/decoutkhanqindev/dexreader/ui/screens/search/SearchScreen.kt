@@ -26,8 +26,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.ui.components.bar.SearchMangaBar
 import com.decoutkhanqindev.dexreader.ui.components.content.VerticalGridMangaList
-import com.decoutkhanqindev.dexreader.ui.components.states.EmptyScreen
 import com.decoutkhanqindev.dexreader.ui.components.states.ErrorScreen
+import com.decoutkhanqindev.dexreader.ui.components.states.IdleScreen
 import com.decoutkhanqindev.dexreader.ui.components.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.ui.components.states.NotFoundScreen
 
@@ -58,6 +58,7 @@ fun SearchScreen(
           isExpanded = false
         },
         onBackClick = onBackClick,
+        modifier = Modifier.fillMaxWidth()
       )
     },
     content = { innerPadding ->
@@ -150,7 +151,7 @@ private fun ShowResults(
   modifier: Modifier = Modifier
 ) {
   when (uiState) {
-    SearchUiState.Idle -> EmptyScreen(
+    SearchUiState.Idle -> IdleScreen(
       message = stringResource(R.string.search_your_manga_here),
       modifier = modifier
     )

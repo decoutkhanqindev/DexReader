@@ -29,14 +29,12 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.Manga
-import com.decoutkhanqindev.dexreader.ui.theme.DexReaderTheme
 import java.util.Locale
 
 @Composable
@@ -124,7 +122,7 @@ private fun MangaItem(
           manga = manga,
           modifier = Modifier
             .fillMaxWidth()
-            .height(70.dp)
+            .height(85.dp)
             .background(MaterialTheme.colorScheme.surface.copy(0.8f))
             .padding(horizontal = 4.dp)
         )
@@ -169,44 +167,6 @@ private fun MangaInfo(
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
       modifier = Modifier.padding(bottom = 4.dp)
-    )
-  }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MangaListPreview() {
-  DexReaderTheme {
-    HorizontalMangaList(
-      modifier = Modifier.fillMaxWidth(),
-      mangaList = listOf(
-        Manga(
-          id = "1",
-          title = "Sample Manga",
-          coverUrl = "",
-          description = "This is a sample manga description.",
-          author = "Sample Author",
-          artist = "Sample Artist",
-          genres = listOf("Action", "Adventure"),
-          status = "Ongoing",
-          year = "2023",
-          lastChapter = "10",
-          lastUpdated = "2 days ago"
-        ), Manga(
-          id = "2",
-          title = "Another Sample Manga",
-          coverUrl = "",
-          description = "This is another sample manga description.",
-          author = "Another Author",
-          artist = "Another Artist",
-          genres = listOf("Fantasy", "Drama"),
-          status = "Completed",
-          year = "2022",
-          lastChapter = "10",
-          lastUpdated = "1 week ago"
-        )
-      ),
-      onMangaClick = {},
     )
   }
 }
