@@ -22,7 +22,7 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.ui.theme.DexReaderTheme
 
 @Composable
-fun EmptyScreen(
+fun IdleScreen(
   message: String,
   modifier: Modifier = Modifier,
 ) {
@@ -32,9 +32,9 @@ fun EmptyScreen(
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     Icon(
-      painter = painterResource(R.drawable.logo),
+      painter = painterResource(R.drawable.app_icon),
       contentDescription = stringResource(R.string.app_name),
-      modifier = Modifier.size(120.dp)
+      modifier = Modifier.size(80.dp)
     )
     Text(
       text = message,
@@ -50,7 +50,7 @@ fun EmptyScreen(
 @Composable
 fun EmptyScreenPreview() {
   DexReaderTheme(true) {
-    EmptyScreen(
+    IdleScreen(
       message = stringResource(R.string.search_your_manga_here),
       modifier = Modifier
         .fillMaxSize()

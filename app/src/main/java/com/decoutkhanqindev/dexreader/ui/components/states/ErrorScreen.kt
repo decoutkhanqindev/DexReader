@@ -2,9 +2,7 @@ package com.decoutkhanqindev.dexreader.ui.components.states
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -38,17 +36,21 @@ fun ErrorScreen(
     Icon(
       imageVector = Icons.Default.Warning,
       contentDescription = null,
-      modifier = Modifier.size(100.dp)
+      modifier = Modifier
+        .size(80.dp)
+        .padding(bottom = 8.dp)
     )
-    Spacer(modifier = Modifier.height(8.dp))
     Text(
       text = message,
       style = MaterialTheme.typography.titleMedium,
       fontWeight = FontWeight.Light,
       textAlign = TextAlign.Center,
-      modifier = Modifier.padding(start = 8.dp)
+      modifier = Modifier
+        .padding(
+          start = 8.dp,
+          bottom = 8.dp
+        )
     )
-    Spacer(modifier = Modifier.height(8.dp))
     Button(
       onClick = onRetryClick,
       shape = MaterialTheme.shapes.large
