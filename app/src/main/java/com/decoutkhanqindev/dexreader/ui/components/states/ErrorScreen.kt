@@ -26,7 +26,7 @@ import com.decoutkhanqindev.dexreader.ui.theme.DexReaderTheme
 
 @Composable
 fun ErrorScreen(
-  errorMessage: String,
+  message: String,
   onRetryClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -42,7 +42,7 @@ fun ErrorScreen(
     )
     Spacer(modifier = Modifier.height(8.dp))
     Text(
-      text = errorMessage,
+      text = message,
       style = MaterialTheme.typography.titleMedium,
       fontWeight = FontWeight.Light,
       textAlign = TextAlign.Center,
@@ -67,7 +67,7 @@ fun ErrorScreen(
 fun ErrorScreenPreview() {
   DexReaderTheme {
     ErrorScreen(
-      errorMessage = stringResource(R.string.oops_something_went_wrong_please_try_again),
+      message = stringResource(R.string.oops_something_went_wrong_please_try_again),
       onRetryClick = {},
       modifier = Modifier.fillMaxSize()
     )

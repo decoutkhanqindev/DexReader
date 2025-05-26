@@ -174,7 +174,7 @@ private fun ShowResults(
     }
 
     SearchUiState.Error -> ErrorScreen(
-      errorMessage = stringResource(R.string.oops_something_went_wrong_please_try_again),
+      message = stringResource(R.string.oops_something_went_wrong_please_try_again),
       onRetryClick = { onRetryClick(query) },
       modifier = modifier
     )
