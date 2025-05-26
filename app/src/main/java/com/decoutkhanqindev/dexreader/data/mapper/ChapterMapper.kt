@@ -2,6 +2,7 @@ package com.decoutkhanqindev.dexreader.data.mapper
 
 import com.decoutkhanqindev.dexreader.data.network.dto.ChapterDto
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
+import com.decoutkhanqindev.dexreader.utils.toFullLanguageName
 import com.decoutkhanqindev.dexreader.utils.toTimeAgo
 
 fun ChapterDto.toDomain(): Chapter {
@@ -10,7 +11,7 @@ fun ChapterDto.toDomain(): Chapter {
   val chapterNumber = attributes.chapter ?: "0"
   val volume = attributes.volume ?: "0"
   val publishAt = attributes.publishAt.toTimeAgo()
-  val translatedLanguage = attributes.translatedLanguage ?: "en"
+  val translatedLanguage = attributes.translatedLanguage?.toFullLanguageName() ?: "en"
 
   return Chapter(
     id = id,
