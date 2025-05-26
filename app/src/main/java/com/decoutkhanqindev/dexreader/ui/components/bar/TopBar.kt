@@ -1,16 +1,8 @@
 package com.decoutkhanqindev.dexreader.ui.components.bar
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -21,97 +13,83 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.ui.theme.DexReaderTheme
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun HomeTopBar(
-  title: String, onMenuClick: () -> Unit, onSearchClick: () -> Unit, modifier: Modifier = Modifier
+  title: String,
+  onMenuClick: () -> Unit,
+  onSearchClick: () -> Unit,
+  modifier: Modifier = Modifier
 ) {
   CenterAlignedTopAppBar(
     title = {
-      Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Absolute.Center,
-        verticalAlignment = Alignment.CenterVertically
-      ) {
-        Text(
-          text = title,
-          style = MaterialTheme.typography.headlineSmall,
-          fontWeight = FontWeight.ExtraBold,
-        )
-        Spacer(modifier = Modifier.width(4.dp))
-        Icon(
-          painter = painterResource(R.drawable.logo),
-          contentDescription = stringResource(R.string.app_name),
-          modifier = Modifier.size(42.dp)
-        )
-      }
-    }, navigationIcon = {
+      Text(
+        text = title,
+        style = MaterialTheme.typography.headlineSmall,
+        fontWeight = FontWeight.ExtraBold,
+      )
+    },
+    navigationIcon = {
       IconButton(onClick = onMenuClick) {
         Icon(
           imageVector = Icons.Default.Menu, contentDescription = stringResource(R.string.menu)
         )
       }
-    }, actions = {
+    },
+    actions = {
       IconButton(onClick = onSearchClick) {
         Icon(
           imageVector = Icons.Default.Search, contentDescription = stringResource(R.string.search)
         )
       }
-    }, colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+    },
+    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
       containerColor = MaterialTheme.colorScheme.primaryContainer,
       titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
       navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
       actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-    ), modifier = modifier
+    ),
+    modifier = modifier
   )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MangaDetailsTopBar(
-  isFavorite: Boolean,
-  onFavoriteClick: () -> Unit,
+  title: String,
   onBackClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   CenterAlignedTopAppBar(
     title = {
-      Icon(
-        painter = painterResource(R.drawable.logo),
-        contentDescription = stringResource(R.string.app_name),
-        modifier = Modifier.size(42.dp)
+      Text(
+        text = title,
+        style = MaterialTheme.typography.headlineSmall,
+        fontWeight = FontWeight.ExtraBold,
       )
-    }, navigationIcon = {
+    },
+    navigationIcon = {
       IconButton(onClick = onBackClick) {
         Icon(
           imageVector = Icons.AutoMirrored.Filled.ArrowBack,
           contentDescription = stringResource(R.string.back)
         )
       }
-    }, actions = {
-      IconButton(onClick = onFavoriteClick) {
-        Icon(
-          imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-          contentDescription = if (isFavorite) stringResource(R.string.unFavorite)
-          else stringResource(R.string.favorite),
-        )
-      }
-    }, colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+    },
+    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
       containerColor = MaterialTheme.colorScheme.primaryContainer,
       titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
       navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
       actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-    ), modifier = modifier
+    ),
+    modifier = modifier
   )
 }
 
@@ -127,8 +105,7 @@ fun TopBarPreview() {
       )
 
       MangaDetailsTopBar(
-        isFavorite = true,
-        onFavoriteClick = {},
+        title = stringResource(R.string.details),
         onBackClick = {},
       )
     }
