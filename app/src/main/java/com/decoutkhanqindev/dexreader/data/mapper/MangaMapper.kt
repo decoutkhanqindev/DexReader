@@ -2,6 +2,7 @@ package com.decoutkhanqindev.dexreader.data.mapper
 
 import com.decoutkhanqindev.dexreader.data.network.dto.MangaDto
 import com.decoutkhanqindev.dexreader.domain.model.Manga
+import com.decoutkhanqindev.dexreader.utils.toFullLanguageName
 import com.decoutkhanqindev.dexreader.utils.toTimeAgo
 
 fun MangaDto.toDomain(uploadUrl: String): Manga {
@@ -19,13 +20,12 @@ fun MangaDto.toDomain(uploadUrl: String): Manga {
   val artistId = relationships?.find { it.type == "artist" }?.attributes?.name ?: "Unknown artist"
   val genres = attributes.tags?.mapNotNull { it.attributes.name["en"] } ?: emptyList()
   val status = attributes.status ?: "Unknown status"
-  val year = attributes.year ?: 0
-  val lastChapter =
-    if (attributes.lastChapter?.isBlank() == true) {
-      "Updating ..."
-    } else {
-      attributes.lastChapter ?: "Unknown"
-    }
+  val year = attributes.year.toString()
+  val originalLanguage =
+    attributes.originalLanguage?.toFullLanguageName() ?: "Unknown original language"
+  val availableTranslatedLanguages =
+    attributes.availableTranslatedLanguages?.map { it.toFullLanguageName() } ?: emptyList()
+  val lastChapter = attributes.lastChapter ?: "Unknown"
   val lastUpdated = attributes.updatedAt.toTimeAgo()
 
   return Manga(
@@ -37,7 +37,9 @@ fun MangaDto.toDomain(uploadUrl: String): Manga {
     artist = artistId,
     genres = genres,
     status = status,
-    year = year.toString(),
+    year = year,
+    originalLanguage = originalLanguage,
+    availableTranslatedLanguages = availableTranslatedLanguages,
     lastChapter = lastChapter,
     lastUpdated = lastUpdated,
   )
