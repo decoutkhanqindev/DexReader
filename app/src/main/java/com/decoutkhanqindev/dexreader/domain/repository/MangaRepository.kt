@@ -10,7 +10,13 @@ interface MangaRepository {
   suspend fun getNewReleaseMangaList(): Result<List<Manga>>
   suspend fun getCompletedMangaList(): Result<List<Manga>>
   suspend fun getMangaDetails(mangaId: String): Result<Manga>
-  suspend fun getChapterList(mangaId: String): Result<List<Chapter>>
+  suspend fun getChapterList(
+    mangaId: String,
+    offset: Int = 0,
+    translatedLanguage: String = "en",
+    volumeOrder: String = "desc",
+    chapterOrder: String = "desc"
+  ): Result<List<Chapter>>
   suspend fun getChapterPages(chapterId: String): Result<ChapterPages>
   suspend fun searchManga(query: String): Result<List<Manga>>
 }

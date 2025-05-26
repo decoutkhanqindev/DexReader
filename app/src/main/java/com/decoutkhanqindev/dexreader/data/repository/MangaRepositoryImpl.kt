@@ -40,9 +40,21 @@ class MangaRepositoryImpl @Inject constructor(
       mangaDexApiService.getMangaDetails(mangaId).data.toDomain(uploadUrl)
     }
 
-  override suspend fun getChapterList(mangaId: String): Result<List<Chapter>> =
+  override suspend fun getChapterList(
+    mangaId: String,
+    offset: Int,
+    translatedLanguage: String,
+    volumeOrder: String,
+    chapterOrder: String
+  ): Result<List<Chapter>> =
     runSuspendCatching(Dispatchers.IO) {
-      mangaDexApiService.getChapterList(mangaId).data.map { it.toDomain() }
+      mangaDexApiService.getChapterList(
+        mangaId = mangaId,
+        offset = offset,
+        translatedLanguages = translatedLanguage,
+        volumeOrder = volumeOrder,
+        chapterOrder = chapterOrder
+      ).data.map { it.toDomain() }
     }
 
   override suspend fun getChapterPages(chapterId: String): Result<ChapterPages> =
