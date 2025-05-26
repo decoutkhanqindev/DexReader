@@ -69,7 +69,7 @@ interface MangaDexApiService {
     @Query("limit") limit: Int = 20,
     @Query("offset") offset: Int = 0,
     @Query("translatedLanguage[]")
-    languages: List<String> = listOf("en"),
+    translatedLanguages: String = "en",
     @Query("order[volume]") volumeOrder: String = "desc",
     @Query("order[chapter]") chapterOrder: String = "desc",
     @Query("includes[]")
@@ -77,9 +77,7 @@ interface MangaDexApiService {
   ): ChapterListResponse
 
   @GET("at-home/server/{id}")
-  suspend fun getChapterPages(
-    @Path("id") chapterId: String
-  ): AtHomeServerDto
+  suspend fun getChapterPages(@Path("id") chapterId: String): AtHomeServerDto
 
   @GET("manga/tag")
   suspend fun getTags(): TagListResponse
