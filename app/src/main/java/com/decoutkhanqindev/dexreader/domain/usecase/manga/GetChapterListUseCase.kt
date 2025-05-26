@@ -7,6 +7,18 @@ import jakarta.inject.Inject
 class GetChapterListUseCase @Inject constructor(
   private val mangaRepository: MangaRepository,
 ) {
-  suspend operator fun invoke(mangaId: String): Result<List<Chapter>> =
-    mangaRepository.getChapterList(mangaId)
+  suspend operator fun invoke(
+    mangaId: String,
+    offset: Int = 0,
+    translatedLanguage: String = "en",
+    volumeOrder: String = "desc",
+    chapterOrder: String = "desc"
+  ): Result<List<Chapter>> =
+    mangaRepository.getChapterList(
+      mangaId = mangaId,
+      offset = offset,
+      translatedLanguage = translatedLanguage,
+      volumeOrder = volumeOrder,
+      chapterOrder = chapterOrder
+    )
 }
