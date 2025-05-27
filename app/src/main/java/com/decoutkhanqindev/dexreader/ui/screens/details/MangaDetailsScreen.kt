@@ -16,25 +16,19 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -56,8 +50,11 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
 import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.ui.components.bar.MangaDetailsTopBar
+import com.decoutkhanqindev.dexreader.ui.components.content.AllItemLoadedText
+import com.decoutkhanqindev.dexreader.ui.components.content.LoadMoreText
+import com.decoutkhanqindev.dexreader.ui.components.content.MoveToTopButton
 import com.decoutkhanqindev.dexreader.ui.components.states.ErrorScreen
-import com.decoutkhanqindev.dexreader.ui.components.states.FirstPageLoadingScreen
+import com.decoutkhanqindev.dexreader.ui.components.states.ListLoadingScreen
 import com.decoutkhanqindev.dexreader.ui.components.states.LoadPageErrorScreen
 import com.decoutkhanqindev.dexreader.ui.components.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.ui.components.states.NextPageLoadingScreen
@@ -92,8 +89,8 @@ fun MangaDetailsScreen(
         chaptersUiState = chaptersUiState,
         selectedLanguage = selectedLanguage.toFullLanguageName(),
         onSelectedLanguage = { viewModel.setChapterLanguage(it.toLanguageCode()) },
-        onLoadNextChapterPage = { viewModel.getChapterListNextPage() },
-        onRetryLoadNextChapterPage = { viewModel.retryLoadNextChapterPage() },
+        onLoadNextChapterListPage = { viewModel.loadChapterListNextPage() },
+        onRetryLoadNextChapterListPage = { viewModel.retryLoadNextChapterListPage() },
         onSelectedTag = onSelectedTag,
         onSelectedChapter = onSelectedChapter,
         onRetry = { viewModel.retry() },
@@ -111,8 +108,8 @@ private fun MangaDetailsContent(
   chaptersUiState: MangaChaptersUiState,
   selectedLanguage: String,
   onSelectedLanguage: (String) -> Unit,
-  onLoadNextChapterPage: () -> Unit,
-  onRetryLoadNextChapterPage: () -> Unit,
+  onLoadNextChapterListPage: () -> Unit,
+  onRetryLoadNextChapterListPage: () -> Unit,
   onSelectedTag: (String) -> Unit,
   onSelectedChapter: (String) -> Unit,
   onRetry: () -> Unit,
@@ -138,6 +135,7 @@ private fun MangaDetailsContent(
           modifier = Modifier.fillMaxSize(),
           state = lazyListState
         ) {
+          // Manga Info
           item {
             MangaInfoHeader(
               manga = manga,
@@ -153,6 +151,7 @@ private fun MangaDetailsContent(
                 .padding(bottom = 16.dp)
             )
           }
+          // Manga Chapters List
           item {
             Row(
               modifier = Modifier
@@ -182,12 +181,12 @@ private fun MangaDetailsContent(
 
           when (chaptersUiState) {
             MangaChaptersUiState.FirstPageLoading -> item {
-              FirstPageLoadingScreen(modifier = Modifier.fillMaxSize())
+              ListLoadingScreen(modifier = Modifier.fillMaxSize())
             }
 
             MangaChaptersUiState.FirstPageError -> item {
               LoadPageErrorScreen(
-                message = stringResource(R.string.oops_something_went_wrong_please_try_again),
+                message = stringResource(R.string.something_went_wrong_while_loading_chapters_please_try_again),
                 onRetry = onRetry,
                 modifier = Modifier
                   .fillMaxSize()
@@ -222,35 +221,10 @@ private fun MangaDetailsContent(
                   )
                 }
 
+                // Load more chapters
                 when (nextPageState) {
-                  MangaChaptersNextPageState.IDLE -> item {
-                    LaunchedEffect(lazyListState) {
-                      snapshotFlow {
-                        val layoutInfo = lazyListState.layoutInfo
-                        val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
-                        val totalItems = layoutInfo.totalItemsCount
-                        // Emit the last visible item index and total items count
-                        lastVisibleItemIndex to totalItems
-                      }
-                        .collect { (lastVisibleItem, totalItems) ->
-                          val VISIBLE_THRESHOLD = 2
-                          if (lastVisibleItem + VISIBLE_THRESHOLD >= totalItems) {
-                            onLoadNextChapterPage()
-                          }
-                        }
-                    }
-                  }
-
                   MangaChaptersNextPageState.LOADING -> item {
-                    NextPageLoadingScreen(modifier = Modifier.fillMaxWidth())
-                  }
-
-                  MangaChaptersNextPageState.NO_MORE_ITEMS -> item {
-                    Text(
-                      text = stringResource(R.string.all_chapters_loaded),
-                      style = MaterialTheme.typography.bodyMedium,
-                      fontStyle = FontStyle.Italic,
-                      textAlign = TextAlign.Center,
+                    NextPageLoadingScreen(
                       modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 12.dp)
@@ -259,9 +233,47 @@ private fun MangaDetailsContent(
 
                   MangaChaptersNextPageState.ERROR -> item {
                     LoadPageErrorScreen(
-                      message = stringResource(R.string.oops_something_went_wrong_please_try_again),
-                      onRetry = onRetryLoadNextChapterPage,
-                      modifier = Modifier.fillMaxWidth()
+                      message = stringResource(R.string.can_t_load_next_chapter_page_please_try_again),
+                      onRetry = onRetryLoadNextChapterListPage,
+                      modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp)
+                    )
+                  }
+
+                  MangaChaptersNextPageState.IDLE -> item {
+                    LoadMoreText(
+                      onLoadMore = onLoadNextChapterListPage,
+                      modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp)
+                        .padding(bottom = 12.dp)
+                    )
+
+//                    LaunchedEffect(lazyListState) {
+//                      snapshotFlow {
+//                        val layoutInfo = lazyListState.layoutInfo
+//                        val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
+//                        val totalItems = layoutInfo.totalItemsCount
+//                        // Emit the last visible item index and total items count
+//                        lastVisibleItemIndex to totalItems
+//                      }
+//                        .collect { (lastVisibleItem, totalItems) ->
+//                          val VISIBLE_THRESHOLD = 2
+//                          if (lastVisibleItem + VISIBLE_THRESHOLD >= totalItems) {
+//                            onLoadNextChapterPage()
+//                          }
+//                        }
+//                    }
+                  }
+
+                  MangaChaptersNextPageState.NO_MORE_ITEMS -> item {
+                    AllItemLoadedText(
+                      title = stringResource(R.string.all_chapters_loaded),
+                      modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp)
+                        .padding(bottom = 12.dp)
                     )
                   }
                 }
@@ -273,7 +285,7 @@ private fun MangaDetailsContent(
     }
 
     val isVisibleFloatingButton = chaptersUiState is MangaChaptersUiState.Content &&
-        chaptersUiState.items.size > 15 &&
+        chaptersUiState.items.size > 20 &&
         lazyListState.firstVisibleItemIndex > 0
     AnimatedVisibility(
       visible = isVisibleFloatingButton,
@@ -643,20 +655,4 @@ private fun LanguageDropdownItem(
     onClick = onSelectedLanguage,
     modifier = modifier
   )
-}
-
-@Composable
-private fun MoveToTopButton(
-  onClick: () -> Unit,
-  modifier: Modifier = Modifier
-) {
-  FloatingActionButton(
-    onClick = onClick,
-    modifier = modifier
-  ) {
-    Icon(
-      imageVector = Icons.Default.KeyboardArrowUp,
-      contentDescription = stringResource(R.string.move_to_top),
-    )
-  }
 }
