@@ -15,7 +15,7 @@ sealed interface MangaChaptersUiState {
   data class Content(
     val items: List<Chapter> = emptyList(),
     val currentPage: Int = 0,
-    val nextPageState: MangaChaptersNextPageState
+    val nextPageState: MangaChaptersNextPageState = MangaChaptersNextPageState.IDLE
   ) : MangaChaptersUiState
 }
 
