@@ -62,8 +62,14 @@ class MangaRepositoryImpl @Inject constructor(
       mangaDexApiService.getChapterPages(chapterId).toDomain(chapterId)
     }
 
-  override suspend fun searchManga(query: String): Result<List<Manga>> =
+  override suspend fun searchManga(
+    query: String,
+    offset: Int
+  ): Result<List<Manga>> =
     runSuspendCatching(Dispatchers.IO) {
-      mangaDexApiService.searchManga(query = query).data.map { it.toDomain(uploadUrl) }
+      mangaDexApiService.searchManga(
+        query = query,
+        offset = offset
+      ).data.map { it.toDomain(uploadUrl) }
     }
 }
