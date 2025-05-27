@@ -29,7 +29,7 @@ import com.decoutkhanqindev.dexreader.ui.components.states.LoadingScreen
 fun HomeScreen(
   onMenuClick: () -> Unit,
   onSearchClick: () -> Unit,
-  onMangaClick: (String) -> Unit,
+  onSelectedManga: (String) -> Unit,
   viewModel: HomeViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
 ) {
@@ -48,8 +48,8 @@ fun HomeScreen(
     content = { innerPadding ->
       HomeContent(
         uiState = uiState,
-        onMangaClick = onMangaClick,
-        onRetryClick = { viewModel.loadData() },
+        onSelectedManga = onSelectedManga,
+        onRetry = { viewModel.retry() },
         modifier = Modifier
           .padding(innerPadding)
           .fillMaxSize(),
@@ -59,10 +59,10 @@ fun HomeScreen(
 }
 
 @Composable
-fun HomeContent(
+private fun HomeContent(
   uiState: HomeUiState,
-  onMangaClick: (String) -> Unit,
-  onRetryClick: () -> Unit,
+  onSelectedManga: (String) -> Unit,
+  onRetry: () -> Unit,
   modifier: Modifier,
 ) {
   when (uiState) {
@@ -71,34 +71,34 @@ fun HomeContent(
     is HomeUiState.Success -> {
       LazyColumn(modifier = modifier) {
         item {
-          MangaSection(
+          MangaListSection(
             title = stringResource(R.string.latest_update),
-            mangaList = uiState.latestUploadedMangaList,
-            onMangaClick = { onMangaClick(it.id) },
+            mangaList = uiState.latestUpdateMangaList,
+            onSelectedManga = { onSelectedManga(it.id) },
             modifier = Modifier.fillMaxWidth()
           )
         }
         item {
-          MangaSection(
+          MangaListSection(
             title = stringResource(R.string.trending),
             mangaList = uiState.trendingMangaList,
-            onMangaClick = { onMangaClick(it.id) },
+            onSelectedManga = { onSelectedManga(it.id) },
             modifier = Modifier.fillMaxWidth()
           )
         }
         item {
-          MangaSection(
+          MangaListSection(
             title = stringResource(R.string.new_releases),
             mangaList = uiState.newReleaseMangaList,
-            onMangaClick = { onMangaClick(it.id) },
+            onSelectedManga = { onSelectedManga(it.id) },
             modifier = Modifier.fillMaxWidth()
           )
         }
         item {
-          MangaSection(
+          MangaListSection(
             title = stringResource(R.string.completed),
             mangaList = uiState.completedMangaList,
-            onMangaClick = { onMangaClick(it.id) },
+            onSelectedManga = { onSelectedManga(it.id) },
             modifier = Modifier.fillMaxWidth()
           )
         }
@@ -107,17 +107,17 @@ fun HomeContent(
 
     HomeUiState.Error -> ErrorScreen(
       message = stringResource(R.string.oops_something_went_wrong_please_try_again),
-      onRetryClick = onRetryClick,
+      onRetry = onRetry,
       modifier = modifier
     )
   }
 }
 
 @Composable
-private fun MangaSection(
+private fun MangaListSection(
   title: String,
   mangaList: List<Manga>,
-  onMangaClick: (Manga) -> Unit,
+  onSelectedManga: (Manga) -> Unit,
   modifier: Modifier = Modifier
 ) {
   Column(modifier = modifier) {
@@ -130,7 +130,7 @@ private fun MangaSection(
     Spacer(modifier = Modifier.height(4.dp))
     HorizontalMangaList(
       mangaList = mangaList,
-      onMangaClick = onMangaClick,
+      onSelectedManga = onSelectedManga,
       modifier = Modifier.fillMaxWidth()
     )
   }

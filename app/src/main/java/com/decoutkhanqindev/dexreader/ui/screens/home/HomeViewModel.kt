@@ -27,10 +27,10 @@ class HomeViewModel @Inject constructor(
   val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
   init {
-    loadData()
+    getMangaLists()
   }
 
-  fun loadData() {
+  private fun getMangaLists() {
     viewModelScope.launch {
       _uiState.value = HomeUiState.Loading
 
@@ -53,7 +53,7 @@ class HomeViewModel @Inject constructor(
         val completedMangaList = results[3].getOrThrow()
 
         _uiState.value = HomeUiState.Success(
-          latestUploadedMangaList = latestUploadedMangaList,
+          latestUpdateMangaList = latestUploadedMangaList,
           trendingMangaList = trendingMangaList,
           newReleaseMangaList = newReleaseMangaList,
           completedMangaList = completedMangaList
@@ -61,9 +61,13 @@ class HomeViewModel @Inject constructor(
       } else {
         val error = results.firstOrNull { it.isFailure }?.exceptionOrNull()
         _uiState.value = HomeUiState.Error
-        Log.e("HomeViewModel", "loadData have error: ${error?.stackTraceToString()}")
+        Log.e("HomeViewModel", "getMangaLists have error: ${error?.stackTraceToString()}")
       }
     }
+  }
+
+  fun retry() {
+    getMangaLists()
   }
 }
 
