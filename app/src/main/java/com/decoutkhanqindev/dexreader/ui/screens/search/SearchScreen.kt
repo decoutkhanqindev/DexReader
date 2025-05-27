@@ -21,27 +21,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.ui.components.bar.SearchMangaBar
+import com.decoutkhanqindev.dexreader.ui.components.content.AllItemLoadedText
+import com.decoutkhanqindev.dexreader.ui.components.content.LoadMoreText
 import com.decoutkhanqindev.dexreader.ui.components.content.VerticalGridMangaList
 import com.decoutkhanqindev.dexreader.ui.components.states.ErrorScreen
 import com.decoutkhanqindev.dexreader.ui.components.states.IdleScreen
-import com.decoutkhanqindev.dexreader.ui.components.states.LoadingScreen
+import com.decoutkhanqindev.dexreader.ui.components.states.ListLoadingScreen
+import com.decoutkhanqindev.dexreader.ui.components.states.LoadPageErrorScreen
+import com.decoutkhanqindev.dexreader.ui.components.states.NextPageLoadingScreen
 import com.decoutkhanqindev.dexreader.ui.components.states.NotFoundScreen
 
 @Composable
 fun SearchScreen(
-  onMangaClick: (String) -> Unit,
-  onBackClick: () -> Unit,
+  onSelectedManga: (String) -> Unit,
+  onNavigateBack: () -> Unit,
   viewModel: SearchViewModel = hiltViewModel(),
   modifier: Modifier = Modifier
 ) {
-  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  val suggestionsUiState by viewModel.suggestionsUiState.collectAsStateWithLifecycle()
+  val resultsUiState by viewModel.resultsUiState.collectAsStateWithLifecycle()
+  val suggestionList by viewModel.suggestionList.collectAsStateWithLifecycle()
   val query by viewModel.query.collectAsStateWithLifecycle()
-  val isSuggestionsLoading by viewModel.isSuggestionsLoading.collectAsStateWithLifecycle()
-  val suggestions by viewModel.suggestions.collectAsStateWithLifecycle()
   var isExpanded by rememberSaveable { mutableStateOf(false) }
 
   Scaffold(
@@ -54,145 +59,199 @@ fun SearchScreen(
           isExpanded = true
         },
         onSearch = {
-          viewModel.searchManga(it)
+          viewModel.loadSearchMangaListFirstPage()
           isExpanded = false
         },
-        onBackClick = onBackClick,
+        onNavigateBack = onNavigateBack,
         modifier = Modifier.fillMaxWidth()
       )
     },
     content = { innerPadding ->
       SearchContent(
-        uiState = uiState,
         query = query,
+        suggestionsUiState = suggestionsUiState,
+        resultsUiState = resultsUiState,
         isExpanded = isExpanded,
-        isSuggestionsLoading = isSuggestionsLoading,
-        suggestions = suggestions,
-        onSuggestionClick = {
+        suggestionList = suggestionList,
+        onSelectedSuggestion = {
           viewModel.onQueryChange(it)
-          viewModel.searchManga(it)
+          viewModel.loadSearchMangaListFirstPage()
           isExpanded = false
         },
-        onMangaClick = onMangaClick,
-        onRetryClick = { viewModel.searchManga(it) },
+        onLoadSearchMangaListNextPage = { viewModel.loadSearchMangaListNextPage() },
+        onRetryLoadSearchMangaListNextPage = { viewModel.retryLoadSearchMangaListNextPage() },
+        onSelectedManga = onSelectedManga,
+        onRetry = { viewModel.retry() },
         modifier = Modifier
-          .padding(innerPadding)
           .fillMaxSize()
+          .padding(innerPadding)
       )
     }
   )
 }
 
 @Composable
-fun SearchContent(
-  uiState: SearchUiState,
+private fun SearchContent(
   query: String,
+  suggestionsUiState: SearchSuggestionsUiState,
+  resultsUiState: SearchResultsUiState,
   isExpanded: Boolean,
-  isSuggestionsLoading: Boolean,
-  suggestions: List<String>,
-  onSuggestionClick: (String) -> Unit,
-  onMangaClick: (String) -> Unit,
-  onRetryClick: (String) -> Unit,
+  suggestionList: List<String>,
+  onLoadSearchMangaListNextPage: () -> Unit,
+  onRetryLoadSearchMangaListNextPage: () -> Unit,
+  onSelectedSuggestion: (String) -> Unit,
+  onSelectedManga: (String) -> Unit,
+  onRetry: () -> Unit,
   modifier: Modifier = Modifier
 ) {
-  if (isExpanded) {
-    ShowSuggestions(
-      query = query,
-      suggestions = suggestions,
-      isSuggestionsLoading = isSuggestionsLoading,
-      onSuggestionClick = onSuggestionClick,
-      modifier = modifier
-    )
-  } else {
-    ShowResults(
-      uiState = uiState,
-      query = query,
-      onMangaClick = onMangaClick,
-      onRetryClick = onRetryClick,
-      modifier = modifier
-    )
-  }
-}
-
-@Composable
-private fun ShowSuggestions(
-  query: String,
-  suggestions: List<String>,
-  isSuggestionsLoading: Boolean,
-  onSuggestionClick: (String) -> Unit,
-  modifier: Modifier = Modifier
-) {
-  when (isSuggestionsLoading) {
-    true -> LoadingScreen(modifier = modifier)
-
-    false -> {
-      if (suggestions.isNotEmpty()) {
-        SuggestionsList(
-          suggestions = suggestions,
-          onSuggestionClick = onSuggestionClick,
-          modifier = modifier
-        )
-      } else {
-        NotFoundScreen(
-          message = stringResource(R.string.sorry_no_manga_found_with_title, query),
-          modifier = modifier
-        )
-      }
-    }
-  }
-}
-
-@Composable
-private fun ShowResults(
-  uiState: SearchUiState,
-  query: String,
-  onMangaClick: (String) -> Unit,
-  onRetryClick: (String) -> Unit,
-  modifier: Modifier = Modifier
-) {
-  when (uiState) {
-    SearchUiState.Idle -> IdleScreen(
+  if (query.isEmpty()) {
+    IdleScreen(
       message = stringResource(R.string.search_your_manga_here),
       modifier = modifier
     )
+    return
+  }
 
-    SearchUiState.Loading -> LoadingScreen(modifier = modifier)
+  if (isExpanded) {
+    MangaListSuggestions(
+      query = query,
+      suggestionsUiState = suggestionsUiState,
+      suggestionList = suggestionList,
+      onSelectedSuggestion = onSelectedSuggestion,
+      onRetry = onRetry,
+      modifier = modifier
+    )
+  } else {
+    MangaListResults(
+      query = query,
+      resultsUiState = resultsUiState,
+      onSelectedManga = onSelectedManga,
+      onLoadSearchMangaListNextPage = onLoadSearchMangaListNextPage,
+      onRetryLoadSearchMangaListNextPage = onRetryLoadSearchMangaListNextPage,
+      onRetry = onRetry,
+      modifier = modifier
+    )
+  }
+}
 
-    is SearchUiState.Success -> {
-      val mangaList = uiState.results
-      if (mangaList.isNotEmpty()) {
-        VerticalGridMangaList(
-          mangaList = uiState.results,
-          onMangaClick = { onMangaClick(it.id) },
-          modifier = modifier
-        )
-      } else {
+@Composable
+fun MangaListSuggestions(
+  query: String,
+  suggestionsUiState: SearchSuggestionsUiState,
+  suggestionList: List<String>,
+  onSelectedSuggestion: (String) -> Unit,
+  onRetry: () -> Unit,
+  modifier: Modifier = Modifier
+) {
+  when (suggestionsUiState) {
+    SearchSuggestionsUiState.Loading -> ListLoadingScreen(modifier = modifier)
+
+    SearchSuggestionsUiState.Error -> ErrorScreen(
+      message = stringResource(R.string.oops_something_went_wrong_please_try_again),
+      onRetry = onRetry,
+      modifier = modifier
+    )
+
+    SearchSuggestionsUiState.Success -> {
+      if (suggestionList.isEmpty()) {
         NotFoundScreen(
           message = stringResource(R.string.sorry_no_manga_found_with_title, query),
           modifier = modifier
         )
+      } else {
+        SuggestionsList(
+          suggestionList = suggestionList,
+          onSelectedSuggestion = onSelectedSuggestion,
+          modifier = modifier
+        )
       }
     }
+  }
+}
 
-    SearchUiState.Error -> ErrorScreen(
+@Composable
+fun MangaListResults(
+  query: String,
+  resultsUiState: SearchResultsUiState,
+  onSelectedManga: (String) -> Unit,
+  onLoadSearchMangaListNextPage: () -> Unit,
+  onRetryLoadSearchMangaListNextPage: () -> Unit,
+  onRetry: () -> Unit,
+  modifier: Modifier = Modifier
+) {
+  when (resultsUiState) {
+    SearchResultsUiState.FirstPageLoading -> ListLoadingScreen(modifier = modifier)
+
+    SearchResultsUiState.FirstPageError -> ErrorScreen(
       message = stringResource(R.string.oops_something_went_wrong_please_try_again),
-      onRetryClick = { onRetryClick(query) },
+      onRetry = onRetry,
       modifier = modifier
     )
+
+    is SearchResultsUiState.Content -> {
+      val mangaList = resultsUiState.items
+      val nextPageState = resultsUiState.nextPageState
+
+      if (mangaList.isEmpty()) {
+        NotFoundScreen(
+          message = stringResource(R.string.sorry_no_manga_found_with_title, query),
+          modifier = modifier
+        )
+      } else {
+        VerticalGridMangaList(
+          mangaList = mangaList,
+          onSelectedManga = { onSelectedManga(it.id) },
+          loadMoreContent = {
+            when (nextPageState) {
+              SearchMangaListNextPageState.LOADING -> NextPageLoadingScreen(
+                modifier = Modifier
+                  .fillMaxWidth()
+                  .padding(bottom = 12.dp)
+              )
+
+              SearchMangaListNextPageState.ERROR -> LoadPageErrorScreen(
+                message = stringResource(R.string.can_t_load_next_manga_page_please_try_again),
+                onRetry = onRetryLoadSearchMangaListNextPage,
+                modifier = Modifier
+                  .fillMaxWidth()
+                  .padding(top = 8.dp)
+              )
+
+              SearchMangaListNextPageState.IDLE -> LoadMoreText(
+                onLoadMore = onLoadSearchMangaListNextPage,
+                modifier = Modifier
+                  .fillMaxWidth()
+                  .padding(horizontal = 8.dp)
+                  .padding(bottom = 12.dp)
+              )
+
+              SearchMangaListNextPageState.NO_MORE_ITEMS -> AllItemLoadedText(
+                title = stringResource(R.string.all_mangas_loaded),
+                modifier = Modifier
+                  .fillMaxWidth()
+                  .padding(horizontal = 8.dp)
+                  .padding(bottom = 12.dp)
+              )
+            }
+          },
+          modifier = modifier
+        )
+      }
+    }
   }
 }
 
 @Composable
 private fun SuggestionsList(
-  suggestions: List<String>,
-  onSuggestionClick: (String) -> Unit,
+  suggestionList: List<String>,
+  onSelectedSuggestion: (String) -> Unit,
   modifier: Modifier = Modifier
 ) {
   LazyColumn(modifier = modifier) {
-    items(suggestions) { suggestion ->
+    items(suggestionList) { suggestion ->
       SuggestionItem(
         suggestion = suggestion,
-        onSuggestionClick = onSuggestionClick,
+        onSelectedSuggestion = onSelectedSuggestion,
         modifier = Modifier.fillMaxWidth()
       )
     }
@@ -202,7 +261,7 @@ private fun SuggestionsList(
 @Composable
 private fun SuggestionItem(
   suggestion: String,
-  onSuggestionClick: (String) -> Unit,
+  onSelectedSuggestion: (String) -> Unit,
   modifier: Modifier = Modifier
 ) {
   DropdownMenuItem(
@@ -215,7 +274,7 @@ private fun SuggestionItem(
         overflow = TextOverflow.Ellipsis
       )
     },
-    onClick = { onSuggestionClick(suggestion) },
+    onClick = { onSelectedSuggestion(suggestion) },
     leadingIcon = {
       Icon(
         imageVector = Icons.Default.Search,
