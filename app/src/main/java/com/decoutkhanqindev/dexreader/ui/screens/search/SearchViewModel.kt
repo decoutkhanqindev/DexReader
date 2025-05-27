@@ -66,7 +66,6 @@ class SearchViewModel @Inject constructor(
       _resultsUiState.value = SearchResultsUiState.FirstPageLoading
 
       val mangaList = searchMangaUseCase(query.value)
-      Log.d("SearchViewModel", "loadSearchMangaListFirstPage - query: ${query.value}")
       mangaList
         .onSuccess {
           val hasNextPage = it.size >= 20
@@ -77,11 +76,6 @@ class SearchViewModel @Inject constructor(
               SearchMangaListNextPageState.NO_MORE_ITEMS
             else
               SearchMangaListNextPageState.IDLE
-          )
-          Log.d("SearchViewModel", "loadSearchMangaListFirstPage - mangaList: ${it.size}")
-          Log.d(
-            "SearchViewModel",
-            "loadSearchMangaListFirstPage - nextPageState: ${(_resultsUiState.value as SearchResultsUiState.Content).nextPageState}"
           )
         }
         .onFailure {
@@ -95,10 +89,6 @@ class SearchViewModel @Inject constructor(
   }
 
   fun loadSearchMangaListNextPage() {
-    Log.d(
-      "SearchViewModel",
-      "loadSearchMangaListNextPage - nextPageState: ${(_resultsUiState.value as SearchResultsUiState.Content).nextPageState}"
-    )
     when (val currentUiState = _resultsUiState.value) {
       SearchResultsUiState.FirstPageLoading,
       SearchResultsUiState.FirstPageError,
@@ -116,10 +106,6 @@ class SearchViewModel @Inject constructor(
         }
       }
     }
-    Log.d(
-      "SearchViewModel",
-      "loadSearchMangaListNextPage - nextPageState: ${(_resultsUiState.value as SearchResultsUiState.Content).nextPageState}"
-    )
   }
 
   private fun loadSearchMangaListNextPageInternal(currentUiState: SearchResultsUiState.Content) {
@@ -133,7 +119,6 @@ class SearchViewModel @Inject constructor(
         query = query.value,
         offset = currentItems.size
       )
-      Log.d("SearchViewModel", "loadSearchMangaListNextPageInternal - query: ${query.value}")
       nextMangaList
         .onSuccess {
           val hasNextPage = it.size >= 20
@@ -144,11 +129,6 @@ class SearchViewModel @Inject constructor(
               SearchMangaListNextPageState.NO_MORE_ITEMS
             else
               SearchMangaListNextPageState.IDLE
-          )
-          Log.d("SearchViewModel", "loadSearchMangaListFirstPage - mangaList: ${it.size}")
-          Log.d(
-            "SearchViewModel",
-            "loadSearchMangaListFirstPage - nextPageState: ${(_resultsUiState.value as SearchResultsUiState.Content).nextPageState}"
           )
         }
         .onFailure {
