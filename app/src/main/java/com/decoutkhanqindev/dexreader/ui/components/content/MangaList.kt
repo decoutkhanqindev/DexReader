@@ -31,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.decoutkhanqindev.dexreader.R
@@ -40,7 +41,7 @@ import java.util.Locale
 @Composable
 fun HorizontalMangaList(
   mangaList: List<Manga>,
-  onMangaClick: (Manga) -> Unit,
+  onSelectedManga: (Manga) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Box(modifier = modifier) {
@@ -52,7 +53,7 @@ fun HorizontalMangaList(
       items(mangaList, key = { it.id }) { manga ->
         MangaItem(
           manga = manga,
-          onMangaClick = onMangaClick,
+          onSelectedManga = onSelectedManga,
           modifier = Modifier
             .padding(4.dp)
             .width(194.dp)
@@ -66,7 +67,7 @@ fun HorizontalMangaList(
 @Composable
 fun VerticalGridMangaList(
   mangaList: List<Manga>,
-  onMangaClick: (Manga) -> Unit,
+  onSelectedManga: (Manga) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Box(modifier = modifier) {
@@ -79,7 +80,7 @@ fun VerticalGridMangaList(
       items(mangaList, key = { it.id }) { manga ->
         MangaItem(
           manga = manga,
-          onMangaClick = onMangaClick,
+          onSelectedManga = onSelectedManga,
           modifier = Modifier
             .padding(4.dp)
             .fillMaxWidth()
@@ -93,20 +94,23 @@ fun VerticalGridMangaList(
 @Composable
 private fun MangaItem(
   manga: Manga,
-  onMangaClick: (Manga) -> Unit,
+  onSelectedManga: (Manga) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Card(
     modifier = modifier,
-    onClick = { onMangaClick(manga) },
+    onClick = { onSelectedManga(manga) },
     elevation = CardDefaults.cardElevation(8.dp),
     shape = MaterialTheme.shapes.large,
   ) {
     Box(modifier = Modifier.fillMaxWidth()) {
       AsyncImage(
-        model = ImageRequest.Builder(context = LocalContext.current)
+        model = ImageRequest.Builder(LocalContext.current)
           .data(manga.coverUrl)
-          .crossfade(true).build(),
+          .crossfade(true)
+          .memoryCachePolicy(CachePolicy.ENABLED)
+          .diskCachePolicy(CachePolicy.ENABLED)
+          .build(),
         contentDescription = manga.title,
         error = painterResource(R.drawable.placeholder),
         placeholder = painterResource(R.drawable.placeholder),

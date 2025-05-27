@@ -2,7 +2,6 @@ package com.decoutkhanqindev.dexreader.ui.components.states
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -17,15 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.ui.theme.DexReaderTheme
 
 @Composable
 fun ErrorScreen(
   message: String,
-  onRetryClick: () -> Unit,
+  onRetry: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Column(
@@ -52,7 +49,7 @@ fun ErrorScreen(
         )
     )
     Button(
-      onClick = onRetryClick,
+      onClick = onRetry,
       shape = MaterialTheme.shapes.large
     ) {
       Text(
@@ -61,17 +58,5 @@ fun ErrorScreen(
         modifier = Modifier.padding(4.dp)
       )
     }
-  }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ErrorScreenPreview() {
-  DexReaderTheme {
-    ErrorScreen(
-      message = stringResource(R.string.oops_something_went_wrong_please_try_again),
-      onRetryClick = {},
-      modifier = Modifier.fillMaxSize()
-    )
   }
 }

@@ -1,6 +1,5 @@
 package com.decoutkhanqindev.dexreader.ui.components.bar
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
@@ -16,9 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.ui.theme.DexReaderTheme
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,7 +61,7 @@ fun HomeTopBar(
 @Composable
 fun MangaDetailsTopBar(
   title: String,
-  onBackClick: () -> Unit,
+  onNavigateBack: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   CenterAlignedTopAppBar(
@@ -76,7 +73,7 @@ fun MangaDetailsTopBar(
       )
     },
     navigationIcon = {
-      IconButton(onClick = onBackClick) {
+      IconButton(onClick = onNavigateBack) {
         Icon(
           imageVector = Icons.AutoMirrored.Filled.ArrowBack,
           contentDescription = stringResource(R.string.back)
@@ -91,23 +88,4 @@ fun MangaDetailsTopBar(
     ),
     modifier = modifier
   )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun TopBarPreview() {
-  DexReaderTheme(true) {
-    Column {
-      HomeTopBar(
-        title = stringResource(R.string.app_name),
-        onMenuClick = {},
-        onSearchClick = {},
-      )
-
-      MangaDetailsTopBar(
-        title = stringResource(R.string.details),
-        onBackClick = {},
-      )
-    }
-  }
 }

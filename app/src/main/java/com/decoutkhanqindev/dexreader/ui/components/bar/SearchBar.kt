@@ -21,17 +21,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.ui.theme.DexReaderTheme
 
 @Composable
 fun SearchMangaBar(
   query: String,
   onQueryChange: (String) -> Unit,
   onSearch: (String) -> Unit,
-  onBackClick: () -> Unit,
+  onNavigateBack: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Column(modifier = modifier.background(MaterialTheme.colorScheme.primaryContainer)) {
@@ -41,7 +39,7 @@ fun SearchMangaBar(
       placeholder = { Text(text = stringResource(R.string.search_manga_placeholder)) },
       singleLine = true,
       leadingIcon = {
-        IconButton(onClick = onBackClick) {
+        IconButton(onClick = onNavigateBack) {
           Icon(
             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
             contentDescription = stringResource(R.string.back)
@@ -85,17 +83,3 @@ fun SearchMangaBar(
   }
 }
 
-
-@Preview(showBackground = true)
-@Composable
-fun SearchBarPreview() {
-  DexReaderTheme(true) {
-    SearchMangaBar(
-      query = "One",
-      onQueryChange = {},
-      onSearch = {},
-      onBackClick = {},
-      modifier = Modifier.fillMaxWidth()
-    )
-  }
-}
