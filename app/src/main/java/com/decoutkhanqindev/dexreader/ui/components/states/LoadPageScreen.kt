@@ -3,7 +3,6 @@ package com.decoutkhanqindev.dexreader.ui.components.states
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.CircularProgressIndicator
@@ -22,28 +21,12 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 
 @Composable
-fun FirstPageLoadingScreen(modifier: Modifier = Modifier) {
-  Box(
-    modifier = modifier,
-    contentAlignment = Alignment.Center
-  ) {
-    CircularProgressIndicator(
-      strokeWidth = 6.dp,
-      modifier = Modifier.padding(bottom = 16.dp)
-    )
-  }
-}
-
-@Composable
 fun NextPageLoadingScreen(modifier: Modifier = Modifier) {
   Box(
     modifier = modifier,
     contentAlignment = Alignment.BottomCenter
   ) {
-    CircularProgressIndicator(
-      strokeWidth = 6.dp,
-      modifier = Modifier.padding(bottom = 16.dp)
-    )
+    CircularProgressIndicator(strokeWidth = 6.dp)
   }
 }
 
