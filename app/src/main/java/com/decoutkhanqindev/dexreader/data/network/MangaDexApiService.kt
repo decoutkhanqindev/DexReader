@@ -15,6 +15,7 @@ interface MangaDexApiService {
     @Query("limit") limit: Int = 20,
     @Query("offset") offset: Int = 0,
     @Query("order[updatedAt]") lastUpdated: String = "desc",
+    @Query("status[]") status: String = "ongoing",
     @Query("includes[]")
     includes: List<String> = listOf("cover_art", "author", "artist"),
   ): MangaListResponse
