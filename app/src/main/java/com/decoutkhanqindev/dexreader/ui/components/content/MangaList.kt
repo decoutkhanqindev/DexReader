@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.ui.components.content
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -8,17 +9,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -36,6 +41,7 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.Manga
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 @Composable
@@ -68,10 +74,15 @@ fun HorizontalMangaList(
 fun VerticalGridMangaList(
   mangaList: List<Manga>,
   onSelectedManga: (Manga) -> Unit,
+  loadMoreContent: @Composable () -> Unit,
   modifier: Modifier = Modifier,
 ) {
+  val lazyGridState = rememberLazyGridState()
+  val coroutineScope = rememberCoroutineScope()
+
   Box(modifier = modifier) {
     LazyVerticalGrid(
+      state = lazyGridState,
       modifier = Modifier.fillMaxSize(),
       columns = GridCells.Fixed(2),
       verticalArrangement = Arrangement.spacedBy(2.dp),
@@ -87,6 +98,32 @@ fun VerticalGridMangaList(
             .height(250.dp)
         )
       }
+      item(span = { GridItemSpan(maxLineSpan) }) {
+        Box(
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp)
+        ) {
+          loadMoreContent()
+        }
+      }
+    }
+
+    val isVisibleFloatingButton = mangaList.size > 20 && lazyGridState.firstVisibleItemIndex > 0
+    AnimatedVisibility(
+      visible = isVisibleFloatingButton,
+      modifier = Modifier
+        .align(Alignment.BottomEnd)
+        .padding(16.dp)
+    ) {
+      MoveToTopButton(
+        onClick = {
+          coroutineScope.launch {
+            lazyGridState.animateScrollToItem(0)
+          }
+        },
+        modifier = Modifier.size(56.dp)
+      )
     }
   }
 }
