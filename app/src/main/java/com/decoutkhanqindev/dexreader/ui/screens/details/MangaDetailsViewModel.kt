@@ -34,7 +34,7 @@ class MangaDetailsViewModel @Inject constructor(
 
   init {
     getMangaDetails()
-    getChapterListFirstPage()
+    loadChapterListFirstPage()
   }
 
   private fun getMangaDetails() {
@@ -51,7 +51,7 @@ class MangaDetailsViewModel @Inject constructor(
     }
   }
 
-  private fun getChapterListFirstPage() {
+  private fun loadChapterListFirstPage() {
     viewModelScope.launch {
       _chaptersUiState.value = MangaChaptersUiState.FirstPageLoading
 
@@ -61,27 +61,27 @@ class MangaDetailsViewModel @Inject constructor(
       )
       chapterList
         .onSuccess {
+          val hasNextPage = it.size >= 20
           _chaptersUiState.value = MangaChaptersUiState.Content(
             items = it,
             currentPage = 1,
-            nextPageState = if (it.size < 20) {
+            nextPageState = if (!hasNextPage)
               MangaChaptersNextPageState.NO_MORE_ITEMS
-            } else {
+            else
               MangaChaptersNextPageState.IDLE
-            }
           )
         }
         .onFailure {
           _chaptersUiState.value = MangaChaptersUiState.FirstPageError
           Log.d(
             "MangaDetailsViewModel",
-            "getChapterListFirstPage have error: ${it.stackTraceToString()}"
+            "loadChapterListFirstPage have error: ${it.stackTraceToString()}"
           )
         }
     }
   }
 
-  fun getChapterListNextPage() {
+  fun loadChapterListNextPage() {
     when (val currentUiState = _chaptersUiState.value) {
       MangaChaptersUiState.FirstPageLoading,
       MangaChaptersUiState.FirstPageError,
@@ -93,21 +93,20 @@ class MangaDetailsViewModel @Inject constructor(
           MangaChaptersNextPageState.NO_MORE_ITEMS
             -> return
 
-          MangaChaptersNextPageState.ERROR -> getChapterListFirstPage()
+          MangaChaptersNextPageState.ERROR -> loadChapterListFirstPage()
 
-          MangaChaptersNextPageState.IDLE -> getChapterListNextPageInternal(currentUiState)
+          MangaChaptersNextPageState.IDLE -> loadChapterListNextPageInternal(currentUiState)
         }
       }
     }
   }
 
-  private fun getChapterListNextPageInternal(currentUiState: MangaChaptersUiState.Content) {
+  private fun loadChapterListNextPageInternal(currentUiState: MangaChaptersUiState.Content) {
     viewModelScope.launch {
       _chaptersUiState.value =
         currentUiState.copy(nextPageState = MangaChaptersNextPageState.LOADING)
       val currentItems = currentUiState.items
       val nextPage: Int = currentUiState.currentPage + 1
-
 
       val nextChapterList = getChapterListUseCase(
         mangaId = mangaId,
@@ -116,21 +115,21 @@ class MangaDetailsViewModel @Inject constructor(
       )
       nextChapterList
         .onSuccess {
+          val hasNextPage = it.size >= 20
           _chaptersUiState.value = currentUiState.copy(
             items = currentItems + it,
             currentPage = nextPage,
-            nextPageState = if (it.size < 20) {
+            nextPageState = if (!hasNextPage)
               MangaChaptersNextPageState.NO_MORE_ITEMS
-            } else {
+            else
               MangaChaptersNextPageState.IDLE
-            }
           )
         }
         .onFailure {
           _chaptersUiState.value = MangaChaptersUiState.FirstPageError
           Log.d(
             "MangaDetailsViewModel",
-            "getChapterListNextPageInternal have error: ${it.stackTraceToString()}"
+            "loadChapterListNextPageInternal have error: ${it.stackTraceToString()}"
           )
         }
     }
@@ -139,15 +138,15 @@ class MangaDetailsViewModel @Inject constructor(
   fun setChapterLanguage(language: String) {
     if (language == _selectedLanguage.value) return
     _selectedLanguage.value = language
-    getChapterListFirstPage()
+    loadChapterListFirstPage()
   }
 
   fun retry() {
     getMangaDetails()
-    getChapterListFirstPage()
+    loadChapterListFirstPage()
   }
 
-  fun retryLoadNextChapterPage() {
-    getChapterListNextPage()
+  fun retryLoadNextChapterListPage() {
+    loadChapterListNextPage()
   }
 }
