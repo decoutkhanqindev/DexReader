@@ -16,11 +16,11 @@ fun MangaDto.toDomain(uploadUrl: String): Manga {
   val description = attributes.description?.get("en")
     ?: attributes.description?.values?.firstOrNull()
     ?: "No description ..."
-  val authorId = relationships?.find { it.type == "author" }?.attributes?.name ?: "Unknown author"
-  val artistId = relationships?.find { it.type == "artist" }?.attributes?.name ?: "Unknown artist"
+  val authorId = relationships?.find { it.type == "author" }?.attributes?.name ?: "Unknown"
+  val artistId = relationships?.find { it.type == "artist" }?.attributes?.name ?: "Unknown"
   val genres = attributes.tags?.mapNotNull { it.attributes.name["en"] } ?: emptyList()
-  val status = attributes.status ?: "Unknown status"
-  val year = attributes.year.toString()
+  val status = attributes.status ?: "Unknown"
+  val year = attributes.year ?: "Unknown"
   val availableTranslatedLanguages =
     attributes.availableTranslatedLanguages?.map { it.toFullLanguageName() } ?: emptyList()
   val lastChapter = attributes.lastChapter ?: "Unknown"
