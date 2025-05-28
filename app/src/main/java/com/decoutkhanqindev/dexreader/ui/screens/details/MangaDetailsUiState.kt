@@ -3,23 +3,23 @@ package com.decoutkhanqindev.dexreader.ui.screens.details
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
 import com.decoutkhanqindev.dexreader.domain.model.Manga
 
-sealed interface MangaInfoUiState {
-  data object Loading : MangaInfoUiState
-  data object Error : MangaInfoUiState
-  data class Success(val manga: Manga) : MangaInfoUiState
+sealed interface MangaDetailsInfoUiState {
+  data object Loading : MangaDetailsInfoUiState
+  data object Error : MangaDetailsInfoUiState
+  data class Success(val manga: Manga) : MangaDetailsInfoUiState
 }
 
-sealed interface MangaChaptersUiState {
-  data object FirstPageLoading : MangaChaptersUiState
-  data object FirstPageError : MangaChaptersUiState
+sealed interface MangaDetailsChaptersUiState {
+  data object FirstPageLoading : MangaDetailsChaptersUiState
+  data object FirstPageError : MangaDetailsChaptersUiState
   data class Content(
-    val items: List<Chapter> = emptyList(),
+    val chapterList: List<Chapter> = emptyList(),
     val currentPage: Int = 0,
-    val nextPageState: MangaChaptersNextPageState = MangaChaptersNextPageState.IDLE
-  ) : MangaChaptersUiState
+    val nextPageState: MangaDetailsChaptersNextPageState = MangaDetailsChaptersNextPageState.IDLE
+  ) : MangaDetailsChaptersUiState
 }
 
-enum class MangaChaptersNextPageState {
+enum class MangaDetailsChaptersNextPageState {
   LOADING,
   ERROR,
   IDLE,

@@ -50,10 +50,10 @@ import coil3.request.crossfade
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
 import com.decoutkhanqindev.dexreader.domain.model.Manga
-import com.decoutkhanqindev.dexreader.ui.components.bar.MangaDetailsTopBar
-import com.decoutkhanqindev.dexreader.ui.components.content.AllItemLoadedText
-import com.decoutkhanqindev.dexreader.ui.components.content.LoadMoreText
-import com.decoutkhanqindev.dexreader.ui.components.content.MoveToTopButton
+import com.decoutkhanqindev.dexreader.ui.components.content.bar.MangaDetailsTopBar
+import com.decoutkhanqindev.dexreader.ui.components.content.button.MoveToTopButton
+import com.decoutkhanqindev.dexreader.ui.components.content.text.AllItemLoadedText
+import com.decoutkhanqindev.dexreader.ui.components.content.text.LoadMoreText
 import com.decoutkhanqindev.dexreader.ui.components.states.ErrorScreen
 import com.decoutkhanqindev.dexreader.ui.components.states.ListLoadingScreen
 import com.decoutkhanqindev.dexreader.ui.components.states.LoadPageErrorScreen
@@ -72,9 +72,9 @@ fun MangaDetailsScreen(
   viewModel: MangaDetailsViewModel = hiltViewModel(),
   modifier: Modifier = Modifier
 ) {
-  val infoUiState by viewModel.infoUiState.collectAsStateWithLifecycle()
-  val chaptersUiState by viewModel.chaptersUiState.collectAsStateWithLifecycle()
-  val selectedLanguage by viewModel.selectedLanguage.collectAsStateWithLifecycle()
+  val mangaDetailsInfoUiState by viewModel.mangaDetailsInfoUiState.collectAsStateWithLifecycle()
+  val mangaDetailsChaptersUiState by viewModel.mangaDetailsChaptersUiState.collectAsStateWithLifecycle()
+  val chapterLanguage by viewModel.chapterLanguage.collectAsStateWithLifecycle()
 
   Scaffold(
     topBar = {
@@ -86,12 +86,12 @@ fun MangaDetailsScreen(
     },
     content = { innerPadding ->
       MangaDetailsContent(
-        infoUiState = infoUiState,
-        chaptersUiState = chaptersUiState,
-        selectedLanguage = selectedLanguage.toFullLanguageName(),
-        onSelectedLanguage = { viewModel.setChapterLanguage(it.toLanguageCode()) },
-        onLoadNextChapterListPage = { viewModel.loadChapterListNextPage() },
-        onRetryLoadNextChapterListPage = { viewModel.retryLoadNextChapterListPage() },
+        mangaDetailsInfoUiState = mangaDetailsInfoUiState,
+        mangaDetailsChaptersUiState = mangaDetailsChaptersUiState,
+        chapterLanguage = chapterLanguage.toFullLanguageName(),
+        onSelectedChapterLanguage = { viewModel.updateChapterLanguage(it.toLanguageCode()) },
+        onFetchChapterListNextPage = { viewModel.fetchChapterListNextPage() },
+        onRetryFetchChapterListNextPage = { viewModel.retryFetchChapterListNextPage() },
         onSelectedTag = onSelectedTag,
         onSelectedChapter = onSelectedChapter,
         onRetry = { viewModel.retry() },
@@ -105,12 +105,12 @@ fun MangaDetailsScreen(
 
 @Composable
 private fun MangaDetailsContent(
-  infoUiState: MangaInfoUiState,
-  chaptersUiState: MangaChaptersUiState,
-  selectedLanguage: String,
-  onSelectedLanguage: (String) -> Unit,
-  onLoadNextChapterListPage: () -> Unit,
-  onRetryLoadNextChapterListPage: () -> Unit,
+  mangaDetailsInfoUiState: MangaDetailsInfoUiState,
+  mangaDetailsChaptersUiState: MangaDetailsChaptersUiState,
+  chapterLanguage: String,
+  onSelectedChapterLanguage: (String) -> Unit,
+  onFetchChapterListNextPage: () -> Unit,
+  onRetryFetchChapterListNextPage: () -> Unit,
   onSelectedTag: (String) -> Unit,
   onSelectedChapter: (String) -> Unit,
   onRetry: () -> Unit,
@@ -120,17 +120,17 @@ private fun MangaDetailsContent(
   val coroutineScope = rememberCoroutineScope()
 
   Box(modifier = modifier) {
-    when (infoUiState) {
-      MangaInfoUiState.Loading -> LoadingScreen(modifier = Modifier.fillMaxSize())
+    when (mangaDetailsInfoUiState) {
+      MangaDetailsInfoUiState.Loading -> LoadingScreen(modifier = Modifier.fillMaxSize())
 
-      MangaInfoUiState.Error -> ErrorScreen(
+      MangaDetailsInfoUiState.Error -> ErrorScreen(
         message = stringResource(R.string.oops_something_went_wrong_please_try_again),
         onRetry = onRetry,
         modifier = Modifier.fillMaxSize()
       )
 
-      is MangaInfoUiState.Success -> {
-        val manga = infoUiState.manga
+      is MangaDetailsInfoUiState.Success -> {
+        val manga = mangaDetailsInfoUiState.manga
 
         // Background cover art
         AsyncImage(
@@ -194,10 +194,10 @@ private fun MangaDetailsContent(
                     .weight(0.5f)
                     .fillMaxWidth()
                 )
-                LanguageDropdownMenu(
-                  languages = manga.availableTranslatedLanguages,
-                  selectedLanguage = selectedLanguage,
-                  onSelectedLanguage = onSelectedLanguage,
+                ChapterLanguageDropdownMenu(
+                  languageList = manga.availableTranslatedLanguages,
+                  selectedLanguage = chapterLanguage,
+                  onSelectedLanguage = onSelectedChapterLanguage,
                   modifier = Modifier
                     .weight(0.5f)
                     .fillMaxWidth()
@@ -205,12 +205,12 @@ private fun MangaDetailsContent(
               }
             }
 
-            when (chaptersUiState) {
-              MangaChaptersUiState.FirstPageLoading -> item {
+            when (mangaDetailsChaptersUiState) {
+              MangaDetailsChaptersUiState.FirstPageLoading -> item {
                 ListLoadingScreen(modifier = Modifier.fillMaxSize())
               }
 
-              MangaChaptersUiState.FirstPageError -> item {
+              MangaDetailsChaptersUiState.FirstPageError -> item {
                 LoadPageErrorScreen(
                   message = stringResource(R.string.something_went_wrong_while_loading_chapters_please_try_again),
                   onRetry = onRetry,
@@ -220,9 +220,9 @@ private fun MangaDetailsContent(
                 )
               }
 
-              is MangaChaptersUiState.Content -> {
-                val chapterList = chaptersUiState.items
-                val nextPageState = chaptersUiState.nextPageState
+              is MangaDetailsChaptersUiState.Content -> {
+                val chapterList = mangaDetailsChaptersUiState.chapterList
+                val nextPageState = mangaDetailsChaptersUiState.nextPageState
 
                 if (chapterList.isEmpty()) {
                   item {
@@ -249,7 +249,7 @@ private fun MangaDetailsContent(
 
                   // Load more chapters
                   when (nextPageState) {
-                    MangaChaptersNextPageState.LOADING -> item {
+                    MangaDetailsChaptersNextPageState.LOADING -> item {
                       NextPageLoadingScreen(
                         modifier = Modifier
                           .fillMaxWidth()
@@ -257,19 +257,19 @@ private fun MangaDetailsContent(
                       )
                     }
 
-                    MangaChaptersNextPageState.ERROR -> item {
+                    MangaDetailsChaptersNextPageState.ERROR -> item {
                       LoadPageErrorScreen(
                         message = stringResource(R.string.can_t_load_next_chapter_page_please_try_again),
-                        onRetry = onRetryLoadNextChapterListPage,
+                        onRetry = onRetryFetchChapterListNextPage,
                         modifier = Modifier
                           .fillMaxWidth()
                           .padding(top = 8.dp)
                       )
                     }
 
-                    MangaChaptersNextPageState.IDLE -> item {
+                    MangaDetailsChaptersNextPageState.IDLE -> item {
                       LoadMoreText(
-                        onLoadMore = onLoadNextChapterListPage,
+                        onLoadMore = onFetchChapterListNextPage,
                         modifier = Modifier
                           .fillMaxWidth()
                           .padding(horizontal = 8.dp)
@@ -281,7 +281,7 @@ private fun MangaDetailsContent(
 //                        val layoutInfo = lazyListState.layoutInfo
 //                        val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
 //                        val totalItems = layoutInfo.totalItemsCount
-//                        // Emit the last visible item index and total items count
+//                        // Emit the last visible item index and total mangaList count
 //                        lastVisibleItemIndex to totalItems
 //                      }
 //                        .collect { (lastVisibleItem, totalItems) ->
@@ -293,7 +293,7 @@ private fun MangaDetailsContent(
 //                    }
                     }
 
-                    MangaChaptersNextPageState.NO_MORE_ITEMS -> item {
+                    MangaDetailsChaptersNextPageState.NO_MORE_ITEMS -> item {
                       AllItemLoadedText(
                         title = stringResource(R.string.all_chapters_loaded),
                         modifier = Modifier
@@ -311,11 +311,11 @@ private fun MangaDetailsContent(
       }
     }
 
-    val isVisibleFloatingButton = chaptersUiState is MangaChaptersUiState.Content &&
-        chaptersUiState.items.size > 20 &&
+    val isMoveToTopButtonVisible = mangaDetailsChaptersUiState is MangaDetailsChaptersUiState.Content &&
+        mangaDetailsChaptersUiState.chapterList.size > 20 &&
         lazyListState.firstVisibleItemIndex > 0
     AnimatedVisibility(
-      visible = isVisibleFloatingButton,
+      visible = isMoveToTopButtonVisible,
       modifier = Modifier
         .align(Alignment.BottomEnd)
         .padding(16.dp)
@@ -594,8 +594,8 @@ private fun ChapterItem(
 }
 
 @Composable
-private fun LanguageDropdownMenu(
-  languages: List<String>,
+private fun ChapterLanguageDropdownMenu(
+  languageList: List<String>,
   selectedLanguage: String,
   onSelectedLanguage: (String) -> Unit,
   modifier: Modifier = Modifier
@@ -618,7 +618,7 @@ private fun LanguageDropdownMenu(
       onDismissRequest = { isExpanded = false },
       modifier = Modifier.fillMaxWidth(),
     ) {
-      if (languages.isEmpty()) {
+      if (languageList.isEmpty()) {
         DropdownMenuItem(
           text = {
             Text(
@@ -631,8 +631,8 @@ private fun LanguageDropdownMenu(
           modifier = Modifier.fillMaxWidth()
         )
       } else {
-        languages.forEach { language ->
-          LanguageDropdownItem(
+        languageList.forEach { language ->
+          ChapterLanguageDropdownItem(
             language = language,
             isSelected = language == selectedLanguage,
             onSelectedLanguage = {
@@ -648,7 +648,7 @@ private fun LanguageDropdownMenu(
 }
 
 @Composable
-private fun LanguageDropdownItem(
+private fun ChapterLanguageDropdownItem(
   language: String,
   isSelected: Boolean,
   onSelectedLanguage: () -> Unit,

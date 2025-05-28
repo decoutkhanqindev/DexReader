@@ -21,132 +21,132 @@ class MangaDetailsViewModel @Inject constructor(
 ) : ViewModel() {
   private val mangaId: String = checkNotNull(savedStateHandle[MangaDetailsDestination.mangaIdArg])
 
-  private val _infoUiState =
-    MutableStateFlow<MangaInfoUiState>(MangaInfoUiState.Loading)
-  val infoUiState: StateFlow<MangaInfoUiState> = _infoUiState.asStateFlow()
+  private val _mangaDetailsInfoUiState =
+    MutableStateFlow<MangaDetailsInfoUiState>(MangaDetailsInfoUiState.Loading)
+  val mangaDetailsInfoUiState: StateFlow<MangaDetailsInfoUiState> = _mangaDetailsInfoUiState.asStateFlow()
 
-  private val _chaptersUiState =
-    MutableStateFlow<MangaChaptersUiState>(MangaChaptersUiState.FirstPageLoading)
-  val chaptersUiState: StateFlow<MangaChaptersUiState> = _chaptersUiState.asStateFlow()
+  private val _mangaDetailsChaptersUiState =
+    MutableStateFlow<MangaDetailsChaptersUiState>(MangaDetailsChaptersUiState.FirstPageLoading)
+  val mangaDetailsChaptersUiState: StateFlow<MangaDetailsChaptersUiState> = _mangaDetailsChaptersUiState.asStateFlow()
 
-  private val _selectedLanguage = MutableStateFlow("en")
-  val selectedLanguage: StateFlow<String> = _selectedLanguage.asStateFlow()
+  private val _chapterLanguage = MutableStateFlow("en")
+  val chapterLanguage: StateFlow<String> = _chapterLanguage.asStateFlow()
 
   init {
-    getMangaDetails()
-    loadChapterListFirstPage()
+    fetchMangaDetails()
+    fetchChapterListFirstPage()
   }
 
-  private fun getMangaDetails() {
+  private fun fetchMangaDetails() {
     viewModelScope.launch {
       val mangaDetails = getMangaDetailsUseCase(mangaId)
       mangaDetails
         .onSuccess {
-          _infoUiState.value = MangaInfoUiState.Success(manga = it)
+          _mangaDetailsInfoUiState.value = MangaDetailsInfoUiState.Success(manga = it)
         }
         .onFailure {
-          _infoUiState.value = MangaInfoUiState.Error
+          _mangaDetailsInfoUiState.value = MangaDetailsInfoUiState.Error
           Log.d("MangaDetailsViewModel", "getManga have error: ${it.stackTraceToString()}")
         }
     }
   }
 
-  private fun loadChapterListFirstPage() {
+  private fun fetchChapterListFirstPage() {
     viewModelScope.launch {
-      _chaptersUiState.value = MangaChaptersUiState.FirstPageLoading
+      _mangaDetailsChaptersUiState.value = MangaDetailsChaptersUiState.FirstPageLoading
 
       val chapterList = getChapterListUseCase(
         mangaId = mangaId,
-        translatedLanguage = selectedLanguage.value
+        translatedLanguage = chapterLanguage.value
       )
       chapterList
         .onSuccess {
           val hasNextPage = it.size >= 20
-          _chaptersUiState.value = MangaChaptersUiState.Content(
-            items = it,
+          _mangaDetailsChaptersUiState.value = MangaDetailsChaptersUiState.Content(
+            chapterList = it,
             currentPage = 1,
             nextPageState = if (!hasNextPage)
-              MangaChaptersNextPageState.NO_MORE_ITEMS
+              MangaDetailsChaptersNextPageState.NO_MORE_ITEMS
             else
-              MangaChaptersNextPageState.IDLE
+              MangaDetailsChaptersNextPageState.IDLE
           )
         }
         .onFailure {
-          _chaptersUiState.value = MangaChaptersUiState.FirstPageError
+          _mangaDetailsChaptersUiState.value = MangaDetailsChaptersUiState.FirstPageError
           Log.d(
             "MangaDetailsViewModel",
-            "loadChapterListFirstPage have error: ${it.stackTraceToString()}"
+            "fetchChapterListFirstPage have error: ${it.stackTraceToString()}"
           )
         }
     }
   }
 
-  fun loadChapterListNextPage() {
-    when (val currentUiState = _chaptersUiState.value) {
-      MangaChaptersUiState.FirstPageLoading,
-      MangaChaptersUiState.FirstPageError,
+  fun fetchChapterListNextPage() {
+    when (val currentUiState = _mangaDetailsChaptersUiState.value) {
+      MangaDetailsChaptersUiState.FirstPageLoading,
+      MangaDetailsChaptersUiState.FirstPageError,
         -> return
 
-      is MangaChaptersUiState.Content -> {
+      is MangaDetailsChaptersUiState.Content -> {
         when (currentUiState.nextPageState) {
-          MangaChaptersNextPageState.LOADING,
-          MangaChaptersNextPageState.NO_MORE_ITEMS
+          MangaDetailsChaptersNextPageState.LOADING,
+          MangaDetailsChaptersNextPageState.NO_MORE_ITEMS
             -> return
 
-          MangaChaptersNextPageState.ERROR -> loadChapterListFirstPage()
+          MangaDetailsChaptersNextPageState.ERROR -> fetchChapterListFirstPage()
 
-          MangaChaptersNextPageState.IDLE -> loadChapterListNextPageInternal(currentUiState)
+          MangaDetailsChaptersNextPageState.IDLE -> fetchChapterListNextPageInternal(currentUiState)
         }
       }
     }
   }
 
-  private fun loadChapterListNextPageInternal(currentUiState: MangaChaptersUiState.Content) {
+  private fun fetchChapterListNextPageInternal(currentUiState: MangaDetailsChaptersUiState.Content) {
     viewModelScope.launch {
-      _chaptersUiState.value =
-        currentUiState.copy(nextPageState = MangaChaptersNextPageState.LOADING)
-      val currentItems = currentUiState.items
+      _mangaDetailsChaptersUiState.value =
+        currentUiState.copy(nextPageState = MangaDetailsChaptersNextPageState.LOADING)
+      val currentItems = currentUiState.chapterList
       val nextPage: Int = currentUiState.currentPage + 1
 
       val nextChapterList = getChapterListUseCase(
         mangaId = mangaId,
         offset = currentItems.size,
-        translatedLanguage = selectedLanguage.value
+        translatedLanguage = chapterLanguage.value
       )
       nextChapterList
         .onSuccess {
           val hasNextPage = it.size >= 20
-          _chaptersUiState.value = currentUiState.copy(
-            items = currentItems + it,
+          _mangaDetailsChaptersUiState.value = currentUiState.copy(
+            chapterList = currentItems + it,
             currentPage = nextPage,
             nextPageState = if (!hasNextPage)
-              MangaChaptersNextPageState.NO_MORE_ITEMS
+              MangaDetailsChaptersNextPageState.NO_MORE_ITEMS
             else
-              MangaChaptersNextPageState.IDLE
+              MangaDetailsChaptersNextPageState.IDLE
           )
         }
         .onFailure {
-          _chaptersUiState.value = MangaChaptersUiState.FirstPageError
+          _mangaDetailsChaptersUiState.value = MangaDetailsChaptersUiState.FirstPageError
           Log.d(
             "MangaDetailsViewModel",
-            "loadChapterListNextPageInternal have error: ${it.stackTraceToString()}"
+            "fetchChapterListNextPageInternal have error: ${it.stackTraceToString()}"
           )
         }
     }
   }
 
-  fun setChapterLanguage(language: String) {
-    if (language == _selectedLanguage.value) return
-    _selectedLanguage.value = language
-    loadChapterListFirstPage()
+  fun updateChapterLanguage(language: String) {
+    if (language == _chapterLanguage.value) return
+    _chapterLanguage.value = language
+    fetchChapterListFirstPage()
   }
 
   fun retry() {
-    getMangaDetails()
-    loadChapterListFirstPage()
+    fetchMangaDetails()
+    fetchChapterListFirstPage()
   }
 
-  fun retryLoadNextChapterListPage() {
-    loadChapterListNextPage()
+  fun retryFetchChapterListNextPage() {
+    fetchChapterListNextPage()
   }
 }
