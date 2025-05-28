@@ -20,8 +20,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.Manga
-import com.decoutkhanqindev.dexreader.ui.components.bar.HomeTopBar
-import com.decoutkhanqindev.dexreader.ui.components.content.HorizontalMangaList
+import com.decoutkhanqindev.dexreader.ui.components.content.bar.HomeTopBar
+import com.decoutkhanqindev.dexreader.ui.components.content.list.HorizontalMangaList
 import com.decoutkhanqindev.dexreader.ui.components.states.ErrorScreen
 import com.decoutkhanqindev.dexreader.ui.components.states.LoadingScreen
 
