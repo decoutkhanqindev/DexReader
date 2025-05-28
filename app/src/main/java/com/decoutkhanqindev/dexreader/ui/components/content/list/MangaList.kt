@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.ui.components.content
+package com.decoutkhanqindev.dexreader.ui.components.content.list
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -41,6 +41,7 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.Manga
+import com.decoutkhanqindev.dexreader.ui.components.content.button.MoveToTopButton
 import kotlinx.coroutines.launch
 import java.util.Locale
 

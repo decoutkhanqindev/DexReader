@@ -25,10 +25,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.ui.components.bar.SearchMangaBar
-import com.decoutkhanqindev.dexreader.ui.components.content.AllItemLoadedText
-import com.decoutkhanqindev.dexreader.ui.components.content.LoadMoreText
-import com.decoutkhanqindev.dexreader.ui.components.content.VerticalGridMangaList
+import com.decoutkhanqindev.dexreader.ui.components.content.bar.SearchMangaBar
+import com.decoutkhanqindev.dexreader.ui.components.content.list.VerticalGridMangaList
+import com.decoutkhanqindev.dexreader.ui.components.content.text.AllItemLoadedText
+import com.decoutkhanqindev.dexreader.ui.components.content.text.LoadMoreText
 import com.decoutkhanqindev.dexreader.ui.components.states.ErrorScreen
 import com.decoutkhanqindev.dexreader.ui.components.states.IdleScreen
 import com.decoutkhanqindev.dexreader.ui.components.states.ListLoadingScreen
@@ -43,9 +43,9 @@ fun SearchScreen(
   viewModel: SearchViewModel = hiltViewModel(),
   modifier: Modifier = Modifier
 ) {
-  val suggestionsUiState by viewModel.suggestionsUiState.collectAsStateWithLifecycle()
-  val resultsUiState by viewModel.resultsUiState.collectAsStateWithLifecycle()
-  val suggestionList by viewModel.suggestionList.collectAsStateWithLifecycle()
+  val mangaSuggestionsUiState by viewModel.mangaSuggestionsUiState.collectAsStateWithLifecycle()
+  val mangaResultsUiState by viewModel.mangaResultsUiState.collectAsStateWithLifecycle()
+  val mangaSuggestions by viewModel.mangaSuggestions.collectAsStateWithLifecycle()
   val query by viewModel.query.collectAsStateWithLifecycle()
   var isExpanded by rememberSaveable { mutableStateOf(false) }
 
@@ -55,11 +55,11 @@ fun SearchScreen(
       SearchMangaBar(
         query = query,
         onQueryChange = {
-          viewModel.onQueryChange(it)
+          viewModel.updateQuery(it)
           isExpanded = true
         },
         onSearch = {
-          viewModel.loadSearchMangaListFirstPage()
+          viewModel.fetchMangaListFirstPage()
           isExpanded = false
         },
         onNavigateBack = onNavigateBack,
@@ -69,17 +69,17 @@ fun SearchScreen(
     content = { innerPadding ->
       SearchContent(
         query = query,
-        suggestionsUiState = suggestionsUiState,
-        resultsUiState = resultsUiState,
+        mangaSuggestionsUiState = mangaSuggestionsUiState,
+        mangaResultsUiState = mangaResultsUiState,
         isExpanded = isExpanded,
-        suggestionList = suggestionList,
+        suggestionList = mangaSuggestions,
         onSelectedSuggestion = {
-          viewModel.onQueryChange(it)
-          viewModel.loadSearchMangaListFirstPage()
+          viewModel.updateQuery(it)
+          viewModel.fetchMangaListFirstPage()
           isExpanded = false
         },
-        onLoadSearchMangaListNextPage = { viewModel.loadSearchMangaListNextPage() },
-        onRetryLoadSearchMangaListNextPage = { viewModel.retryLoadSearchMangaListNextPage() },
+        onFetchMangaListNextPage = { viewModel.fetchMangaListNextPage() },
+        onRetryFetchMangaListNextPage = { viewModel.retryFetchMangaListNextPage() },
         onSelectedManga = onSelectedManga,
         onRetry = { viewModel.retry() },
         modifier = Modifier
@@ -93,13 +93,13 @@ fun SearchScreen(
 @Composable
 private fun SearchContent(
   query: String,
-  suggestionsUiState: SearchSuggestionsUiState,
-  resultsUiState: SearchResultsUiState,
+  mangaSuggestionsUiState: SearchMangaSuggestionsUiState,
+  mangaResultsUiState: SearchMangaResultsUiState,
   isExpanded: Boolean,
   suggestionList: List<String>,
-  onLoadSearchMangaListNextPage: () -> Unit,
-  onRetryLoadSearchMangaListNextPage: () -> Unit,
   onSelectedSuggestion: (String) -> Unit,
+  onFetchMangaListNextPage: () -> Unit,
+  onRetryFetchMangaListNextPage: () -> Unit,
   onSelectedManga: (String) -> Unit,
   onRetry: () -> Unit,
   modifier: Modifier = Modifier
@@ -113,21 +113,21 @@ private fun SearchContent(
   }
 
   if (isExpanded) {
-    MangaListSuggestions(
+    SearchMangaSuggestions(
       query = query,
-      suggestionsUiState = suggestionsUiState,
+      mangaSuggestionsUiState = mangaSuggestionsUiState,
       suggestionList = suggestionList,
       onSelectedSuggestion = onSelectedSuggestion,
       onRetry = onRetry,
       modifier = modifier
     )
   } else {
-    MangaListResults(
+    SearchMangaResults(
       query = query,
-      resultsUiState = resultsUiState,
+      mangaResultsUiState = mangaResultsUiState,
       onSelectedManga = onSelectedManga,
-      onLoadSearchMangaListNextPage = onLoadSearchMangaListNextPage,
-      onRetryLoadSearchMangaListNextPage = onRetryLoadSearchMangaListNextPage,
+      onFetchMangaListNextPage = onFetchMangaListNextPage,
+      onRetryFetchMangaListNextPage = onRetryFetchMangaListNextPage,
       onRetry = onRetry,
       modifier = modifier
     )
@@ -135,31 +135,31 @@ private fun SearchContent(
 }
 
 @Composable
-fun MangaListSuggestions(
+fun SearchMangaSuggestions(
   query: String,
-  suggestionsUiState: SearchSuggestionsUiState,
+  mangaSuggestionsUiState: SearchMangaSuggestionsUiState,
   suggestionList: List<String>,
   onSelectedSuggestion: (String) -> Unit,
   onRetry: () -> Unit,
   modifier: Modifier = Modifier
 ) {
-  when (suggestionsUiState) {
-    SearchSuggestionsUiState.Loading -> ListLoadingScreen(modifier = modifier)
+  when (mangaSuggestionsUiState) {
+    SearchMangaSuggestionsUiState.Loading -> ListLoadingScreen(modifier = modifier)
 
-    SearchSuggestionsUiState.Error -> ErrorScreen(
+    SearchMangaSuggestionsUiState.Error -> ErrorScreen(
       message = stringResource(R.string.oops_something_went_wrong_please_try_again),
       onRetry = onRetry,
       modifier = modifier
     )
 
-    SearchSuggestionsUiState.Success -> {
+    SearchMangaSuggestionsUiState.Success -> {
       if (suggestionList.isEmpty()) {
         NotFoundScreen(
           message = stringResource(R.string.sorry_no_manga_found_with_title, query),
           modifier = modifier
         )
       } else {
-        SuggestionsList(
+        MangaSuggestionList(
           suggestionList = suggestionList,
           onSelectedSuggestion = onSelectedSuggestion,
           modifier = modifier
@@ -170,27 +170,27 @@ fun MangaListSuggestions(
 }
 
 @Composable
-fun MangaListResults(
+fun SearchMangaResults(
   query: String,
-  resultsUiState: SearchResultsUiState,
+  mangaResultsUiState: SearchMangaResultsUiState,
   onSelectedManga: (String) -> Unit,
-  onLoadSearchMangaListNextPage: () -> Unit,
-  onRetryLoadSearchMangaListNextPage: () -> Unit,
+  onFetchMangaListNextPage: () -> Unit,
+  onRetryFetchMangaListNextPage: () -> Unit,
   onRetry: () -> Unit,
   modifier: Modifier = Modifier
 ) {
-  when (resultsUiState) {
-    SearchResultsUiState.FirstPageLoading -> ListLoadingScreen(modifier = modifier)
+  when (mangaResultsUiState) {
+    SearchMangaResultsUiState.FirstPageLoading -> ListLoadingScreen(modifier = modifier)
 
-    SearchResultsUiState.FirstPageError -> ErrorScreen(
+    SearchMangaResultsUiState.FirstPageError -> ErrorScreen(
       message = stringResource(R.string.oops_something_went_wrong_please_try_again),
       onRetry = onRetry,
       modifier = modifier
     )
 
-    is SearchResultsUiState.Content -> {
-      val mangaList = resultsUiState.items
-      val nextPageState = resultsUiState.nextPageState
+    is SearchMangaResultsUiState.Content -> {
+      val mangaList = mangaResultsUiState.mangaList
+      val nextPageState = mangaResultsUiState.nextPageState
 
       if (mangaList.isEmpty()) {
         NotFoundScreen(
@@ -203,29 +203,29 @@ fun MangaListResults(
           onSelectedManga = { onSelectedManga(it.id) },
           loadMoreContent = {
             when (nextPageState) {
-              SearchMangaListNextPageState.LOADING -> NextPageLoadingScreen(
+              SearchMangaResultsNextPageState.LOADING -> NextPageLoadingScreen(
                 modifier = Modifier
                   .fillMaxWidth()
                   .padding(bottom = 12.dp)
               )
 
-              SearchMangaListNextPageState.ERROR -> LoadPageErrorScreen(
+              SearchMangaResultsNextPageState.ERROR -> LoadPageErrorScreen(
                 message = stringResource(R.string.can_t_load_next_manga_page_please_try_again),
-                onRetry = onRetryLoadSearchMangaListNextPage,
+                onRetry = onRetryFetchMangaListNextPage,
                 modifier = Modifier
                   .fillMaxWidth()
                   .padding(top = 8.dp)
               )
 
-              SearchMangaListNextPageState.IDLE -> LoadMoreText(
-                onLoadMore = onLoadSearchMangaListNextPage,
+              SearchMangaResultsNextPageState.IDLE -> LoadMoreText(
+                onLoadMore = onFetchMangaListNextPage,
                 modifier = Modifier
                   .fillMaxWidth()
                   .padding(horizontal = 8.dp)
                   .padding(bottom = 12.dp)
               )
 
-              SearchMangaListNextPageState.NO_MORE_ITEMS -> AllItemLoadedText(
+              SearchMangaResultsNextPageState.NO_MORE_ITEMS -> AllItemLoadedText(
                 title = stringResource(R.string.all_mangas_loaded),
                 modifier = Modifier
                   .fillMaxWidth()
@@ -242,14 +242,14 @@ fun MangaListResults(
 }
 
 @Composable
-private fun SuggestionsList(
+private fun MangaSuggestionList(
   suggestionList: List<String>,
   onSelectedSuggestion: (String) -> Unit,
   modifier: Modifier = Modifier
 ) {
   LazyColumn(modifier = modifier) {
     items(suggestionList) { suggestion ->
-      SuggestionItem(
+      MangaSuggestionItem(
         suggestion = suggestion,
         onSelectedSuggestion = onSelectedSuggestion,
         modifier = Modifier.fillMaxWidth()
@@ -259,7 +259,7 @@ private fun SuggestionsList(
 }
 
 @Composable
-private fun SuggestionItem(
+private fun MangaSuggestionItem(
   suggestion: String,
   onSelectedSuggestion: (String) -> Unit,
   modifier: Modifier = Modifier

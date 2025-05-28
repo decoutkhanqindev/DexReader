@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.ui.components.bar
+package com.decoutkhanqindev.dexreader.ui.components.content.bar
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions

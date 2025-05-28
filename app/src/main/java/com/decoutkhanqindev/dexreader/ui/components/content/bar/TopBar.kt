@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.ui.components.bar
+package com.decoutkhanqindev.dexreader.ui.components.content.bar
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
