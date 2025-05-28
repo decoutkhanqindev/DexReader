@@ -1,6 +1,7 @@
 package com.decoutkhanqindev.dexreader.ui.screens.details
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,7 +16,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -31,6 +31,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -131,124 +132,149 @@ private fun MangaDetailsContent(
       is MangaInfoUiState.Success -> {
         val manga = infoUiState.manga
 
-        LazyColumn(
-          modifier = Modifier.fillMaxSize(),
-          state = lazyListState
+        // Background cover art
+        AsyncImage(
+          model = ImageRequest.Builder(LocalContext.current)
+            .data(manga.coverUrl)
+            .crossfade(true)
+            .size(1080)
+            .build(),
+          contentDescription = manga.title,
+          contentScale = ContentScale.Crop,
+          modifier = Modifier.fillMaxSize()
+        )
+
+        Box(
+          modifier = Modifier
+            .fillMaxSize()
+            .background(
+              brush = Brush.verticalGradient(
+                colors = listOf(
+                  MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
+                  MaterialTheme.colorScheme.surface.copy(alpha = 1.5f),
+                )
+              )
+            )
         ) {
-          // Manga Info
-          item {
-            MangaInfoHeader(
-              manga = manga,
-              modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
-            )
-            MangaSummary(
-              manga = manga,
-              onSelectedTag = onSelectedTag,
-              modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
-            )
-          }
-          // Manga Chapters List
-          item {
-            Row(
-              modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 4.dp)
-                .padding(bottom = 12.dp),
-              verticalAlignment = Alignment.CenterVertically,
-            ) {
-              Text(
-                text = stringResource(R.string.chapters),
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.ExtraBold,
+          LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            state = lazyListState
+          ) {
+            // Manga Info
+            item {
+              MangaInfoHeader(
+                manga = manga,
                 modifier = Modifier
-                  .weight(0.5f)
                   .fillMaxWidth()
+                  .padding(4.dp)
+                  .padding(bottom = 16.dp)
               )
-              LanguageDropdownMenu(
-                languages = manga.availableTranslatedLanguages,
-                selectedLanguage = selectedLanguage,
-                onSelectedLanguage = onSelectedLanguage,
+              MangaSummary(
+                manga = manga,
+                onSelectedTag = onSelectedTag,
                 modifier = Modifier
-                  .weight(0.5f)
                   .fillMaxWidth()
+                  .padding(bottom = 16.dp)
               )
             }
-          }
-
-          when (chaptersUiState) {
-            MangaChaptersUiState.FirstPageLoading -> item {
-              ListLoadingScreen(modifier = Modifier.fillMaxSize())
-            }
-
-            MangaChaptersUiState.FirstPageError -> item {
-              LoadPageErrorScreen(
-                message = stringResource(R.string.something_went_wrong_while_loading_chapters_please_try_again),
-                onRetry = onRetry,
+            // Manga Chapters List
+            item {
+              Row(
                 modifier = Modifier
-                  .fillMaxSize()
+                  .fillMaxWidth()
                   .padding(horizontal = 4.dp)
-              )
+                  .padding(bottom = 12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+              ) {
+                Text(
+                  text = stringResource(R.string.chapters),
+                  style = MaterialTheme.typography.titleLarge,
+                  fontWeight = FontWeight.ExtraBold,
+                  modifier = Modifier
+                    .weight(0.5f)
+                    .fillMaxWidth()
+                )
+                LanguageDropdownMenu(
+                  languages = manga.availableTranslatedLanguages,
+                  selectedLanguage = selectedLanguage,
+                  onSelectedLanguage = onSelectedLanguage,
+                  modifier = Modifier
+                    .weight(0.5f)
+                    .fillMaxWidth()
+                )
+              }
             }
 
-            is MangaChaptersUiState.Content -> {
-              val chapterList = chaptersUiState.items
-              val nextPageState = chaptersUiState.nextPageState
+            when (chaptersUiState) {
+              MangaChaptersUiState.FirstPageLoading -> item {
+                ListLoadingScreen(modifier = Modifier.fillMaxSize())
+              }
 
-              if (chapterList.isEmpty()) {
-                item {
-                  Text(
-                    text = stringResource(R.string.no_chapters_available),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    fontStyle = FontStyle.Italic,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth(),
-                  )
-                }
-              } else {
-                items(chapterList, key = { it.id }) { chapter ->
-                  ChapterItem(
-                    chapter = chapter,
-                    onSelectedChapter = onSelectedChapter,
-                    modifier = Modifier
-                      .fillMaxWidth()
-                      .padding(bottom = 12.dp)
-                      .padding(horizontal = 4.dp)
-                  )
-                }
+              MangaChaptersUiState.FirstPageError -> item {
+                LoadPageErrorScreen(
+                  message = stringResource(R.string.something_went_wrong_while_loading_chapters_please_try_again),
+                  onRetry = onRetry,
+                  modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 4.dp)
+                )
+              }
 
-                // Load more chapters
-                when (nextPageState) {
-                  MangaChaptersNextPageState.LOADING -> item {
-                    NextPageLoadingScreen(
+              is MangaChaptersUiState.Content -> {
+                val chapterList = chaptersUiState.items
+                val nextPageState = chaptersUiState.nextPageState
+
+                if (chapterList.isEmpty()) {
+                  item {
+                    Text(
+                      text = stringResource(R.string.no_chapters_available),
+                      style = MaterialTheme.typography.titleMedium,
+                      fontWeight = FontWeight.Bold,
+                      fontStyle = FontStyle.Italic,
+                      textAlign = TextAlign.Center,
+                      modifier = Modifier.fillMaxWidth(),
+                    )
+                  }
+                } else {
+                  items(chapterList, key = { it.id }) { chapter ->
+                    ChapterItem(
+                      chapter = chapter,
+                      onSelectedChapter = onSelectedChapter,
                       modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 12.dp)
+                        .padding(horizontal = 4.dp)
                     )
                   }
 
-                  MangaChaptersNextPageState.ERROR -> item {
-                    LoadPageErrorScreen(
-                      message = stringResource(R.string.can_t_load_next_chapter_page_please_try_again),
-                      onRetry = onRetryLoadNextChapterListPage,
-                      modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp)
-                    )
-                  }
+                  // Load more chapters
+                  when (nextPageState) {
+                    MangaChaptersNextPageState.LOADING -> item {
+                      NextPageLoadingScreen(
+                        modifier = Modifier
+                          .fillMaxWidth()
+                          .padding(bottom = 12.dp)
+                      )
+                    }
 
-                  MangaChaptersNextPageState.IDLE -> item {
-                    LoadMoreText(
-                      onLoadMore = onLoadNextChapterListPage,
-                      modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
-                        .padding(bottom = 12.dp)
-                    )
+                    MangaChaptersNextPageState.ERROR -> item {
+                      LoadPageErrorScreen(
+                        message = stringResource(R.string.can_t_load_next_chapter_page_please_try_again),
+                        onRetry = onRetryLoadNextChapterListPage,
+                        modifier = Modifier
+                          .fillMaxWidth()
+                          .padding(top = 8.dp)
+                      )
+                    }
+
+                    MangaChaptersNextPageState.IDLE -> item {
+                      LoadMoreText(
+                        onLoadMore = onLoadNextChapterListPage,
+                        modifier = Modifier
+                          .fillMaxWidth()
+                          .padding(horizontal = 8.dp)
+                          .padding(bottom = 12.dp)
+                      )
 
 //                    LaunchedEffect(lazyListState) {
 //                      snapshotFlow {
@@ -265,16 +291,17 @@ private fun MangaDetailsContent(
 //                          }
 //                        }
 //                    }
-                  }
+                    }
 
-                  MangaChaptersNextPageState.NO_MORE_ITEMS -> item {
-                    AllItemLoadedText(
-                      title = stringResource(R.string.all_chapters_loaded),
-                      modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
-                        .padding(bottom = 12.dp)
-                    )
+                    MangaChaptersNextPageState.NO_MORE_ITEMS -> item {
+                      AllItemLoadedText(
+                        title = stringResource(R.string.all_chapters_loaded),
+                        modifier = Modifier
+                          .fillMaxWidth()
+                          .padding(horizontal = 8.dp)
+                          .padding(bottom = 12.dp)
+                      )
+                    }
                   }
                 }
               }
@@ -310,34 +337,21 @@ private fun MangaInfoHeader(
   manga: Manga,
   modifier: Modifier = Modifier
 ) {
-  Box(modifier = modifier) {
-    Card(
+  Row(
+    modifier = modifier,
+    horizontalArrangement = Arrangement.spacedBy(8.dp)
+  ) {
+    MangaCoverArt(
+      manga = manga,
       modifier = Modifier
+        .weight(0.4f)
         .fillMaxWidth()
-        .height(150.dp),
-      shape = RoundedCornerShape(0.dp),
-    ) {}
-    Row(
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = 75.dp)
-        .padding(horizontal = 4.dp),
-      horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-      MangaCoverArt(
-        manga = manga,
-        modifier = Modifier
-          .weight(0.4f)
-          .fillMaxWidth()
-          .height(222.dp)
-      )
-      MangaInfo(
-        manga = manga,
-        modifier = Modifier
-          .weight(0.6f)
-          .padding(top = 75.dp)
-      )
-    }
+        .height(222.dp)
+    )
+    MangaInfo(
+      manga = manga,
+      modifier = Modifier.weight(0.6f)
+    )
   }
 }
 
@@ -407,8 +421,6 @@ private fun MangaInfo(
   manga: Manga,
   modifier: Modifier = Modifier
 ) {
-  var isExpanded by rememberSaveable { mutableStateOf(false) }
-
   Column(
     modifier = modifier,
     verticalArrangement = Arrangement.Center,
@@ -416,13 +428,11 @@ private fun MangaInfo(
   ) {
     Text(
       text = manga.title,
-      style = if (isExpanded) MaterialTheme.typography.titleMedium else MaterialTheme.typography.titleLarge,
+      style = MaterialTheme.typography.titleLarge,
       fontWeight = FontWeight.ExtraBold,
-      maxLines = if (isExpanded) Int.MAX_VALUE else 2,
       overflow = TextOverflow.Ellipsis,
-      modifier = Modifier
-        .padding(bottom = 4.dp)
-        .clickable { isExpanded = !isExpanded })
+      modifier = Modifier.padding(bottom = 4.dp)
+    )
     Text(
       text = stringResource(R.string.author, manga.author),
       fontWeight = FontWeight.Bold,
