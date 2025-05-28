@@ -2,23 +2,23 @@ package com.decoutkhanqindev.dexreader.ui.screens.search
 
 import com.decoutkhanqindev.dexreader.domain.model.Manga
 
-sealed interface SearchSuggestionsUiState {
-  data object Loading : SearchSuggestionsUiState
-  data object Error : SearchSuggestionsUiState
-  data object Success : SearchSuggestionsUiState
+sealed interface SearchMangaSuggestionsUiState {
+  data object Loading : SearchMangaSuggestionsUiState
+  data object Error : SearchMangaSuggestionsUiState
+  data object Success : SearchMangaSuggestionsUiState
 }
 
-sealed interface SearchResultsUiState {
-  data object FirstPageLoading : SearchResultsUiState
-  data object FirstPageError : SearchResultsUiState
+sealed interface SearchMangaResultsUiState {
+  data object FirstPageLoading : SearchMangaResultsUiState
+  data object FirstPageError : SearchMangaResultsUiState
   data class Content(
-    val items: List<Manga> = emptyList(),
+    val mangaList: List<Manga> = emptyList(),
     val currentPage: Int = 0,
-    val nextPageState: SearchMangaListNextPageState = SearchMangaListNextPageState.IDLE
-  ) : SearchResultsUiState
+    val nextPageState: SearchMangaResultsNextPageState = SearchMangaResultsNextPageState.IDLE
+  ) : SearchMangaResultsUiState
 }
 
-enum class SearchMangaListNextPageState {
+enum class SearchMangaResultsNextPageState {
   LOADING,
   ERROR,
   IDLE,

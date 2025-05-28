@@ -22,36 +22,37 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
   private val searchMangaUseCase: SearchMangaUseCase
 ) : ViewModel() {
-  private val _suggestionsUiState =
-    MutableStateFlow<SearchSuggestionsUiState>(SearchSuggestionsUiState.Loading)
-  val suggestionsUiState: StateFlow<SearchSuggestionsUiState> = _suggestionsUiState.asStateFlow()
+  private val _mangaSuggestionsUiState =
+    MutableStateFlow<SearchMangaSuggestionsUiState>(SearchMangaSuggestionsUiState.Loading)
+  val mangaSuggestionsUiState: StateFlow<SearchMangaSuggestionsUiState> =
+    _mangaSuggestionsUiState.asStateFlow()
 
-  private val _resultsUiState =
-    MutableStateFlow<SearchResultsUiState>(SearchResultsUiState.FirstPageLoading)
-  val resultsUiState: StateFlow<SearchResultsUiState> = _resultsUiState.asStateFlow()
+  private val _mangaResultsUiState =
+    MutableStateFlow<SearchMangaResultsUiState>(SearchMangaResultsUiState.FirstPageLoading)
+  val mangaResultsUiState: StateFlow<SearchMangaResultsUiState> = _mangaResultsUiState.asStateFlow()
 
   private val _query = MutableStateFlow("")
   val query: StateFlow<String> = _query.asStateFlow()
 
-  val suggestionList = query
+  val mangaSuggestions = query
     .filter { it.isNotEmpty() }
     .debounce(500L)
     .distinctUntilChanged()
     .flatMapLatest { query ->
       flow {
-        _suggestionsUiState.value = SearchSuggestionsUiState.Loading
+        _mangaSuggestionsUiState.value = SearchMangaSuggestionsUiState.Loading
 
-        val results = searchMangaUseCase(query)
-        results
-          .onSuccess { mangaList ->
-            val titles = mangaList.map { it.title }.take(10)
-            _suggestionsUiState.value = SearchSuggestionsUiState.Success
-            emit(titles)
+        val mangaList = searchMangaUseCase(query)
+        mangaList
+          .onSuccess {
+            val titleList = it.map { manga -> manga.title }.take(10)
+            _mangaSuggestionsUiState.value = SearchMangaSuggestionsUiState.Success
+            emit(titleList)
           }
           .onFailure {
-            _suggestionsUiState.value = SearchSuggestionsUiState.Error
+            _mangaSuggestionsUiState.value = SearchMangaSuggestionsUiState.Error
             emit(emptyList())
-            Log.d("SearchViewModel", "suggestionList have error: ${it.stackTraceToString()}")
+            Log.d("SearchViewModel", "mangaSuggestions have error: ${it.stackTraceToString()}")
           }
       }
     }
@@ -61,58 +62,58 @@ class SearchViewModel @Inject constructor(
       initialValue = emptyList()
     )
 
-  fun loadSearchMangaListFirstPage() {
+  fun fetchMangaListFirstPage() {
     viewModelScope.launch {
-      _resultsUiState.value = SearchResultsUiState.FirstPageLoading
+      _mangaResultsUiState.value = SearchMangaResultsUiState.FirstPageLoading
 
       val mangaList = searchMangaUseCase(query.value)
       mangaList
         .onSuccess {
           val hasNextPage = it.size >= 20
-          _resultsUiState.value = SearchResultsUiState.Content(
-            items = it,
+          _mangaResultsUiState.value = SearchMangaResultsUiState.Content(
+            mangaList = it,
             currentPage = 1,
             nextPageState = if (!hasNextPage)
-              SearchMangaListNextPageState.NO_MORE_ITEMS
+              SearchMangaResultsNextPageState.NO_MORE_ITEMS
             else
-              SearchMangaListNextPageState.IDLE
+              SearchMangaResultsNextPageState.IDLE
           )
         }
         .onFailure {
-          _resultsUiState.value = SearchResultsUiState.FirstPageError
+          _mangaResultsUiState.value = SearchMangaResultsUiState.FirstPageError
           Log.d(
             "SearchViewModel",
-            "loadSearchMangaListFirstPage have error: ${it.stackTraceToString()}"
+            "fetchMangaListFirstPage have error: ${it.stackTraceToString()}"
           )
         }
     }
   }
 
-  fun loadSearchMangaListNextPage() {
-    when (val currentUiState = _resultsUiState.value) {
-      SearchResultsUiState.FirstPageLoading,
-      SearchResultsUiState.FirstPageError,
+  fun fetchMangaListNextPage() {
+    when (val currentUiState = _mangaResultsUiState.value) {
+      SearchMangaResultsUiState.FirstPageLoading,
+      SearchMangaResultsUiState.FirstPageError,
         -> return
 
-      is SearchResultsUiState.Content -> {
+      is SearchMangaResultsUiState.Content -> {
         when (currentUiState.nextPageState) {
-          SearchMangaListNextPageState.LOADING,
-          SearchMangaListNextPageState.NO_MORE_ITEMS
+          SearchMangaResultsNextPageState.LOADING,
+          SearchMangaResultsNextPageState.NO_MORE_ITEMS
             -> return
 
-          SearchMangaListNextPageState.ERROR -> loadSearchMangaListFirstPage()
+          SearchMangaResultsNextPageState.ERROR -> fetchMangaListFirstPage()
 
-          SearchMangaListNextPageState.IDLE -> loadSearchMangaListNextPageInternal(currentUiState)
+          SearchMangaResultsNextPageState.IDLE -> fetchMangaListNextPageInternal(currentUiState)
         }
       }
     }
   }
 
-  private fun loadSearchMangaListNextPageInternal(currentUiState: SearchResultsUiState.Content) {
+  private fun fetchMangaListNextPageInternal(currentUiState: SearchMangaResultsUiState.Content) {
     viewModelScope.launch {
-      _resultsUiState.value =
-        currentUiState.copy(nextPageState = SearchMangaListNextPageState.LOADING)
-      val currentItems = currentUiState.items
+      _mangaResultsUiState.value =
+        currentUiState.copy(nextPageState = SearchMangaResultsNextPageState.LOADING)
+      val currentItems = currentUiState.mangaList
       val nextPage = currentUiState.currentPage + 1
 
       val nextMangaList = searchMangaUseCase(
@@ -122,37 +123,37 @@ class SearchViewModel @Inject constructor(
       nextMangaList
         .onSuccess {
           val hasNextPage = it.size >= 20
-          _resultsUiState.value = currentUiState.copy(
-            items = currentItems + it,
+          _mangaResultsUiState.value = currentUiState.copy(
+            mangaList = currentItems + it,
             currentPage = nextPage,
             nextPageState = if (!hasNextPage)
-              SearchMangaListNextPageState.NO_MORE_ITEMS
+              SearchMangaResultsNextPageState.NO_MORE_ITEMS
             else
-              SearchMangaListNextPageState.IDLE
+              SearchMangaResultsNextPageState.IDLE
           )
         }
         .onFailure {
-          _resultsUiState.value =
-            currentUiState.copy(nextPageState = SearchMangaListNextPageState.ERROR)
+          _mangaResultsUiState.value =
+            currentUiState.copy(nextPageState = SearchMangaResultsNextPageState.ERROR)
           Log.d(
             "SearchViewModel",
-            "loadSearchMangaListNextPageInternal have error: ${it.stackTraceToString()}"
+            "fetchMangaListNextPageInternal have error: ${it.stackTraceToString()}"
           )
         }
     }
   }
 
 
-  fun onQueryChange(newQuery: String) {
+  fun updateQuery(newQuery: String) {
     if (newQuery == query.value) return
     _query.value = newQuery
   }
 
   fun retry() {
-    loadSearchMangaListFirstPage()
+    fetchMangaListFirstPage()
   }
 
-  fun retryLoadSearchMangaListNextPage() {
-    loadSearchMangaListNextPage()
+  fun retryFetchMangaListNextPage() {
+    fetchMangaListNextPage()
   }
 }
