@@ -162,14 +162,14 @@ private fun MangaDetailsContent(
           ) {
             // Manga Info
             item {
-              MangaInfoHeader(
+              MangaDetailsHeader(
                 manga = manga,
                 modifier = Modifier
                   .fillMaxWidth()
                   .padding(4.dp)
                   .padding(bottom = 16.dp)
               )
-              MangaSummary(
+              MangaDetailsSummary(
                 manga = manga,
                 onSelectedGenre = onSelectedGenre,
                 modifier = Modifier
@@ -334,7 +334,7 @@ private fun MangaDetailsContent(
 }
 
 @Composable
-private fun MangaInfoHeader(
+private fun MangaDetailsHeader(
   manga: Manga,
   modifier: Modifier = Modifier
 ) {
@@ -342,14 +342,14 @@ private fun MangaInfoHeader(
     modifier = modifier,
     horizontalArrangement = Arrangement.spacedBy(8.dp)
   ) {
-    MangaCoverArt(
+    MangaDetailsCoverArt(
       manga = manga,
       modifier = Modifier
         .weight(0.4f)
         .fillMaxWidth()
         .height(222.dp)
     )
-    MangaInfo(
+    MangaDetailsInfo(
       manga = manga,
       modifier = Modifier.weight(0.6f)
     )
@@ -357,7 +357,7 @@ private fun MangaInfoHeader(
 }
 
 @Composable
-private fun MangaSummary(
+private fun MangaDetailsSummary(
   manga: Manga,
   onSelectedGenre: (String) -> Unit,
   modifier: Modifier = Modifier
@@ -392,7 +392,7 @@ private fun MangaSummary(
 }
 
 @Composable
-private fun MangaCoverArt(
+private fun MangaDetailsCoverArt(
   manga: Manga,
   modifier: Modifier = Modifier
 ) {
@@ -418,7 +418,7 @@ private fun MangaCoverArt(
 }
 
 @Composable
-private fun MangaInfo(
+private fun MangaDetailsInfo(
   manga: Manga,
   modifier: Modifier = Modifier
 ) {
