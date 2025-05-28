@@ -67,7 +67,7 @@ import java.util.Locale
 @Composable
 fun MangaDetailsScreen(
   onNavigateBack: () -> Unit,
-  onSelectedTag: (String) -> Unit,
+  onSelectedGenre: (String) -> Unit,
   onSelectedChapter: (String) -> Unit,
   viewModel: MangaDetailsViewModel = hiltViewModel(),
   modifier: Modifier = Modifier
@@ -92,7 +92,7 @@ fun MangaDetailsScreen(
         onSelectedChapterLanguage = { viewModel.updateChapterLanguage(it.toLanguageCode()) },
         onFetchChapterListNextPage = { viewModel.fetchChapterListNextPage() },
         onRetryFetchChapterListNextPage = { viewModel.retryFetchChapterListNextPage() },
-        onSelectedTag = onSelectedTag,
+        onSelectedGenre = onSelectedGenre,
         onSelectedChapter = onSelectedChapter,
         onRetry = { viewModel.retry() },
         modifier = modifier
@@ -111,7 +111,7 @@ private fun MangaDetailsContent(
   onSelectedChapterLanguage: (String) -> Unit,
   onFetchChapterListNextPage: () -> Unit,
   onRetryFetchChapterListNextPage: () -> Unit,
-  onSelectedTag: (String) -> Unit,
+  onSelectedGenre: (String) -> Unit,
   onSelectedChapter: (String) -> Unit,
   onRetry: () -> Unit,
   modifier: Modifier = Modifier
@@ -171,7 +171,7 @@ private fun MangaDetailsContent(
               )
               MangaSummary(
                 manga = manga,
-                onSelectedTag = onSelectedTag,
+                onSelectedGenre = onSelectedGenre,
                 modifier = Modifier
                   .fillMaxWidth()
                   .padding(bottom = 16.dp)
@@ -194,7 +194,7 @@ private fun MangaDetailsContent(
                     .weight(0.5f)
                     .fillMaxWidth()
                 )
-                ChapterLanguageDropdownMenu(
+                MangaChapterLanguageDropdownMenu(
                   languageList = manga.availableTranslatedLanguages,
                   selectedLanguage = chapterLanguage,
                   onSelectedLanguage = onSelectedChapterLanguage,
@@ -237,7 +237,7 @@ private fun MangaDetailsContent(
                   }
                 } else {
                   items(chapterList, key = { it.id }) { chapter ->
-                    ChapterItem(
+                    MangaChapterItem(
                       chapter = chapter,
                       onSelectedChapter = onSelectedChapter,
                       modifier = Modifier
@@ -311,9 +311,10 @@ private fun MangaDetailsContent(
       }
     }
 
-    val isMoveToTopButtonVisible = mangaDetailsChaptersUiState is MangaDetailsChaptersUiState.Content &&
-        mangaDetailsChaptersUiState.chapterList.size > 20 &&
-        lazyListState.firstVisibleItemIndex > 0
+    val isMoveToTopButtonVisible =
+      mangaDetailsChaptersUiState is MangaDetailsChaptersUiState.Content &&
+          mangaDetailsChaptersUiState.chapterList.size > 20 &&
+          lazyListState.firstVisibleItemIndex > 0
     AnimatedVisibility(
       visible = isMoveToTopButtonVisible,
       modifier = Modifier
@@ -358,7 +359,7 @@ private fun MangaInfoHeader(
 @Composable
 private fun MangaSummary(
   manga: Manga,
-  onSelectedTag: (String) -> Unit,
+  onSelectedGenre: (String) -> Unit,
   modifier: Modifier = Modifier
 ) {
   var isExpanded by rememberSaveable { mutableStateOf(false) }
@@ -382,9 +383,9 @@ private fun MangaSummary(
         .padding(horizontal = 4.dp)
         .clickable { isExpanded = !isExpanded }
         .padding(bottom = 8.dp))
-    TagList(
+    MangaGenreList(
       manga = manga,
-      onSelectedTag = onSelectedTag,
+      onSelectedGenre = onSelectedGenre,
       modifier = Modifier.fillMaxWidth()
     )
   }
@@ -465,9 +466,9 @@ private fun MangaInfo(
 }
 
 @Composable
-private fun TagList(
+private fun MangaGenreList(
   manga: Manga,
-  onSelectedTag: (String) -> Unit,
+  onSelectedGenre: (String) -> Unit,
   modifier: Modifier = Modifier
 ) {
   Box(modifier = modifier) {
@@ -476,10 +477,10 @@ private fun TagList(
       horizontalArrangement = Arrangement.spacedBy(2.dp),
       verticalAlignment = Alignment.CenterVertically,
     ) {
-      items(manga.genres) { tag ->
-        TagItem(
-          tag = tag,
-          onSelectedTag = onSelectedTag,
+      items(manga.genres) { genre ->
+        MangaGenreItem(
+          genre = genre,
+          onSelectedGenre = onSelectedGenre,
           modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 4.dp)
@@ -490,18 +491,18 @@ private fun TagList(
 }
 
 @Composable
-private fun TagItem(
-  tag: String,
-  onSelectedTag: (String) -> Unit,
+private fun MangaGenreItem(
+  genre: String,
+  onSelectedGenre: (String) -> Unit,
   modifier: Modifier = Modifier
 ) {
   Card(
     modifier = modifier,
     shape = MaterialTheme.shapes.large,
     elevation = CardDefaults.cardElevation(4.dp),
-    onClick = { onSelectedTag(tag) }) {
+    onClick = { onSelectedGenre(genre) }) {
     Text(
-      text = tag,
+      text = genre,
       style = MaterialTheme.typography.bodyMedium,
       fontWeight = FontWeight.Bold,
       textAlign = TextAlign.Center,
@@ -513,7 +514,7 @@ private fun TagItem(
 }
 
 @Composable
-private fun ChapterItem(
+private fun MangaChapterItem(
   chapter: Chapter,
   onSelectedChapter: (String) -> Unit,
   modifier: Modifier = Modifier
@@ -594,7 +595,7 @@ private fun ChapterItem(
 }
 
 @Composable
-private fun ChapterLanguageDropdownMenu(
+private fun MangaChapterLanguageDropdownMenu(
   languageList: List<String>,
   selectedLanguage: String,
   onSelectedLanguage: (String) -> Unit,
@@ -632,7 +633,7 @@ private fun ChapterLanguageDropdownMenu(
         )
       } else {
         languageList.forEach { language ->
-          ChapterLanguageDropdownItem(
+          MangaChapterLanguageDropdownItem(
             language = language,
             isSelected = language == selectedLanguage,
             onSelectedLanguage = {
@@ -648,7 +649,7 @@ private fun ChapterLanguageDropdownMenu(
 }
 
 @Composable
-private fun ChapterLanguageDropdownItem(
+private fun MangaChapterLanguageDropdownItem(
   language: String,
   isSelected: Boolean,
   onSelectedLanguage: () -> Unit,
