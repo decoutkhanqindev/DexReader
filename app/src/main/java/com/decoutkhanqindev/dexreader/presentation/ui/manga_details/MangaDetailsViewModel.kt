@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.ui.screens.details
+package com.decoutkhanqindev.dexreader.presentation.ui.manga_details
 
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
@@ -21,13 +21,13 @@ class MangaDetailsViewModel @Inject constructor(
 ) : ViewModel() {
   private val mangaId: String = checkNotNull(savedStateHandle[MangaDetailsDestination.mangaIdArg])
 
-  private val _mangaDetailsInfoUiState =
-    MutableStateFlow<MangaDetailsInfoUiState>(MangaDetailsInfoUiState.Loading)
-  val mangaDetailsInfoUiState: StateFlow<MangaDetailsInfoUiState> = _mangaDetailsInfoUiState.asStateFlow()
+  private val _mangaDetailsUiState =
+    MutableStateFlow<MangaDetailsUiState>(MangaDetailsUiState.Loading)
+  val mangaDetailsUiState: StateFlow<MangaDetailsUiState> = _mangaDetailsUiState.asStateFlow()
 
-  private val _mangaDetailsChaptersUiState =
-    MutableStateFlow<MangaDetailsChaptersUiState>(MangaDetailsChaptersUiState.FirstPageLoading)
-  val mangaDetailsChaptersUiState: StateFlow<MangaDetailsChaptersUiState> = _mangaDetailsChaptersUiState.asStateFlow()
+  private val _mangaChaptersUiState =
+    MutableStateFlow<MangaChaptersUiState>(MangaChaptersUiState.FirstPageLoading)
+  val mangaChaptersUiState: StateFlow<MangaChaptersUiState> = _mangaChaptersUiState.asStateFlow()
 
   private val _chapterLanguage = MutableStateFlow("en")
   val chapterLanguage: StateFlow<String> = _chapterLanguage.asStateFlow()
@@ -42,10 +42,10 @@ class MangaDetailsViewModel @Inject constructor(
       val mangaDetails = getMangaDetailsUseCase(mangaId)
       mangaDetails
         .onSuccess {
-          _mangaDetailsInfoUiState.value = MangaDetailsInfoUiState.Success(manga = it)
+          _mangaDetailsUiState.value = MangaDetailsUiState.Success(manga = it)
         }
         .onFailure {
-          _mangaDetailsInfoUiState.value = MangaDetailsInfoUiState.Error
+          _mangaDetailsUiState.value = MangaDetailsUiState.Error
           Log.d("MangaDetailsViewModel", "getManga have error: ${it.stackTraceToString()}")
         }
     }
@@ -53,7 +53,7 @@ class MangaDetailsViewModel @Inject constructor(
 
   private fun fetchChapterListFirstPage() {
     viewModelScope.launch {
-      _mangaDetailsChaptersUiState.value = MangaDetailsChaptersUiState.FirstPageLoading
+      _mangaChaptersUiState.value = MangaChaptersUiState.FirstPageLoading
 
       val chapterList = getChapterListUseCase(
         mangaId = mangaId,
@@ -62,17 +62,17 @@ class MangaDetailsViewModel @Inject constructor(
       chapterList
         .onSuccess {
           val hasNextPage = it.size >= 20
-          _mangaDetailsChaptersUiState.value = MangaDetailsChaptersUiState.Content(
+          _mangaChaptersUiState.value = MangaChaptersUiState.Content(
             chapterList = it,
             currentPage = 1,
             nextPageState = if (!hasNextPage)
-              MangaDetailsChaptersNextPageState.NO_MORE_ITEMS
+              MangaChaptersNextPageState.NO_MORE_ITEMS
             else
-              MangaDetailsChaptersNextPageState.IDLE
+              MangaChaptersNextPageState.IDLE
           )
         }
         .onFailure {
-          _mangaDetailsChaptersUiState.value = MangaDetailsChaptersUiState.FirstPageError
+          _mangaChaptersUiState.value = MangaChaptersUiState.FirstPageError
           Log.d(
             "MangaDetailsViewModel",
             "fetchChapterListFirstPage have error: ${it.stackTraceToString()}"
@@ -82,29 +82,29 @@ class MangaDetailsViewModel @Inject constructor(
   }
 
   fun fetchChapterListNextPage() {
-    when (val currentUiState = _mangaDetailsChaptersUiState.value) {
-      MangaDetailsChaptersUiState.FirstPageLoading,
-      MangaDetailsChaptersUiState.FirstPageError,
+    when (val currentUiState = _mangaChaptersUiState.value) {
+      MangaChaptersUiState.FirstPageLoading,
+      MangaChaptersUiState.FirstPageError,
         -> return
 
-      is MangaDetailsChaptersUiState.Content -> {
+      is MangaChaptersUiState.Content -> {
         when (currentUiState.nextPageState) {
-          MangaDetailsChaptersNextPageState.LOADING,
-          MangaDetailsChaptersNextPageState.NO_MORE_ITEMS
+          MangaChaptersNextPageState.LOADING,
+          MangaChaptersNextPageState.NO_MORE_ITEMS
             -> return
 
-          MangaDetailsChaptersNextPageState.ERROR -> fetchChapterListFirstPage()
+          MangaChaptersNextPageState.ERROR -> fetchChapterListFirstPage()
 
-          MangaDetailsChaptersNextPageState.IDLE -> fetchChapterListNextPageInternal(currentUiState)
+          MangaChaptersNextPageState.IDLE -> fetchChapterListNextPageInternal(currentUiState)
         }
       }
     }
   }
 
-  private fun fetchChapterListNextPageInternal(currentUiState: MangaDetailsChaptersUiState.Content) {
+  private fun fetchChapterListNextPageInternal(currentUiState: MangaChaptersUiState.Content) {
     viewModelScope.launch {
-      _mangaDetailsChaptersUiState.value =
-        currentUiState.copy(nextPageState = MangaDetailsChaptersNextPageState.LOADING)
+      _mangaChaptersUiState.value =
+        currentUiState.copy(nextPageState = MangaChaptersNextPageState.LOADING)
       val currentItems = currentUiState.chapterList
       val nextPage: Int = currentUiState.currentPage + 1
 
@@ -116,17 +116,17 @@ class MangaDetailsViewModel @Inject constructor(
       nextChapterList
         .onSuccess {
           val hasNextPage = it.size >= 20
-          _mangaDetailsChaptersUiState.value = currentUiState.copy(
+          _mangaChaptersUiState.value = currentUiState.copy(
             chapterList = currentItems + it,
             currentPage = nextPage,
             nextPageState = if (!hasNextPage)
-              MangaDetailsChaptersNextPageState.NO_MORE_ITEMS
+              MangaChaptersNextPageState.NO_MORE_ITEMS
             else
-              MangaDetailsChaptersNextPageState.IDLE
+              MangaChaptersNextPageState.IDLE
           )
         }
         .onFailure {
-          _mangaDetailsChaptersUiState.value = MangaDetailsChaptersUiState.FirstPageError
+          _mangaChaptersUiState.value = MangaChaptersUiState.FirstPageError
           Log.d(
             "MangaDetailsViewModel",
             "fetchChapterListNextPageInternal have error: ${it.stackTraceToString()}"

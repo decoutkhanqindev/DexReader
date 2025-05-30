@@ -1,6 +1,6 @@
-package com.decoutkhanqindev.dexreader.ui.screens.details
+package com.decoutkhanqindev.dexreader.presentation.ui.manga_details
 
-import com.decoutkhanqindev.dexreader.ui.navigation.NavigationDestination
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavigationDestination
 
 object MangaDetailsDestination: NavigationDestination {
   override val route: String = "manga_details"
