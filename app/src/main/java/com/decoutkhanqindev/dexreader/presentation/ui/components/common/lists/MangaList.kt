@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.ui.components.content.list
+package com.decoutkhanqindev.dexreader.presentation.ui.components.common.lists
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -41,7 +41,7 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.Manga
-import com.decoutkhanqindev.dexreader.ui.components.content.button.MoveToTopButton
+import com.decoutkhanqindev.dexreader.presentation.ui.components.common.buttons.MoveToTopButton
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -110,7 +110,7 @@ fun VerticalGridMangaList(
       }
     }
 
-    val isVisibleFloatingButton = mangaList.size > 20 && lazyGridState.firstVisibleItemIndex > 0
+    val isVisibleFloatingButton = mangaList.size > 15 && lazyGridState.firstVisibleItemIndex > 0
     AnimatedVisibility(
       visible = isVisibleFloatingButton,
       modifier = Modifier
