@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.ui.components.states
+package com.decoutkhanqindev.dexreader.presentation.ui.search.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 
 @Composable
-fun NotFoundScreen(
+fun NotFoundMessage(
   message: String,
   modifier: Modifier = Modifier,
 ) {
