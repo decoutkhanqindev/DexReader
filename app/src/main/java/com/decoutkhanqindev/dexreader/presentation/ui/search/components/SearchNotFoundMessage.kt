@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 
 @Composable
-fun NotFoundMessage(
+fun SearchNotFoundMessage(
   message: String,
   modifier: Modifier = Modifier,
 ) {

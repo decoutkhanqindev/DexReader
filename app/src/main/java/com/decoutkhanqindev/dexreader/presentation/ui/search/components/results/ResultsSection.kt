@@ -16,7 +16,7 @@ import com.decoutkhanqindev.dexreader.presentation.ui.components.states.ErrorScr
 import com.decoutkhanqindev.dexreader.presentation.ui.components.states.ListLoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.search.ResultsNextPageState
 import com.decoutkhanqindev.dexreader.presentation.ui.search.ResultsUiState
-import com.decoutkhanqindev.dexreader.presentation.ui.search.components.NotFoundMessage
+import com.decoutkhanqindev.dexreader.presentation.ui.search.components.SearchNotFoundMessage
 
 @Composable
 fun ResultsSection(
@@ -42,7 +42,7 @@ fun ResultsSection(
       val nextPageState = resultsUiState.nextPageState
 
       if (mangaList.isEmpty()) {
-        NotFoundMessage(
+        SearchNotFoundMessage(
           message = stringResource(R.string.sorry_no_manga_found_with_title, query),
           modifier = modifier
         )

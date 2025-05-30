@@ -19,9 +19,9 @@ fun SearchContent(
   isExpanded: Boolean,
   suggestionList: List<String>,
   onSelectedSuggestion: (String) -> Unit,
+  onSelectedManga: (String) -> Unit,
   onFetchMangaListNextPage: () -> Unit,
   onRetryFetchMangaListNextPage: () -> Unit,
-  onSelectedManga: (String) -> Unit,
   onRetry: () -> Unit,
   modifier: Modifier = Modifier
 ) {
