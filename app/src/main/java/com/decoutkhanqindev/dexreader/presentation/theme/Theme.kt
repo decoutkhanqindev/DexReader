@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.ui.theme
+package com.decoutkhanqindev.dexreader.presentation.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.ui.theme
+package com.decoutkhanqindev.dexreader.presentation.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

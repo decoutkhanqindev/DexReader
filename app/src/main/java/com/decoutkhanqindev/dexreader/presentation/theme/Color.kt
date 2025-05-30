@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.ui.theme
+package com.decoutkhanqindev.dexreader.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
