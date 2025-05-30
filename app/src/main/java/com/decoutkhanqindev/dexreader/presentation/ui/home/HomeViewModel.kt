@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.ui.screens.home
+package com.decoutkhanqindev.dexreader.presentation.ui.home
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

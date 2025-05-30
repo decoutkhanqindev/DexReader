@@ -1,7 +1,6 @@
-package com.decoutkhanqindev.dexreader.ui.components.content.bar
+package com.decoutkhanqindev.dexreader.presentation.ui.home.components
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -44,39 +43,6 @@ fun HomeTopBar(
       IconButton(onClick = onSearchClick) {
         Icon(
           imageVector = Icons.Default.Search, contentDescription = stringResource(R.string.search)
-        )
-      }
-    },
-    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-      containerColor = MaterialTheme.colorScheme.primaryContainer,
-      titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-      navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-      actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-    ),
-    modifier = modifier
-  )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MangaDetailsTopBar(
-  title: String,
-  onNavigateBack: () -> Unit,
-  modifier: Modifier = Modifier
-) {
-  CenterAlignedTopAppBar(
-    title = {
-      Text(
-        text = title,
-        style = MaterialTheme.typography.headlineSmall,
-        fontWeight = FontWeight.ExtraBold,
-      )
-    },
-    navigationIcon = {
-      IconButton(onClick = onNavigateBack) {
-        Icon(
-          imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-          contentDescription = stringResource(R.string.back)
         )
       }
     },
