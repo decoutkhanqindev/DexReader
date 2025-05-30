@@ -18,7 +18,7 @@ fun ReadingButton(
 ) {
   OutlinedButton(
     onClick = { onReadingClick },
-    shape = MaterialTheme.shapes.large,
+    shape = MaterialTheme.shapes.medium,
     colors = ButtonDefaults.outlinedButtonColors(
       containerColor = MaterialTheme.colorScheme.surface.copy(0.7f)
     ),

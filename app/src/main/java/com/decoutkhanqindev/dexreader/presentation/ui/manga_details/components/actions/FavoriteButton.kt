@@ -19,7 +19,7 @@ fun FavoriteButton(
 ) {
   OutlinedButton(
     onClick = { onFavoriteClick },
-    shape = MaterialTheme.shapes.large,
+    shape = MaterialTheme.shapes.medium,
     colors = ButtonDefaults.outlinedButtonColors(
       containerColor = if (isFavorite)
         Color.Red
