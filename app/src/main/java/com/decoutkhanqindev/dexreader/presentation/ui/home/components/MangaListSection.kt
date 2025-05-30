@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.domain.model.Manga
-import com.decoutkhanqindev.dexreader.presentation.ui.components.common.lists.HorizontalMangaList
+import com.decoutkhanqindev.dexreader.presentation.ui.common.lists.HorizontalMangaList
 
 
 @Composable

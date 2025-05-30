@@ -9,10 +9,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
-import com.decoutkhanqindev.dexreader.presentation.ui.components.common.indicators.NextPageLoadingIndicator
-import com.decoutkhanqindev.dexreader.presentation.ui.components.common.texts.AllItemLoadedText
-import com.decoutkhanqindev.dexreader.presentation.ui.components.common.texts.LoadMoreText
-import com.decoutkhanqindev.dexreader.presentation.ui.components.common.texts.NextPageErrorText
+import com.decoutkhanqindev.dexreader.presentation.ui.common.indicators.NextPageLoadingIndicator
+import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.AllItemLoadedMessage
+import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.LoadMoreMessage
+import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.NextPageErrorMessage
 import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.MangaChaptersNextPageState
 
 @Composable
@@ -48,7 +48,7 @@ fun MangaChapterList(
           )
 
         MangaChaptersNextPageState.ERROR ->
-          NextPageErrorText(
+          NextPageErrorMessage(
             message = stringResource(R.string.can_t_load_next_chapter_page_please_try_again),
             onRetryFetchNextPage = onRetryFetchChapterListNextPage,
             modifier = Modifier
@@ -57,7 +57,7 @@ fun MangaChapterList(
           )
 
         MangaChaptersNextPageState.IDLE ->
-          LoadMoreText(
+          LoadMoreMessage(
             onLoadMore = onFetchChapterListNextPage,
             modifier = Modifier
               .fillMaxWidth()
@@ -66,7 +66,7 @@ fun MangaChapterList(
           )
 
         MangaChaptersNextPageState.NO_MORE_ITEMS ->
-          AllItemLoadedText(
+          AllItemLoadedMessage(
             title = stringResource(R.string.all_chapters_loaded),
             modifier = Modifier
               .fillMaxWidth()

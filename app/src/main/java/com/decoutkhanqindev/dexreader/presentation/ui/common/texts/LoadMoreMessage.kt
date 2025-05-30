@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.ui.components.common.texts
+package com.decoutkhanqindev.dexreader.presentation.ui.common.texts
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import com.decoutkhanqindev.dexreader.R
 
 @Composable
-fun LoadMoreText(
+fun LoadMoreMessage(
   onLoadMore: () -> Unit,
   modifier: Modifier = Modifier
 ) {

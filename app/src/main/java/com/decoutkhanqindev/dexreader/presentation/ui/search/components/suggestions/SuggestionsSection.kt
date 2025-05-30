@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.ui.components.common.states.ErrorScreen
-import com.decoutkhanqindev.dexreader.presentation.ui.components.common.states.ListLoadingScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.common.indicators.ListLoadingIndicator
+import com.decoutkhanqindev.dexreader.presentation.ui.common.states.ErrorScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.search.SuggestionsUiState
 import com.decoutkhanqindev.dexreader.presentation.ui.search.components.SearchNotFoundMessage
 
@@ -19,7 +19,7 @@ fun SuggestionsSection(
   modifier: Modifier = Modifier
 ) {
   when (suggestionsUiState) {
-    SuggestionsUiState.Loading -> ListLoadingScreen(modifier = modifier)
+    SuggestionsUiState.Loading -> ListLoadingIndicator(modifier = modifier)
 
     SuggestionsUiState.Error -> ErrorScreen(
       message = stringResource(R.string.oops_something_went_wrong_please_try_again),

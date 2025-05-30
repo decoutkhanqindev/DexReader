@@ -18,9 +18,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.ui.components.common.buttons.MoveToTopButton
-import com.decoutkhanqindev.dexreader.presentation.ui.components.common.states.ErrorScreen
-import com.decoutkhanqindev.dexreader.presentation.ui.components.common.states.LoadingScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.common.buttons.MoveToTopButton
+import com.decoutkhanqindev.dexreader.presentation.ui.common.states.ErrorScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.MangaChaptersUiState
 import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.MangaDetailsUiState
 import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.components.actions.ActionButtonsSection

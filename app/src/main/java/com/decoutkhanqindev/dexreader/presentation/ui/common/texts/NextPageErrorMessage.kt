@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.ui.components.common.texts
+package com.decoutkhanqindev.dexreader.presentation.ui.common.texts
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -19,7 +19,7 @@ import com.decoutkhanqindev.dexreader.R
 
 
 @Composable
-fun NextPageErrorText(
+fun NextPageErrorMessage(
   message: String,
   onRetryFetchNextPage: () -> Unit,
   modifier: Modifier = Modifier,

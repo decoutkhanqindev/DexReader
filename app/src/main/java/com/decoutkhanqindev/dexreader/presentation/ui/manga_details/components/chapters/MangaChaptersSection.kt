@@ -11,8 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.ui.components.common.states.ListLoadingScreen
-import com.decoutkhanqindev.dexreader.presentation.ui.components.common.texts.NextPageErrorText
+import com.decoutkhanqindev.dexreader.presentation.ui.common.indicators.ListLoadingIndicator
+import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.NextPageErrorMessage
 import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.MangaChaptersUiState
 
 
@@ -39,8 +39,8 @@ fun MangaChaptersSection(
     )
 
     when (mangaChaptersUiState) {
-      MangaChaptersUiState.FirstPageLoading -> ListLoadingScreen(modifier = Modifier.fillMaxSize())
-      MangaChaptersUiState.FirstPageError -> NextPageErrorText(
+      MangaChaptersUiState.FirstPageLoading -> ListLoadingIndicator(modifier = Modifier.fillMaxSize())
+      MangaChaptersUiState.FirstPageError -> NextPageErrorMessage(
         message = stringResource(R.string.something_went_wrong_while_loading_chapters_please_try_again),
         onRetryFetchNextPage = onRetryFetchChapterListNextPage,
         modifier = Modifier

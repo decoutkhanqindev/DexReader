@@ -7,13 +7,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.ui.components.common.indicators.NextPageLoadingIndicator
-import com.decoutkhanqindev.dexreader.presentation.ui.components.common.lists.VerticalGridMangaList
-import com.decoutkhanqindev.dexreader.presentation.ui.components.common.states.ErrorScreen
-import com.decoutkhanqindev.dexreader.presentation.ui.components.common.states.ListLoadingScreen
-import com.decoutkhanqindev.dexreader.presentation.ui.components.common.texts.AllItemLoadedText
-import com.decoutkhanqindev.dexreader.presentation.ui.components.common.texts.LoadMoreText
-import com.decoutkhanqindev.dexreader.presentation.ui.components.common.texts.NextPageErrorText
+import com.decoutkhanqindev.dexreader.presentation.ui.common.indicators.ListLoadingIndicator
+import com.decoutkhanqindev.dexreader.presentation.ui.common.indicators.NextPageLoadingIndicator
+import com.decoutkhanqindev.dexreader.presentation.ui.common.lists.VerticalGridMangaList
+import com.decoutkhanqindev.dexreader.presentation.ui.common.states.ErrorScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.AllItemLoadedMessage
+import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.LoadMoreMessage
+import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.NextPageErrorMessage
 import com.decoutkhanqindev.dexreader.presentation.ui.search.ResultsNextPageState
 import com.decoutkhanqindev.dexreader.presentation.ui.search.ResultsUiState
 import com.decoutkhanqindev.dexreader.presentation.ui.search.components.SearchNotFoundMessage
@@ -29,7 +29,7 @@ fun ResultsSection(
   modifier: Modifier = Modifier
 ) {
   when (resultsUiState) {
-    ResultsUiState.FirstPageLoading -> ListLoadingScreen(modifier = modifier)
+    ResultsUiState.FirstPageLoading -> ListLoadingIndicator(modifier = modifier)
 
     ResultsUiState.FirstPageError -> ErrorScreen(
       message = stringResource(R.string.oops_something_went_wrong_please_try_again),
@@ -58,7 +58,7 @@ fun ResultsSection(
                   .padding(bottom = 12.dp)
               )
 
-              ResultsNextPageState.ERROR -> NextPageErrorText(
+              ResultsNextPageState.ERROR -> NextPageErrorMessage(
                 message = stringResource(R.string.can_t_load_next_manga_page_please_try_again),
                 onRetryFetchNextPage = onRetryFetchMangaListNextPage,
                 modifier = Modifier
@@ -66,7 +66,7 @@ fun ResultsSection(
                   .padding(top = 8.dp)
               )
 
-              ResultsNextPageState.IDLE -> LoadMoreText(
+              ResultsNextPageState.IDLE -> LoadMoreMessage(
                 onLoadMore = onFetchMangaListNextPage,
                 modifier = Modifier
                   .fillMaxWidth()
@@ -74,7 +74,7 @@ fun ResultsSection(
                   .padding(bottom = 12.dp)
               )
 
-              ResultsNextPageState.NO_MORE_ITEMS -> AllItemLoadedText(
+              ResultsNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
                 title = stringResource(R.string.all_mangas_loaded),
                 modifier = Modifier
                   .fillMaxWidth()

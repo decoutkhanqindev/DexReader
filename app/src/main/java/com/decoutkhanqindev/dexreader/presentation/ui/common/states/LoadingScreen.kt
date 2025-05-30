@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.ui.components.common.states
+package com.decoutkhanqindev.dexreader.presentation.ui.common.states
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

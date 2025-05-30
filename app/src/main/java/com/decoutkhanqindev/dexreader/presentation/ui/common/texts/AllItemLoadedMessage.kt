@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.ui.components.common.texts
+package com.decoutkhanqindev.dexreader.presentation.ui.common.texts
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -13,7 +13,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 
 @Composable
-fun AllItemLoadedText(
+fun AllItemLoadedMessage(
   title: String,
   modifier: Modifier = Modifier
 ) {
