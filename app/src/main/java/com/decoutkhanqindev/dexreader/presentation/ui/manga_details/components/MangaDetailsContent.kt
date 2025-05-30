@@ -43,6 +43,7 @@ fun MangaDetailsContent(
   onSelectedChapter: (String) -> Unit,
   onFetchChapterListNextPage: () -> Unit,
   onRetryFetchChapterListNextPage: () -> Unit,
+  onRetryFetchChapterListFirstPage: () -> Unit,
   onRetry: () -> Unit,
   modifier: Modifier = Modifier
 ) {
@@ -132,6 +133,7 @@ fun MangaDetailsContent(
                 onSelectedChapter = onSelectedChapter,
                 onFetchChapterListNextPage = onFetchChapterListNextPage,
                 onRetryFetchChapterListNextPage = onRetryFetchChapterListNextPage,
+                onRetry = onRetryFetchChapterListFirstPage,
                 modifier = Modifier.fillMaxWidth()
               )
             }

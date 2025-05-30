@@ -56,6 +56,7 @@ fun MangaDetailsScreen(
         onSelectedChapter = onSelectedChapter,
         onFetchChapterListNextPage = { viewModel.fetchChapterListNextPage() },
         onRetryFetchChapterListNextPage = { viewModel.retryFetchChapterListNextPage() },
+        onRetryFetchChapterListFirstPage = { viewModel.retryFetchChapterListFirstPage() },
         onRetry = { viewModel.retry() },
         modifier = modifier
           .padding(innerPadding)

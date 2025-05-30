@@ -19,9 +19,9 @@ import com.decoutkhanqindev.dexreader.R
 
 
 @Composable
-fun NextPageErrorMessage(
+fun LoadPageErrorMessage(
   message: String,
-  onRetryFetchNextPage: () -> Unit,
+  onRetry: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Row(
@@ -36,7 +36,7 @@ fun NextPageErrorMessage(
       fontStyle = FontStyle.Italic,
       textAlign = TextAlign.Center,
     )
-    IconButton(onClick = onRetryFetchNextPage) {
+    IconButton(onClick = onRetry) {
       Icon(
         imageVector = Icons.Default.Refresh,
         contentDescription = stringResource(R.string.retry),

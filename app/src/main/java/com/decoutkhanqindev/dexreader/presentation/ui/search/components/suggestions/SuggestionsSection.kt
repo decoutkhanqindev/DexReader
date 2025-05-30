@@ -15,7 +15,6 @@ fun SuggestionsSection(
   suggestionsUiState: SuggestionsUiState,
   suggestionList: List<String>,
   onSelectedSuggestion: (String) -> Unit,
-  onRetry: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   when (suggestionsUiState) {
@@ -23,7 +22,7 @@ fun SuggestionsSection(
 
     SuggestionsUiState.Error -> ErrorScreen(
       message = stringResource(R.string.oops_something_went_wrong_please_try_again),
-      onRetry = onRetry,
+      onRetry = {},
       modifier = modifier
     )
 

@@ -39,7 +39,6 @@ fun SearchContent(
       suggestionsUiState = suggestionsUiState,
       suggestionList = suggestionList,
       onSelectedSuggestion = onSelectedSuggestion,
-      onRetry = onRetry,
       modifier = modifier
     )
   } else {

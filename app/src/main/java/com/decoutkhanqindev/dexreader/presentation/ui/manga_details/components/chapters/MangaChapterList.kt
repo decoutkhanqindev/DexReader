@@ -12,7 +12,7 @@ import com.decoutkhanqindev.dexreader.domain.model.Chapter
 import com.decoutkhanqindev.dexreader.presentation.ui.common.indicators.NextPageLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.AllItemLoadedMessage
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.LoadMoreMessage
-import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.NextPageErrorMessage
+import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.LoadPageErrorMessage
 import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.MangaChaptersNextPageState
 
 @Composable
@@ -40,39 +40,35 @@ fun MangaChapterList(
       }
 
       when (chapterListNextPageState) {
-        MangaChaptersNextPageState.LOADING ->
-          NextPageLoadingIndicator(
-            modifier = Modifier
-              .fillMaxWidth()
-              .padding(bottom = 12.dp)
-          )
+        MangaChaptersNextPageState.LOADING -> NextPageLoadingIndicator(
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 12.dp)
+        )
 
-        MangaChaptersNextPageState.ERROR ->
-          NextPageErrorMessage(
-            message = stringResource(R.string.can_t_load_next_chapter_page_please_try_again),
-            onRetryFetchNextPage = onRetryFetchChapterListNextPage,
-            modifier = Modifier
-              .fillMaxWidth()
-              .padding(top = 8.dp)
-          )
+        MangaChaptersNextPageState.ERROR -> LoadPageErrorMessage(
+          message = stringResource(R.string.can_t_load_next_chapter_page_please_try_again),
+          onRetry = onRetryFetchChapterListNextPage,
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp)
+        )
 
-        MangaChaptersNextPageState.IDLE ->
-          LoadMoreMessage(
-            onLoadMore = onFetchChapterListNextPage,
-            modifier = Modifier
-              .fillMaxWidth()
-              .padding(horizontal = 8.dp)
-              .padding(bottom = 12.dp)
-          )
+        MangaChaptersNextPageState.IDLE -> LoadMoreMessage(
+          onLoadMore = onFetchChapterListNextPage,
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp)
+            .padding(bottom = 12.dp)
+        )
 
-        MangaChaptersNextPageState.NO_MORE_ITEMS ->
-          AllItemLoadedMessage(
-            title = stringResource(R.string.all_chapters_loaded),
-            modifier = Modifier
-              .fillMaxWidth()
-              .padding(horizontal = 8.dp)
-              .padding(bottom = 12.dp)
-          )
+        MangaChaptersNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
+          title = stringResource(R.string.all_chapters_loaded),
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp)
+            .padding(bottom = 12.dp)
+        )
       }
     }
   }

@@ -13,7 +13,7 @@ import com.decoutkhanqindev.dexreader.presentation.ui.common.lists.VerticalGridM
 import com.decoutkhanqindev.dexreader.presentation.ui.common.states.ErrorScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.AllItemLoadedMessage
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.LoadMoreMessage
-import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.NextPageErrorMessage
+import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.LoadPageErrorMessage
 import com.decoutkhanqindev.dexreader.presentation.ui.search.ResultsNextPageState
 import com.decoutkhanqindev.dexreader.presentation.ui.search.ResultsUiState
 import com.decoutkhanqindev.dexreader.presentation.ui.search.components.SearchNotFoundMessage
@@ -58,9 +58,9 @@ fun ResultsSection(
                   .padding(bottom = 12.dp)
               )
 
-              ResultsNextPageState.ERROR -> NextPageErrorMessage(
+              ResultsNextPageState.ERROR -> LoadPageErrorMessage(
                 message = stringResource(R.string.can_t_load_next_manga_page_please_try_again),
-                onRetryFetchNextPage = onRetryFetchMangaListNextPage,
+                onRetry = onRetryFetchMangaListNextPage,
                 modifier = Modifier
                   .fillMaxWidth()
                   .padding(top = 8.dp)

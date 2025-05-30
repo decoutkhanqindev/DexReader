@@ -146,6 +146,10 @@ class MangaDetailsViewModel @Inject constructor(
     fetchChapterListFirstPage()
   }
 
+  fun retryFetchChapterListFirstPage() {
+    fetchChapterListFirstPage()
+  }
+
   fun retryFetchChapterListNextPage() {
     fetchChapterListNextPage()
   }
