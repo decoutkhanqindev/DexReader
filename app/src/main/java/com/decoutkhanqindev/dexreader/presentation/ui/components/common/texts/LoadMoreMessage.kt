@@ -1,5 +1,6 @@
-package com.decoutkhanqindev.dexreader.ui.components.content.text
+package com.decoutkhanqindev.dexreader.presentation.ui.components.common.texts
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,29 +10,31 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
+import com.decoutkhanqindev.dexreader.R
 
 @Composable
-fun AllItemLoadedText(
-  title: String,
+fun LoadMoreText(
+  onLoadMore: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   Row(
-    modifier = modifier,
+    modifier = modifier.clickable { onLoadMore() },
     horizontalArrangement = Arrangement.Center,
     verticalAlignment = Alignment.CenterVertically
   ) {
-    HorizontalDivider(modifier = Modifier.weight(0.8f))
+    HorizontalDivider(modifier = Modifier.weight(1f))
     Text(
-      text = title,
+      text = stringResource(R.string.load_more),
       style = MaterialTheme.typography.bodyMedium,
       fontStyle = FontStyle.Italic,
       textAlign = TextAlign.Center,
       modifier = Modifier
-        .weight(1.4f)
+        .weight(1f)
         .fillMaxWidth()
     )
-    HorizontalDivider(modifier = Modifier.weight(0.8f))
+    HorizontalDivider(modifier = Modifier.weight(1f))
   }
 }

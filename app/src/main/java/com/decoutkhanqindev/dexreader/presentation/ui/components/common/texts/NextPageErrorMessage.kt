@@ -1,11 +1,9 @@
-package com.decoutkhanqindev.dexreader.ui.components.states
+package com.decoutkhanqindev.dexreader.presentation.ui.components.common.texts
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -17,24 +15,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 
-@Composable
-fun NextPageLoadingScreen(modifier: Modifier = Modifier) {
-  Box(
-    modifier = modifier,
-    contentAlignment = Alignment.BottomCenter
-  ) {
-    CircularProgressIndicator(strokeWidth = 6.dp)
-  }
-}
-
 
 @Composable
-fun LoadPageErrorScreen(
+fun NextPageErrorText(
   message: String,
-  onRetry: () -> Unit,
+  onRetryFetchNextPage: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Row(
@@ -49,7 +36,7 @@ fun LoadPageErrorScreen(
       fontStyle = FontStyle.Italic,
       textAlign = TextAlign.Center,
     )
-    IconButton(onClick = onRetry) {
+    IconButton(onClick = onRetryFetchNextPage) {
       Icon(
         imageVector = Icons.Default.Refresh,
         contentDescription = stringResource(R.string.retry),
