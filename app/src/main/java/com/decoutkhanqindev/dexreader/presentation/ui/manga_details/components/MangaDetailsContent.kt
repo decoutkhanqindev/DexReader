@@ -3,13 +3,12 @@ package com.decoutkhanqindev.dexreader.presentation.ui.manga_details.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -40,15 +39,18 @@ fun MangaDetailsContent(
   onFavoriteClick: (String) -> Unit,
   chapterLanguage: String,
   onSelectedLanguage: (String) -> Unit,
-  onFetchChapterListNextPage: () -> Unit,
-  onRetryFetchChapterListNextPage: () -> Unit,
   onSelectedGenre: (String) -> Unit,
   onSelectedChapter: (String) -> Unit,
+  onFetchChapterListNextPage: () -> Unit,
+  onRetryFetchChapterListNextPage: () -> Unit,
   onRetry: () -> Unit,
   modifier: Modifier = Modifier
 ) {
-  val verticalScrollState = rememberScrollState()
+  val lazyListState = rememberLazyListState()
   val coroutineScope = rememberCoroutineScope()
+  val isMoveToTopButtonVisible = (mangaChaptersUiState is MangaChaptersUiState.Content)
+      && mangaChaptersUiState.chapterList.size > 15
+      && lazyListState.firstVisibleItemScrollOffset > 0
 
   Box(modifier = modifier) {
     when (mangaDetailsUiState) {
@@ -62,11 +64,13 @@ fun MangaDetailsContent(
 
       is MangaDetailsUiState.Success -> {
         val manga = mangaDetailsUiState.manga
+        val mangaTitle = manga.title
+        val mangaCoverUrl = manga.coverUrl
         val chapterLanguageList = manga.availableTranslatedLanguages
 
         MangaDetailsBackground(
-          imageUrl = manga.coverUrl,
-          contentDesc = manga.title,
+          imageUrl = mangaCoverUrl,
+          contentDesc = mangaTitle,
           modifier = Modifier.fillMaxSize()
         )
 
@@ -82,55 +86,60 @@ fun MangaDetailsContent(
               )
             )
         ) {
-          Column(
-            modifier = Modifier
-              .fillMaxSize()
-              .verticalScroll(verticalScrollState),
+          LazyColumn(
+            state = lazyListState,
+            modifier = Modifier.fillMaxSize()
           ) {
-            MangaInfoSection(
-              manga = manga,
-              modifier = Modifier
-                .fillMaxWidth()
-                .padding(4.dp)
-                .padding(bottom = 16.dp)
-            )
+            item {
+              MangaInfoSection(
+                manga = manga,
+                modifier = Modifier
+                  .fillMaxWidth()
+                  .padding(4.dp)
+                  .padding(bottom = 16.dp)
+              )
+            }
 
-            ActionButtonsSection(
-              isReading = isReading,
-              onReadingClick = onReadingClick,
-              isFavorite = isFavorite,
-              onFavoriteClick = onFavoriteClick,
-              modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 4.dp)
-                .padding(bottom = 16.dp),
-            )
+            item {
+              ActionButtonsSection(
+                isReading = isReading,
+                onReadingClick = onReadingClick,
+                isFavorite = isFavorite,
+                onFavoriteClick = onFavoriteClick,
+                modifier = Modifier
+                  .fillMaxWidth()
+                  .padding(horizontal = 4.dp)
+                  .padding(bottom = 16.dp),
+              )
+            }
 
-            MangaSummarySection(
-              manga = manga,
-              onSelectedGenre = onSelectedGenre,
-              modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
-            )
+            item {
+              MangaSummarySection(
+                manga = manga,
+                onSelectedGenre = onSelectedGenre,
+                modifier = Modifier
+                  .fillMaxWidth()
+                  .padding(bottom = 16.dp)
+              )
+            }
 
-            MangaChaptersSection(
-              mangaChaptersUiState = mangaChaptersUiState,
-              chapterLanguage = chapterLanguage,
-              chapterLanguageList = chapterLanguageList,
-              onSelectedLanguage = onSelectedLanguage,
-              onSelectedChapter = onSelectedChapter,
-              onFetchChapterListNextPage = onFetchChapterListNextPage,
-              onRetryFetchChapterListNextPage = onRetryFetchChapterListNextPage,
-              modifier = Modifier.fillMaxWidth()
-            )
+            item {
+              MangaChaptersSection(
+                mangaChaptersUiState = mangaChaptersUiState,
+                chapterLanguage = chapterLanguage,
+                chapterLanguageList = chapterLanguageList,
+                onSelectedLanguage = onSelectedLanguage,
+                onSelectedChapter = onSelectedChapter,
+                onFetchChapterListNextPage = onFetchChapterListNextPage,
+                onRetryFetchChapterListNextPage = onRetryFetchChapterListNextPage,
+                modifier = Modifier.fillMaxWidth()
+              )
+            }
           }
         }
       }
     }
 
-    val isMoveToTopButtonVisible = mangaChaptersUiState is MangaChaptersUiState.Content &&
-        mangaChaptersUiState.chapterList.size > 15
     AnimatedVisibility(
       visible = isMoveToTopButtonVisible,
       modifier = Modifier
@@ -140,7 +149,7 @@ fun MangaDetailsContent(
       MoveToTopButton(
         onClick = {
           coroutineScope.launch {
-            verticalScrollState.animateScrollTo(0)
+            lazyListState.animateScrollToItem(0)
           }
         },
         modifier = Modifier.size(56.dp)
