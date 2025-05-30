@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.ui.components.content.button
+package com.decoutkhanqindev.dexreader.presentation.ui.components.common.buttons
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowUp
