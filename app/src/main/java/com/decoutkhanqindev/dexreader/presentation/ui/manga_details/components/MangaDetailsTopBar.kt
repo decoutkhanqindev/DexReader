@@ -18,7 +18,7 @@ import com.decoutkhanqindev.dexreader.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailsTopBar(
+fun MangaDetailsTopBar(
   title: String,
   onNavigateBack: () -> Unit,
   modifier: Modifier = Modifier
