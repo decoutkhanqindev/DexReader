@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.ui.components.content.bar
+package com.decoutkhanqindev.dexreader.presentation.ui.search.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
@@ -23,7 +23,7 @@ import com.decoutkhanqindev.dexreader.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchMangaBar(
+fun SearchBar(
   query: String,
   onQueryChange: (String) -> Unit,
   onSearch: (String) -> Unit,
