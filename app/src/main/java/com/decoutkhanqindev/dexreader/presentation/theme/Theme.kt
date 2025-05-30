@@ -20,6 +20,18 @@ data class ExtendedColorScheme(
   val customColor4: ColorFamily,
 )
 
+@Immutable
+data class ColorFamily(
+  val color: Color,
+  val onColor: Color,
+  val colorContainer: Color,
+  val onColorContainer: Color
+)
+
+val unspecified_scheme = ColorFamily(
+  Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified
+)
+
 private val lightScheme = lightColorScheme(
   primary = primaryLight,
   onPrimary = onPrimaryLight,
@@ -410,33 +422,44 @@ val extendedDarkHighContrast = ExtendedColorScheme(
   ),
 )
 
-@Immutable
-data class ColorFamily(
-  val color: Color,
-  val onColor: Color,
-  val colorContainer: Color,
-  val onColorContainer: Color
-)
-
-val unspecified_scheme = ColorFamily(
-  Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified
-)
-
 @Composable
 fun DexReaderTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
-  // Dynamic color is available on Android 12+
   dynamicColor: Boolean = false,
-  content: @Composable() () -> Unit
+  contrastLevel: ContrastLevel = ContrastLevel.Standard,
+  content: @Composable () -> Unit
 ) {
   val colorScheme = when {
     dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
       val context = LocalContext.current
       if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
     }
+    darkTheme -> when (contrastLevel) {
+      ContrastLevel.Standard -> darkScheme
+      ContrastLevel.Medium -> mediumContrastDarkColorScheme
+      ContrastLevel.High -> highContrastDarkColorScheme
+    }
+    else -> when (contrastLevel) {
+      ContrastLevel.Standard -> lightScheme
+      ContrastLevel.Medium -> mediumContrastLightColorScheme
+      ContrastLevel.High -> highContrastLightColorScheme
+    }
+  }
 
-    darkTheme -> darkScheme
-    else -> lightScheme
+  val extendedColorScheme = when {
+    dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+      if (darkTheme) extendedDark else extendedLight
+    }
+    darkTheme -> when (contrastLevel) {
+      ContrastLevel.Standard -> extendedDark
+      ContrastLevel.Medium -> extendedDarkMediumContrast
+      ContrastLevel.High -> extendedDarkHighContrast
+    }
+    else -> when (contrastLevel) {
+      ContrastLevel.Standard -> extendedLight
+      ContrastLevel.Medium -> extendedLightMediumContrast
+      ContrastLevel.High -> extendedLightHighContrast
+    }
   }
 
   MaterialTheme(
@@ -447,3 +470,8 @@ fun DexReaderTheme(
   )
 }
 
+enum class ContrastLevel {
+  Standard,
+  Medium,
+  High
+}
