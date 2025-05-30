@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.ui.components.states
+package com.decoutkhanqindev.dexreader.presentation.ui.components.states
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.CircularProgressIndicator
