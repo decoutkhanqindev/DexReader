@@ -14,8 +14,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.components.DetailsTopBar
 import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.components.MangaDetailsContent
+import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.components.MangaDetailsTopBar
 import com.decoutkhanqindev.dexreader.utils.toFullLanguageName
 import com.decoutkhanqindev.dexreader.utils.toLanguageCode
 
@@ -36,7 +36,7 @@ fun MangaDetailsScreen(
 
   Scaffold(
     topBar = {
-      DetailsTopBar(
+      MangaDetailsTopBar(
         title = stringResource(R.string.manga_details),
         onNavigateBack = onNavigateBack,
         modifier = Modifier.fillMaxWidth()
@@ -52,10 +52,10 @@ fun MangaDetailsScreen(
         onFavoriteClick = {},
         chapterLanguage = chapterLanguage.toFullLanguageName(),
         onSelectedLanguage = { viewModel.updateChapterLanguage(it.toLanguageCode()) },
-        onFetchChapterListNextPage = { viewModel.fetchChapterListNextPage() },
-        onRetryFetchChapterListNextPage = { viewModel.retryFetchChapterListNextPage() },
         onSelectedGenre = onSelectedGenre,
         onSelectedChapter = onSelectedChapter,
+        onFetchChapterListNextPage = { viewModel.fetchChapterListNextPage() },
+        onRetryFetchChapterListNextPage = { viewModel.retryFetchChapterListNextPage() },
         onRetry = { viewModel.retry() },
         modifier = modifier
           .padding(innerPadding)

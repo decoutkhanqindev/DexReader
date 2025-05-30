@@ -3,14 +3,9 @@ package com.decoutkhanqindev.dexreader.presentation.ui.manga_details.components.
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
@@ -24,7 +19,7 @@ import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.MangaChapter
 fun MangaChapterList(
   chapterList: List<Chapter>,
   onSelectedChapter: (String) -> Unit,
-  nextPageState: MangaChaptersNextPageState,
+  chapterListNextPageState: MangaChaptersNextPageState,
   onFetchChapterListNextPage: () -> Unit,
   onRetryFetchChapterListNextPage: () -> Unit,
   modifier: Modifier = Modifier
@@ -44,7 +39,7 @@ fun MangaChapterList(
         )
       }
 
-      when (nextPageState) {
+      when (chapterListNextPageState) {
         MangaChaptersNextPageState.LOADING ->
           NextPageLoadingIndicator(
             modifier = Modifier
@@ -81,16 +76,4 @@ fun MangaChapterList(
       }
     }
   }
-}
-
-@Composable
-private fun NoChaptersAvailableMessage(modifier: Modifier = Modifier) {
-  Text(
-    text = stringResource(R.string.no_chapters_available),
-    style = MaterialTheme.typography.titleMedium,
-    fontWeight = FontWeight.Bold,
-    fontStyle = FontStyle.Italic,
-    textAlign = TextAlign.Center,
-    modifier = modifier
-  )
 }

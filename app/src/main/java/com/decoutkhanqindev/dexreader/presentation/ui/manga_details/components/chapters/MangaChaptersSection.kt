@@ -35,6 +35,7 @@ fun MangaChaptersSection(
       modifier = modifier
         .fillMaxWidth()
         .padding(bottom = 12.dp)
+        .padding(horizontal = 4.dp)
     )
 
     when (mangaChaptersUiState) {
@@ -49,12 +50,12 @@ fun MangaChaptersSection(
 
       is MangaChaptersUiState.Content -> {
         val chapterList = mangaChaptersUiState.chapterList
-        val nextPageState = mangaChaptersUiState.nextPageState
+        val chapterListNextPageState = mangaChaptersUiState.nextPageState
 
         MangaChapterList(
           chapterList = chapterList,
           onSelectedChapter = onSelectedChapter,
-          nextPageState = nextPageState,
+          chapterListNextPageState = chapterListNextPageState,
           onFetchChapterListNextPage = onFetchChapterListNextPage,
           onRetryFetchChapterListNextPage = onRetryFetchChapterListNextPage,
           modifier = Modifier.fillMaxWidth()
