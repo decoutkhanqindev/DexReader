@@ -9,11 +9,11 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.ui.components.common.indicators.NextPageLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.ui.components.common.lists.VerticalGridMangaList
+import com.decoutkhanqindev.dexreader.presentation.ui.components.common.states.ErrorScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.components.common.states.ListLoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.components.common.texts.AllItemLoadedText
 import com.decoutkhanqindev.dexreader.presentation.ui.components.common.texts.LoadMoreText
 import com.decoutkhanqindev.dexreader.presentation.ui.components.common.texts.NextPageErrorText
-import com.decoutkhanqindev.dexreader.presentation.ui.components.states.ErrorScreen
-import com.decoutkhanqindev.dexreader.presentation.ui.components.states.ListLoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.search.ResultsNextPageState
 import com.decoutkhanqindev.dexreader.presentation.ui.search.ResultsUiState
 import com.decoutkhanqindev.dexreader.presentation.ui.search.components.SearchNotFoundMessage

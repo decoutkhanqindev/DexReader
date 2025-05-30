@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.ui.components.states.ErrorScreen
-import com.decoutkhanqindev.dexreader.presentation.ui.components.states.LoadingScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.components.common.states.ErrorScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.components.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.home.HomeUiState
 
 @Composable

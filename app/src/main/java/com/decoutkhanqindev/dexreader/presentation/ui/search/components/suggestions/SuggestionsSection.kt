@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.ui.components.states.ErrorScreen
-import com.decoutkhanqindev.dexreader.presentation.ui.components.states.ListLoadingScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.components.common.states.ErrorScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.components.common.states.ListLoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.search.SuggestionsUiState
 import com.decoutkhanqindev.dexreader.presentation.ui.search.components.SearchNotFoundMessage
 
