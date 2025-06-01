@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.domain.usecase.manga
+package com.decoutkhanqindev.dexreader.domain.usecase.manga.chapter
 
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
 import com.decoutkhanqindev.dexreader.domain.repository.MangaRepository
