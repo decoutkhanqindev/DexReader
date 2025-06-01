@@ -57,6 +57,12 @@ class MangaRepositoryImpl @Inject constructor(
       ).data.map { it.toDomain() }
     }
 
+  override suspend fun getChapterDetails(chapterId: String): Result<Chapter> =
+    runSuspendCatching(Dispatchers.IO) {
+      mangaDexApiService.getChapterDetails(chapterId).data.toDomain()
+    }
+
+
   override suspend fun getChapterPages(chapterId: String): Result<ChapterPages> =
     runSuspendCatching(Dispatchers.IO) {
       mangaDexApiService.getChapterPages(chapterId).toDomain(chapterId)

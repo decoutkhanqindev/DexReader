@@ -17,6 +17,7 @@ interface MangaRepository {
     volumeOrder: String = "desc",
     chapterOrder: String = "desc"
   ): Result<List<Chapter>>
+  suspend fun getChapterDetails(chapterId: String): Result<Chapter>
   suspend fun getChapterPages(chapterId: String): Result<ChapterPages>
   suspend fun searchManga(
     query: String,
