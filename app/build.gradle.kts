@@ -109,6 +109,9 @@ dependencies {
   implementation(libs.coil.compose)
   implementation(libs.coil.network.okhttp)
 
+  // Zoomable image for Coil
+  implementation("me.saket.telephoto:zoomable-image-coil3:0.16.0")
+
   // Hilt
   implementation(libs.hilt.android)
   ksp(libs.hilt.android.compiler)
