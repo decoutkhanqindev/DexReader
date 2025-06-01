@@ -6,12 +6,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import coil3.compose.AsyncImage
-import coil3.request.CachePolicy
-import coil3.request.ImageRequest
-import coil3.request.crossfade
 
 @Composable
 fun ChapterPageSection(
@@ -28,20 +22,13 @@ fun ChapterPageSection(
 
   HorizontalPager(
     modifier = modifier,
-    state = pagerState
+    state = pagerState,
   ) { pageIndex ->
     val currentPageIndex = pagerState.currentPage
 
-    AsyncImage(
-      model = ImageRequest.Builder(LocalContext.current)
-        .data(chapterPages[pageIndex])
-        .crossfade(true)
-        .memoryCachePolicy(CachePolicy.ENABLED)
-        .diskCachePolicy(CachePolicy.ENABLED)
-        .build(),
-      contentDescription = chapterPages[pageIndex],
-      contentScale = ContentScale.Fit,
-      modifier = Modifier.fillMaxSize(),
+    ChapterPageImage(
+      imageUrl = chapterPages[pageIndex],
+      modifier = Modifier.fillMaxSize()
     )
 
     LaunchedEffect(currentPageIndex) {
