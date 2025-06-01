@@ -446,7 +446,7 @@ fun DexReaderTheme(
     }
   }
 
-  val extendedColorScheme = when {
+  when {
     dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
       if (darkTheme) extendedDark else extendedLight
     }
