@@ -2,6 +2,7 @@ package com.decoutkhanqindev.dexreader.presentation.ui.manga_details.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -19,14 +20,14 @@ import com.decoutkhanqindev.dexreader.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MangaDetailsTopBar(
-  title: String,
   onNavigateBack: () -> Unit,
+  onSearchClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   CenterAlignedTopAppBar(
     title = {
       Text(
-        text = title,
+        text = stringResource(R.string.manga_details),
         style = MaterialTheme.typography.headlineSmall,
         fontWeight = FontWeight.ExtraBold,
       )
@@ -39,8 +40,16 @@ fun MangaDetailsTopBar(
         )
       }
     },
+    actions = {
+      IconButton(onClick = onSearchClick) {
+        Icon(
+          imageVector = Icons.Default.Search,
+          contentDescription = stringResource(R.string.back)
+        )
+      }
+    },
     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-      containerColor = MaterialTheme.colorScheme.primaryContainer,
+      containerColor = MaterialTheme.colorScheme.surfaceContainer,
       titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
       navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
       actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,

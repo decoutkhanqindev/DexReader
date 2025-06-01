@@ -11,7 +11,6 @@ import coil3.request.crossfade
 @Composable
 fun MangaDetailsBackground(
   imageUrl: String,
-  contentDesc: String,
   modifier: Modifier = Modifier
 ) {
   AsyncImage(
@@ -20,7 +19,7 @@ fun MangaDetailsBackground(
       .crossfade(true)
       .size(1080)
       .build(),
-    contentDescription = contentDesc,
+    contentDescription = null,
     contentScale = ContentScale.Crop,
     modifier = modifier
   )
