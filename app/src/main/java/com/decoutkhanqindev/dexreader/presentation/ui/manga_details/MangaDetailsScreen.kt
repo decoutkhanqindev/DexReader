@@ -10,10 +10,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.components.MangaDetailsContent
 import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.components.MangaDetailsTopBar
 import com.decoutkhanqindev.dexreader.utils.toFullLanguageName
@@ -22,6 +20,7 @@ import com.decoutkhanqindev.dexreader.utils.toLanguageCode
 @Composable
 fun MangaDetailsScreen(
   onNavigateBack: () -> Unit,
+  onSearchClick: () -> Unit,
   onReadingClick: (String) -> Unit,
   onSelectedGenre: (String) -> Unit,
   onSelectedChapter: (String) -> Unit,
@@ -37,8 +36,8 @@ fun MangaDetailsScreen(
   Scaffold(
     topBar = {
       MangaDetailsTopBar(
-        title = stringResource(R.string.manga_details),
         onNavigateBack = onNavigateBack,
+        onSearchClick = onSearchClick,
         modifier = Modifier.fillMaxWidth()
       )
     },

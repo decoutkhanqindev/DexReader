@@ -65,78 +65,74 @@ fun MangaDetailsContent(
 
       is MangaDetailsUiState.Success -> {
         val manga = mangaDetailsUiState.manga
-        val mangaTitle = manga.title
         val mangaCoverUrl = manga.coverUrl
         val chapterLanguageList = manga.availableTranslatedLanguages
+        val lastChapter = manga.lastChapter
 
         MangaDetailsBackground(
           imageUrl = mangaCoverUrl,
-          contentDesc = mangaTitle,
           modifier = Modifier.fillMaxSize()
         )
 
-        Box(
+        LazyColumn(
+          state = lazyListState,
           modifier = Modifier
             .fillMaxSize()
             .background(
               brush = Brush.verticalGradient(
                 colors = listOf(
-                  MaterialTheme.colorScheme.surface.copy(alpha = 0.7f),
-                  MaterialTheme.colorScheme.surface.copy(alpha = 1.5f),
+                  MaterialTheme.colorScheme.surface.copy(0.8f),
+                  MaterialTheme.colorScheme.surface.copy(1f)
                 )
               )
             )
         ) {
-          LazyColumn(
-            state = lazyListState,
-            modifier = Modifier.fillMaxSize()
-          ) {
-            item {
-              MangaInfoSection(
-                manga = manga,
-                modifier = Modifier
-                  .fillMaxWidth()
-                  .padding(4.dp)
-                  .padding(bottom = 16.dp)
-              )
-            }
+          item {
+            MangaInfoSection(
+              manga = manga,
+              modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp)
+                .padding(top = 8.dp, bottom = 16.dp)
+            )
+          }
 
-            item {
-              ActionButtonsSection(
-                isReading = isReading,
-                onReadingClick = onReadingClick,
-                isFavorite = isFavorite,
-                onFavoriteClick = onFavoriteClick,
-                modifier = Modifier
-                  .fillMaxWidth()
-                  .padding(horizontal = 4.dp)
-                  .padding(bottom = 16.dp),
-              )
-            }
+          item {
+            ActionButtonsSection(
+              isReading = isReading,
+              onReadingClick = onReadingClick,
+              isFavorite = isFavorite,
+              onFavoriteClick = onFavoriteClick,
+              modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 4.dp)
+                .padding(bottom = 16.dp),
+            )
+          }
 
-            item {
-              MangaSummarySection(
-                manga = manga,
-                onSelectedGenre = onSelectedGenre,
-                modifier = Modifier
-                  .fillMaxWidth()
-                  .padding(bottom = 16.dp)
-              )
-            }
+          item {
+            MangaSummarySection(
+              manga = manga,
+              onSelectedGenre = onSelectedGenre,
+              modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
+            )
+          }
 
-            item {
-              MangaChaptersSection(
-                mangaChaptersUiState = mangaChaptersUiState,
-                chapterLanguage = chapterLanguage,
-                chapterLanguageList = chapterLanguageList,
-                onSelectedLanguage = onSelectedLanguage,
-                onSelectedChapter = onSelectedChapter,
-                onFetchChapterListNextPage = onFetchChapterListNextPage,
-                onRetryFetchChapterListNextPage = onRetryFetchChapterListNextPage,
-                onRetry = onRetryFetchChapterListFirstPage,
-                modifier = Modifier.fillMaxWidth()
-              )
-            }
+          item {
+            MangaChaptersSection(
+              mangaChaptersUiState = mangaChaptersUiState,
+              lastChapter = lastChapter,
+              chapterLanguage = chapterLanguage,
+              chapterLanguageList = chapterLanguageList,
+              onSelectedLanguage = onSelectedLanguage,
+              onSelectedChapter = onSelectedChapter,
+              onFetchChapterListNextPage = onFetchChapterListNextPage,
+              onRetryFetchChapterListNextPage = onRetryFetchChapterListNextPage,
+              onRetry = onRetryFetchChapterListFirstPage,
+              modifier = Modifier.fillMaxWidth()
+            )
           }
         }
       }
