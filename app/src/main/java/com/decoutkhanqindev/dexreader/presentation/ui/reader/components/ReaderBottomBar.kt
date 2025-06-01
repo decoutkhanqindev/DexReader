@@ -54,12 +54,12 @@ fun ReaderBottomBar(
       ) {
         Text(
           text = stringResource(R.string.volume_chapter, volume, chapterNumber),
-          style = MaterialTheme.typography.titleMedium,
+          style = MaterialTheme.typography.titleLarge,
           fontWeight = FontWeight.ExtraBold,
         )
         Text(
           text = title,
-          style = MaterialTheme.typography.bodyMedium,
+          style = MaterialTheme.typography.bodyLarge,
           fontWeight = FontWeight.Bold,
           fontStyle = FontStyle.Italic,
           textAlign = TextAlign.Center,

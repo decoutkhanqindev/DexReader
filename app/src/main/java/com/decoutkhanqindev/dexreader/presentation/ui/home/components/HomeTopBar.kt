@@ -27,7 +27,7 @@ fun HomeTopBar(
     title = {
       Text(
         text = stringResource(R.string.app_name),
-        style = MaterialTheme.typography.headlineSmall,
+        style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.ExtraBold,
       )
     },

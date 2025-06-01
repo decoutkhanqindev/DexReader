@@ -27,7 +27,7 @@ fun ReaderTopBar(
     title = {
       Text(
         text = stringResource(R.string.reader_title, currentChapterPage, totalChapterPages),
-        style = MaterialTheme.typography.headlineSmall,
+        style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.ExtraBold,
       )
     },

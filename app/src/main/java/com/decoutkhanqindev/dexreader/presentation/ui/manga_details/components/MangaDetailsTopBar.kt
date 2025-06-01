@@ -28,7 +28,7 @@ fun MangaDetailsTopBar(
     title = {
       Text(
         text = stringResource(R.string.manga_details),
-        style = MaterialTheme.typography.headlineSmall,
+        style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.ExtraBold,
       )
     },
