@@ -112,4 +112,7 @@ dependencies {
   // Hilt
   implementation(libs.hilt.android)
   ksp(libs.hilt.android.compiler)
+
+  // Material3 Icons Extended
+  implementation(libs.androidx.material.icons.extended)
 }
