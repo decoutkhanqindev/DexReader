@@ -45,14 +45,14 @@ fun SearchBar(
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = { onSearch(query) }),
         colors = TextFieldDefaults.colors(
-          focusedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-          unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+          focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+          unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
           focusedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
           unfocusedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
           focusedPlaceholderColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.6f),
           unfocusedPlaceholderColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.6f),
-          focusedIndicatorColor = MaterialTheme.colorScheme.primaryContainer,
-          unfocusedIndicatorColor = MaterialTheme.colorScheme.primaryContainer,
+          focusedIndicatorColor = MaterialTheme.colorScheme.surfaceContainer,
+          unfocusedIndicatorColor = MaterialTheme.colorScheme.surfaceContainer,
           cursorColor = MaterialTheme.colorScheme.onPrimaryContainer
         ),
         textStyle = MaterialTheme.typography.titleMedium,
@@ -78,7 +78,7 @@ fun SearchBar(
       }
     },
     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-      containerColor = MaterialTheme.colorScheme.primaryContainer,
+      containerColor = MaterialTheme.colorScheme.surfaceContainer,
       navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
       actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
     ),
