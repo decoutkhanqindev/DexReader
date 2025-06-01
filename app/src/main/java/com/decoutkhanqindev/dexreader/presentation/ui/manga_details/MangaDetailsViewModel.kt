@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetChapterListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaDetailsUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.manga.chapter.GetChapterListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -46,7 +46,7 @@ class MangaDetailsViewModel @Inject constructor(
         }
         .onFailure {
           _mangaDetailsUiState.value = MangaDetailsUiState.Error
-          Log.d("MangaDetailsViewModel", "getManga have error: ${it.stackTraceToString()}")
+          Log.d("MangaDetailsViewModel", "fetchMangaDetails have error: ${it.stackTraceToString()}")
         }
     }
   }
