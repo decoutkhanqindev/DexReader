@@ -3,9 +3,14 @@ package com.decoutkhanqindev.dexreader.presentation.ui.manga_details.components.
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
@@ -17,6 +22,7 @@ import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.MangaChapter
 
 @Composable
 fun MangaChapterList(
+  lastChapter: String,
   chapterList: List<Chapter>,
   onSelectedChapter: (String) -> Unit,
   chapterListNextPageState: MangaChaptersNextPageState,
@@ -26,10 +32,18 @@ fun MangaChapterList(
 ) {
   Column(modifier = modifier) {
     if (chapterList.isEmpty()) {
-      NoChaptersAvailableMessage(modifier = Modifier.fillMaxWidth())
+      Text(
+        text = stringResource(R.string.no_chapters_available),
+        style = MaterialTheme.typography.titleMedium,
+        fontWeight = FontWeight.Bold,
+        fontStyle = FontStyle.Italic,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.fillMaxWidth()
+      )
     } else {
       chapterList.forEach { chapter ->
         MangaChapterItem(
+          lastChapter = lastChapter,
           chapter = chapter,
           onSelectedChapter = onSelectedChapter,
           modifier = Modifier

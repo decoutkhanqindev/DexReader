@@ -23,10 +23,14 @@ import com.decoutkhanqindev.dexreader.domain.model.Chapter
 
 @Composable
 fun MangaChapterItem(
+  lastChapter: String,
   chapter: Chapter,
   onSelectedChapter: (String) -> Unit,
   modifier: Modifier = Modifier
 ) {
+  val volume = chapter.volume
+  val chapterNumber = chapter.chapterNumber
+
   Card(
     modifier = modifier,
     shape = MaterialTheme.shapes.large,
@@ -37,36 +41,43 @@ fun MangaChapterItem(
     Column(
       modifier = Modifier
         .fillMaxSize()
-        .padding(8.dp),
-      verticalArrangement = Arrangement.Center,
+        .padding(12.dp),
+      horizontalAlignment = Alignment.Start,
+      verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-      Row(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(4.dp),
-        verticalAlignment = Alignment.CenterVertically
-      ) {
+      if (lastChapter == chapterNumber) {
+        Row(
+          modifier = Modifier.fillMaxWidth(),
+          verticalAlignment = Alignment.CenterVertically
+        ) {
+          Text(
+            text = stringResource(R.string.volume_chapter, volume, chapterNumber),
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.ExtraBold,
+            modifier = Modifier
+              .weight(0.7f)
+              .fillMaxWidth()
+          )
+          Text(
+            text = stringResource(R.string.last_chapter),
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Bold,
+            fontStyle = FontStyle.Italic,
+            textAlign = TextAlign.End,
+            modifier = Modifier
+              .weight(0.3f)
+              .fillMaxWidth()
+          )
+        }
+      } else {
         Text(
-          text = stringResource(R.string.volume, chapter.volume),
-          style = MaterialTheme.typography.titleMedium,
-          fontWeight = FontWeight.ExtraBold,
-        )
-        Text(
-          text = stringResource(R.string.separate),
-          style = MaterialTheme.typography.titleMedium,
-          fontWeight = FontWeight.ExtraBold,
-          modifier = Modifier.padding(horizontal = 4.dp)
-        )
-        Text(
-          text = stringResource(R.string.chapter, chapter.chapterNumber),
+          text = stringResource(R.string.volume_chapter, volume, chapterNumber),
           style = MaterialTheme.typography.titleMedium,
           fontWeight = FontWeight.ExtraBold,
         )
       }
       Row(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(4.dp),
+        modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
       ) {
         Text(
@@ -81,6 +92,7 @@ fun MangaChapterItem(
         Text(
           text = chapter.publishAt,
           style = MaterialTheme.typography.bodyMedium,
+          fontWeight = FontWeight.Bold,
           fontStyle = FontStyle.Italic,
           textAlign = TextAlign.End,
           modifier = Modifier
