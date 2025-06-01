@@ -1,9 +1,13 @@
 package com.decoutkhanqindev.dexreader.presentation.ui.reader.components
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -34,23 +38,29 @@ fun ReaderContent(
       val currentPage = chapterPageUiState.currentChapterPage
       val totalPages = chapterPageUiState.chapterPages.totalPages
 
-      if (chapterPages.isEmpty()) {
-        Text(
-          text = stringResource(R.string.no_chapter_pages_available),
-          style = MaterialTheme.typography.titleMedium,
-          fontWeight = FontWeight.Bold,
-          fontStyle = FontStyle.Italic,
-          textAlign = TextAlign.Center,
-          modifier = Modifier.fillMaxWidth()
-        )
-      } else {
-        ChapterPageSection(
-          chapterPages = chapterPages,
-          currentPage = currentPage,
-          totalPages = totalPages,
-          onUpdateChapterPage = onUpdateChapterPage,
-          modifier = modifier,
-        )
+      Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+      ) {
+        if (chapterPages.isEmpty()) {
+          Text(
+            text = stringResource(R.string.no_chapter_pages_available),
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            fontStyle = FontStyle.Italic,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+          )
+        } else {
+          ChapterPageSection(
+            chapterPages = chapterPages,
+            currentPage = currentPage,
+            totalPages = totalPages,
+            onUpdateChapterPage = onUpdateChapterPage,
+            modifier = Modifier.fillMaxSize()
+          )
+        }
       }
     }
   }
