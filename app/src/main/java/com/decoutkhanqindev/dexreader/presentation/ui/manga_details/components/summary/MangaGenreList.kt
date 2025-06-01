@@ -11,11 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.domain.model.Manga
 
 @Composable
 fun MangaGenreList(
-  manga: Manga,
+  genreList: List<String>,
   onSelectedGenre: (String) -> Unit,
   modifier: Modifier = Modifier
 ) {
@@ -25,7 +24,7 @@ fun MangaGenreList(
       horizontalArrangement = Arrangement.spacedBy(2.dp),
       verticalAlignment = Alignment.CenterVertically,
     ) {
-      items(manga.genres, key = { it }) { genre ->
+      items(genreList, key = { it }) { genre ->
         MangaGenreItem(
           genre = genre,
           onSelectedGenre = onSelectedGenre,
