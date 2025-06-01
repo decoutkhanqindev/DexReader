@@ -1,6 +1,7 @@
 package com.decoutkhanqindev.dexreader.data.network
 
 import com.decoutkhanqindev.dexreader.data.network.dto.AtHomeServerDto
+import com.decoutkhanqindev.dexreader.data.network.response.ChapterDetailsResponse
 import com.decoutkhanqindev.dexreader.data.network.response.ChapterListResponse
 import com.decoutkhanqindev.dexreader.data.network.response.MangaDetailsResponse
 import com.decoutkhanqindev.dexreader.data.network.response.MangaListResponse
@@ -76,6 +77,13 @@ interface MangaDexApiService {
     @Query("includes[]")
     includes: List<String> = listOf("scanlation_group")
   ): ChapterListResponse
+
+  @GET("/chapter/{id}")
+  suspend fun getChapterDetails(
+    @Path("id") chapterId: String,
+    @Query("includes[]")
+    includes: List<String> = listOf("manga", "scanlation_group")
+  ): ChapterDetailsResponse
 
   @GET("at-home/server/{id}")
   suspend fun getChapterPages(@Path("id") chapterId: String): AtHomeServerDto
