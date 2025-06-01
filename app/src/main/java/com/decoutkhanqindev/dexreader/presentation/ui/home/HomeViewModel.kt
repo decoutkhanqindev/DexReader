@@ -34,26 +34,26 @@ class HomeViewModel @Inject constructor(
     viewModelScope.launch {
       _uiState.value = HomeUiState.Loading
 
-      val latestUploadedMangaListDef = async { getLatestUploadedMangaListUseCase() }
+      val latestUpdatesMangaListDef = async { getLatestUploadedMangaListUseCase() }
       val trendingMangaListDef = async { getTrendingMangaListUseCase() }
       val newReleaseMangaListDef = async { getNewReleaseMangaListUseCase() }
       val completedMangaListDef = async { getCompletedMangaListUseCase() }
 
       val results = awaitAll(
-        latestUploadedMangaListDef,
+        latestUpdatesMangaListDef,
         trendingMangaListDef,
         newReleaseMangaListDef,
         completedMangaListDef
       )
 
       if (results.all { it.isSuccess }) {
-        val latestUploadedMangaList = results[0].getOrThrow()
+        val latestUpdatesMangaList = results[0].getOrThrow()
         val trendingMangaList = results[1].getOrThrow()
         val newReleaseMangaList = results[2].getOrThrow()
         val completedMangaList = results[3].getOrThrow()
 
         _uiState.value = HomeUiState.Success(
-          latestUpdateMangaList = latestUploadedMangaList,
+          latestUpdatesMangaList = latestUpdatesMangaList,
           trendingMangaList = trendingMangaList,
           newReleaseMangaList = newReleaseMangaList,
           completedMangaList = completedMangaList

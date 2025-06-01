@@ -7,10 +7,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.ui.home.components.HomeContent
 import com.decoutkhanqindev.dexreader.presentation.ui.home.components.HomeTopBar
 
@@ -28,7 +26,6 @@ fun HomeScreen(
     modifier = modifier,
     topBar = {
       HomeTopBar(
-        title = stringResource(R.string.app_name),
         onMenuClick = onMenuClick,
         onSearchClick = onSearchClick,
         modifier = Modifier.fillMaxWidth()

@@ -19,7 +19,6 @@ import com.decoutkhanqindev.dexreader.R
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun HomeTopBar(
-  title: String,
   onMenuClick: () -> Unit,
   onSearchClick: () -> Unit,
   modifier: Modifier = Modifier
@@ -27,7 +26,7 @@ fun HomeTopBar(
   CenterAlignedTopAppBar(
     title = {
       Text(
-        text = title,
+        text = stringResource(R.string.app_name),
         style = MaterialTheme.typography.headlineSmall,
         fontWeight = FontWeight.ExtraBold,
       )
@@ -47,7 +46,7 @@ fun HomeTopBar(
       }
     },
     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-      containerColor = MaterialTheme.colorScheme.primaryContainer,
+      containerColor = MaterialTheme.colorScheme.surfaceContainer,
       titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
       navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
       actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,

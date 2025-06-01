@@ -25,7 +25,7 @@ fun HomeContent(
         item {
           MangaListSection(
             title = stringResource(R.string.latest_update),
-            mangaList = uiState.latestUpdateMangaList,
+            mangaList = uiState.latestUpdatesMangaList,
             onSelectedManga = { onSelectedManga(it.id) },
             modifier = Modifier.fillMaxWidth()
           )
