@@ -32,7 +32,7 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
       modifier = Modifier
         .width(100.dp)
         .padding(top = 8.dp),
-      color = MaterialTheme.colorScheme.primary,
+      color = MaterialTheme.colorScheme.onPrimaryContainer,
       trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
     )
   }
