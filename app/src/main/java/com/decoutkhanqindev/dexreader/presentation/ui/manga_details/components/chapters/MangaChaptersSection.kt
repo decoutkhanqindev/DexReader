@@ -1,5 +1,3 @@
-@file:JvmName("MangaChaptersTitleKt")
-
 package com.decoutkhanqindev.dexreader.presentation.ui.manga_details.components.chapters
 
 import androidx.compose.foundation.layout.Column
@@ -19,6 +17,7 @@ import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.MangaChapter
 @Composable
 fun MangaChaptersSection(
   mangaChaptersUiState: MangaChaptersUiState,
+  lastChapter: String,
   chapterLanguage: String,
   chapterLanguageList: List<String>,
   onSelectedLanguage: (String) -> Unit,
@@ -54,6 +53,7 @@ fun MangaChaptersSection(
         val chapterListNextPageState = mangaChaptersUiState.nextPageState
 
         MangaChapterList(
+          lastChapter = lastChapter,
           chapterList = chapterList,
           onSelectedChapter = onSelectedChapter,
           chapterListNextPageState = chapterListNextPageState,
