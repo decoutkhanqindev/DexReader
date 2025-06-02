@@ -38,6 +38,8 @@ fun ReaderScreen(
 
     else -> "1" to "∞"
   }
+  val canNavigatePrevious by viewModel.canNavigatePrevious.collectAsStateWithLifecycle()
+  val canNavigateNext by viewModel.canNavigateNext.collectAsStateWithLifecycle()
   var isFullScreen by rememberSaveable { mutableStateOf(false) }
 
 
@@ -66,10 +68,10 @@ fun ReaderScreen(
           volume = chapterDetailsUiState.volume,
           chapterNumber = chapterDetailsUiState.chapterNumber,
           title = chapterDetailsUiState.title,
-          isFirstChapterPage = false,
-          isLastChapterPage = false,
-          onPreChapterClick = {},
-          onNextChapterClick = {},
+          canNavigatePrevious = canNavigatePrevious,
+          canNavigateNext = canNavigateNext,
+          onNavigatePrevious = { viewModel.navigateToPreviousChapter() },
+          onNavigateNext = { viewModel.navigateToNextChapter() },
           modifier = Modifier.fillMaxWidth()
         )
       }

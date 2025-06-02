@@ -26,24 +26,23 @@ fun ReaderBottomBar(
   volume: String,
   chapterNumber: String,
   title: String,
-  isFirstChapterPage: Boolean,
-  isLastChapterPage: Boolean,
-  onPreChapterClick: () -> Unit,
-  onNextChapterClick: () -> Unit,
+  canNavigatePrevious: Boolean,
+  canNavigateNext: Boolean,
+  onNavigatePrevious: () -> Unit,
+  onNavigateNext: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   BottomAppBar(
     actions = {
       IconButton(
-        onClick = onPreChapterClick,
+        onClick = onNavigatePrevious,
+        enabled = canNavigatePrevious,
         modifier = Modifier.weight(0.5f)
       ) {
-        if (!isFirstChapterPage) {
-          Icon(
-            imageVector = Icons.Default.ChevronLeft,
-            contentDescription = stringResource(R.string.pre_chapter)
-          )
-        }
+        Icon(
+          imageVector = Icons.Default.ChevronLeft,
+          contentDescription = stringResource(R.string.pre_chapter)
+        )
       }
       Column(
         modifier = Modifier
@@ -66,15 +65,14 @@ fun ReaderBottomBar(
         )
       }
       IconButton(
-        onClick = onNextChapterClick,
+        onClick = onNavigateNext,
+        enabled = canNavigateNext,
         modifier = Modifier.weight(0.5f)
       ) {
-        if (!isLastChapterPage) {
-          Icon(
-            imageVector = Icons.Default.ChevronRight,
-            contentDescription = stringResource(R.string.next_chapter)
-          )
-        }
+        Icon(
+          imageVector = Icons.Default.ChevronRight,
+          contentDescription = stringResource(R.string.next_chapter)
+        )
       }
     },
     containerColor = MaterialTheme.colorScheme.surfaceContainer,
