@@ -42,6 +42,7 @@ class MangaRepositoryImpl @Inject constructor(
 
   override suspend fun getChapterList(
     mangaId: String,
+    limit: Int,
     offset: Int,
     translatedLanguage: String,
     volumeOrder: String,
@@ -50,6 +51,7 @@ class MangaRepositoryImpl @Inject constructor(
     runSuspendCatching(Dispatchers.IO) {
       mangaDexApiService.getChapterList(
         mangaId = mangaId,
+        limit = limit,
         offset = offset,
         translatedLanguages = translatedLanguage,
         volumeOrder = volumeOrder,

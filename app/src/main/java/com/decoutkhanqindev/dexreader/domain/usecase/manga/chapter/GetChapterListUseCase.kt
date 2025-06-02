@@ -9,6 +9,7 @@ class GetChapterListUseCase @Inject constructor(
 ) {
   suspend operator fun invoke(
     mangaId: String,
+    limit: Int = 20,
     offset: Int = 0,
     translatedLanguage: String = "en",
     volumeOrder: String = "desc",
@@ -16,6 +17,7 @@ class GetChapterListUseCase @Inject constructor(
   ): Result<List<Chapter>> =
     mangaRepository.getChapterList(
       mangaId = mangaId,
+      limit = limit,
       offset = offset,
       translatedLanguage = translatedLanguage,
       volumeOrder = volumeOrder,
