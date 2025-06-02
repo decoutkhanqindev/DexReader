@@ -10,8 +10,9 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ActionButtonsSection(
+  canRead: Boolean,
   isReading: Boolean,
-  onReadingClick: (String) -> Unit,
+  onReadingClick: () -> Unit,
   isFavorite: Boolean,
   onFavoriteClick: (String) -> Unit,
   modifier: Modifier = Modifier
@@ -22,6 +23,7 @@ fun ActionButtonsSection(
     horizontalArrangement = Arrangement.spacedBy(8.dp)
   ) {
     ReadingButton(
+      canRead = canRead,
       isReading = isReading,
       onReadingClick = onReadingClick,
       modifier = Modifier

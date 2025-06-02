@@ -14,12 +14,14 @@ import com.decoutkhanqindev.dexreader.R
 
 @Composable
 fun ReadingButton(
+  canRead: Boolean,
   isReading: Boolean,
-  onReadingClick: (String) -> Unit,
+  onReadingClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Button(
-    onClick = { onReadingClick },
+    onClick = onReadingClick,
+    enabled = canRead,
     shape = MaterialTheme.shapes.medium,
     colors = ButtonDefaults.outlinedButtonColors(
       containerColor = MaterialTheme.colorScheme.surface.copy(0.5f)
