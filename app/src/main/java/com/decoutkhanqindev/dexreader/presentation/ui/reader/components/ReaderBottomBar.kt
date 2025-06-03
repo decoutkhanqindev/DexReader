@@ -58,7 +58,7 @@ fun ReaderBottomBar(
         )
         Text(
           text = title,
-          style = MaterialTheme.typography.bodyLarge,
+          style = MaterialTheme.typography.bodyMedium,
           fontWeight = FontWeight.Bold,
           fontStyle = FontStyle.Italic,
           textAlign = TextAlign.Center,
