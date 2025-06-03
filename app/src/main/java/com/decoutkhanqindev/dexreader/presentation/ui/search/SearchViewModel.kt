@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.SearchMangaUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.StateFlow
@@ -34,6 +36,10 @@ class SearchViewModel @Inject constructor(
   private val _query = MutableStateFlow("")
   val query: StateFlow<String> = _query.asStateFlow()
 
+  @OptIn(
+    FlowPreview::class,
+    ExperimentalCoroutinesApi::class
+  )
   val suggestionList = query
     .filter { it.isNotEmpty() }
     .debounce(500L)
@@ -42,10 +48,10 @@ class SearchViewModel @Inject constructor(
       flow {
         _suggestionsUiState.value = SuggestionsUiState.Loading
 
-        val mangaList = searchMangaUseCase(query)
-        mangaList
-          .onSuccess {
-            val titleList = it.map { manga -> manga.title }.take(10)
+        val mangaListResult = searchMangaUseCase(query)
+        mangaListResult
+          .onSuccess { mangaList ->
+            val titleList = mangaList.map { manga -> manga.title }.take(10)
             _suggestionsUiState.value = SuggestionsUiState.Success
             emit(titleList)
           }
@@ -66,12 +72,12 @@ class SearchViewModel @Inject constructor(
     viewModelScope.launch {
       _resultsUiState.value = ResultsUiState.FirstPageLoading
 
-      val mangaList = searchMangaUseCase(query.value)
-      mangaList
-        .onSuccess {
-          val hasNextPage = it.size >= 20
+      val mangaListResult = searchMangaUseCase(query.value)
+      mangaListResult
+        .onSuccess { mangaList ->
+          val hasNextPage = mangaList.size >= 20
           _resultsUiState.value = ResultsUiState.Content(
-            results = it,
+            results = mangaList,
             currentPage = 1,
             nextPageState = if (!hasNextPage)
               ResultsNextPageState.NO_MORE_ITEMS
@@ -113,18 +119,19 @@ class SearchViewModel @Inject constructor(
     viewModelScope.launch {
       _resultsUiState.value =
         currentUiState.copy(nextPageState = ResultsNextPageState.LOADING)
-      val currentItems = currentUiState.results
+      val currentMangaList = currentUiState.results
       val nextPage = currentUiState.currentPage + 1
 
-      val nextMangaList = searchMangaUseCase(
+      val nextMangaListResults = searchMangaUseCase(
         query = query.value,
-        offset = currentItems.size
+        offset = currentMangaList.size
       )
-      nextMangaList
-        .onSuccess {
-          val hasNextPage = it.size >= 20
+      nextMangaListResults
+        .onSuccess { nextMangaList ->
+          val allMangaList = currentMangaList + nextMangaList
+          val hasNextPage = nextMangaList.size >= 20
           _resultsUiState.value = currentUiState.copy(
-            results = currentItems + it,
+            results = currentMangaList + allMangaList,
             currentPage = nextPage,
             nextPageState = if (!hasNextPage)
               ResultsNextPageState.NO_MORE_ITEMS
@@ -133,8 +140,7 @@ class SearchViewModel @Inject constructor(
           )
         }
         .onFailure {
-          _resultsUiState.value =
-            currentUiState.copy(nextPageState = ResultsNextPageState.ERROR)
+          _resultsUiState.value = currentUiState.copy(nextPageState = ResultsNextPageState.ERROR)
           Log.d(
             "SearchViewModel",
             "fetchMangaListNextPageInternal have error: ${it.stackTraceToString()}"
@@ -154,6 +160,9 @@ class SearchViewModel @Inject constructor(
   }
 
   fun retryFetchMangaListNextPage() {
-    fetchMangaListNextPage()
+    val currentUiState = _resultsUiState.value
+    if (currentUiState is ResultsUiState.Content && currentUiState.nextPageState == ResultsNextPageState.ERROR) {
+      fetchMangaListNextPageInternal(currentUiState)
+    }
   }
 }
