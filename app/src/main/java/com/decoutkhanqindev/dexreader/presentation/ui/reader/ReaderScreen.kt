@@ -28,18 +28,17 @@ fun ReaderScreen(
   viewModel: ReaderViewModel = hiltViewModel(),
   modifier: Modifier = Modifier
 ) {
-  val chapterDetailsUiState by viewModel.chapterDetailsUiState.collectAsStateWithLifecycle()
+  val chapterDetailsUiState by viewModel.chapterDetailsState.collectAsStateWithLifecycle()
   val chapterPagesUiState by viewModel.chapterPagesUiState.collectAsStateWithLifecycle()
+  val chapterNavState by viewModel.chapterNavState.collectAsStateWithLifecycle()
   val (currentPage, totalPages) = when (chapterPagesUiState) {
     is ChapterPagesUiState.Success -> {
       val successUiState = chapterPagesUiState as ChapterPagesUiState.Success
       successUiState.currentChapterPage.toString() to successUiState.chapterPages.totalPages.toString()
     }
 
-    else -> "1" to "∞"
+    else -> "1" to "0"
   }
-  val canNavigatePrevious by viewModel.canNavigatePrevious.collectAsStateWithLifecycle()
-  val canNavigateNext by viewModel.canNavigateNext.collectAsStateWithLifecycle()
   var isFullScreen by rememberSaveable { mutableStateOf(false) }
 
 
@@ -68,8 +67,8 @@ fun ReaderScreen(
           volume = chapterDetailsUiState.volume,
           chapterNumber = chapterDetailsUiState.chapterNumber,
           title = chapterDetailsUiState.title,
-          canNavigatePrevious = canNavigatePrevious,
-          canNavigateNext = canNavigateNext,
+          canNavigatePrevious = chapterNavState.canNavigatePrevious,
+          canNavigateNext = chapterNavState.canNavigateNext,
           onNavigatePrevious = { viewModel.navigateToPreviousChapter() },
           onNavigateNext = { viewModel.navigateToNextChapter() },
           modifier = Modifier.fillMaxWidth()
