@@ -17,7 +17,7 @@ import javax.inject.Inject
 class MangaDetailsViewModel @Inject constructor(
   savedStateHandle: SavedStateHandle,
   private val getMangaDetailsUseCase: GetMangaDetailsUseCase,
-  private val getChapterListUseCase: GetChapterListUseCase
+  private val getChapterListUseCase: GetChapterListUseCase,
 ) : ViewModel() {
   private val mangaId: String = checkNotNull(savedStateHandle[MangaDetailsDestination.mangaIdArg])
 
@@ -29,11 +29,15 @@ class MangaDetailsViewModel @Inject constructor(
     MutableStateFlow<MangaChaptersUiState>(MangaChaptersUiState.FirstPageLoading)
   val mangaChaptersUiState: StateFlow<MangaChaptersUiState> = _mangaChaptersUiState.asStateFlow()
 
+  private val _firstChapterId = MutableStateFlow<String?>(null)
+  val firstChapterId = _firstChapterId.asStateFlow()
+
   private val _chapterLanguage = MutableStateFlow("en")
   val chapterLanguage: StateFlow<String> = _chapterLanguage.asStateFlow()
 
   init {
     fetchMangaDetails()
+    fetchFirstChapter()
     fetchChapterListFirstPage()
   }
 
@@ -51,19 +55,46 @@ class MangaDetailsViewModel @Inject constructor(
     }
   }
 
+  private fun fetchFirstChapter() {
+    viewModelScope.launch {
+      val chapterListResult = getChapterListUseCase(
+        mangaId = mangaId,
+        limit = 1,
+        translatedLanguage = chapterLanguage.value,
+        volumeOrder = "asc",
+        chapterOrder = "asc"
+      )
+      chapterListResult
+        .onSuccess {
+          if (it.isNotEmpty()) {
+            _firstChapterId.value = it.first().id
+          } else {
+            _firstChapterId.value = null
+          }
+        }
+        .onFailure {
+          _firstChapterId.value = null
+          Log.d(
+            "MangaDetailsViewModel",
+            "fetchFirstChapter have error: ${it.stackTraceToString()}"
+          )
+        }
+    }
+  }
+
   private fun fetchChapterListFirstPage() {
     viewModelScope.launch {
       _mangaChaptersUiState.value = MangaChaptersUiState.FirstPageLoading
 
-      val chapterList = getChapterListUseCase(
+      val chapterListResult = getChapterListUseCase(
         mangaId = mangaId,
         translatedLanguage = chapterLanguage.value
       )
-      chapterList
-        .onSuccess {
-          val hasNextPage = it.size >= 20
+      chapterListResult
+        .onSuccess { chapterList ->
+          val hasNextPage = chapterList.size >= 20
           _mangaChaptersUiState.value = MangaChaptersUiState.Content(
-            chapterList = it,
+            chapterList = chapterList,
             currentPage = 1,
             nextPageState = if (!hasNextPage)
               MangaChaptersNextPageState.NO_MORE_ITEMS
@@ -93,9 +124,9 @@ class MangaDetailsViewModel @Inject constructor(
           MangaChaptersNextPageState.NO_MORE_ITEMS
             -> return
 
-          MangaChaptersNextPageState.ERROR -> fetchChapterListFirstPage()
+          MangaChaptersNextPageState.ERROR -> retryFetchChapterListNextPage()
 
-          MangaChaptersNextPageState.IDLE -> fetchChapterListNextPageInternal(currentUiState)
+          MangaChaptersNextPageState.IDLE -> fetchChapterListNextPageInternal(currentUiState = currentUiState)
         }
       }
     }
@@ -105,19 +136,20 @@ class MangaDetailsViewModel @Inject constructor(
     viewModelScope.launch {
       _mangaChaptersUiState.value =
         currentUiState.copy(nextPageState = MangaChaptersNextPageState.LOADING)
-      val currentItems = currentUiState.chapterList
+      val currentMangaList = currentUiState.chapterList
       val nextPage: Int = currentUiState.currentPage + 1
 
-      val nextChapterList = getChapterListUseCase(
+      val nextChapterListResult = getChapterListUseCase(
         mangaId = mangaId,
-        offset = currentItems.size,
+        offset = currentMangaList.size,
         translatedLanguage = chapterLanguage.value
       )
-      nextChapterList
-        .onSuccess {
-          val hasNextPage = it.size >= 20
+      nextChapterListResult
+        .onSuccess { nextChapterList ->
+          val allChapterList = currentMangaList + nextChapterList
+          val hasNextPage = nextChapterList.size >= 20
           _mangaChaptersUiState.value = currentUiState.copy(
-            chapterList = currentItems + it,
+            chapterList = allChapterList,
             currentPage = nextPage,
             nextPageState = if (!hasNextPage)
               MangaChaptersNextPageState.NO_MORE_ITEMS
@@ -126,7 +158,8 @@ class MangaDetailsViewModel @Inject constructor(
           )
         }
         .onFailure {
-          _mangaChaptersUiState.value = MangaChaptersUiState.FirstPageError
+          _mangaChaptersUiState.value =
+            currentUiState.copy(nextPageState = MangaChaptersNextPageState.ERROR)
           Log.d(
             "MangaDetailsViewModel",
             "fetchChapterListNextPageInternal have error: ${it.stackTraceToString()}"
@@ -138,11 +171,13 @@ class MangaDetailsViewModel @Inject constructor(
   fun updateChapterLanguage(language: String) {
     if (language == _chapterLanguage.value) return
     _chapterLanguage.value = language
+    fetchFirstChapter()
     fetchChapterListFirstPage()
   }
 
   fun retry() {
     fetchMangaDetails()
+    fetchFirstChapter()
     fetchChapterListFirstPage()
   }
 
@@ -151,6 +186,11 @@ class MangaDetailsViewModel @Inject constructor(
   }
 
   fun retryFetchChapterListNextPage() {
-    fetchChapterListNextPage()
+    val currentUiState = _mangaChaptersUiState.value
+    if (currentUiState is MangaChaptersUiState.Content &&
+      currentUiState.nextPageState == MangaChaptersNextPageState.ERROR
+    ) {
+      fetchChapterListNextPageInternal(currentUiState)
+    }
   }
 }
