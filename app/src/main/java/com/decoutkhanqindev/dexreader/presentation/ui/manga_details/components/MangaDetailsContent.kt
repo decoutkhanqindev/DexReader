@@ -33,8 +33,9 @@ import kotlinx.coroutines.launch
 fun MangaDetailsContent(
   mangaDetailsUiState: MangaDetailsUiState,
   mangaChaptersUiState: MangaChaptersUiState,
+  canRead: Boolean,
   isReading: Boolean,
-  onReadingClick: (String) -> Unit,
+  onReadingClick: () -> Unit,
   isFavorite: Boolean,
   onFavoriteClick: (String) -> Unit,
   chapterLanguage: String,
@@ -99,6 +100,7 @@ fun MangaDetailsContent(
 
           item {
             ActionButtonsSection(
+              canRead = canRead,
               isReading = isReading,
               onReadingClick = onReadingClick,
               isFavorite = isFavorite,

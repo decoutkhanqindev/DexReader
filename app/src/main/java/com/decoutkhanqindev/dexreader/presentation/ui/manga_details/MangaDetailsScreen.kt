@@ -29,6 +29,7 @@ fun MangaDetailsScreen(
 ) {
   val mangaDetailsUiState by viewModel.mangaDetailsUiState.collectAsStateWithLifecycle()
   val mangaChaptersUiState by viewModel.mangaChaptersUiState.collectAsStateWithLifecycle()
+  val firstChapterId by viewModel.firstChapterId.collectAsStateWithLifecycle()
   val chapterLanguage by viewModel.chapterLanguage.collectAsStateWithLifecycle()
   var isReading by rememberSaveable { mutableStateOf(false) }
   var isFavorite by rememberSaveable { mutableStateOf(true) }
@@ -45,14 +46,15 @@ fun MangaDetailsScreen(
       MangaDetailsContent(
         mangaDetailsUiState = mangaDetailsUiState,
         mangaChaptersUiState = mangaChaptersUiState,
+        canRead = firstChapterId != null,
         isReading = isReading,
-        onReadingClick = onReadingClick,
+        onReadingClick = { onReadingClick(firstChapterId!!) },
         isFavorite = isFavorite,
         onFavoriteClick = {},
         chapterLanguage = chapterLanguage.toFullLanguageName(),
         onSelectedLanguage = { viewModel.updateChapterLanguage(it.toLanguageCode()) },
         onSelectedGenre = onSelectedGenre,
-        onSelectedChapter = onSelectedChapter,
+        onSelectedChapter = { onSelectedChapter(it) },
         onFetchChapterListNextPage = { viewModel.fetchChapterListNextPage() },
         onRetryFetchChapterListNextPage = { viewModel.retryFetchChapterListNextPage() },
         onRetryFetchChapterListFirstPage = { viewModel.retryFetchChapterListFirstPage() },
