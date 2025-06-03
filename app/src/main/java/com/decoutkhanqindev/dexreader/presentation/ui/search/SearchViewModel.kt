@@ -26,8 +26,7 @@ class SearchViewModel @Inject constructor(
 ) : ViewModel() {
   private val _suggestionsUiState =
     MutableStateFlow<SuggestionsUiState>(SuggestionsUiState.Loading)
-  val suggestionsUiState: StateFlow<SuggestionsUiState> =
-    _suggestionsUiState.asStateFlow()
+  val suggestionsUiState: StateFlow<SuggestionsUiState> = _suggestionsUiState.asStateFlow()
 
   private val _resultsUiState =
     MutableStateFlow<ResultsUiState>(ResultsUiState.FirstPageLoading)

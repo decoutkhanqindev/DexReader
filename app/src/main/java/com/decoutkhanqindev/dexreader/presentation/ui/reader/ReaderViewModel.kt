@@ -11,6 +11,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.manga.chapter.GetChapterPag
 import com.decoutkhanqindev.dexreader.utils.toLanguageCode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -29,15 +30,15 @@ class ReaderViewModel @Inject constructor(
 
   private val _chapterDetailsState =
     MutableStateFlow<ChapterDetailsUiState>(ChapterDetailsUiState())
-  val chapterDetailsState = _chapterDetailsState.asStateFlow()
+  val chapterDetailsState: StateFlow<ChapterDetailsUiState> = _chapterDetailsState.asStateFlow()
 
   private val _chapterPagesUiState =
     MutableStateFlow<ChapterPagesUiState>(ChapterPagesUiState.Loading)
-  val chapterPagesUiState = _chapterPagesUiState.asStateFlow()
+  val chapterPagesUiState: StateFlow<ChapterPagesUiState> = _chapterPagesUiState.asStateFlow()
 
   private val _chapterNavState =
     MutableStateFlow(ChapterNavigationState(currentChapterId = currentChapterId))
-  val chapterNavState = _chapterNavState.asStateFlow()
+  val chapterNavState: StateFlow<ChapterNavigationState> = _chapterNavState.asStateFlow()
 
   private var mangaId: String? = null
   private var chapterLanguage: String? = null
@@ -167,7 +168,6 @@ class ReaderViewModel @Inject constructor(
 
       val isFirstChapter = currentChapterIndex == 0
       val isLastChapter = currentChapterIndex == currentChapterList.lastIndex
-
       _chapterNavState.update {
         it.copy(
           currentChapterId = currentChapterId,
