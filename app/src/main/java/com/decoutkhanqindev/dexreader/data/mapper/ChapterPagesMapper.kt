@@ -7,13 +7,14 @@ import com.decoutkhanqindev.dexreader.domain.model.ChapterPages
 fun AtHomeServerDto.toDomain(chapterId: String): ChapterPages {
   val hash = chapter.hash
   val data = chapter.data
-  val pageUrls = data.map { url ->
-    "$baseUrl/data/$hash/$url"
+  val pageUrls = data.map { pageHash ->
+    "$baseUrl/data/$hash/$pageHash"
   }
 
   return ChapterPages(
     chapterId = chapterId,
     baseUrl = baseUrl,
+    chapterDataHash = hash,
     pageUrls = pageUrls,
     totalPages = pageUrls.size
   )
@@ -21,12 +22,13 @@ fun AtHomeServerDto.toDomain(chapterId: String): ChapterPages {
 
 fun ChapterCacheEntity.toDomain(): ChapterPages {
   val pageUrls = pageHashes.map { hash ->
-    "$baseUrl/data/$chapterId/$hash"
+    "$baseUrl/data/$chapterDataHash/$hash"
   }
 
   return ChapterPages(
     chapterId = chapterId,
     baseUrl = baseUrl,
+    chapterDataHash = chapterDataHash,
     pageUrls = pageUrls,
     totalPages = pageUrls.size
   )
@@ -41,6 +43,7 @@ fun ChapterPages.toEntity(mangaId: String): ChapterCacheEntity {
     chapterId = chapterId,
     mangaId = mangaId,
     baseUrl = baseUrl,
+    chapterDataHash = chapterDataHash,
     pageHashes = pageHashes,
     totalPages = pageUrls.size,
     cachedAt = System.currentTimeMillis()
