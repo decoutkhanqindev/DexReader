@@ -71,7 +71,7 @@ class ReaderViewModel @Inject constructor(
         }
         .onFailure {
           Log.e(
-            "ReaderViewModel",
+            TAG,
             "fetchChapterDetails have error: ${it.stackTraceToString()}"
           )
           _chapterDetailsState.update { ChapterDetailsUiState() }
@@ -90,7 +90,7 @@ class ReaderViewModel @Inject constructor(
         }
         .onFailure {
           _chapterPagesUiState.value = ChapterPagesUiState.Error
-          Log.e("ReaderViewModel", "fetchChapterPages have error: ${it.stackTraceToString()}")
+          Log.e(TAG, "fetchChapterPages have error: ${it.stackTraceToString()}")
         }
     }
   }
@@ -111,14 +111,14 @@ class ReaderViewModel @Inject constructor(
         .onSuccess { chapterList ->
           isFetchingChapterList = false
           currentChapterList = chapterList
-          hasNextChapterListPage = currentChapterList.size >= 20
+          hasNextChapterListPage = currentChapterList.size >= CHAPTER_LIST_PER_PAGE_SIZE
           updateChapterNavUiState()
         }
         .onFailure {
           isFetchingChapterList = false
           currentChapterList = emptyList()
           Log.d(
-            "ReaderViewModel",
+            TAG,
             "fetchChapterListFirstPage have error: ${it.stackTraceToString()}"
           )
         }
@@ -142,13 +142,13 @@ class ReaderViewModel @Inject constructor(
         .onSuccess { nextChapterList ->
           isFetchingChapterList = false
           currentChapterList += nextChapterList
-          hasNextChapterListPage = nextChapterList.size >= 20
+          hasNextChapterListPage = nextChapterList.size >= CHAPTER_LIST_PER_PAGE_SIZE
           updateChapterNavUiState()
         }
         .onFailure {
           isFetchingChapterList = false
           Log.d(
-            "ReaderViewModel",
+            TAG,
             "fetchChapterListNextPage have error: ${it.stackTraceToString()}"
           )
         }
@@ -178,7 +178,8 @@ class ReaderViewModel @Inject constructor(
         )
       }
 
-      val isNearLastChapter = currentChapterIndex == (currentChapterList.lastIndex - 5)
+      val isNearLastChapter =
+        currentChapterIndex == (currentChapterList.lastIndex - NEARED_LAST_CHAPTER_COUNT)
       if (isNearLastChapter && hasNextChapterListPage) {
         fetchChapterListNextPage()
       }
@@ -220,5 +221,11 @@ class ReaderViewModel @Inject constructor(
     }
 
     // save history to firebase
+  }
+
+  companion object {
+    private const val TAG = "ReaderViewModel"
+    private const val CHAPTER_LIST_PER_PAGE_SIZE = 20
+    private const val NEARED_LAST_CHAPTER_COUNT = 5
   }
 }

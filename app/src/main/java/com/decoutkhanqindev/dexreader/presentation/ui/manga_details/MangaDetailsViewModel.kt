@@ -50,7 +50,7 @@ class MangaDetailsViewModel @Inject constructor(
         }
         .onFailure {
           _mangaDetailsUiState.value = MangaDetailsUiState.Error
-          Log.d("MangaDetailsViewModel", "fetchMangaDetails have error: ${it.stackTraceToString()}")
+          Log.d(TAG, "fetchMangaDetails have error: ${it.stackTraceToString()}")
         }
     }
   }
@@ -75,7 +75,7 @@ class MangaDetailsViewModel @Inject constructor(
         .onFailure {
           _firstChapterId.value = null
           Log.d(
-            "MangaDetailsViewModel",
+            TAG,
             "fetchFirstChapter have error: ${it.stackTraceToString()}"
           )
         }
@@ -92,10 +92,10 @@ class MangaDetailsViewModel @Inject constructor(
       )
       chapterListResult
         .onSuccess { chapterList ->
-          val hasNextPage = chapterList.size >= 20
+          val hasNextPage = chapterList.size >= CHAPTER_LIST_PER_PAGE_SIZE
           _mangaChaptersUiState.value = MangaChaptersUiState.Content(
             chapterList = chapterList,
-            currentPage = 1,
+            currentPage = FIRST_PAGE,
             nextPageState = if (!hasNextPage)
               MangaChaptersNextPageState.NO_MORE_ITEMS
             else
@@ -105,7 +105,7 @@ class MangaDetailsViewModel @Inject constructor(
         .onFailure {
           _mangaChaptersUiState.value = MangaChaptersUiState.FirstPageError
           Log.d(
-            "MangaDetailsViewModel",
+            TAG,
             "fetchChapterListFirstPage have error: ${it.stackTraceToString()}"
           )
         }
@@ -147,7 +147,7 @@ class MangaDetailsViewModel @Inject constructor(
       nextChapterListResult
         .onSuccess { nextChapterList ->
           val allChapterList = currentMangaList + nextChapterList
-          val hasNextPage = nextChapterList.size >= 20
+          val hasNextPage = nextChapterList.size >= CHAPTER_LIST_PER_PAGE_SIZE
           _mangaChaptersUiState.value = currentUiState.copy(
             chapterList = allChapterList,
             currentPage = nextPage,
@@ -161,7 +161,7 @@ class MangaDetailsViewModel @Inject constructor(
           _mangaChaptersUiState.value =
             currentUiState.copy(nextPageState = MangaChaptersNextPageState.ERROR)
           Log.d(
-            "MangaDetailsViewModel",
+            TAG,
             "fetchChapterListNextPageInternal have error: ${it.stackTraceToString()}"
           )
         }
@@ -192,5 +192,11 @@ class MangaDetailsViewModel @Inject constructor(
     ) {
       fetchChapterListNextPageInternal(currentUiState)
     }
+  }
+
+  companion object {
+    private const val TAG = "MangaDetailsViewModel"
+    private const val FIRST_PAGE = 1
+    private const val CHAPTER_LIST_PER_PAGE_SIZE = 20
   }
 }

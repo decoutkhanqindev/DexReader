@@ -41,7 +41,7 @@ class SearchViewModel @Inject constructor(
   )
   val suggestionList = query
     .filter { it.isNotEmpty() }
-    .debounce(500L)
+    .debounce(DEBOUNCE_TIME_MILLIS)
     .distinctUntilChanged()
     .flatMapLatest { query ->
       flow {
@@ -50,20 +50,21 @@ class SearchViewModel @Inject constructor(
         val mangaListResult = searchMangaUseCase(query)
         mangaListResult
           .onSuccess { mangaList ->
-            val titleList = mangaList.map { manga -> manga.title }.take(10)
+            val titleList =
+              mangaList.map { manga -> manga.title }.take(TAKE_SUGGESTION_LIST_SIZE)
             _suggestionsUiState.value = SuggestionsUiState.Success
             emit(titleList)
           }
           .onFailure {
             _suggestionsUiState.value = SuggestionsUiState.Error
             emit(emptyList())
-            Log.d("SearchViewModel", "suggestionList have error: ${it.stackTraceToString()}")
+            Log.d(TAG, "suggestionList have error: ${it.stackTraceToString()}")
           }
       }
     }
     .stateIn(
       scope = viewModelScope,
-      started = WhileSubscribed(5000L),
+      started = WhileSubscribed(WHILE_SUBSCRIBED_STOP_TIMEOUT_MILLIS),
       initialValue = emptyList()
     )
 
@@ -74,10 +75,10 @@ class SearchViewModel @Inject constructor(
       val mangaListResult = searchMangaUseCase(query.value)
       mangaListResult
         .onSuccess { mangaList ->
-          val hasNextPage = mangaList.size >= 20
+          val hasNextPage = mangaList.size >= CHAPTER_LIST_PER_PAGE_SIZE
           _resultsUiState.value = ResultsUiState.Content(
             results = mangaList,
-            currentPage = 1,
+            currentPage = FIRST_PAGE,
             nextPageState = if (!hasNextPage)
               ResultsNextPageState.NO_MORE_ITEMS
             else
@@ -87,7 +88,7 @@ class SearchViewModel @Inject constructor(
         .onFailure {
           _resultsUiState.value = ResultsUiState.FirstPageError
           Log.d(
-            "SearchViewModel",
+            TAG,
             "fetchMangaListFirstPage have error: ${it.stackTraceToString()}"
           )
         }
@@ -128,7 +129,7 @@ class SearchViewModel @Inject constructor(
       nextMangaListResults
         .onSuccess { nextMangaList ->
           val allMangaList = currentMangaList + nextMangaList
-          val hasNextPage = nextMangaList.size >= 20
+          val hasNextPage = nextMangaList.size >= CHAPTER_LIST_PER_PAGE_SIZE
           _resultsUiState.value = currentUiState.copy(
             results = currentMangaList + allMangaList,
             currentPage = nextPage,
@@ -141,7 +142,7 @@ class SearchViewModel @Inject constructor(
         .onFailure {
           _resultsUiState.value = currentUiState.copy(nextPageState = ResultsNextPageState.ERROR)
           Log.d(
-            "SearchViewModel",
+            TAG,
             "fetchMangaListNextPageInternal have error: ${it.stackTraceToString()}"
           )
         }
@@ -163,5 +164,14 @@ class SearchViewModel @Inject constructor(
     if (currentUiState is ResultsUiState.Content && currentUiState.nextPageState == ResultsNextPageState.ERROR) {
       fetchMangaListNextPageInternal(currentUiState)
     }
+  }
+
+  companion object {
+    private const val TAG = "SearchViewModel"
+    private const val TAKE_SUGGESTION_LIST_SIZE = 10
+    private const val FIRST_PAGE = 1
+    private const val CHAPTER_LIST_PER_PAGE_SIZE = 20
+    private const val DEBOUNCE_TIME_MILLIS = 500L
+    private const val WHILE_SUBSCRIBED_STOP_TIMEOUT_MILLIS = 5000L
   }
 }
