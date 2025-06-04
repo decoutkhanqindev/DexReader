@@ -61,8 +61,8 @@ class MangaDetailsViewModel @Inject constructor(
         mangaId = mangaId,
         limit = 1,
         translatedLanguage = chapterLanguage.value,
-        volumeOrder = "asc",
-        chapterOrder = "asc"
+        volumeOrder = ASC_ORDER,
+        chapterOrder = ASC_ORDER
       )
       chapterListResult
         .onSuccess {
@@ -197,6 +197,7 @@ class MangaDetailsViewModel @Inject constructor(
   companion object {
     private const val TAG = "MangaDetailsViewModel"
     private const val FIRST_PAGE = 1
+    private const val ASC_ORDER = "asc"
     private const val CHAPTER_LIST_PER_PAGE_SIZE = 20
   }
 }
