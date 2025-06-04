@@ -7,6 +7,8 @@ import com.decoutkhanqindev.dexreader.domain.model.ChapterPages
 fun AtHomeServerDto.toDomain(chapterId: String): ChapterPages {
   val hash = chapter.hash
   val data = chapter.data
+
+  // {baseUrl}/data/{chapterDataHash}/{pageHash}
   val pageUrls = data.map { pageHash ->
     "$baseUrl/data/$hash/$pageHash"
   }
@@ -21,6 +23,7 @@ fun AtHomeServerDto.toDomain(chapterId: String): ChapterPages {
 }
 
 fun ChapterCacheEntity.toDomain(): ChapterPages {
+  // {baseUrl}/data/{chapterDataHash}/{pageHash}
   val pageUrls = pageHashes.map { hash ->
     "$baseUrl/data/$chapterDataHash/$hash"
   }
