@@ -149,7 +149,6 @@ class SearchViewModel @Inject constructor(
     }
   }
 
-
   fun updateQuery(newQuery: String) {
     if (newQuery == query.value) return
     _query.value = newQuery
