@@ -29,6 +29,7 @@ fun MenuDrawer(
         Column(modifier = Modifier.fillMaxSize()) {
           MenuHeader(
             modifier = Modifier
+              .weight(0.4f)
               .fillMaxWidth()
               .background(color = MaterialTheme.colorScheme.surfaceContainer)
               .padding(16.dp)
@@ -37,7 +38,15 @@ fun MenuDrawer(
             items = items,
             selectedItemId = selectedItemId,
             onItemClick = onItemClick,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+              .weight(2f)
+              .fillMaxWidth()
+          )
+          MenuFooter(
+            modifier = Modifier
+              .weight(0.2f)
+              .fillMaxWidth()
+              .background(color = MaterialTheme.colorScheme.surface)
           )
         }
       }
