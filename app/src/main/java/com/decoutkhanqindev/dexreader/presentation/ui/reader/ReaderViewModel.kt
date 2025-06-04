@@ -122,7 +122,8 @@ class ReaderViewModel @Inject constructor(
           return@launch
         }
         .onFailure {
-          Log.d(TAG, "Fetch chapter from cache have error: ${it.stackTraceToString()}")
+          Log.d(TAG, "Fetch chapter from cache is missed: ${it.stackTraceToString()}")
+          Log.d(TAG, "Fetch chapter from network is in progress.")
         }
 
       val networkResult = getChapterPagesUseCase(chapterIdToFetch)
