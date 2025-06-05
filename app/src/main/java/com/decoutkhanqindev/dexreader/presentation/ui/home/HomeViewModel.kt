@@ -61,13 +61,17 @@ class HomeViewModel @Inject constructor(
       } else {
         val error = results.firstOrNull { it.isFailure }?.exceptionOrNull()
         _uiState.value = HomeUiState.Error
-        Log.e("HomeViewModel", "fetchMangaLists have error: ${error?.stackTraceToString()}")
+        Log.e(TAG, "fetchMangaLists have error: ${error?.stackTraceToString()}")
       }
     }
   }
 
   fun retry() {
     fetchMangaLists()
+  }
+
+  companion object {
+    private const val TAG = "HomeViewModel"
   }
 }
 
