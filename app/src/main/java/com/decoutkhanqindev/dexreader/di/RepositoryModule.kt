@@ -1,13 +1,13 @@
 package com.decoutkhanqindev.dexreader.di
 
 import com.decoutkhanqindev.dexreader.data.repository.CacheRepositoryImpl
-import com.decoutkhanqindev.dexreader.data.repository.CategoryRepositoryImpl
 import com.decoutkhanqindev.dexreader.data.repository.ChapterRepositoryImpl
 import com.decoutkhanqindev.dexreader.data.repository.MangaRepositoryImpl
+import com.decoutkhanqindev.dexreader.data.repository.TagRepositoryImpl
 import com.decoutkhanqindev.dexreader.domain.repository.CacheRepository
-import com.decoutkhanqindev.dexreader.domain.repository.CategoryRepository
 import com.decoutkhanqindev.dexreader.domain.repository.ChapterRepository
 import com.decoutkhanqindev.dexreader.domain.repository.MangaRepository
+import com.decoutkhanqindev.dexreader.domain.repository.TagRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -32,7 +32,7 @@ interface RepositoryModule {
   ): CacheRepository
 
   @Binds
-  fun provideCategoryRepository(
-    categoryRepositoryImpl: CategoryRepositoryImpl
-  ): CategoryRepository
+  fun provideTagRepository(
+    categoryRepositoryImpl: TagRepositoryImpl
+  ): TagRepository
 }
