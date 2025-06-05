@@ -22,7 +22,8 @@ fun MangaTagItem(
     modifier = modifier,
     shape = MaterialTheme.shapes.large,
     elevation = CardDefaults.cardElevation(4.dp),
-    onClick = { onSelectedTag(tag) }) {
+    onClick = { onSelectedTag(tag) }
+  ) {
     Text(
       text = tag,
       style = MaterialTheme.typography.bodyMedium,

@@ -25,7 +25,6 @@ fun MangaListSection(
       text = title,
       style = MaterialTheme.typography.titleLarge,
       fontWeight = FontWeight.ExtraBold,
-      color = MaterialTheme.colorScheme.onPrimaryContainer,
       modifier = Modifier.padding(
         start = 16.dp,
         top = 8.dp,

@@ -46,9 +46,7 @@ fun MangaDescription(
         contentDescription = if (isExpanded)
           stringResource(R.string.icon_expand_less)
         else
-          stringResource(
-            R.string.icon_expand_more
-          )
+          stringResource(R.string.icon_expand_more)
       )
     }
   }
