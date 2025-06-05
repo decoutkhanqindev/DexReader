@@ -35,9 +35,9 @@ fun MangaSummarySection(
         .fillMaxWidth()
         .padding(horizontal = 4.dp)
     )
-    MangaGenreList(
-      genreList = manga.genres,
-      onSelectedGenre = onSelectedGenre,
+    MangaTagList(
+      tagList = manga.tags,
+      onSelectedTag = onSelectedGenre,
       modifier = Modifier.fillMaxWidth()
     )
   }

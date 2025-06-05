@@ -13,18 +13,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MangaGenreItem(
-  genre: String,
-  onSelectedGenre: (String) -> Unit,
+fun MangaTagItem(
+  tag: String,
+  onSelectedTag: (String) -> Unit,
   modifier: Modifier = Modifier
 ) {
   Card(
     modifier = modifier,
     shape = MaterialTheme.shapes.large,
     elevation = CardDefaults.cardElevation(4.dp),
-    onClick = { onSelectedGenre(genre) }) {
+    onClick = { onSelectedTag(tag) }) {
     Text(
-      text = genre,
+      text = tag,
       style = MaterialTheme.typography.bodyMedium,
       fontWeight = FontWeight.Bold,
       textAlign = TextAlign.Center,

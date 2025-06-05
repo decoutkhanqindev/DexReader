@@ -13,9 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MangaGenreList(
-  genreList: List<String>,
-  onSelectedGenre: (String) -> Unit,
+fun MangaTagList(
+  tagList: List<String>,
+  onSelectedTag: (String) -> Unit,
   modifier: Modifier = Modifier
 ) {
   Box(modifier = modifier) {
@@ -24,10 +24,10 @@ fun MangaGenreList(
       horizontalArrangement = Arrangement.spacedBy(2.dp),
       verticalAlignment = Alignment.CenterVertically,
     ) {
-      items(genreList, key = { it }) { genre ->
-        MangaGenreItem(
-          genre = genre,
-          onSelectedGenre = onSelectedGenre,
+      items(tagList, key = { it }) { tag ->
+        MangaTagItem(
+          tag = tag,
+          onSelectedTag = onSelectedTag,
           modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 4.dp)
