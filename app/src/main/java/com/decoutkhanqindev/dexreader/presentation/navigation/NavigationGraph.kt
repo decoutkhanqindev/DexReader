@@ -9,7 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.decoutkhanqindev.dexreader.presentation.ui.categories.CategoriesScreen
-import com.decoutkhanqindev.dexreader.presentation.ui.favorites.FavoriteScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.favorite.FavoriteScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.history.HistoryScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.home.HomeScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.MangaDetailsScreen
@@ -52,6 +52,9 @@ fun NavGraph(
             navController.navigate(itemId)
           }
         },
+        onSearchClick = {
+          navController.navigate(route = NavigationDestination.SearchScreen.route)
+        },
         modifier = Modifier.fillMaxSize()
       )
     }
@@ -62,6 +65,9 @@ fun NavGraph(
           if (itemId != NavigationDestination.FavoriteScreen.route) {
             navController.navigate(itemId)
           }
+        },
+        onSearchClick = {
+          navController.navigate(route = NavigationDestination.SearchScreen.route)
         },
         modifier = Modifier.fillMaxSize()
       )
@@ -74,6 +80,9 @@ fun NavGraph(
             navController.navigate(itemId)
           }
         },
+        onSearchClick = {
+          navController.navigate(route = NavigationDestination.SearchScreen.route)
+        },
         modifier = Modifier.fillMaxSize()
       )
     }
@@ -85,6 +94,9 @@ fun NavGraph(
             navController.navigate(itemId)
           }
         },
+        onSearchClick = {
+          navController.navigate(route = NavigationDestination.SearchScreen.route)
+        },
         modifier = Modifier.fillMaxSize()
       )
     }
@@ -95,6 +107,9 @@ fun NavGraph(
           if (itemId != NavigationDestination.SettingsScreen.route) {
             navController.navigate(itemId)
           }
+        },
+        onSearchClick = {
+          navController.navigate(route = NavigationDestination.SearchScreen.route)
         },
         modifier = Modifier.fillMaxSize()
       )
