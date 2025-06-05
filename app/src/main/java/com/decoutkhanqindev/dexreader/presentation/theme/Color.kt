@@ -277,7 +277,7 @@ val onCustomColor2DarkHighContrast = Color(0xFF000000)
 val customColor2ContainerDarkHighContrast = Color(0xFF81D2E0)
 val onCustomColor2ContainerDarkHighContrast = Color(0xFF000F11)
 
-// Custom Color 3: Tag Tags and Filters
+// Custom Color 3: Category Tags and Filters
 val customColor3Light = Color(0xFF7B5C0D)
 val onCustomColor3Light = Color(0xFFFFFFFF)
 val customColor3ContainerLight = Color(0xFFFFE1A3)
