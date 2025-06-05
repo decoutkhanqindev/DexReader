@@ -1,14 +1,14 @@
-package com.decoutkhanqindev.dexreader.data.network.response
+package com.decoutkhanqindev.dexreader.data.network.mangadex_api.response
 
 
-import com.decoutkhanqindev.dexreader.data.network.dto.TagDto
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.dto.ChapterDto
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class TagListResponse(
+data class ChapterListResponse(
   @Json(name = "data")
-  val data: List<TagDto>,
+  val data: List<ChapterDto>,
   @Json(name = "limit")
   val limit: Int,
   @Json(name = "offset")

@@ -1,8 +1,8 @@
 package com.decoutkhanqindev.dexreader.di
 
 import com.decoutkhanqindev.dexreader.BuildConfig
-import com.decoutkhanqindev.dexreader.data.network.MangaDexApiService
-import com.decoutkhanqindev.dexreader.data.network.interceptor.NetworkInterceptor
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.MangaDexApiService
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.interceptor.NetworkInterceptor
 import com.decoutkhanqindev.dexreader.data.utils.IsoDateAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

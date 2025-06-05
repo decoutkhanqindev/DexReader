@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.data.network.dto
+package com.decoutkhanqindev.dexreader.data.network.mangadex_api.dto
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

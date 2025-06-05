@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.data.network.dto
+package com.decoutkhanqindev.dexreader.data.network.mangadex_api.dto
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -23,13 +23,4 @@ data class MangaAttributesDto(
   @Json(name = "updatedAt") val updatedAt: Long? = null, // Ngày cập nhật cuối
 )
 
-@JsonClass(generateAdapter = true)
-data class TagDto(
-  @Json(name = "id") val id: String,
-  @Json(name = "attributes") val attributes: TagAttributesDto
-)
 
-@JsonClass(generateAdapter = true)
-data class TagAttributesDto(
-  @Json(name = "name") val name: Map<String, String>, // Tên thể loại
-)

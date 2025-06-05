@@ -1,11 +1,11 @@
-package com.decoutkhanqindev.dexreader.data.network
+package com.decoutkhanqindev.dexreader.data.network.mangadex_api
 
-import com.decoutkhanqindev.dexreader.data.network.dto.AtHomeServerDto
-import com.decoutkhanqindev.dexreader.data.network.response.ChapterDetailsResponse
-import com.decoutkhanqindev.dexreader.data.network.response.ChapterListResponse
-import com.decoutkhanqindev.dexreader.data.network.response.MangaDetailsResponse
-import com.decoutkhanqindev.dexreader.data.network.response.MangaListResponse
-import com.decoutkhanqindev.dexreader.data.network.response.TagListResponse
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.dto.AtHomeServerDto
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.ChapterDetailsResponse
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.ChapterListResponse
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.MangaDetailsResponse
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.MangaListResponse
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.TagListResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -89,5 +89,14 @@ interface MangaDexApiService {
   suspend fun getChapterPages(@Path("id") chapterId: String): AtHomeServerDto
 
   @GET("manga/tag")
-  suspend fun getTags(): TagListResponse
+  suspend fun getTagList(): TagListResponse
+
+  @GET("/manga")
+  suspend fun getMangaListByTag(
+    @Query("limit") limit: Int = 20,
+    @Query("offset") offset: Int = 0,
+    @Query("includedTags[]") tagId: String,
+    @Query("includes[]")
+    includes: List<String> = listOf("cover_art", "author", "artist"),
+  ): MangaListResponse
 }
