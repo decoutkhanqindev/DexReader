@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.ui.home.components
+package com.decoutkhanqindev.dexreader.presentation.ui.common.top_bars
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -18,7 +18,8 @@ import com.decoutkhanqindev.dexreader.R
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun HomeTopBar(
+fun TopBar(
+  title: String,
   onMenuClick: () -> Unit,
   onSearchClick: () -> Unit,
   modifier: Modifier = Modifier
@@ -26,7 +27,7 @@ fun HomeTopBar(
   CenterAlignedTopAppBar(
     title = {
       Text(
-        text = stringResource(R.string.app_name),
+        text = title,
         style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.ExtraBold,
       )
