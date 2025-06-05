@@ -8,7 +8,6 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.decoutkhanqindev.dexreader.presentation.ui.categories.CategoriesScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.favorite.FavoriteScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.history.HistoryScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.home.HomeScreen
@@ -17,6 +16,7 @@ import com.decoutkhanqindev.dexreader.presentation.ui.profile.ProfileScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.reader.ReaderScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.search.SearchScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.settings.SettingsScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.tags.TagsScreen
 
 @Composable
 fun NavGraph(
@@ -45,10 +45,10 @@ fun NavGraph(
       )
     }
 
-    composable(route = NavigationDestination.CategoriesScreen.route) {
-      CategoriesScreen(
+    composable(route = NavigationDestination.TagsScreen.route) {
+      TagsScreen(
         onMenuItemClick = { itemId ->
-          if (itemId != NavigationDestination.CategoriesScreen.route) {
+          if (itemId != NavigationDestination.TagsScreen.route) {
             navHostController.navigate(itemId)
           }
         },
