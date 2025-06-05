@@ -8,6 +8,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.decoutkhanqindev.dexreader.presentation.ui.categories.CategoriesScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.category_details.CategoryDetailsScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.favorite.FavoriteScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.history.HistoryScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.home.HomeScreen
@@ -16,7 +18,6 @@ import com.decoutkhanqindev.dexreader.presentation.ui.profile.ProfileScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.reader.ReaderScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.search.SearchScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.settings.SettingsScreen
-import com.decoutkhanqindev.dexreader.presentation.ui.tags.TagsScreen
 
 @Composable
 fun NavGraph(
@@ -45,16 +46,32 @@ fun NavGraph(
       )
     }
 
-    composable(route = NavigationDestination.TagsScreen.route) {
-      TagsScreen(
+    composable(route = NavigationDestination.CategoriesScreen.route) {
+      CategoriesScreen(
         onMenuItemClick = { itemId ->
-          if (itemId != NavigationDestination.TagsScreen.route) {
+          if (itemId != NavigationDestination.CategoriesScreen.route) {
             navHostController.navigate(itemId)
           }
         },
         onSearchClick = {
           navHostController.navigate(route = NavigationDestination.SearchScreen.route)
         },
+        onSelectedCategory = { tagId ->
+          navHostController.navigate(route = "${NavigationDestination.CategoryDetailsScreen.route}/$tagId")
+        },
+        modifier = Modifier.fillMaxSize()
+      )
+    }
+
+    composable(
+      route = NavigationDestination.CategoryDetailsScreen.routeWithArgs,
+      arguments = listOf(
+        navArgument(NavigationDestination.CategoryDetailsScreen.TAG_ID_ARG) {
+          type = NavType.StringType
+        }
+      )
+    ) {
+      CategoryDetailsScreen(
         modifier = Modifier.fillMaxSize()
       )
     }

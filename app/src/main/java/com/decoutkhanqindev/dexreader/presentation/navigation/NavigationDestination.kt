@@ -16,12 +16,14 @@ sealed interface NavigationDestination {
     override val route: String = "home"
   }
 
-  object TagsScreen : NavigationDestination {
-    override val route: String = "tag"
+  object CategoriesScreen : NavigationDestination {
+    override val route: String = "categories"
   }
 
-  object TagDetailsScreen : NavigationDestination {
-    override val route: String = "tag_details"
+  object CategoryDetailsScreen : NavigationDestination {
+    override val route: String = "category_details"
+    const val TAG_ID_ARG: String = "tagId"
+    val routeWithArgs: String = "${route}/{$TAG_ID_ARG}"
   }
 
   object FavoriteScreen : NavigationDestination {
