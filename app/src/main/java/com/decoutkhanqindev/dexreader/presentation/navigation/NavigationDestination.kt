@@ -20,8 +20,8 @@ sealed interface NavigationDestination {
     override val route: String = "tag"
   }
 
-  object CategoryDetailsScreen : NavigationDestination {
-    override val route: String = "category_details"
+  object TagDetailsScreen : NavigationDestination {
+    override val route: String = "tag_details"
   }
 
   object FavoriteScreen : NavigationDestination {

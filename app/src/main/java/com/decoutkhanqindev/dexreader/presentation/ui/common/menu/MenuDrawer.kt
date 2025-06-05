@@ -6,12 +6,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Tag
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
@@ -38,9 +38,9 @@ fun MenuDrawer(
       icon = Icons.Default.Home
     ),
     MenuItem(
-      id = NavigationDestination.CategoriesScreen.route,
-      title = stringResource(R.string.categories_menu_item),
-      icon = Icons.Default.Category
+      id = NavigationDestination.TagsScreen.route,
+      title = stringResource(R.string.tags_menu_item),
+      icon = Icons.Default.Tag
     ),
     MenuItem(
       id = NavigationDestination.FavoriteScreen.route,
