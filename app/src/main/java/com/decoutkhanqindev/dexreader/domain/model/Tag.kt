@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.domain.model
 
-data class Category(
+data class Tag(
   val id: String,
   val name: String,
   val description: String,
