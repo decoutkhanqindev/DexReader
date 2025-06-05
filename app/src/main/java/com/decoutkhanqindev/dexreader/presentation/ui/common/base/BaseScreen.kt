@@ -19,6 +19,7 @@ fun BaseScreen(
   title: String,
   route: String,
   onMenuItemClick: (String) -> Unit,
+  isSearchEnabled: Boolean = true,
   onSearchClick: () -> Unit,
   content: @Composable () -> Unit,
   modifier: Modifier = Modifier
@@ -45,6 +46,7 @@ fun BaseScreen(
                 drawerState.open()
               }
             },
+            isSearchEnabled = isSearchEnabled,
             onSearchClick = onSearchClick,
             modifier = Modifier.fillMaxWidth()
           )

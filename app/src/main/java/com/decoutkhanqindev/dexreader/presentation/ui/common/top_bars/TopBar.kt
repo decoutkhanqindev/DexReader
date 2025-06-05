@@ -21,6 +21,7 @@ import com.decoutkhanqindev.dexreader.R
 fun TopBar(
   title: String,
   onMenuClick: () -> Unit,
+  isSearchEnabled: Boolean = true,
   onSearchClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
@@ -35,15 +36,19 @@ fun TopBar(
     navigationIcon = {
       IconButton(onClick = onMenuClick) {
         Icon(
-          imageVector = Icons.Default.Menu, contentDescription = stringResource(R.string.menu)
+          imageVector = Icons.Default.Menu,
+          contentDescription = stringResource(R.string.menu)
         )
       }
     },
     actions = {
-      IconButton(onClick = onSearchClick) {
-        Icon(
-          imageVector = Icons.Default.Search, contentDescription = stringResource(R.string.search)
-        )
+      if (isSearchEnabled) {
+        IconButton(onClick = onSearchClick) {
+          Icon(
+            imageVector = Icons.Default.Search,
+            contentDescription = stringResource(R.string.search)
+          )
+        }
       }
     },
     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
