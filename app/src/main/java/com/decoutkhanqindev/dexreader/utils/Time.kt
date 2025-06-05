@@ -11,7 +11,10 @@ fun Long?.toTimeAgo(): String {
   val diff = now - this
 
   return when {
-    diff < 60_000L -> "${diff / 1000} seconds ago" // Less than 1 minute
+    diff < 60_000L -> {
+      if ((diff / 1000) < 0) "Unknown time"
+      else "${diff / 1000} seconds ago"
+    } // Less than 1 minute
     diff < 3_600_000L -> "${diff / 60_000} minutes ago" // Less than 1 hour
     diff < 86_400_000L -> "${diff / 3_600_000} hours ago" // Less than 1 day
     diff < 604_800_000L -> "${diff / 86_400_000} days ago" // Less than 1 week
