@@ -8,9 +8,10 @@ import com.decoutkhanqindev.dexreader.presentation.navigation.NavGraph
 
 @Composable
 fun DexReaderApp() {
-  val navController = rememberNavController()
+  val navHostController = rememberNavController()
+
   NavGraph(
-    navController = navController,
+    navHostController = navHostController,
     modifier = Modifier.fillMaxSize()
   )
 }
