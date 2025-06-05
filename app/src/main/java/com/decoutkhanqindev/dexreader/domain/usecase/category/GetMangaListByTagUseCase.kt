@@ -1,11 +1,11 @@
-package com.decoutkhanqindev.dexreader.domain.usecase.tag
+package com.decoutkhanqindev.dexreader.domain.usecase.category
 
 import com.decoutkhanqindev.dexreader.domain.model.Manga
-import com.decoutkhanqindev.dexreader.domain.repository.TagRepository
+import com.decoutkhanqindev.dexreader.domain.repository.CategoryRepository
 import javax.inject.Inject
 
 class GetMangaListByTagUseCase @Inject constructor(
-  private val categoryRepository: TagRepository
+  private val categoryRepository: CategoryRepository
 ) {
   suspend operator fun invoke(
     tagId: String,
