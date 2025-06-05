@@ -27,7 +27,6 @@ fun MenuItemRow(
         style = MaterialTheme.typography.bodyLarge,
         fontWeight = FontWeight.Bold,
         textAlign = TextAlign.Center,
-        color = MaterialTheme.colorScheme.onPrimaryContainer
       )
     },
     icon = {
