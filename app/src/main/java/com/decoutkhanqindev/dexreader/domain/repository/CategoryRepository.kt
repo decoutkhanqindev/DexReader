@@ -1,10 +1,10 @@
 package com.decoutkhanqindev.dexreader.domain.repository
 
+import com.decoutkhanqindev.dexreader.domain.model.Category
 import com.decoutkhanqindev.dexreader.domain.model.Manga
-import com.decoutkhanqindev.dexreader.domain.model.Tag
 
-interface TagRepository {
-  suspend fun getTagList(): Result<List<Tag>>
+interface CategoryRepository {
+  suspend fun getTagList(): Result<List<Category>>
   suspend fun getMangaListByTag(
     tagId: String,
     offset: Int = 0
