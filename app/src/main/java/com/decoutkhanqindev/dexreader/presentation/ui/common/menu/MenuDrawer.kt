@@ -93,7 +93,7 @@ fun MenuDrawer(
         }
       }
     },
-    content = content,
+    content = { content() },
     modifier = modifier
   )
 }
