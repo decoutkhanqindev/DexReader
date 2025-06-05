@@ -8,9 +8,9 @@ import com.decoutkhanqindev.dexreader.domain.model.Chapter
 import com.decoutkhanqindev.dexreader.domain.usecase.cache.AddChapterCacheUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.cache.ClearExpiredCacheUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.cache.GetChapterCacheUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.manga.chapter.GetChapterDetailsUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.manga.chapter.GetChapterListUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.manga.chapter.GetChapterPagesUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.chapter.GetChapterDetailsUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.chapter.GetChapterListUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.chapter.GetChapterPagesUseCase
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavigationDestination
 import com.decoutkhanqindev.dexreader.utils.toLanguageCode
 import dagger.hilt.android.lifecycle.HiltViewModel
