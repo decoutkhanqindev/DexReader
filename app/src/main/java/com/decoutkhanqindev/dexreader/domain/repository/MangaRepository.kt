@@ -1,7 +1,5 @@
 package com.decoutkhanqindev.dexreader.domain.repository
 
-import com.decoutkhanqindev.dexreader.domain.model.Chapter
-import com.decoutkhanqindev.dexreader.domain.model.ChapterPages
 import com.decoutkhanqindev.dexreader.domain.model.Manga
 
 interface MangaRepository {
@@ -10,17 +8,7 @@ interface MangaRepository {
   suspend fun getNewReleaseMangaList(): Result<List<Manga>>
   suspend fun getCompletedMangaList(): Result<List<Manga>>
   suspend fun getMangaDetails(mangaId: String): Result<Manga>
-  suspend fun getChapterList(
-    mangaId: String,
-    limit: Int = 20,
-    offset: Int = 0,
-    translatedLanguage: String = "en",
-    volumeOrder: String = "desc",
-    chapterOrder: String = "desc"
-  ): Result<List<Chapter>>
 
-  suspend fun getChapterDetails(chapterId: String): Result<Chapter>
-  suspend fun getChapterPages(chapterId: String): Result<ChapterPages>
   suspend fun searchManga(
     query: String,
     offset: Int
