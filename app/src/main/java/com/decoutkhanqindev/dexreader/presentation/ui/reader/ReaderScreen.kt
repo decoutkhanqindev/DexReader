@@ -2,6 +2,8 @@ package com.decoutkhanqindev.dexreader.presentation.ui.reader
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -46,8 +48,8 @@ fun ReaderScreen(
     topBar = {
       AnimatedVisibility(
         visible = !isFullScreen,
-        enter = expandVertically(),
-        exit = shrinkVertically()
+        enter = expandVertically() + fadeIn(),
+        exit = shrinkVertically() + fadeOut()
       ) {
         ReaderTopBar(
           currentChapterPage = currentPage,
@@ -60,8 +62,8 @@ fun ReaderScreen(
     bottomBar = {
       AnimatedVisibility(
         visible = !isFullScreen,
-        enter = expandVertically(),
-        exit = shrinkVertically()
+        enter = expandVertically() + fadeIn(),
+        exit = shrinkVertically() + fadeOut()
       ) {
         ReaderBottomBar(
           volume = chapterDetailsUiState.volume,
