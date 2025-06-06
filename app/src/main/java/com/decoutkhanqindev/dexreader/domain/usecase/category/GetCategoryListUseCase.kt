@@ -4,9 +4,9 @@ import com.decoutkhanqindev.dexreader.domain.model.Category
 import com.decoutkhanqindev.dexreader.domain.repository.CategoryRepository
 import javax.inject.Inject
 
-class GetTagListUseCase @Inject constructor(
+class GetCategoryListUseCase @Inject constructor(
   private val categoryRepository: CategoryRepository
 ) {
   suspend operator fun invoke(): Result<List<Category>> =
-    categoryRepository.getTagList()
+    categoryRepository.getCategoryList()
 }

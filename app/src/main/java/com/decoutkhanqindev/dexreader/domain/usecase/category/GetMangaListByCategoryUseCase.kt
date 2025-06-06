@@ -4,11 +4,11 @@ import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.domain.repository.CategoryRepository
 import javax.inject.Inject
 
-class GetMangaListByTagUseCase @Inject constructor(
+class GetMangaListByCategoryUseCase @Inject constructor(
   private val categoryRepository: CategoryRepository
 ) {
   suspend operator fun invoke(
-    tagId: String,
+    categoryId: String,
     offset: Int = 0,
     // sorting
     lastUpdated: String = "desc", // latest update
@@ -19,8 +19,8 @@ class GetMangaListByTagUseCase @Inject constructor(
     status: String = "ongoing", // ongoing, completed, hiatus, cancelled
     contentRating: String = "safe", // safe, suggestive, erotica
   ): Result<List<Manga>> =
-    categoryRepository.getMangaListByTag(
-      tagId = tagId,
+    categoryRepository.getMangaListByCategory(
+      categoryId = categoryId,
       offset = offset,
       lastUpdated = lastUpdated,
       followedCount = followedCount,
