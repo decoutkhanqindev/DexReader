@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.ui.reader.components
+package com.decoutkhanqindev.dexreader.presentation.ui.reader.components.pages
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

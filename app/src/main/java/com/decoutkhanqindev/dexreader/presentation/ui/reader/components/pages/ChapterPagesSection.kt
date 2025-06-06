@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.ui.reader.components
+package com.decoutkhanqindev.dexreader.presentation.ui.reader.components.pages
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
@@ -8,7 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 
 @Composable
-fun ChapterPageSection(
+fun ChapterPagesSection(
   chapterPages: List<String>,
   currentPage: Int,
   totalPages: Int,
