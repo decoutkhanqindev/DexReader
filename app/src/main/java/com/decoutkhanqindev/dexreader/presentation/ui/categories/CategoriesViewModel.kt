@@ -29,10 +29,10 @@ class CategoriesViewModel @Inject constructor(
       val categoryListResult = getCategoryListUseCase()
       categoryListResult
         .onSuccess {
-          val genreList = it.filter { it.group == GENRE }
-          val themeList = it.filter { it.group == THEME }
-          val formatList = it.filter { it.group == FORMAT }
-          val contentList = it.filter { it.group == CONTENT }
+          val genreList = it.filter { it.group == CategoryGroup.Genre.value }
+          val themeList = it.filter { it.group == CategoryGroup.Theme.value }
+          val formatList = it.filter { it.group == CategoryGroup.Format.value }
+          val contentList = it.filter { it.group == CategoryGroup.Content.value }
           _uiState.value = CategoriesUiState.Success(
             genreList = genreList,
             themeList = themeList,
@@ -53,9 +53,5 @@ class CategoriesViewModel @Inject constructor(
 
   companion object {
     private const val TAG = "CategoriesViewModel"
-    private const val GENRE = "genre"
-    private const val THEME = "theme"
-    private const val FORMAT = "format"
-    private const val CONTENT = "content"
   }
 }

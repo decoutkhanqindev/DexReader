@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.ui.categories.CategoriesUiState
+import com.decoutkhanqindev.dexreader.presentation.ui.categories.CategoryGroup
 import com.decoutkhanqindev.dexreader.presentation.ui.common.states.ErrorScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.common.states.LoadingScreen
 
@@ -36,10 +37,6 @@ fun CategoriesContent(
 
     is CategoriesUiState.Success -> {
       var expandedGroup by rememberSaveable { mutableStateOf<String?>(null) }
-      val genre = uiState.genreList.first().group.capitalize(java.util.Locale.US)
-      val theme = uiState.themeList.first().group.capitalize(java.util.Locale.US)
-      val format = uiState.formatList.first().group.capitalize(java.util.Locale.US)
-      val content = uiState.contentList.first().group.capitalize(java.util.Locale.US)
 
       Box(modifier = modifier) {
         LazyColumn(
@@ -50,11 +47,12 @@ fun CategoriesContent(
         ) {
           item {
             CategoryGroupSection(
-              isExpanded = expandedGroup == genre,
+              isExpanded = expandedGroup == CategoryGroup.Genre.name,
               onExpandClick = {
-                expandedGroup = if (expandedGroup == genre) null else genre
+                expandedGroup = if (expandedGroup == CategoryGroup.Genre.name) null
+                else CategoryGroup.Genre.name
               },
-              group = genre,
+              group = CategoryGroup.Genre.name,
               categoryList = uiState.genreList,
               onSelectedCategory = onSelectedCategory,
               modifier = Modifier
@@ -65,11 +63,12 @@ fun CategoriesContent(
 
           item {
             CategoryGroupSection(
-              isExpanded = expandedGroup == theme,
+              isExpanded = expandedGroup == CategoryGroup.Theme.name,
               onExpandClick = {
-                expandedGroup = if (expandedGroup == theme) null else theme
+                expandedGroup = if (expandedGroup == CategoryGroup.Theme.name) null
+                else CategoryGroup.Theme.name
               },
-              group = theme,
+              group = CategoryGroup.Theme.name,
               categoryList = uiState.themeList,
               onSelectedCategory = onSelectedCategory,
               modifier = Modifier
@@ -80,11 +79,12 @@ fun CategoriesContent(
 
           item {
             CategoryGroupSection(
-              isExpanded = expandedGroup == format,
+              isExpanded = expandedGroup == CategoryGroup.Format.name,
               onExpandClick = {
-                expandedGroup = if (expandedGroup == format) null else format
+                expandedGroup = if (expandedGroup == CategoryGroup.Format.name) null
+                else CategoryGroup.Format.name
               },
-              group = format,
+              group = CategoryGroup.Format.name,
               categoryList = uiState.formatList,
               onSelectedCategory = onSelectedCategory,
               modifier = Modifier
@@ -95,11 +95,12 @@ fun CategoriesContent(
 
           item {
             CategoryGroupSection(
-              isExpanded = expandedGroup == content,
+              isExpanded = expandedGroup == CategoryGroup.Content.name,
               onExpandClick = {
-                expandedGroup = if (expandedGroup == content) null else content
+                expandedGroup = if (expandedGroup == CategoryGroup.Content.name) null
+                else CategoryGroup.Content.name
               },
-              group = content,
+              group = CategoryGroup.Content.name,
               categoryList = uiState.contentList,
               onSelectedCategory = onSelectedCategory,
               modifier = Modifier
