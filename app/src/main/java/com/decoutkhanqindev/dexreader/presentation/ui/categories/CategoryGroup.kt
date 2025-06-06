@@ -1,26 +1,26 @@
 package com.decoutkhanqindev.dexreader.presentation.ui.categories
 
 sealed class CategoryGroup(
-  val  name: String,
-  val value: String
+  val id: String,
+  val name: String,
 ) {
   object Genre : CategoryGroup(
+    id = "genre",
     name = "Genre",
-    value = "genre"
   )
 
   object Theme : CategoryGroup(
+    id = "theme",
     name = "Theme",
-    value = "theme"
   )
 
   object Format : CategoryGroup(
+    id = "theme",
     name = "Format",
-    value = "format"
   )
 
   object Content : CategoryGroup(
+    id = "theme",
     name = "Content",
-    value = "content"
   )
 }
