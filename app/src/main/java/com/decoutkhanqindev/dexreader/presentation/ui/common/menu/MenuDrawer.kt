@@ -33,32 +33,32 @@ fun MenuDrawer(
 ) {
   val items = listOf(
     MenuItem(
-      id = NavigationDestination.HomeScreen.route,
+      id = NavigationDestination.HomeDestination.route,
       title = stringResource(R.string.home_menu_item),
       icon = Icons.Default.Home
     ),
     MenuItem(
-      id = NavigationDestination.CategoriesScreen.route,
+      id = NavigationDestination.CategoriesDestination.route,
       title = stringResource(R.string.category_menu_item),
       icon = Icons.Default.Category
     ),
     MenuItem(
-      id = NavigationDestination.FavoriteScreen.route,
+      id = NavigationDestination.FavoriteDestination.route,
       title = stringResource(R.string.favorite_menu_item),
       icon = Icons.Default.Favorite
     ),
     MenuItem(
-      id = NavigationDestination.HistoryScreen.route,
+      id = NavigationDestination.HistoryDestination.route,
       title = stringResource(R.string.history_menu_item),
       icon = Icons.Default.History
     ),
     MenuItem(
-      id = NavigationDestination.ProfileScreen.route,
+      id = NavigationDestination.ProfileDestination.route,
       title = stringResource(R.string.profile_menu_item),
       icon = Icons.Default.Person
     ),
     MenuItem(
-      id = NavigationDestination.SettingsScreen.route,
+      id = NavigationDestination.SettingsDestination.route,
       title = stringResource(R.string.settings_menu_item),
       icon = Icons.Default.Settings
     )
