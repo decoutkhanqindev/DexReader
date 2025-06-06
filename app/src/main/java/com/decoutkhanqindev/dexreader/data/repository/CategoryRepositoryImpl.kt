@@ -14,13 +14,13 @@ class CategoryRepositoryImpl @Inject constructor(
   private val mangaDexApiService: MangaDexApiService,
   @UploadUrlQualifier private val uploadUrl: String
 ) : CategoryRepository {
-  override suspend fun getTagList(): Result<List<Category>> =
+  override suspend fun getCategoryList(): Result<List<Category>> =
     runSuspendCatching(Dispatchers.IO) {
       mangaDexApiService.getTagList().data.map { it.toDomain() }
     }
 
-  override suspend fun getMangaListByTag(
-    tagId: String,
+  override suspend fun getMangaListByCategory(
+    categoryId: String,
     offset: Int,
     // sorting
     lastUpdated: String, // latest update
@@ -33,7 +33,7 @@ class CategoryRepositoryImpl @Inject constructor(
   ): Result<List<Manga>> =
     runSuspendCatching(Dispatchers.IO) {
       mangaDexApiService.getMangaListByTag(
-        tagId = tagId,
+        tagId = categoryId,
         offset = offset,
         lastUpdated = lastUpdated,
         followedCount = followedCount,

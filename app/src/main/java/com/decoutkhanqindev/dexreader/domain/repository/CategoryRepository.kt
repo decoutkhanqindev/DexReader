@@ -4,9 +4,9 @@ import com.decoutkhanqindev.dexreader.domain.model.Category
 import com.decoutkhanqindev.dexreader.domain.model.Manga
 
 interface CategoryRepository {
-  suspend fun getTagList(): Result<List<Category>>
-  suspend fun getMangaListByTag(
-    tagId: String,
+  suspend fun getCategoryList(): Result<List<Category>>
+  suspend fun getMangaListByCategory(
+    categoryId: String,
     offset: Int = 0,
     // sorting
     lastUpdated: String = "desc", // latest update
