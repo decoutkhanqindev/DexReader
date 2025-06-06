@@ -32,7 +32,7 @@ class ReaderViewModel @Inject constructor(
   private val clearExpiredCacheUseCase: ClearExpiredCacheUseCase
 ) : ViewModel() {
   private val chapterIdFromArg: String =
-    checkNotNull(savedStateHandle[NavigationDestination.ReaderScreen.CHAPTER_ID_ARG])
+    checkNotNull(savedStateHandle[NavigationDestination.ReaderDestination.CHAPTER_ID_ARG])
   private var currentChapterId: String = chapterIdFromArg
 
   private val _chapterDetailsState =
