@@ -17,6 +17,7 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.ui.common.states.ErrorScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.reader.ChapterPagesUiState
+import com.decoutkhanqindev.dexreader.presentation.ui.reader.components.pages.ChapterPagesSection
 
 @Composable
 fun ReaderContent(
@@ -53,7 +54,7 @@ fun ReaderContent(
             modifier = Modifier.fillMaxWidth()
           )
         } else {
-          ChapterPageSection(
+          ChapterPagesSection(
             chapterPages = chapterPages,
             currentPage = currentPage,
             totalPages = totalPages,
