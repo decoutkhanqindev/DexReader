@@ -61,8 +61,7 @@ fun MangaChapterItem(
           Text(
             text = stringResource(R.string.last_chapter),
             style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Bold,
-            fontStyle = FontStyle.Italic,
+            fontWeight = FontWeight.ExtraBold,
             textAlign = TextAlign.End,
             modifier = Modifier
               .weight(0.3f)

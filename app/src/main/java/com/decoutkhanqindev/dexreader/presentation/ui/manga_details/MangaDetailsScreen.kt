@@ -1,19 +1,18 @@
 package com.decoutkhanqindev.dexreader.presentation.ui.manga_details
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BaseDetailsScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.components.MangaDetailsContent
-import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.components.MangaDetailsTopBar
 import com.decoutkhanqindev.dexreader.utils.toFullLanguageName
 import com.decoutkhanqindev.dexreader.utils.toLanguageCode
 
@@ -34,15 +33,11 @@ fun MangaDetailsScreen(
   var isReading by rememberSaveable { mutableStateOf(false) }
   var isFavorite by rememberSaveable { mutableStateOf(true) }
 
-  Scaffold(
-    topBar = {
-      MangaDetailsTopBar(
-        onNavigateBack = onNavigateBack,
-        onSearchClick = onSearchClick,
-        modifier = Modifier.fillMaxWidth()
-      )
-    },
-    content = { innerPadding ->
+  BaseDetailsScreen(
+    title = stringResource(R.string.manga_details),
+    onNavigateBack = onNavigateBack,
+    onSearchClick = onSearchClick,
+    content = {
       MangaDetailsContent(
         mangaDetailsUiState = mangaDetailsUiState,
         mangaChaptersUiState = mangaChaptersUiState,
@@ -59,11 +54,10 @@ fun MangaDetailsScreen(
         onRetryFetchChapterListNextPage = { viewModel.retryFetchChapterListNextPage() },
         onRetryFetchChapterListFirstPage = { viewModel.retryFetchChapterListFirstPage() },
         onRetry = { viewModel.retry() },
-        modifier = modifier
-          .padding(innerPadding)
-          .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
       )
-    }
+    },
+    modifier = modifier
   )
 }
 
