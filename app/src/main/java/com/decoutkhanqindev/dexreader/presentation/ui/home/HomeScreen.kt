@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -24,8 +23,8 @@ fun HomeScreen(
   modifier: Modifier = Modifier,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-  var route by rememberSaveable {
-    mutableStateOf(NavigationDestination.HomeScreen.route)
+  val route by rememberSaveable {
+    mutableStateOf(NavigationDestination.HomeDestination.route)
   }
 
   BaseScreen(
