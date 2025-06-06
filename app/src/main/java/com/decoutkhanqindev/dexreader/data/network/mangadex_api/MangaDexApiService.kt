@@ -97,7 +97,13 @@ interface MangaDexApiService {
     @Query("offset") offset: Int = 0,
     @Query("includedTags[]") tagId: String,
     // sorting
-
+    @Query("order[updatedAt]") lastUpdated: String = "desc", // latest update
+    @Query("order[followedCount]") followedCount: String = "desc", // trending
+    @Query("order[createdAt]") createdAt: String = "desc", // new release
+    @Query("order[rating]=desc") rating: String = "desc", // top rated
+    // filters
+    @Query("status[]") status: String = "ongoing", // ongoing, completed, hiatus, cancelled
+    @Query("contentRating[]") contentRating: String = "safe", // safe, suggestive, erotica
     @Query("includes[]")
     includes: List<String> = listOf("cover_art", "author", "artist"),
   ): MangaListResponse

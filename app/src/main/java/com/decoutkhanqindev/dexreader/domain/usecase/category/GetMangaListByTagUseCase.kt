@@ -9,10 +9,24 @@ class GetMangaListByTagUseCase @Inject constructor(
 ) {
   suspend operator fun invoke(
     tagId: String,
-    offset: Int = 0
+    offset: Int = 0,
+    // sorting
+    lastUpdated: String = "desc", // latest update
+    followedCount: String = "desc", // trending
+    createdAt: String = "desc", // new release
+    rating: String = "desc", // top rated
+    // filters
+    status: String = "ongoing", // ongoing, completed, hiatus, cancelled
+    contentRating: String = "safe", // safe, suggestive, erotica
   ): Result<List<Manga>> =
     categoryRepository.getMangaListByTag(
       tagId = tagId,
-      offset = offset
+      offset = offset,
+      lastUpdated = lastUpdated,
+      followedCount = followedCount,
+      createdAt = createdAt,
+      rating = rating,
+      status = status,
+      contentRating = contentRating
     )
 }

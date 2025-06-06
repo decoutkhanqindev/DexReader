@@ -7,6 +7,14 @@ interface CategoryRepository {
   suspend fun getTagList(): Result<List<Category>>
   suspend fun getMangaListByTag(
     tagId: String,
-    offset: Int = 0
+    offset: Int = 0,
+    // sorting
+    lastUpdated: String = "desc", // latest update
+    followedCount: String = "desc", // trending
+    createdAt: String = "desc", // new release
+    rating: String = "desc", // top rated
+    // filters
+    status: String = "ongoing", // ongoing, completed, hiatus, cancelled
+    contentRating: String = "safe", // safe, suggestive, erotica
   ): Result<List<Manga>>
 }

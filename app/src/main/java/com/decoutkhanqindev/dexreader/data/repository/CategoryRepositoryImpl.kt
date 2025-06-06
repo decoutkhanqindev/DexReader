@@ -21,12 +21,26 @@ class CategoryRepositoryImpl @Inject constructor(
 
   override suspend fun getMangaListByTag(
     tagId: String,
-    offset: Int
+    offset: Int,
+    // sorting
+    lastUpdated: String, // latest update
+    followedCount: String, // trending
+    createdAt: String, // new release
+    rating: String, // top rated
+    // filters
+    status: String, // ongoing, completed, hiatus, cancelled
+    contentRating: String, // safe, suggestive, erotica
   ): Result<List<Manga>> =
     runSuspendCatching(Dispatchers.IO) {
       mangaDexApiService.getMangaListByTag(
         tagId = tagId,
-        offset = offset
+        offset = offset,
+        lastUpdated = lastUpdated,
+        followedCount = followedCount,
+        createdAt = createdAt,
+        rating = rating,
+        status = status,
+        contentRating = contentRating
       ).data.map { it.toDomain(uploadUrl) }
     }
 }
