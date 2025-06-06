@@ -22,7 +22,7 @@ import com.decoutkhanqindev.dexreader.presentation.ui.common.states.LoadingScree
 @Composable
 fun CategoriesContent(
   uiState: CategoriesUiState,
-  onSelectedCategory: (String) -> Unit,
+  onSelectedCategory: (String, String) -> Unit,
   onRetry: () -> Unit,
   modifier: Modifier = Modifier
 ) {

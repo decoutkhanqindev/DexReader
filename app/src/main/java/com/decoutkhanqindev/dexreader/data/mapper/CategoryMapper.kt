@@ -6,6 +6,6 @@ import com.decoutkhanqindev.dexreader.domain.model.Category
 fun TagDto.toDomain(): Category =
   Category(
     id = id,
-    name = attributes.name?.get("en") ?: "Unknown",
+    title = attributes.name?.get("en") ?: "Unknown",
     group = attributes.group ?: "Unknown"
   )

@@ -11,7 +11,7 @@ import com.decoutkhanqindev.dexreader.domain.model.Category
 @Composable
 fun CategoryList(
   categoryList: List<Category>,
-  onSelectedCategory: (String) -> Unit,
+  onSelectedCategory: (String, String) -> Unit,
   modifier: Modifier = Modifier
 ) {
   FlowRow(

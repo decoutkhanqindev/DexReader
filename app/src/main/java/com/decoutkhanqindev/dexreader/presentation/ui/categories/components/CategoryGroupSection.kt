@@ -17,7 +17,7 @@ fun CategoryGroupSection(
   onExpandClick: () -> Unit,
   group: String,
   categoryList: List<Category>,
-  onSelectedCategory: (String) -> Unit,
+  onSelectedCategory: (String, String) -> Unit,
   modifier: Modifier = Modifier
 ) {
   Column(modifier = modifier) {
