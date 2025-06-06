@@ -18,11 +18,11 @@ import com.decoutkhanqindev.dexreader.R
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun TopBar(
+fun AppTopBar(
   title: String,
   onMenuClick: () -> Unit,
   isSearchEnabled: Boolean = true,
-  onSearchClick: () -> Unit,
+  onSearchClick: () -> Unit = {},
   modifier: Modifier = Modifier
 ) {
   CenterAlignedTopAppBar(
