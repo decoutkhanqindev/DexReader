@@ -1,6 +1,8 @@
 package com.decoutkhanqindev.dexreader.presentation.ui.manga_details.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,7 +42,10 @@ fun MangaDetailsContent(
   onFavoriteClick: (String) -> Unit,
   chapterLanguage: String,
   onSelectedLanguage: (String) -> Unit,
-  onSelectedCategory: (String, String) -> Unit,
+  onSelectedCategory: (
+    categoryId: String,
+    categoryTitle: String
+  ) -> Unit,
   onSelectedChapter: (String) -> Unit,
   onFetchChapterListNextPage: () -> Unit,
   onRetryFetchChapterListNextPage: () -> Unit,
@@ -142,6 +147,8 @@ fun MangaDetailsContent(
 
     AnimatedVisibility(
       visible = isMoveToTopButtonVisible,
+      enter = scaleIn(),
+      exit = scaleOut(),
       modifier = Modifier
         .align(Alignment.BottomEnd)
         .padding(16.dp)

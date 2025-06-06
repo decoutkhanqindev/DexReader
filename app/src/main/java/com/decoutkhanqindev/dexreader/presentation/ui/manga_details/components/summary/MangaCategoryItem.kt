@@ -17,14 +17,22 @@ import java.util.Locale
 @Composable
 fun MangaCategoryItem(
   category: Category,
-  onSelectedCategory: (String, String) -> Unit,
+  onSelectedCategory: (
+    categoryId: String,
+    categoryTitle: String
+  ) -> Unit,
   modifier: Modifier = Modifier
 ) {
   Card(
     modifier = modifier,
     shape = MaterialTheme.shapes.large,
     elevation = CardDefaults.cardElevation(4.dp),
-    onClick = { onSelectedCategory(category.id, category.title) }
+    onClick = {
+      onSelectedCategory(
+        category.id,
+        category.title
+      )
+    }
   ) {
     Text(
       text = category.title.capitalize(Locale.US),

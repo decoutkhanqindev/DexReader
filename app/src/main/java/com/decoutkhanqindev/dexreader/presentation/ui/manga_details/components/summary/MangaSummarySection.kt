@@ -17,7 +17,10 @@ import com.decoutkhanqindev.dexreader.domain.model.Manga
 @Composable
 fun MangaSummarySection(
   manga: Manga,
-  onSelectedCategory: (String, String) -> Unit,
+  onSelectedCategory: (
+    categoryId: String,
+    categoryTitle: String
+  ) -> Unit,
   modifier: Modifier = Modifier
 ) {
   Column(modifier = modifier) {

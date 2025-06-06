@@ -16,7 +16,10 @@ import com.decoutkhanqindev.dexreader.domain.model.Category
 @Composable
 fun MangaCategoryList(
   categoryList: List<Category>,
-  onSelectedCategory: (String, String) -> Unit,
+  onSelectedCategory: (
+    categoryId: String,
+    categoryTitle: String
+  ) -> Unit,
   modifier: Modifier = Modifier
 ) {
   Box(modifier = modifier) {
