@@ -8,28 +8,23 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.decoutkhanqindev.dexreader.domain.model.Category
-import java.util.Locale
 
 @Composable
 fun CategoryGroupSection(
+  isExpanded: Boolean,
+  onExpandClick: () -> Unit,
+  group: String,
   categoryList: List<Category>,
   onSelectedCategory: (String) -> Unit,
   modifier: Modifier = Modifier
 ) {
-  val group = categoryList.first().group.capitalize(locale = Locale.US)
-  var isExpanded by rememberSaveable { mutableStateOf(false) }
-
   Column(modifier = modifier) {
     CategoryHeader(
       group = group,
       isExpanded = isExpanded,
-      onExpandClick = { isExpanded = !isExpanded },
+      onExpandClick = onExpandClick,
       modifier = Modifier.fillMaxWidth()
     )
     AnimatedVisibility(
