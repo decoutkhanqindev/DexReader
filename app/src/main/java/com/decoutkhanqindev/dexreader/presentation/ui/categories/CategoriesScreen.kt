@@ -20,7 +20,7 @@ fun CategoriesScreen(
   onMenuItemClick: (String) -> Unit,
   onSearchClick: () -> Unit,
   onSelectedCategory: (String) -> Unit,
-  viewModel: CategoryViewModel = hiltViewModel(),
+  viewModel: CategoriesViewModel = hiltViewModel(),
   modifier: Modifier = Modifier
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()

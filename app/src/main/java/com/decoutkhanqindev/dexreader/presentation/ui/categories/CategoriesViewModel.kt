@@ -3,7 +3,7 @@ package com.decoutkhanqindev.dexreader.presentation.ui.categories
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.decoutkhanqindev.dexreader.domain.usecase.category.GetTagListUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.category.GetCategoryListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,8 +12,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CategoryViewModel @Inject constructor(
-  private val getTagListUseCase: GetTagListUseCase,
+class CategoriesViewModel @Inject constructor(
+  private val getCategoryListUseCase: GetCategoryListUseCase,
 ) : ViewModel() {
   private val _uiState = MutableStateFlow<CategoriesUiState>(CategoriesUiState.Loading)
   val uiState: StateFlow<CategoriesUiState> = _uiState.asStateFlow()
@@ -26,8 +26,8 @@ class CategoryViewModel @Inject constructor(
     viewModelScope.launch {
       _uiState.value = CategoriesUiState.Loading
 
-      val tagListResult = getTagListUseCase()
-      tagListResult
+      val categoryListResult = getCategoryListUseCase()
+      categoryListResult
         .onSuccess {
           val genreList = it.filter { it.group == GENRE }
           val themeList = it.filter { it.group == THEME }
@@ -52,7 +52,7 @@ class CategoryViewModel @Inject constructor(
   }
 
   companion object {
-    private const val TAG = "CategoryViewModel"
+    private const val TAG = "CategoriesViewModel"
     private const val GENRE = "genre"
     private const val THEME = "theme"
     private const val FORMAT = "format"
