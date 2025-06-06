@@ -4,10 +4,10 @@ import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.domain.repository.MangaRepository
 import javax.inject.Inject
 
-class GetCompletedMangaListUseCase @Inject constructor(
+class GetTopRatedMangaListUseCase @Inject constructor(
   private val mangaRepository: MangaRepository
 ) {
   suspend operator fun invoke(): Result<List<Manga>> {
-    return mangaRepository.getCompletedMangaList()
+    return mangaRepository.getTopRatedMangaList()
   }
 }

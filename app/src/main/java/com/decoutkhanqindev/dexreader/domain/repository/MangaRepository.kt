@@ -6,7 +6,7 @@ interface MangaRepository {
   suspend fun getLatestUpdateMangaList(): Result<List<Manga>>
   suspend fun getTrendingMangaList(): Result<List<Manga>>
   suspend fun getNewReleaseMangaList(): Result<List<Manga>>
-  suspend fun getCompletedMangaList(): Result<List<Manga>>
+  suspend fun getTopRatedMangaList(): Result<List<Manga>>
   suspend fun getMangaDetails(mangaId: String): Result<Manga>
 
   suspend fun searchManga(

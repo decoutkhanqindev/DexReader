@@ -28,9 +28,9 @@ class MangaRepositoryImpl @Inject constructor(
       mangaDexApiService.getNewReleaseMangaList().data.map { it.toDomain(uploadUrl) }
     }
 
-  override suspend fun getCompletedMangaList(): Result<List<Manga>> =
+  override suspend fun getTopRatedMangaList(): Result<List<Manga>> =
     runSuspendCatching(Dispatchers.IO) {
-      mangaDexApiService.getCompletedMangaList().data.map { it.toDomain(uploadUrl) }
+      mangaDexApiService.getTopRatedMangaList().data.map { it.toDomain(uploadUrl) }
     }
 
   override suspend fun getMangaDetails(mangaId: String): Result<Manga> =

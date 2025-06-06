@@ -40,10 +40,10 @@ interface MangaDexApiService {
   ): MangaListResponse
 
   @GET("/manga")
-  suspend fun getCompletedMangaList(
+  suspend fun getTopRatedMangaList(
     @Query("limit") limit: Int = 20,
     @Query("offset") offset: Int = 0,
-    @Query("status[]") status: String = "completed",
+    @Query("order[rating]=desc") rating: String = "desc",
     @Query("includes[]")
     includes: List<String> = listOf("cover_art", "author", "artist"),
   ): MangaListResponse
@@ -96,6 +96,8 @@ interface MangaDexApiService {
     @Query("limit") limit: Int = 20,
     @Query("offset") offset: Int = 0,
     @Query("includedTags[]") tagId: String,
+    // sorting
+
     @Query("includes[]")
     includes: List<String> = listOf("cover_art", "author", "artist"),
   ): MangaListResponse

@@ -9,6 +9,6 @@ sealed interface HomeUiState {
     val latestUpdatesMangaList: List<Manga> = emptyList(),
     val trendingMangaList: List<Manga> = emptyList(),
     val newReleaseMangaList: List<Manga> = emptyList(),
-    val completedMangaList: List<Manga> = emptyList(),
+    val topRatedMangaList: List<Manga> = emptyList(),
   ) : HomeUiState
 }
