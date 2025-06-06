@@ -23,10 +23,10 @@ class CategoryRepositoryImpl @Inject constructor(
     categoryId: String,
     offset: Int,
     // sorting
-    lastUpdated: String, // latest update
-    followedCount: String, // trending
-    createdAt: String, // new release
-    rating: String, // top rated
+    lastUpdated: String?, // latest update
+    followedCount: String?, // trending
+    createdAt: String?, // new release
+    rating: String?, // top rated
     // filters
     status: String, // ongoing, completed, hiatus, cancelled
     contentRating: String, // safe, suggestive, erotica

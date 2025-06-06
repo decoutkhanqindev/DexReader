@@ -9,10 +9,10 @@ interface CategoryRepository {
     categoryId: String,
     offset: Int = 0,
     // sorting
-    lastUpdated: String = "desc", // latest update
-    followedCount: String = "desc", // trending
-    createdAt: String = "desc", // new release
-    rating: String = "desc", // top rated
+    lastUpdated: String? = null, // latest update
+    followedCount: String? = null, // trending
+    createdAt: String? = null, // new release
+    rating: String? = null, // top rated
     // filters
     status: String = "ongoing", // ongoing, completed, hiatus, cancelled
     contentRating: String = "safe", // safe, suggestive, erotica
