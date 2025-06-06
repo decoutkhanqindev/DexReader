@@ -111,9 +111,6 @@ fun NavGraph(
             navHostController.navigate(itemId)
           }
         },
-        onSearchClick = {
-          navHostController.navigate(route = NavigationDestination.SearchScreen.route)
-        },
         modifier = Modifier.fillMaxSize()
       )
     }
@@ -124,9 +121,6 @@ fun NavGraph(
           if (itemId != NavigationDestination.SettingsScreen.route) {
             navHostController.navigate(itemId)
           }
-        },
-        onSearchClick = {
-          navHostController.navigate(route = NavigationDestination.SearchScreen.route)
         },
         modifier = Modifier.fillMaxSize()
       )
