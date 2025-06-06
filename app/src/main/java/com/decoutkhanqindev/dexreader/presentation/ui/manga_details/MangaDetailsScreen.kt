@@ -21,7 +21,7 @@ fun MangaDetailsScreen(
   onNavigateBack: () -> Unit,
   onSearchClick: () -> Unit,
   onReadingClick: (String) -> Unit,
-  onSelectedGenre: (String) -> Unit,
+  onSelectedCategory: (String) -> Unit,
   onSelectedChapter: (String) -> Unit,
   viewModel: MangaDetailsViewModel = hiltViewModel(),
   modifier: Modifier = Modifier
@@ -48,7 +48,7 @@ fun MangaDetailsScreen(
         onFavoriteClick = {},
         chapterLanguage = chapterLanguage.toFullLanguageName(),
         onSelectedLanguage = { viewModel.updateChapterLanguage(it.toLanguageCode()) },
-        onSelectedGenre = onSelectedGenre,
+        onSelectedCategory = onSelectedCategory,
         onSelectedChapter = { onSelectedChapter(it) },
         onFetchChapterListNextPage = { viewModel.fetchChapterListNextPage() },
         onRetryFetchChapterListNextPage = { viewModel.retryFetchChapterListNextPage() },

@@ -11,11 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.decoutkhanqindev.dexreader.domain.model.Category
 
 @Composable
-fun MangaTagList(
-  tagList: List<String>,
-  onSelectedTag: (String) -> Unit,
+fun MangaCategoryList(
+  categoryList: List<Category>,
+  onSelectedCategory: (String) -> Unit,
   modifier: Modifier = Modifier
 ) {
   Box(modifier = modifier) {
@@ -24,10 +25,10 @@ fun MangaTagList(
       horizontalArrangement = Arrangement.spacedBy(2.dp),
       verticalAlignment = Alignment.CenterVertically,
     ) {
-      items(tagList, key = { it }) { tag ->
-        MangaTagItem(
-          tag = tag,
-          onSelectedTag = onSelectedTag,
+      items(categoryList, key = { it.id }) { category ->
+        MangaCategoryItem(
+          category = category,
+          onSelectedCategory = onSelectedCategory,
           modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 4.dp)

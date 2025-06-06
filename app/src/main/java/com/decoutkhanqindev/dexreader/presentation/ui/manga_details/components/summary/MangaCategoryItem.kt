@@ -11,21 +11,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.decoutkhanqindev.dexreader.domain.model.Category
+import java.util.Locale
 
 @Composable
-fun MangaTagItem(
-  tag: String,
-  onSelectedTag: (String) -> Unit,
+fun MangaCategoryItem(
+  category: Category,
+  onSelectedCategory: (String) -> Unit,
   modifier: Modifier = Modifier
 ) {
   Card(
     modifier = modifier,
     shape = MaterialTheme.shapes.large,
     elevation = CardDefaults.cardElevation(4.dp),
-    onClick = { onSelectedTag(tag) }
+    onClick = { onSelectedCategory(category.id) }
   ) {
     Text(
-      text = tag,
+      text = category.name.capitalize(Locale.US),
       style = MaterialTheme.typography.bodyMedium,
       fontWeight = FontWeight.Bold,
       textAlign = TextAlign.Center,

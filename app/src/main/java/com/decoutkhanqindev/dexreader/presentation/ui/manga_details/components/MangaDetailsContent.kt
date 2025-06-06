@@ -40,7 +40,7 @@ fun MangaDetailsContent(
   onFavoriteClick: (String) -> Unit,
   chapterLanguage: String,
   onSelectedLanguage: (String) -> Unit,
-  onSelectedGenre: (String) -> Unit,
+  onSelectedCategory: (String) -> Unit,
   onSelectedChapter: (String) -> Unit,
   onFetchChapterListNextPage: () -> Unit,
   onRetryFetchChapterListNextPage: () -> Unit,
@@ -115,7 +115,7 @@ fun MangaDetailsContent(
           item {
             MangaSummarySection(
               manga = manga,
-              onSelectedGenre = onSelectedGenre,
+              onSelectedCategory = onSelectedCategory,
               modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
