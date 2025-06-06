@@ -40,7 +40,7 @@ fun MangaDetailsContent(
   onFavoriteClick: (String) -> Unit,
   chapterLanguage: String,
   onSelectedLanguage: (String) -> Unit,
-  onSelectedCategory: (String) -> Unit,
+  onSelectedCategory: (String, String) -> Unit,
   onSelectedChapter: (String) -> Unit,
   onFetchChapterListNextPage: () -> Unit,
   onRetryFetchChapterListNextPage: () -> Unit,

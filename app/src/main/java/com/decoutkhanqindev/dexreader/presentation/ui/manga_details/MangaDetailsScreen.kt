@@ -21,7 +21,7 @@ fun MangaDetailsScreen(
   onNavigateBack: () -> Unit,
   onSearchClick: () -> Unit,
   onReadingClick: (String) -> Unit,
-  onSelectedCategory: (String) -> Unit,
+  onSelectedCategory: (String, String) -> Unit,
   onSelectedChapter: (String) -> Unit,
   viewModel: MangaDetailsViewModel = hiltViewModel(),
   modifier: Modifier = Modifier
