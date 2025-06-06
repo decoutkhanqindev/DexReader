@@ -4,55 +4,56 @@ package com.decoutkhanqindev.dexreader.presentation.navigation
 sealed interface NavigationDestination {
   val route: String
 
-  object SignInScreen : NavigationDestination {
-    override val route: String = "sign_in"
+  object LoginDestination : NavigationDestination {
+    override val route: String = "login"
   }
 
-  object SignUpScreen : NavigationDestination {
-    override val route: String = "sign_up"
+  object RegisterDestination : NavigationDestination {
+    override val route: String = "register"
   }
 
-  object HomeScreen : NavigationDestination {
+  object HomeDestination : NavigationDestination {
     override val route: String = "home"
   }
 
-  object CategoriesScreen : NavigationDestination {
+  object CategoriesDestination : NavigationDestination {
     override val route: String = "categories"
   }
 
-  object CategoryDetailsScreen : NavigationDestination {
+  object CategoryDetailsDestination : NavigationDestination {
     override val route: String = "category_details"
-    const val TAG_ID_ARG: String = "tagId"
-    val routeWithArgs: String = "${route}/{$TAG_ID_ARG}"
+    const val CATEGORY_ID_ARG: String = "categoryId"
+    const val CATEGORY_TITLE_ARG: String = "categoryTitle"
+    val routeWithArgs: String = "${route}/{$CATEGORY_ID_ARG}/{$CATEGORY_TITLE_ARG}"
   }
 
-  object FavoriteScreen : NavigationDestination {
+  object FavoriteDestination : NavigationDestination {
     override val route: String = "favorite"
   }
 
-  object HistoryScreen : NavigationDestination {
+  object HistoryDestination : NavigationDestination {
     override val route: String = "history"
   }
 
-  object ProfileScreen : NavigationDestination {
+  object ProfileDestination : NavigationDestination {
     override val route: String = "profile"
   }
 
-  object SettingsScreen : NavigationDestination {
+  object SettingsDestination : NavigationDestination {
     override val route: String = "settings"
   }
 
-  object SearchScreen : NavigationDestination {
+  object SearchDestination : NavigationDestination {
     override val route: String = "search"
   }
 
-  object MangaDetailsScreen : NavigationDestination {
+  object MangaDetailsDestination : NavigationDestination {
     override val route: String = "manga_details"
     const val MANGA_ID_ARG: String = "mangaId"
     val routeWithArgs: String = "$route/{$MANGA_ID_ARG}"
   }
 
-  object ReaderScreen : NavigationDestination {
+  object ReaderDestination : NavigationDestination {
     override val route: String = "reader"
     const val CHAPTER_ID_ARG: String = "chapterId"
     val routeWithArgs: String = "$route/{$CHAPTER_ID_ARG}"
