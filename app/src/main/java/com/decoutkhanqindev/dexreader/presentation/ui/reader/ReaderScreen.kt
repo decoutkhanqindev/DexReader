@@ -16,13 +16,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.ui.common.top_bars.DetailsTopBar
 import com.decoutkhanqindev.dexreader.presentation.ui.reader.components.ReaderBottomBar
 import com.decoutkhanqindev.dexreader.presentation.ui.reader.components.ReaderContent
 import com.decoutkhanqindev.dexreader.presentation.ui.reader.components.ReaderFloatingButton
-import com.decoutkhanqindev.dexreader.presentation.ui.reader.components.ReaderTopBar
 
 @Composable
 fun ReaderScreen(
@@ -51,10 +53,10 @@ fun ReaderScreen(
         enter = expandVertically() + fadeIn(),
         exit = shrinkVertically() + fadeOut()
       ) {
-        ReaderTopBar(
-          currentChapterPage = currentPage,
-          totalChapterPages = totalPages,
+        DetailsTopBar(
+          title = stringResource(R.string.reader_title, currentPage, totalPages),
           onNavigateBack = onNavigateBack,
+          isSearchEnabled = false,
           modifier = Modifier.fillMaxWidth()
         )
       }
