@@ -72,7 +72,14 @@ fun NavGraph(
       )
     ) {
       CategoryDetailsScreen(
-        modifier = Modifier.fillMaxSize()
+        onNavigateBack = { navHostController.navigateUp() },
+        onSearchClick = {
+          navHostController.navigate(route = NavigationDestination.SearchScreen.route)
+        },
+        onSelectedManga = { mangaId ->
+          navHostController.navigate(route = "${NavigationDestination.MangaDetailsScreen.route}/$mangaId")
+        },
+        modifier = Modifier.fillMaxSize(),
       )
     }
 
@@ -152,7 +159,9 @@ fun NavGraph(
         onReadingClick = { firstChapterId ->
           navHostController.navigate(route = "${NavigationDestination.ReaderScreen.route}/$firstChapterId")
         },
-        onSelectedGenre = {},
+        onSelectedCategory = { categoryId ->
+          navHostController.navigate(route = "${NavigationDestination.CategoryDetailsScreen.route}/$categoryId")
+        },
         onSelectedChapter = { chapterId ->
           navHostController.navigate(route = "${NavigationDestination.ReaderScreen.route}/$chapterId")
         },
