@@ -19,8 +19,12 @@ class CategoryDetailsViewModel @Inject constructor(
   savedStateHandle: SavedStateHandle,
   private val getMangaListByTagUseCase: GetMangaListByCategoryUseCase
 ) : ViewModel() {
-  private val categoryId: String =
-    checkNotNull(savedStateHandle[NavigationDestination.CategoryDetailsScreen.TAG_ID_ARG])
+  private val categoryIdFromArg: String =
+    checkNotNull(savedStateHandle[NavigationDestination.CategoryDetailsDestination.CATEGORY_ID_ARG])
+  private val categoryTitleFromArg: String =
+    checkNotNull(savedStateHandle[NavigationDestination.CategoryDetailsDestination.CATEGORY_TITLE_ARG])
+
+  val categoryTitle: String = categoryTitleFromArg.replaceFirstChar { it.uppercase() }
 
   private val _uiState =
     MutableStateFlow<CategoryDetailsUiState>(CategoryDetailsUiState.FirstPageLoading)
@@ -40,7 +44,7 @@ class CategoryDetailsViewModel @Inject constructor(
       val currentCriteria = _criteriaState.value
 
       val mangaListResult = getMangaListByTagUseCase(
-        categoryId = categoryId,
+        categoryId = categoryIdFromArg,
         lastUpdated = currentCriteria.lastUpdated,
         followedCount = currentCriteria.followedCount,
         createdAt = currentCriteria.createdAt,
@@ -92,7 +96,7 @@ class CategoryDetailsViewModel @Inject constructor(
       val nextPage = currentUiState.currentPage + 1
 
       val nextMangaListResults = getMangaListByTagUseCase(
-        categoryId = categoryId,
+        categoryId = categoryIdFromArg,
         offset = currentMangaList.size,
         lastUpdated = currentCriteria.lastUpdated,
         followedCount = currentCriteria.followedCount,
