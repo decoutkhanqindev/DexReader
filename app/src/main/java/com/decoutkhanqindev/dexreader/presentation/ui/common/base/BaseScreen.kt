@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import com.decoutkhanqindev.dexreader.presentation.ui.common.menu.MenuDrawer
-import com.decoutkhanqindev.dexreader.presentation.ui.common.top_bars.TopBar
+import com.decoutkhanqindev.dexreader.presentation.ui.common.top_bars.AppTopBar
 import kotlinx.coroutines.launch
 
 @Composable
@@ -20,7 +20,7 @@ fun BaseScreen(
   route: String,
   onMenuItemClick: (String) -> Unit,
   isSearchEnabled: Boolean = true,
-  onSearchClick: () -> Unit,
+  onSearchClick: () -> Unit = {},
   content: @Composable () -> Unit,
   modifier: Modifier = Modifier
 ) {
@@ -39,7 +39,7 @@ fun BaseScreen(
     content = {
       Scaffold(
         topBar = {
-          TopBar(
+          AppTopBar(
             title = title,
             onMenuClick = {
               coroutineScope.launch {
