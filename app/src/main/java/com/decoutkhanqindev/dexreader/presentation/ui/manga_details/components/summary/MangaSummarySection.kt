@@ -17,7 +17,7 @@ import com.decoutkhanqindev.dexreader.domain.model.Manga
 @Composable
 fun MangaSummarySection(
   manga: Manga,
-  onSelectedGenre: (String) -> Unit,
+  onSelectedCategory: (String) -> Unit,
   modifier: Modifier = Modifier
 ) {
   Column(modifier = modifier) {
@@ -35,9 +35,9 @@ fun MangaSummarySection(
         .fillMaxWidth()
         .padding(horizontal = 4.dp)
     )
-    MangaTagList(
-      tagList = manga.tags,
-      onSelectedTag = onSelectedGenre,
+    MangaCategoryList(
+      categoryList = manga.categories,
+      onSelectedCategory = onSelectedCategory,
       modifier = Modifier.fillMaxWidth()
     )
   }
