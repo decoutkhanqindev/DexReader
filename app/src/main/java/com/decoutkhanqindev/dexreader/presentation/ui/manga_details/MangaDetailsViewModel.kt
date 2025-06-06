@@ -98,10 +98,8 @@ class MangaDetailsViewModel @Inject constructor(
           _mangaChaptersUiState.value = MangaChaptersUiState.Content(
             chapterList = chapterList,
             currentPage = FIRST_PAGE,
-            nextPageState = if (!hasNextPage)
-              MangaChaptersNextPageState.NO_MORE_ITEMS
-            else
-              MangaChaptersNextPageState.IDLE
+            nextPageState = if (!hasNextPage) MangaChaptersNextPageState.NO_MORE_ITEMS
+            else MangaChaptersNextPageState.IDLE
           )
         }
         .onFailure {
@@ -138,6 +136,7 @@ class MangaDetailsViewModel @Inject constructor(
     viewModelScope.launch {
       _mangaChaptersUiState.value =
         currentUiState.copy(nextPageState = MangaChaptersNextPageState.LOADING)
+
       val currentMangaList = currentUiState.chapterList
       val nextPage: Int = currentUiState.currentPage + 1
 
@@ -148,15 +147,13 @@ class MangaDetailsViewModel @Inject constructor(
       )
       nextChapterListResult
         .onSuccess { nextChapterList ->
-          val allChapterList = currentMangaList + nextChapterList
+          val updatedChapterList = currentMangaList + nextChapterList
           val hasNextPage = nextChapterList.size >= CHAPTER_LIST_PER_PAGE_SIZE
           _mangaChaptersUiState.value = currentUiState.copy(
-            chapterList = allChapterList,
+            chapterList = updatedChapterList,
             currentPage = nextPage,
-            nextPageState = if (!hasNextPage)
-              MangaChaptersNextPageState.NO_MORE_ITEMS
-            else
-              MangaChaptersNextPageState.IDLE
+            nextPageState = if (!hasNextPage) MangaChaptersNextPageState.NO_MORE_ITEMS
+            else MangaChaptersNextPageState.IDLE
           )
         }
         .onFailure {

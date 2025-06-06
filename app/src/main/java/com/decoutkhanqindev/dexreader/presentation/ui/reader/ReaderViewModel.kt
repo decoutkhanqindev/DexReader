@@ -103,10 +103,9 @@ class ReaderViewModel @Inject constructor(
   }
 
   private fun fetchChapterPages(isPrefetch: Boolean = false) {
-    val chapterIdToFetch = if (isPrefetch)
-      _chapterNavState.value.nextChapterId ?: return
-    else
-      currentChapterId
+    val chapterIdToFetch =
+      if (isPrefetch) _chapterNavState.value.nextChapterId ?: return
+      else currentChapterId
 
     if (chapterIdToFetch.isBlank()) return
 
