@@ -20,8 +20,8 @@ class MangaDetailsViewModel @Inject constructor(
   private val getMangaDetailsUseCase: GetMangaDetailsUseCase,
   private val getChapterListUseCase: GetChapterListUseCase,
 ) : ViewModel() {
-  private val mangaId: String =
-    checkNotNull(savedStateHandle[NavigationDestination.MangaDetailsScreen.MANGA_ID_ARG])
+  private val mangaIdFromArg: String =
+    checkNotNull(savedStateHandle[NavigationDestination.MangaDetailsDestination.MANGA_ID_ARG])
 
   private val _mangaDetailsUiState =
     MutableStateFlow<MangaDetailsUiState>(MangaDetailsUiState.Loading)
@@ -45,7 +45,7 @@ class MangaDetailsViewModel @Inject constructor(
 
   private fun fetchMangaDetails() {
     viewModelScope.launch {
-      val mangaDetails = getMangaDetailsUseCase(mangaId)
+      val mangaDetails = getMangaDetailsUseCase(mangaIdFromArg)
       mangaDetails
         .onSuccess {
           _mangaDetailsUiState.value = MangaDetailsUiState.Success(manga = it)
@@ -60,7 +60,7 @@ class MangaDetailsViewModel @Inject constructor(
   private fun fetchFirstChapter() {
     viewModelScope.launch {
       val chapterListResult = getChapterListUseCase(
-        mangaId = mangaId,
+        mangaId = mangaIdFromArg,
         limit = 1,
         translatedLanguage = chapterLanguage.value,
         volumeOrder = ASC_ORDER,
@@ -89,7 +89,7 @@ class MangaDetailsViewModel @Inject constructor(
       _mangaChaptersUiState.value = MangaChaptersUiState.FirstPageLoading
 
       val chapterListResult = getChapterListUseCase(
-        mangaId = mangaId,
+        mangaId = mangaIdFromArg,
         translatedLanguage = chapterLanguage.value
       )
       chapterListResult
@@ -141,7 +141,7 @@ class MangaDetailsViewModel @Inject constructor(
       val nextPage: Int = currentUiState.currentPage + 1
 
       val nextChapterListResult = getChapterListUseCase(
-        mangaId = mangaId,
+        mangaId = mangaIdFromArg,
         offset = currentMangaList.size,
         translatedLanguage = chapterLanguage.value
       )
