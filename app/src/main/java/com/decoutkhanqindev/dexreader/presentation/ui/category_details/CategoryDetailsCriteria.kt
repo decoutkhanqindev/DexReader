@@ -1,56 +1,97 @@
 package com.decoutkhanqindev.dexreader.presentation.ui.category_details
 
-sealed class SortingCriteria(
+sealed class SortCriteria(
+  val id: String,
   val name: String,
-  val value: String
 ) {
-  object Ascending : SortingCriteria(
-    name = "Ascending",
-    value = "asc"
+  data object LatestUpdate : SortCriteria(
+    id = "latest_update",
+    name = "Latest Update",
   )
 
-  object Descending : SortingCriteria(
-    name = "Descending",
-    value = "desc"
+  data object Trending : SortCriteria(
+    id = "trending",
+    name = "Trending",
+  )
+
+  data object NewReleases : SortCriteria(
+    id = "new_releases",
+    name = "New Releases",
+  )
+
+  data object TopRated : SortCriteria(
+    id = "top_rated",
+    name = "Top Rated",
   )
 }
 
-sealed class FilteringCriteria(
+
+sealed class SortOrder(
+  val id: String,
   val name: String,
-  val value: String
 ) {
-  object Ongoing : FilteringCriteria(
+  data object Ascending : SortOrder(
+    id = "asc",
+    name = "Ascending",
+  )
+
+  data object Descending : SortOrder(
+    id = "desc",
+    name = "Descending",
+  )
+}
+
+sealed class FilterCriteria(
+  val id: String,
+  val name: String,
+) {
+  data object Status : FilterCriteria(
+    id = "status",
+    name = "Status",
+  )
+
+  data object ContentRating : FilterCriteria(
+    id = "content_rating",
+    name = "Content Rating",
+  )
+}
+
+sealed class FilterValue(
+  val name: String,
+  val id: String
+) {
+  data object Ongoing : FilterValue(
+    id = "ongoing",
     name = "Ongoing",
-    value = "ongoing"
   )
 
-  object Completed : FilteringCriteria(
+  data object Completed : FilterValue(
+    id = "completed",
     name = "Completed",
-    value = "completed"
   )
 
-  object Hiatus : FilteringCriteria(
+  data object Hiatus : FilterValue(
+    id = "hiatus",
     name = "Hiatus",
-    value = "hiatus"
   )
 
-  object Cancelled : FilteringCriteria(
+  data object Cancelled : FilterValue(
+    id = "cancelled",
     name = "Cancelled",
-    value = "cancelled"
   )
 
-  object Safe : FilteringCriteria(
+  data object Safe : FilterValue(
+    id = "safe",
     name = "Safe",
-    value = "safe"
   )
 
-  object Suggestive : FilteringCriteria(
+  data object Suggestive : FilterValue(
+    id = "suggestive",
     name = "Suggestive",
-    value = "suggestive"
   )
 
-  object Erotica : FilteringCriteria(
+  data object Erotica : FilterValue(
+    id = "erotica",
     name = "Erotica",
-    value = "erotica"
   )
 }
