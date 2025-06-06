@@ -17,45 +17,45 @@ import javax.inject.Inject
 @HiltViewModel
 class CategoryDetailsViewModel @Inject constructor(
   savedStateHandle: SavedStateHandle,
-  private val getMangaListByTagUseCase: GetMangaListByCategoryUseCase
+  private val getMangaListByCategoryUseCase: GetMangaListByCategoryUseCase
 ) : ViewModel() {
   private val categoryIdFromArg: String =
     checkNotNull(savedStateHandle[NavigationDestination.CategoryDetailsDestination.CATEGORY_ID_ARG])
-  private val categoryTitleFromArg: String =
+  val categoryTitleFromArg: String =
     checkNotNull(savedStateHandle[NavigationDestination.CategoryDetailsDestination.CATEGORY_TITLE_ARG])
 
-  val categoryTitle: String = categoryTitleFromArg.replaceFirstChar { it.uppercase() }
-
-  private val _uiState =
+  private val _categoryDetailsUiState =
     MutableStateFlow<CategoryDetailsUiState>(CategoryDetailsUiState.FirstPageLoading)
-  val uiState: StateFlow<CategoryDetailsUiState> = _uiState.asStateFlow()
+  val categoryDetailsUiState: StateFlow<CategoryDetailsUiState> =
+    _categoryDetailsUiState.asStateFlow()
 
-  private val _criteriaState = MutableStateFlow(CategoryDetailsCriteriaState())
-  val criteriaState: StateFlow<CategoryDetailsCriteriaState> = _criteriaState.asStateFlow()
+  private val _categoryCriteriaUiState = MutableStateFlow(CategoryDetailsCriteriaUiState())
+  val categoryCriteriaUiState: StateFlow<CategoryDetailsCriteriaUiState> =
+    _categoryCriteriaUiState.asStateFlow()
 
   init {
-    fetchMangaListByTagFirstPage()
+    fetchMangaListByCategoryFirstPage()
   }
 
-  private fun fetchMangaListByTagFirstPage() {
+  private fun fetchMangaListByCategoryFirstPage() {
     viewModelScope.launch {
-      _uiState.value = CategoryDetailsUiState.FirstPageLoading
+      _categoryDetailsUiState.value = CategoryDetailsUiState.FirstPageLoading
 
-      val currentCriteria = _criteriaState.value
+      val currentCriteria = _categoryCriteriaUiState.value
 
-      val mangaListResult = getMangaListByTagUseCase(
+      val mangaListResult = getMangaListByCategoryUseCase(
         categoryId = categoryIdFromArg,
-        lastUpdated = currentCriteria.lastUpdated,
-        followedCount = currentCriteria.followedCount,
-        createdAt = currentCriteria.createdAt,
-        rating = currentCriteria.rating,
-        status = currentCriteria.status,
-        contentRating = currentCriteria.contentRating
+        lastUpdated = currentCriteria.lastUpdatedOrderId,
+        followedCount = currentCriteria.followedCountOrderId,
+        createdAt = currentCriteria.createdAtOrderId,
+        rating = currentCriteria.ratingOrderId,
+        status = currentCriteria.statusValueId,
+        contentRating = currentCriteria.contentRatingValueId
       )
       mangaListResult
         .onSuccess { mangaList ->
           val hasNextPage = mangaList.size >= MANGA_LIST_PER_PAGE_SIZE
-          _uiState.value = CategoryDetailsUiState.Content(
+          _categoryDetailsUiState.value = CategoryDetailsUiState.Content(
             mangaList = mangaList,
             currentPage = FIRST_PAGE,
             nextPageState = if (!hasNextPage) CategoryDetailsNextPageState.NO_MORE_ITEMS
@@ -63,14 +63,14 @@ class CategoryDetailsViewModel @Inject constructor(
           )
         }
         .onFailure {
-          _uiState.value = CategoryDetailsUiState.FirstPageError
-          Log.d(TAG, "fetchMangaListByTagFirstPage have error: ${it.stackTraceToString()}")
+          _categoryDetailsUiState.value = CategoryDetailsUiState.FirstPageError
+          Log.d(TAG, "fetchMangaListByCategoryFirstPage have error: ${it.stackTraceToString()}")
         }
     }
   }
 
-  fun fetchMangaListByTagNextPage() {
-    when (val currentUiState = _uiState.value) {
+  fun fetchMangaListByCategoryNextPage() {
+    when (val currentUiState = _categoryDetailsUiState.value) {
       CategoryDetailsUiState.FirstPageLoading,
       CategoryDetailsUiState.FirstPageError -> return
 
@@ -79,37 +79,40 @@ class CategoryDetailsViewModel @Inject constructor(
           CategoryDetailsNextPageState.LOADING,
           CategoryDetailsNextPageState.NO_MORE_ITEMS -> return
 
-          CategoryDetailsNextPageState.ERROR -> retryFetchMangaListByTagNextPage()
+          CategoryDetailsNextPageState.ERROR -> retryFetchMangaListByCategoryNextPage()
 
-          CategoryDetailsNextPageState.IDLE -> fetchMangaListByTagNextPageInternal(currentUiState)
+          CategoryDetailsNextPageState.IDLE -> fetchMangaListByCategoryNextPageInternal(
+            currentUiState
+          )
         }
       }
     }
   }
 
-  private fun fetchMangaListByTagNextPageInternal(currentUiState: CategoryDetailsUiState.Content) {
+  private fun fetchMangaListByCategoryNextPageInternal(currentUiState: CategoryDetailsUiState.Content) {
     viewModelScope.launch {
-      _uiState.value = currentUiState.copy(nextPageState = CategoryDetailsNextPageState.LOADING)
+      _categoryDetailsUiState.value =
+        currentUiState.copy(nextPageState = CategoryDetailsNextPageState.LOADING)
 
-      val currentCriteria = _criteriaState.value
+      val currentCriteria = _categoryCriteriaUiState.value
       val currentMangaList = currentUiState.mangaList
       val nextPage = currentUiState.currentPage + 1
 
-      val nextMangaListResults = getMangaListByTagUseCase(
+      val nextMangaListResults = getMangaListByCategoryUseCase(
         categoryId = categoryIdFromArg,
         offset = currentMangaList.size,
-        lastUpdated = currentCriteria.lastUpdated,
-        followedCount = currentCriteria.followedCount,
-        createdAt = currentCriteria.createdAt,
-        rating = currentCriteria.rating,
-        status = currentCriteria.status,
-        contentRating = currentCriteria.contentRating
+        lastUpdated = currentCriteria.lastUpdatedOrderId,
+        followedCount = currentCriteria.followedCountOrderId,
+        createdAt = currentCriteria.createdAtOrderId,
+        rating = currentCriteria.ratingOrderId,
+        status = currentCriteria.statusValueId,
+        contentRating = currentCriteria.contentRatingValueId
       )
       nextMangaListResults
         .onSuccess { nextMangaList ->
           val updatedMangaList = currentMangaList + nextMangaList
           val hasNextPage = nextMangaList.size >= MANGA_LIST_PER_PAGE_SIZE
-          _uiState.value = currentUiState.copy(
+          _categoryDetailsUiState.value = currentUiState.copy(
             mangaList = updatedMangaList,
             currentPage = nextPage,
             nextPageState = if (!hasNextPage) CategoryDetailsNextPageState.NO_MORE_ITEMS
@@ -117,54 +120,67 @@ class CategoryDetailsViewModel @Inject constructor(
           )
         }
         .onFailure {
-          _uiState.value =
+          _categoryDetailsUiState.value =
             currentUiState.copy(nextPageState = CategoryDetailsNextPageState.ERROR)
-          Log.d(TAG, "fetchMangaListByTagNextPageInternal have error: ${it.stackTraceToString()}")
+          Log.d(
+            TAG,
+            "fetchMangaListByCategoryNextPageInternal have error: ${it.stackTraceToString()}"
+          )
         }
     }
   }
 
 
   fun updateSortingCriteria(
-    lastUpdated: String = _criteriaState.value.lastUpdated,
-    followedCount: String = _criteriaState.value.followedCount,
-    createdAt: String = _criteriaState.value.createdAt,
-    rating: String = _criteriaState.value.rating
+    criteriaId: String,
+    orderId: String,
   ) {
-    _criteriaState.update {
+    _categoryCriteriaUiState.update {
       it.copy(
-        lastUpdated = lastUpdated,
-        followedCount = followedCount,
-        createdAt = createdAt,
-        rating = rating
+        lastUpdatedOrderId = null,
+        followedCountOrderId = null,
+        createdAtOrderId = null,
+        ratingOrderId = null
       )
     }
-    fetchMangaListByTagFirstPage()
+
+    when (criteriaId) {
+      SortCriteria.LatestUpdate.id -> _categoryCriteriaUiState.update { it.copy(lastUpdatedOrderId = orderId) }
+      SortCriteria.Trending.id -> _categoryCriteriaUiState.update { it.copy(followedCountOrderId = orderId) }
+      SortCriteria.NewReleases.id -> _categoryCriteriaUiState.update { it.copy(createdAtOrderId = orderId) }
+      SortCriteria.TopRated.id -> _categoryCriteriaUiState.update { it.copy(ratingOrderId = orderId) }
+    }
+
+    fetchMangaListByCategoryFirstPage()
   }
 
   fun updateFilteringCriteria(
-    status: String = _criteriaState.value.status,
-    contentRating: String = _criteriaState.value.contentRating
+    statusValueId: String,
+    contentRatingValueId: String
   ) {
-    _criteriaState.update {
+    _categoryCriteriaUiState.update {
       it.copy(
-        status = status,
-        contentRating = contentRating
+        statusValueId =
+          if (statusValueId == _categoryCriteriaUiState.value.statusValueId) return
+          else statusValueId,
+        contentRatingValueId =
+          if (contentRatingValueId == _categoryCriteriaUiState.value.contentRatingValueId) return
+          else contentRatingValueId
       )
     }
-    fetchMangaListByTagFirstPage()
+    fetchMangaListByCategoryFirstPage()
   }
 
   fun retry() {
-    fetchMangaListByTagFirstPage()
+    fetchMangaListByCategoryFirstPage()
   }
 
-  fun retryFetchMangaListByTagNextPage() {
-    val currentUiState = _uiState.value
+  fun retryFetchMangaListByCategoryNextPage() {
+    val currentUiState = _categoryDetailsUiState.value
     if (currentUiState is CategoryDetailsUiState.Content &&
       currentUiState.nextPageState == CategoryDetailsNextPageState.ERROR
     ) {
-      fetchMangaListByTagNextPageInternal(currentUiState)
+      fetchMangaListByCategoryNextPageInternal(currentUiState)
     }
   }
 
