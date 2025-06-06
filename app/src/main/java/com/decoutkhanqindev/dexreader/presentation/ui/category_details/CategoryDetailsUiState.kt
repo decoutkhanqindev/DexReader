@@ -19,11 +19,11 @@ enum class CategoryDetailsNextPageState {
   NO_MORE_ITEMS,
 }
 
-data class CategoryDetailsCriteriaState(
-  val lastUpdated: String = SortingCriteria.Descending.value,
-  val followedCount: String = SortingCriteria.Descending.value,
-  val createdAt: String = SortingCriteria.Descending.value,
-  val rating: String = SortingCriteria.Descending.value,
-  val status: String = FilteringCriteria.Ongoing.value,
-  val contentRating: String = FilteringCriteria.Safe.value,
+data class CategoryDetailsCriteriaUiState(
+  val lastUpdatedOrderId: String? = SortOrder.Descending.id,
+  val followedCountOrderId: String? = null,
+  val createdAtOrderId : String? = null,
+  val ratingOrderId: String? = null,
+  val statusValueId: String = FilterValue.Ongoing.id,
+  val contentRatingValueId: String = FilterValue.Safe.id,
 )
