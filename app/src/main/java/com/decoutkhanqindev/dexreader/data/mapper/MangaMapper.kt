@@ -18,7 +18,7 @@ fun MangaDto.toDomain(uploadUrl: String): Manga {
     ?: "No description ..."
   val authorId = relationships?.find { it.type == "author" }?.attributes?.name ?: "Unknown"
   val artistId = relationships?.find { it.type == "artist" }?.attributes?.name ?: "Unknown"
-  val genres = attributes.tags?.mapNotNull { it.attributes.name?.get("en") } ?: emptyList()
+  val tags = attributes.tags?.mapNotNull { it.toDomain() } ?: emptyList()
   val status = attributes.status ?: "Unknown"
   val year = attributes.year ?: "Unknown"
   val availableTranslatedLanguages =
@@ -33,7 +33,7 @@ fun MangaDto.toDomain(uploadUrl: String): Manga {
     description = description,
     author = authorId,
     artist = artistId,
-    tags = genres,
+    categories = tags,
     status = status,
     year = year,
     availableTranslatedLanguages = availableTranslatedLanguages,

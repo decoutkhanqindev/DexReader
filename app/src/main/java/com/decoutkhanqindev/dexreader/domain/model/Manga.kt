@@ -7,7 +7,7 @@ data class Manga(
   val description: String, // Mô tả
   val author: String, // Tác giả
   val artist: String, // Họa sĩ
-  val tags: List<String>, // Thể loại
+  val categories: List<Category>, // Thể loại
   val status: String, // Trạng thái (ongoing, completed,...)
   val year: String, // Năm phát hành
   val availableTranslatedLanguages: List<String>, // Ngôn ngữ đã dịch
