@@ -33,13 +33,14 @@ fun CategoryDetailsScreen(
   BaseDetailsScreen(
     title = categoryTitle,
     onNavigateBack = onNavigateBack,
-    isSearchEnabled = true,
     onSearchClick = onSearchClick,
     bottomBar = {
       CategoryDetailsBottomBar(
         onSortClick = { isSortSheetVisible = true },
         onFilterClick = { isFilterSheetVisible = true },
-        modifier = Modifier.fillMaxWidth().height(80.dp)
+        modifier = Modifier
+          .fillMaxWidth()
+          .height(80.dp)
       )
     },
     content = {
