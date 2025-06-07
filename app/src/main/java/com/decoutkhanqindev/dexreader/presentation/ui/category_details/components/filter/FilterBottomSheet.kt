@@ -75,7 +75,7 @@ fun FilterBottomSheet(
       modifier = Modifier
         .fillMaxWidth()
         .padding(horizontal = 4.dp)
-        .padding(bottom = 12.dp)
+        .padding(bottom = 8.dp)
     )
   }
 }
