@@ -5,7 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.category.GetMangaListByCategoryUseCase
-import com.decoutkhanqindev.dexreader.presentation.navigation.NavigationDestination
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,9 +20,9 @@ class CategoryDetailsViewModel @Inject constructor(
   private val getMangaListByCategoryUseCase: GetMangaListByCategoryUseCase
 ) : ViewModel() {
   private val categoryIdFromArg: String =
-    checkNotNull(savedStateHandle[NavigationDestination.CategoryDetailsDestination.CATEGORY_ID_ARG])
+    checkNotNull(savedStateHandle[NavDestination.CategoryDetailsDestination.CATEGORY_ID_ARG])
   val categoryTitleFromArg: String =
-    checkNotNull(savedStateHandle[NavigationDestination.CategoryDetailsDestination.CATEGORY_TITLE_ARG])
+    checkNotNull(savedStateHandle[NavDestination.CategoryDetailsDestination.CATEGORY_TITLE_ARG])
 
   private val _categoryDetailsUiState =
     MutableStateFlow<CategoryDetailsUiState>(CategoryDetailsUiState.FirstPageLoading)

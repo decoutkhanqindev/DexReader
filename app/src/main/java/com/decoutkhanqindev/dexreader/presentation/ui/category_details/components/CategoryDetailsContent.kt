@@ -42,8 +42,6 @@ fun CategoryDetailsContent(
   onRetry: () -> Unit,
   modifier: Modifier = Modifier
 ) {
-
-
   if (isSortSheetVisible) {
     SortBottomSheet(
       onDismiss = onSortSheetDismiss,
