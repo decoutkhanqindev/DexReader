@@ -102,8 +102,8 @@ interface MangaDexApiService {
     @Query("order[createdAt]") createdAt: String? = null, // new release
     @Query("order[rating]=desc") rating: String? = null, // top rated
     // filtering
-    @Query("status[]") status: String = "ongoing", // ongoing, completed, hiatus, cancelled
-    @Query("contentRating[]") contentRating: String = "safe", // safe, suggestive, erotica
+    @Query("status[]") status: List<String> = listOf("ongoing"), // ongoing, completed, hiatus, cancelled
+    @Query("contentRating[]") contentRating: List<String> = listOf("safe"), // safe, suggestive, erotica
     @Query("includes[]")
     includes: List<String> = listOf("cover_art", "author", "artist"),
   ): MangaListResponse

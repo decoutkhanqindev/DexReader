@@ -16,8 +16,8 @@ class GetMangaListByCategoryUseCase @Inject constructor(
     createdAt: String? = null, // new release
     rating: String? = null, // top rated
     // filters
-    status: String = "ongoing", // ongoing, completed, hiatus, cancelled
-    contentRating: String = "safe", // safe, suggestive, erotica
+    status: List<String> = listOf("ongoing"), // ongoing, completed, hiatus, cancelled
+    contentRating: List<String> = listOf("safe"), // safe, suggestive, erotica
   ): Result<List<Manga>> =
     categoryRepository.getMangaListByCategory(
       categoryId = categoryId,

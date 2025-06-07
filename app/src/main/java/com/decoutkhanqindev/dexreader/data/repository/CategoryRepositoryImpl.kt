@@ -28,8 +28,8 @@ class CategoryRepositoryImpl @Inject constructor(
     createdAt: String?, // new release
     rating: String?, // top rated
     // filters
-    status: String, // ongoing, completed, hiatus, cancelled
-    contentRating: String, // safe, suggestive, erotica
+    status: List<String>, // ongoing, completed, hiatus, cancelled
+    contentRating: List<String>, // safe, suggestive, erotica
   ): Result<List<Manga>> =
     runSuspendCatching(Dispatchers.IO) {
       mangaDexApiService.getMangaListByTag(
