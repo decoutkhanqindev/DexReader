@@ -49,8 +49,8 @@ class CategoryDetailsViewModel @Inject constructor(
         followedCount = currentCriteria.followedCountOrderId,
         createdAt = currentCriteria.createdAtOrderId,
         rating = currentCriteria.ratingOrderId,
-        status = currentCriteria.statusValueId,
-        contentRating = currentCriteria.contentRatingValueId
+        status = currentCriteria.statusValueIds,
+        contentRating = currentCriteria.contentRatingValueIds
       )
       mangaListResult
         .onSuccess { mangaList ->
@@ -105,8 +105,8 @@ class CategoryDetailsViewModel @Inject constructor(
         followedCount = currentCriteria.followedCountOrderId,
         createdAt = currentCriteria.createdAtOrderId,
         rating = currentCriteria.ratingOrderId,
-        status = currentCriteria.statusValueId,
-        contentRating = currentCriteria.contentRatingValueId
+        status = currentCriteria.statusValueIds,
+        contentRating = currentCriteria.contentRatingValueIds
       )
       nextMangaListResults
         .onSuccess { nextMangaList ->
@@ -155,17 +155,17 @@ class CategoryDetailsViewModel @Inject constructor(
   }
 
   fun updateFilteringCriteria(
-    statusValueId: String,
-    contentRatingValueId: String
+    statusValueIds: List<String>,
+    contentRatingValueIds: List<String>
   ) {
     _categoryCriteriaUiState.update {
       it.copy(
-        statusValueId =
-          if (statusValueId == _categoryCriteriaUiState.value.statusValueId) return
-          else statusValueId,
-        contentRatingValueId =
-          if (contentRatingValueId == _categoryCriteriaUiState.value.contentRatingValueId) return
-          else contentRatingValueId
+        statusValueIds =
+          if (statusValueIds == _categoryCriteriaUiState.value.statusValueIds) return
+          else statusValueIds,
+        contentRatingValueIds =
+          if (contentRatingValueIds == _categoryCriteriaUiState.value.contentRatingValueIds) return
+          else contentRatingValueIds
       )
     }
     fetchMangaListByCategoryFirstPage()
