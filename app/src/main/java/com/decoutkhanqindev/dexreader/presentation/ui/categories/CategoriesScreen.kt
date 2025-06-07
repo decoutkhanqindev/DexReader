@@ -3,8 +3,6 @@ package com.decoutkhanqindev.dexreader.presentation.ui.categories
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -23,9 +21,7 @@ fun CategoriesScreen(
   modifier: Modifier = Modifier
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-  val route by rememberSaveable {
-    mutableStateOf(NavDestination.CategoriesDestination.route)
-  }
+  val route = NavDestination.CategoriesDestination.route
 
   BaseScreen(
     title = stringResource(R.string.category_menu_item),
