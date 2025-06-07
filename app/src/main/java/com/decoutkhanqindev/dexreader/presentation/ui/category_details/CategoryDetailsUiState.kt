@@ -22,8 +22,8 @@ enum class CategoryDetailsNextPageState {
 data class CategoryDetailsCriteriaUiState(
   val lastUpdatedOrderId: String? = SortOrder.Descending.id,
   val followedCountOrderId: String? = null,
-  val createdAtOrderId : String? = null,
+  val createdAtOrderId: String? = null,
   val ratingOrderId: String? = null,
-  val statusValueId: String = FilterValue.Ongoing.id,
-  val contentRatingValueId: String = FilterValue.Safe.id,
+  val statusValueIds: List<String> = listOf(FilterValue.Ongoing.id),
+  val contentRatingValueIds: List<String> = listOf(FilterValue.Safe.id),
 )
