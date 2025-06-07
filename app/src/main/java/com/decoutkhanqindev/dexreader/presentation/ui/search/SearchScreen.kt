@@ -12,8 +12,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.decoutkhanqindev.dexreader.presentation.ui.search.components.SearchBar
 import com.decoutkhanqindev.dexreader.presentation.ui.search.components.SearchContent
+import com.decoutkhanqindev.dexreader.presentation.ui.search.components.actions.SearchBar
 
 
 @Composable

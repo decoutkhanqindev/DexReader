@@ -22,9 +22,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.ui.common.top_bars.DetailsTopBar
-import com.decoutkhanqindev.dexreader.presentation.ui.reader.components.ReaderBottomBar
 import com.decoutkhanqindev.dexreader.presentation.ui.reader.components.ReaderContent
-import com.decoutkhanqindev.dexreader.presentation.ui.reader.components.ReaderFloatingButton
+import com.decoutkhanqindev.dexreader.presentation.ui.reader.components.actions.NavigateChapterBottomBar
+import com.decoutkhanqindev.dexreader.presentation.ui.reader.components.actions.ZoomPageButton
 
 @Composable
 fun ReaderScreen(
@@ -67,7 +67,7 @@ fun ReaderScreen(
         enter = expandVertically() + fadeIn(),
         exit = shrinkVertically() + fadeOut()
       ) {
-        ReaderBottomBar(
+        NavigateChapterBottomBar(
           volume = chapterDetailsUiState.volume,
           chapterNumber = chapterDetailsUiState.chapterNumber,
           title = chapterDetailsUiState.title,
@@ -80,7 +80,7 @@ fun ReaderScreen(
       }
     },
     floatingActionButton = {
-      ReaderFloatingButton(
+      ZoomPageButton(
         isFullScreen = isFullScreen,
         onClick = { isFullScreen = !isFullScreen },
         modifier = Modifier.size(56.dp)

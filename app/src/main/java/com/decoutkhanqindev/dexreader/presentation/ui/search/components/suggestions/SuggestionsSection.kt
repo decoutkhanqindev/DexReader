@@ -7,7 +7,7 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.ui.common.indicators.ListLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.ui.common.states.ErrorScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.search.SuggestionsUiState
-import com.decoutkhanqindev.dexreader.presentation.ui.search.components.SearchNotFoundMessage
+import com.decoutkhanqindev.dexreader.presentation.ui.search.components.results.ResultsNotFoundMessage
 
 @Composable
 fun SuggestionsSection(
@@ -28,7 +28,7 @@ fun SuggestionsSection(
 
     SuggestionsUiState.Success -> {
       if (suggestionList.isEmpty()) {
-        SearchNotFoundMessage(
+        ResultsNotFoundMessage(
           message = stringResource(R.string.sorry_no_manga_found_with_title, query),
           modifier = modifier
         )

@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.ui.reader.components
+package com.decoutkhanqindev.dexreader.presentation.ui.reader.components.actions
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 
 @Composable
-fun ReaderFloatingButton(
+fun ZoomPageButton(
   isFullScreen: Boolean,
   onClick: () -> Unit,
   modifier: Modifier = Modifier

@@ -13,7 +13,7 @@ fun SuggestionList(
   modifier: Modifier = Modifier
 ) {
   LazyColumn(modifier = modifier) {
-    items(suggestionList, key = { it }) { mangaSuggestion ->
+    items(suggestionList, key = { suggestionList.indexOf(it) }) { mangaSuggestion ->
       SuggestionItem(
         suggestion = mangaSuggestion,
         onSelectedSuggestion = onSelectedSuggestion,

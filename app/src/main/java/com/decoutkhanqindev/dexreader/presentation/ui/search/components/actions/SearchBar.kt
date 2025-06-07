@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.ui.search.components
+package com.decoutkhanqindev.dexreader.presentation.ui.search.components.actions
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions

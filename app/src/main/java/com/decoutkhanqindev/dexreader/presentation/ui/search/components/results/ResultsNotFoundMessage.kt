@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.ui.search.components
+package com.decoutkhanqindev.dexreader.presentation.ui.search.components.results
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 
 @Composable
-fun SearchNotFoundMessage(
+fun ResultsNotFoundMessage(
   message: String,
   modifier: Modifier = Modifier,
 ) {

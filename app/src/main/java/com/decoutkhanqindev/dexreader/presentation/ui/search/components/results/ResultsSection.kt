@@ -16,7 +16,6 @@ import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.LoadMoreMessa
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.LoadPageErrorMessage
 import com.decoutkhanqindev.dexreader.presentation.ui.search.ResultsNextPageState
 import com.decoutkhanqindev.dexreader.presentation.ui.search.ResultsUiState
-import com.decoutkhanqindev.dexreader.presentation.ui.search.components.SearchNotFoundMessage
 
 @Composable
 fun ResultsSection(
@@ -42,7 +41,7 @@ fun ResultsSection(
       val nextPageState = resultsUiState.nextPageState
 
       if (mangaList.isEmpty()) {
-        SearchNotFoundMessage(
+        ResultsNotFoundMessage(
           message = stringResource(R.string.sorry_no_manga_found_with_title, query),
           modifier = modifier
         )

@@ -2,16 +2,18 @@ package com.decoutkhanqindev.dexreader.presentation.ui.category_details
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.decoutkhanqindev.dexreader.presentation.ui.category_details.components.CategoryDetailsBottomBar
 import com.decoutkhanqindev.dexreader.presentation.ui.category_details.components.CategoryDetailsContent
+import com.decoutkhanqindev.dexreader.presentation.ui.category_details.components.actions.SortAndFilterBottomBar
 import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BaseDetailsScreen
 
 @Composable
@@ -33,10 +35,12 @@ fun CategoryDetailsScreen(
     onNavigateBack = onNavigateBack,
     onSearchClick = onSearchClick,
     bottomBar = {
-      CategoryDetailsBottomBar(
+      SortAndFilterBottomBar(
         onSortClick = { isSortSheetVisible = true },
         onFilterClick = { isFilterSheetVisible = true },
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+          .fillMaxWidth()
+          .height(56.dp)
       )
     },
     content = {
