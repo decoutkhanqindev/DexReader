@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.chapter.GetChapterListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaDetailsUseCase
-import com.decoutkhanqindev.dexreader.presentation.navigation.NavigationDestination
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +21,7 @@ class MangaDetailsViewModel @Inject constructor(
   private val getChapterListUseCase: GetChapterListUseCase,
 ) : ViewModel() {
   private val mangaIdFromArg: String =
-    checkNotNull(savedStateHandle[NavigationDestination.MangaDetailsDestination.MANGA_ID_ARG])
+    checkNotNull(savedStateHandle[NavDestination.MangaDetailsDestination.MANGA_ID_ARG])
 
   private val _mangaDetailsUiState =
     MutableStateFlow<MangaDetailsUiState>(MangaDetailsUiState.Loading)
