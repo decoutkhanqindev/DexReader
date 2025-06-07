@@ -5,6 +5,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,22 +26,26 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 
 @Composable
-fun CategoryHeader(
+fun CategoryGroupHeader(
   group: String,
   isExpanded: Boolean,
   onExpandClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   Column(modifier = modifier) {
-    Row(modifier = Modifier.fillMaxWidth()) {
+    Row(
+      modifier = Modifier
+        .fillMaxWidth()
+        .clickable { onExpandClick() }
+        .padding(horizontal = 12.dp)
+    ) {
       Text(
         text = group,
         style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.ExtraBold,
         modifier = Modifier
           .weight(0.9f)
-          .fillMaxWidth()
-          .padding(12.dp)
+          .padding(vertical = 12.dp)
       )
       IconButton(
         onClick = onExpandClick,
@@ -61,7 +66,10 @@ fun CategoryHeader(
       enter = expandVertically() + fadeIn(),
       exit = shrinkVertically() + fadeOut()
     ) {
-      HorizontalDivider(thickness = 2.dp, modifier = Modifier.fillMaxWidth())
+      HorizontalDivider(
+        thickness = 2.dp,
+        modifier = Modifier.fillMaxWidth()
+      )
     }
   }
 }

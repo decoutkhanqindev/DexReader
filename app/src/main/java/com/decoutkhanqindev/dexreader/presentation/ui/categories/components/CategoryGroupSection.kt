@@ -21,7 +21,7 @@ fun CategoryGroupSection(
   modifier: Modifier = Modifier
 ) {
   Column(modifier = modifier) {
-    CategoryHeader(
+    CategoryGroupHeader(
       group = group,
       isExpanded = isExpanded,
       onExpandClick = onExpandClick,

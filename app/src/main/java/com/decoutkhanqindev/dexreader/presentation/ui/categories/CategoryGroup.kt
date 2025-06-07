@@ -4,23 +4,23 @@ sealed class CategoryGroup(
   val id: String,
   val name: String,
 ) {
-  object Genre : CategoryGroup(
+  data object Genre : CategoryGroup(
     id = "genre",
     name = "Genre",
   )
 
-  object Theme : CategoryGroup(
+  data object Theme : CategoryGroup(
     id = "theme",
     name = "Theme",
   )
 
-  object Format : CategoryGroup(
-    id = "theme",
+  data object Format : CategoryGroup(
+    id = "format",
     name = "Format",
   )
 
-  object Content : CategoryGroup(
-    id = "theme",
+  data object Content : CategoryGroup(
+    id = "content",
     name = "Content",
   )
 }
