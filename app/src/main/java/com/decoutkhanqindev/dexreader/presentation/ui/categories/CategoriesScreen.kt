@@ -10,7 +10,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.navigation.NavigationDestination
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.ui.categories.components.CategoriesContent
 import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BaseScreen
 
@@ -24,7 +24,7 @@ fun CategoriesScreen(
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val route by rememberSaveable {
-    mutableStateOf(NavigationDestination.CategoriesDestination.route)
+    mutableStateOf(NavDestination.CategoriesDestination.route)
   }
 
   BaseScreen(
