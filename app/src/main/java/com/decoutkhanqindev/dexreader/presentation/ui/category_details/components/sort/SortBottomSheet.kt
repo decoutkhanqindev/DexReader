@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.ui.category_details.CategoryDetailsCriteriaUiState
 import com.decoutkhanqindev.dexreader.presentation.ui.category_details.SortCriteria
-import com.decoutkhanqindev.dexreader.presentation.ui.category_details.components.actions.ApplyButton
+import com.decoutkhanqindev.dexreader.presentation.ui.category_details.components.ApplyButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

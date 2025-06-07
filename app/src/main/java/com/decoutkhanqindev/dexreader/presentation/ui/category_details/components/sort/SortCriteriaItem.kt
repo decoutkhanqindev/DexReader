@@ -41,7 +41,7 @@ fun SortCriteriaItem(
     ) {
       Text(
         text = criteria.name,
-        style = MaterialTheme.typography.titleLarge,
+        style = MaterialTheme.typography.titleMedium,
         fontWeight = FontWeight.ExtraBold,
         textAlign = TextAlign.Center,
       )
