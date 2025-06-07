@@ -10,7 +10,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -24,7 +24,7 @@ import com.decoutkhanqindev.dexreader.presentation.ui.category_details.component
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SortBottomSheetSection(
+fun SortBottomSheet(
   onDismiss: () -> Unit,
   criteriaState: CategoryDetailsCriteriaUiState,
   onApplyClick: (
@@ -34,10 +34,10 @@ fun SortBottomSheetSection(
   modifier: Modifier = Modifier
 ) {
   val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-  var selectedCriteriaId by remember {
+  var selectedCriteriaId by rememberSaveable {
     mutableStateOf<String>(SortCriteria.LatestUpdate.id)
   }
-  var selectedOrderId by remember {
+  var selectedOrderId by rememberSaveable {
     mutableStateOf(criteriaState.lastUpdatedOrderId)
   }
 

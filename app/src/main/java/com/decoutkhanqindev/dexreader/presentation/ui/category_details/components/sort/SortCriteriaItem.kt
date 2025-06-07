@@ -1,6 +1,5 @@
 package com.decoutkhanqindev.dexreader.presentation.ui.category_details.components.sort
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,7 +29,8 @@ fun SortCriteriaItem(
       containerColor = if (isSelected) MaterialTheme.colorScheme.surfaceVariant
       else MaterialTheme.colorScheme.surfaceContainerHigh,
     ),
-    modifier = modifier.clickable { onSelectedItem }
+    elevation = CardDefaults.cardElevation(4.dp),
+    modifier = modifier
   ) {
     Column(
       modifier = Modifier
@@ -41,8 +41,8 @@ fun SortCriteriaItem(
     ) {
       Text(
         text = criteria.name,
-        style = MaterialTheme.typography.titleMedium,
-        fontWeight = FontWeight.Bold,
+        style = MaterialTheme.typography.titleLarge,
+        fontWeight = FontWeight.ExtraBold,
         textAlign = TextAlign.Center,
       )
     }
