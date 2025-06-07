@@ -18,6 +18,7 @@ import com.decoutkhanqindev.dexreader.presentation.ui.profile.ProfileScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.reader.ReaderScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.search.SearchScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.settings.SettingsScreen
+import com.decoutkhanqindev.dexreader.utils.navigateTo
 
 @Composable
 fun NavGraph(
@@ -26,50 +27,50 @@ fun NavGraph(
 ) {
   NavHost(
     navController = navHostController,
-    startDestination = NavigationDestination.HomeDestination.route,
+    startDestination = NavDestination.HomeDestination.route,
     modifier = modifier
   ) {
-    composable(route = NavigationDestination.HomeDestination.route) {
+    composable(route = NavDestination.HomeDestination.route) {
       HomeScreen(
         onMenuItemClick = { itemId ->
-          if (itemId != NavigationDestination.HistoryDestination.route) {
-            navHostController.navigate(itemId)
+          if (itemId != NavDestination.HistoryDestination.route) {
+            navHostController.navigateTo(itemId)
           }
         },
         onSearchClick = {
-          navHostController.navigate(route = NavigationDestination.SearchDestination.route)
+          navHostController.navigate(route = NavDestination.SearchDestination.route)
         },
         onSelectedManga = { mangaId ->
-          navHostController.navigate(route = "${NavigationDestination.MangaDetailsDestination.route}/$mangaId")
+          navHostController.navigate(route = "${NavDestination.MangaDetailsDestination.route}/$mangaId")
         },
         modifier = Modifier.fillMaxSize()
       )
     }
 
-    composable(route = NavigationDestination.CategoriesDestination.route) {
+    composable(route = NavDestination.CategoriesDestination.route) {
       CategoriesScreen(
         onMenuItemClick = { itemId ->
-          if (itemId != NavigationDestination.CategoriesDestination.route) {
-            navHostController.navigate(itemId)
+          if (itemId != NavDestination.CategoriesDestination.route) {
+            navHostController.navigateTo(itemId)
           }
         },
         onSearchClick = {
-          navHostController.navigate(route = NavigationDestination.SearchDestination.route)
+          navHostController.navigate(route = NavDestination.SearchDestination.route)
         },
         onSelectedCategory = { categoryId, categoryTitle ->
-          navHostController.navigate(route = "${NavigationDestination.CategoryDetailsDestination.route}/$categoryId/$categoryTitle")
+          navHostController.navigate(route = "${NavDestination.CategoryDetailsDestination.route}/$categoryId/$categoryTitle")
         },
         modifier = Modifier.fillMaxSize()
       )
     }
 
     composable(
-      route = NavigationDestination.CategoryDetailsDestination.routeWithArgs,
+      route = NavDestination.CategoryDetailsDestination.routeWithArgs,
       arguments = listOf(
-        navArgument(NavigationDestination.CategoryDetailsDestination.CATEGORY_ID_ARG) {
+        navArgument(NavDestination.CategoryDetailsDestination.CATEGORY_ID_ARG) {
           type = NavType.StringType
         },
-        navArgument(NavigationDestination.CategoryDetailsDestination.CATEGORY_TITLE_ARG) {
+        navArgument(NavDestination.CategoryDetailsDestination.CATEGORY_TITLE_ARG) {
           type = NavType.StringType
         },
       )
@@ -77,79 +78,79 @@ fun NavGraph(
       CategoryDetailsScreen(
         onNavigateBack = { navHostController.navigateUp() },
         onSearchClick = {
-          navHostController.navigate(route = NavigationDestination.SearchDestination.route)
+          navHostController.navigate(route = NavDestination.SearchDestination.route)
         },
         onSelectedManga = { mangaId ->
-          navHostController.navigate(route = "${NavigationDestination.MangaDetailsDestination.route}/$mangaId")
+          navHostController.navigate(route = "${NavDestination.MangaDetailsDestination.route}/$mangaId")
         },
         modifier = Modifier.fillMaxSize(),
       )
     }
 
-    composable(route = NavigationDestination.FavoriteDestination.route) {
+    composable(route = NavDestination.FavoriteDestination.route) {
       FavoriteScreen(
         onMenuItemClick = { itemId ->
-          if (itemId != NavigationDestination.FavoriteDestination.route) {
-            navHostController.navigate(itemId)
+          if (itemId != NavDestination.FavoriteDestination.route) {
+            navHostController.navigateTo(itemId)
           }
         },
         onSearchClick = {
-          navHostController.navigate(route = NavigationDestination.SearchDestination.route)
+          navHostController.navigate(route = NavDestination.SearchDestination.route)
         },
         modifier = Modifier.fillMaxSize()
       )
     }
 
-    composable(route = NavigationDestination.HistoryDestination.route) {
+    composable(route = NavDestination.HistoryDestination.route) {
       HistoryScreen(
         onMenuItemClick = { itemId ->
-          if (itemId != NavigationDestination.HistoryDestination.route) {
-            navHostController.navigate(itemId)
+          if (itemId != NavDestination.HistoryDestination.route) {
+            navHostController.navigateTo(itemId)
           }
         },
         onSearchClick = {
-          navHostController.navigate(route = NavigationDestination.SearchDestination.route)
+          navHostController.navigate(route = NavDestination.SearchDestination.route)
         },
         modifier = Modifier.fillMaxSize()
       )
     }
 
-    composable(route = NavigationDestination.ProfileDestination.route) {
+    composable(route = NavDestination.ProfileDestination.route) {
       ProfileScreen(
         onMenuItemClick = { itemId ->
-          if (itemId != NavigationDestination.ProfileDestination.route) {
-            navHostController.navigate(itemId)
+          if (itemId != NavDestination.ProfileDestination.route) {
+            navHostController.navigateTo(itemId)
           }
         },
         modifier = Modifier.fillMaxSize()
       )
     }
 
-    composable(route = NavigationDestination.SettingsDestination.route) {
+    composable(route = NavDestination.SettingsDestination.route) {
       SettingsScreen(
         onMenuItemClick = { itemId ->
-          if (itemId != NavigationDestination.SettingsDestination.route) {
-            navHostController.navigate(itemId)
+          if (itemId != NavDestination.SettingsDestination.route) {
+            navHostController.navigateTo(itemId)
           }
         },
         modifier = Modifier.fillMaxSize()
       )
     }
 
-    composable(route = NavigationDestination.SearchDestination.route) {
+    composable(route = NavDestination.SearchDestination.route) {
       SearchScreen(
         onNavigateBack = { navHostController.navigateUp() },
         onSelectedManga = { mangaId ->
-          navHostController.navigate(route = "${NavigationDestination.MangaDetailsDestination.route}/$mangaId")
+          navHostController.navigate(route = "${NavDestination.MangaDetailsDestination.route}/$mangaId")
         },
         modifier = Modifier.fillMaxSize()
       )
     }
 
     composable(
-      route = NavigationDestination.MangaDetailsDestination.routeWithArgs,
+      route = NavDestination.MangaDetailsDestination.routeWithArgs,
       arguments = listOf(
-        navArgument(NavigationDestination.MangaDetailsDestination.MANGA_ID_ARG) {
+        navArgument(NavDestination.MangaDetailsDestination.MANGA_ID_ARG) {
           type = NavType.StringType
         }
       )
@@ -157,25 +158,25 @@ fun NavGraph(
       MangaDetailsScreen(
         onNavigateBack = { navHostController.navigateUp() },
         onSearchClick = {
-          navHostController.navigate(route = NavigationDestination.SearchDestination.route)
+          navHostController.navigate(route = NavDestination.SearchDestination.route)
         },
         onReadingClick = { firstChapterId ->
-          navHostController.navigate(route = "${NavigationDestination.ReaderDestination.route}/$firstChapterId")
+          navHostController.navigate(route = "${NavDestination.ReaderDestination.route}/$firstChapterId")
         },
         onSelectedCategory = { categoryId, categoryTitle ->
-          navHostController.navigate(route = "${NavigationDestination.CategoryDetailsDestination.route}/$categoryId/$categoryTitle")
+          navHostController.navigate(route = "${NavDestination.CategoryDetailsDestination.route}/$categoryId/$categoryTitle")
         },
         onSelectedChapter = { chapterId ->
-          navHostController.navigate(route = "${NavigationDestination.ReaderDestination.route}/$chapterId")
+          navHostController.navigate(route = "${NavDestination.ReaderDestination.route}/$chapterId")
         },
         modifier = Modifier.fillMaxSize()
       )
     }
 
     composable(
-      route = NavigationDestination.ReaderDestination.routeWithArgs,
+      route = NavDestination.ReaderDestination.routeWithArgs,
       arguments = listOf(
-        navArgument(NavigationDestination.ReaderDestination.CHAPTER_ID_ARG) {
+        navArgument(NavDestination.ReaderDestination.CHAPTER_ID_ARG) {
           type = NavType.StringType
         }
       )

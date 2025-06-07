@@ -1,59 +1,63 @@
 package com.decoutkhanqindev.dexreader.presentation.navigation
 
+import kotlinx.serialization.Serializable
 
-sealed interface NavigationDestination {
+
+sealed interface NavDestination {
   val route: String
 
-  object LoginDestination : NavigationDestination {
+  object LoginDestination : NavDestination {
     override val route: String = "login"
   }
 
-  object RegisterDestination : NavigationDestination {
+  object RegisterDestination : NavDestination {
     override val route: String = "register"
   }
 
-  object HomeDestination : NavigationDestination {
+  @Serializable
+  object HomeDestination : NavDestination {
     override val route: String = "home"
   }
 
-  object CategoriesDestination : NavigationDestination {
+  @Serializable
+  object CategoriesDestination : NavDestination {
     override val route: String = "categories"
   }
 
-  object CategoryDetailsDestination : NavigationDestination {
+  object CategoryDetailsDestination : NavDestination {
     override val route: String = "category_details"
     const val CATEGORY_ID_ARG: String = "categoryId"
     const val CATEGORY_TITLE_ARG: String = "categoryTitle"
     val routeWithArgs: String = "${route}/{$CATEGORY_ID_ARG}/{$CATEGORY_TITLE_ARG}"
   }
 
-  object FavoriteDestination : NavigationDestination {
+  object FavoriteDestination : NavDestination {
     override val route: String = "favorite"
   }
 
-  object HistoryDestination : NavigationDestination {
+  object HistoryDestination : NavDestination {
     override val route: String = "history"
   }
 
-  object ProfileDestination : NavigationDestination {
+  object ProfileDestination : NavDestination {
     override val route: String = "profile"
   }
 
-  object SettingsDestination : NavigationDestination {
+  object SettingsDestination : NavDestination {
     override val route: String = "settings"
   }
 
-  object SearchDestination : NavigationDestination {
+  object SearchDestination : NavDestination {
     override val route: String = "search"
   }
 
-  object MangaDetailsDestination : NavigationDestination {
+  object MangaDetailsDestination : NavDestination {
     override val route: String = "manga_details"
     const val MANGA_ID_ARG: String = "mangaId"
     val routeWithArgs: String = "$route/{$MANGA_ID_ARG}"
   }
 
-  object ReaderDestination : NavigationDestination {
+  object ReaderDestination : NavDestination {
     override val route: String = "reader"
     const val CHAPTER_ID_ARG: String = "chapterId"
     val routeWithArgs: String = "$route/{$CHAPTER_ID_ARG}"
