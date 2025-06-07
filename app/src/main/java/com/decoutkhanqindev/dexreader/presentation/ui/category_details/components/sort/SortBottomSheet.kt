@@ -53,7 +53,6 @@ fun SortBottomSheet(
       textAlign = TextAlign.Center,
       modifier = Modifier
         .fillMaxWidth()
-        .padding(horizontal = 4.dp)
         .padding(bottom = 16.dp)
     )
 
@@ -62,7 +61,6 @@ fun SortBottomSheet(
       onSelectedItem = { selectedCriteriaId = it },
       modifier = Modifier
         .fillMaxWidth()
-        .padding(horizontal = 4.dp)
         .padding(bottom = 12.dp)
     )
 
@@ -71,7 +69,6 @@ fun SortBottomSheet(
       onSelectedOption = { selectedOrderId = it },
       modifier = Modifier
         .fillMaxWidth()
-        .padding(horizontal = 4.dp)
         .padding(bottom = 24.dp)
     )
 

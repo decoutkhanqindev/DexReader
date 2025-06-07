@@ -52,7 +52,6 @@ fun FilterBottomSheet(
       textAlign = TextAlign.Center,
       modifier = Modifier
         .fillMaxWidth()
-        .padding(horizontal = 4.dp)
         .padding(bottom = 16.dp)
     )
 
@@ -63,7 +62,6 @@ fun FilterBottomSheet(
       onSelectedContentRatingOptions = { selectedContentRatingValueIds = it },
       modifier = Modifier
         .fillMaxWidth()
-        .padding(horizontal = 4.dp)
         .padding(bottom = 24.dp)
     )
 
