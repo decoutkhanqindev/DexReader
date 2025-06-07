@@ -20,7 +20,9 @@ enum class CategoryDetailsNextPageState {
 }
 
 data class CategoryDetailsCriteriaUiState(
-  val lastUpdatedOrderId: String? = SortOrder.Descending.id,
+  val selectedSortCriteriaId: String = SortCriteria.LatestUpdate.id,
+  val selectedSortOrderId: String = SortOrder.Descending.id,
+  val lastUpdatedOrderId: String? = null,
   val followedCountOrderId: String? = null,
   val createdAtOrderId: String? = null,
   val ratingOrderId: String? = null,
