@@ -36,7 +36,12 @@ fun CategoryDetailsScreen(
             orderId = orderId
           )
         },
-        onFilterApplyClick = {},
+        onFilterApplyClick = { statusValueIds, contentRatingValueIds ->
+          viewModel.updateFilteringCriteria(
+            statusValueIds = statusValueIds,
+            contentRatingValueIds = contentRatingValueIds
+          )
+        },
         onSelectedManga = onSelectedManga,
         onFetchMangaListNextPage = { viewModel.fetchMangaListByCategoryNextPage() },
         onRetryFetchMangaListNextPage = { viewModel.retryFetchMangaListByCategoryNextPage() },
