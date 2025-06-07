@@ -137,6 +137,8 @@ class CategoryDetailsViewModel @Inject constructor(
   ) {
     _categoryCriteriaUiState.update {
       it.copy(
+        selectedSortCriteriaId = criteriaId,
+        selectedSortOrderId = orderId,
         lastUpdatedOrderId = null,
         followedCountOrderId = null,
         createdAtOrderId = null,
