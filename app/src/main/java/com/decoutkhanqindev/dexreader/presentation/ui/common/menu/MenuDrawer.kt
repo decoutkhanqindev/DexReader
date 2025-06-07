@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.navigation.NavigationDestination
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 
 @Composable
 fun MenuDrawer(
@@ -33,32 +33,32 @@ fun MenuDrawer(
 ) {
   val items = listOf(
     MenuItem(
-      id = NavigationDestination.HomeDestination.route,
+      id = NavDestination.HomeDestination.route,
       title = stringResource(R.string.home_menu_item),
       icon = Icons.Default.Home
     ),
     MenuItem(
-      id = NavigationDestination.CategoriesDestination.route,
+      id = NavDestination.CategoriesDestination.route,
       title = stringResource(R.string.category_menu_item),
       icon = Icons.Default.Category
     ),
     MenuItem(
-      id = NavigationDestination.FavoriteDestination.route,
+      id = NavDestination.FavoriteDestination.route,
       title = stringResource(R.string.favorite_menu_item),
       icon = Icons.Default.Favorite
     ),
     MenuItem(
-      id = NavigationDestination.HistoryDestination.route,
+      id = NavDestination.HistoryDestination.route,
       title = stringResource(R.string.history_menu_item),
       icon = Icons.Default.History
     ),
     MenuItem(
-      id = NavigationDestination.ProfileDestination.route,
+      id = NavDestination.ProfileDestination.route,
       title = stringResource(R.string.profile_menu_item),
       icon = Icons.Default.Person
     ),
     MenuItem(
-      id = NavigationDestination.SettingsDestination.route,
+      id = NavDestination.SettingsDestination.route,
       title = stringResource(R.string.settings_menu_item),
       icon = Icons.Default.Settings
     )

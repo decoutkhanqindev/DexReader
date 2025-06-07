@@ -3,14 +3,12 @@ package com.decoutkhanqindev.dexreader.presentation.ui.home
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.navigation.NavigationDestination
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BaseScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.home.components.HomeContent
 
@@ -23,9 +21,7 @@ fun HomeScreen(
   modifier: Modifier = Modifier,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-  val route by rememberSaveable {
-    mutableStateOf(NavigationDestination.HomeDestination.route)
-  }
+  val route = NavDestination.HomeDestination.route
 
   BaseScreen(
     title = stringResource(R.string.app_name),
