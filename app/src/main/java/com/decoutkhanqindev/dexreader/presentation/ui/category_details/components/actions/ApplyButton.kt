@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.ui.category_details.components
+package com.decoutkhanqindev.dexreader.presentation.ui.category_details.components.actions
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
