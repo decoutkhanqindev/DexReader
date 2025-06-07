@@ -11,7 +11,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.cache.GetChapterCacheUseCas
 import com.decoutkhanqindev.dexreader.domain.usecase.chapter.GetChapterDetailsUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.chapter.GetChapterListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.chapter.GetChapterPagesUseCase
-import com.decoutkhanqindev.dexreader.presentation.navigation.NavigationDestination
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.utils.toLanguageCode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,7 +32,7 @@ class ReaderViewModel @Inject constructor(
   private val clearExpiredCacheUseCase: ClearExpiredCacheUseCase
 ) : ViewModel() {
   private val chapterIdFromArg: String =
-    checkNotNull(savedStateHandle[NavigationDestination.ReaderDestination.CHAPTER_ID_ARG])
+    checkNotNull(savedStateHandle[NavDestination.ReaderDestination.CHAPTER_ID_ARG])
   private var currentChapterId: String = chapterIdFromArg
 
   private val _chapterDetailsState =
