@@ -27,7 +27,7 @@ fun FilterCriteriaItem(
   Card(
     modifier = modifier,
     colors = CardDefaults.cardColors(
-      containerColor = MaterialTheme.colorScheme.surfaceVariant
+      containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
     ),
     elevation = CardDefaults.cardElevation(4.dp),
   ) {
@@ -38,7 +38,7 @@ fun FilterCriteriaItem(
     ) {
       Text(
         text = criteria.name,
-        style = MaterialTheme.typography.titleLarge,
+        style = MaterialTheme.typography.titleMedium,
         fontWeight = FontWeight.ExtraBold,
         textAlign = TextAlign.Center,
         modifier = Modifier
