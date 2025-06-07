@@ -160,12 +160,8 @@ class CategoryDetailsViewModel @Inject constructor(
   ) {
     _categoryCriteriaUiState.update {
       it.copy(
-        statusValueIds =
-          if (statusValueIds == _categoryCriteriaUiState.value.statusValueIds) return
-          else statusValueIds,
-        contentRatingValueIds =
-          if (contentRatingValueIds == _categoryCriteriaUiState.value.contentRatingValueIds) return
-          else contentRatingValueIds
+        statusValueIds = statusValueIds,
+        contentRatingValueIds = contentRatingValueIds
       )
     }
     fetchMangaListByCategoryFirstPage()
