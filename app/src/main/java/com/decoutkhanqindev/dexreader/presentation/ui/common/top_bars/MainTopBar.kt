@@ -18,7 +18,7 @@ import com.decoutkhanqindev.dexreader.R
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun AppTopBar(
+fun MainTopBar(
   title: String,
   onMenuClick: () -> Unit,
   isSearchEnabled: Boolean = true,

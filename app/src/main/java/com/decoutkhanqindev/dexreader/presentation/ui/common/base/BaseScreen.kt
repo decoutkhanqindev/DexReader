@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import com.decoutkhanqindev.dexreader.presentation.ui.common.menu.MenuDrawer
-import com.decoutkhanqindev.dexreader.presentation.ui.common.top_bars.AppTopBar
+import com.decoutkhanqindev.dexreader.presentation.ui.common.top_bars.MainTopBar
 import kotlinx.coroutines.launch
 
 @Composable
@@ -39,7 +39,7 @@ fun BaseScreen(
     content = {
       Scaffold(
         topBar = {
-          AppTopBar(
+          MainTopBar(
             title = title,
             onMenuClick = {
               coroutineScope.launch {
