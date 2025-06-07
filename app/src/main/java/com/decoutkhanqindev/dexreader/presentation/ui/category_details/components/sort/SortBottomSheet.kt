@@ -19,7 +19,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.ui.category_details.CategoryDetailsCriteriaUiState
-import com.decoutkhanqindev.dexreader.presentation.ui.category_details.SortCriteria
 import com.decoutkhanqindev.dexreader.presentation.ui.category_details.components.actions.ApplyButton
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,10 +34,10 @@ fun SortBottomSheet(
 ) {
   val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
   var selectedCriteriaId by rememberSaveable {
-    mutableStateOf<String>(SortCriteria.LatestUpdate.id)
+    mutableStateOf(criteriaState.selectedSortCriteriaId)
   }
   var selectedOrderId by rememberSaveable {
-    mutableStateOf(criteriaState.lastUpdatedOrderId)
+    mutableStateOf(criteriaState.selectedSortOrderId)
   }
 
   ModalBottomSheet(
@@ -65,7 +64,7 @@ fun SortBottomSheet(
     )
 
     SortOrderOptions(
-      selectedOrderId = selectedOrderId!!,
+      selectedOrderId = selectedOrderId,
       onSelectedOption = { selectedOrderId = it },
       modifier = Modifier
         .fillMaxWidth()
@@ -74,7 +73,7 @@ fun SortBottomSheet(
 
     ApplyButton(
       onApply = {
-        onApplyClick(selectedCriteriaId, selectedOrderId!!)
+        onApplyClick(selectedCriteriaId, selectedOrderId)
         onDismiss()
       },
       modifier = Modifier
