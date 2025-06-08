@@ -54,9 +54,5 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
   override suspend fun updateUserProfile(userProfile: UserProfileDto) {
     usersCollectionRef.document(userProfile.id).set(userProfile).await()
   }
-
-  companion object {
-    private const val USERS_COLLECTION = "users"
-  }
 }
 
