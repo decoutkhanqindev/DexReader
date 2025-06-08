@@ -1,9 +1,15 @@
 package com.decoutkhanqindev.dexreader.di
 
 import com.decoutkhanqindev.dexreader.BuildConfig
+import com.decoutkhanqindev.dexreader.data.network.firebase.auth.FirebaseAuthSource
+import com.decoutkhanqindev.dexreader.data.network.firebase.auth.FirebaseAuthSourceImpl
+import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
+import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSourceImpl
 import com.decoutkhanqindev.dexreader.data.network.mangadex_api.MangaDexApiService
 import com.decoutkhanqindev.dexreader.data.network.mangadex_api.interceptor.NetworkInterceptor
 import com.decoutkhanqindev.dexreader.data.utils.IsoDateAdapter
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -29,6 +35,18 @@ annotation class UploadUrlQualifier
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
 annotation class MangaDexApiServiceQualifier
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class UsersCollectionQualifier
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class FavoritesCollectionQualifier
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class HistoryCollectionQualifier
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -88,6 +106,37 @@ object NetworkDataModule {
   @Provides
   fun provideMangaDexApiService(
     @MangaDexApiServiceQualifier retrofit: Retrofit
-  ): MangaDexApiService =
-    retrofit.create(MangaDexApiService::class.java)
+  ): MangaDexApiService = retrofit.create(MangaDexApiService::class.java)
+
+  @Provides
+  @UsersCollectionQualifier
+  fun provideUsersCollection(): String = "users"
+
+  @Provides
+  @FavoritesCollectionQualifier
+  fun provideFavoritesCollection(): String = "favorites"
+
+  @Provides
+  @HistoryCollectionQualifier
+  fun provideHistoryCollection(): String = "history"
+
+  @Provides
+  @Singleton
+  fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
+
+  @Provides
+  @Singleton
+  fun provideFirebaseFirestore(): FirebaseFirestore = FirebaseFirestore.getInstance()
+
+  @Provides
+  @Singleton
+  fun provideFirebaseAuthSource(
+    firebaseAuthSourceImpl: FirebaseAuthSourceImpl
+  ): FirebaseAuthSource = firebaseAuthSourceImpl
+
+  @Provides
+  @Singleton
+  fun provideFirebaseFirestoreSource(
+    firebaseFirestoreSourceImpl: FirebaseFirestoreSourceImpl
+  ): FirebaseFirestoreSource = firebaseFirestoreSourceImpl
 }
