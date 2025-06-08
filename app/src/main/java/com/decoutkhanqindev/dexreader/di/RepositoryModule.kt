@@ -4,10 +4,12 @@ import com.decoutkhanqindev.dexreader.data.repository.CacheRepositoryImpl
 import com.decoutkhanqindev.dexreader.data.repository.CategoryRepositoryImpl
 import com.decoutkhanqindev.dexreader.data.repository.ChapterRepositoryImpl
 import com.decoutkhanqindev.dexreader.data.repository.MangaRepositoryImpl
+import com.decoutkhanqindev.dexreader.data.repository.UserRepositoryImpl
 import com.decoutkhanqindev.dexreader.domain.repository.CacheRepository
 import com.decoutkhanqindev.dexreader.domain.repository.CategoryRepository
 import com.decoutkhanqindev.dexreader.domain.repository.ChapterRepository
 import com.decoutkhanqindev.dexreader.domain.repository.MangaRepository
+import com.decoutkhanqindev.dexreader.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -27,7 +29,7 @@ interface RepositoryModule {
   ): ChapterRepository
 
   @Binds
-  fun provideCacheRepository (
+  fun provideCacheRepository(
     cacheRepositoryImpl: CacheRepositoryImpl
   ): CacheRepository
 
@@ -35,4 +37,9 @@ interface RepositoryModule {
   fun provideCategoryRepository(
     categoryRepositoryImpl: CategoryRepositoryImpl
   ): CategoryRepository
+
+  @Binds
+  fun provideUserRepository(
+    userRepositoryImpl: UserRepositoryImpl
+  ): UserRepository
 }
