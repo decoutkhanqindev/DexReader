@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "509514457980",
+    "project_id": "dexreader-dd764",
+    "storage_bucket": "dexreader-dd764.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:509514457980:android:63721cf8aec4e56b697af9",
+        "android_client_info": {
+          "package_name": "com.decoutkhanqindev.dexreader"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "509514457980-4mq65qomq1lc5rp2dv503aaffpavmqbn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.decoutkhanqindev.dexreader",
+            "certificate_hash": "64fb5cc4e527b8091a3133df951564189c82aa7b"
+          }
+        },
+        {
+          "client_id": "509514457980-00esref5ndcapors77ro371mgh5ejptg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYGxPgLUXYv595cXUWwzApfvnErLl0N5M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "509514457980-00esref5ndcapors77ro371mgh5ejptg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
