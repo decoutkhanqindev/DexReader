@@ -6,6 +6,7 @@ plugins {
   alias(libs.plugins.kotlin.compose)
   id("com.google.devtools.ksp")
   id("com.google.dagger.hilt.android")
+  id("com.google.gms.google-services")
 }
 
 android {
@@ -67,6 +68,7 @@ dependencies {
   implementation(libs.androidx.ui.graphics)
   implementation(libs.androidx.ui.tooling.preview)
   implementation(libs.androidx.material3)
+  implementation(libs.firebase.crashlytics.buildtools)
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)
@@ -110,7 +112,7 @@ dependencies {
   implementation(libs.coil.network.okhttp)
 
   // Zoomable image for Coil
-  implementation("me.saket.telephoto:zoomable-image-coil3:0.16.0")
+  implementation(libs.zoomable.image.coil3)
 
   // Hilt
   implementation(libs.hilt.android)
@@ -118,4 +120,10 @@ dependencies {
 
   // Material3 Icons Extended
   implementation(libs.androidx.material.icons.extended)
+
+  // Firebase
+  implementation(platform(libs.firebase.bom))
+  implementation(libs.firebase.auth.ktx)
+  implementation(libs.firebase.firestore.ktx)
+  implementation(libs.firebase.analytics)
 }
