@@ -24,8 +24,10 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
   // private val favoritesCollectionRef = firebaseFirestore.collection(favoritesCollection)
   // private val historyCollectionRef = firebaseFirestore.collection(historyCollection)
 
-  override suspend fun addUserProfile(userProfile: UserProfileDto) {
-    usersCollectionRef.document(userProfile.id).set(userProfile).await()
+  override suspend fun addUserProfile(userProfile: UserProfileDto): UserProfileDto {
+    val documentRef = usersCollectionRef.document(userProfile.id)
+    documentRef.set(userProfile).await()
+    return userProfile
   }
 
   override fun observeUserProfile(userId: String): Flow<UserProfileDto?> = callbackFlow {

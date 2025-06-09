@@ -11,8 +11,9 @@ import javax.inject.Inject
 class FirebaseAuthSourceImpl @Inject constructor(
   private val firebaseAuth: FirebaseAuth
 ) : FirebaseAuthSource {
-  override suspend fun registerUser(email: String, password: String) {
-    firebaseAuth.createUserWithEmailAndPassword(email, password).await()
+  override suspend fun registerUser(email: String, password: String): FirebaseUser? {
+    val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
+    return result.user
   }
 
   override suspend fun loginUser(email: String, password: String) {
