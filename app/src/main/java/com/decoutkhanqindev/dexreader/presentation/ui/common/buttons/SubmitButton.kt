@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.ui.category_details.components.actions
+package com.decoutkhanqindev.dexreader.presentation.ui.common.buttons
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
@@ -6,24 +6,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.R
 
 @Composable
-fun ApplyButton(
-  onApply: () -> Unit,
+fun SubmitButton(
+  title: String,
+  onSubmitClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   Button(
     shape = MaterialTheme.shapes.medium,
-    onClick = onApply,
+    onClick = onSubmitClick,
     modifier = modifier.height(48.dp)
   ) {
     Text(
-      text = stringResource(R.string.apply),
+      text = title,
       style = MaterialTheme.typography.titleMedium,
       fontWeight = FontWeight.ExtraBold,
       textAlign = TextAlign.Center
