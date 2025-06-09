@@ -19,7 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.ui.category_details.CategoryDetailsCriteriaUiState
-import com.decoutkhanqindev.dexreader.presentation.ui.category_details.components.actions.ApplyButton
+import com.decoutkhanqindev.dexreader.presentation.ui.common.buttons.SubmitButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,8 +65,9 @@ fun FilterBottomSheet(
         .padding(bottom = 24.dp)
     )
 
-    ApplyButton(
-      onApply = {
+    SubmitButton(
+      title = stringResource(R.string.apply),
+      onSubmitClick = {
         onApplyClick(selectedStatusValueIds, selectedContentRatingValueIds)
         onDismiss()
       },
