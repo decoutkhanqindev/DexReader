@@ -2,17 +2,24 @@ package com.decoutkhanqindev.dexreader.utils
 
 import androidx.navigation.NavHostController
 
-fun NavHostController.navigateTo(route: String) {
+fun NavHostController.navigatePreserveState(route: String) {
   this.navigate(route) {
-    // Clears back stack up to start destination
     popUpTo(graph.startDestinationId) {
-      saveState = true
+      saveState = true     // Saves state
     }
+    launchSingleTop = true // Prevents duplicates
+    restoreState = true    // Restores state when back
+  }
+}
 
-    // Prevents multiple copies of same destination in back stack
-    launchSingleTop = true
-
-    // Restores previous state when navigating back
-    restoreState = true
+fun NavHostController.navigateClearStack(
+  currentRoute: String,
+  destination: String
+) {
+  this.navigate(destination) {
+    popUpTo(currentRoute) {
+      inclusive = true     // Removes destination from stack
+    }
+    launchSingleTop = true // Prevents duplicates
   }
 }
