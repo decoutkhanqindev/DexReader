@@ -2,12 +2,16 @@ package com.decoutkhanqindev.dexreader.presentation.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.decoutkhanqindev.dexreader.presentation.ui.auth.forgot_password.ForgotPasswordScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.auth.login.LoginScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.auth.register.RegisterScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.categories.CategoriesScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.category_details.CategoryDetailsScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.favorite.FavoriteScreen
@@ -18,30 +22,55 @@ import com.decoutkhanqindev.dexreader.presentation.ui.profile.ProfileScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.reader.ReaderScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.search.SearchScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.settings.SettingsScreen
-import com.decoutkhanqindev.dexreader.utils.navigateTo
+import com.decoutkhanqindev.dexreader.utils.navigateClearStack
+import com.decoutkhanqindev.dexreader.utils.navigatePreserveState
 
 @Composable
 fun NavGraph(
+  isUserLoggedIn: Boolean,
   navHostController: NavHostController,
   modifier: Modifier = Modifier
 ) {
+  val startDestination = if (isUserLoggedIn) {
+    NavDestination.HomeDestination.route
+  } else {
+    NavDestination.LoginDestination.route
+  }
+
+  LaunchedEffect(isUserLoggedIn) {
+    val currentRoute = navHostController.currentBackStackEntry?.destination?.route
+    if (isUserLoggedIn && currentRoute != NavDestination.HomeDestination.route) {
+      navHostController.navigateClearStack(
+        currentRoute = NavDestination.LoginDestination.route,
+        destination = NavDestination.HomeDestination.route
+      )
+    } else if (!isUserLoggedIn && currentRoute != NavDestination.LoginDestination.route) {
+      navHostController.navigateClearStack(
+        currentRoute = NavDestination.HomeDestination.route,
+        destination = NavDestination.LoginDestination.route
+      )
+    }
+  }
+
   NavHost(
     navController = navHostController,
-    startDestination = NavDestination.HomeDestination.route,
+    startDestination = startDestination,
     modifier = modifier
   ) {
     composable(route = NavDestination.HomeDestination.route) {
       HomeScreen(
         onMenuItemClick = { itemId ->
-          if (itemId != NavDestination.HistoryDestination.route) {
-            navHostController.navigateTo(itemId)
+          if (itemId != NavDestination.HomeDestination.route) {
+            navHostController.navigatePreserveState(itemId)
           }
         },
         onSearchClick = {
           navHostController.navigate(route = NavDestination.SearchDestination.route)
         },
         onSelectedManga = { mangaId ->
-          navHostController.navigate(route = "${NavDestination.MangaDetailsDestination.route}/$mangaId")
+          navHostController.navigate(
+            route = "${NavDestination.MangaDetailsDestination.route}/$mangaId"
+          )
         },
         modifier = Modifier.fillMaxSize()
       )
@@ -51,14 +80,16 @@ fun NavGraph(
       CategoriesScreen(
         onMenuItemClick = { itemId ->
           if (itemId != NavDestination.CategoriesDestination.route) {
-            navHostController.navigateTo(itemId)
+            navHostController.navigatePreserveState(itemId)
           }
         },
         onSearchClick = {
           navHostController.navigate(route = NavDestination.SearchDestination.route)
         },
         onSelectedCategory = { categoryId, categoryTitle ->
-          navHostController.navigate(route = "${NavDestination.CategoryDetailsDestination.route}/$categoryId/$categoryTitle")
+          navHostController.navigate(
+            route = "${NavDestination.CategoryDetailsDestination.route}/$categoryId/$categoryTitle"
+          )
         },
         modifier = Modifier.fillMaxSize()
       )
@@ -81,7 +112,9 @@ fun NavGraph(
           navHostController.navigate(route = NavDestination.SearchDestination.route)
         },
         onSelectedManga = { mangaId ->
-          navHostController.navigate(route = "${NavDestination.MangaDetailsDestination.route}/$mangaId")
+          navHostController.navigate(
+            route = "${NavDestination.MangaDetailsDestination.route}/$mangaId"
+          )
         },
         modifier = Modifier.fillMaxSize(),
       )
@@ -91,7 +124,7 @@ fun NavGraph(
       FavoriteScreen(
         onMenuItemClick = { itemId ->
           if (itemId != NavDestination.FavoriteDestination.route) {
-            navHostController.navigateTo(itemId)
+            navHostController.navigatePreserveState(itemId)
           }
         },
         onSearchClick = {
@@ -105,7 +138,7 @@ fun NavGraph(
       HistoryScreen(
         onMenuItemClick = { itemId ->
           if (itemId != NavDestination.HistoryDestination.route) {
-            navHostController.navigateTo(itemId)
+            navHostController.navigatePreserveState(itemId)
           }
         },
         onSearchClick = {
@@ -119,7 +152,7 @@ fun NavGraph(
       ProfileScreen(
         onMenuItemClick = { itemId ->
           if (itemId != NavDestination.ProfileDestination.route) {
-            navHostController.navigateTo(itemId)
+            navHostController.navigatePreserveState(itemId)
           }
         },
         modifier = Modifier.fillMaxSize()
@@ -130,7 +163,7 @@ fun NavGraph(
       SettingsScreen(
         onMenuItemClick = { itemId ->
           if (itemId != NavDestination.SettingsDestination.route) {
-            navHostController.navigateTo(itemId)
+            navHostController.navigatePreserveState(itemId)
           }
         },
         modifier = Modifier.fillMaxSize()
@@ -141,7 +174,9 @@ fun NavGraph(
       SearchScreen(
         onNavigateBack = { navHostController.navigateUp() },
         onSelectedManga = { mangaId ->
-          navHostController.navigate(route = "${NavDestination.MangaDetailsDestination.route}/$mangaId")
+          navHostController.navigate(
+            route = "${NavDestination.MangaDetailsDestination.route}/$mangaId"
+          )
         },
         modifier = Modifier.fillMaxSize()
       )
@@ -161,13 +196,19 @@ fun NavGraph(
           navHostController.navigate(route = NavDestination.SearchDestination.route)
         },
         onReadingClick = { firstChapterId ->
-          navHostController.navigate(route = "${NavDestination.ReaderDestination.route}/$firstChapterId")
+          navHostController.navigate(
+            route = "${NavDestination.ReaderDestination.route}/$firstChapterId"
+          )
         },
         onSelectedCategory = { categoryId, categoryTitle ->
-          navHostController.navigate(route = "${NavDestination.CategoryDetailsDestination.route}/$categoryId/$categoryTitle")
+          navHostController.navigate(
+            route = "${NavDestination.CategoryDetailsDestination.route}/$categoryId/$categoryTitle"
+          )
         },
         onSelectedChapter = { chapterId ->
-          navHostController.navigate(route = "${NavDestination.ReaderDestination.route}/$chapterId")
+          navHostController.navigate(
+            route = "${NavDestination.ReaderDestination.route}/$chapterId"
+          )
         },
         modifier = Modifier.fillMaxSize()
       )
@@ -183,6 +224,50 @@ fun NavGraph(
     ) {
       ReaderScreen(
         onNavigateBack = { navHostController.navigateUp() },
+        modifier = Modifier.fillMaxSize()
+      )
+    }
+
+    composable(route = NavDestination.LoginDestination.route) {
+      LoginScreen(
+        onLoginSuccess = {
+          navHostController.navigateClearStack(
+            currentRoute = NavDestination.LoginDestination.route,
+            destination = NavDestination.HomeDestination.route
+          )
+        },
+        onRegisterClick = {
+          navHostController.navigate(route = NavDestination.RegisterDestination.route)
+        },
+        onForgotPasswordClick = {
+          navHostController.navigate(route = NavDestination.ForgotPasswordDestination.route)
+        },
+        modifier = Modifier.fillMaxSize(),
+      )
+    }
+
+    composable(route = NavDestination.RegisterDestination.route) {
+      RegisterScreen(
+        onNavigateBack = { navHostController.navigateUp() },
+        onRegisterSuccess = {
+          navHostController.navigateClearStack(
+            currentRoute = NavDestination.RegisterDestination.route,
+            destination = NavDestination.LoginDestination.route
+          )
+        },
+        modifier = Modifier.fillMaxSize()
+      )
+    }
+
+    composable(route = NavDestination.ForgotPasswordDestination.route) {
+      ForgotPasswordScreen(
+        onNavigateBack = { navHostController.navigateUp() },
+        onSubmitSuccess = {
+          navHostController.navigateClearStack(
+            currentRoute = NavDestination.ForgotPasswordDestination.route,
+            destination = NavDestination.LoginDestination.route,
+          )
+        },
         modifier = Modifier.fillMaxSize()
       )
     }
