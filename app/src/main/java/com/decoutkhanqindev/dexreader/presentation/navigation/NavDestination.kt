@@ -8,10 +8,17 @@ sealed interface NavDestination {
 
   object LoginDestination : NavDestination {
     override val route: String = "login"
+    const val EMAIL_ARG: String = "emailArg"
+    const val PASSWORD_ARG: String = "passwordArg"
+    val routeWithArgs: String = "${route}/{$EMAIL_ARG}/{$PASSWORD_ARG}"
   }
 
   object RegisterDestination : NavDestination {
     override val route: String = "register"
+  }
+
+  object ForgotPasswordDestination : NavDestination {
+    override val route: String = "forgot_password"
   }
 
   @Serializable
