@@ -1,17 +1,24 @@
 package com.decoutkhanqindev.dexreader.presentation
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavGraph
 
 @Composable
-fun DexReaderApp() {
+fun DexReaderApp(
+  viewModel: DexReaderAppViewModel = hiltViewModel(),
+  modifier: Modifier = Modifier
+) {
+  val isUserLoggedIn by viewModel.isUserLoggedIn.collectAsStateWithLifecycle()
   val navHostController = rememberNavController()
 
   NavGraph(
+    isUserLoggedIn = isUserLoggedIn,
     navHostController = navHostController,
-    modifier = Modifier.fillMaxSize()
+    modifier = modifier
   )
 }
