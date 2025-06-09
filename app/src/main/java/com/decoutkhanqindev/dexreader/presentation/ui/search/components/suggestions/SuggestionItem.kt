@@ -23,7 +23,7 @@ fun SuggestionItem(
     text = {
       Text(
         text = suggestion,
-        style = MaterialTheme.typography.titleMedium,
+        style = MaterialTheme.typography.bodyLarge,
         fontWeight = FontWeight.Light,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis

@@ -36,7 +36,7 @@ fun MangaCategoryItem(
   ) {
     Text(
       text = category.title.capitalize(Locale.US),
-      style = MaterialTheme.typography.bodyMedium,
+      style = MaterialTheme.typography.bodyLarge,
       fontWeight = FontWeight.Bold,
       textAlign = TextAlign.Center,
       modifier = Modifier

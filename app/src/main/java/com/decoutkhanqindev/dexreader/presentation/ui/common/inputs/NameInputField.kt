@@ -53,7 +53,7 @@ fun NameInputField(
         )
       }
     },
-    textStyle = MaterialTheme.typography.bodyMedium,
+    textStyle = MaterialTheme.typography.bodyLarge,
     keyboardOptions = KeyboardOptions(
       keyboardType = KeyboardType.Text,
       imeAction = ImeAction.Next

@@ -83,7 +83,7 @@ fun PasswordInputField(
         )
       }
     },
-    textStyle = MaterialTheme.typography.bodyMedium,
+    textStyle = MaterialTheme.typography.bodyLarge,
     visualTransformation =
       if (isShowPassword) VisualTransformation.None
       else PasswordVisualTransformation(),

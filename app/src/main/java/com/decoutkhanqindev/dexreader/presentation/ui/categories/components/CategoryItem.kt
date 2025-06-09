@@ -25,7 +25,7 @@ fun CategoryItem(
   ) {
     Text(
       text = category.title,
-      style = MaterialTheme.typography.bodyMedium,
+      style = MaterialTheme.typography.bodyLarge,
       fontWeight = FontWeight.Bold,
       textAlign = TextAlign.Center,
       modifier = Modifier

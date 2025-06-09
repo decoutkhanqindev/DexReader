@@ -38,7 +38,7 @@ fun SearchBar(
         placeholder = {
           Text(
             text = stringResource(R.string.search_manga_placeholder),
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.bodyLarge
           )
         },
         singleLine = true,
@@ -51,7 +51,7 @@ fun SearchBar(
           unfocusedIndicatorColor = MaterialTheme.colorScheme.surfaceContainer,
           cursorColor = MaterialTheme.colorScheme.onPrimaryContainer
         ),
-        textStyle = MaterialTheme.typography.bodyMedium,
+        textStyle = MaterialTheme.typography.bodyLarge,
         modifier = Modifier.fillMaxWidth()
       )
     },

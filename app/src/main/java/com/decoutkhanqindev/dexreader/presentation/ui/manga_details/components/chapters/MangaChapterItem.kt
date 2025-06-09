@@ -43,7 +43,7 @@ fun MangaChapterItem(
         .fillMaxSize()
         .padding(12.dp),
       horizontalAlignment = Alignment.Start,
-      verticalArrangement = Arrangement.spacedBy(4.dp),
+      verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
       if (lastChapter == chapterNumber) {
         Row(
@@ -60,7 +60,7 @@ fun MangaChapterItem(
           )
           Text(
             text = stringResource(R.string.last_chapter),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.ExtraBold,
             textAlign = TextAlign.End,
             modifier = Modifier
@@ -71,7 +71,7 @@ fun MangaChapterItem(
       } else {
         Text(
           text = stringResource(R.string.volume_chapter, volume, chapterNumber),
-          style = MaterialTheme.typography.titleMedium,
+          style = MaterialTheme.typography.bodyLarge,
           fontWeight = FontWeight.ExtraBold,
         )
       }
@@ -81,21 +81,21 @@ fun MangaChapterItem(
       ) {
         Text(
           text = chapter.title,
-          style = MaterialTheme.typography.bodyMedium,
+          style = MaterialTheme.typography.bodyLarge,
           fontWeight = FontWeight.Bold,
           fontStyle = FontStyle.Italic,
           modifier = Modifier
-            .weight(0.7f)
+            .weight(0.6f)
             .fillMaxWidth()
         )
         Text(
           text = chapter.publishAt,
-          style = MaterialTheme.typography.bodyMedium,
+          style = MaterialTheme.typography.bodyLarge,
           fontWeight = FontWeight.Bold,
           fontStyle = FontStyle.Italic,
           textAlign = TextAlign.End,
           modifier = Modifier
-            .weight(0.3f)
+            .weight(0.4f)
             .fillMaxWidth()
         )
       }

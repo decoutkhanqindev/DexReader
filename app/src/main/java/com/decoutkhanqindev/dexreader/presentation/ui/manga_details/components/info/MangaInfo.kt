@@ -38,28 +38,28 @@ fun MangaInfo(
       text = stringResource(R.string.author, manga.author),
       fontWeight = FontWeight.Bold,
       fontStyle = FontStyle.Italic,
-      style = MaterialTheme.typography.bodyMedium,
+      style = MaterialTheme.typography.bodyLarge,
       modifier = Modifier.padding(bottom = 4.dp)
     )
     Text(
       text = stringResource(R.string.artist, manga.artist),
       fontWeight = FontWeight.Bold,
       fontStyle = FontStyle.Italic,
-      style = MaterialTheme.typography.bodyMedium,
+      style = MaterialTheme.typography.bodyLarge,
       modifier = Modifier.padding(bottom = 4.dp)
     )
     Text(
       text = stringResource(R.string.year, manga.year),
       fontWeight = FontWeight.Bold,
       fontStyle = FontStyle.Italic,
-      style = MaterialTheme.typography.bodyMedium,
+      style = MaterialTheme.typography.bodyLarge,
       modifier = Modifier.padding(bottom = 4.dp)
     )
     Text(
       text = stringResource(R.string.status, manga.status.capitalize(Locale.US)),
       fontWeight = FontWeight.Bold,
       fontStyle = FontStyle.Italic,
-      style = MaterialTheme.typography.bodyMedium,
+      style = MaterialTheme.typography.bodyLarge,
       modifier = Modifier.padding(bottom = 4.dp)
     )
   }

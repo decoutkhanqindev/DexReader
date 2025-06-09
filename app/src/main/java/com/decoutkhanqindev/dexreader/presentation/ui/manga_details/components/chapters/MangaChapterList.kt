@@ -34,7 +34,7 @@ fun MangaChapterList(
     if (chapterList.isEmpty()) {
       Text(
         text = stringResource(R.string.no_chapters_available),
-        style = MaterialTheme.typography.titleMedium,
+        style = MaterialTheme.typography.bodyLarge,
         fontWeight = FontWeight.Bold,
         fontStyle = FontStyle.Italic,
         textAlign = TextAlign.Center,

@@ -33,7 +33,7 @@ fun ChapterLanguageMenu(
   Box(modifier = modifier) {
     Text(
       text = selectedLanguage,
-      style = MaterialTheme.typography.titleMedium,
+      style = MaterialTheme.typography.bodyLarge,
       fontWeight = FontWeight.Bold,
       textAlign = TextAlign.End,
       modifier = Modifier
@@ -51,7 +51,7 @@ fun ChapterLanguageMenu(
           text = {
             Text(
               text = stringResource(R.string.no_languages_available),
-              style = MaterialTheme.typography.bodyMedium,
+              style = MaterialTheme.typography.bodyLarge,
               fontStyle = FontStyle.Italic
             )
           },

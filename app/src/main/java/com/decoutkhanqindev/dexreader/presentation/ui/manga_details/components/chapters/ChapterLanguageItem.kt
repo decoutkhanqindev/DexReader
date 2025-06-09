@@ -18,7 +18,7 @@ fun ChapterLanguageItem(
     text = {
       Text(
         text = language,
-        style = MaterialTheme.typography.bodyMedium,
+        style = MaterialTheme.typography.bodyLarge,
         fontWeight = if (isSelected) FontWeight.ExtraBold else FontWeight.Normal
       )
     },

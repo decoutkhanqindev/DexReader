@@ -31,7 +31,7 @@ fun MangaDescription(
   Column(modifier = modifier) {
     Text(
       text = description,
-      style = MaterialTheme.typography.bodyMedium,
+      style = MaterialTheme.typography.bodyLarge,
       fontWeight = FontWeight.Bold,
       maxLines = if (isExpanded) Int.MAX_VALUE else 3,
       overflow = TextOverflow.Ellipsis,

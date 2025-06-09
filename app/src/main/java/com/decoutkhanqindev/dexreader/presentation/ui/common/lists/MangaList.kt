@@ -200,7 +200,7 @@ private fun MangaInfo(
       text = stringResource(R.string.by_author, manga.author),
       fontWeight = FontWeight.Bold,
       fontStyle = FontStyle.Italic,
-      style = MaterialTheme.typography.bodyMedium,
+      style = MaterialTheme.typography.bodyLarge,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
       modifier = Modifier.padding(bottom = 4.dp)
@@ -209,7 +209,7 @@ private fun MangaInfo(
       text = manga.status.capitalize(Locale.US),
       fontWeight = FontWeight.Bold,
       fontStyle = FontStyle.Italic,
-      style = MaterialTheme.typography.bodyMedium,
+      style = MaterialTheme.typography.bodyLarge,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
       modifier = Modifier.padding(bottom = 4.dp)
