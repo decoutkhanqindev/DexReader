@@ -51,7 +51,7 @@ fun SearchBar(
           unfocusedIndicatorColor = MaterialTheme.colorScheme.surfaceContainer,
           cursorColor = MaterialTheme.colorScheme.onPrimaryContainer
         ),
-        textStyle = MaterialTheme.typography.titleMedium,
+        textStyle = MaterialTheme.typography.bodyMedium,
         modifier = Modifier.fillMaxWidth()
       )
     },
