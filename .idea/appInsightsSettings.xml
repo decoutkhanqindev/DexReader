@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.decoutkhanqindev.dexreader" />
+                  <option name="mobileSdkAppId" value="1:509514457980:android:63721cf8aec4e56b697af9" />
+                  <option name="projectId" value="dexreader-dd764" />
+                  <option name="projectNumber" value="509514457980" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
