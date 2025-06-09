@@ -65,10 +65,10 @@ class ReaderViewModel @Inject constructor(
       val clearExpiredCacheResult = clearExpiredCacheUseCase(expiryTimestamp)
       clearExpiredCacheResult
         .onSuccess {
-          Log.d(TAG, "Clear expired cache successfully.")
+          Log.d(TAG, "clearExpiredCache is success.")
         }
         .onFailure {
-          Log.d(TAG, "Clear expired cache have error: ${it.stackTraceToString()}")
+          Log.d(TAG, "clearExpiredCache have error: ${it.stackTraceToString()}")
         }
     }
   }
@@ -122,8 +122,7 @@ class ReaderViewModel @Inject constructor(
           return@launch
         }
         .onFailure {
-          Log.d(TAG, "Fetch chapter from cache is missed: ${it.stackTraceToString()}")
-          Log.d(TAG, "Fetch chapter from network is in progress.")
+          Log.d(TAG, "getChapterCacheUseCase have error: ${it.stackTraceToString()}")
         }
 
       val networkResult = getChapterPagesUseCase(chapterIdToFetch)
@@ -135,10 +134,10 @@ class ReaderViewModel @Inject constructor(
           if (mangaId != null) {
             addChapterCacheUseCase(mangaId = mangaId!!, chapterPages = chapterPages)
               .onSuccess {
-                Log.d(TAG, "Add chapter to cache successfully.")
+                Log.d(TAG, "addChapterCacheUseCase is success: $chapterIdToFetch")
               }
               .onFailure {
-                Log.d(TAG, "Add chapter to cache have error: ${it.stackTraceToString()}")
+                Log.d(TAG, "addChapterCacheUseCase have error: ${it.stackTraceToString()}")
               }
           }
 
@@ -146,7 +145,7 @@ class ReaderViewModel @Inject constructor(
         }
         .onFailure {
           if (!isPrefetch) _chapterPagesUiState.value = ChapterPagesUiState.Error
-          Log.d(TAG, "Fetch chapter from network have error: ${it.stackTraceToString()}")
+          Log.d(TAG, "getChapterPagesUseCase have error: ${it.stackTraceToString()}")
         }
     }
   }
