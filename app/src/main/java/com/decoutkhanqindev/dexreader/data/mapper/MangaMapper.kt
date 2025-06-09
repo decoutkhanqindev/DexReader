@@ -21,8 +21,10 @@ fun MangaDto.toDomain(uploadUrl: String): Manga {
   val tags = attributes.tags?.mapNotNull { it.toDomain() } ?: emptyList()
   val status = attributes.status ?: "Unknown"
   val year = attributes.year ?: "Unknown"
-  val availableTranslatedLanguages =
-    attributes.availableTranslatedLanguages?.map { it.toFullLanguageName() } ?: emptyList()
+  val availableTranslatedLanguages = attributes.availableTranslatedLanguages
+    ?.filterNotNull()
+    ?.map { it.toFullLanguageName() }
+    ?: emptyList()
   val lastChapter = attributes.lastChapter ?: "Unknown"
   val lastUpdated = attributes.updatedAt.toTimeAgo()
 
