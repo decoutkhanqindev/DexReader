@@ -18,9 +18,10 @@ class UserRepositoryImpl @Inject constructor(
   private val firebaseAuthSource: FirebaseAuthSource,
   private val firebaseFirestoreSource: FirebaseFirestoreSource
 ) : UserRepository {
-  override suspend fun registerUser(email: String, password: String): Result<Unit> =
+  override suspend fun registerUser(email: String, password: String): Result<User> =
     runSuspendCatching(Dispatchers.IO) {
-      firebaseAuthSource.registerUser(email, password)
+      firebaseAuthSource.registerUser(email, password)?.toDomain()
+        ?: throw IllegalStateException("User registration failed")
     }
 
   override suspend fun loginUser(email: String, password: String): Result<Unit> =
@@ -44,9 +45,9 @@ class UserRepositoryImpl @Inject constructor(
       .flowOn(Dispatchers.IO)
       .toResultFlow()
 
-  override suspend fun addUserProfile(user: User): Result<Unit> =
+  override suspend fun addUserProfile(user: User): Result<User> =
     runSuspendCatching(Dispatchers.IO) {
-      firebaseFirestoreSource.addUserProfile(user.toUserProfileDto())
+      firebaseFirestoreSource.addUserProfile(user.toUserProfileDto()).toDomain()
     }
 
   override fun observeUserProfile(userId: String): Flow<Result<User?>> =
