@@ -13,8 +13,9 @@ data class RegisterUiState(
   val isValidConfirmPassword: Boolean = false,
   val isValidName: Boolean = false,
   val isSuccess: Boolean = false,
-  val emailError: AuthError = AuthError.UnknownError,
-  val passwordError: AuthError = AuthError.UnknownError,
-  val confirmPasswordError: AuthError = AuthError.UnknownError,
-  val nameError: AuthError = AuthError.UnknownError,
+  val emailError: AuthError = AuthError.EmailError.Required,
+  val passwordError: AuthError = AuthError.PasswordError.Required,
+  val confirmPasswordError: AuthError = AuthError.ConfirmPasswordError.Required,
+  val nameError: AuthError = AuthError.NameError.Required,
+  val isError: Boolean = false,
 )

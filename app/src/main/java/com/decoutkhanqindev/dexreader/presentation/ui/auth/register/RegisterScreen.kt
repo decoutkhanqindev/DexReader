@@ -1,6 +1,5 @@
 package com.decoutkhanqindev.dexreader.presentation.ui.auth.register
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -11,10 +10,7 @@ import com.decoutkhanqindev.dexreader.presentation.ui.auth.register.components.R
 @Composable
 fun RegisterScreen(
   onNavigateBack: () -> Unit,
-  onRegisterSuccess: (
-    email: String,
-    password: String,
-  ) -> Unit,
+  onRegisterSuccess: () -> Unit,
   viewModel: RegisterViewModel = hiltViewModel(),
   modifier: Modifier = Modifier
 ) {
@@ -29,6 +25,6 @@ fun RegisterScreen(
     onSubmitClick = { viewModel.registerUser() },
     onRegisterSuccess = onRegisterSuccess,
     onNavigateBack = onNavigateBack,
-    modifier = modifier.fillMaxSize()
+    modifier = modifier
   )
 }

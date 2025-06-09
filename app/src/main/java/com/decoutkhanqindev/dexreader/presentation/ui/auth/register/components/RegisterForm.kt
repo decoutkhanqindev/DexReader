@@ -66,7 +66,9 @@ fun RegisterForm(
         color = MaterialTheme.colorScheme.onSurface,
         fontWeight = FontWeight.ExtraBold,
         textAlign = TextAlign.Center,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(top = 16.dp)
       )
 
       Spacer(modifier = Modifier.height(16.dp))
@@ -116,7 +118,9 @@ fun RegisterForm(
           onSubmitClick()
           isShowError = true
         },
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(bottom = 8.dp)
       )
 
       ActionButton(

@@ -30,7 +30,7 @@ class RegisterViewModel @Inject constructor(
       val currentUiState = _uiState.value
       if (currentUiState.isLoading) return@launch
 
-      _uiState.update { it.copy(isLoading = true) }
+      _uiState.update { it.copy(isLoading = true, isError = false) }
 
       if (
         !currentUiState.isValidEmail ||
@@ -47,19 +47,19 @@ class RegisterViewModel @Inject constructor(
         return@launch
       }
 
-      val registerResult = registerUserUseCase(
-        email = currentUiState.email,
-        password = currentUiState.password
+      val registerUserResult = registerUserUseCase(
+        email = currentUiState.email.trim(),
+        password = currentUiState.password.trim()
       )
-      registerResult
+      registerUserResult
         .onSuccess { user ->
           val newUser = User(
             id = user.id,
-            name = currentUiState.name,
-            email = currentUiState.email,
+            name = currentUiState.name.trim(),
+            email = currentUiState.email.trim(),
             profilePictureUrl = null
           )
-          addUserProfile(newUser)
+          addUserProfile(user = newUser)
         }
         .onFailure { throwable ->
           _uiState.update { currentUiState ->
@@ -74,6 +74,7 @@ class RegisterViewModel @Inject constructor(
               currentUiState.copy(
                 isLoading = false,
                 isSuccess = false,
+                isError = true
               )
             }
           }
@@ -84,8 +85,8 @@ class RegisterViewModel @Inject constructor(
 
   private fun addUserProfile(user: User) {
     viewModelScope.launch {
-      val result = addUserProfileUseCase(user)
-      result
+      val addUserProfileResult = addUserProfileUseCase(user)
+      addUserProfileResult
         .onSuccess { addedUser ->
           _uiState.update {
             it.copy(
@@ -99,6 +100,7 @@ class RegisterViewModel @Inject constructor(
             it.copy(
               isLoading = false,
               isSuccess = false,
+              isError = true,
             )
           }
           Log.e(TAG, "addUserProfile have error: ${throwable.stackTraceToString()}")
@@ -115,7 +117,8 @@ class RegisterViewModel @Inject constructor(
           !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> AuthError.EmailError.Invalid
           else -> AuthError.UnknownError
         },
-        isValidEmail = email.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        isValidEmail = email.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(email).matches(),
+        isError = false
       )
     }
   }
@@ -129,7 +132,8 @@ class RegisterViewModel @Inject constructor(
           password.length < MIN_LENGTH_PASSWORD -> AuthError.PasswordError.Weak
           else -> AuthError.UnknownError
         },
-        isValidPassword = password.isNotBlank() && password.length >= MIN_LENGTH_PASSWORD
+        isValidPassword = password.isNotBlank() && password.length >= MIN_LENGTH_PASSWORD,
+        isError = false
       )
     }
   }
@@ -143,7 +147,8 @@ class RegisterViewModel @Inject constructor(
           confirmPassword != currentState.password -> AuthError.ConfirmPasswordError.DoesNotMatch
           else -> AuthError.UnknownError
         },
-        isValidConfirmPassword = confirmPassword.isNotBlank() && confirmPassword == currentState.password
+        isValidConfirmPassword = confirmPassword.isNotBlank() && confirmPassword == currentState.password,
+        isError = false
       )
     }
   }
@@ -155,13 +160,14 @@ class RegisterViewModel @Inject constructor(
         nameError =
           if (name.isBlank()) AuthError.NameError.Required
           else AuthError.UnknownError,
-        isValidName = name.isNotBlank()
+        isValidName = name.isNotBlank(),
+        isError = false
       )
     }
   }
 
-  fun retry() {
-    registerUser()
+  fun reset() {
+    _uiState.update { RegisterUiState() }
   }
 
   companion object {
