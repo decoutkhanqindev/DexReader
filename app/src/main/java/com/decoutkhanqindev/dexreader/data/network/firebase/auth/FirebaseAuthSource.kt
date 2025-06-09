@@ -7,6 +7,6 @@ interface FirebaseAuthSource {
   suspend fun registerUser(email: String, password: String): FirebaseUser?
   suspend fun loginUser(email: String, password: String)
   suspend fun logoutUser()
-  suspend fun resetUserPassword(email: String)
+  suspend fun sendResetUserPassword(email: String)
   fun observeCurrentUser(): Flow<FirebaseUser?>
 }

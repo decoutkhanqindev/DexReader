@@ -34,9 +34,9 @@ class UserRepositoryImpl @Inject constructor(
       firebaseAuthSource.logoutUser()
     }
 
-  override suspend fun resetUserPassword(email: String): Result<Unit> =
+  override suspend fun sendResetUserPassword(email: String): Result<Unit> =
     runSuspendCatching(Dispatchers.IO) {
-      firebaseAuthSource.resetUserPassword(email)
+      firebaseAuthSource.sendResetUserPassword(email)
     }
 
   override fun observeCurrentUser(): Flow<Result<User?>> =

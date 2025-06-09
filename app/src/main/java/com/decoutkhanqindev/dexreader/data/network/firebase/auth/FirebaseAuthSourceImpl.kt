@@ -22,7 +22,7 @@ class FirebaseAuthSourceImpl @Inject constructor(
 
   override suspend fun logoutUser() = firebaseAuth.signOut()
 
-  override suspend fun resetUserPassword(email: String) {
+  override suspend fun sendResetUserPassword(email: String) {
     firebaseAuth.sendPasswordResetEmail(email).await()
   }
 
