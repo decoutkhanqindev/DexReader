@@ -7,10 +7,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.ui.common.indicators.ListLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.ui.common.indicators.NextPageLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.ui.common.lists.VerticalGridMangaList
 import com.decoutkhanqindev.dexreader.presentation.ui.common.states.ErrorScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.AllItemLoadedMessage
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.LoadMoreMessage
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.LoadPageErrorMessage
@@ -28,7 +28,7 @@ fun ResultsSection(
   modifier: Modifier = Modifier
 ) {
   when (resultsUiState) {
-    ResultsUiState.FirstPageLoading -> ListLoadingIndicator(modifier = modifier)
+    ResultsUiState.FirstPageLoading -> LoadingScreen(modifier = modifier)
 
     ResultsUiState.FirstPageError -> ErrorScreen(
       message = stringResource(R.string.oops_something_went_wrong_please_try_again),

@@ -2,7 +2,6 @@ package com.decoutkhanqindev.dexreader.presentation.ui.common.states
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -37,7 +36,6 @@ fun IdleScreen(
       style = MaterialTheme.typography.titleMedium,
       fontWeight = FontWeight.Light,
       textAlign = TextAlign.Center,
-      modifier = Modifier.padding(start = 8.dp)
     )
   }
 }
