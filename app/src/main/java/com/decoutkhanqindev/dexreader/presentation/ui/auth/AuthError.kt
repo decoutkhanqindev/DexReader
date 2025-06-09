@@ -3,7 +3,6 @@ package com.decoutkhanqindev.dexreader.presentation.ui.auth
 sealed class AuthError(val message: String) {
   sealed class EmailError(message: String) : AuthError(message) {
     object Invalid : EmailError("Invalid email format.")
-    object Incorrect : EmailError("Incorrect email.")
     object Required : EmailError("Email is required.")
     object AlreadyInUse : EmailError("Email already in use.")
   }
@@ -23,5 +22,9 @@ sealed class AuthError(val message: String) {
     object Required : NameError("Name is required.")
   }
 
-  object UnknownError: AuthError("An unexpected error occurred.")
+  object UserNotFoundError: AuthError("User not found.")
+
+  object SendResetPasswordError: AuthError("Error sending reset password email.")
+
+  object UnknownError : AuthError("An unexpected error occurred.")
 }

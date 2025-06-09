@@ -21,7 +21,7 @@ fun AuthContent(
   ) {
     Box(
       modifier = Modifier
-        .weight(0.3f)
+        .weight(0.25f)
         .fillMaxWidth(),
       contentAlignment = Alignment.Center
     ) {
@@ -35,7 +35,7 @@ fun AuthContent(
 
     Box(
       modifier = Modifier
-        .weight(0.7f)
+        .weight(0.75f)
         .fillMaxWidth()
     ) { content() }
   }
