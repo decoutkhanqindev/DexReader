@@ -20,7 +20,7 @@ fun ActionButton(
     enabled = enabled,
     shape = MaterialTheme.shapes.medium,
     colors = ButtonDefaults.outlinedButtonColors(
-      containerColor = MaterialTheme.colorScheme.surface.copy(0.5f)
+      containerColor = MaterialTheme.colorScheme.surface.copy(0.2f)
     ),
     modifier = modifier.border(
       width = 1.dp,
