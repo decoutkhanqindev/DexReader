@@ -8,6 +8,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.presentation.ui.auth.forgot_password.ForgotPasswordScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.auth.login.LoginScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.auth.register.RegisterScreen
@@ -27,6 +28,7 @@ import com.decoutkhanqindev.dexreader.utils.navigatePreserveState
 @Composable
 fun NavGraph(
   isUserLoggedIn: Boolean,
+  currentUser: User?,
   navHostController: NavHostController,
   modifier: Modifier = Modifier
 ) {
@@ -37,6 +39,14 @@ fun NavGraph(
   ) {
     composable(route = NavDestination.HomeDestination.route) {
       HomeScreen(
+        isUserLoggedIn = isUserLoggedIn,
+        currentUser = currentUser,
+        onSignInClick = {
+          navHostController.navigateClearStack(
+            currentRoute = NavDestination.HomeDestination.route,
+            destination = NavDestination.LoginDestination.route
+          )
+        },
         onMenuItemClick = { itemId ->
           if (itemId != NavDestination.HomeDestination.route) {
             navHostController.navigatePreserveState(itemId)
@@ -56,6 +66,14 @@ fun NavGraph(
 
     composable(route = NavDestination.CategoriesDestination.route) {
       CategoriesScreen(
+        isUserLoggedIn = isUserLoggedIn,
+        currentUser = currentUser,
+        onSignInClick = {
+          navHostController.navigateClearStack(
+            currentRoute = NavDestination.CategoriesDestination.route,
+            destination = NavDestination.LoginDestination.route
+          )
+        },
         onMenuItemClick = { itemId ->
           if (itemId != NavDestination.CategoriesDestination.route) {
             navHostController.navigatePreserveState(itemId)
@@ -100,6 +118,14 @@ fun NavGraph(
 
     composable(route = NavDestination.FavoriteDestination.route) {
       FavoriteScreen(
+        isUserLoggedIn = isUserLoggedIn,
+        currentUser = currentUser,
+        onSignInClick = {
+          navHostController.navigateClearStack(
+            currentRoute = NavDestination.FavoriteDestination.route,
+            destination = NavDestination.LoginDestination.route
+          )
+        },
         onMenuItemClick = { itemId ->
           if (itemId != NavDestination.FavoriteDestination.route) {
             navHostController.navigatePreserveState(itemId)
@@ -114,6 +140,14 @@ fun NavGraph(
 
     composable(route = NavDestination.HistoryDestination.route) {
       HistoryScreen(
+        isUserLoggedIn = isUserLoggedIn,
+        currentUser = currentUser,
+        onSignInClick = {
+          navHostController.navigateClearStack(
+            currentRoute = NavDestination.HistoryDestination.route,
+            destination = NavDestination.LoginDestination.route
+          )
+        },
         onMenuItemClick = { itemId ->
           if (itemId != NavDestination.HistoryDestination.route) {
             navHostController.navigatePreserveState(itemId)
@@ -126,8 +160,16 @@ fun NavGraph(
       )
     }
 
-    composable(route = NavDestination.ProfileDestination.route) {
+      composable(route = NavDestination.ProfileDestination.route) {
       ProfileScreen(
+        isUserLoggedIn = isUserLoggedIn,
+        currentUser = currentUser,
+        onSignInClick = {
+          navHostController.navigateClearStack(
+            currentRoute = NavDestination.ProfileDestination.route,
+            destination = NavDestination.LoginDestination.route
+          )
+        },
         onMenuItemClick = { itemId ->
           if (itemId != NavDestination.ProfileDestination.route) {
             navHostController.navigatePreserveState(itemId)
@@ -139,6 +181,14 @@ fun NavGraph(
 
     composable(route = NavDestination.SettingsDestination.route) {
       SettingsScreen(
+        isUserLoggedIn = isUserLoggedIn,
+        currentUser = currentUser,
+        onSignInClick = {
+          navHostController.navigateClearStack(
+            currentRoute = NavDestination.SettingsDestination.route,
+            destination = NavDestination.LoginDestination.route
+          )
+        },
         onMenuItemClick = { itemId ->
           if (itemId != NavDestination.SettingsDestination.route) {
             navHostController.navigatePreserveState(itemId)
