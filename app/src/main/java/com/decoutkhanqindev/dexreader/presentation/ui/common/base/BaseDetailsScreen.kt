@@ -15,7 +15,7 @@ fun BaseDetailsScreen(
   onNavigateBack: () -> Unit,
   isSearchEnabled: Boolean = true,
   onSearchClick: () -> Unit = {},
-  bottomBar: @Composable () -> Unit = {},
+  bottomBarContent: @Composable () -> Unit = {},
   content: @Composable () -> Unit,
   modifier: Modifier = Modifier
 ) {
@@ -29,7 +29,7 @@ fun BaseDetailsScreen(
         modifier = Modifier.fillMaxWidth()
       )
     },
-    bottomBar = { bottomBar() },
+    bottomBar = bottomBarContent,
     content = { paddingValues ->
       Box(
         modifier = Modifier

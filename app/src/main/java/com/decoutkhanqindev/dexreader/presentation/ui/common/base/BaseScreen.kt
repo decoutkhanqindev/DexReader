@@ -25,6 +25,7 @@ fun BaseScreen(
   onMenuItemClick: (String) -> Unit,
   isSearchEnabled: Boolean = true,
   onSearchClick: () -> Unit = {},
+  bottomBarContent: @Composable () -> Unit = {},
   content: @Composable () -> Unit,
   modifier: Modifier = Modifier
 ) {
@@ -58,6 +59,7 @@ fun BaseScreen(
             modifier = Modifier.fillMaxWidth()
           )
         },
+        bottomBar = bottomBarContent,
         content = { paddingValues ->
           Box(
             modifier = Modifier
