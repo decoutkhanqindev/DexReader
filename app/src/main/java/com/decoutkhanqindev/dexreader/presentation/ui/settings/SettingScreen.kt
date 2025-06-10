@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.ui.favorite
+package com.decoutkhanqindev.dexreader.presentation.ui.settings
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -9,24 +9,23 @@ import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BaseScreen
 
 @Composable
-fun FavoriteScreen(
+fun SettingsScreen(
   isUserLoggedIn: Boolean,
   currentUser: User?,
   onSignInClick: () -> Unit,
   onMenuItemClick: (String) -> Unit,
-  onSearchClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
-  val route = NavDestination.FavoriteDestination.route
-  
+  val route = NavDestination.SettingsDestination.route
+
   BaseScreen(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
     onSignInClick = onSignInClick,
-    title = stringResource(R.string.favorite_menu_item),
+    title = stringResource(R.string.settings_menu_item),
     route = route,
     onMenuItemClick = onMenuItemClick,
-    onSearchClick = onSearchClick,
+    isSearchEnabled = false,
     content = {},
     modifier = modifier
   )

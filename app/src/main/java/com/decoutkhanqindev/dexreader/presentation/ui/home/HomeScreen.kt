@@ -8,12 +8,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BaseScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.home.components.HomeContent
 
 @Composable
 fun HomeScreen(
+  isUserLoggedIn: Boolean,
+  currentUser: User?,
+  onSignInClick: () -> Unit,
   onMenuItemClick: (String) -> Unit,
   onSearchClick: () -> Unit,
   onSelectedManga: (String) -> Unit,
@@ -24,6 +28,9 @@ fun HomeScreen(
   val route = NavDestination.HomeDestination.route
 
   BaseScreen(
+    isUserLoggedIn = isUserLoggedIn,
+    currentUser = currentUser,
+    onSignInClick = onSignInClick,
     title = stringResource(R.string.app_name),
     route = route,
     onMenuItemClick = onMenuItemClick,

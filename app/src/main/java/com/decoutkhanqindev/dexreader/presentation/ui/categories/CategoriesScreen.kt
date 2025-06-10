@@ -8,12 +8,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.ui.categories.components.CategoriesContent
 import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BaseScreen
 
 @Composable
 fun CategoriesScreen(
+  isUserLoggedIn: Boolean,
+  currentUser: User?,
+  onSignInClick: () -> Unit,
   onMenuItemClick: (String) -> Unit,
   onSearchClick: () -> Unit,
   onSelectedCategory: (String, String) -> Unit,
@@ -24,6 +28,9 @@ fun CategoriesScreen(
   val route = NavDestination.CategoriesDestination.route
 
   BaseScreen(
+    isUserLoggedIn = isUserLoggedIn,
+    currentUser = currentUser,
+    onSignInClick = onSignInClick,
     title = stringResource(R.string.category_menu_item),
     route = route,
     onMenuItemClick = onMenuItemClick,

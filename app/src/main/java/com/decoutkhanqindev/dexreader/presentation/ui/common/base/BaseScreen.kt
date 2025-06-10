@@ -10,12 +10,16 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.presentation.ui.common.menu.MenuDrawer
 import com.decoutkhanqindev.dexreader.presentation.ui.common.top_bars.MainTopBar
 import kotlinx.coroutines.launch
 
 @Composable
 fun BaseScreen(
+  isUserLoggedIn: Boolean,
+  currentUser: User?,
+  onSignInClick: () -> Unit,
   title: String,
   route: String,
   onMenuItemClick: (String) -> Unit,
@@ -28,6 +32,9 @@ fun BaseScreen(
   val coroutineScope = rememberCoroutineScope()
 
   MenuDrawer(
+    isUserLoggedIn = isUserLoggedIn,
+    currentUser = currentUser,
+    onSignInClick = onSignInClick,
     drawerState = drawerState,
     selectedItemId = route,
     onItemClick = { route ->
@@ -56,9 +63,7 @@ fun BaseScreen(
             modifier = Modifier
               .padding(paddingValues)
               .fillMaxSize()
-          ) {
-            content()
-          }
+          ) { content() }
         }
       )
     },
