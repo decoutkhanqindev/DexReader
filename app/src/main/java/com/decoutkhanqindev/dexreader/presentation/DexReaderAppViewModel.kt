@@ -7,6 +7,7 @@ import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.domain.usecase.user.ObserveCurrentUserUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.ObserveUserProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,6 +25,9 @@ class DexReaderAppViewModel @Inject constructor(
   private val _userProfile = MutableStateFlow<User?>(null)
   val userProfile: StateFlow<User?> = _userProfile.asStateFlow()
 
+  // manage observe user profile job
+  private var userProfileJob: Job? = null
+
   init {
     observeCurrentUser()
   }
@@ -34,7 +38,14 @@ class DexReaderAppViewModel @Inject constructor(
         userResult
           .onSuccess {
             _isUserLoggedIn.value = it != null
-            observeUserProfile(userId = it?.id)
+            if (it != null) {
+              observeUserProfile(userId = it.id)
+            } else {
+              // user is null like user logged out
+              // clear user profile state and cancel user profile job
+              userProfileJob?.cancel()
+              _userProfile.value = null
+            }
           }
           .onFailure {
             _isUserLoggedIn.value = false
@@ -44,13 +55,11 @@ class DexReaderAppViewModel @Inject constructor(
     }
   }
 
-  private fun observeUserProfile(userId: String?) {
-    if (userId == null) {
-      _userProfile.value = null
-      return
-    }
-
-    viewModelScope.launch {
+  private fun observeUserProfile(userId: String) {
+    // cancels any previous observation before starting a new one
+    // make sure only one active job for per user
+    userProfileJob?.cancel()
+    userProfileJob = viewModelScope.launch {
       observeUserProfileUseCase(userId).collect { userProfileResult ->
         userProfileResult
           .onSuccess { _userProfile.value = it }
