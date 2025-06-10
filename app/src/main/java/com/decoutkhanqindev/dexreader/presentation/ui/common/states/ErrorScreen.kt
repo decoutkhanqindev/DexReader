@@ -4,9 +4,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.ui.common.buttons.SubmitButton
 
 @Composable
 fun ErrorScreen(
@@ -48,15 +49,10 @@ fun ErrorScreen(
           bottom = 8.dp
         )
     )
-    Button(
-      onClick = onRetry,
-      shape = MaterialTheme.shapes.large
-    ) {
-      Text(
-        text = stringResource(R.string.retry),
-        style = MaterialTheme.typography.titleMedium,
-        modifier = Modifier.padding(4.dp)
-      )
-    }
+    SubmitButton(
+      title = stringResource(R.string.retry),
+      onSubmitClick = onRetry,
+      modifier = Modifier.width(100.dp)
+    )
   }
 }
