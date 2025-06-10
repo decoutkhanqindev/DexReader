@@ -21,10 +21,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 
 @Composable
 fun MenuDrawer(
+  isUserLoggedIn: Boolean,
+  currentUser: User?,
+  onSignInClick: () -> Unit,
   drawerState: DrawerState,
   selectedItemId: String,
   onItemClick: (String) -> Unit,
@@ -70,6 +74,9 @@ fun MenuDrawer(
       ModalDrawerSheet {
         Column(modifier = Modifier.fillMaxSize()) {
           MenuHeader(
+            isUserLoggedIn = isUserLoggedIn,
+            currentUser = currentUser,
+            onSignInClick = onSignInClick,
             modifier = Modifier
               .weight(0.4f)
               .fillMaxWidth()
