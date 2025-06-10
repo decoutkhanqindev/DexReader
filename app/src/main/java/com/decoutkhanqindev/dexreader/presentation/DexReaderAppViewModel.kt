@@ -3,7 +3,9 @@ package com.decoutkhanqindev.dexreader.presentation
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.domain.usecase.user.ObserveCurrentUserUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.user.ObserveUserProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,10 +15,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DexReaderAppViewModel @Inject constructor(
-  private val observeCurrentUserUseCase: ObserveCurrentUserUseCase
+  private val observeCurrentUserUseCase: ObserveCurrentUserUseCase,
+  private val observeUserProfileUseCase: ObserveUserProfileUseCase
 ) : ViewModel() {
   private val _isUserLoggedIn = MutableStateFlow(false)
   val isUserLoggedIn: StateFlow<Boolean> = _isUserLoggedIn.asStateFlow()
+
+  private val _userProfile = MutableStateFlow<User?>(null)
+  val userProfile: StateFlow<User?> = _userProfile.asStateFlow()
 
   init {
     observeCurrentUser()
@@ -28,10 +34,29 @@ class DexReaderAppViewModel @Inject constructor(
         userResult
           .onSuccess {
             _isUserLoggedIn.value = it != null
+            observeUserProfile(userId = it?.id)
           }
           .onFailure {
             _isUserLoggedIn.value = false
             Log.d(TAG, "observeCurrentUser have error: ${it.stackTraceToString()}")
+          }
+      }
+    }
+  }
+
+  private fun observeUserProfile(userId: String?) {
+    if (userId == null) {
+      _userProfile.value = null
+      return
+    }
+
+    viewModelScope.launch {
+      observeUserProfileUseCase(userId).collect { userProfileResult ->
+        userProfileResult
+          .onSuccess { _userProfile.value = it }
+          .onFailure {
+            _userProfile.value = null
+            Log.d(TAG, "observeUserProfile have error: ${it.stackTraceToString()}")
           }
       }
     }
