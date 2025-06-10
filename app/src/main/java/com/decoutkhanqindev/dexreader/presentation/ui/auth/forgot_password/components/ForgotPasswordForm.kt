@@ -78,7 +78,7 @@ fun ForgotPasswordForm(
       )
 
       SubmitButton(
-        title = stringResource(R.string.submit_reset_password_request),
+        title = stringResource(R.string.reset_password),
         onSubmitClick = {
           onSubmitClick()
           isShowError = true
