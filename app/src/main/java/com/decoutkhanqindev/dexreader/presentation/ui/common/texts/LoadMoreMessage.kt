@@ -28,7 +28,7 @@ fun LoadMoreMessage(
     HorizontalDivider(modifier = Modifier.weight(1f))
     Text(
       text = stringResource(R.string.load_more),
-      style = MaterialTheme.typography.bodyMedium,
+      style = MaterialTheme.typography.titleMedium,
       fontStyle = FontStyle.Italic,
       textAlign = TextAlign.Center,
       modifier = Modifier
