@@ -2,7 +2,6 @@ package com.decoutkhanqindev.dexreader.presentation.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -31,30 +30,9 @@ fun NavGraph(
   navHostController: NavHostController,
   modifier: Modifier = Modifier
 ) {
-  val startDestination = if (isUserLoggedIn) {
-    NavDestination.HomeDestination.route
-  } else {
-    NavDestination.LoginDestination.route
-  }
-
-  LaunchedEffect(isUserLoggedIn) {
-    val currentRoute = navHostController.currentBackStackEntry?.destination?.route
-    if (isUserLoggedIn && currentRoute != NavDestination.HomeDestination.route) {
-      navHostController.navigateClearStack(
-        currentRoute = NavDestination.LoginDestination.route,
-        destination = NavDestination.HomeDestination.route
-      )
-    } else if (!isUserLoggedIn && currentRoute != NavDestination.LoginDestination.route) {
-      navHostController.navigateClearStack(
-        currentRoute = NavDestination.HomeDestination.route,
-        destination = NavDestination.LoginDestination.route
-      )
-    }
-  }
-
   NavHost(
     navController = navHostController,
-    startDestination = startDestination,
+    startDestination = NavDestination.HomeDestination.route,
     modifier = modifier
   ) {
     composable(route = NavDestination.HomeDestination.route) {
