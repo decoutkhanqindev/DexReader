@@ -12,11 +12,13 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SubmitButton(
+  enabled: Boolean = true,
   title: String,
   onSubmitClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   Button(
+    enabled = enabled,
     shape = MaterialTheme.shapes.medium,
     onClick = onSubmitClick,
     modifier = modifier.height(48.dp)
