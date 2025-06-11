@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.ui.common.inputs
+package com.decoutkhanqindev.dexreader.presentation.ui.auth
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
