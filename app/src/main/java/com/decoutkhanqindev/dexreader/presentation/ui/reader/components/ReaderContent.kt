@@ -7,6 +7,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -14,7 +18,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.ui.common.states.ErrorScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.ui.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.reader.ChapterPagesUiState
 import com.decoutkhanqindev.dexreader.presentation.ui.reader.components.pages.ChapterPagesSection
@@ -26,13 +30,19 @@ fun ReaderContent(
   onRetry: () -> Unit,
   modifier: Modifier = Modifier
 ) {
+  var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
+
   when (chapterPageUiState) {
     ChapterPagesUiState.Loading -> LoadingScreen(modifier = modifier)
-    ChapterPagesUiState.Error -> ErrorScreen(
-      message = stringResource(R.string.oops_something_went_wrong_please_try_again),
-      onRetry = onRetry,
-      modifier = modifier
-    )
+
+    ChapterPagesUiState.Error -> {
+      if (isShowErrorDialog) {
+        NotificationDialog(
+          onDismissClick = { isShowErrorDialog = false },
+          onConfirmClick = onRetry,
+        )
+      }
+    }
 
     is ChapterPagesUiState.Success -> {
       val chapterPages = chapterPageUiState.chapterPages.pageUrls

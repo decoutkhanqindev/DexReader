@@ -3,13 +3,17 @@ package com.decoutkhanqindev.dexreader.presentation.ui.search.components.results
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.ui.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.ui.common.indicators.NextPageLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.ui.common.lists.VerticalGridMangaList
-import com.decoutkhanqindev.dexreader.presentation.ui.common.states.ErrorScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.AllItemLoadedMessage
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.LoadMoreMessage
@@ -27,14 +31,19 @@ fun ResultsSection(
   onRetry: () -> Unit,
   modifier: Modifier = Modifier
 ) {
+  var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
+
   when (resultsUiState) {
     ResultsUiState.FirstPageLoading -> LoadingScreen(modifier = modifier)
 
-    ResultsUiState.FirstPageError -> ErrorScreen(
-      message = stringResource(R.string.oops_something_went_wrong_please_try_again),
-      onRetry = onRetry,
-      modifier = modifier
-    )
+    ResultsUiState.FirstPageError -> {
+      if (isShowErrorDialog) {
+        NotificationDialog(
+          onDismissClick = { isShowErrorDialog = false },
+          onConfirmClick = onRetry,
+        )
+      }
+    }
 
     is ResultsUiState.Content -> {
       val mangaList = resultsUiState.results
