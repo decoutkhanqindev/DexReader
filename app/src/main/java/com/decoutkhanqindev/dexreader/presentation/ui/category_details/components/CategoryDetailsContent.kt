@@ -28,13 +28,13 @@ import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.LoadPageError
 fun CategoryDetailsContent(
   categoryDetailsUiState: CategoryDetailsUiState,
   categoryCriteriaUiState: CategoryDetailsCriteriaUiState,
-  isSortSheetVisible: Boolean,
+  isSortBottomSheetVisible: Boolean,
   onSortSheetDismiss: () -> Unit,
   onSortApplyClick: (
     criteriaId: String,
     orderId: String
   ) -> Unit,
-  isFilterSheetVisible: Boolean,
+  isFilterBottomSheetVisible: Boolean,
   onFilterSheetDismiss: () -> Unit,
   onFilterApplyClick: (
     statusValueIds: List<String>,
@@ -48,7 +48,7 @@ fun CategoryDetailsContent(
 ) {
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
 
-  if (isSortSheetVisible) {
+  if (isSortBottomSheetVisible) {
     SortBottomSheet(
       onDismiss = onSortSheetDismiss,
       criteriaState = categoryCriteriaUiState,
@@ -59,7 +59,7 @@ fun CategoryDetailsContent(
     )
   }
 
-  if (isFilterSheetVisible) {
+  if (isFilterBottomSheetVisible) {
     FilterBottomSheet(
       onDismiss = onFilterSheetDismiss,
       criteriaState = categoryCriteriaUiState,

@@ -27,8 +27,8 @@ fun CategoryDetailsScreen(
   val categoryDetailsUiState by viewModel.categoryDetailsUiState.collectAsStateWithLifecycle()
   val categoryCriteriaUiState by viewModel.categoryCriteriaUiState.collectAsStateWithLifecycle()
   val categoryTitle = viewModel.categoryTitleFromArg
-  var isShowSortSheet by rememberSaveable { mutableStateOf(false) }
-  var isShowFilterSheet by rememberSaveable { mutableStateOf(false) }
+  var isShowSortBottomSheet by rememberSaveable { mutableStateOf(false) }
+  var isShowFilterBottomSheet by rememberSaveable { mutableStateOf(false) }
 
   BaseDetailsScreen(
     title = categoryTitle,
@@ -36,8 +36,8 @@ fun CategoryDetailsScreen(
     onSearchClick = onSearchClick,
     bottomBarContent = {
       SortAndFilterBottomBar(
-        onSortClick = { isShowSortSheet = true },
-        onFilterClick = { isShowFilterSheet = true },
+        onSortClick = { isShowSortBottomSheet = true },
+        onFilterClick = { isShowFilterBottomSheet = true },
         modifier = Modifier
           .fillMaxWidth()
           .height(56.dp)
@@ -47,23 +47,23 @@ fun CategoryDetailsScreen(
       CategoryDetailsContent(
         categoryDetailsUiState = categoryDetailsUiState,
         categoryCriteriaUiState = categoryCriteriaUiState,
-        isSortSheetVisible = isShowSortSheet,
-        onSortSheetDismiss = { isShowSortSheet = false },
+        isSortBottomSheetVisible = isShowSortBottomSheet,
+        onSortSheetDismiss = { isShowSortBottomSheet = false },
         onSortApplyClick = { criteriaId, orderId ->
           viewModel.updateSortingCriteria(
             criteriaId = criteriaId,
             orderId = orderId
           )
-          isShowSortSheet = false
+          isShowSortBottomSheet = false
         },
-        isFilterSheetVisible = isShowFilterSheet,
-        onFilterSheetDismiss = { isShowFilterSheet = false },
+        isFilterBottomSheetVisible = isShowFilterBottomSheet,
+        onFilterSheetDismiss = { isShowFilterBottomSheet = false },
         onFilterApplyClick = { statusValueIds, contentRatingValueIds ->
           viewModel.updateFilteringCriteria(
             statusValueIds = statusValueIds,
             contentRatingValueIds = contentRatingValueIds
           )
-          isShowFilterSheet = false
+          isShowFilterBottomSheet = false
         },
         onSelectedManga = onSelectedManga,
         onFetchMangaListNextPage = { viewModel.fetchMangaListByCategoryNextPage() },
