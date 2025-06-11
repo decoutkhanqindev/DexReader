@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.domain.model.Manga
-import com.decoutkhanqindev.dexreader.presentation.ui.common.lists.HorizontalMangaList
+import com.decoutkhanqindev.dexreader.presentation.ui.common.lists.manga.HorizontalMangaList
 
 
 @Composable
