@@ -25,12 +25,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.ui.auth.EmailInputField
+import com.decoutkhanqindev.dexreader.presentation.ui.auth.NameInputField
+import com.decoutkhanqindev.dexreader.presentation.ui.auth.PasswordInputField
 import com.decoutkhanqindev.dexreader.presentation.ui.auth.register.RegisterUiState
 import com.decoutkhanqindev.dexreader.presentation.ui.common.buttons.ActionButton
 import com.decoutkhanqindev.dexreader.presentation.ui.common.buttons.SubmitButton
-import com.decoutkhanqindev.dexreader.presentation.ui.common.inputs.EmailInputField
-import com.decoutkhanqindev.dexreader.presentation.ui.common.inputs.NameInputField
-import com.decoutkhanqindev.dexreader.presentation.ui.common.inputs.PasswordInputField
 
 @Composable
 fun RegisterForm(
