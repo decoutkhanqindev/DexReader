@@ -25,11 +25,17 @@ class LoginViewModel @Inject constructor(
   val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
   fun loginUser() {
-    viewModelScope.launch {
-      val currentUiState = _uiState.value
-      if (currentUiState.isLoading) return@launch
+    val currentUiState = _uiState.value
+    if (currentUiState.isLoading) return
 
-      _uiState.update { it.copy(isLoading = true, isError = false) }
+    viewModelScope.launch {
+      _uiState.update {
+        it.copy(
+          isLoading = true,
+          isSuccess = false,
+          isError = false
+        )
+      }
 
       if (!currentUiState.isValidEmail || !currentUiState.isValidPassword) {
         _uiState.update {
@@ -50,7 +56,8 @@ class LoginViewModel @Inject constructor(
           _uiState.update {
             it.copy(
               isLoading = false,
-              isSuccess = true
+              isSuccess = true,
+              isError = false
             )
           }
         }
@@ -98,6 +105,8 @@ class LoginViewModel @Inject constructor(
           else -> AuthError.UnknownError
         },
         isValidEmail = email.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(email).matches(),
+        isLoading = false,
+        isSuccess = false,
         isError = false
       )
     }
@@ -113,13 +122,17 @@ class LoginViewModel @Inject constructor(
           else -> AuthError.UnknownError
         },
         isValidPassword = password.isNotBlank() && password.length >= MIN_LENGTH_PASSWORD,
+        isLoading = false,
+        isSuccess = false,
         isError = false
       )
     }
   }
 
-  fun reset() {
-    _uiState.update { LoginUiState() }
+  fun retry() {
+    val currentUiState = _uiState.value
+    if (currentUiState.isLoading || !currentUiState.isError) return
+    loginUser()
   }
 
   companion object {
