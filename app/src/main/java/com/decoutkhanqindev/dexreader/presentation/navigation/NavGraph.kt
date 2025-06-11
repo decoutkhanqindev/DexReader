@@ -175,6 +175,12 @@ fun NavGraph(
             navHostController.navigatePreserveState(itemId)
           }
         },
+        onLogoutSuccess = {
+          navHostController.navigateClearStack(
+            currentRoute = NavDestination.ProfileDestination.route,
+            destination = NavDestination.HomeDestination.route,
+          )
+        },
         modifier = Modifier.fillMaxSize()
       )
     }
