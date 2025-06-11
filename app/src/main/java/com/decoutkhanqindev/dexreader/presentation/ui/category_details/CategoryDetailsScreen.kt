@@ -66,9 +66,9 @@ fun CategoryDetailsScreen(
           isShowFilterBottomSheet = false
         },
         onSelectedManga = onSelectedManga,
-        onFetchMangaListNextPage = { viewModel.fetchMangaListByCategoryNextPage() },
-        onRetryFetchMangaListNextPage = { viewModel.retryFetchMangaListByCategoryNextPage() },
-        onRetry = { viewModel.retry() },
+        onFetchMangaListNextPage = viewModel::fetchMangaListByCategoryNextPage,
+        onRetryFetchMangaListNextPage = viewModel::retryFetchMangaListByCategoryNextPage,
+        onRetry = viewModel::retry,
         modifier = Modifier.fillMaxSize()
       )
     },

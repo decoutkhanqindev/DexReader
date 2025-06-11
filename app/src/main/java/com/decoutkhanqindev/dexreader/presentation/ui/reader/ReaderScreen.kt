@@ -73,8 +73,8 @@ fun ReaderScreen(
           title = chapterDetailsUiState.title,
           canNavigatePrevious = chapterNavState.canNavigatePrevious,
           canNavigateNext = chapterNavState.canNavigateNext,
-          onNavigatePrevious = { viewModel.navigateToPreviousChapter() },
-          onNavigateNext = { viewModel.navigateToNextChapter() },
+          onNavigatePrevious = viewModel::navigateToPreviousChapter,
+          onNavigateNext = viewModel::navigateToNextChapter,
           modifier = Modifier.fillMaxWidth()
         )
       }
@@ -89,8 +89,8 @@ fun ReaderScreen(
     content = { innerPadding ->
       ReaderContent(
         chapterPageUiState = chapterPagesUiState,
-        onUpdateChapterPage = { viewModel.updateChapterPage(newChapterPage = it) },
-        onRetry = { viewModel.retry() },
+        onUpdateChapterPage = viewModel::updateChapterPage,
+        onRetry = viewModel::retry,
         modifier = Modifier
           .fillMaxSize()
           .padding(innerPadding)

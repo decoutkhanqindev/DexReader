@@ -50,10 +50,10 @@ fun MangaDetailsScreen(
         onSelectedLanguage = { viewModel.updateChapterLanguage(it.toLanguageCode()) },
         onSelectedCategory = onSelectedCategory,
         onSelectedChapter = { onSelectedChapter(it) },
-        onFetchChapterListNextPage = { viewModel.fetchChapterListNextPage() },
-        onRetryFetchChapterListNextPage = { viewModel.retryFetchChapterListNextPage() },
-        onRetryFetchChapterListFirstPage = { viewModel.retryFetchChapterListFirstPage() },
-        onRetry = { viewModel.retry() },
+        onFetchChapterListNextPage = viewModel::fetchChapterListNextPage,
+        onRetryFetchChapterListNextPage = viewModel::retryFetchChapterListNextPage,
+        onRetryFetchChapterListFirstPage = viewModel::retryFetchChapterListFirstPage,
+        onRetry = viewModel::retry,
         modifier = Modifier.fillMaxSize()
       )
     },

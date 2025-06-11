@@ -39,7 +39,7 @@ fun CategoriesScreen(
       CategoriesContent(
         uiState = uiState,
         onSelectedCategory = onSelectedCategory,
-        onRetry = { viewModel.retry() },
+        onRetry = viewModel::retry,
         modifier = Modifier.fillMaxSize()
       )
     },

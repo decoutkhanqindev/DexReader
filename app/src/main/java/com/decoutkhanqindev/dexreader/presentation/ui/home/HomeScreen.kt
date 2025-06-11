@@ -39,7 +39,7 @@ fun HomeScreen(
       HomeContent(
         uiState = uiState,
         onSelectedManga = onSelectedManga,
-        onRetry = { viewModel.retry() },
+        onRetry = viewModel::retry,
         modifier = Modifier.fillMaxSize(),
       )
     },

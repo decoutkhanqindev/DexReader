@@ -59,9 +59,9 @@ fun SearchScreen(
           isExpanded = false
         },
         onSelectedManga = onSelectedManga,
-        onFetchMangaListNextPage = { viewModel.fetchMangaListNextPage() },
-        onRetryFetchMangaListNextPage = { viewModel.retryFetchMangaListNextPage() },
-        onRetry = { viewModel.retry() },
+        onFetchMangaListNextPage = viewModel::fetchMangaListNextPage,
+        onRetryFetchMangaListNextPage = viewModel::retryFetchMangaListNextPage,
+        onRetry = viewModel::retry,
         modifier = Modifier
           .fillMaxSize()
           .padding(innerPadding)
