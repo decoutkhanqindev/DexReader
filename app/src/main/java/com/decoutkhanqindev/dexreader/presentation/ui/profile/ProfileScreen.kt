@@ -1,12 +1,24 @@
 package com.decoutkhanqindev.dexreader.presentation.ui.profile
 
+
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BaseScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.common.states.IdleScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.profile.components.ProfileContent
+import com.decoutkhanqindev.dexreader.presentation.ui.profile.components.actions.UpdateAndLogoutUserBottomBar
 
 @Composable
 fun ProfileScreen(
@@ -14,9 +26,25 @@ fun ProfileScreen(
   currentUser: User?,
   onSignInClick: () -> Unit,
   onMenuItemClick: (String) -> Unit,
+  onLogoutSuccess: () -> Unit,
+  viewModel: ProfileViewModel = hiltViewModel(),
   modifier: Modifier = Modifier
 ) {
+  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val route = NavDestination.ProfileDestination.route
+  val isShowUpdateButton by remember(uiState) {
+    derivedStateOf {
+      val nameChanged = uiState.updatedName != null
+          && uiState.updatedName != currentUser?.name
+      val picChanged = uiState.updatedProfilePictureUrl != null
+          && uiState.updatedProfilePictureUrl != currentUser?.profilePictureUrl
+      nameChanged || picChanged
+    }
+  }
+
+  LaunchedEffect(currentUser) {
+    currentUser?.let { viewModel.updateCurrentUser(it) }
+  }
 
   BaseScreen(
     isUserLoggedIn = isUserLoggedIn,
@@ -26,7 +54,34 @@ fun ProfileScreen(
     route = route,
     onMenuItemClick = onMenuItemClick,
     isSearchEnabled = false,
-    content = {},
+    bottomBarContent = {
+      if (isUserLoggedIn) {
+        UpdateAndLogoutUserBottomBar(
+          isShowUpdateButton = isShowUpdateButton,
+          onUpdateClick = viewModel::updateUserProfile,
+          onLogoutClick = viewModel::logoutUser,
+          modifier = Modifier.fillMaxWidth()
+        )
+      }
+    },
+    content = {
+      if (isUserLoggedIn || uiState.isLogoutUserSuccess) {
+        ProfileContent(
+          uiState = uiState,
+          onUpdateNameChange = viewModel::updateUserName,
+          onUpdatePicUrlChange = viewModel::updateUserPicUrl,
+          onLogoutSuccess = onLogoutSuccess,
+          onRetryUpdate = viewModel::retryUpdateUserProfile,
+          onRetryLogout = viewModel::retryLogoutUser,
+          modifier = Modifier.fillMaxSize()
+        )
+      } else {
+        IdleScreen(
+          message = stringResource(R.string.please_sign_in_to_view_your_profile),
+          modifier = Modifier.fillMaxSize()
+        )
+      }
+    },
     modifier = modifier
   )
 }
