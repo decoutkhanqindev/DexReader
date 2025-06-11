@@ -39,7 +39,10 @@ fun ReaderContent(
       if (isShowErrorDialog) {
         NotificationDialog(
           onDismissClick = { isShowErrorDialog = false },
-          onConfirmClick = onRetry,
+          onConfirmClick = {
+            isShowErrorDialog = false
+            onRetry()
+          },
         )
       }
     }

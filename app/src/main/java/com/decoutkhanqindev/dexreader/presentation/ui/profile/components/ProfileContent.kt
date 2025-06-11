@@ -44,89 +44,91 @@ fun ProfileContent(
   var isShowLogoutDialog by rememberSaveable { mutableStateOf(true) }
   val currentUser = uiState.user
 
-  Box(modifier = modifier) {
-    Box(modifier = modifier) {
-      when {
-        uiState.isLoading -> LoadingScreen(modifier = Modifier.fillMaxSize())
+  Box(
+    modifier =
+      if (uiState.isLoading) modifier.blur(8.dp)
+      else modifier
+  ) {
+    Column(
+      modifier = Modifier.fillMaxSize(),
+      verticalArrangement = Arrangement.spacedBy(16.dp),
+      horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+      ProfilePicturePicker(
+        url = uiState.updatedProfilePictureUrl ?: currentUser?.profilePictureUrl,
+        name = uiState.updatedName ?: currentUser?.name ?: "",
+        onSelectedImageUrl = onUpdatePicUrlChange,
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(top = 16.dp)
+      )
+      ProfileNameEdit(
+        name = uiState.updatedName ?: currentUser?.name ?: "",
+        onNameChange = onUpdateNameChange,
+      )
+      Text(
+        text = currentUser?.email ?: "",
+        style = MaterialTheme.typography.bodyLarge,
+        fontWeight = FontWeight.Light,
+        fontStyle = FontStyle.Italic,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.fillMaxWidth()
+      )
+    }
+  }
 
-        uiState.isUpdateUserError -> {
-          if (isShowUpdateDialog) {
-            NotificationDialog(
-              title = stringResource(R.string.update_profile_failed),
-              onDismissClick = { isShowUpdateDialog = false },
-              onConfirmClick = onRetryUpdate,
-            )
-          }
-        }
+  when {
+    uiState.isLoading -> LoadingScreen(modifier = modifier)
 
-        uiState.isLogoutUserError -> {
-          if (isShowLogoutDialog) {
-            NotificationDialog(
-              title = stringResource(R.string.logout_failed_please_try_again),
-              onDismissClick = { isShowLogoutDialog = false },
-              onConfirmClick = onRetryLogout,
-            )
-          }
-        }
-
-        uiState.isUpdateUserSuccess -> {
-          if (isShowUpdateDialog) {
-            NotificationDialog(
-              icon = Icons.Default.Done,
-              title = stringResource(R.string.your_profile_has_been_updated_successfully),
-              confirm = stringResource(R.string.ok),
-              onConfirmClick = { isShowUpdateDialog = false },
-            )
-          }
-        }
-
-        uiState.isLogoutUserSuccess -> {
-          if (isShowLogoutDialog) {
-            NotificationDialog(
-              icon = Icons.Default.Done,
-              title = stringResource(R.string.logout_successful),
-              confirm = stringResource(R.string.ok),
-              onConfirmClick = {
-                isShowLogoutDialog = false
-                onLogoutSuccess()
-              },
-            )
-          }
-        }
+    uiState.isUpdateUserError -> {
+      if (isShowUpdateDialog) {
+        NotificationDialog(
+          title = stringResource(R.string.update_profile_failed),
+          onDismissClick = { isShowUpdateDialog = false },
+          onConfirmClick = {
+            isShowUpdateDialog = false
+            onRetryUpdate()
+          },
+        )
       }
+    }
 
-      Box(
-        modifier = if (uiState.isLoading) Modifier
-          .fillMaxSize()
-          .blur(8.dp)
-        else Modifier.fillMaxSize()
-      ) {
-        Column(
-          modifier = Modifier.fillMaxSize(),
-          verticalArrangement = Arrangement.spacedBy(16.dp),
-          horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-          ProfilePicturePicker(
-            url = uiState.updatedProfilePictureUrl ?: currentUser?.profilePictureUrl,
-            name = uiState.updatedName ?: currentUser?.name ?: "",
-            onSelectedImageUrl = onUpdatePicUrlChange,
-            modifier = Modifier
-              .fillMaxWidth()
-              .padding(top = 16.dp)
-          )
-          ProfileNameEdit(
-            name = uiState.updatedName ?: currentUser?.name ?: "",
-            onNameChange = onUpdateNameChange,
-          )
-          Text(
-            text = currentUser?.email ?: "",
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Light,
-            fontStyle = FontStyle.Italic,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
-          )
-        }
+    uiState.isLogoutUserError -> {
+      if (isShowLogoutDialog) {
+        NotificationDialog(
+          title = stringResource(R.string.logout_failed_please_try_again),
+          onDismissClick = { isShowLogoutDialog = false },
+          onConfirmClick = {
+            isShowLogoutDialog = false
+            onRetryLogout()
+          },
+        )
+      }
+    }
+
+    uiState.isUpdateUserSuccess -> {
+      if (isShowUpdateDialog) {
+        NotificationDialog(
+          icon = Icons.Default.Done,
+          title = stringResource(R.string.your_profile_has_been_updated_successfully),
+          confirm = stringResource(R.string.ok),
+          onConfirmClick = { isShowUpdateDialog = false },
+        )
+      }
+    }
+
+    uiState.isLogoutUserSuccess -> {
+      if (isShowLogoutDialog) {
+        NotificationDialog(
+          icon = Icons.Default.Done,
+          title = stringResource(R.string.logout_successful),
+          isEnableDismiss = false,
+          confirm = stringResource(R.string.ok),
+          onConfirmClick = {
+            isShowLogoutDialog = false
+            onLogoutSuccess()
+          },
+        )
       }
     }
   }

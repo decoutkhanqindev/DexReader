@@ -3,10 +3,14 @@ package com.decoutkhanqindev.dexreader.presentation.ui.home.components
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.ui.common.states.ErrorScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.ui.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.home.HomeUiState
 
@@ -17,8 +21,22 @@ fun HomeContent(
   onRetry: () -> Unit,
   modifier: Modifier,
 ) {
+  var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
+
   when (uiState) {
     HomeUiState.Loading -> LoadingScreen(modifier = modifier)
+
+    HomeUiState.Error -> {
+      if (isShowErrorDialog) {
+        NotificationDialog(
+          onDismissClick = { isShowErrorDialog = false },
+          onConfirmClick = {
+            isShowErrorDialog = false
+            onRetry()
+          },
+        )
+      }
+    }
 
     is HomeUiState.Success -> {
       LazyColumn(modifier = modifier) {
@@ -59,11 +77,5 @@ fun HomeContent(
         }
       }
     }
-
-    HomeUiState.Error -> ErrorScreen(
-      message = stringResource(R.string.oops_something_went_wrong_please_try_again),
-      onRetry = onRetry,
-      modifier = modifier
-    )
   }
 }

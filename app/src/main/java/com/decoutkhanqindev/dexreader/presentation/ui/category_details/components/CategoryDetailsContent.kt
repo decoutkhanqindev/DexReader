@@ -3,6 +3,10 @@ package com.decoutkhanqindev.dexreader.presentation.ui.category_details.componen
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -12,9 +16,9 @@ import com.decoutkhanqindev.dexreader.presentation.ui.category_details.CategoryD
 import com.decoutkhanqindev.dexreader.presentation.ui.category_details.CategoryDetailsUiState
 import com.decoutkhanqindev.dexreader.presentation.ui.category_details.components.filter.FilterBottomSheet
 import com.decoutkhanqindev.dexreader.presentation.ui.category_details.components.sort.SortBottomSheet
+import com.decoutkhanqindev.dexreader.presentation.ui.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.ui.common.indicators.NextPageLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.ui.common.lists.VerticalGridMangaList
-import com.decoutkhanqindev.dexreader.presentation.ui.common.states.ErrorScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.AllItemLoadedMessage
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.LoadMoreMessage
@@ -42,6 +46,8 @@ fun CategoryDetailsContent(
   onRetry: () -> Unit,
   modifier: Modifier = Modifier
 ) {
+  var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
+
   if (isSortSheetVisible) {
     SortBottomSheet(
       onDismiss = onSortSheetDismiss,
@@ -67,11 +73,17 @@ fun CategoryDetailsContent(
   when (categoryDetailsUiState) {
     CategoryDetailsUiState.FirstPageLoading -> LoadingScreen(modifier = modifier)
 
-    CategoryDetailsUiState.FirstPageError -> ErrorScreen(
-      message = stringResource(R.string.oops_something_went_wrong_please_try_again),
-      onRetry = onRetry,
-      modifier = modifier
-    )
+    CategoryDetailsUiState.FirstPageError -> {
+      if (isShowErrorDialog) {
+        NotificationDialog(
+          onDismissClick = { isShowErrorDialog = false },
+          onConfirmClick = {
+            isShowErrorDialog = false
+            onRetry()
+          },
+        )
+      }
+    }
 
     is CategoryDetailsUiState.Content -> {
       val mangaList = categoryDetailsUiState.mangaList

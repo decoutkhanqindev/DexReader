@@ -18,10 +18,11 @@ fun ForgotPasswordScreen(
 
   ForgotPasswordContent(
     uiState = uiState,
-    onEmailChange = { viewModel.updateEmailField(email = it) },
-    onSubmitClick = { viewModel.sendResetUserPassword() },
+    onEmailChange = viewModel::updateEmailField,
+    onSubmitClick = viewModel::sendResetUserPassword,
     onSubmitSuccess = onSubmitSuccess,
     onNavigateBack = onNavigateBack,
+    onRetry = viewModel::retry,
     modifier = modifier
   )
 }

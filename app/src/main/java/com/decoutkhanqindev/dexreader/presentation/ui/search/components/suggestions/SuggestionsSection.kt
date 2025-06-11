@@ -1,10 +1,14 @@
 package com.decoutkhanqindev.dexreader.presentation.ui.search.components.suggestions
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.ui.common.states.ErrorScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.ui.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.search.SuggestionsUiState
 import com.decoutkhanqindev.dexreader.presentation.ui.search.components.results.ResultsNotFoundMessage
@@ -17,14 +21,19 @@ fun SuggestionsSection(
   onSelectedSuggestion: (String) -> Unit,
   modifier: Modifier = Modifier
 ) {
+  var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
+
   when (suggestionsUiState) {
     SuggestionsUiState.Loading -> LoadingScreen(modifier = modifier)
 
-    SuggestionsUiState.Error -> ErrorScreen(
-      message = stringResource(R.string.oops_something_went_wrong_please_try_again),
-      onRetry = {},
-      modifier = modifier
-    )
+    SuggestionsUiState.Error -> {
+      if (isShowErrorDialog) {
+        NotificationDialog(
+          onDismissClick = { isShowErrorDialog = false },
+          onConfirmClick = { isShowErrorDialog = false },
+        )
+      }
+    }
 
     SuggestionsUiState.Success -> {
       if (suggestionList.isEmpty()) {
