@@ -10,6 +10,7 @@ import com.decoutkhanqindev.dexreader.utils.runSuspendCatching
 import com.decoutkhanqindev.dexreader.utils.toResultFlow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -40,9 +41,11 @@ class UserRepositoryImpl @Inject constructor(
     }
 
   override fun observeCurrentUser(): Flow<Result<User?>> =
-    firebaseAuthSource.observeCurrentUser()
+    firebaseAuthSource
+      .observeCurrentUser()
       .map { it?.toDomain() }
       .flowOn(Dispatchers.IO)
+      .distinctUntilChanged()
       .toResultFlow()
 
   override suspend fun addUserProfile(user: User): Result<User> =
@@ -51,9 +54,11 @@ class UserRepositoryImpl @Inject constructor(
     }
 
   override fun observeUserProfile(userId: String): Flow<Result<User?>> =
-    firebaseFirestoreSource.observeUserProfile(userId)
+    firebaseFirestoreSource
+      .observeUserProfile(userId)
       .map { it?.toDomain() }
       .flowOn(Dispatchers.IO)
+      .distinctUntilChanged()
       .toResultFlow()
 
   override suspend fun updateUserProfile(user: User): Result<Unit> =
