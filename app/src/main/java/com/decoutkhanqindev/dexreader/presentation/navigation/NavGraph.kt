@@ -160,7 +160,7 @@ fun NavGraph(
       )
     }
 
-      composable(route = NavDestination.ProfileDestination.route) {
+    composable(route = NavDestination.ProfileDestination.route) {
       ProfileScreen(
         isUserLoggedIn = isUserLoggedIn,
         currentUser = currentUser,
