@@ -80,7 +80,6 @@ fun MenuDrawer(
             modifier = Modifier
               .weight(0.4f)
               .fillMaxWidth()
-              .background(color = MaterialTheme.colorScheme.surfaceContainer)
               .padding(16.dp)
           )
           MenuBody(
