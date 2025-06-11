@@ -13,7 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun PersonImage(modifier: Modifier = Modifier) {
+fun PersonPicture(modifier: Modifier = Modifier) {
   Image(
     imageVector = Icons.Default.Person,
     contentDescription = null,
