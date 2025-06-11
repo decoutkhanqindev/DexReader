@@ -40,6 +40,7 @@ fun MangaChaptersSection(
 
     when (mangaChaptersUiState) {
       MangaChaptersUiState.FirstPageLoading -> ListLoadingIndicator(modifier = Modifier.fillMaxSize())
+
       MangaChaptersUiState.FirstPageError -> LoadPageErrorMessage(
         message = stringResource(R.string.something_went_wrong_while_loading_chapters_please_try_again),
         onRetry = onRetry,
