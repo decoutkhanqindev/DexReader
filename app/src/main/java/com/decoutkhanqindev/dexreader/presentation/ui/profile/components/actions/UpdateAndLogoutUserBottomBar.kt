@@ -3,9 +3,8 @@ package com.decoutkhanqindev.dexreader.presentation.ui.profile.components.action
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -76,7 +75,6 @@ fun UpdateAndLogoutUserBottomBar(
           .weight(1f)
           .fillMaxWidth()
       )
-      Spacer(modifier = Modifier.width(8.dp))
       AnimatedVisibility(
         visible = isShowUpdateButton,
         enter = scaleIn(),
@@ -88,7 +86,9 @@ fun UpdateAndLogoutUserBottomBar(
         SubmitButton(
           title = stringResource(R.string.update_profile),
           onSubmitClick = { isShowUpdateDialog = true },
-          modifier = Modifier.fillMaxWidth()
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 8.dp)
         )
       }
     },
