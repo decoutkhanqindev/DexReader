@@ -2,6 +2,7 @@ package com.decoutkhanqindev.dexreader.presentation.ui.manga_details
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -11,17 +12,25 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BaseDetailsScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.components.MangaDetailsContent
 import com.decoutkhanqindev.dexreader.utils.toFullLanguageName
 import com.decoutkhanqindev.dexreader.utils.toLanguageCode
 
 @Composable
 fun MangaDetailsScreen(
+  isUserLoggedIn: Boolean,
+  currentUser: User?,
   onNavigateBack: () -> Unit,
   onSearchClick: () -> Unit,
+  onSignInClick: () -> Unit,
   onReadingClick: (String) -> Unit,
-  onSelectedCategory: (String, String) -> Unit,
+  onSelectedCategory: (
+    categoryId: String,
+    categoryTitle: String
+  ) -> Unit,
   onSelectedChapter: (String) -> Unit,
   viewModel: MangaDetailsViewModel = hiltViewModel(),
   modifier: Modifier = Modifier
@@ -30,8 +39,25 @@ fun MangaDetailsScreen(
   val mangaChaptersUiState by viewModel.mangaChaptersUiState.collectAsStateWithLifecycle()
   val firstChapterId by viewModel.firstChapterId.collectAsStateWithLifecycle()
   val chapterLanguage by viewModel.chapterLanguage.collectAsStateWithLifecycle()
-  var isReading by rememberSaveable { mutableStateOf(false) }
-  var isFavorite by rememberSaveable { mutableStateOf(true) }
+  val isFavorite by viewModel.isFavorite.collectAsStateWithLifecycle()
+  var isContinueReading by rememberSaveable { mutableStateOf(false) }
+  var isShowFavoritesDialog by rememberSaveable { mutableStateOf(false) }
+
+  LaunchedEffect(currentUser) {
+    currentUser?.let { viewModel.updateUserId(it.id) }
+  }
+
+  if (isShowFavoritesDialog) {
+    NotificationDialog(
+      title = stringResource(R.string.you_must_sign_in_to_favorite_this_manga),
+      onDismissClick = { isShowFavoritesDialog = false },
+      confirm = stringResource(R.string.sign_in),
+      onConfirmClick = {
+        isShowFavoritesDialog = false
+        onSignInClick()
+      },
+    )
+  }
 
   BaseDetailsScreen(
     title = stringResource(R.string.manga_details),
@@ -42,10 +68,17 @@ fun MangaDetailsScreen(
         mangaDetailsUiState = mangaDetailsUiState,
         mangaChaptersUiState = mangaChaptersUiState,
         canRead = firstChapterId != null,
-        isReading = isReading,
+        isReading = isContinueReading,
         onReadingClick = { onReadingClick(firstChapterId!!) },
         isFavorite = isFavorite,
-        onFavoriteClick = {},
+        onFavoriteClick = {
+          if (isUserLoggedIn) {
+            if (isFavorite) viewModel.removeFromFavorites()
+            else viewModel.addToFavorites()
+          } else {
+            isShowFavoritesDialog = true
+          }
+        },
         chapterLanguage = chapterLanguage.toFullLanguageName(),
         onSelectedLanguage = { viewModel.updateChapterLanguage(it.toLanguageCode()) },
         onSelectedCategory = onSelectedCategory,
