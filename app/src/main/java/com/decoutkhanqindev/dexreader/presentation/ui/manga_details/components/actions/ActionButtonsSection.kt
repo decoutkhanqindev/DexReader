@@ -20,7 +20,7 @@ fun ActionButtonsSection(
   isReading: Boolean,
   onReadingClick: () -> Unit,
   isFavorite: Boolean,
-  onFavoriteClick: (String) -> Unit,
+  onFavoriteClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   Row(
@@ -46,7 +46,7 @@ fun ActionButtonsSection(
         .fillMaxWidth()
     )
     ActionButton(
-      onClick = { onFavoriteClick },
+      onClick = onFavoriteClick,
       content = {
         Text(
           text =
