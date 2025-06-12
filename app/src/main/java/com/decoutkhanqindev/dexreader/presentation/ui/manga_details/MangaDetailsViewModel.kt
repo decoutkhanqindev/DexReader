@@ -4,7 +4,11 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.decoutkhanqindev.dexreader.domain.model.FavoriteManga
 import com.decoutkhanqindev.dexreader.domain.usecase.chapter.GetChapterListUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.favorite.AddToFavoritesUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.favorite.ObserveIsFavoriteUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.favorite.RemoveFromFavoritesUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaDetailsUseCase
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,6 +23,9 @@ class MangaDetailsViewModel @Inject constructor(
   savedStateHandle: SavedStateHandle,
   private val getMangaDetailsUseCase: GetMangaDetailsUseCase,
   private val getChapterListUseCase: GetChapterListUseCase,
+  private val addToFavoritesUseCase: AddToFavoritesUseCase,
+  private val removeFromFavoritesUseCase: RemoveFromFavoritesUseCase,
+  private val observeIsFavoriteUseCase: ObserveIsFavoriteUseCase
 ) : ViewModel() {
   private val mangaIdFromArg: String =
     checkNotNull(savedStateHandle[NavDestination.MangaDetailsDestination.MANGA_ID_ARG])
@@ -37,7 +44,14 @@ class MangaDetailsViewModel @Inject constructor(
   private val _chapterLanguage = MutableStateFlow("en")
   val chapterLanguage: StateFlow<String> = _chapterLanguage.asStateFlow()
 
+  private val _userId = MutableStateFlow<String?>(null)
+  private val userId = _userId.asStateFlow()
+
+  private val _isFavorite = MutableStateFlow(false)
+  val isFavorite: StateFlow<Boolean> = _isFavorite.asStateFlow()
+
   init {
+    observeIsFavorite()
     fetchMangaDetails()
     fetchFirstChapter()
     fetchChapterListFirstPage()
@@ -165,6 +179,86 @@ class MangaDetailsViewModel @Inject constructor(
           )
         }
     }
+  }
+
+  private fun observeIsFavorite() {
+
+    viewModelScope.launch {
+      mangaDetailsUiState.collect { currentUiState ->
+        if (currentUiState !is MangaDetailsUiState.Success) return@collect
+        val mangaId = currentUiState.manga.id
+
+        userId.collect {
+          it?.let { userId ->
+            observeIsFavoriteUseCase(
+              userId = userId,
+              mangaId = mangaId
+            ).collect { result ->
+              result
+                .onSuccess { _isFavorite.value = it}
+                .onFailure {
+                  _isFavorite.value = false
+                  Log.d(TAG, "observeIsFavorite have error: ${it.stackTraceToString()}")
+                }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  fun addToFavorites() {
+    val currentUiState = _mangaDetailsUiState.value
+    if (currentUiState !is MangaDetailsUiState.Success) return
+
+    viewModelScope.launch {
+      val manga = currentUiState.manga
+      userId.value?.let { userId ->
+        val newFavoriteManga = FavoriteManga(
+          id = manga.id,
+          title = manga.title,
+          coverUrl = manga.coverUrl,
+          author = manga.author,
+          status = manga.status,
+          addedAt = null
+        )
+
+        val addToFavoriteResult = addToFavoritesUseCase(
+          userId = userId,
+          manga = newFavoriteManga
+        )
+        addToFavoriteResult
+          .onSuccess { Log.d(TAG, "addToFavorites success") }
+          .onFailure {
+            Log.d(TAG, "addToFavorites have error: ${it.stackTraceToString()}")
+          }
+      }
+    }
+  }
+
+  fun removeFromFavorites() {
+    val currentUiState = _mangaDetailsUiState.value
+    if (currentUiState !is MangaDetailsUiState.Success) return
+
+    viewModelScope.launch {
+      val mangaId = currentUiState.manga.id
+      userId.value?.let { userId ->
+        val removeFromFavoriteResult = removeFromFavoritesUseCase(
+          userId = userId,
+          mangaId = mangaId
+        )
+        removeFromFavoriteResult
+          .onSuccess { Log.d(TAG, "removeFromFavorites success") }
+          .onFailure {
+            Log.d(TAG, "removeFromFavorites have error: ${it.stackTraceToString()}")
+          }
+      }
+    }
+  }
+
+  fun updateUserId(id: String) {
+    Log.d(TAG, "updateUserId: $id")
+    _userId.value = id
   }
 
   fun updateChapterLanguage(language: String) {
