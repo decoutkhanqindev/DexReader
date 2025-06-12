@@ -48,7 +48,7 @@ class CategoriesViewModel @Inject constructor(
   }
 
   fun retry() {
-    fetchTagList()
+    if(_uiState.value is CategoriesUiState.Error) fetchTagList()
   }
 
   companion object {
