@@ -223,7 +223,7 @@ class ReaderViewModel @Inject constructor(
 
       val chapterListResult = getChapterListUseCase(
         mangaId = mangaId!!,
-        offset = currentChapterList.size,
+        offset = CHAPTER_LIST_PER_PAGE_SIZE,
         translatedLanguage = chapterLanguage!!,
         volumeOrder = ASC_ORDER,
         chapterOrder = ASC_ORDER,

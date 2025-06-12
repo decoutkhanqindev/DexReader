@@ -79,8 +79,9 @@ class SearchViewModel @Inject constructor(
           _resultsUiState.value = ResultsUiState.Content(
             results = mangaList,
             currentPage = FIRST_PAGE,
-            nextPageState = if (!hasNextPage) ResultsNextPageState.NO_MORE_ITEMS
-            else ResultsNextPageState.IDLE
+            nextPageState =
+              if (!hasNextPage) ResultsNextPageState.NO_MORE_ITEMS
+              else ResultsNextPageState.IDLE
           )
         }
         .onFailure {
@@ -123,7 +124,7 @@ class SearchViewModel @Inject constructor(
 
       val nextMangaListResults = searchMangaUseCase(
         query = query.value,
-        offset = currentMangaList.size
+        offset = MANGA_LIST_PER_PAGE_SIZE
       )
       nextMangaListResults
         .onSuccess { nextMangaList ->
@@ -132,8 +133,9 @@ class SearchViewModel @Inject constructor(
           _resultsUiState.value = currentUiState.copy(
             results = updatedMangaList,
             currentPage = nextPage,
-            nextPageState = if (!hasNextPage) ResultsNextPageState.NO_MORE_ITEMS
-            else ResultsNextPageState.IDLE
+            nextPageState =
+              if (!hasNextPage) ResultsNextPageState.NO_MORE_ITEMS
+              else ResultsNextPageState.IDLE
           )
         }
         .onFailure {

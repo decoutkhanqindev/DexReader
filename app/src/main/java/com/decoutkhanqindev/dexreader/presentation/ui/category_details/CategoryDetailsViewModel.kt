@@ -100,7 +100,7 @@ class CategoryDetailsViewModel @Inject constructor(
 
       val nextMangaListResults = getMangaListByCategoryUseCase(
         categoryId = categoryIdFromArg,
-        offset = currentMangaList.size,
+        offset = MANGA_LIST_PER_PAGE_SIZE,
         lastUpdated = currentCriteria.lastUpdatedOrderId,
         followedCount = currentCriteria.followedCountOrderId,
         createdAt = currentCriteria.createdAtOrderId,

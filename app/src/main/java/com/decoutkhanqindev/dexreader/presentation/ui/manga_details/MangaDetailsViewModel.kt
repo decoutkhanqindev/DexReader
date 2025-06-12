@@ -112,8 +112,9 @@ class MangaDetailsViewModel @Inject constructor(
           _mangaChaptersUiState.value = MangaChaptersUiState.Content(
             chapterList = chapterList,
             currentPage = FIRST_PAGE,
-            nextPageState = if (!hasNextPage) MangaChaptersNextPageState.NO_MORE_ITEMS
-            else MangaChaptersNextPageState.IDLE
+            nextPageState =
+              if (!hasNextPage) MangaChaptersNextPageState.NO_MORE_ITEMS
+              else MangaChaptersNextPageState.IDLE
           )
         }
         .onFailure {
@@ -156,7 +157,7 @@ class MangaDetailsViewModel @Inject constructor(
 
       val nextChapterListResult = getChapterListUseCase(
         mangaId = mangaIdFromArg,
-        offset = currentMangaList.size,
+        offset = CHAPTER_LIST_PER_PAGE_SIZE,
         translatedLanguage = chapterLanguage.value
       )
       nextChapterListResult
@@ -166,8 +167,9 @@ class MangaDetailsViewModel @Inject constructor(
           _mangaChaptersUiState.value = currentUiState.copy(
             chapterList = updatedChapterList,
             currentPage = nextPage,
-            nextPageState = if (!hasNextPage) MangaChaptersNextPageState.NO_MORE_ITEMS
-            else MangaChaptersNextPageState.IDLE
+            nextPageState =
+              if (!hasNextPage) MangaChaptersNextPageState.NO_MORE_ITEMS
+              else MangaChaptersNextPageState.IDLE
           )
         }
         .onFailure {
@@ -194,7 +196,7 @@ class MangaDetailsViewModel @Inject constructor(
               mangaId = mangaId
             ).collect { result ->
               result
-                .onSuccess { _isFavorite.value = it}
+                .onSuccess { _isFavorite.value = it }
                 .onFailure {
                   _isFavorite.value = false
                   Log.d(TAG, "observeIsFavorite have error: ${it.stackTraceToString()}")
