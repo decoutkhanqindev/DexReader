@@ -50,7 +50,5 @@ data class ReadingHistoryDto(
   var totalChapterPages: Int = 0,
 
   @ServerTimestamp
-  @get:PropertyName("last_read_at")
-  @set:PropertyName("last_read_at")
-  var lastReadAt: Date? = null
+  var createAt: Date? = null
 )
