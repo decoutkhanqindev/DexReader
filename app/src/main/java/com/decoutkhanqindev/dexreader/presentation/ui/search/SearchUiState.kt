@@ -12,7 +12,7 @@ sealed interface ResultsUiState {
   data object FirstPageLoading : ResultsUiState
   data object FirstPageError : ResultsUiState
   data class Content(
-    val results: List<Manga> = emptyList(),
+    val mangaList: List<Manga> = emptyList(),
     val currentPage: Int = 0,
     val nextPageState: ResultsNextPageState = ResultsNextPageState.IDLE
   ) : ResultsUiState

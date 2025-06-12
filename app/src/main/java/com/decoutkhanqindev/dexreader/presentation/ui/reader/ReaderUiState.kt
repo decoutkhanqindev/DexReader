@@ -5,7 +5,7 @@ import com.decoutkhanqindev.dexreader.domain.model.ChapterPages
 data class ChapterDetailsUiState(
   val volume: String = "",
   val chapterNumber: String = "",
-  val title: String = ""
+  val title: String = "",
 )
 
 sealed interface ChapterPagesUiState {

@@ -67,7 +67,7 @@ class HomeViewModel @Inject constructor(
   }
 
   fun retry() {
-    fetchMangaLists()
+    if (_uiState.value is HomeUiState.Error) fetchMangaLists()
   }
 
   companion object {

@@ -116,6 +116,7 @@ class RegisterViewModel @Inject constructor(
   }
 
   fun updateEmailField(email: String) {
+    if(_uiState.value.email == email) return
     _uiState.update {
       it.copy(
         email = email,
@@ -133,6 +134,7 @@ class RegisterViewModel @Inject constructor(
   }
 
   fun updatePasswordField(password: String) {
+    if (_uiState.value.password == password) return
     _uiState.update {
       it.copy(
         password = password,
@@ -150,6 +152,7 @@ class RegisterViewModel @Inject constructor(
   }
 
   fun updateConfirmPasswordField(confirmPassword: String) {
+    if (_uiState.value.confirmPassword == confirmPassword) return
     _uiState.update { currentState ->
       currentState.copy(
         confirmPassword = confirmPassword,
@@ -167,6 +170,7 @@ class RegisterViewModel @Inject constructor(
   }
 
   fun updateNameField(name: String) {
+    if (_uiState.value.name == name) return
     _uiState.update {
       it.copy(
         name = name,
@@ -182,9 +186,7 @@ class RegisterViewModel @Inject constructor(
   }
 
   fun retry() {
-    val currentUiState = _uiState.value
-    if (currentUiState.isLoading || !currentUiState.isError) return
-    registerUser()
+    if (_uiState.value.isError) registerUser()
   }
 
   companion object {

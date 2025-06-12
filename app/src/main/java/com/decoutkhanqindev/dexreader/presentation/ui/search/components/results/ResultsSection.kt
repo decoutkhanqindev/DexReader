@@ -49,7 +49,7 @@ fun ResultsSection(
     }
 
     is ResultsUiState.Content -> {
-      val mangaList = resultsUiState.results
+      val mangaList = resultsUiState.mangaList
       val nextPageState = resultsUiState.nextPageState
 
       if (mangaList.isEmpty()) {

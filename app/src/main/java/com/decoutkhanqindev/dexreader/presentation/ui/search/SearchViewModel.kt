@@ -77,7 +77,7 @@ class SearchViewModel @Inject constructor(
         .onSuccess { mangaList ->
           val hasNextPage = mangaList.size >= MANGA_LIST_PER_PAGE_SIZE
           _resultsUiState.value = ResultsUiState.Content(
-            results = mangaList,
+            mangaList = mangaList,
             currentPage = FIRST_PAGE,
             nextPageState =
               if (!hasNextPage) ResultsNextPageState.NO_MORE_ITEMS
@@ -95,43 +95,43 @@ class SearchViewModel @Inject constructor(
   }
 
   fun fetchMangaListNextPage() {
-    when (val currentUiState = _resultsUiState.value) {
+    when (val currentResultsUiState = _resultsUiState.value) {
       ResultsUiState.FirstPageLoading,
       ResultsUiState.FirstPageError,
         -> return
 
       is ResultsUiState.Content -> {
-        when (currentUiState.nextPageState) {
+        when (currentResultsUiState.nextPageState) {
           ResultsNextPageState.LOADING,
           ResultsNextPageState.NO_MORE_ITEMS
             -> return
 
           ResultsNextPageState.ERROR -> retryFetchMangaListNextPage()
 
-          ResultsNextPageState.IDLE -> fetchMangaListNextPageInternal(currentUiState)
+          ResultsNextPageState.IDLE -> fetchMangaListNextPageInternal(currentResultsUiState)
         }
       }
     }
   }
 
-  private fun fetchMangaListNextPageInternal(currentUiState: ResultsUiState.Content) {
+  private fun fetchMangaListNextPageInternal(currentResultsUiState: ResultsUiState.Content) {
     viewModelScope.launch {
       _resultsUiState.value =
-        currentUiState.copy(nextPageState = ResultsNextPageState.LOADING)
+        currentResultsUiState.copy(nextPageState = ResultsNextPageState.LOADING)
 
-      val currentMangaList = currentUiState.results
-      val nextPage = currentUiState.currentPage + 1
+      val currentMangaList = currentResultsUiState.mangaList
+      val nextPage = currentResultsUiState.currentPage + 1
 
       val nextMangaListResults = searchMangaUseCase(
         query = query.value,
-        offset = MANGA_LIST_PER_PAGE_SIZE
+        offset = currentMangaList.size
       )
       nextMangaListResults
         .onSuccess { nextMangaList ->
-          val updatedMangaList = currentMangaList + nextMangaList
+          val allMangaList = currentMangaList + nextMangaList
           val hasNextPage = nextMangaList.size >= MANGA_LIST_PER_PAGE_SIZE
-          _resultsUiState.value = currentUiState.copy(
-            results = updatedMangaList,
+          _resultsUiState.value = currentResultsUiState.copy(
+            mangaList = allMangaList,
             currentPage = nextPage,
             nextPageState =
               if (!hasNextPage) ResultsNextPageState.NO_MORE_ITEMS
@@ -139,7 +139,8 @@ class SearchViewModel @Inject constructor(
           )
         }
         .onFailure {
-          _resultsUiState.value = currentUiState.copy(nextPageState = ResultsNextPageState.ERROR)
+          _resultsUiState.value =
+            currentResultsUiState.copy(nextPageState = ResultsNextPageState.ERROR)
           Log.d(
             TAG,
             "fetchMangaListNextPageInternal have error: ${it.stackTraceToString()}"
@@ -149,21 +150,20 @@ class SearchViewModel @Inject constructor(
   }
 
   fun updateQuery(newQuery: String) {
-    if (newQuery == query.value) return
+    if (_query.value == newQuery) return
     _query.value = newQuery
   }
 
   fun retry() {
-    fetchMangaListFirstPage()
+    if (_resultsUiState.value is ResultsUiState.FirstPageError)
+      fetchMangaListFirstPage()
   }
 
   fun retryFetchMangaListNextPage() {
-    val currentUiState = _resultsUiState.value
-    if (currentUiState is ResultsUiState.Content &&
-      currentUiState.nextPageState == ResultsNextPageState.ERROR
-    ) {
-      fetchMangaListNextPageInternal(currentUiState)
-    }
+    val currentResultsUiState = _resultsUiState.value
+    if (currentResultsUiState is ResultsUiState.Content &&
+      currentResultsUiState.nextPageState == ResultsNextPageState.ERROR
+    ) fetchMangaListNextPage()
   }
 
   companion object {
