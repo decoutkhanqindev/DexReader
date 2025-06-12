@@ -133,6 +133,11 @@ class ProfileViewModel @Inject constructor(
   }
 
   fun updateCurrentUser(user: User) {
+    val currentUiState = _uiState.value
+    if (currentUiState.user == user &&
+      currentUiState.updatedName == user.name &&
+      currentUiState.updatedProfilePictureUrl == user.profilePictureUrl
+    ) return
     _uiState.update {
       it.copy(
         isLoading = false,
@@ -144,6 +149,7 @@ class ProfileViewModel @Inject constructor(
   }
 
   fun updateUserName(name: String) {
+    if (_uiState.value.updatedName == name) return
     _uiState.update {
       it.copy(
         isLoading = false,
@@ -156,6 +162,7 @@ class ProfileViewModel @Inject constructor(
   }
 
   fun updateUserPicUrl(url: String) {
+    if (_uiState.value.updatedProfilePictureUrl == url) return
     _uiState.update {
       it.copy(
         updatedProfilePictureUrl = url,
@@ -167,15 +174,26 @@ class ProfileViewModel @Inject constructor(
   }
 
   fun retryUpdateUserProfile() {
-    val currentUiState = _uiState.value
-    if (currentUiState.isLoading && !currentUiState.isUpdateUserError) return
-    updateUserProfile()
+    if (_uiState.value.isUpdateUserError) updateUserProfile()
   }
 
   fun retryLogoutUser() {
-    val currentUiState = _uiState.value
-    if (currentUiState.isLoading && !currentUiState.isLogoutUserError) return
-    logoutUser()
+    if (_uiState.value.isLogoutUserError) logoutUser()
+  }
+
+  fun reset() {
+    _uiState.update {
+      it.copy(
+        isLoading = false,
+        user = null,
+        updatedName = null,
+        updatedProfilePictureUrl = null,
+        isValidName = false,
+        isUpdateUserSuccess = false,
+        isUpdateUserError = false,
+        isLogoutUserError = false
+      )
+    }
   }
 
   companion object {

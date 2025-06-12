@@ -38,12 +38,13 @@ fun ProfileScreen(
           && uiState.updatedName != currentUser?.name
       val picChanged = uiState.updatedProfilePictureUrl != null
           && uiState.updatedProfilePictureUrl != currentUser?.profilePictureUrl
-      nameChanged || picChanged
+      (nameChanged || picChanged) && !uiState.isUpdateUserSuccess
     }
   }
 
-  LaunchedEffect(currentUser) {
-    currentUser?.let { viewModel.updateCurrentUser(it) }
+  LaunchedEffect(isUserLoggedIn, currentUser) {
+    if (isUserLoggedIn && currentUser != null) viewModel.updateCurrentUser(user = currentUser)
+    else viewModel.reset()
   }
 
   BaseScreen(

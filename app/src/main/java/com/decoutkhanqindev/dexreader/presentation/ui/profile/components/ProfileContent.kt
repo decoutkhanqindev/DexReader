@@ -111,6 +111,7 @@ fun ProfileContent(
         NotificationDialog(
           icon = Icons.Default.Done,
           title = stringResource(R.string.your_profile_has_been_updated_successfully),
+          isEnableDismiss = false,
           confirm = stringResource(R.string.ok),
           onConfirmClick = { isShowUpdateDialog = false },
         )
