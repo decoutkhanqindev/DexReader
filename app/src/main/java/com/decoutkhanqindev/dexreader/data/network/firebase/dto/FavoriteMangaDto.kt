@@ -26,7 +26,5 @@ data class FavoriteMangaDto(
   var status: String = "",
 
   @ServerTimestamp
-  @get:PropertyName("added_at")
-  @set:PropertyName("added_at")
-  var addedAt: Date? = null
+  var createAt: Date? = null
 )
