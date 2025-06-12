@@ -3,6 +3,7 @@ package com.decoutkhanqindev.dexreader.presentation.ui.favorites
 import com.decoutkhanqindev.dexreader.domain.model.FavoriteManga
 
 sealed interface FavoritesUiState {
+  data object Idle: FavoritesUiState
   data object FirstPageLoading: FavoritesUiState
   data object FirstPageError: FavoritesUiState
   data class Content(
