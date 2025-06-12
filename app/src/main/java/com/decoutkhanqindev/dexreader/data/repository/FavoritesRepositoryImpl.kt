@@ -17,9 +17,17 @@ import javax.inject.Inject
 class FavoritesRepositoryImpl @Inject constructor(
   private val firebaseFirestoreSource: FirebaseFirestoreSource,
 ) : FavoritesRepository {
-  override fun observeFavorites(userId: String): Flow<Result<List<FavoriteManga>>> =
+  override fun observeFavorites(
+    userId: String,
+    limit: Int,
+    lastFavoriteMangaId: String?
+  ): Flow<Result<List<FavoriteManga>>> =
     firebaseFirestoreSource
-      .observeFavorites(userId)
+      .observeFavorites(
+        userId = userId,
+        limit = limit.toLong(),
+        lastFavoriteMangaId = lastFavoriteMangaId
+      )
       .map { favoriteMangaDtoList ->
         favoriteMangaDtoList.map { it.toDomain() }
       }
