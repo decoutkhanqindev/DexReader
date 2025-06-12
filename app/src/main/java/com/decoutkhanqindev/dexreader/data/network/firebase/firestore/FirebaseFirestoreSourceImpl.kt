@@ -56,11 +56,31 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
     usersCollectionRef.document(userProfile.id).set(userProfile).await()
   }
 
-  override fun observeFavorites(userId: String): Flow<List<FavoriteMangaDto>> = callbackFlow {
+  override fun observeFavorites(
+    userId: String,
+    limit: Long,
+    lastFavoriteMangaId: String?
+  ): Flow<List<FavoriteMangaDto>> = callbackFlow {
+    val lastFavoriteManga = lastFavoriteMangaId?.let { id ->
+      usersCollectionRef
+        .document(userId)
+        .collection(favoritesCollection)
+        .document(id)
+        .get()
+        .await()
+    }
+
     val favoritesCollectionRef = usersCollectionRef
       .document(userId)
       .collection(favoritesCollection)
-      .orderBy("added_at", Query.Direction.DESCENDING)
+      .orderBy("createAt", Query.Direction.DESCENDING)
+      .limit(limit)
+      .let { query ->
+        lastFavoriteManga?.let {
+          if (it.exists()) query.startAfter(it)
+          else query
+        } ?: query
+      }
 
     val listenerRegistration = favoritesCollectionRef.addSnapshotListener { snapshot, error ->
       if (error != null) {
@@ -69,7 +89,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
       }
 
       val favoriteMangaDtoList = snapshot?.documents?.mapNotNull { document ->
-        document.toObject(FavoriteMangaDto::class.java)
+        document.toObject(FavoriteMangaDto::class.java)?.copy(id = document.id)
       } ?: emptyList()
 
       trySend(favoriteMangaDtoList)

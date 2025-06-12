@@ -8,7 +8,11 @@ interface FirebaseFirestoreSource {
   suspend fun addUserProfile(userProfile: UserProfileDto): UserProfileDto
   fun observeUserProfile(userId: String): Flow<UserProfileDto?>
   suspend fun updateUserProfile(userProfile: UserProfileDto)
-  fun observeFavorites(userId: String): Flow<List<FavoriteMangaDto>>
+  fun observeFavorites(
+    userId: String,
+    limit: Long,
+    lastFavoriteMangaId: String? = null
+  ): Flow<List<FavoriteMangaDto>>
   suspend fun addToFavorites(userId: String, manga: FavoriteMangaDto)
   suspend fun removeFromFavorites(userId: String, mangaId: String)
   fun observeIsFavorite(userId: String, mangaId: String): Flow<Boolean>
