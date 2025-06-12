@@ -12,5 +12,5 @@ data class ReadingHistory(
   val chapterVolume: String,
   val lastReadPage: String,
   val totalChapterPages: Int,
-  val lastReadAt: String
+  val lastReadAt: String?,
 )
