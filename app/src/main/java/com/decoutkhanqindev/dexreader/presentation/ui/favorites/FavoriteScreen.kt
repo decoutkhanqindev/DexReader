@@ -29,8 +29,9 @@ fun FavoriteScreen(
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val route = NavDestination.FavoritesDestination.route
 
-  LaunchedEffect(currentUser) {
-    currentUser?.let { viewModel.updateUserId(it.id) }
+  LaunchedEffect(isUserLoggedIn, currentUser?.id) {
+    if (isUserLoggedIn && currentUser != null) viewModel.updateUserId(userId = currentUser.id)
+    else viewModel.reset()
   }
 
   BaseScreen(

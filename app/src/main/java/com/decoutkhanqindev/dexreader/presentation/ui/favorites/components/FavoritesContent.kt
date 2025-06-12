@@ -36,6 +36,8 @@ fun FavoritesContent(
   var isShowErrorDialog by rememberSaveable { mutableStateOf(false) }
 
   when (uiState) {
+    FavoritesUiState.Idle -> Unit
+
     FavoritesUiState.FirstPageLoading -> LoadingScreen(modifier = modifier)
 
     FavoritesUiState.FirstPageError -> {
