@@ -15,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -59,8 +60,8 @@ class MangaDetailsViewModel @Inject constructor(
 
   private fun fetchMangaDetails() {
     viewModelScope.launch {
-      val mangaDetails = getMangaDetailsUseCase(mangaIdFromArg)
-      mangaDetails
+      val mangaDetailsResult = getMangaDetailsUseCase(mangaId = mangaIdFromArg)
+      mangaDetailsResult
         .onSuccess {
           _mangaDetailsUiState.value = MangaDetailsUiState.Success(manga = it)
         }
@@ -82,11 +83,8 @@ class MangaDetailsViewModel @Inject constructor(
       )
       chapterListResult
         .onSuccess {
-          if (it.isNotEmpty()) {
-            _firstChapterId.value = it.first().id
-          } else {
-            _firstChapterId.value = null
-          }
+          if (it.isNotEmpty()) _firstChapterId.value = it.first().id
+          else _firstChapterId.value = null
         }
         .onFailure {
           _firstChapterId.value = null
@@ -157,7 +155,7 @@ class MangaDetailsViewModel @Inject constructor(
 
       val nextChapterListResult = getChapterListUseCase(
         mangaId = mangaIdFromArg,
-        offset = CHAPTER_LIST_PER_PAGE_SIZE,
+        offset = currentMangaList.size,
         translatedLanguage = chapterLanguage.value
       )
       nextChapterListResult
@@ -189,7 +187,7 @@ class MangaDetailsViewModel @Inject constructor(
         if (currentUiState !is MangaDetailsUiState.Success) return@collect
         val mangaId = currentUiState.manga.id
 
-        userId.collect {
+        userId.collectLatest {
           it?.let { userId ->
             observeIsFavoriteUseCase(
               userId = userId,
@@ -258,34 +256,35 @@ class MangaDetailsViewModel @Inject constructor(
   }
 
   fun updateUserId(id: String) {
-    Log.d(TAG, "updateUserId: $id")
+    if (_userId.value == id) return
     _userId.value = id
   }
 
   fun updateChapterLanguage(language: String) {
-    if (language == _chapterLanguage.value) return
+    if (_chapterLanguage.value == language) return
     _chapterLanguage.value = language
     fetchFirstChapter()
     fetchChapterListFirstPage()
   }
 
   fun retry() {
-    fetchMangaDetails()
-    fetchFirstChapter()
-    fetchChapterListFirstPage()
+    if (_mangaDetailsUiState.value is MangaDetailsUiState.Error)
+      fetchMangaDetails()
+    if (_firstChapterId.value == null) fetchFirstChapter()
+    if (_mangaChaptersUiState.value is MangaChaptersUiState.FirstPageError)
+      fetchChapterListFirstPage()
   }
 
   fun retryFetchChapterListFirstPage() {
-    fetchChapterListFirstPage()
+    if (_mangaChaptersUiState.value is MangaChaptersUiState.FirstPageLoading)
+      fetchChapterListFirstPage()
   }
 
   fun retryFetchChapterListNextPage() {
-    val currentUiState = _mangaChaptersUiState.value
-    if (currentUiState is MangaChaptersUiState.Content &&
-      currentUiState.nextPageState == MangaChaptersNextPageState.ERROR
-    ) {
-      fetchChapterListNextPageInternal(currentUiState)
-    }
+    val currentMangaChaptersUiState = _mangaChaptersUiState.value
+    if (currentMangaChaptersUiState is MangaChaptersUiState.Content &&
+      currentMangaChaptersUiState.nextPageState == MangaChaptersNextPageState.ERROR
+    ) fetchChapterListNextPage()
   }
 
   companion object {
