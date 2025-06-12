@@ -43,8 +43,8 @@ fun MangaDetailsScreen(
   var isContinueReading by rememberSaveable { mutableStateOf(false) }
   var isShowFavoritesDialog by rememberSaveable { mutableStateOf(false) }
 
-  LaunchedEffect(currentUser) {
-    currentUser?.let { viewModel.updateUserId(it.id) }
+  LaunchedEffect(isUserLoggedIn, currentUser?.id) {
+    if (isUserLoggedIn && currentUser != null) viewModel.updateUserId(id = currentUser.id)
   }
 
   if (isShowFavoritesDialog) {
