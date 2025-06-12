@@ -8,6 +8,14 @@ import javax.inject.Inject
 class ObserveFavoritesUseCase @Inject constructor(
   private val favoriteRepository: FavoritesRepository
 ) {
-  operator fun invoke(userId: String): Flow<Result<List<FavoriteManga>>> =
-    favoriteRepository.observeFavorites(userId)
+  operator fun invoke(
+    userId: String,
+    limit: Int = 20,
+    lastFavoriteMangaId: String? = null
+  ): Flow<Result<List<FavoriteManga>>> =
+    favoriteRepository.observeFavorites(
+      userId = userId,
+      limit = limit,
+      lastFavoriteMangaId = lastFavoriteMangaId
+    )
 }
