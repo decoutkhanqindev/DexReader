@@ -4,33 +4,48 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.favorite.ObserveFavoritesUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.favorite.RemoveFromFavoritesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class FavoritesViewModel @Inject constructor(
   private val observeFavoritesUseCase: ObserveFavoritesUseCase,
+  private val removeFromFavoritesUseCase: RemoveFromFavoritesUseCase
 ) : ViewModel() {
-  private val _uiState = MutableStateFlow<FavoritesUiState>(FavoritesUiState.FirstPageLoading)
+  private val _uiState = MutableStateFlow<FavoritesUiState>(FavoritesUiState.Idle)
   val uiState: StateFlow<FavoritesUiState> = _uiState.asStateFlow()
 
   private val _userId = MutableStateFlow<String?>(null)
-  val userId: StateFlow<String?> = _userId.asStateFlow()
+  private val userId: StateFlow<String?> = _userId.asStateFlow()
+
+  private val _removeFavoriteMangaId = MutableStateFlow<String?>(null)
+  val removeFavoriteMangaId: StateFlow<String?> = _removeFavoriteMangaId.asStateFlow()
+
+  private var observeFavoritesJob: Job? = null
 
   init {
     observeFavoriteMangaListFirstPage()
   }
 
   private fun observeFavoriteMangaListFirstPage() {
-    viewModelScope.launch {
+    cancelObserveFavoritesJob()
+    observeFavoritesJob = viewModelScope.launch {
       _uiState.value = FavoritesUiState.FirstPageLoading
 
-      userId.collect {
-        it?.let { userId ->
+      userId.collectLatest { userId ->
+        if (userId == null) {
+          _uiState.value = FavoritesUiState.Idle
+          return@collectLatest
+        }
+
+        try {
           observeFavoritesUseCase(
             userId = userId,
             limit = MANGA_LIST_PER_PAGE_SIZE,
@@ -47,13 +62,29 @@ class FavoritesViewModel @Inject constructor(
                     else FavoritesNextPageState.IDLE
                 )
               }
-              .onFailure {
+              .onFailure { throwable ->
+                if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true &&
+                  _userId.value == null
+                ) {
+                  _uiState.value = FavoritesUiState.Idle
+                  return@onFailure
+                }
+
                 _uiState.value = FavoritesUiState.FirstPageError
                 Log.d(
                   TAG,
-                  "observeFavoriteMangaListFirstPage have error: ${it.stackTraceToString()}"
+                  "observeFavoriteMangaListFirstPage have error: ${throwable.stackTraceToString()}"
                 )
               }
+          }
+        } catch (e: Exception) {
+          if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true &&
+            _userId.value == null
+          ) {
+            _uiState.value = FavoritesUiState.Idle
+          } else {
+            _uiState.value = FavoritesUiState.FirstPageError
+            Log.d(TAG, "observeFavoriteMangaListFirstPage have error: ${e.stackTraceToString()}")
           }
         }
       }
@@ -62,6 +93,7 @@ class FavoritesViewModel @Inject constructor(
 
   fun observeFavoriteMangaListNextPage() {
     when (val currentUiState = _uiState.value) {
+      FavoritesUiState.Idle,
       FavoritesUiState.FirstPageError,
       FavoritesUiState.FirstPageLoading
         -> return
@@ -80,18 +112,23 @@ class FavoritesViewModel @Inject constructor(
   }
 
   private fun observeFavoriteMangaListNextPageInternal(currentUiState: FavoritesUiState.Content) {
-    viewModelScope.launch {
+    observeFavoritesJob = viewModelScope.launch {
       _uiState.value = currentUiState.copy(nextPageState = FavoritesNextPageState.LOADING)
 
       val favoriteMangaList = currentUiState.favoriteMangaList
-      val lastFavoriteMangaId = favoriteMangaList.last().id
+      val lastFavoriteMangaId = favoriteMangaList.lastOrNull()?.id
       val nextPage = currentUiState.currentPage + 1
 
-      userId.collect {
-        it?.let { userId ->
+      userId.collectLatest { userId ->
+        if (userId == null) {
+          _uiState.value = FavoritesUiState.Idle
+          return@collectLatest
+        }
+
+        try {
           observeFavoritesUseCase(
             userId = userId,
-            limit = favoriteMangaList.size,
+            limit = MANGA_LIST_PER_PAGE_SIZE,
             lastFavoriteMangaId = lastFavoriteMangaId
           ).collect { result ->
             result
@@ -106,25 +143,71 @@ class FavoritesViewModel @Inject constructor(
                     else FavoritesNextPageState.IDLE
                 )
               }
-              .onFailure {
+              .onFailure { throwable ->
+                if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true &&
+                  _userId.value == null
+                ) {
+                  return@onFailure
+                }
+
                 _uiState.value = currentUiState.copy(nextPageState = FavoritesNextPageState.ERROR)
                 Log.d(
                   TAG,
-                  "observeFavoriteMangaListNextPageInternal have error: ${it.stackTraceToString()}"
+                  "observeFavoriteMangaListNextPageInternal have error: ${throwable.stackTraceToString()}"
                 )
               }
+          }
+        } catch (e: Exception) {
+          if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true &&
+            _userId.value == null
+          ) {
+            return@collectLatest
+          } else {
+            _uiState.value = currentUiState.copy(nextPageState = FavoritesNextPageState.ERROR)
+            Log.d(
+              TAG,
+              "observeFavoriteMangaListNextPageInternal setup error: ${e.stackTraceToString()}"
+            )
           }
         }
       }
     }
   }
 
+  fun removeFromFavorites() {
+    val currentUiState = _uiState.value
+    if (currentUiState !is FavoritesUiState.Content) return
+
+    viewModelScope.launch {
+      userId.value?.let { userId ->
+        removeFavoriteMangaId.value?.let { mangaId ->
+          val removeFromFavoriteResult = removeFromFavoritesUseCase(
+            userId = userId,
+            mangaId = mangaId
+          )
+          removeFromFavoriteResult
+            .onSuccess { Log.d(TAG, "removeFromFavorites success") }
+            .onFailure {
+              Log.d(TAG, "removeFromFavorites have error: ${it.stackTraceToString()}")
+            }
+        }
+      }
+    }
+  }
+
   fun updateUserId(userId: String) {
+    if (_userId.value == userId) return
     _userId.value = userId
   }
 
+  fun updateRemoveFavoriteMangaId(mangaId: String) {
+    if (_removeFavoriteMangaId.value == mangaId) return
+    _removeFavoriteMangaId.value = mangaId
+  }
+
   fun retry() {
-    observeFavoriteMangaListFirstPage()
+    if (_uiState.value is FavoritesUiState.FirstPageError)
+      observeFavoriteMangaListFirstPage()
   }
 
   fun retryObserveFavoriteMangaListNextPage() {
@@ -134,9 +217,27 @@ class FavoritesViewModel @Inject constructor(
     ) observeFavoriteMangaListNextPage()
   }
 
+  fun reset() {
+    cancelObserveFavoritesJob()
+    _uiState.value = FavoritesUiState.Idle
+    _userId.value = null
+    _removeFavoriteMangaId.value = null
+  }
+
+  private fun cancelObserveFavoritesJob() {
+    observeFavoritesJob?.cancel()
+    observeFavoritesJob = null
+  }
+
+  override fun onCleared() {
+    super.onCleared()
+    cancelObserveFavoritesJob()
+  }
+
   companion object {
     private const val TAG = "FavoritesViewModel"
     private const val FIRST_PAGE = 1
     private const val MANGA_LIST_PER_PAGE_SIZE = 20
+    private const val PERMISSION_DENIED_EXCEPTION = "PERMISSION_DENIED"
   }
 }
