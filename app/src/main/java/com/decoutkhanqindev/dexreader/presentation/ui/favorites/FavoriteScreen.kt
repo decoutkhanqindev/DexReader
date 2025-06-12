@@ -1,0 +1,63 @@
+package com.decoutkhanqindev.dexreader.presentation.ui.favorites
+
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.domain.model.User
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
+import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BaseScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.common.states.IdleScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.favorites.components.FavoritesContent
+
+@Composable
+fun FavoriteScreen(
+  isUserLoggedIn: Boolean,
+  currentUser: User?,
+  onSignInClick: () -> Unit,
+  onMenuItemClick: (String) -> Unit,
+  onSearchClick: () -> Unit,
+  onSelectedManga: (String) -> Unit,
+  viewModel: FavoritesViewModel = hiltViewModel(),
+  modifier: Modifier = Modifier
+) {
+  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  val route = NavDestination.FavoritesDestination.route
+
+  LaunchedEffect(currentUser) {
+    currentUser?.let { viewModel.updateUserId(it.id) }
+  }
+
+  BaseScreen(
+    isUserLoggedIn = isUserLoggedIn,
+    currentUser = currentUser,
+    onSignInClick = onSignInClick,
+    title = stringResource(R.string.favorite_menu_item),
+    route = route,
+    onMenuItemClick = onMenuItemClick,
+    onSearchClick = onSearchClick,
+    content = {
+      if (isUserLoggedIn) {
+        FavoritesContent(
+          uiState = uiState,
+          onSelectedManga = onSelectedManga,
+          onObserveFavoriteMangaListNextPage = viewModel::observeFavoriteMangaListNextPage,
+          onRetryObserveFavoriteMangaListNextPage = viewModel::retryObserveFavoriteMangaListNextPage,
+          onRetry = viewModel::retry,
+          modifier = Modifier.fillMaxSize()
+        )
+      } else {
+        IdleScreen(
+          message = stringResource(R.string.please_sign_in_to_view_your_favorites),
+          modifier = Modifier.fillMaxSize()
+        )
+      }
+    },
+    modifier = modifier
+  )
+}
