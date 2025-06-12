@@ -2,6 +2,7 @@ package com.decoutkhanqindev.dexreader.data.network.firebase.firestore
 
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.FavoriteMangaDto
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.UserProfileDto
+import com.decoutkhanqindev.dexreader.di.CreateAtFieldQualifier
 import com.decoutkhanqindev.dexreader.di.FavoritesCollectionQualifier
 import com.decoutkhanqindev.dexreader.di.HistoryCollectionQualifier
 import com.decoutkhanqindev.dexreader.di.UsersCollectionQualifier
@@ -20,7 +21,9 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
   @FavoritesCollectionQualifier
   private val favoritesCollection: String,
   @HistoryCollectionQualifier
-  private val historyCollection: String
+  private val historyCollection: String,
+  @CreateAtFieldQualifier
+  private val createAtField: String
 ) : FirebaseFirestoreSource {
   private val usersCollectionRef = firebaseFirestore.collection(usersCollection)
 
@@ -30,7 +33,8 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
     return userProfile
   }
 
-  override fun observeUserProfile(userId: String): Flow<UserProfileDto?> = callbackFlow {
+  override fun observeUserProfile(userId: String): Flow<UserProfileDto?>
+      = callbackFlow {
     val documentRef = usersCollectionRef.document(userId)
 
     val listenerRegistration = documentRef.addSnapshotListener { snapshot, error ->
@@ -51,7 +55,6 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
       listenerRegistration.remove()
     }
   }
-
   override suspend fun updateUserProfile(userProfile: UserProfileDto) {
     usersCollectionRef.document(userProfile.id).set(userProfile).await()
   }
@@ -73,7 +76,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
     val favoritesCollectionRef = usersCollectionRef
       .document(userId)
       .collection(favoritesCollection)
-      .orderBy("createAt", Query.Direction.DESCENDING)
+      .orderBy(createAtField, Query.Direction.DESCENDING)
       .limit(limit)
       .let { query ->
         lastFavoriteManga?.let {
@@ -100,7 +103,10 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
     }
   }
 
-  override suspend fun addToFavorites(userId: String, manga: FavoriteMangaDto) {
+  override suspend fun addToFavorites(
+    userId: String,
+    manga: FavoriteMangaDto
+  ) {
     usersCollectionRef
       .document(userId)
       .collection(favoritesCollection)
@@ -109,7 +115,10 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
       .await()
   }
 
-  override suspend fun removeFromFavorites(userId: String, mangaId: String) {
+  override suspend fun removeFromFavorites(
+    userId: String,
+    mangaId: String
+  ) {
     usersCollectionRef
       .document(userId)
       .collection(favoritesCollection)
@@ -118,7 +127,10 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
       .await()
   }
 
-  override fun observeIsFavorite(userId: String, mangaId: String): Flow<Boolean> = callbackFlow {
+  override fun observeIsFavorite(
+    userId: String,
+    mangaId: String
+  ): Flow<Boolean> = callbackFlow {
     val favoriteCollectionRef = usersCollectionRef
       .document(userId)
       .collection(favoritesCollection)
