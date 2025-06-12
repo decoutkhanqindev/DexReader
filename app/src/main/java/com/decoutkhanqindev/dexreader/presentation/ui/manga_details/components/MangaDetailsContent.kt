@@ -41,7 +41,7 @@ fun MangaDetailsContent(
   isReading: Boolean,
   onReadingClick: () -> Unit,
   isFavorite: Boolean,
-  onFavoriteClick: (String) -> Unit,
+  onFavoriteClick: () -> Unit,
   chapterLanguage: String,
   onSelectedLanguage: (String) -> Unit,
   onSelectedCategory: (
