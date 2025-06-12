@@ -47,7 +47,7 @@ fun MenuDrawer(
       icon = Icons.Default.Category
     ),
     MenuItem(
-      id = NavDestination.FavoriteDestination.route,
+      id = NavDestination.FavoritesDestination.route,
       title = stringResource(R.string.favorite_menu_item),
       icon = Icons.Default.Favorite
     ),

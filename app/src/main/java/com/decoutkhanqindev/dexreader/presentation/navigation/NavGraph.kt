@@ -14,7 +14,7 @@ import com.decoutkhanqindev.dexreader.presentation.ui.auth.login.LoginScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.auth.register.RegisterScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.categories.CategoriesScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.category_details.CategoryDetailsScreen
-import com.decoutkhanqindev.dexreader.presentation.ui.favorite.FavoriteScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.favorites.FavoriteScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.history.HistoryScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.home.HomeScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.MangaDetailsScreen
@@ -116,23 +116,28 @@ fun NavGraph(
       )
     }
 
-    composable(route = NavDestination.FavoriteDestination.route) {
+    composable(route = NavDestination.FavoritesDestination.route) {
       FavoriteScreen(
         isUserLoggedIn = isUserLoggedIn,
         currentUser = currentUser,
         onSignInClick = {
           navHostController.navigateClearStack(
-            currentRoute = NavDestination.FavoriteDestination.route,
+            currentRoute = NavDestination.FavoritesDestination.route,
             destination = NavDestination.LoginDestination.route
           )
         },
         onMenuItemClick = { itemId ->
-          if (itemId != NavDestination.FavoriteDestination.route) {
+          if (itemId != NavDestination.FavoritesDestination.route) {
             navHostController.navigatePreserveState(itemId)
           }
         },
         onSearchClick = {
           navHostController.navigate(route = NavDestination.SearchDestination.route)
+        },
+        onSelectedManga = { mangaId ->
+          navHostController.navigate(
+            route = "${NavDestination.MangaDetailsDestination.route}/$mangaId"
+          )
         },
         modifier = Modifier.fillMaxSize()
       )

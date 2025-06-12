@@ -1,7 +1,5 @@
 package com.decoutkhanqindev.dexreader.presentation.navigation
 
-import kotlinx.serialization.Serializable
-
 
 sealed interface NavDestination {
   val route: String
@@ -18,12 +16,10 @@ sealed interface NavDestination {
     override val route: String = "forgot_password"
   }
 
-  @Serializable
   object HomeDestination : NavDestination {
     override val route: String = "home"
   }
 
-  @Serializable
   object CategoriesDestination : NavDestination {
     override val route: String = "categories"
   }
@@ -35,8 +31,8 @@ sealed interface NavDestination {
     val routeWithArgs: String = "${route}/{$CATEGORY_ID_ARG}/{$CATEGORY_TITLE_ARG}"
   }
 
-  object FavoriteDestination : NavDestination {
-    override val route: String = "favorite"
+  object FavoritesDestination : NavDestination {
+    override val route: String = "favorites"
   }
 
   object HistoryDestination : NavDestination {
