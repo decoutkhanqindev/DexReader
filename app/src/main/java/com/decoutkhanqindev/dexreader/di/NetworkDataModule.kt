@@ -48,6 +48,10 @@ annotation class FavoritesCollectionQualifier
 @Retention(AnnotationRetention.RUNTIME)
 annotation class HistoryCollectionQualifier
 
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class CreateAtFieldQualifier
+
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkDataModule {
@@ -119,6 +123,10 @@ object NetworkDataModule {
   @Provides
   @HistoryCollectionQualifier
   fun provideHistoryCollection(): String = "history"
+
+  @Provides
+  @CreateAtFieldQualifier
+  fun provideCreateAtField(): String = "createAt"
 
   @Provides
   @Singleton
