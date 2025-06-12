@@ -2,6 +2,7 @@ package com.decoutkhanqindev.dexreader.presentation.ui.search.components.suggest
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
@@ -12,8 +13,10 @@ fun SuggestionList(
   modifier: Modifier = Modifier
 ) {
   LazyColumn(modifier = modifier) {
-    items(suggestionList.size, key = { index -> "${suggestionList[index]}_$index" }) { index ->
-      val suggestion = suggestionList[index]
+    itemsIndexed(
+      items = suggestionList,
+      key = { index, suggestion -> "${suggestionList[index]}_$index" }
+    ) { index, suggestion ->
       SuggestionItem(
         suggestion = suggestion,
         onSelectedSuggestion = onSelectedSuggestion,
