@@ -2,6 +2,7 @@ package com.decoutkhanqindev.dexreader.data.mapper
 
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.FavoriteMangaDto
 import com.decoutkhanqindev.dexreader.domain.model.FavoriteManga
+import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.utils.toTimeAgo
 
 fun FavoriteMangaDto.toDomain() =
@@ -21,4 +22,20 @@ fun FavoriteManga.toDto() =
     coverUrl = coverUrl,
     author = author,
     status = status,
+  )
+
+fun FavoriteManga.toManga() =
+  Manga(
+    id = id,
+    title = title,
+    coverUrl = coverUrl,
+    description = "",
+    author = author,
+    artist = "",
+    categories = emptyList(),
+    status = status,
+    year = "",
+    availableTranslatedLanguages = emptyList(),
+    lastChapter = "",
+    lastUpdated = ""
   )
