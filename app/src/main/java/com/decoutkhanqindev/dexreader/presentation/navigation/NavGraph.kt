@@ -225,9 +225,17 @@ fun NavGraph(
       )
     ) {
       MangaDetailsScreen(
+        isUserLoggedIn = isUserLoggedIn,
+        currentUser = currentUser,
         onNavigateBack = { navHostController.navigateUp() },
         onSearchClick = {
           navHostController.navigate(route = NavDestination.SearchDestination.route)
+        },
+        onSignInClick = {
+          navHostController.navigateClearStack(
+            currentRoute = NavDestination.MangaDetailsDestination.route,
+            destination = NavDestination.LoginDestination.route
+          )
         },
         onReadingClick = { firstChapterId ->
           navHostController.navigate(
