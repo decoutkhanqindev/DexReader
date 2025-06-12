@@ -96,6 +96,7 @@ class LoginViewModel @Inject constructor(
   }
 
   fun updateEmailField(email: String) {
+    if (_uiState.value.email == email) return
     _uiState.update {
       it.copy(
         email = email,
@@ -113,6 +114,7 @@ class LoginViewModel @Inject constructor(
   }
 
   fun updatePasswordField(password: String) {
+    if (_uiState.value.password == password) return
     _uiState.update {
       it.copy(
         password = password,
@@ -130,9 +132,7 @@ class LoginViewModel @Inject constructor(
   }
 
   fun retry() {
-    val currentUiState = _uiState.value
-    if (currentUiState.isLoading || !currentUiState.isError) return
-    loginUser()
+    if (_uiState.value.isError) loginUser()
   }
 
   companion object {

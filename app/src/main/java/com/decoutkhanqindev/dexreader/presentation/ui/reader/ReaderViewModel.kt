@@ -64,9 +64,7 @@ class ReaderViewModel @Inject constructor(
       val expiryTimestamp = System.currentTimeMillis() - CACHE_EXPIRY_DURATION_MILLIS
       val clearExpiredCacheResult = clearExpiredCacheUseCase(expiryTimestamp)
       clearExpiredCacheResult
-        .onSuccess {
-          Log.d(TAG, "clearExpiredCache is success.")
-        }
+        .onSuccess { Log.d(TAG, "clearExpiredCache is success.") }
         .onFailure {
           Log.d(TAG, "clearExpiredCache have error: ${it.stackTraceToString()}")
         }
@@ -75,7 +73,7 @@ class ReaderViewModel @Inject constructor(
 
   private fun fetchChapterDetails() {
     viewModelScope.launch {
-      val chapterDetailsResult = getChapterDetailsUseCase(currentChapterId)
+      val chapterDetailsResult = getChapterDetailsUseCase(chapterId = currentChapterId)
       chapterDetailsResult
         .onSuccess { chapter ->
           _chapterDetailsState.update {
@@ -88,9 +86,9 @@ class ReaderViewModel @Inject constructor(
 
           mangaId = chapter.mangaId
           chapterLanguage = chapter.translatedLanguage.toLanguageCode()
-          if (currentChapterList.isEmpty() && mangaId != null && chapterLanguage != null) {
-            fetchChapterListFirstPage()
-          }
+          if (currentChapterList.isEmpty() &&
+            mangaId != null && chapterLanguage != null
+          ) fetchChapterListFirstPage()
         }
         .onFailure {
           _chapterDetailsState.update { ChapterDetailsUiState() }
@@ -112,7 +110,7 @@ class ReaderViewModel @Inject constructor(
     viewModelScope.launch {
       if (!isPrefetch) _chapterPagesUiState.value = ChapterPagesUiState.Loading
 
-      val cachedResult = getChapterCacheUseCase(chapterIdToFetch)
+      val cachedResult = getChapterCacheUseCase(chapterId = chapterIdToFetch)
       cachedResult
         .onSuccess { chapterPages ->
           if (!isPrefetch) {
@@ -125,7 +123,7 @@ class ReaderViewModel @Inject constructor(
           Log.d(TAG, "getChapterCacheUseCase have error: ${it.stackTraceToString()}")
         }
 
-      val networkResult = getChapterPagesUseCase(chapterIdToFetch)
+      val networkResult = getChapterPagesUseCase(chapterId = chapterIdToFetch)
       networkResult
         .onSuccess { chapterPages ->
           if (!isPrefetch)
@@ -134,7 +132,7 @@ class ReaderViewModel @Inject constructor(
           if (mangaId != null) {
             addChapterCacheUseCase(mangaId = mangaId!!, chapterPages = chapterPages)
               .onSuccess {
-                Log.d(TAG, "addChapterCacheUseCase is success: $chapterIdToFetch")
+                Log.d(TAG, "addChapterCacheUseCase success: $chapterIdToFetch")
               }
               .onFailure {
                 Log.d(TAG, "addChapterCacheUseCase have error: ${it.stackTraceToString()}")
@@ -151,8 +149,8 @@ class ReaderViewModel @Inject constructor(
   }
 
   private fun prefetchNextChapterPages() {
-    val currentState = _chapterNavState.value
-    currentState.nextChapterId?.let { nextId ->
+    val currentChapterNavState = _chapterNavState.value
+    currentChapterNavState.nextChapterId?.let { nextId ->
       if (nextId.isNotBlank()) {
         if (mangaId == null) return
         fetchChapterPages(isPrefetch = true)
@@ -161,8 +159,8 @@ class ReaderViewModel @Inject constructor(
   }
 
   fun navigateToPreviousChapter() {
-    val currentState = _chapterNavState.value
-    currentState.previousChapterId?.let { previousId ->
+    val currentChapterNavState = _chapterNavState.value
+    currentChapterNavState.previousChapterId?.let { previousId ->
       currentChapterId = previousId
       fetchChapterDetails()
       fetchChapterPages()
@@ -171,14 +169,13 @@ class ReaderViewModel @Inject constructor(
   }
 
   fun navigateToNextChapter() {
-    val currentState = _chapterNavState.value
-    if (currentState.nextChapterId != null) {
-      currentChapterId = currentState.nextChapterId
+    val currentChapterNavState = _chapterNavState.value
+    currentChapterNavState.nextChapterId?.let { nextId ->
+      currentChapterId = nextId
       fetchChapterDetails()
       fetchChapterPages()
       updateChapterNavState()
-    } else if (hasNextChapterListPage) {
-      fetchChapterListNextPage()
+      if (hasNextChapterListPage) fetchChapterListNextPage()
     }
   }
 
@@ -223,7 +220,7 @@ class ReaderViewModel @Inject constructor(
 
       val chapterListResult = getChapterListUseCase(
         mangaId = mangaId!!,
-        offset = CHAPTER_LIST_PER_PAGE_SIZE,
+        offset = currentChapterList.size,
         translatedLanguage = chapterLanguage!!,
         volumeOrder = ASC_ORDER,
         chapterOrder = ASC_ORDER,
@@ -250,7 +247,9 @@ class ReaderViewModel @Inject constructor(
     viewModelScope.launch {
       val currentChapterIndex = currentChapterList.indexOfFirst { it.id == currentChapterId }
       if (currentChapterIndex == -1) {
-        _chapterNavState.update { it.copy(canNavigateNext = hasNextChapterListPage) }
+        _chapterNavState.update {
+          it.copy(canNavigateNext = hasNextChapterListPage)
+        }
         if (hasNextChapterListPage) fetchChapterListNextPage()
         return@launch
       }
@@ -261,8 +260,12 @@ class ReaderViewModel @Inject constructor(
       _chapterNavState.update {
         it.copy(
           currentChapterId = currentChapterId,
-          previousChapterId = if (!isFirstChapter) currentChapterList[currentChapterIndex - 1].id else null,
-          nextChapterId = if (!isLastChapter) currentChapterList[currentChapterIndex + 1].id else null,
+          previousChapterId =
+            if (!isFirstChapter) currentChapterList[currentChapterIndex - 1].id
+            else null,
+          nextChapterId =
+            if (!isLastChapter) currentChapterList[currentChapterIndex + 1].id
+            else null,
           canNavigatePrevious = !isFirstChapter,
           canNavigateNext = !isLastChapter || hasNextChapterListPage
         )
@@ -279,10 +282,10 @@ class ReaderViewModel @Inject constructor(
   }
 
   fun updateChapterPage(newChapterPage: Int) {
-    _chapterPagesUiState.update {
-      (it as? ChapterPagesUiState.Success)?.copy(
+    _chapterPagesUiState.update { currentUiState ->
+      (currentUiState as? ChapterPagesUiState.Success)?.copy(
         currentChapterPage = newChapterPage
-      ) ?: it
+      ) ?: currentUiState
     }
 
     // TODO: save history to a persistent store (e.g., Firebase, local database)
@@ -295,8 +298,10 @@ class ReaderViewModel @Inject constructor(
   }
 
   fun retry() {
-    fetchChapterDetails()
-    fetchChapterPages()
+    if (_chapterDetailsState.value == ChapterDetailsUiState())
+      fetchChapterDetails()
+    if (_chapterPagesUiState.value is ChapterPagesUiState.Error)
+      fetchChapterPages()
   }
 
   companion object {

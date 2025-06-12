@@ -45,10 +45,8 @@ class ForgotPasswordViewModel @Inject constructor(
       }
 
       val sendResetUserPasswordResult = resetUserPasswordUseCase(email = currentUiState.email)
-      Log.d(TAG, "Sending reset email to: ${currentUiState.email}")
       sendResetUserPasswordResult
         .onSuccess {
-          Log.d(TAG, "Reset email sent successfully")
           _uiState.update {
             it.copy(
               isLoading = false,
@@ -71,6 +69,7 @@ class ForgotPasswordViewModel @Inject constructor(
   }
 
   fun updateEmailField(email: String) {
+    if (_uiState.value.email == email) return
     _uiState.update {
       it.copy(
         email = email,
@@ -88,9 +87,7 @@ class ForgotPasswordViewModel @Inject constructor(
   }
 
   fun retry() {
-    val currentUiState = _uiState.value
-    if (currentUiState.isLoading || !currentUiState.isError) return
-    sendResetUserPassword()
+    if (_uiState.value.isError) sendResetUserPassword()
   }
 
   companion object {
