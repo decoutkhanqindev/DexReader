@@ -182,7 +182,6 @@ class MangaDetailsViewModel @Inject constructor(
   }
 
   private fun observeIsFavorite() {
-
     viewModelScope.launch {
       mangaDetailsUiState.collect { currentUiState ->
         if (currentUiState !is MangaDetailsUiState.Success) return@collect
