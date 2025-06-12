@@ -38,12 +38,11 @@ class DexReaderAppViewModel @Inject constructor(
         userResult
           .onSuccess {
             _isUserLoggedIn.value = it != null
-            if (it != null) {
-              observeUserProfile(userId = it.id)
-            } else {
+            if (it != null) observeUserProfile(userId = it.id)
+            else {
               // user is null like user logged out
               // clear user profile state and cancel user profile job
-              userProfileJob?.cancel()
+              cancelUserProfileJob()
               _userProfile.value = null
             }
           }
@@ -58,7 +57,7 @@ class DexReaderAppViewModel @Inject constructor(
   private fun observeUserProfile(userId: String) {
     // cancels any previous observation before starting a new one
     // make sure only one active job for per user
-    userProfileJob?.cancel()
+    cancelUserProfileJob()
     userProfileJob = viewModelScope.launch {
       observeUserProfileUseCase(userId).collect { userProfileResult ->
         userProfileResult
@@ -69,6 +68,16 @@ class DexReaderAppViewModel @Inject constructor(
           }
       }
     }
+  }
+
+  private fun cancelUserProfileJob() {
+    userProfileJob?.cancel()
+    userProfileJob = null
+  }
+
+  override fun onCleared() {
+    super.onCleared()
+    cancelUserProfileJob()
   }
 
   companion object {
