@@ -5,6 +5,10 @@ import com.google.firebase.firestore.ServerTimestamp
 import java.util.Date
 
 data class ReadingHistoryDto(
+  @get:PropertyName("reading_history_id")
+  @set:PropertyName("reading_history_id")
+  var id: String = "",
+
   @get:PropertyName("manga_id")
   @set:PropertyName("manga_id")
   var mangaId: String = "",
@@ -16,14 +20,6 @@ data class ReadingHistoryDto(
   @get:PropertyName("manga_cover_url")
   @set:PropertyName("manga_cover_url")
   var mangaCoverUrl: String = "",
-
-  @get:PropertyName("manga_author")
-  @set:PropertyName("manga_author")
-  var mangaAuthor: String = "",
-
-  @get:PropertyName("manga_status")
-  @set:PropertyName("manga_status")
-  var mangaStatus: String = "",
 
   @get:PropertyName("chapter_id")
   @set:PropertyName("chapter_id")
@@ -43,7 +39,7 @@ data class ReadingHistoryDto(
 
   @get:PropertyName("last_read_page")
   @set:PropertyName("last_read_page")
-  var lastReadPage: String = "",
+  var lastReadPage: Int = 0,
 
   @get:PropertyName("total_chapter_pages")
   @set:PropertyName("total_chapter_pages")
