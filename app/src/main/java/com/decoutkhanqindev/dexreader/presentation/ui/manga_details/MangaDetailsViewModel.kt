@@ -126,32 +126,32 @@ class MangaDetailsViewModel @Inject constructor(
   }
 
   fun fetchChapterListNextPage() {
-    when (val currentUiState = _mangaChaptersUiState.value) {
+    when (val currentMangaChaptersUiState = _mangaChaptersUiState.value) {
       MangaChaptersUiState.FirstPageLoading,
       MangaChaptersUiState.FirstPageError,
         -> return
 
       is MangaChaptersUiState.Content -> {
-        when (currentUiState.nextPageState) {
+        when (currentMangaChaptersUiState.nextPageState) {
           MangaChaptersNextPageState.LOADING,
           MangaChaptersNextPageState.NO_MORE_ITEMS
             -> return
 
           MangaChaptersNextPageState.ERROR -> retryFetchChapterListNextPage()
 
-          MangaChaptersNextPageState.IDLE -> fetchChapterListNextPageInternal(currentUiState = currentUiState)
+          MangaChaptersNextPageState.IDLE -> fetchChapterListNextPageInternal(currentMangaChaptersUiState)
         }
       }
     }
   }
 
-  private fun fetchChapterListNextPageInternal(currentUiState: MangaChaptersUiState.Content) {
+  private fun fetchChapterListNextPageInternal(currentMangaChaptersUiState: MangaChaptersUiState.Content) {
     viewModelScope.launch {
       _mangaChaptersUiState.value =
-        currentUiState.copy(nextPageState = MangaChaptersNextPageState.LOADING)
+        currentMangaChaptersUiState.copy(nextPageState = MangaChaptersNextPageState.LOADING)
 
-      val currentMangaList = currentUiState.chapterList
-      val nextPage: Int = currentUiState.currentPage + 1
+      val currentMangaList = currentMangaChaptersUiState.chapterList
+      val nextPage: Int = currentMangaChaptersUiState.currentPage + 1
 
       val nextChapterListResult = getChapterListUseCase(
         mangaId = mangaIdFromArg,
@@ -162,7 +162,7 @@ class MangaDetailsViewModel @Inject constructor(
         .onSuccess { nextChapterList ->
           val updatedChapterList = currentMangaList + nextChapterList
           val hasNextPage = nextChapterList.size >= CHAPTER_LIST_PER_PAGE_SIZE
-          _mangaChaptersUiState.value = currentUiState.copy(
+          _mangaChaptersUiState.value = currentMangaChaptersUiState.copy(
             chapterList = updatedChapterList,
             currentPage = nextPage,
             nextPageState =
@@ -172,7 +172,7 @@ class MangaDetailsViewModel @Inject constructor(
         }
         .onFailure {
           _mangaChaptersUiState.value =
-            currentUiState.copy(nextPageState = MangaChaptersNextPageState.ERROR)
+            currentMangaChaptersUiState.copy(nextPageState = MangaChaptersNextPageState.ERROR)
           Log.d(
             TAG,
             "fetchChapterListNextPageInternal have error: ${it.stackTraceToString()}"
@@ -284,7 +284,7 @@ class MangaDetailsViewModel @Inject constructor(
     val currentMangaChaptersUiState = _mangaChaptersUiState.value
     if (currentMangaChaptersUiState is MangaChaptersUiState.Content &&
       currentMangaChaptersUiState.nextPageState == MangaChaptersNextPageState.ERROR
-    ) fetchChapterListNextPage()
+    ) fetchChapterListNextPageInternal(currentMangaChaptersUiState)
   }
 
   companion object {
