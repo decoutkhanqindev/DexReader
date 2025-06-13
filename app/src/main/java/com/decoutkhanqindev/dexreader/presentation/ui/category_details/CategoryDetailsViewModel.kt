@@ -187,10 +187,10 @@ class CategoryDetailsViewModel @Inject constructor(
   }
 
   fun retryFetchMangaListByCategoryNextPage() {
-    val currentCategoryCriteriaUiState = _categoryDetailsUiState.value
-    if (currentCategoryCriteriaUiState is CategoryDetailsUiState.Content &&
-      currentCategoryCriteriaUiState.nextPageState == CategoryDetailsNextPageState.ERROR
-    ) fetchMangaListByCategoryNextPage()
+    val currentCategoryDetailsUiState = _categoryDetailsUiState.value
+    if (currentCategoryDetailsUiState is CategoryDetailsUiState.Content &&
+      currentCategoryDetailsUiState.nextPageState == CategoryDetailsNextPageState.ERROR
+    ) fetchMangaListByCategoryNextPageInternal(currentCategoryDetailsUiState)
   }
 
   companion object {
