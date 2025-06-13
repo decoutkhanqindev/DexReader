@@ -1,6 +1,7 @@
 package com.decoutkhanqindev.dexreader.data.network.firebase.firestore
 
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.FavoriteMangaDto
+import com.decoutkhanqindev.dexreader.data.network.firebase.dto.ReadingHistoryDto
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.UserProfileDto
 import com.decoutkhanqindev.dexreader.di.CreateAtFieldQualifier
 import com.decoutkhanqindev.dexreader.di.FavoritesCollectionQualifier
@@ -33,8 +34,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
     return userProfile
   }
 
-  override fun observeUserProfile(userId: String): Flow<UserProfileDto?>
-      = callbackFlow {
+  override fun observeUserProfile(userId: String): Flow<UserProfileDto?> = callbackFlow {
     val documentRef = usersCollectionRef.document(userId)
 
     val listenerRegistration = documentRef.addSnapshotListener { snapshot, error ->
@@ -55,6 +55,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
       listenerRegistration.remove()
     }
   }
+
   override suspend fun updateUserProfile(userProfile: UserProfileDto) {
     usersCollectionRef.document(userProfile.id).set(userProfile).await()
   }
@@ -150,6 +151,74 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
     awaitClose {
       listenerRegistration.remove()
     }
+  }
+
+  override fun observeHistory(
+    userId: String,
+    limit: Long,
+    lastReadingHistoryId: String?
+  ): Flow<List<ReadingHistoryDto>> = callbackFlow {
+    val lastReadingHistory = lastReadingHistoryId?.let { id ->
+      usersCollectionRef
+        .document(userId)
+        .collection(historyCollection)
+        .document(id)
+        .get()
+        .await()
+    }
+
+    val historyCollectionRef = usersCollectionRef
+      .document(userId)
+      .collection(historyCollection)
+      .orderBy(createAtField, Query.Direction.DESCENDING)
+      .limit(limit)
+      .let { query ->
+        lastReadingHistory?.let {
+          if (it.exists()) query.startAfter(it)
+          else query
+        } ?: query
+      }
+
+    val listenerRegistration = historyCollectionRef.addSnapshotListener { snapshot, error ->
+      if (error != null) {
+        close(error)
+        return@addSnapshotListener
+      }
+
+      val readingHistoryDtoList = snapshot?.documents?.mapNotNull { document ->
+        document.toObject(ReadingHistoryDto::class.java)?.copy(id = document.id)
+      } ?: emptyList()
+
+      trySend(readingHistoryDtoList)
+    }
+
+    awaitClose {
+      listenerRegistration.remove()
+    }
+  }
+
+  override suspend fun addAndUpdateToHistory(
+    userId: String,
+    readingHistory: ReadingHistoryDto
+  ) {
+    usersCollectionRef
+      .document(userId)
+      .collection(historyCollection)
+      .document(readingHistory.id)
+      .set(readingHistory)
+      .await()
+  }
+
+  override suspend fun removeFromHistory(
+    userId: String,
+    readingHistoryId: String
+  ) {
+    usersCollectionRef
+      .document(userId)
+      .collection(historyCollection)
+      .document(readingHistoryId)
+      .delete()
+      .await()
   }
 }
 
