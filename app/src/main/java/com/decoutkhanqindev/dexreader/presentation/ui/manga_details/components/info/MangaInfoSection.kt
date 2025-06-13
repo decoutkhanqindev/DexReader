@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.domain.model.Manga
+import com.decoutkhanqindev.dexreader.presentation.ui.common.image.MangaCoverArt
 
 @Composable
 fun MangaInfoSection(
@@ -19,7 +20,8 @@ fun MangaInfoSection(
     horizontalArrangement = Arrangement.spacedBy(8.dp)
   ) {
     MangaCoverArt(
-      manga = manga,
+      url = manga.coverUrl,
+      title = manga.title,
       modifier = Modifier
         .weight(0.4f)
         .fillMaxWidth()
