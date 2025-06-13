@@ -270,6 +270,8 @@ fun NavGraph(
       )
     ) {
       ReaderScreen(
+        isUserLoggedIn = isUserLoggedIn,
+        currentUser = currentUser,
         onNavigateBack = { navHostController.navigateUp() },
         modifier = Modifier.fillMaxSize()
       )
