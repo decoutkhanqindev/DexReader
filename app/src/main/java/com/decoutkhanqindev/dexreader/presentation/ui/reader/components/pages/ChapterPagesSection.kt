@@ -24,17 +24,13 @@ fun ChapterPagesSection(
     modifier = modifier,
     state = pagerState,
   ) { pageIndex ->
-    val currentPageIndex = pagerState.currentPage
-
     ChapterPageImage(
       imageUrl = chapterPages[pageIndex],
       modifier = Modifier.fillMaxSize()
     )
+  }
 
-    LaunchedEffect(currentPageIndex) {
-      if (pageIndex == currentPageIndex) {
-        onUpdateChapterPage(currentPageIndex + 1)
-      }
-    }
+  LaunchedEffect(pagerState.currentPage) {
+    onUpdateChapterPage(pagerState.currentPage + 1)
   }
 }
