@@ -1,12 +1,19 @@
 package com.decoutkhanqindev.dexreader.presentation.ui.history
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BaseScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.common.states.IdleScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.history.components.HistoryContent
 
 @Composable
 fun HistoryScreen(
@@ -15,9 +22,16 @@ fun HistoryScreen(
   onSignInClick: () -> Unit,
   onMenuItemClick: (String) -> Unit,
   onSearchClick: () -> Unit,
+  viewModel: HistoryViewModel = hiltViewModel(),
   modifier: Modifier = Modifier
 ) {
+  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val route = NavDestination.HistoryDestination.route
+
+  LaunchedEffect(isUserLoggedIn, currentUser?.id) {
+    if (isUserLoggedIn && currentUser != null) viewModel.updateUserId(userId = currentUser.id)
+    else viewModel.reset()
+  }
 
   BaseScreen(
     isUserLoggedIn = isUserLoggedIn,
@@ -27,7 +41,27 @@ fun HistoryScreen(
     route = route,
     onMenuItemClick = onMenuItemClick,
     onSearchClick = onSearchClick,
-    content = {},
+    content = {
+      if(isUserLoggedIn) {
+        HistoryContent(
+          uiState = uiState,
+          onSelectedReadingHistory = {},
+          onRemoveFromHistory = { readingHistoryId ->
+            viewModel.updateRemoveReadingHistoryId(readingHistoryId)
+            viewModel.removeFromHistory()
+          },
+          onObserveHistoryNextPage = viewModel::observeHistoryNextPage,
+          onRetryObserveHistoryNextPage = viewModel::retryObserveHistoryNextPage,
+          retryObserveHistoryFirstPage = viewModel::retryObserveHistoryFirstPage,
+          modifier = Modifier.fillMaxSize()
+        )
+      } else {
+        IdleScreen(
+          message = stringResource(R.string.please_sign_in_to_view_your_history),
+          modifier = Modifier.fillMaxSize()
+        )
+      }
+    },
     modifier = modifier
   )
 }
