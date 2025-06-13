@@ -62,9 +62,7 @@ fun VerticalGridMangaList(
           modifier = Modifier
             .fillMaxWidth()
             .padding(top = 8.dp)
-        ) {
-          loadMoreContent()
-        }
+        ) { loadMoreContent() }
       }
     }
 
