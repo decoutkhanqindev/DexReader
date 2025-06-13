@@ -49,7 +49,7 @@ fun MangaChaptersHeader(
     )
     Text(
       text = selectedLanguage,
-      style = MaterialTheme.typography.bodyLarge,
+      style = MaterialTheme.typography.titleMedium,
       fontWeight = FontWeight.Bold,
       modifier = Modifier.clickable { isShowLanguageBottomSheet = true }
     )
