@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.presentation.ui.common.top_bars.DetailsTopBar
 import com.decoutkhanqindev.dexreader.presentation.ui.reader.components.ReaderContent
 import com.decoutkhanqindev.dexreader.presentation.ui.reader.components.actions.NavigateChapterBottomBar
@@ -28,11 +30,13 @@ import com.decoutkhanqindev.dexreader.presentation.ui.reader.components.actions.
 
 @Composable
 fun ReaderScreen(
+  isUserLoggedIn: Boolean,
+  currentUser: User?,
   onNavigateBack: () -> Unit,
   viewModel: ReaderViewModel = hiltViewModel(),
   modifier: Modifier = Modifier
 ) {
-  val chapterDetailsUiState by viewModel.chapterDetailsState.collectAsStateWithLifecycle()
+  val chapterDetailsUiState by viewModel.chapterDetailsUiState.collectAsStateWithLifecycle()
   val chapterPagesUiState by viewModel.chapterPagesUiState.collectAsStateWithLifecycle()
   val chapterNavState by viewModel.chapterNavState.collectAsStateWithLifecycle()
   val (currentPage, totalPages) = when (chapterPagesUiState) {
@@ -45,6 +49,10 @@ fun ReaderScreen(
   }
   var isFullScreen by rememberSaveable { mutableStateOf(false) }
 
+
+  LaunchedEffect(isUserLoggedIn, currentUser?.id) {
+    if (isUserLoggedIn && currentUser != null) viewModel.updateUserId(userId = currentUser.id)
+  }
 
   Scaffold(
     topBar = {

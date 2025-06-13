@@ -5,15 +5,20 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
+import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.usecase.cache.AddChapterCacheUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.cache.ClearExpiredCacheUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.cache.GetChapterCacheUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.chapter.GetChapterDetailsUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.chapter.GetChapterListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.chapter.GetChapterPagesUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.history.AddAndUpdateToHistoryUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaDetailsUseCase
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.utils.toLanguageCode
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,15 +34,17 @@ class ReaderViewModel @Inject constructor(
   private val getChapterPagesUseCase: GetChapterPagesUseCase,
   private val addChapterCacheUseCase: AddChapterCacheUseCase,
   private val getChapterCacheUseCase: GetChapterCacheUseCase,
-  private val clearExpiredCacheUseCase: ClearExpiredCacheUseCase
+  private val clearExpiredCacheUseCase: ClearExpiredCacheUseCase,
+  private val getMangaDetailsUseCase: GetMangaDetailsUseCase,
+  private val addAndUpdateToHistoryUseCase: AddAndUpdateToHistoryUseCase
 ) : ViewModel() {
   private val chapterIdFromArg: String =
     checkNotNull(savedStateHandle[NavDestination.ReaderDestination.CHAPTER_ID_ARG])
   private var currentChapterId: String = chapterIdFromArg
 
-  private val _chapterDetailsState =
+  private val _chapterDetailsUiState =
     MutableStateFlow<ChapterDetailsUiState>(ChapterDetailsUiState())
-  val chapterDetailsState: StateFlow<ChapterDetailsUiState> = _chapterDetailsState.asStateFlow()
+  val chapterDetailsUiState: StateFlow<ChapterDetailsUiState> = _chapterDetailsUiState.asStateFlow()
 
   private val _chapterPagesUiState =
     MutableStateFlow<ChapterPagesUiState>(ChapterPagesUiState.Loading)
@@ -48,10 +55,17 @@ class ReaderViewModel @Inject constructor(
   val chapterNavState: StateFlow<ChapterNavigationState> = _chapterNavState.asStateFlow()
 
   private var mangaId: String? = null
+  private var mangaTitle: String? = null
+  private var mangaCoverUrl: String? = null
   private var chapterLanguage: String? = null
   private var currentChapterList: List<Chapter> = emptyList()
   private var hasNextChapterListPage = true
   private var isFetchingChapterList = false
+
+  private val _userId = MutableStateFlow<String?>(null)
+  private val userId: StateFlow<String?> = _userId.asStateFlow()
+
+  private var addToHistoryJob: Job? = null
 
   init {
     clearExpiredCache()
@@ -61,7 +75,7 @@ class ReaderViewModel @Inject constructor(
 
   private fun clearExpiredCache() {
     viewModelScope.launch {
-      val expiryTimestamp = System.currentTimeMillis() - CACHE_EXPIRY_DURATION_MILLIS
+      val expiryTimestamp = System.currentTimeMillis() - CACHE_EXPIRY_TIME_MILLIS
       val clearExpiredCacheResult = clearExpiredCacheUseCase(expiryTimestamp)
       clearExpiredCacheResult
         .onSuccess { Log.d(TAG, "clearExpiredCache is success.") }
@@ -76,7 +90,7 @@ class ReaderViewModel @Inject constructor(
       val chapterDetailsResult = getChapterDetailsUseCase(chapterId = currentChapterId)
       chapterDetailsResult
         .onSuccess { chapter ->
-          _chapterDetailsState.update {
+          _chapterDetailsUiState.update {
             it.copy(
               volume = chapter.volume,
               chapterNumber = chapter.chapterNumber,
@@ -86,16 +100,38 @@ class ReaderViewModel @Inject constructor(
 
           mangaId = chapter.mangaId
           chapterLanguage = chapter.translatedLanguage.toLanguageCode()
+
           if (currentChapterList.isEmpty() &&
             mangaId != null && chapterLanguage != null
           ) fetchChapterListFirstPage()
+
+          if (mangaId != null) fetchMangaDetails()
         }
         .onFailure {
-          _chapterDetailsState.update { ChapterDetailsUiState() }
+          _chapterDetailsUiState.update { ChapterDetailsUiState() }
           Log.e(
             TAG,
             "fetchChapterDetails have error: ${it.stackTraceToString()}"
           )
+        }
+    }
+  }
+
+  private fun fetchMangaDetails() {
+    if (mangaId == null &&
+      _chapterPagesUiState.value !is ChapterPagesUiState.Success
+    ) return
+
+    viewModelScope.launch {
+      val getMangaDetailsResult = getMangaDetailsUseCase(mangaId = mangaId!!)
+      getMangaDetailsResult
+        .onSuccess { manga ->
+          mangaTitle = manga.title
+          mangaCoverUrl = manga.coverUrl
+        }
+        .onFailure {
+          mangaTitle = null
+          mangaCoverUrl = null
         }
     }
   }
@@ -281,27 +317,79 @@ class ReaderViewModel @Inject constructor(
     if (isNearedLastChapter && hasNextChapterListPage) fetchChapterListNextPage()
   }
 
-  fun updateChapterPage(newChapterPage: Int) {
-    _chapterPagesUiState.update { currentUiState ->
-      (currentUiState as? ChapterPagesUiState.Success)?.copy(
-        currentChapterPage = newChapterPage
-      ) ?: currentUiState
-    }
+  fun updateUserId(userId: String) {
+    if (_userId.value == userId) return
+    _userId.value = userId
+  }
 
-    // TODO: save history to a persistent store (e.g., Firebase, local database)
-    // This would typically involve:
-    // - mangaId
-    // - currentChapterId
-    // - newChapterPage
-    // - timestamp
-    // viewModelScope.launch { saveReadingProgressUseCase(...) }
+  fun updateChapterPage(newChapterPage: Int) {
+    val currentChapterPagesUiState = _chapterPagesUiState.value
+    if (currentChapterPagesUiState is ChapterPagesUiState.Success) {
+      if (currentChapterPagesUiState.currentChapterPage == newChapterPage) return
+      _chapterPagesUiState.value =
+        currentChapterPagesUiState.copy(currentChapterPage = newChapterPage)
+      addToHistory()
+    }
+  }
+
+  private fun addToHistory() {
+    val currentChapterDetailsUiState = _chapterDetailsUiState.value
+    val currentChapterPagesUiState = _chapterPagesUiState.value
+    if (mangaId == null ||
+      mangaTitle == null ||
+      mangaCoverUrl == null ||
+      currentChapterPagesUiState !is ChapterPagesUiState.Success ||
+      currentChapterDetailsUiState == ChapterDetailsUiState()
+    ) return
+
+    cancelAddToHistoryJob()
+    addToHistoryJob = viewModelScope.launch {
+      delay(DELAY_TIME_MILLIS)
+
+      userId.value?.let { userId ->
+        val newId = "${mangaId}_${currentChapterId}"
+        val newReadingHistory = ReadingHistory(
+          id = newId,
+          mangaId = mangaId!!,
+          mangaTitle = mangaTitle!!,
+          mangaCoverUrl = mangaCoverUrl!!,
+          chapterId = currentChapterId,
+          chapterTitle = currentChapterDetailsUiState.title,
+          chapterNumber = currentChapterDetailsUiState.chapterNumber,
+          chapterVolume = currentChapterDetailsUiState.volume,
+          lastReadPage = currentChapterPagesUiState.currentChapterPage,
+          totalChapterPages = currentChapterPagesUiState.chapterPages.totalPages,
+          lastReadAt = null
+        )
+
+        val addToHistoryResult = addAndUpdateToHistoryUseCase(
+          userId = userId,
+          readingHistory = newReadingHistory
+        )
+        addToHistoryResult
+          .onSuccess { Log.d(TAG, "addToHistory success") }
+          .onFailure {
+            Log.d(TAG, "addToHistory have error: ${it.stackTraceToString()}")
+          }
+      }
+    }
   }
 
   fun retry() {
-    if (_chapterDetailsState.value == ChapterDetailsUiState())
+    if (_chapterDetailsUiState.value == ChapterDetailsUiState())
       fetchChapterDetails()
     if (_chapterPagesUiState.value is ChapterPagesUiState.Error)
       fetchChapterPages()
+  }
+
+  fun cancelAddToHistoryJob() {
+    addToHistoryJob?.cancel()
+    addToHistoryJob = null
+  }
+
+  override fun onCleared() {
+    super.onCleared()
+    cancelAddToHistoryJob()
   }
 
   companion object {
@@ -309,6 +397,7 @@ class ReaderViewModel @Inject constructor(
     private const val CHAPTER_LIST_PER_PAGE_SIZE = 20
     private const val ASC_ORDER = "asc"
     private const val NEARED_LAST_CHAPTER_COUNT = 5
-    private const val CACHE_EXPIRY_DURATION_MILLIS = 24 * 60 * 60 * 1000L // 24h
+    private const val CACHE_EXPIRY_TIME_MILLIS = 24 * 60 * 60 * 1000L // 24h
+    private const val DELAY_TIME_MILLIS = 500L
   }
 }
