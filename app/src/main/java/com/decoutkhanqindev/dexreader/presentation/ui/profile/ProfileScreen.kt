@@ -38,7 +38,7 @@ fun ProfileScreen(
           && uiState.updatedName != currentUser?.name
       val picChanged = uiState.updatedProfilePictureUrl != null
           && uiState.updatedProfilePictureUrl != currentUser?.profilePictureUrl
-      (nameChanged || picChanged) && !uiState.isUpdateUserSuccess
+      nameChanged || picChanged
     }
   }
 
