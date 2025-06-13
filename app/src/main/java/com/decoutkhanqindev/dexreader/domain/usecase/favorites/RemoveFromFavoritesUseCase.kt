@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.domain.usecase.favorite
+package com.decoutkhanqindev.dexreader.domain.usecase.favorites
 
 import com.decoutkhanqindev.dexreader.domain.repository.FavoritesRepository
 import javax.inject.Inject

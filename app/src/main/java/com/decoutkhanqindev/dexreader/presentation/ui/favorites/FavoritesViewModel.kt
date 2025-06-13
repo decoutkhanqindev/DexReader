@@ -3,7 +3,7 @@ package com.decoutkhanqindev.dexreader.presentation.ui.favorites
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.decoutkhanqindev.dexreader.domain.usecase.favorite.ObserveFavoritesUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.favorites.ObserveFavoritesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow

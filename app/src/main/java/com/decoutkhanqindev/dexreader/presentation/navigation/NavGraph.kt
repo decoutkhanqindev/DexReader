@@ -14,7 +14,7 @@ import com.decoutkhanqindev.dexreader.presentation.ui.auth.login.LoginScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.auth.register.RegisterScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.categories.CategoriesScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.category_details.CategoryDetailsScreen
-import com.decoutkhanqindev.dexreader.presentation.ui.favorites.FavoriteScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.favorites.FavoritesScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.history.HistoryScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.home.HomeScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.MangaDetailsScreen
@@ -117,7 +117,7 @@ fun NavGraph(
     }
 
     composable(route = NavDestination.FavoritesDestination.route) {
-      FavoriteScreen(
+      FavoritesScreen(
         isUserLoggedIn = isUserLoggedIn,
         currentUser = currentUser,
         onSignInClick = {

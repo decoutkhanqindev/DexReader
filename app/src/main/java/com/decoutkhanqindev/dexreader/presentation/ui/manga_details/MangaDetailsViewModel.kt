@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.model.FavoriteManga
 import com.decoutkhanqindev.dexreader.domain.usecase.chapter.GetChapterListUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.favorite.AddToFavoritesUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.favorite.ObserveIsFavoriteUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.favorite.RemoveFromFavoritesUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.favorites.AddToFavoritesUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.favorites.ObserveIsFavoriteUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.favorites.RemoveFromFavoritesUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaDetailsUseCase
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import dagger.hilt.android.lifecycle.HiltViewModel

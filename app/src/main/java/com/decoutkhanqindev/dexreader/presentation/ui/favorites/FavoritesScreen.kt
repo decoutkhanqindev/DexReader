@@ -16,7 +16,7 @@ import com.decoutkhanqindev.dexreader.presentation.ui.common.states.IdleScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.favorites.components.FavoritesContent
 
 @Composable
-fun FavoriteScreen(
+fun FavoritesScreen(
   isUserLoggedIn: Boolean,
   currentUser: User?,
   onSignInClick: () -> Unit,
