@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.favorite.ObserveFavoritesUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.favorite.RemoveFromFavoritesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,16 +16,12 @@ import javax.inject.Inject
 @HiltViewModel
 class FavoritesViewModel @Inject constructor(
   private val observeFavoritesUseCase: ObserveFavoritesUseCase,
-  private val removeFromFavoritesUseCase: RemoveFromFavoritesUseCase
 ) : ViewModel() {
   private val _uiState = MutableStateFlow<FavoritesUiState>(FavoritesUiState.Idle)
   val uiState: StateFlow<FavoritesUiState> = _uiState.asStateFlow()
 
   private val _userId = MutableStateFlow<String?>(null)
   private val userId: StateFlow<String?> = _userId.asStateFlow()
-
-  private val _removeFavoriteMangaId = MutableStateFlow<String?>(null)
-  val removeFavoriteMangaId: StateFlow<String?> = _removeFavoriteMangaId.asStateFlow()
 
   private var observeFavoritesJob: Job? = null
 
@@ -146,9 +141,7 @@ class FavoritesViewModel @Inject constructor(
               .onFailure { throwable ->
                 if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true &&
                   _userId.value == null
-                ) {
-                  return@onFailure
-                }
+                ) return@onFailure
 
                 _uiState.value = currentUiState.copy(nextPageState = FavoritesNextPageState.ERROR)
                 Log.d(
@@ -160,9 +153,8 @@ class FavoritesViewModel @Inject constructor(
         } catch (e: Exception) {
           if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true &&
             _userId.value == null
-          ) {
-            return@collectLatest
-          } else {
+          ) return@collectLatest
+          else {
             _uiState.value = currentUiState.copy(nextPageState = FavoritesNextPageState.ERROR)
             Log.d(
               TAG,
@@ -174,35 +166,9 @@ class FavoritesViewModel @Inject constructor(
     }
   }
 
-  fun removeFromFavorites() {
-    val currentUiState = _uiState.value
-    if (currentUiState !is FavoritesUiState.Content) return
-
-    viewModelScope.launch {
-      userId.value?.let { userId ->
-        removeFavoriteMangaId.value?.let { mangaId ->
-          val removeFromFavoriteResult = removeFromFavoritesUseCase(
-            userId = userId,
-            mangaId = mangaId
-          )
-          removeFromFavoriteResult
-            .onSuccess { Log.d(TAG, "removeFromFavorites success") }
-            .onFailure {
-              Log.d(TAG, "removeFromFavorites have error: ${it.stackTraceToString()}")
-            }
-        }
-      }
-    }
-  }
-
   fun updateUserId(userId: String) {
     if (_userId.value == userId) return
     _userId.value = userId
-  }
-
-  fun updateRemoveFavoriteMangaId(mangaId: String) {
-    if (_removeFavoriteMangaId.value == mangaId) return
-    _removeFavoriteMangaId.value = mangaId
   }
 
   fun retry() {
@@ -221,7 +187,6 @@ class FavoritesViewModel @Inject constructor(
     cancelObserveFavoritesJob()
     _uiState.value = FavoritesUiState.Idle
     _userId.value = null
-    _removeFavoriteMangaId.value = null
   }
 
   private fun cancelObserveFavoritesJob() {
