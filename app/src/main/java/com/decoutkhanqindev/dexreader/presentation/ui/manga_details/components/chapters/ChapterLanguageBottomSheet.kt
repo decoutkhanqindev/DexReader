@@ -57,8 +57,8 @@ fun ChapterLanguageBottomSheet(
           val isSelected = language == selectedLanguage
           Text(
             text = language,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = if (isSelected) FontWeight.ExtraBold else FontWeight.Normal,
+            style = if (isSelected) MaterialTheme.typography.titleMedium else MaterialTheme.typography.bodyLarge,
+            fontWeight = if (isSelected) FontWeight.ExtraBold else FontWeight.Light,
             modifier = Modifier
               .padding(bottom = 8.dp)
               .clickable {
