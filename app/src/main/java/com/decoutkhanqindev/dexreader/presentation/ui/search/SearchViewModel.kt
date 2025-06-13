@@ -163,7 +163,7 @@ class SearchViewModel @Inject constructor(
     val currentResultsUiState = _resultsUiState.value
     if (currentResultsUiState is ResultsUiState.Content &&
       currentResultsUiState.nextPageState == ResultsNextPageState.ERROR
-    ) fetchMangaListNextPage()
+    ) fetchMangaListNextPageInternal(currentResultsUiState)
   }
 
   companion object {
