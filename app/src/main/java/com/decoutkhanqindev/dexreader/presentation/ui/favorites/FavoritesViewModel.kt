@@ -180,7 +180,7 @@ class FavoritesViewModel @Inject constructor(
     val currentUiState = _uiState.value
     if (currentUiState is FavoritesUiState.Content &&
       currentUiState.nextPageState == FavoritesNextPageState.ERROR
-    ) observeFavoriteMangaListNextPage()
+    ) observeFavoriteMangaListNextPageInternal(currentUiState)
   }
 
   fun reset() {
