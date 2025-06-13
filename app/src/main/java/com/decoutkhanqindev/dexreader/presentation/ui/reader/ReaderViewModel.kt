@@ -17,7 +17,6 @@ import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaDetailsUseCas
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.utils.toLanguageCode
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -64,8 +63,6 @@ class ReaderViewModel @Inject constructor(
 
   private val _userId = MutableStateFlow<String?>(null)
   private val userId: StateFlow<String?> = _userId.asStateFlow()
-
-  private var addToHistoryJob: Job? = null
 
   init {
     clearExpiredCache()
@@ -342,8 +339,7 @@ class ReaderViewModel @Inject constructor(
       currentChapterDetailsUiState == ChapterDetailsUiState()
     ) return
 
-    cancelAddToHistoryJob()
-    addToHistoryJob = viewModelScope.launch {
+    viewModelScope.launch {
       delay(DELAY_TIME_MILLIS)
 
       userId.value?.let { userId ->
@@ -380,16 +376,6 @@ class ReaderViewModel @Inject constructor(
       fetchChapterDetails()
     if (_chapterPagesUiState.value is ChapterPagesUiState.Error)
       fetchChapterPages()
-  }
-
-  fun cancelAddToHistoryJob() {
-    addToHistoryJob?.cancel()
-    addToHistoryJob = null
-  }
-
-  override fun onCleared() {
-    super.onCleared()
-    cancelAddToHistoryJob()
   }
 
   companion object {
