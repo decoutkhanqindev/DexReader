@@ -63,9 +63,7 @@ class HistoryViewModel @Inject constructor(
                 )
               }
               .onFailure { throwable ->
-                if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true &&
-                  _userId.value == null
-                ) {
+                if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null) {
                   _uiState.value = HistoryUiState.Idle
                   return@onFailure
                 }
@@ -75,9 +73,7 @@ class HistoryViewModel @Inject constructor(
               }
           }
         } catch (e: Exception) {
-          if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true &&
-            _userId.value == null
-          ) {
+          if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null) {
             _uiState.value = HistoryUiState.Idle
           } else {
             _uiState.value = HistoryUiState.FirstPageError
