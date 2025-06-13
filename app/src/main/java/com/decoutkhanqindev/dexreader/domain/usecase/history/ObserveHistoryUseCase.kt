@@ -10,7 +10,7 @@ class ObserveHistoryUseCase @Inject constructor(
 ) {
   operator fun invoke(
     userId: String,
-    limit: Int = 20,
+    limit: Int = 10,
     lastReadingHistoryId: String? = null
   ): Flow<Result<List<ReadingHistory>>> =
     historyRepository.observeHistory(
