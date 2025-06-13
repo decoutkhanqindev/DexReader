@@ -1,7 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.ui.category_details.components.actions
 
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
@@ -33,9 +32,7 @@ fun SortAndFilterBottomBar(
             tint = MaterialTheme.colorScheme.onPrimaryContainer,
           )
         },
-        modifier = Modifier
-          .weight(1f)
-          .size(48.dp)
+        modifier = Modifier.weight(1f)
       )
       Spacer(modifier = Modifier.width(8.dp))
       ActionButton(
@@ -47,12 +44,10 @@ fun SortAndFilterBottomBar(
             tint = MaterialTheme.colorScheme.onPrimaryContainer,
           )
         },
-        modifier = Modifier
-          .weight(1f)
-          .size(48.dp)
+        modifier = Modifier.weight(1f)
       )
     },
-    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+    containerColor = MaterialTheme.colorScheme.surface,
     modifier = modifier
   )
 }
