@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface HistoryRepository {
   fun observeHistory(
     userId: String,
-    limit: Int = 20,
+    limit: Int = 10,
     lastReadingHistoryId: String? = null
   ): Flow<Result<List<ReadingHistory>>>
   suspend fun addAndUpdateToHistory(userId: String, readingHistory: ReadingHistory): Result<Unit>
