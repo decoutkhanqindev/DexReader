@@ -26,10 +26,10 @@ class FavoritesViewModel @Inject constructor(
   private var observeFavoritesJob: Job? = null
 
   init {
-    observeFavoriteMangaListFirstPage()
+    observeFavoritesFirstPage()
   }
 
-  private fun observeFavoriteMangaListFirstPage() {
+  private fun observeFavoritesFirstPage() {
     cancelObserveFavoritesJob()
     observeFavoritesJob = viewModelScope.launch {
       _uiState.value = FavoritesUiState.FirstPageLoading
@@ -58,9 +58,7 @@ class FavoritesViewModel @Inject constructor(
                 )
               }
               .onFailure { throwable ->
-                if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true &&
-                  _userId.value == null
-                ) {
+                if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null) {
                   _uiState.value = FavoritesUiState.Idle
                   return@onFailure
                 }
@@ -68,25 +66,23 @@ class FavoritesViewModel @Inject constructor(
                 _uiState.value = FavoritesUiState.FirstPageError
                 Log.d(
                   TAG,
-                  "observeFavoriteMangaListFirstPage have error: ${throwable.stackTraceToString()}"
+                  "observeFavoritesFirstPage have error: ${throwable.stackTraceToString()}"
                 )
               }
           }
         } catch (e: Exception) {
-          if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true &&
-            _userId.value == null
-          ) {
+          if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null) {
             _uiState.value = FavoritesUiState.Idle
           } else {
             _uiState.value = FavoritesUiState.FirstPageError
-            Log.d(TAG, "observeFavoriteMangaListFirstPage have error: ${e.stackTraceToString()}")
+            Log.d(TAG, "observeFavoritesFirstPage have error: ${e.stackTraceToString()}")
           }
         }
       }
     }
   }
 
-  fun observeFavoriteMangaListNextPage() {
+  fun observeFavoritesNextPage() {
     when (val currentUiState = _uiState.value) {
       FavoritesUiState.Idle,
       FavoritesUiState.FirstPageError,
@@ -99,14 +95,14 @@ class FavoritesViewModel @Inject constructor(
           FavoritesNextPageState.NO_MORE_ITEMS
             -> return
 
-          FavoritesNextPageState.ERROR -> retryObserveFavoriteMangaListNextPage()
-          FavoritesNextPageState.IDLE -> observeFavoriteMangaListNextPageInternal(currentUiState)
+          FavoritesNextPageState.ERROR -> retryObserveFavoritesNextPage()
+          FavoritesNextPageState.IDLE -> observeFavoritesNextPageInternal(currentUiState)
         }
       }
     }
   }
 
-  private fun observeFavoriteMangaListNextPageInternal(currentUiState: FavoritesUiState.Content) {
+  private fun observeFavoritesNextPageInternal(currentUiState: FavoritesUiState.Content) {
     observeFavoritesJob = viewModelScope.launch {
       _uiState.value = currentUiState.copy(nextPageState = FavoritesNextPageState.LOADING)
 
@@ -139,26 +135,25 @@ class FavoritesViewModel @Inject constructor(
                 )
               }
               .onFailure { throwable ->
-                if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true &&
-                  _userId.value == null
-                ) return@onFailure
+                if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null) {
+                  return@onFailure
+                }
 
                 _uiState.value = currentUiState.copy(nextPageState = FavoritesNextPageState.ERROR)
                 Log.d(
                   TAG,
-                  "observeFavoriteMangaListNextPageInternal have error: ${throwable.stackTraceToString()}"
+                  "observeFavoritesNextPageInternal have error: ${throwable.stackTraceToString()}"
                 )
               }
           }
         } catch (e: Exception) {
-          if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true &&
-            _userId.value == null
-          ) return@collectLatest
-          else {
+          if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null) {
+            return@collectLatest
+          } else {
             _uiState.value = currentUiState.copy(nextPageState = FavoritesNextPageState.ERROR)
             Log.d(
               TAG,
-              "observeFavoriteMangaListNextPageInternal setup error: ${e.stackTraceToString()}"
+              "observeFavoritesNextPageInternal setup error: ${e.stackTraceToString()}"
             )
           }
         }
@@ -173,14 +168,14 @@ class FavoritesViewModel @Inject constructor(
 
   fun retry() {
     if (_uiState.value is FavoritesUiState.FirstPageError)
-      observeFavoriteMangaListFirstPage()
+      observeFavoritesFirstPage()
   }
 
-  fun retryObserveFavoriteMangaListNextPage() {
+  fun retryObserveFavoritesNextPage() {
     val currentUiState = _uiState.value
     if (currentUiState is FavoritesUiState.Content &&
       currentUiState.nextPageState == FavoritesNextPageState.ERROR
-    ) observeFavoriteMangaListNextPageInternal(currentUiState)
+    ) observeFavoritesNextPageInternal(currentUiState)
   }
 
   fun reset() {

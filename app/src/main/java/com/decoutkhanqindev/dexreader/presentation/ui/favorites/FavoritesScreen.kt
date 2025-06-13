@@ -47,8 +47,8 @@ fun FavoritesScreen(
         FavoritesContent(
           uiState = uiState,
           onSelectedManga = onSelectedManga,
-          onObserveFavoriteMangaListNextPage = viewModel::observeFavoriteMangaListNextPage,
-          onRetryObserveFavoriteMangaListNextPage = viewModel::retryObserveFavoriteMangaListNextPage,
+          onObserveFavoriteMangaListNextPage = viewModel::observeFavoritesNextPage,
+          onRetryObserveFavoriteMangaListNextPage = viewModel::retryObserveFavoritesNextPage,
           onRetry = viewModel::retry,
           modifier = Modifier.fillMaxSize()
         )
