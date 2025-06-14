@@ -22,6 +22,11 @@ fun HistoryScreen(
   onSignInClick: () -> Unit,
   onMenuItemClick: (String) -> Unit,
   onSearchClick: () -> Unit,
+  onContinueReadingClick: (
+    chapterId: String,
+    lastReadPage: Int
+  ) -> Unit,
+  onMangaDetailsClick: (String) -> Unit,
   viewModel: HistoryViewModel = hiltViewModel(),
   modifier: Modifier = Modifier
 ) {
@@ -43,11 +48,12 @@ fun HistoryScreen(
     onMenuItemClick = onMenuItemClick,
     onSearchClick = onSearchClick,
     content = {
-      if(isUserLoggedIn) {
+      if (isUserLoggedIn) {
         HistoryContent(
           historyUiState = historyUiState,
           removeFromHistoryUiState = removeFromHistoryUiState,
-          onSelectedReadingHistory = {},
+          onContinueReadingClick = onContinueReadingClick,
+          onMangaDetailsClick = onMangaDetailsClick,
           onUpdateRemoveReadingHistoryId = viewModel::updateRemoveReadingHistoryId,
           onConfirmRemoveFromHistory = viewModel::removeFromHistory,
           onRetryRemoveFromHistory = viewModel::retryRemoveFromHistory,

@@ -21,7 +21,11 @@ import com.decoutkhanqindev.dexreader.presentation.ui.history.RemoveFromHistoryU
 fun HistoryContent(
   historyUiState: HistoryUiState,
   removeFromHistoryUiState: RemoveFromHistoryUiState,
-  onSelectedReadingHistory: (String) -> Unit,
+  onContinueReadingClick: (
+    chapterId: String,
+    lastReadPage: Int
+  ) -> Unit,
+  onMangaDetailsClick: (String) -> Unit,
   onUpdateRemoveReadingHistoryId: (String) -> Unit,
   onConfirmRemoveFromHistory: () -> Unit,
   onRetryRemoveFromHistory: () -> Unit,
@@ -30,6 +34,10 @@ fun HistoryContent(
   onRetryObserveHistoryFirstPage: () -> Unit,
   modifier: Modifier = Modifier
 ) {
+  var selectedMangaId by rememberSaveable { mutableStateOf<String?>(null) }
+  var selectedChapterId by rememberSaveable { mutableStateOf<String?>(null) }
+  var selectedLastReadPage by rememberSaveable { mutableStateOf<Int?>(null) }
+  var isShowNavigateDialog by rememberSaveable { mutableStateOf(false) }
   var isShowRemoveFromHistoryDialog by rememberSaveable { mutableStateOf(false) }
   var isShowRemoveFromHistoryErrorDialog by rememberSaveable { mutableStateOf(true) }
   var isShowRemoveFromHistorySuccessDialog by rememberSaveable { mutableStateOf(true) }
@@ -65,7 +73,12 @@ fun HistoryContent(
         ReadingHistoryList(
           readingHistoryList = readingHistoryList,
           historyNextPageState = nextPageState,
-          onSelectedReadingHistory = onSelectedReadingHistory,
+          onSelectedReadingHistory = { mangaId, chapterId, lastReadPage ->
+            isShowNavigateDialog = true
+            selectedMangaId = mangaId
+            selectedChapterId = chapterId
+            selectedLastReadPage = lastReadPage
+          },
           onRemoveFromHistory = { readingHistoryId ->
             isShowRemoveFromHistoryDialog = true
             onUpdateRemoveReadingHistoryId(readingHistoryId)
@@ -112,6 +125,26 @@ fun HistoryContent(
           onConfirmClick = {
             isShowRemoveFromHistoryDialog = false
             onConfirmRemoveFromHistory()
+          },
+        )
+      }
+
+      if (isShowNavigateDialog &&
+        selectedMangaId != null &&
+        selectedChapterId != null &&
+        selectedLastReadPage != null
+      ) {
+        NotificationDialog(
+          title = stringResource(R.string.view_details_or_continue),
+          dismiss = stringResource(R.string.continue_reading),
+          onDismissClick = {
+            isShowNavigateDialog = false
+            onContinueReadingClick(selectedChapterId!!, selectedLastReadPage!!)
+          },
+          confirm = stringResource(R.string.manga_details),
+          onConfirmClick = {
+            isShowNavigateDialog = false
+            onMangaDetailsClick(selectedMangaId!!)
           },
         )
       }
