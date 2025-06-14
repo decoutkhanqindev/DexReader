@@ -161,6 +161,16 @@ fun NavGraph(
         onSearchClick = {
           navHostController.navigate(route = NavDestination.SearchDestination.route)
         },
+        onContinueReadingClick = { chapterId, lastReadPage ->
+          navHostController.navigate(
+            route = "${NavDestination.ReaderDestination.route}/$chapterId/$lastReadPage"
+          )
+        },
+        onMangaDetailsClick = { mangaId ->
+          navHostController.navigate(
+            route = "${NavDestination.MangaDetailsDestination.route}/$mangaId"
+          )
+        },
         modifier = Modifier.fillMaxSize()
       )
     }
@@ -254,7 +264,7 @@ fun NavGraph(
         },
         onSelectedChapter = { chapterId ->
           navHostController.navigate(
-            route = "${NavDestination.ReaderDestination.route}/$chapterId"
+            route = "${NavDestination.ReaderDestination.route}/$chapterId/${0}"
           )
         },
         modifier = Modifier.fillMaxSize()
@@ -266,6 +276,11 @@ fun NavGraph(
       arguments = listOf(
         navArgument(NavDestination.ReaderDestination.CHAPTER_ID_ARG) {
           type = NavType.StringType
+        },
+        navArgument(NavDestination.ReaderDestination.LAST_READ_PAGE_ARG) {
+          type = NavType.IntType
+          defaultValue = 0
+          nullable = false
         }
       )
     ) {
