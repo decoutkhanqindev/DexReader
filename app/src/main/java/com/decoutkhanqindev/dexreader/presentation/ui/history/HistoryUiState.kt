@@ -19,3 +19,10 @@ enum class HistoryNextPageState {
   IDLE,
   NO_MORE_ITEMS,
 }
+
+data class RemoveFromHistoryUiState(
+  val isLoading: Boolean = false,
+  val readingHistoryId: String? = null,
+  val isSuccess: Boolean = false,
+  val isError: Boolean = false
+)
