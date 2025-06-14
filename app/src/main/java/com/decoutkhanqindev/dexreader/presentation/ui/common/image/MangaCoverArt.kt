@@ -6,7 +6,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -21,12 +20,11 @@ import com.decoutkhanqindev.dexreader.R
 fun MangaCoverArt(
   url: String,
   title: String,
-  shape: Shape = MaterialTheme.shapes.large,
   modifier: Modifier = Modifier
 ) {
   Card(
     modifier = modifier,
-    shape = shape,
+    shape = MaterialTheme.shapes.large,
     elevation = CardDefaults.cardElevation(8.dp),
   ) {
     AsyncImage(
