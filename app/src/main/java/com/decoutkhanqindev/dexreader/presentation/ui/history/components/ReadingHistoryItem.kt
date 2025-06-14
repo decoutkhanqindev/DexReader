@@ -20,7 +20,11 @@ import com.decoutkhanqindev.dexreader.presentation.ui.common.image.MangaCoverArt
 @Composable
 fun ReadingHistoryItem(
   readingHistory: ReadingHistory,
-  onSelectedItem: (String) -> Unit,
+  onSelectedReadingHistory: (
+    mangaId: String,
+    chapterId: String,
+    lastReadPage: Int
+  ) -> Unit,
   onRemoveFromHistory: (String) -> Unit,
   modifier: Modifier = Modifier
 ) {
@@ -50,7 +54,13 @@ fun ReadingHistoryItem(
         shape = RoundedCornerShape(0.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
         elevation = CardDefaults.cardElevation(8.dp),
-        onClick = { onSelectedItem(readingHistory.id) },
+        onClick = {
+          onSelectedReadingHistory(
+            readingHistory.mangaId,
+            readingHistory.chapterId,
+            readingHistory.lastReadPage
+          )
+        },
       ) {
         Row(
           modifier = Modifier

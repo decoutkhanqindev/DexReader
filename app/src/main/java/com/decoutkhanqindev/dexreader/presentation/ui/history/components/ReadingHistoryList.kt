@@ -33,7 +33,11 @@ import kotlinx.coroutines.launch
 fun ReadingHistoryList(
   readingHistoryList: List<ReadingHistory>,
   historyNextPageState: HistoryNextPageState,
-  onSelectedReadingHistory: (String) -> Unit,
+  onSelectedReadingHistory: (
+    mangaId: String,
+    chapterId: String,
+    lastReadPage: Int
+  ) -> Unit,
   onRemoveFromHistory: (String) -> Unit,
   onObserveHistoryNextPage: () -> Unit,
   onRetryObserveHistoryNextPage: () -> Unit,
@@ -56,7 +60,7 @@ fun ReadingHistoryList(
       ) { index, readingHistory ->
         ReadingHistoryItem(
           readingHistory = readingHistory,
-          onSelectedItem = onSelectedReadingHistory,
+          onSelectedReadingHistory = onSelectedReadingHistory,
           onRemoveFromHistory = onRemoveFromHistory,
           modifier = Modifier
             .fillMaxSize()
