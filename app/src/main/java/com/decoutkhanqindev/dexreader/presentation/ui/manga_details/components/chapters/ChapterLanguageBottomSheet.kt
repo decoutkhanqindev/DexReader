@@ -48,7 +48,7 @@ fun ChapterLanguageBottomSheet(
     if (languageList.isEmpty()) {
       Text(
         text = stringResource(R.string.no_languages_available),
-        style = MaterialTheme.typography.bodyLarge,
+        style = MaterialTheme.typography.titleMedium,
         fontStyle = FontStyle.Italic,
         textAlign = TextAlign.Center,
         modifier = Modifier
@@ -66,7 +66,7 @@ fun ChapterLanguageBottomSheet(
           val isSelected = language == selectedLanguage
           Text(
             text = language,
-            style = if (isSelected) MaterialTheme.typography.titleMedium else MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.titleMedium,
             fontWeight = if (isSelected) FontWeight.ExtraBold else FontWeight.Light,
             modifier = Modifier
               .padding(bottom = 8.dp)
