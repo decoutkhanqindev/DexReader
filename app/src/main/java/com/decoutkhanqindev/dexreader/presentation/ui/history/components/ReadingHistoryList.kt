@@ -3,7 +3,6 @@ package com.decoutkhanqindev.dexreader.presentation.ui.history.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +12,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -48,7 +49,6 @@ fun ReadingHistoryList(
     LazyColumn(
       state = lazyListState,
       modifier = Modifier.fillMaxSize(),
-      verticalArrangement = Arrangement.spacedBy(4.dp),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
       itemsIndexed(
@@ -61,8 +61,12 @@ fun ReadingHistoryList(
           onRemoveFromHistory = onRemoveFromHistory,
           modifier = Modifier
             .fillMaxSize()
-            .padding(4.dp)
             .height(160.dp)
+        )
+        HorizontalDivider(
+          thickness = 2.dp,
+          color = MaterialTheme.colorScheme.outlineVariant,
+          modifier = Modifier.fillMaxWidth()
         )
       }
 
@@ -87,7 +91,7 @@ fun ReadingHistoryList(
             modifier = Modifier
               .fillMaxWidth()
               .padding(horizontal = 8.dp)
-              .padding(bottom = 12.dp)
+              .padding(bottom = 12.dp, top = 8.dp)
           )
 
           HistoryNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
@@ -95,7 +99,7 @@ fun ReadingHistoryList(
             modifier = Modifier
               .fillMaxWidth()
               .padding(horizontal = 8.dp)
-              .padding(bottom = 12.dp)
+              .padding(bottom = 12.dp, top = 8.dp)
           )
         }
       }
