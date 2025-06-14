@@ -25,7 +25,8 @@ fun HistoryScreen(
   viewModel: HistoryViewModel = hiltViewModel(),
   modifier: Modifier = Modifier
 ) {
-  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  val historyUiState by viewModel.historyUiState.collectAsStateWithLifecycle()
+  val removeFromHistoryUiState by viewModel.removeFromHistoryUiState.collectAsStateWithLifecycle()
   val route = NavDestination.HistoryDestination.route
 
   LaunchedEffect(isUserLoggedIn, currentUser?.id) {
@@ -44,15 +45,15 @@ fun HistoryScreen(
     content = {
       if(isUserLoggedIn) {
         HistoryContent(
-          uiState = uiState,
+          historyUiState = historyUiState,
+          removeFromHistoryUiState = removeFromHistoryUiState,
           onSelectedReadingHistory = {},
-          onRemoveFromHistory = { readingHistoryId ->
-            viewModel.updateRemoveReadingHistoryId(readingHistoryId)
-            viewModel.removeFromHistory()
-          },
+          onUpdateRemoveReadingHistoryId = viewModel::updateRemoveReadingHistoryId,
+          onConfirmRemoveFromHistory = viewModel::removeFromHistory,
+          onRetryRemoveFromHistory = viewModel::retryRemoveFromHistory,
           onObserveHistoryNextPage = viewModel::observeHistoryNextPage,
           onRetryObserveHistoryNextPage = viewModel::retryObserveHistoryNextPage,
-          retryObserveHistoryFirstPage = viewModel::retryObserveHistoryFirstPage,
+          onRetryObserveHistoryFirstPage = viewModel::retryObserveHistoryFirstPage,
           modifier = Modifier.fillMaxSize()
         )
       } else {

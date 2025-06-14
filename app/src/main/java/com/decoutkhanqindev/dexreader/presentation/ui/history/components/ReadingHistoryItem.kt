@@ -32,12 +32,13 @@ fun ReadingHistoryItem(
       } else false
     }
   )
+  val isSwiping = state.dismissDirection == SwipeToDismissBoxValue.EndToStart
 
   SwipeToDismissBox(
     state = state,
     backgroundContent = {
       SwipeToDismissBackground(
-        isSwiping = state.dismissDirection == SwipeToDismissBoxValue.EndToStart,
+        isSwiping = isSwiping,
         modifier = Modifier.fillMaxSize()
       )
     },
