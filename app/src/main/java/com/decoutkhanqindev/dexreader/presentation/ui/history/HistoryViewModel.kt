@@ -24,11 +24,9 @@ class HistoryViewModel @Inject constructor(
   val historyUiState: StateFlow<HistoryUiState> = _historyUiState.asStateFlow()
 
   private val _removeFromHistoryUiState = MutableStateFlow(RemoveFromHistoryUiState())
-  val removeFromHistoryUiState: StateFlow<RemoveFromHistoryUiState> =
-    _removeFromHistoryUiState.asStateFlow()
+  val removeFromHistoryUiState: StateFlow<RemoveFromHistoryUiState> = _removeFromHistoryUiState.asStateFlow()
 
   private val _userId = MutableStateFlow<String?>(null)
-  private val userId: StateFlow<String?> = _userId.asStateFlow()
 
   private var observeHistoryJob: Job? = null
 
@@ -41,7 +39,7 @@ class HistoryViewModel @Inject constructor(
     observeHistoryJob = viewModelScope.launch {
       _historyUiState.value = HistoryUiState.FirstPageLoading
 
-      userId.collectLatest { userId ->
+      _userId.collectLatest { userId ->
         if (userId == null) {
           _historyUiState.value = HistoryUiState.Idle
           return@collectLatest
@@ -114,7 +112,7 @@ class HistoryViewModel @Inject constructor(
       val nextPage = currentUiState.currentPage + 1
       val lastReadingHistoryId = currentReadingHistoryList.lastOrNull()?.id
 
-      userId.collectLatest { userId ->
+      _userId.collectLatest { userId ->
         if (userId == null) {
           _historyUiState.value = HistoryUiState.Idle
           return@collectLatest
@@ -182,7 +180,7 @@ class HistoryViewModel @Inject constructor(
         )
       }
 
-      userId.value?.let { userId ->
+      _userId.value?.let { userId ->
         val readingHistoryId = currentRemoveFromHistoryUiState.readingHistoryId
         val removeFromHistoryResult = removeFromHistoryUseCase(
           userId = userId,

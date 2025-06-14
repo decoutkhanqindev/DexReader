@@ -21,7 +21,6 @@ class FavoritesViewModel @Inject constructor(
   val uiState: StateFlow<FavoritesUiState> = _uiState.asStateFlow()
 
   private val _userId = MutableStateFlow<String?>(null)
-  private val userId: StateFlow<String?> = _userId.asStateFlow()
 
   private var observeFavoritesJob: Job? = null
 
@@ -34,7 +33,7 @@ class FavoritesViewModel @Inject constructor(
     observeFavoritesJob = viewModelScope.launch {
       _uiState.value = FavoritesUiState.FirstPageLoading
 
-      userId.collectLatest { userId ->
+      _userId.collectLatest { userId ->
         if (userId == null) {
           _uiState.value = FavoritesUiState.Idle
           return@collectLatest
@@ -110,7 +109,7 @@ class FavoritesViewModel @Inject constructor(
       val lastFavoriteMangaId = favoriteMangaList.lastOrNull()?.id
       val nextPage = currentUiState.currentPage + 1
 
-      userId.collectLatest { userId ->
+      _userId.collectLatest { userId ->
         if (userId == null) {
           _uiState.value = FavoritesUiState.Idle
           return@collectLatest
