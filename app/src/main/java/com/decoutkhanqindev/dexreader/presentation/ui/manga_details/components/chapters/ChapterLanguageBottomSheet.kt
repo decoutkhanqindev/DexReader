@@ -36,6 +36,15 @@ fun ChapterLanguageBottomSheet(
     onDismissRequest = onDismiss,
     modifier = modifier
   ) {
+    Text(
+      text = stringResource(R.string.language_options),
+      style = MaterialTheme.typography.titleLarge,
+      fontWeight = FontWeight.ExtraBold,
+      textAlign = TextAlign.Center,
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(bottom = 16.dp)
+    )
     if (languageList.isEmpty()) {
       Text(
         text = stringResource(R.string.no_languages_available),
