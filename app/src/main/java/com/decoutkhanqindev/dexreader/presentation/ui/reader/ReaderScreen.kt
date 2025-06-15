@@ -38,7 +38,7 @@ fun ReaderScreen(
 ) {
   val chapterDetailsUiState by viewModel.chapterDetailsUiState.collectAsStateWithLifecycle()
   val chapterPagesUiState by viewModel.chapterPagesUiState.collectAsStateWithLifecycle()
-  val chapterNavState by viewModel.chapterNavState.collectAsStateWithLifecycle()
+  val chapterNavUiState by viewModel.chapterNavUiState.collectAsStateWithLifecycle()
   val (currentPage, totalPages) = when (chapterPagesUiState) {
     is ChapterPagesUiState.Success -> {
       val successUiState = chapterPagesUiState as ChapterPagesUiState.Success
@@ -79,8 +79,8 @@ fun ReaderScreen(
           volume = chapterDetailsUiState.volume,
           chapterNumber = chapterDetailsUiState.chapterNumber,
           title = chapterDetailsUiState.title,
-          canNavigatePrevious = chapterNavState.canNavigatePrevious,
-          canNavigateNext = chapterNavState.canNavigateNext,
+          canNavigatePrevious = chapterNavUiState.canNavigatePrevious,
+          canNavigateNext = chapterNavUiState.canNavigateNext,
           onNavigatePrevious = viewModel::navigateToPreviousChapter,
           onNavigateNext = viewModel::navigateToNextChapter,
           modifier = Modifier.fillMaxWidth()
