@@ -12,7 +12,6 @@ interface UserRepository {
   fun observeCurrentUser(): Flow<Result<User?>>
 
   // user profile methods
-  suspend fun addUserProfile(user: User): Result<User>
+  suspend fun addAndUpdateUserProfile(user: User): Result<Unit>
   fun observeUserProfile(userId: String): Flow<Result<User?>>
-  suspend fun updateUserProfile(user: User): Result<Unit>
 }

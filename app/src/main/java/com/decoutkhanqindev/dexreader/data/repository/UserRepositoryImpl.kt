@@ -48,9 +48,9 @@ class UserRepositoryImpl @Inject constructor(
       .distinctUntilChanged()
       .toResultFlow()
 
-  override suspend fun addUserProfile(user: User): Result<User> =
+  override suspend fun addAndUpdateUserProfile(user: User): Result<Unit> =
     runSuspendCatching(Dispatchers.IO) {
-      firebaseFirestoreSource.addUserProfile(user.toUserProfileDto()).toDomain()
+      firebaseFirestoreSource.addAndUpdateUserProfile(userProfile = user.toUserProfileDto())
     }
 
   override fun observeUserProfile(userId: String): Flow<Result<User?>> =
@@ -60,9 +60,4 @@ class UserRepositoryImpl @Inject constructor(
       .flowOn(Dispatchers.IO)
       .distinctUntilChanged()
       .toResultFlow()
-
-  override suspend fun updateUserProfile(user: User): Result<Unit> =
-    runSuspendCatching(Dispatchers.IO) {
-      firebaseFirestoreSource.updateUserProfile(user.toUserProfileDto())
-    }
 }
