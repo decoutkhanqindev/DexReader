@@ -4,9 +4,9 @@ import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.domain.repository.UserRepository
 import javax.inject.Inject
 
-class UpdateUserProfileUseCase @Inject constructor(
+class AddAndUpdateUserProfileUseCase @Inject constructor(
   private val userRepository: UserRepository
 ) {
   suspend operator fun invoke(user: User): Result<Unit> =
-    userRepository.updateUserProfile(user)
+    userRepository.addAndUpdateUserProfile(user)
 }

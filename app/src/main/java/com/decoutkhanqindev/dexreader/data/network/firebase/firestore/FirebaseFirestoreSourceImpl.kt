@@ -28,10 +28,11 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
 ) : FirebaseFirestoreSource {
   private val usersCollectionRef = firebaseFirestore.collection(usersCollection)
 
-  override suspend fun addUserProfile(userProfile: UserProfileDto): UserProfileDto {
-    val documentRef = usersCollectionRef.document(userProfile.id)
-    documentRef.set(userProfile).await()
-    return userProfile
+  override suspend fun addAndUpdateUserProfile(userProfile: UserProfileDto) {
+    usersCollectionRef
+      .document(userProfile.id)
+      .set(userProfile)
+      .await()
   }
 
   override fun observeUserProfile(userId: String): Flow<UserProfileDto?> = callbackFlow {
@@ -54,10 +55,6 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
     awaitClose {
       listenerRegistration.remove()
     }
-  }
-
-  override suspend fun updateUserProfile(userProfile: UserProfileDto) {
-    usersCollectionRef.document(userProfile.id).set(userProfile).await()
   }
 
   override fun observeFavorites(
