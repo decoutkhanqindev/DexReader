@@ -17,7 +17,7 @@ sealed interface ChapterPagesUiState {
   ) : ChapterPagesUiState
 }
 
-data class ChapterNavigationState(
+data class ChapterNavigationUiState(
   val currentChapterId: String,
   val previousChapterId: String? = null,
   val nextChapterId: String? = null,
