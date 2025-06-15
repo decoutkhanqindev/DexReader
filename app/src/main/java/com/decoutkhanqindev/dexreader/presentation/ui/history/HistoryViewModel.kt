@@ -24,7 +24,8 @@ class HistoryViewModel @Inject constructor(
   val historyUiState: StateFlow<HistoryUiState> = _historyUiState.asStateFlow()
 
   private val _removeFromHistoryUiState = MutableStateFlow(RemoveFromHistoryUiState())
-  val removeFromHistoryUiState: StateFlow<RemoveFromHistoryUiState> = _removeFromHistoryUiState.asStateFlow()
+  val removeFromHistoryUiState: StateFlow<RemoveFromHistoryUiState> =
+    _removeFromHistoryUiState.asStateFlow()
 
   private val _userId = MutableStateFlow<String?>(null)
 
@@ -73,9 +74,9 @@ class HistoryViewModel @Inject constructor(
               }
           }
         } catch (e: Exception) {
-          if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null) {
+          if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null)
             _historyUiState.value = HistoryUiState.Idle
-          } else {
+          else {
             _historyUiState.value = HistoryUiState.FirstPageError
             Log.d(TAG, "observeHistoryFirstPage have error: ${e.stackTraceToString()}")
           }
@@ -137,9 +138,8 @@ class HistoryViewModel @Inject constructor(
                 )
               }
               .onFailure { throwable ->
-                if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null) {
+                if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null)
                   return@onFailure
-                }
 
                 _historyUiState.value =
                   currentUiState.copy(nextPageState = HistoryNextPageState.ERROR)
@@ -150,9 +150,9 @@ class HistoryViewModel @Inject constructor(
               }
           }
         } catch (e: Exception) {
-          if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null) {
+          if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null)
             return@collectLatest
-          } else {
+          else {
             _historyUiState.value = currentUiState.copy(nextPageState = HistoryNextPageState.ERROR)
             Log.d(
               TAG,
@@ -180,13 +180,13 @@ class HistoryViewModel @Inject constructor(
         )
       }
 
+      val readingHistoryId = currentRemoveFromHistoryUiState.readingHistoryId
+
       _userId.value?.let { userId ->
-        val readingHistoryId = currentRemoveFromHistoryUiState.readingHistoryId
-        val removeFromHistoryResult = removeFromHistoryUseCase(
+        removeFromHistoryUseCase(
           userId = userId,
           readingHistoryId = readingHistoryId
         )
-        removeFromHistoryResult
           .onSuccess {
             _removeFromHistoryUiState.update {
               it.copy(

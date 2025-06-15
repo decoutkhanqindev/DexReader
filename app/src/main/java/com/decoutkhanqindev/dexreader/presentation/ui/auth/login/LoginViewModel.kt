@@ -47,11 +47,10 @@ class LoginViewModel @Inject constructor(
         return@launch
       }
 
-      val loginUserResult = loginUserUserCase(
+      loginUserUserCase(
         email = currentUiState.email.trim(),
         password = currentUiState.password.trim()
       )
-      loginUserResult
         .onSuccess {
           _uiState.update {
             it.copy(

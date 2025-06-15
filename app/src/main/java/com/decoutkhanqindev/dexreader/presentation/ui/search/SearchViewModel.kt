@@ -47,8 +47,7 @@ class SearchViewModel @Inject constructor(
       flow {
         _suggestionsUiState.value = SuggestionsUiState.Loading
 
-        val mangaListResult = searchMangaUseCase(query)
-        mangaListResult
+        searchMangaUseCase(query)
           .onSuccess { mangaList ->
             val titleList =
               mangaList.map { manga -> manga.title }.take(TAKE_SUGGESTION_LIST_SIZE)
@@ -72,8 +71,7 @@ class SearchViewModel @Inject constructor(
     viewModelScope.launch {
       _resultsUiState.value = ResultsUiState.FirstPageLoading
 
-      val mangaListResult = searchMangaUseCase(query.value)
-      mangaListResult
+      searchMangaUseCase(query.value)
         .onSuccess { mangaList ->
           val hasNextPage = mangaList.size >= MANGA_LIST_PER_PAGE_SIZE
           _resultsUiState.value = ResultsUiState.Content(
@@ -122,11 +120,10 @@ class SearchViewModel @Inject constructor(
       val currentMangaList = currentResultsUiState.mangaList
       val nextPage = currentResultsUiState.currentPage + 1
 
-      val nextMangaListResults = searchMangaUseCase(
+      searchMangaUseCase(
         query = query.value,
         offset = currentMangaList.size
       )
-      nextMangaListResults
         .onSuccess { nextMangaList ->
           val allMangaList = currentMangaList + nextMangaList
           val hasNextPage = nextMangaList.size >= MANGA_LIST_PER_PAGE_SIZE

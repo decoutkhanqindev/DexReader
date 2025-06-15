@@ -45,11 +45,10 @@ class MangaDetailsViewModel @Inject constructor(
   private val _chapterLanguage = MutableStateFlow("en")
   val chapterLanguage: StateFlow<String> = _chapterLanguage.asStateFlow()
 
-  private val _userId = MutableStateFlow<String?>(null)
-  private val userId = _userId.asStateFlow()
-
   private val _isFavorite = MutableStateFlow(false)
   val isFavorite: StateFlow<Boolean> = _isFavorite.asStateFlow()
+
+  private val _userId = MutableStateFlow<String?>(null)
 
   init {
     observeIsFavorite()
@@ -60,11 +59,8 @@ class MangaDetailsViewModel @Inject constructor(
 
   private fun fetchMangaDetails() {
     viewModelScope.launch {
-      val mangaDetailsResult = getMangaDetailsUseCase(mangaId = mangaIdFromArg)
-      mangaDetailsResult
-        .onSuccess {
-          _mangaDetailsUiState.value = MangaDetailsUiState.Success(manga = it)
-        }
+      getMangaDetailsUseCase(mangaId = mangaIdFromArg)
+        .onSuccess { _mangaDetailsUiState.value = MangaDetailsUiState.Success(manga = it) }
         .onFailure {
           _mangaDetailsUiState.value = MangaDetailsUiState.Error
           Log.d(TAG, "fetchMangaDetails have error: ${it.stackTraceToString()}")
@@ -74,14 +70,13 @@ class MangaDetailsViewModel @Inject constructor(
 
   private fun fetchFirstChapter() {
     viewModelScope.launch {
-      val chapterListResult = getChapterListUseCase(
+      getChapterListUseCase(
         mangaId = mangaIdFromArg,
         limit = 1,
         translatedLanguage = chapterLanguage.value,
         volumeOrder = ASC_ORDER,
         chapterOrder = ASC_ORDER
       )
-      chapterListResult
         .onSuccess {
           if (it.isNotEmpty()) _firstChapterId.value = it.first().id
           else _firstChapterId.value = null
@@ -100,11 +95,10 @@ class MangaDetailsViewModel @Inject constructor(
     viewModelScope.launch {
       _mangaChaptersUiState.value = MangaChaptersUiState.FirstPageLoading
 
-      val chapterListResult = getChapterListUseCase(
+      getChapterListUseCase(
         mangaId = mangaIdFromArg,
         translatedLanguage = chapterLanguage.value
       )
-      chapterListResult
         .onSuccess { chapterList ->
           val hasNextPage = chapterList.size >= CHAPTER_LIST_PER_PAGE_SIZE
           _mangaChaptersUiState.value = MangaChaptersUiState.Content(
@@ -139,7 +133,9 @@ class MangaDetailsViewModel @Inject constructor(
 
           MangaChaptersNextPageState.ERROR -> retryFetchChapterListNextPage()
 
-          MangaChaptersNextPageState.IDLE -> fetchChapterListNextPageInternal(currentMangaChaptersUiState)
+          MangaChaptersNextPageState.IDLE -> fetchChapterListNextPageInternal(
+            currentMangaChaptersUiState
+          )
         }
       }
     }
@@ -153,12 +149,11 @@ class MangaDetailsViewModel @Inject constructor(
       val currentMangaList = currentMangaChaptersUiState.chapterList
       val nextPage: Int = currentMangaChaptersUiState.currentPage + 1
 
-      val nextChapterListResult = getChapterListUseCase(
+      getChapterListUseCase(
         mangaId = mangaIdFromArg,
         offset = currentMangaList.size,
         translatedLanguage = chapterLanguage.value
       )
-      nextChapterListResult
         .onSuccess { nextChapterList ->
           val updatedChapterList = currentMangaList + nextChapterList
           val hasNextPage = nextChapterList.size >= CHAPTER_LIST_PER_PAGE_SIZE
@@ -183,23 +178,26 @@ class MangaDetailsViewModel @Inject constructor(
 
   private fun observeIsFavorite() {
     viewModelScope.launch {
-      mangaDetailsUiState.collect { currentUiState ->
+      _mangaDetailsUiState.collect { currentUiState ->
         if (currentUiState !is MangaDetailsUiState.Success) return@collect
         val mangaId = currentUiState.manga.id
 
-        userId.collectLatest {
-          it?.let { userId ->
-            observeIsFavoriteUseCase(
-              userId = userId,
-              mangaId = mangaId
-            ).collect { result ->
-              result
-                .onSuccess { _isFavorite.value = it }
-                .onFailure {
-                  _isFavorite.value = false
-                  Log.d(TAG, "observeIsFavorite have error: ${it.stackTraceToString()}")
-                }
-            }
+        _userId.collectLatest { userId ->
+          if (userId == null) {
+            _isFavorite.value = false
+            return@collectLatest
+          }
+
+          observeIsFavoriteUseCase(
+            userId = userId,
+            mangaId = mangaId
+          ).collect { result ->
+            result
+              .onSuccess { _isFavorite.value = it }
+              .onFailure {
+                _isFavorite.value = false
+                Log.d(TAG, "observeIsFavorite have error: ${it.stackTraceToString()}")
+              }
           }
         }
       }
@@ -212,7 +210,7 @@ class MangaDetailsViewModel @Inject constructor(
 
     viewModelScope.launch {
       val manga = currentUiState.manga
-      userId.value?.let { userId ->
+      _userId.value?.let { userId ->
         val newFavoriteManga = FavoriteManga(
           id = manga.id,
           title = manga.title,
@@ -221,16 +219,9 @@ class MangaDetailsViewModel @Inject constructor(
           status = manga.status,
           addedAt = null
         )
-
-        val addToFavoriteResult = addToFavoritesUseCase(
-          userId = userId,
-          manga = newFavoriteManga
-        )
-        addToFavoriteResult
+        addToFavoritesUseCase(userId = userId, manga = newFavoriteManga)
           .onSuccess { Log.d(TAG, "addToFavorites success") }
-          .onFailure {
-            Log.d(TAG, "addToFavorites have error: ${it.stackTraceToString()}")
-          }
+          .onFailure { Log.d(TAG, "addToFavorites have error: ${it.stackTraceToString()}") }
       }
     }
   }
@@ -241,16 +232,10 @@ class MangaDetailsViewModel @Inject constructor(
 
     viewModelScope.launch {
       val mangaId = currentUiState.manga.id
-      userId.value?.let { userId ->
-        val removeFromFavoriteResult = removeFromFavoritesUseCase(
-          userId = userId,
-          mangaId = mangaId
-        )
-        removeFromFavoriteResult
+      _userId.value?.let { userId ->
+        removeFromFavoritesUseCase(userId = userId, mangaId = mangaId)
           .onSuccess { Log.d(TAG, "removeFromFavorites success") }
-          .onFailure {
-            Log.d(TAG, "removeFromFavorites have error: ${it.stackTraceToString()}")
-          }
+          .onFailure { Log.d(TAG, "removeFromFavorites have error: ${it.stackTraceToString()}") }
       }
     }
   }
@@ -268,8 +253,7 @@ class MangaDetailsViewModel @Inject constructor(
   }
 
   fun retry() {
-    if (_mangaDetailsUiState.value is MangaDetailsUiState.Error)
-      fetchMangaDetails()
+    if (_mangaDetailsUiState.value is MangaDetailsUiState.Error) fetchMangaDetails()
     if (_firstChapterId.value == null) fetchFirstChapter()
     if (_mangaChaptersUiState.value is MangaChaptersUiState.FirstPageError)
       fetchChapterListFirstPage()

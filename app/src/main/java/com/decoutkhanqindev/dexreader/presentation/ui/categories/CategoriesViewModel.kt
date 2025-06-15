@@ -26,8 +26,7 @@ class CategoriesViewModel @Inject constructor(
     viewModelScope.launch {
       _uiState.value = CategoriesUiState.Loading
 
-      val categoryListResult = getCategoryListUseCase()
-      categoryListResult
+      getCategoryListUseCase()
         .onSuccess {
           val genreList = it.filter { it.group == CategoryGroup.Genre.id }
           val themeList = it.filter { it.group == CategoryGroup.Theme.id }
@@ -48,7 +47,7 @@ class CategoriesViewModel @Inject constructor(
   }
 
   fun retry() {
-    if(_uiState.value is CategoriesUiState.Error) fetchTagList()
+    if (_uiState.value is CategoriesUiState.Error) fetchTagList()
   }
 
   companion object {

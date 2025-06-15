@@ -5,7 +5,7 @@ import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.model.User
-import com.decoutkhanqindev.dexreader.domain.usecase.user.AddUserProfileUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.user.AddAndUpdateUserProfileUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.RegisterUserUseCase
 import com.decoutkhanqindev.dexreader.presentation.ui.auth.AuthError
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
@@ -20,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
   private val registerUserUseCase: RegisterUserUseCase,
-  private val addUserProfileUseCase: AddUserProfileUseCase
+  private val addUserProfileUseCase: AddAndUpdateUserProfileUseCase
 ) : ViewModel() {
   private val _uiState = MutableStateFlow<RegisterUiState>(RegisterUiState())
   val uiState: StateFlow<RegisterUiState> = _uiState.asStateFlow()
@@ -53,11 +53,10 @@ class RegisterViewModel @Inject constructor(
         return@launch
       }
 
-      val registerUserResult = registerUserUseCase(
+      registerUserUseCase(
         email = currentUiState.email.trim(),
         password = currentUiState.password.trim()
       )
-      registerUserResult
         .onSuccess { user ->
           val newUser = User(
             id = user.id,
@@ -91,8 +90,7 @@ class RegisterViewModel @Inject constructor(
 
   private fun addUserProfile(user: User) {
     viewModelScope.launch {
-      val addUserProfileResult = addUserProfileUseCase(user)
-      addUserProfileResult
+      addUserProfileUseCase(user)
         .onSuccess { addedUser ->
           _uiState.update {
             it.copy(
@@ -116,7 +114,7 @@ class RegisterViewModel @Inject constructor(
   }
 
   fun updateEmailField(email: String) {
-    if(_uiState.value.email == email) return
+    if (_uiState.value.email == email) return
     _uiState.update {
       it.copy(
         email = email,

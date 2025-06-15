@@ -43,7 +43,7 @@ class CategoryDetailsViewModel @Inject constructor(
 
       val currentCriteriaUiState = _categoryCriteriaUiState.value
 
-      val mangaListResult = getMangaListByCategoryUseCase(
+      getMangaListByCategoryUseCase(
         categoryId = categoryIdFromArg,
         lastUpdated = currentCriteriaUiState.lastUpdatedOrderId,
         followedCount = currentCriteriaUiState.followedCountOrderId,
@@ -52,7 +52,6 @@ class CategoryDetailsViewModel @Inject constructor(
         status = currentCriteriaUiState.statusValueIds,
         contentRating = currentCriteriaUiState.contentRatingValueIds
       )
-      mangaListResult
         .onSuccess { mangaList ->
           val hasNextPage = mangaList.size >= MANGA_LIST_PER_PAGE_SIZE
           _categoryDetailsUiState.value = CategoryDetailsUiState.Content(
@@ -73,12 +72,14 @@ class CategoryDetailsViewModel @Inject constructor(
   fun fetchMangaListByCategoryNextPage() {
     when (val currentCategoryDetailsUiState = _categoryDetailsUiState.value) {
       CategoryDetailsUiState.FirstPageLoading,
-      CategoryDetailsUiState.FirstPageError -> return
+      CategoryDetailsUiState.FirstPageError
+        -> return
 
       is CategoryDetailsUiState.Content -> {
         when (currentCategoryDetailsUiState.nextPageState) {
           CategoryDetailsNextPageState.LOADING,
-          CategoryDetailsNextPageState.NO_MORE_ITEMS -> return
+          CategoryDetailsNextPageState.NO_MORE_ITEMS
+            -> return
 
           CategoryDetailsNextPageState.ERROR -> retryFetchMangaListByCategoryNextPage()
 
@@ -98,7 +99,7 @@ class CategoryDetailsViewModel @Inject constructor(
       val currentMangaList = currentCategoryDetailsUiState.mangaList
       val nextPage = currentCategoryDetailsUiState.currentPage + 1
 
-      val nextMangaListResults = getMangaListByCategoryUseCase(
+      getMangaListByCategoryUseCase(
         categoryId = categoryIdFromArg,
         offset = currentMangaList.size,
         lastUpdated = currentCriteriaUiState.lastUpdatedOrderId,
@@ -108,7 +109,6 @@ class CategoryDetailsViewModel @Inject constructor(
         status = currentCriteriaUiState.statusValueIds,
         contentRating = currentCriteriaUiState.contentRatingValueIds
       )
-      nextMangaListResults
         .onSuccess { nextMangaList ->
           val allMangaList = currentMangaList + nextMangaList
           val hasNextPage = nextMangaList.size >= MANGA_LIST_PER_PAGE_SIZE

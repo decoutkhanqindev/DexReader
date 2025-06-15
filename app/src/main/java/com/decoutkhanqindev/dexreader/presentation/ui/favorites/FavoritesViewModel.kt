@@ -70,9 +70,9 @@ class FavoritesViewModel @Inject constructor(
               }
           }
         } catch (e: Exception) {
-          if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null) {
+          if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null)
             _uiState.value = FavoritesUiState.Idle
-          } else {
+          else {
             _uiState.value = FavoritesUiState.FirstPageError
             Log.d(TAG, "observeFavoritesFirstPage have error: ${e.stackTraceToString()}")
           }
@@ -134,9 +134,8 @@ class FavoritesViewModel @Inject constructor(
                 )
               }
               .onFailure { throwable ->
-                if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null) {
+                if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null)
                   return@onFailure
-                }
 
                 _uiState.value = currentUiState.copy(nextPageState = FavoritesNextPageState.ERROR)
                 Log.d(
@@ -146,9 +145,9 @@ class FavoritesViewModel @Inject constructor(
               }
           }
         } catch (e: Exception) {
-          if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null) {
+          if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null)
             return@collectLatest
-          } else {
+          else {
             _uiState.value = currentUiState.copy(nextPageState = FavoritesNextPageState.ERROR)
             Log.d(
               TAG,

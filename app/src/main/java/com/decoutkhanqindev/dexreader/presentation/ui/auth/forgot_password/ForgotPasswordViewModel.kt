@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ForgotPasswordViewModel @Inject constructor(
-  private val resetUserPasswordUseCase: SendResetUserPasswordUseCase
+  private val sendResetUserPasswordUseCase: SendResetUserPasswordUseCase
 ) : ViewModel() {
   private val _uiState = MutableStateFlow<ForgotPasswordUiState>(ForgotPasswordUiState())
   val uiState: StateFlow<ForgotPasswordUiState> = _uiState.asStateFlow()
@@ -44,8 +44,7 @@ class ForgotPasswordViewModel @Inject constructor(
         return@launch
       }
 
-      val sendResetUserPasswordResult = resetUserPasswordUseCase(email = currentUiState.email)
-      sendResetUserPasswordResult
+      sendResetUserPasswordUseCase(email = currentUiState.email)
         .onSuccess {
           _uiState.update {
             it.copy(
