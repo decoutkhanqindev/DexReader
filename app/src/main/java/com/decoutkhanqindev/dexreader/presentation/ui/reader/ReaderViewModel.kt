@@ -496,7 +496,9 @@ class ReaderViewModel @Inject constructor(
       val expiryTimestamp = System.currentTimeMillis() - CACHE_EXPIRY_TIME_MILLIS
       clearExpiredCacheUseCase(expiryTimestamp)
         .onSuccess { Log.d(TAG, "clearExpiredCache success.") }
-        .onFailure { Log.d(TAG, "clearExpiredCache error: ${it.stackTraceToString()}") }
+        .onFailure {
+          Log.d(TAG, "clearExpiredCache error: ${it.stackTraceToString()}")
+        }
     }
   }
 

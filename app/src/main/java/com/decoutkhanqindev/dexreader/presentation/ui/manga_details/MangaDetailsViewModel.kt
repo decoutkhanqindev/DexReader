@@ -83,10 +83,7 @@ class MangaDetailsViewModel @Inject constructor(
         }
         .onFailure {
           _firstChapterId.value = null
-          Log.d(
-            TAG,
-            "fetchFirstChapter have error: ${it.stackTraceToString()}"
-          )
+          Log.d(TAG, "fetchFirstChapter have error: ${it.stackTraceToString()}")
         }
     }
   }
@@ -111,10 +108,7 @@ class MangaDetailsViewModel @Inject constructor(
         }
         .onFailure {
           _mangaChaptersUiState.value = MangaChaptersUiState.FirstPageError
-          Log.d(
-            TAG,
-            "fetchChapterListFirstPage have error: ${it.stackTraceToString()}"
-          )
+          Log.d(TAG, "fetchChapterListFirstPage have error: ${it.stackTraceToString()}")
         }
     }
   }
@@ -133,9 +127,8 @@ class MangaDetailsViewModel @Inject constructor(
 
           MangaChaptersNextPageState.ERROR -> retryFetchChapterListNextPage()
 
-          MangaChaptersNextPageState.IDLE -> fetchChapterListNextPageInternal(
-            currentMangaChaptersUiState
-          )
+          MangaChaptersNextPageState.IDLE ->
+            fetchChapterListNextPageInternal(currentMangaChaptersUiState)
         }
       }
     }
@@ -168,10 +161,7 @@ class MangaDetailsViewModel @Inject constructor(
         .onFailure {
           _mangaChaptersUiState.value =
             currentMangaChaptersUiState.copy(nextPageState = MangaChaptersNextPageState.ERROR)
-          Log.d(
-            TAG,
-            "fetchChapterListNextPageInternal have error: ${it.stackTraceToString()}"
-          )
+          Log.d(TAG, "fetchChapterListNextPageInternal have error: ${it.stackTraceToString()}")
         }
     }
   }
@@ -221,7 +211,9 @@ class MangaDetailsViewModel @Inject constructor(
         )
         addToFavoritesUseCase(userId = userId, manga = newFavoriteManga)
           .onSuccess { Log.d(TAG, "addToFavorites success") }
-          .onFailure { Log.d(TAG, "addToFavorites have error: ${it.stackTraceToString()}") }
+          .onFailure {
+            Log.d(TAG, "addToFavorites have error: ${it.stackTraceToString()}")
+          }
       }
     }
   }
@@ -235,7 +227,9 @@ class MangaDetailsViewModel @Inject constructor(
       _userId.value?.let { userId ->
         removeFromFavoritesUseCase(userId = userId, mangaId = mangaId)
           .onSuccess { Log.d(TAG, "removeFromFavorites success") }
-          .onFailure { Log.d(TAG, "removeFromFavorites have error: ${it.stackTraceToString()}") }
+          .onFailure {
+            Log.d(TAG, "removeFromFavorites have error: ${it.stackTraceToString()}")
+          }
       }
     }
   }

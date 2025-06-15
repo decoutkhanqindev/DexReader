@@ -154,10 +154,7 @@ class HistoryViewModel @Inject constructor(
             return@collectLatest
           else {
             _historyUiState.value = currentUiState.copy(nextPageState = HistoryNextPageState.ERROR)
-            Log.d(
-              TAG,
-              "observeHistoryNextPageInternal setup error: ${e.stackTraceToString()}"
-            )
+            Log.d(TAG, "observeHistoryNextPageInternal setup error: ${e.stackTraceToString()}")
           }
         }
       }

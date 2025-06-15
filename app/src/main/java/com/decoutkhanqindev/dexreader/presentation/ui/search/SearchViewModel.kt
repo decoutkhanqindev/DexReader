@@ -138,10 +138,7 @@ class SearchViewModel @Inject constructor(
         .onFailure {
           _resultsUiState.value =
             currentResultsUiState.copy(nextPageState = ResultsNextPageState.ERROR)
-          Log.d(
-            TAG,
-            "fetchMangaListNextPageInternal have error: ${it.stackTraceToString()}"
-          )
+          Log.d(TAG, "fetchMangaListNextPageInternal have error: ${it.stackTraceToString()}")
         }
     }
   }
