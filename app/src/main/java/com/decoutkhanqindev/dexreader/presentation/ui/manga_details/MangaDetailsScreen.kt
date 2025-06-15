@@ -31,7 +31,10 @@ fun MangaDetailsScreen(
     categoryId: String,
     categoryTitle: String
   ) -> Unit,
-  onSelectedChapter: (String) -> Unit,
+  onSelectedChapter: (
+    chapterId: String,
+    lastReadPage: Int
+  ) -> Unit,
   viewModel: MangaDetailsViewModel = hiltViewModel(),
   modifier: Modifier = Modifier
 ) {
@@ -82,7 +85,9 @@ fun MangaDetailsScreen(
         chapterLanguage = chapterLanguage.toFullLanguageName(),
         onSelectedLanguage = { viewModel.updateChapterLanguage(it.toLanguageCode()) },
         onSelectedCategory = onSelectedCategory,
-        onSelectedChapter = { onSelectedChapter(it) },
+        onSelectedChapter = { chapterId, lastReadPage ->
+          onSelectedChapter(chapterId, lastReadPage)
+        },
         onFetchChapterListNextPage = viewModel::fetchChapterListNextPage,
         onRetryFetchChapterListNextPage = viewModel::retryFetchChapterListNextPage,
         onRetryFetchChapterListFirstPage = viewModel::retryFetchChapterListFirstPage,

@@ -21,7 +21,10 @@ fun MangaChaptersSection(
   chapterLanguage: String,
   chapterLanguageList: List<String>,
   onSelectedLanguage: (String) -> Unit,
-  onSelectedChapter: (String) -> Unit,
+  onSelectedChapter: (
+    chapterId: String,
+    lastReadPage: Int
+  ) -> Unit,
   onFetchChapterListNextPage: () -> Unit,
   onRetryFetchChapterListNextPage: () -> Unit,
   onRetry: () -> Unit,

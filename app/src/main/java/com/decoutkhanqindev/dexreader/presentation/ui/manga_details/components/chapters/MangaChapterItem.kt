@@ -25,7 +25,10 @@ import com.decoutkhanqindev.dexreader.domain.model.Chapter
 fun MangaChapterItem(
   lastChapter: String,
   chapter: Chapter,
-  onSelectedChapter: (String) -> Unit,
+  onSelectedChapter: (
+    chapterId: String,
+    lastReadPage: Int
+  ) -> Unit,
   modifier: Modifier = Modifier
 ) {
   val volume = chapter.volume
@@ -36,7 +39,7 @@ fun MangaChapterItem(
     shape = MaterialTheme.shapes.large,
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
     elevation = CardDefaults.cardElevation(8.dp),
-    onClick = { onSelectedChapter(chapter.id) }
+    onClick = { onSelectedChapter(chapter.id, 0) }
   ) {
     Column(
       modifier = Modifier

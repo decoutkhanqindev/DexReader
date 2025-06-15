@@ -255,12 +255,10 @@ class MangaDetailsViewModel @Inject constructor(
   fun retry() {
     if (_mangaDetailsUiState.value is MangaDetailsUiState.Error) fetchMangaDetails()
     if (_firstChapterId.value == null) fetchFirstChapter()
-    if (_mangaChaptersUiState.value is MangaChaptersUiState.FirstPageError)
-      fetchChapterListFirstPage()
   }
 
   fun retryFetchChapterListFirstPage() {
-    if (_mangaChaptersUiState.value is MangaChaptersUiState.FirstPageLoading)
+    if (_mangaChaptersUiState.value is MangaChaptersUiState.FirstPageError)
       fetchChapterListFirstPage()
   }
 

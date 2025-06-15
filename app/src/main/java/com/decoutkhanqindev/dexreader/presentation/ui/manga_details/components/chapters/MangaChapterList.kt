@@ -24,7 +24,10 @@ import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.MangaChapter
 fun MangaChapterList(
   lastChapter: String,
   chapterList: List<Chapter>,
-  onSelectedChapter: (String) -> Unit,
+  onSelectedChapter: (
+    chapterId: String,
+    lastReadPage: Int
+  ) -> Unit,
   chapterListNextPageState: MangaChaptersNextPageState,
   onFetchChapterListNextPage: () -> Unit,
   onRetryFetchChapterListNextPage: () -> Unit,

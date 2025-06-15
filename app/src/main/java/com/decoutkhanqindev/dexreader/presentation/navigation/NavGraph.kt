@@ -254,7 +254,7 @@ fun NavGraph(
         },
         onReadingClick = { firstChapterId ->
           navHostController.navigate(
-            route = "${NavDestination.ReaderDestination.route}/$firstChapterId"
+            route = "${NavDestination.ReaderDestination.route}/$firstChapterId/${0}"
           )
         },
         onSelectedCategory = { categoryId, categoryTitle ->
@@ -262,9 +262,9 @@ fun NavGraph(
             route = "${NavDestination.CategoryDetailsDestination.route}/$categoryId/$categoryTitle"
           )
         },
-        onSelectedChapter = { chapterId ->
+        onSelectedChapter = { chapterId , lastReadPage->
           navHostController.navigate(
-            route = "${NavDestination.ReaderDestination.route}/$chapterId/${0}"
+            route = "${NavDestination.ReaderDestination.route}/$chapterId/${lastReadPage}"
           )
         },
         modifier = Modifier.fillMaxSize()

@@ -48,7 +48,10 @@ fun MangaDetailsContent(
     categoryId: String,
     categoryTitle: String
   ) -> Unit,
-  onSelectedChapter: (String) -> Unit,
+  onSelectedChapter: (
+    chapterId: String,
+    lastReadPage: Int
+  ) -> Unit,
   onFetchChapterListNextPage: () -> Unit,
   onRetryFetchChapterListNextPage: () -> Unit,
   onRetryFetchChapterListFirstPage: () -> Unit,
