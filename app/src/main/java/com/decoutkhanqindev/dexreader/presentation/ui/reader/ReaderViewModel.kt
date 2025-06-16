@@ -19,12 +19,12 @@ import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.utils.toLanguageCode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -79,27 +79,26 @@ class ReaderViewModel @Inject constructor(
 
   private var _isFetchChapterDetailsDone = MutableStateFlow(false)
   private var _isFetchMangaDetailsDone = MutableStateFlow(false)
-  private var _isObserveHistoryFirstPageDone = MutableStateFlow(false)
+  private var _isObserveHistoryDone = MutableStateFlow(false)
 
   init {
     clearExpiredCache()
     observeHistoryFirstPage()
-    loadReaderData()
-  }
+    fetchChapterDetails()
 
-  private fun loadReaderData() {
     viewModelScope.launch {
-      fetchChapterDetails()
-
       combine(
         _isFetchChapterDetailsDone,
         _isFetchMangaDetailsDone,
-        _isObserveHistoryFirstPageDone,
-      ) { isFetchChapterDetailsDone, isFetchMangaDetailsDone, isObserveHistoryFirstPageDone ->
-        isFetchChapterDetailsDone && isFetchMangaDetailsDone && isObserveHistoryFirstPageDone
-      }.first { it }
-
-      fetchChapterPages()
+        _isObserveHistoryDone
+      ) { chapterDetailsDone, mangaDetailsDone, historyDone ->
+        chapterDetailsDone && mangaDetailsDone && historyDone
+      }.collectLatest { isAllDataReady ->
+        if (isAllDataReady && _chapterPagesUiState.value is ChapterPagesUiState.Loading) {
+          delay(DELAY_TIME_MILLIS)
+          fetchChapterPages()
+        }
+      }
     }
   }
 
@@ -121,7 +120,8 @@ class ReaderViewModel @Inject constructor(
           if (currentChapterList.isEmpty() && mangaId != null && chapterLanguage != null)
             fetchChapterListFirstPage()
 
-          if (mangaId != null) fetchMangaDetails()
+          if (mangaId != null && mangaTitle == null && mangaCoverUrl == null)
+            fetchMangaDetails()
 
           _isFetchChapterDetailsDone.value = true
         }
@@ -159,7 +159,8 @@ class ReaderViewModel @Inject constructor(
     if (chapterIdToFetch.isBlank()) return
 
     viewModelScope.launch {
-      if (!isPrefetch) _chapterPagesUiState.value = ChapterPagesUiState.Loading
+      if (!isPrefetch)
+        _chapterPagesUiState.value = ChapterPagesUiState.Loading
 
       val cachedResult = getChapterCacheUseCase(chapterId = chapterIdToFetch)
       cachedResult
@@ -200,7 +201,8 @@ class ReaderViewModel @Inject constructor(
           if (!isPrefetch) prefetchNextChapterPages()
         }
         .onFailure {
-          if (!isPrefetch) _chapterPagesUiState.value = ChapterPagesUiState.Error
+          if (!isPrefetch)
+            _chapterPagesUiState.value = ChapterPagesUiState.Error
           Log.d(TAG, "getChapterPagesUseCase have error: ${it.stackTraceToString()}")
         }
     }
@@ -210,10 +212,11 @@ class ReaderViewModel @Inject constructor(
     if (chapterId == chapterIdFromArg && lastReadPageFromArg > 0)
       return lastReadPageFromArg
 
-    if (chapterId == currentChapterId &&
-      currentReadingHistory != null &&
-      currentReadingHistory!!.chapterId == chapterId
-    ) return currentReadingHistory!!.lastReadPage
+    if (currentReadingHistory != null && currentReadingHistory!!.chapterId == chapterId)
+      return currentReadingHistory!!.lastReadPage
+
+    val historyForCurrentChapter = currentReadingHistoryList.find { it.chapterId == chapterId }
+    if (historyForCurrentChapter != null) return historyForCurrentChapter.lastReadPage
 
     return 1
   }
@@ -321,30 +324,26 @@ class ReaderViewModel @Inject constructor(
   fun navigateToPreviousChapter() {
     _chapterNavUiState.value.previousChapterId?.let { previousId ->
       currentChapterId = previousId
-      _isFetchChapterDetailsDone.value = false
-      _isFetchMangaDetailsDone.value = false
-      loadReaderData()
       updateChapterNavState()
+
+      reset()
       updateCurrentReadingHistory()
+      fetchChapterDetails()
     }
   }
 
   fun navigateToNextChapter() {
     _chapterNavUiState.value.nextChapterId?.let { nextId ->
       currentChapterId = nextId
-      _isFetchChapterDetailsDone.value = false
-      _isFetchMangaDetailsDone.value = false
-      loadReaderData()
       updateChapterNavState()
+
+      reset()
       updateCurrentReadingHistory()
+      fetchChapterDetails()
+
       if (hasNextChapterListPage) fetchChapterListNextPage()
       if (currentReadingHistory == null && hasNextReadingHistoryListPage) observeHistoryNextPage()
     }
-  }
-
-  fun updateUserId(userId: String) {
-    if (_userId.value == userId) return
-    _userId.value = userId
   }
 
   fun updateChapterPage(chapterPage: Int, isFromHistory: Boolean = false) {
@@ -356,9 +355,13 @@ class ReaderViewModel @Inject constructor(
     }
   }
 
+  fun updateUserId(userId: String) {
+    if (_userId.value == userId) return
+    _userId.value = userId
+  }
+
   private fun addAndUpdateToHistory() {
-    if (!_isFetchChapterDetailsDone.value || !_isFetchMangaDetailsDone.value)
-      return
+    if (!_isFetchChapterDetailsDone.value || !_isFetchMangaDetailsDone.value) return
 
     val currentChapterDetailsState = _chapterDetailsUiState.value
     val currentChapterPagesState = _chapterPagesUiState.value
@@ -397,11 +400,12 @@ class ReaderViewModel @Inject constructor(
 
     cancelObserveHistoryJob()
     observeHistoryJob = viewModelScope.launch {
+      _isObserveHistoryDone.value = false
       isObservingReadingHistoryList = true
 
       _userId.collectLatest { userId ->
         if (userId == null) {
-          _isObserveHistoryFirstPageDone.value = true
+          _isObserveHistoryDone.value = true
           return@collectLatest
         }
 
@@ -417,7 +421,6 @@ class ReaderViewModel @Inject constructor(
               hasNextReadingHistoryListPage =
                 readingHistoryList.size >= READING_HISTORY_LIST_PER_PAGE_SIZE
               updateCurrentReadingHistory(isFromHistory = true)
-              _isObserveHistoryFirstPageDone.value = true
             }
             .onFailure { throwable ->
               isObservingReadingHistoryList = false
@@ -427,7 +430,7 @@ class ReaderViewModel @Inject constructor(
 
               currentReadingHistoryList = emptyList()
               hasNextReadingHistoryListPage = false
-              _isObserveHistoryFirstPageDone.value = true
+              _isObserveHistoryDone.value = true
               Log.d(TAG, "observeHistoryFirstPage have error: ${throwable.stackTraceToString()}")
             }
         }
@@ -439,10 +442,15 @@ class ReaderViewModel @Inject constructor(
     if (!hasNextReadingHistoryListPage || isObservingReadingHistoryList) return
 
     observeHistoryJob = viewModelScope.launch {
+      val previousState = _isObserveHistoryDone.value
+      _isObserveHistoryDone.value = false
       isObservingReadingHistoryList = true
 
       _userId.collectLatest { userId ->
-        if (userId == null) return@collectLatest
+        if (userId == null) {
+          _isObserveHistoryDone.value = previousState
+          return@collectLatest
+        }
 
         val lastHistoryEntryId = currentReadingHistoryList.lastOrNull()?.id
 
@@ -465,9 +473,9 @@ class ReaderViewModel @Inject constructor(
               if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null)
                 return@onFailure
 
-              currentReadingHistoryList = emptyList()
               hasNextReadingHistoryListPage = false
-              Log.d(TAG, "observeHistoryFirstPage have error: ${throwable.stackTraceToString()}")
+              _isObserveHistoryDone.value = previousState
+              Log.d(TAG, "observeHistoryNextPage have error: ${throwable.stackTraceToString()}")
             }
         }
       }
@@ -476,18 +484,27 @@ class ReaderViewModel @Inject constructor(
 
   private fun updateCurrentReadingHistory(isFromHistory: Boolean = false) {
     val readingHistory = currentReadingHistoryList.find { it.chapterId == currentChapterId }
-    currentReadingHistory = readingHistory
 
     if (readingHistory != null) {
+      currentReadingHistory = readingHistory
+
       val currentUiState = _chapterPagesUiState.value
       if (currentUiState is ChapterPagesUiState.Success &&
         currentUiState.currentChapterPage != readingHistory.lastReadPage
       ) {
-        updateChapterPage(
-          chapterPage = readingHistory.lastReadPage,
-          isFromHistory = isFromHistory
-        )
+        viewModelScope.launch {
+          delay(DELAY_TIME_MILLIS)
+          updateChapterPage(
+            chapterPage = readingHistory.lastReadPage,
+            isFromHistory = isFromHistory
+          )
+        }
       }
+      _isObserveHistoryDone.value = true
+    } else {
+      _isObserveHistoryDone.value = true
+      currentReadingHistory = null
+      if (hasNextReadingHistoryListPage) observeHistoryNextPage()
     }
   }
 
@@ -506,9 +523,20 @@ class ReaderViewModel @Inject constructor(
     if (_chapterPagesUiState.value is ChapterPagesUiState.Error) {
       _isFetchChapterDetailsDone.value = false
       _isFetchMangaDetailsDone.value = false
-      _isObserveHistoryFirstPageDone.value = false
+      _isObserveHistoryDone.value = false
       observeHistoryFirstPage()
-      loadReaderData()
+      fetchChapterDetails()
+    }
+  }
+
+  fun reset(isLogout: Boolean = false) {
+    _chapterPagesUiState.value = ChapterPagesUiState.Loading
+    _chapterDetailsUiState.value = ChapterDetailsUiState()
+    _isFetchChapterDetailsDone.value = false
+    _isFetchMangaDetailsDone.value = false
+    if (isLogout) {
+      _isObserveHistoryDone.value = false
+      _userId.value = null
     }
   }
 
@@ -525,9 +553,10 @@ class ReaderViewModel @Inject constructor(
   companion object {
     private const val TAG = "ReaderViewModel"
     private const val CHAPTER_LIST_PER_PAGE_SIZE = 20
-    private const val READING_HISTORY_LIST_PER_PAGE_SIZE = 10
+    private const val READING_HISTORY_LIST_PER_PAGE_SIZE = 50
     private const val ASC_ORDER = "asc"
     private const val NEARED_LAST_CHAPTER_COUNT = 5
+    private const val DELAY_TIME_MILLIS = 100L
     private const val CACHE_EXPIRY_TIME_MILLIS = 24 * 60 * 60 * 1000L // 24h
     private const val PERMISSION_DENIED_EXCEPTION = "PERMISSION_DENIED"
   }
