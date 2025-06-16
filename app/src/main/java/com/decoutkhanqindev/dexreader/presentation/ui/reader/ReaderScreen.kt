@@ -42,16 +42,15 @@ fun ReaderScreen(
   val (currentPage, totalPages) = when (chapterPagesUiState) {
     is ChapterPagesUiState.Success -> {
       val successUiState = chapterPagesUiState as ChapterPagesUiState.Success
-      successUiState.currentChapterPage.toString() to successUiState.chapterPages.totalPages.toString()
+        successUiState.currentChapterPage.toString() to successUiState.chapterPages.totalPages.toString()
     }
-
-    else -> "1" to "0"
+    else -> "0" to "0"
   }
   var isFullScreen by rememberSaveable { mutableStateOf(false) }
 
-
   LaunchedEffect(isUserLoggedIn, currentUser?.id) {
     if (isUserLoggedIn && currentUser != null) viewModel.updateUserId(userId = currentUser.id)
+    else viewModel.reset()
   }
 
   Scaffold(

@@ -48,7 +48,7 @@ fun NavigateChapterBottomBar(
         modifier = Modifier
           .weight(2f)
           .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
         Text(
@@ -56,13 +56,15 @@ fun NavigateChapterBottomBar(
           style = MaterialTheme.typography.titleLarge,
           fontWeight = FontWeight.ExtraBold,
         )
-        Text(
-          text = title,
-          style = MaterialTheme.typography.bodyMedium,
-          fontWeight = FontWeight.Bold,
-          fontStyle = FontStyle.Italic,
-          textAlign = TextAlign.Center,
-        )
+        if(title.isNotBlank()){
+          Text(
+            text = title,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Bold,
+            fontStyle = FontStyle.Italic,
+            textAlign = TextAlign.Center,
+          )
+        }
       }
       IconButton(
         onClick = onNavigateNext,
