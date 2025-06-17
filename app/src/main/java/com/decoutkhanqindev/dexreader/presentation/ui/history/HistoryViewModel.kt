@@ -254,8 +254,8 @@ class HistoryViewModel @Inject constructor(
   }
 
   override fun onCleared() {
-    super.onCleared()
     cancelObserveHistoryJob()
+    super.onCleared()
   }
 
   companion object {

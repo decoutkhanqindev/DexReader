@@ -34,8 +34,8 @@ class DexReaderAppViewModel @Inject constructor(
 
   private fun observeCurrentUser() {
     viewModelScope.launch {
-      observeCurrentUserUseCase().collect { userResult ->
-        userResult
+      observeCurrentUserUseCase().collect { result ->
+        result
           .onSuccess {
             _isUserLoggedIn.value = it != null
             if (it != null) observeUserProfile(userId = it.id)
@@ -59,8 +59,8 @@ class DexReaderAppViewModel @Inject constructor(
     // make sure only one active job for per user
     cancelUserProfileJob()
     userProfileJob = viewModelScope.launch {
-      observeUserProfileUseCase(userId).collect { userProfileResult ->
-        userProfileResult
+      observeUserProfileUseCase(userId).collect { result ->
+        result
           .onSuccess { _userProfile.value = it }
           .onFailure {
             _userProfile.value = null
@@ -76,8 +76,8 @@ class DexReaderAppViewModel @Inject constructor(
   }
 
   override fun onCleared() {
-    super.onCleared()
     cancelUserProfileJob()
+    super.onCleared()
   }
 
   companion object {

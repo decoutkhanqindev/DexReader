@@ -12,6 +12,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.favorites.RemoveFromFavorit
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaDetailsUseCase
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -45,10 +46,11 @@ class MangaDetailsViewModel @Inject constructor(
   private val _chapterLanguage = MutableStateFlow("en")
   val chapterLanguage: StateFlow<String> = _chapterLanguage.asStateFlow()
 
+  private val _userId = MutableStateFlow<String?>(null)
+
   private val _isFavorite = MutableStateFlow(false)
   val isFavorite: StateFlow<Boolean> = _isFavorite.asStateFlow()
-
-  private val _userId = MutableStateFlow<String?>(null)
+  private var observeIsFavoriteJob: Job? = null
 
   init {
     observeIsFavorite()
@@ -167,7 +169,8 @@ class MangaDetailsViewModel @Inject constructor(
   }
 
   private fun observeIsFavorite() {
-    viewModelScope.launch {
+    cancelObserveIsFavorite()
+    observeIsFavoriteJob = viewModelScope.launch {
       _mangaDetailsUiState.collect { currentUiState ->
         if (currentUiState !is MangaDetailsUiState.Success) return@collect
         val mangaId = currentUiState.manga.id
@@ -261,6 +264,16 @@ class MangaDetailsViewModel @Inject constructor(
     if (currentMangaChaptersUiState is MangaChaptersUiState.Content &&
       currentMangaChaptersUiState.nextPageState == MangaChaptersNextPageState.ERROR
     ) fetchChapterListNextPageInternal(currentMangaChaptersUiState)
+  }
+
+  private fun cancelObserveIsFavorite() {
+    observeIsFavoriteJob?.cancel()
+    observeIsFavoriteJob = null
+  }
+
+  override fun onCleared() {
+    cancelObserveIsFavorite()
+    super.onCleared()
   }
 
   companion object {
