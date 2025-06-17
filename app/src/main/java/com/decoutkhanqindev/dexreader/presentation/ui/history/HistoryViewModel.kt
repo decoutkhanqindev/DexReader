@@ -43,6 +43,7 @@ class HistoryViewModel @Inject constructor(
       _userId.collectLatest { userId ->
         if (userId == null) {
           _historyUiState.value = HistoryUiState.Idle
+          cancelObserveHistoryJob()
           return@collectLatest
         }
 
@@ -116,6 +117,7 @@ class HistoryViewModel @Inject constructor(
       _userId.collectLatest { userId ->
         if (userId == null) {
           _historyUiState.value = HistoryUiState.Idle
+          cancelObserveHistoryJob()
           return@collectLatest
         }
 

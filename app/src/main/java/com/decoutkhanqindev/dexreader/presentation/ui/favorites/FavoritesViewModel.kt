@@ -36,6 +36,7 @@ class FavoritesViewModel @Inject constructor(
       _userId.collectLatest { userId ->
         if (userId == null) {
           _uiState.value = FavoritesUiState.Idle
+          cancelObserveFavoritesJob()
           return@collectLatest
         }
 
@@ -112,6 +113,7 @@ class FavoritesViewModel @Inject constructor(
       _userId.collectLatest { userId ->
         if (userId == null) {
           _uiState.value = FavoritesUiState.Idle
+          cancelObserveFavoritesJob()
           return@collectLatest
         }
 
