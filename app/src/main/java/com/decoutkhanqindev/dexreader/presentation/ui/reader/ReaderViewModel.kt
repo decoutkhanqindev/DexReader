@@ -92,7 +92,7 @@ class ReaderViewModel @Inject constructor(
       combine(
         _isFetchChapterDetailsDone,
         _isFetchMangaDetailsDone,
-        _isObserveHistoryDone
+        _isObserveHistoryDone,
       ) { chapterDetailsDone, mangaDetailsDone, historyDone ->
         chapterDetailsDone && mangaDetailsDone && historyDone
       }.collectLatest { isDataDone ->
@@ -400,8 +400,8 @@ class ReaderViewModel @Inject constructor(
 
       _userId.collectLatest { userId ->
         if (userId == null) {
-          cancelObserveHistoryJob()
           _isObserveHistoryDone.value = true
+          cancelObserveHistoryJob()
           return@collectLatest
         }
 
@@ -444,8 +444,8 @@ class ReaderViewModel @Inject constructor(
 
       _userId.collectLatest { userId ->
         if (userId == null) {
-          cancelObserveHistoryJob()
           _isObserveHistoryDone.value = previousState
+          cancelObserveHistoryJob()
           return@collectLatest
         }
 
@@ -528,7 +528,7 @@ class ReaderViewModel @Inject constructor(
     _chapterDetailsUiState.value = ChapterDetailsUiState()
     _isFetchChapterDetailsDone.value = false
     _isFetchMangaDetailsDone.value = false
-    _isObserveHistoryDone.value = false
+    _isObserveHistoryDone.value = true
     _userId.value = null
   }
 
