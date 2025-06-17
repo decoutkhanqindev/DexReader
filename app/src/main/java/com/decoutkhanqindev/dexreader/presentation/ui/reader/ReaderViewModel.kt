@@ -46,6 +46,8 @@ class ReaderViewModel @Inject constructor(
     checkNotNull(savedStateHandle[NavDestination.ReaderDestination.CHAPTER_ID_ARG])
   private val lastReadPageFromArg: Int =
     savedStateHandle[NavDestination.ReaderDestination.LAST_READ_PAGE_ARG] ?: 0
+  private val mangaIdFromArg: String =
+    checkNotNull(savedStateHandle[NavDestination.ReaderDestination.MANGA_ID_ARG])
   private var currentChapterId: String = chapterIdFromArg
 
   private val _chapterDetailsUiState =
@@ -62,7 +64,6 @@ class ReaderViewModel @Inject constructor(
 
   private val _userId = MutableStateFlow<String?>(null)
 
-  private var mangaId: String? = null
   private var mangaTitle: String? = null
   private var mangaCoverUrl: String? = null
   private var chapterLanguage: String? = null
@@ -114,13 +115,12 @@ class ReaderViewModel @Inject constructor(
             )
           }
 
-          mangaId = chapter.mangaId
           chapterLanguage = chapter.translatedLanguage.toLanguageCode()
 
-          if (currentChapterList.isEmpty() && mangaId != null && chapterLanguage != null)
+          if (currentChapterList.isEmpty() && chapterLanguage != null)
             fetchChapterListFirstPage()
 
-          if (mangaId != null && mangaTitle == null && mangaCoverUrl == null)
+          if (mangaTitle == null && mangaCoverUrl == null)
             fetchMangaDetails()
 
           _isFetchChapterDetailsDone.value = true
@@ -134,10 +134,8 @@ class ReaderViewModel @Inject constructor(
   }
 
   private fun fetchMangaDetails() {
-    if (mangaId == null) return
-
     viewModelScope.launch {
-      getMangaDetailsUseCase(mangaId = mangaId!!)
+      getMangaDetailsUseCase(mangaId = mangaIdFromArg)
         .onSuccess { manga ->
           mangaTitle = manga.title
           mangaCoverUrl = manga.coverUrl
@@ -189,13 +187,11 @@ class ReaderViewModel @Inject constructor(
             )
           }
 
-          if (mangaId != null) {
-            addChapterCacheUseCase(mangaId = mangaId!!, chapterPages = chapterPages)
-              .onSuccess { Log.d(TAG, "addChapterCacheUseCase success") }
-              .onFailure {
-                Log.d(TAG, "addChapterCacheUseCase have error: ${it.stackTraceToString()}")
-              }
-          }
+          addChapterCacheUseCase(mangaId = mangaIdFromArg, chapterPages = chapterPages)
+            .onSuccess { Log.d(TAG, "addChapterCacheUseCase success") }
+            .onFailure {
+              Log.d(TAG, "addChapterCacheUseCase have error: ${it.stackTraceToString()}")
+            }
 
           if (!isPrefetch) prefetchNextChapterPages()
         }
@@ -222,18 +218,18 @@ class ReaderViewModel @Inject constructor(
 
   private fun prefetchNextChapterPages() {
     _chapterNavUiState.value.nextChapterId?.let { nextId ->
-      if (nextId.isNotBlank() && mangaId != null) fetchChapterPages(isPrefetch = true)
+      if (nextId.isNotBlank()) fetchChapterPages(isPrefetch = true)
     }
   }
 
   private fun fetchChapterListFirstPage() {
-    if (isFetchingChapterList || mangaId == null || chapterLanguage == null) return
+    if (isFetchingChapterList || chapterLanguage == null) return
 
     viewModelScope.launch {
       isFetchingChapterList = true
 
       getChapterListUseCase(
-        mangaId = mangaId!!,
+        mangaId = mangaIdFromArg,
         translatedLanguage = chapterLanguage!!,
         volumeOrder = ASC_ORDER,
         chapterOrder = ASC_ORDER,
@@ -254,14 +250,12 @@ class ReaderViewModel @Inject constructor(
   }
 
   private fun fetchChapterListNextPage() {
-    if (!hasNextChapterListPage || isFetchingChapterList ||
-      mangaId == null || chapterLanguage == null
-    ) return
+    if (!hasNextChapterListPage || isFetchingChapterList || chapterLanguage == null) return
 
     viewModelScope.launch {
       isFetchingChapterList = true
       getChapterListUseCase(
-        mangaId = mangaId!!,
+        mangaId = mangaIdFromArg,
         offset = currentChapterList.size,
         translatedLanguage = chapterLanguage!!,
         volumeOrder = ASC_ORDER,
@@ -366,7 +360,7 @@ class ReaderViewModel @Inject constructor(
     val currentChapterDetailsState = _chapterDetailsUiState.value
     val currentChapterPagesState = _chapterPagesUiState.value
 
-    if (mangaId == null || mangaTitle == null || mangaCoverUrl == null ||
+    if (mangaTitle == null || mangaCoverUrl == null ||
       currentChapterDetailsState == ChapterDetailsUiState() ||
       currentChapterPagesState !is ChapterPagesUiState.Success
     ) return
@@ -374,8 +368,8 @@ class ReaderViewModel @Inject constructor(
     viewModelScope.launch {
       _userId.value?.let { userId ->
         val newReadingHistory = ReadingHistory(
-          id = "${mangaId}_${currentChapterId}",
-          mangaId = mangaId!!,
+          id = "${mangaIdFromArg}_${currentChapterId}",
+          mangaId = mangaIdFromArg,
           mangaTitle = mangaTitle!!,
           mangaCoverUrl = mangaCoverUrl!!,
           chapterId = currentChapterId,
@@ -412,12 +406,11 @@ class ReaderViewModel @Inject constructor(
 
         observeHistoryUseCase(
           userId = userId,
-          mangaId = mangaId,
+          mangaId = mangaIdFromArg,
           limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
         ).collect { result ->
           result
             .onSuccess { readingHistoryList ->
-              Log.d(TAG, "observeHistoryFirstPage ${readingHistoryList.size}")
               isObservingReadingHistoryList = false
               currentReadingHistoryList = readingHistoryList
               hasNextReadingHistoryListPage =
@@ -460,7 +453,7 @@ class ReaderViewModel @Inject constructor(
         observeHistoryUseCase(
           userId = userId,
           limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
-          mangaId = mangaId,
+          mangaId = mangaIdFromArg,
           lastReadingHistoryId = lastReadingHistoryId
         ).collect { result ->
           result

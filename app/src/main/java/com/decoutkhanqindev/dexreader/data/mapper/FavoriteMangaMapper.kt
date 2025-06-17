@@ -12,7 +12,7 @@ fun FavoriteMangaDto.toDomain() =
     coverUrl = coverUrl,
     author = author,
     status = status,
-    addedAt = createAt?.time?.toTimeAgo() ?: "Unknown time"
+    addedAt = createdAt?.time?.toTimeAgo() ?: "Unknown time"
   )
 
 fun FavoriteManga.toDto() =

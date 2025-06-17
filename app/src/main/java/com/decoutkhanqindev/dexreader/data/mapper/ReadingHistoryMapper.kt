@@ -16,7 +16,7 @@ fun ReadingHistoryDto.toDomain() =
     chapterVolume = chapterVolume,
     lastReadPage = lastReadPage,
     totalChapterPages = totalChapterPages,
-    lastReadAt = createAt?.time.toTimeAgo()
+    lastReadAt = createdAt?.time.toTimeAgo()
   )
 
 fun ReadingHistory.toDto() =

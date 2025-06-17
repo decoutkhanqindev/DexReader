@@ -3,7 +3,7 @@ package com.decoutkhanqindev.dexreader.data.network.firebase.firestore
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.FavoriteMangaDto
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.ReadingHistoryDto
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.UserProfileDto
-import com.decoutkhanqindev.dexreader.di.CreateAtFieldQualifier
+import com.decoutkhanqindev.dexreader.di.CreatedAtFieldQualifier
 import com.decoutkhanqindev.dexreader.di.FavoritesCollectionQualifier
 import com.decoutkhanqindev.dexreader.di.HistoryCollectionQualifier
 import com.decoutkhanqindev.dexreader.di.MangaIdFieldQualifier
@@ -24,8 +24,8 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
   private val favoritesCollection: String,
   @HistoryCollectionQualifier
   private val historyCollection: String,
-  @CreateAtFieldQualifier
-  private val createAtField: String,
+  @CreatedAtFieldQualifier
+  private val createdAtField: String,
   @MangaIdFieldQualifier
   private val mangaIdField: String
 ) : FirebaseFirestoreSource {
@@ -39,9 +39,9 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
   }
 
   override fun observeUserProfile(userId: String): Flow<UserProfileDto?> = callbackFlow {
-    val documentRef = usersCollectionRef.document(userId)
+    val usersDocumentRef = usersCollectionRef.document(userId)
 
-    val listenerRegistration = documentRef.addSnapshotListener { snapshot, error ->
+    val listenerRegistration = usersDocumentRef.addSnapshotListener { snapshot, error ->
       if (error != null) {
         close(error)
         return@addSnapshotListener
@@ -65,28 +65,26 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
     limit: Long,
     lastFavoriteMangaId: String?
   ): Flow<List<FavoriteMangaDto>> = callbackFlow {
+    val favoritesCollectionRef = usersCollectionRef
+      .document(userId)
+      .collection(favoritesCollection)
+
+    var query = favoritesCollectionRef
+      .orderBy(createdAtField, Query.Direction.DESCENDING)
+      .limit(limit)
+
     val lastFavoriteManga = lastFavoriteMangaId?.let { id ->
-      usersCollectionRef
-        .document(userId)
-        .collection(favoritesCollection)
+      favoritesCollectionRef
         .document(id)
         .get()
         .await()
     }
 
-    val favoritesCollectionRef = usersCollectionRef
-      .document(userId)
-      .collection(favoritesCollection)
-      .orderBy(createAtField, Query.Direction.DESCENDING)
-      .limit(limit)
-      .let { query ->
-        lastFavoriteManga?.let {
-          if (it.exists()) query.startAfter(it)
-          else query
-        } ?: query
-      }
+    lastFavoriteManga?.let {
+      if (it.exists()) query = query.startAfter(it)
+    }
 
-    val listenerRegistration = favoritesCollectionRef.addSnapshotListener { snapshot, error ->
+    val listenerRegistration = query.addSnapshotListener { snapshot, error ->
       if (error != null) {
         close(error)
         return@addSnapshotListener
@@ -159,36 +157,32 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
     mangaId: String?,
     lastReadingHistoryId: String?
   ): Flow<List<ReadingHistoryDto>> = callbackFlow {
-    var historyCollectionRef = usersCollectionRef
+    val historyCollectionRef = usersCollectionRef
       .document(userId)
       .collection(historyCollection)
-      .orderBy(createAtField, Query.Direction.DESCENDING)
 
-    historyCollectionRef = historyCollectionRef.let { query ->
-      mangaId?.let {
-        query.whereEqualTo(mangaIdField, it)
-      } ?: query
+    var query: Query = historyCollectionRef
+
+    mangaId?.let { id ->
+      query = query.whereEqualTo(mangaIdField, id)
     }
 
-    historyCollectionRef = historyCollectionRef.limit(limit)
+    query = query
+      .orderBy(createdAtField, Query.Direction.DESCENDING)
+      .limit(limit)
 
     val lastReadingHistory = lastReadingHistoryId?.let { id ->
-      usersCollectionRef
-        .document(userId)
-        .collection(historyCollection)
+      historyCollectionRef
         .document(id)
         .get()
         .await()
     }
 
-    historyCollectionRef = historyCollectionRef.let { query ->
-      lastReadingHistory?.let {
-        if (it.exists()) query.startAfter(it)
-        else query
-      } ?: query
+    lastReadingHistory?.let {
+      if (it.exists()) query = query.startAfter(it)
     }
 
-    val listenerRegistration = historyCollectionRef.addSnapshotListener { snapshot, error ->
+    val listenerRegistration = query.addSnapshotListener { snapshot, error ->
       if (error != null) {
         close(error)
         return@addSnapshotListener

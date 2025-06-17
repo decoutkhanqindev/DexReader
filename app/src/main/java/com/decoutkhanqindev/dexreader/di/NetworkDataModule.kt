@@ -50,7 +50,7 @@ annotation class HistoryCollectionQualifier
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-annotation class CreateAtFieldQualifier
+annotation class CreatedAtFieldQualifier
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
@@ -129,12 +129,12 @@ object NetworkDataModule {
   fun provideHistoryCollection(): String = "history"
 
   @Provides
-  @CreateAtFieldQualifier
-  fun provideCreateAtField(): String = "createAt"
+  @CreatedAtFieldQualifier
+  fun provideCreatedAtField(): String = "createdAt"
 
   @Provides
   @MangaIdFieldQualifier
-  fun provideMangaIdField(): String = "mangaId"
+  fun provideMangaIdField(): String = "manga_id"
 
   @Provides
   @Singleton
