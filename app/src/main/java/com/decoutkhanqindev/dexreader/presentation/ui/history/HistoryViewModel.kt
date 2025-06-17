@@ -51,7 +51,6 @@ class HistoryViewModel @Inject constructor(
           observeHistoryUseCase(
             userId = userId,
             limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
-            lastReadingHistoryId = null
           ).collect { result ->
             result
               .onSuccess { readingHistoryList ->

@@ -52,6 +52,10 @@ annotation class HistoryCollectionQualifier
 @Retention(AnnotationRetention.RUNTIME)
 annotation class CreateAtFieldQualifier
 
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class MangaIdFieldQualifier
+
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkDataModule {
@@ -127,6 +131,10 @@ object NetworkDataModule {
   @Provides
   @CreateAtFieldQualifier
   fun provideCreateAtField(): String = "createAt"
+
+  @Provides
+  @MangaIdFieldQualifier
+  fun provideMangaIdField(): String = "mangaId"
 
   @Provides
   @Singleton

@@ -412,11 +412,12 @@ class ReaderViewModel @Inject constructor(
 
         observeHistoryUseCase(
           userId = userId,
+          mangaId = mangaId,
           limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
-          lastReadingHistoryId = null
         ).collect { result ->
           result
             .onSuccess { readingHistoryList ->
+              Log.d(TAG, "observeHistoryFirstPage ${readingHistoryList.size}")
               isObservingReadingHistoryList = false
               currentReadingHistoryList = readingHistoryList
               hasNextReadingHistoryListPage =
@@ -459,10 +460,12 @@ class ReaderViewModel @Inject constructor(
         observeHistoryUseCase(
           userId = userId,
           limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
+          mangaId = mangaId,
           lastReadingHistoryId = lastReadingHistoryId
         ).collect { result ->
           result
             .onSuccess { readingHistoryList ->
+              Log.d(TAG, "observeHistoryNextPage ${readingHistoryList.size}")
               isObservingReadingHistoryList = false
               currentReadingHistoryList += readingHistoryList
               hasNextReadingHistoryListPage =

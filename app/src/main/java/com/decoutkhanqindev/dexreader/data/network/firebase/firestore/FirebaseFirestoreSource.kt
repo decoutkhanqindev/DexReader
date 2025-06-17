@@ -22,6 +22,7 @@ interface FirebaseFirestoreSource {
   fun observeHistory(
     userId: String,
     limit: Long,
+    mangaId: String? = null,
     lastReadingHistoryId: String? = null
   ): Flow<List<ReadingHistoryDto>>
 

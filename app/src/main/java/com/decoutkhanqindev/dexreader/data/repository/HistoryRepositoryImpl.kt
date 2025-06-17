@@ -20,12 +20,14 @@ class HistoryRepositoryImpl @Inject constructor(
   override fun observeHistory(
     userId: String,
     limit: Int,
+    mangaId: String?,
     lastReadingHistoryId: String?
   ): Flow<Result<List<ReadingHistory>>> =
     firebaseFirestoreSource
       .observeHistory(
         userId = userId,
         limit = limit.toLong(),
+        mangaId = mangaId,
         lastReadingHistoryId = lastReadingHistoryId
       )
       .map { readingHistoryDtoList ->

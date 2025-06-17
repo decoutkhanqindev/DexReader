@@ -7,6 +7,7 @@ interface HistoryRepository {
   fun observeHistory(
     userId: String,
     limit: Int = 10,
+    mangaId: String? = null,
     lastReadingHistoryId: String? = null
   ): Flow<Result<List<ReadingHistory>>>
   suspend fun addAndUpdateToHistory(userId: String, readingHistory: ReadingHistory): Result<Unit>

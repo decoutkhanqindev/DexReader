@@ -11,11 +11,13 @@ class ObserveHistoryUseCase @Inject constructor(
   operator fun invoke(
     userId: String,
     limit: Int = 10,
+    mangaId: String? = null,
     lastReadingHistoryId: String? = null
   ): Flow<Result<List<ReadingHistory>>> =
     historyRepository.observeHistory(
       userId = userId,
       limit = limit,
+      mangaId = mangaId,
       lastReadingHistoryId = lastReadingHistoryId
     )
 }
