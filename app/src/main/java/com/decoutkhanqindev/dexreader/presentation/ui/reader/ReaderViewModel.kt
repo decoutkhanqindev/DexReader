@@ -48,6 +48,7 @@ class ReaderViewModel @Inject constructor(
     savedStateHandle[NavDestination.ReaderDestination.LAST_READ_PAGE_ARG] ?: 0
   private val mangaIdFromArg: String =
     checkNotNull(savedStateHandle[NavDestination.ReaderDestination.MANGA_ID_ARG])
+
   private var currentChapterId: String = chapterIdFromArg
 
   private val _chapterDetailsUiState =
@@ -458,7 +459,6 @@ class ReaderViewModel @Inject constructor(
         ).collect { result ->
           result
             .onSuccess { readingHistoryList ->
-              Log.d(TAG, "observeHistoryNextPage ${readingHistoryList.size}")
               isObservingReadingHistoryList = false
               currentReadingHistoryList += readingHistoryList
               hasNextReadingHistoryListPage =
