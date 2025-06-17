@@ -405,6 +405,7 @@ class ReaderViewModel @Inject constructor(
 
       _userId.collectLatest { userId ->
         if (userId == null) {
+          cancelObserveHistoryJob()
           _isObserveHistoryDone.value = true
           return@collectLatest
         }
@@ -448,6 +449,7 @@ class ReaderViewModel @Inject constructor(
 
       _userId.collectLatest { userId ->
         if (userId == null) {
+          cancelObserveHistoryJob()
           _isObserveHistoryDone.value = previousState
           return@collectLatest
         }
@@ -505,9 +507,11 @@ class ReaderViewModel @Inject constructor(
       }
 
       else -> {
-        currentReadingHistory = null
         if (hasNextReadingHistoryListPage) observeHistoryNextPage()
-        else _isObserveHistoryDone.value = true
+        else {
+          currentReadingHistory = null
+          _isObserveHistoryDone.value = true
+        }
       }
     }
   }
