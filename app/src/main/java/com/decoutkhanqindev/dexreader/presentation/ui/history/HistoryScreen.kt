@@ -24,7 +24,8 @@ fun HistoryScreen(
   onSearchClick: () -> Unit,
   onContinueReadingClick: (
     chapterId: String,
-    lastReadPage: Int
+    lastReadPage: Int,
+    mangaId: String
   ) -> Unit,
   onMangaDetailsClick: (String) -> Unit,
   viewModel: HistoryViewModel = hiltViewModel(),

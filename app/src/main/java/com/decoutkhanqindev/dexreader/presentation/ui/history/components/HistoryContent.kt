@@ -23,7 +23,8 @@ fun HistoryContent(
   removeFromHistoryUiState: RemoveFromHistoryUiState,
   onContinueReadingClick: (
     chapterId: String,
-    lastReadPage: Int
+    lastReadPage: Int,
+    mangaId: String
   ) -> Unit,
   onMangaDetailsClick: (String) -> Unit,
   onUpdateRemoveReadingHistoryId: (String) -> Unit,
@@ -139,7 +140,11 @@ fun HistoryContent(
           dismiss = stringResource(R.string.continue_reading),
           onDismissClick = {
             isShowNavigateDialog = false
-            onContinueReadingClick(selectedChapterId!!, selectedLastReadPage!!)
+            onContinueReadingClick(
+              selectedChapterId!!,
+              selectedLastReadPage!!,
+              selectedMangaId!!
+            )
           },
           confirm = stringResource(R.string.manga_details),
           onConfirmClick = {

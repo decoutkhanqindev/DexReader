@@ -61,7 +61,8 @@ sealed interface NavDestination {
     override val route: String = "reader"
     const val CHAPTER_ID_ARG: String = "chapterId"
     const val LAST_READ_PAGE_ARG: String = "lastReadPage"
-    val routeWithArgs: String = "$route/{$CHAPTER_ID_ARG}/{$LAST_READ_PAGE_ARG}"
+    const val MANGA_ID_ARG: String = "mangaId"
+    val routeWithArgs: String = "$route/{$CHAPTER_ID_ARG}/{$LAST_READ_PAGE_ARG}/{$MANGA_ID_ARG}"
   }
 }
 
