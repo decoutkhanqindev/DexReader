@@ -252,9 +252,9 @@ fun NavGraph(
             destination = NavDestination.LoginDestination.route
           )
         },
-        onReadingClick = { firstChapterId ->
+        onReadingClick = { chapterId , lastReadPage, mangaId->
           navHostController.navigate(
-            route = "${NavDestination.ReaderDestination.route}/$firstChapterId/${0}"
+            route = "${NavDestination.ReaderDestination.route}/$chapterId/${lastReadPage}/${mangaId}"
           )
         },
         onSelectedCategory = { categoryId, categoryTitle ->
