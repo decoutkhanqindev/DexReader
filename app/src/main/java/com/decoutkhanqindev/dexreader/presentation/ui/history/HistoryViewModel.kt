@@ -20,7 +20,7 @@ class HistoryViewModel @Inject constructor(
   private val observeHistoryUseCase: ObserveHistoryUseCase,
   private val removeFromHistoryUseCase: RemoveFromHistoryUseCase
 ) : ViewModel() {
-  private val _historyUiState = MutableStateFlow<HistoryUiState>(HistoryUiState.Idle)
+  private val _historyUiState = MutableStateFlow<HistoryUiState>(HistoryUiState.FirstPageLoading)
   val historyUiState: StateFlow<HistoryUiState> = _historyUiState.asStateFlow()
 
   private val _removeFromHistoryUiState = MutableStateFlow(RemoveFromHistoryUiState())
@@ -42,7 +42,7 @@ class HistoryViewModel @Inject constructor(
 
       _userId.collectLatest { userId ->
         if (userId == null) {
-          _historyUiState.value = HistoryUiState.Idle
+          _historyUiState.value = HistoryUiState.FirstPageLoading
           cancelObserveHistoryJob()
           return@collectLatest
         }
@@ -65,7 +65,7 @@ class HistoryViewModel @Inject constructor(
               }
               .onFailure { throwable ->
                 if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null) {
-                  _historyUiState.value = HistoryUiState.Idle
+                  _historyUiState.value = HistoryUiState.FirstPageLoading
                   return@onFailure
                 }
 
@@ -75,7 +75,7 @@ class HistoryViewModel @Inject constructor(
           }
         } catch (e: Exception) {
           if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null)
-            _historyUiState.value = HistoryUiState.Idle
+            _historyUiState.value = HistoryUiState.FirstPageLoading
           else {
             _historyUiState.value = HistoryUiState.FirstPageError
             Log.d(TAG, "observeHistoryFirstPage have error: ${e.stackTraceToString()}")
@@ -87,7 +87,7 @@ class HistoryViewModel @Inject constructor(
 
   fun observeHistoryNextPage() {
     when (val currentUiState = _historyUiState.value) {
-      HistoryUiState.Idle,
+      HistoryUiState.FirstPageLoading,
       HistoryUiState.FirstPageError,
       HistoryUiState.FirstPageLoading,
         -> return
@@ -115,7 +115,7 @@ class HistoryViewModel @Inject constructor(
 
       _userId.collectLatest { userId ->
         if (userId == null) {
-          _historyUiState.value = HistoryUiState.Idle
+          _historyUiState.value = HistoryUiState.FirstPageLoading
           cancelObserveHistoryJob()
           return@collectLatest
         }
@@ -243,7 +243,7 @@ class HistoryViewModel @Inject constructor(
   }
 
   fun reset() {
-    _historyUiState.value = HistoryUiState.Idle
+    _historyUiState.value = HistoryUiState.FirstPageLoading
     _userId.value = null
     _removeFromHistoryUiState.value = RemoveFromHistoryUiState()
   }

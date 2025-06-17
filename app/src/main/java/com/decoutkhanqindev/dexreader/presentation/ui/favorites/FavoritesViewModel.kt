@@ -17,7 +17,7 @@ import javax.inject.Inject
 class FavoritesViewModel @Inject constructor(
   private val observeFavoritesUseCase: ObserveFavoritesUseCase,
 ) : ViewModel() {
-  private val _uiState = MutableStateFlow<FavoritesUiState>(FavoritesUiState.Idle)
+  private val _uiState = MutableStateFlow<FavoritesUiState>(FavoritesUiState.FirstPageLoading)
   val uiState: StateFlow<FavoritesUiState> = _uiState.asStateFlow()
 
   private val _userId = MutableStateFlow<String?>(null)
@@ -35,7 +35,7 @@ class FavoritesViewModel @Inject constructor(
 
       _userId.collectLatest { userId ->
         if (userId == null) {
-          _uiState.value = FavoritesUiState.Idle
+          _uiState.value = FavoritesUiState.FirstPageLoading
           cancelObserveFavoritesJob()
           return@collectLatest
         }
@@ -59,7 +59,7 @@ class FavoritesViewModel @Inject constructor(
               }
               .onFailure { throwable ->
                 if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null) {
-                  _uiState.value = FavoritesUiState.Idle
+                  _uiState.value = FavoritesUiState.FirstPageLoading
                   return@onFailure
                 }
 
@@ -72,7 +72,7 @@ class FavoritesViewModel @Inject constructor(
           }
         } catch (e: Exception) {
           if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null)
-            _uiState.value = FavoritesUiState.Idle
+            _uiState.value = FavoritesUiState.FirstPageLoading
           else {
             _uiState.value = FavoritesUiState.FirstPageError
             Log.d(TAG, "observeFavoritesFirstPage have error: ${e.stackTraceToString()}")
@@ -84,7 +84,7 @@ class FavoritesViewModel @Inject constructor(
 
   fun observeFavoritesNextPage() {
     when (val currentUiState = _uiState.value) {
-      FavoritesUiState.Idle,
+      FavoritesUiState.FirstPageLoading,
       FavoritesUiState.FirstPageError,
       FavoritesUiState.FirstPageLoading
         -> return
@@ -112,7 +112,7 @@ class FavoritesViewModel @Inject constructor(
 
       _userId.collectLatest { userId ->
         if (userId == null) {
-          _uiState.value = FavoritesUiState.Idle
+          _uiState.value = FavoritesUiState.FirstPageLoading
           cancelObserveFavoritesJob()
           return@collectLatest
         }
@@ -180,7 +180,7 @@ class FavoritesViewModel @Inject constructor(
 
   fun reset() {
     cancelObserveFavoritesJob()
-    _uiState.value = FavoritesUiState.Idle
+    _uiState.value = FavoritesUiState.FirstPageLoading
     _userId.value = null
   }
 

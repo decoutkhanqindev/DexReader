@@ -45,8 +45,6 @@ fun HistoryContent(
   var isShowHistoryErrorDialog by rememberSaveable { mutableStateOf(true) }
 
   when (historyUiState) {
-    HistoryUiState.Idle -> Unit
-
     HistoryUiState.FirstPageLoading -> LoadingScreen(modifier = modifier)
 
     HistoryUiState.FirstPageError -> {

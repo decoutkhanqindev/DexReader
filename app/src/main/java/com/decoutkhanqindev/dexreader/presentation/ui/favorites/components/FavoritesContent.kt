@@ -33,11 +33,9 @@ fun FavoritesContent(
   onRetry: () -> Unit,
   modifier: Modifier = Modifier
 ) {
-  var isShowErrorDialog by rememberSaveable { mutableStateOf(false) }
+  var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
 
   when (uiState) {
-    FavoritesUiState.Idle -> Unit
-
     FavoritesUiState.FirstPageLoading -> LoadingScreen(modifier = modifier)
 
     FavoritesUiState.FirstPageError -> {

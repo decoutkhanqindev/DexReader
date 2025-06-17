@@ -3,7 +3,6 @@ package com.decoutkhanqindev.dexreader.presentation.ui.history
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 
 sealed interface HistoryUiState {
-  data object Idle : HistoryUiState
   data object FirstPageLoading : HistoryUiState
   data object FirstPageError : HistoryUiState
   data class Content(
