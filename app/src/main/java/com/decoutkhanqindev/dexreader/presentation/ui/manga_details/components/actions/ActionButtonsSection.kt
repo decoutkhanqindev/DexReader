@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.ui.manga_details.components.actions
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,17 +13,29 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.domain.model.Chapter
+import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.presentation.ui.common.buttons.ActionButton
 
 @Composable
 fun ActionButtonsSection(
-  canRead: Boolean,
-  isReading: Boolean,
-  onReadingClick: () -> Unit,
+  startedChapter: Chapter? = null,
+  continueChapter: ReadingHistory? = null,
+  onReadingClick: (
+    chapterId: String,
+    lastReadPage: Int,
+    mangaId: String
+  ) -> Unit,
   isFavorite: Boolean,
   onFavoriteClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
+  Log.d("ActionButtonsSection", "startedChapter: $startedChapter")
+  Log.d("ActionButtonsSection", "continueChapter: $continueChapter")
+
+  val isContinueReading = continueChapter != null
+  val canRead = startedChapter != null || continueChapter != null
+
   Row(
     modifier = modifier,
     verticalAlignment = Alignment.CenterVertically,
@@ -30,11 +43,20 @@ fun ActionButtonsSection(
   ) {
     ActionButton(
       enabled = canRead,
-      onClick = onReadingClick,
+      onClick = {
+        if (isContinueReading) {
+          onReadingClick(
+            continueChapter.chapterId,
+            continueChapter.lastReadPage,
+            continueChapter.mangaId
+          )
+        }
+        else onReadingClick(startedChapter!!.id, 0, startedChapter.mangaId)
+      },
       content = {
         Text(
           text =
-            if (isReading) stringResource(R.string.continue_reading)
+            if (isContinueReading) stringResource(R.string.continue_reading)
             else stringResource(R.string.start_reading),
           style = MaterialTheme.typography.titleMedium,
           color = MaterialTheme.colorScheme.inverseSurface,
