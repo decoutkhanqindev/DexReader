@@ -20,14 +20,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
+import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 
 @Composable
 fun MangaChapterItem(
   lastChapter: String,
   chapter: Chapter,
+  readingHistory: ReadingHistory? = null,
   onSelectedChapter: (
     chapterId: String,
-    lastReadPage: Int
+    lastReadPage: Int,
+    mangaId: String
   ) -> Unit,
   modifier: Modifier = Modifier
 ) {
@@ -39,7 +42,13 @@ fun MangaChapterItem(
     shape = MaterialTheme.shapes.large,
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
     elevation = CardDefaults.cardElevation(8.dp),
-    onClick = { onSelectedChapter(chapter.id, 0) }
+    onClick = {
+      onSelectedChapter(
+        chapter.id,
+        readingHistory?.lastReadPage ?: 0,
+        chapter.mangaId
+      )
+    }
   ) {
     Column(
       modifier = Modifier
@@ -48,36 +57,42 @@ fun MangaChapterItem(
       horizontalAlignment = Alignment.Start,
       verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-      if (lastChapter == chapterNumber) {
-        Row(
-          modifier = Modifier.fillMaxWidth(),
-          verticalAlignment = Alignment.CenterVertically
-        ) {
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+      ) {
+        Row(modifier = Modifier.weight(0.7f)) {
           Text(
             text = stringResource(R.string.volume_chapter, volume, chapterNumber),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.ExtraBold,
             modifier = Modifier
-              .weight(0.7f)
-              .fillMaxWidth()
+              .padding(end = 4.dp)
           )
+          if (lastChapter == chapterNumber) {
+            Text(
+              text = stringResource(R.string.last_chapter),
+              style = MaterialTheme.typography.titleMedium,
+              fontWeight = FontWeight.ExtraBold,
+            )
+          }
+        }
+
+        if (readingHistory != null) {
           Text(
-            text = stringResource(R.string.last_chapter),
+            text = stringResource(
+              R.string.reader_title,
+              readingHistory.lastReadPage,
+              readingHistory.totalChapterPages
+            ),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.ExtraBold,
             textAlign = TextAlign.End,
-            modifier = Modifier
-              .weight(0.3f)
-              .fillMaxWidth()
+            modifier = Modifier.weight(0.3f)
           )
         }
-      } else {
-        Text(
-          text = stringResource(R.string.volume_chapter, volume, chapterNumber),
-          style = MaterialTheme.typography.bodyLarge,
-          fontWeight = FontWeight.ExtraBold,
-        )
       }
+
       Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically

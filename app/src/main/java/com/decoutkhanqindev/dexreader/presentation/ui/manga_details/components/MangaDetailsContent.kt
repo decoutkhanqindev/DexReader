@@ -22,6 +22,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
+import com.decoutkhanqindev.dexreader.domain.model.Chapter
+import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.presentation.ui.common.buttons.MoveToTopButton
 import com.decoutkhanqindev.dexreader.presentation.ui.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.ui.common.states.LoadingScreen
@@ -37,9 +39,14 @@ import kotlinx.coroutines.launch
 fun MangaDetailsContent(
   mangaDetailsUiState: MangaDetailsUiState,
   mangaChaptersUiState: MangaChaptersUiState,
-  canRead: Boolean,
-  isReading: Boolean,
-  onReadingClick: () -> Unit,
+  readingHistoryList: List<ReadingHistory> = emptyList(),
+  startedChapter: Chapter? = null,
+  continueChapter: ReadingHistory? = null,
+  onReadingClick: (
+    chapterId: String,
+    lastReadPage: Int,
+    mangaId: String
+  ) -> Unit,
   isFavorite: Boolean,
   onFavoriteClick: () -> Unit,
   chapterLanguage: String,
@@ -50,7 +57,8 @@ fun MangaDetailsContent(
   ) -> Unit,
   onSelectedChapter: (
     chapterId: String,
-    lastReadPage: Int
+    lastReadPage: Int,
+    mangaId: String
   ) -> Unit,
   onFetchChapterListNextPage: () -> Unit,
   onRetryFetchChapterListNextPage: () -> Unit,
@@ -117,8 +125,8 @@ fun MangaDetailsContent(
 
           item {
             ActionButtonsSection(
-              canRead = canRead,
-              isReading = isReading,
+              startedChapter = startedChapter,
+              continueChapter = continueChapter,
               onReadingClick = onReadingClick,
               isFavorite = isFavorite,
               onFavoriteClick = onFavoriteClick,
@@ -142,6 +150,7 @@ fun MangaDetailsContent(
           item {
             MangaChaptersSection(
               mangaChaptersUiState = mangaChaptersUiState,
+              readingHistoryList = readingHistoryList,
               lastChapter = lastChapter,
               chapterLanguage = chapterLanguage,
               chapterLanguageList = chapterLanguageList,
@@ -176,4 +185,3 @@ fun MangaDetailsContent(
     }
   }
 }
-

@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.presentation.ui.common.indicators.ListLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.LoadPageErrorMessage
 import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.MangaChaptersUiState
@@ -17,13 +18,15 @@ import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.MangaChapter
 @Composable
 fun MangaChaptersSection(
   mangaChaptersUiState: MangaChaptersUiState,
+  readingHistoryList: List<ReadingHistory> = emptyList(),
   lastChapter: String,
   chapterLanguage: String,
   chapterLanguageList: List<String>,
   onSelectedLanguage: (String) -> Unit,
   onSelectedChapter: (
     chapterId: String,
-    lastReadPage: Int
+    lastReadPage: Int,
+    mangaId: String
   ) -> Unit,
   onFetchChapterListNextPage: () -> Unit,
   onRetryFetchChapterListNextPage: () -> Unit,
@@ -59,6 +62,7 @@ fun MangaChaptersSection(
         MangaChapterList(
           lastChapter = lastChapter,
           chapterList = chapterList,
+          readingHistoryList = readingHistoryList,
           onSelectedChapter = onSelectedChapter,
           chapterListNextPageState = chapterListNextPageState,
           onFetchChapterListNextPage = onFetchChapterListNextPage,

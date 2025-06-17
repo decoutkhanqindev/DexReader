@@ -14,6 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
+import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.presentation.ui.common.indicators.NextPageLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.AllItemLoadedMessage
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.LoadMoreMessage
@@ -24,9 +25,11 @@ import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.MangaChapter
 fun MangaChapterList(
   lastChapter: String,
   chapterList: List<Chapter>,
+  readingHistoryList: List<ReadingHistory> = emptyList(),
   onSelectedChapter: (
     chapterId: String,
-    lastReadPage: Int
+    lastReadPage: Int,
+    mangaId: String
   ) -> Unit,
   chapterListNextPageState: MangaChaptersNextPageState,
   onFetchChapterListNextPage: () -> Unit,
@@ -45,9 +48,11 @@ fun MangaChapterList(
       )
     } else {
       chapterList.forEach { chapter ->
+        val readingHistory = readingHistoryList.find { it.chapterId == chapter.id }
         MangaChapterItem(
           lastChapter = lastChapter,
           chapter = chapter,
+          readingHistory = readingHistory,
           onSelectedChapter = onSelectedChapter,
           modifier = Modifier
             .fillMaxWidth()

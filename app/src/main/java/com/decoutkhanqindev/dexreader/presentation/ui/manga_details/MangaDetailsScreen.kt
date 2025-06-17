@@ -26,28 +26,35 @@ fun MangaDetailsScreen(
   onNavigateBack: () -> Unit,
   onSearchClick: () -> Unit,
   onSignInClick: () -> Unit,
-  onReadingClick: (String) -> Unit,
+  onReadingClick: (
+    chapterId: String,
+    lastReadPage: Int,
+    mangaId: String
+  ) -> Unit,
   onSelectedCategory: (
     categoryId: String,
     categoryTitle: String
   ) -> Unit,
   onSelectedChapter: (
     chapterId: String,
-    lastReadPage: Int
+    lastReadPage: Int,
+    mangaId: String
   ) -> Unit,
   viewModel: MangaDetailsViewModel = hiltViewModel(),
   modifier: Modifier = Modifier
 ) {
   val mangaDetailsUiState by viewModel.mangaDetailsUiState.collectAsStateWithLifecycle()
   val mangaChaptersUiState by viewModel.mangaChaptersUiState.collectAsStateWithLifecycle()
-  val firstChapterId by viewModel.firstChapterId.collectAsStateWithLifecycle()
   val chapterLanguage by viewModel.chapterLanguage.collectAsStateWithLifecycle()
+  val readingHistoryList by viewModel.readingHistoryList.collectAsStateWithLifecycle()
+  val startedChapter by viewModel.startedChapter.collectAsStateWithLifecycle()
+  val continueChapter by viewModel.continueChapter.collectAsStateWithLifecycle()
   val isFavorite by viewModel.isFavorite.collectAsStateWithLifecycle()
-  var isContinueReading by rememberSaveable { mutableStateOf(false) }
   var isShowFavoritesDialog by rememberSaveable { mutableStateOf(false) }
 
   LaunchedEffect(isUserLoggedIn, currentUser?.id) {
     if (isUserLoggedIn && currentUser != null) viewModel.updateUserId(id = currentUser.id)
+    else viewModel.reset()
   }
 
   if (isShowFavoritesDialog) {
@@ -70,9 +77,10 @@ fun MangaDetailsScreen(
       MangaDetailsContent(
         mangaDetailsUiState = mangaDetailsUiState,
         mangaChaptersUiState = mangaChaptersUiState,
-        canRead = firstChapterId != null,
-        isReading = isContinueReading,
-        onReadingClick = { onReadingClick(firstChapterId!!) },
+        readingHistoryList = readingHistoryList,
+        startedChapter = startedChapter,
+        continueChapter = continueChapter,
+        onReadingClick = onReadingClick,
         isFavorite = isFavorite,
         onFavoriteClick = {
           if (isUserLoggedIn) {
@@ -85,9 +93,7 @@ fun MangaDetailsScreen(
         chapterLanguage = chapterLanguage.toFullLanguageName(),
         onSelectedLanguage = { viewModel.updateChapterLanguage(it.toLanguageCode()) },
         onSelectedCategory = onSelectedCategory,
-        onSelectedChapter = { chapterId, lastReadPage ->
-          onSelectedChapter(chapterId, lastReadPage)
-        },
+        onSelectedChapter = onSelectedChapter,
         onFetchChapterListNextPage = viewModel::fetchChapterListNextPage,
         onRetryFetchChapterListNextPage = viewModel::retryFetchChapterListNextPage,
         onRetryFetchChapterListFirstPage = viewModel::retryFetchChapterListFirstPage,
@@ -98,26 +104,3 @@ fun MangaDetailsScreen(
     modifier = modifier
   )
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
