@@ -12,6 +12,7 @@ import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
@@ -42,7 +43,9 @@ fun ReadingHistoryItem(
     backgroundContent = {
       SwipeToDismissBackground(
         isSwiping = isSwiping,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+          .fillMaxSize()
+          .clip(MaterialTheme.shapes.large)
       )
     },
     enableDismissFromStartToEnd = false,
