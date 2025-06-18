@@ -267,7 +267,6 @@ class MangaDetailsViewModel @Inject constructor(
   }
 
   private fun observeHistoryFirstPage() {
-    Log.d(TAG, "observeHistoryFirstPage")
     if (isObservingReadingHistoryList) return
 
     cancelObserveHistoryJob()
@@ -287,7 +286,6 @@ class MangaDetailsViewModel @Inject constructor(
         ).collect { result ->
           result
             .onSuccess { readingHistoryList ->
-              Log.d(TAG, "observeHistoryFirstPage ${readingHistoryList.size}")
               isObservingReadingHistoryList = false
               _readingHistoryList.value = readingHistoryList
               hasNextReadingHistoryListPage =
@@ -312,7 +310,6 @@ class MangaDetailsViewModel @Inject constructor(
   }
 
   private fun observeHistoryNextPage() {
-    Log.d(TAG, "observeHistoryNextPage")
     if (!hasNextReadingHistoryListPage || isObservingReadingHistoryList) return
 
     observeHistoryJob = viewModelScope.launch {
@@ -334,7 +331,6 @@ class MangaDetailsViewModel @Inject constructor(
         ).collect { result ->
           result
             .onSuccess { readingHistoryList ->
-              Log.d(TAG, "observeHistoryNextPage ${readingHistoryList.size}")
               isObservingReadingHistoryList = false
               _readingHistoryList.value += readingHistoryList
               hasNextReadingHistoryListPage =
