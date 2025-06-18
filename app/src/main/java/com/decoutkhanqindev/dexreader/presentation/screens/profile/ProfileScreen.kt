@@ -55,7 +55,7 @@ fun ProfileScreen(
     route = route,
     onMenuItemClick = onMenuItemClick,
     isSearchEnabled = false,
-    bottomBarContent = {
+    bottomBar = {
       if (isUserLoggedIn) {
         UpdateAndLogoutUserBottomBar(
           isShowUpdateButton = isShowUpdateButton,
