@@ -1,6 +1,5 @@
 package com.decoutkhanqindev.dexreader.presentation.ui.manga_details.components.actions
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,9 +29,6 @@ fun ActionButtonsSection(
   onFavoriteClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
-  Log.d("ActionButtonsSection", "startedChapter: $startedChapter")
-  Log.d("ActionButtonsSection", "continueChapter: $continueChapter")
-
   val isContinueReading = continueChapter != null
   val canRead = startedChapter != null || continueChapter != null
 
