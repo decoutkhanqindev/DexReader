@@ -1,11 +1,14 @@
 package com.decoutkhanqindev.dexreader.domain.model
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class Chapter(
-  val id: String, // UUID từ MangaDex
-  val mangaId: String, // UUID của truyện
-  val title: String, // Tên chương
-  val chapterNumber: String, // Số chương
-  val volume: String, // Tập
-  val publishAt: String, // Ngày xuất bản
-  val translatedLanguage: String // Ngôn ngữ (en, vi,...)
+  val id: String,
+  val mangaId: String,
+  val title: String,
+  val chapterNumber: String,
+  val volume: String,
+  val publishAt: String,
+  val translatedLanguage: String
 )

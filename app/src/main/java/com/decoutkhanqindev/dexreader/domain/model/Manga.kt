@@ -1,16 +1,19 @@
 package com.decoutkhanqindev.dexreader.domain.model
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class Manga(
-  val id: String, // UUID từ MangaDex
-  val title: String, // Tên truyện
-  val coverUrl: String, // URL ảnh bìa
-  val description: String, // Mô tả
-  val author: String, // Tác giả
-  val artist: String, // Họa sĩ
-  val categories: List<Category>, // Thể loại
-  val status: String, // Trạng thái (ongoing, completed,...)
-  val year: String, // Năm phát hành
-  val availableTranslatedLanguages: List<String>, // Ngôn ngữ đã dịch
-  val lastChapter: String, // Chương cuối
-  val lastUpdated: String, // Thời gian cập nhật dưới dạng "time ago"
+  val id: String,
+  val title: String,
+  val coverUrl: String,
+  val description: String,
+  val author: String,
+  val artist: String,
+  val categories: List<Category>,
+  val status: String,
+  val year: String,
+  val availableTranslatedLanguages: List<String>,
+  val lastChapter: String,
+  val lastUpdated: String,
 )
