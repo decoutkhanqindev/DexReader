@@ -69,7 +69,7 @@ fun ReadingHistoryInfo(
     )
     Text(
       text = "(${readingHistory.mangaTitle})",
-      fontWeight = FontWeight.Bold,
+      fontWeight = FontWeight.Light,
       maxLines = 2,
       overflow = TextOverflow.Ellipsis,
       style = MaterialTheme.typography.bodyLarge,

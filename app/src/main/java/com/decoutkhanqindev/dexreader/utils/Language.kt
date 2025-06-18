@@ -62,7 +62,8 @@ fun String.toFullLanguageName(): String {
     "ur" to "Urdu",
     "uz" to "Uzbek",
     "vi" to "Vietnamese",
-    "es" to "Spanish (LATAM)"
+    "es" to "Spanish (LATAM)",
+    "tl" to "Thailand"
   )
   return languageMap[this] ?: this
 }
@@ -129,7 +130,8 @@ fun String.toLanguageCode(): String {
     "Urdu" to "ur",
     "Uzbek" to "uz",
     "Vietnamese" to "vi",
-    "Spanish (LATAM)" to "es"
+    "Spanish (LATAM)" to "es",
+    "Thailand" to "tl"
   )
   return languageMap[this] ?: this
 }

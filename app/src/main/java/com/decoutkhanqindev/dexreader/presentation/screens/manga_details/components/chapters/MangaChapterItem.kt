@@ -41,7 +41,7 @@ fun MangaChapterItem(
     modifier = modifier,
     shape = MaterialTheme.shapes.large,
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-    elevation = CardDefaults.cardElevation(8.dp),
+    elevation = CardDefaults.cardElevation(4.dp),
     onClick = {
       onSelectedChapter(
         chapter.id,
@@ -66,8 +66,7 @@ fun MangaChapterItem(
             text = stringResource(R.string.volume_chapter, volume, chapterNumber),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.ExtraBold,
-            modifier = Modifier
-              .padding(end = 4.dp)
+            modifier = Modifier.padding(end = 4.dp)
           )
           if (lastChapter == chapterNumber) {
             Text(
@@ -102,9 +101,7 @@ fun MangaChapterItem(
           style = MaterialTheme.typography.bodyLarge,
           fontWeight = FontWeight.Bold,
           fontStyle = FontStyle.Italic,
-          modifier = Modifier
-            .weight(0.6f)
-            .fillMaxWidth()
+          modifier = Modifier.weight(0.6f)
         )
         Text(
           text = chapter.publishAt,
@@ -112,9 +109,7 @@ fun MangaChapterItem(
           fontWeight = FontWeight.Bold,
           fontStyle = FontStyle.Italic,
           textAlign = TextAlign.End,
-          modifier = Modifier
-            .weight(0.4f)
-            .fillMaxWidth()
+          modifier = Modifier.weight(0.4f)
         )
       }
     }
