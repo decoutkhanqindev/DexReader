@@ -9,8 +9,13 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.decoutkhanqindev.dexreader.domain.model.ThemeType
+import com.decoutkhanqindev.dexreader.presentation.ui.settings.SettingsViewModel
 
 @Immutable
 data class ExtendedColorScheme(
@@ -424,21 +429,31 @@ val extendedDarkHighContrast = ExtendedColorScheme(
 
 @Composable
 fun DexReaderTheme(
-  darkTheme: Boolean = isSystemInDarkTheme(),
   dynamicColor: Boolean = false,
   contrastLevel: ContrastLevel = ContrastLevel.Standard,
   content: @Composable () -> Unit
 ) {
+  val viewModel = hiltViewModel<SettingsViewModel>()
+  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+  val darkTheme = when (uiState.themeType) {
+    ThemeType.SYSTEM -> isSystemInDarkTheme()
+    ThemeType.DARK -> true
+    ThemeType.LIGHT -> false
+  }
+
   val colorScheme = when {
     dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
       val context = LocalContext.current
       if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
     }
+
     darkTheme -> when (contrastLevel) {
       ContrastLevel.Standard -> darkScheme
       ContrastLevel.Medium -> mediumContrastDarkColorScheme
       ContrastLevel.High -> highContrastDarkColorScheme
     }
+
     else -> when (contrastLevel) {
       ContrastLevel.Standard -> lightScheme
       ContrastLevel.Medium -> mediumContrastLightColorScheme
@@ -446,15 +461,17 @@ fun DexReaderTheme(
     }
   }
 
-  when {
+  val extendedColorScheme = when {
     dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
       if (darkTheme) extendedDark else extendedLight
     }
+
     darkTheme -> when (contrastLevel) {
       ContrastLevel.Standard -> extendedDark
       ContrastLevel.Medium -> extendedDarkMediumContrast
       ContrastLevel.High -> extendedDarkHighContrast
     }
+
     else -> when (contrastLevel) {
       ContrastLevel.Standard -> extendedLight
       ContrastLevel.Medium -> extendedLightMediumContrast
