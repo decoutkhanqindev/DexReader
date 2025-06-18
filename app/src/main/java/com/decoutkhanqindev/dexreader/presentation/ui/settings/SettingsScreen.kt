@@ -1,12 +1,18 @@
 package com.decoutkhanqindev.dexreader.presentation.ui.settings
 
+
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BaseScreen
+import com.decoutkhanqindev.dexreader.presentation.ui.settings.components.SettingsContent
 
 @Composable
 fun SettingsScreen(
@@ -14,8 +20,10 @@ fun SettingsScreen(
   currentUser: User?,
   onSignInClick: () -> Unit,
   onMenuItemClick: (String) -> Unit,
+  viewModel: SettingsViewModel = hiltViewModel(),
   modifier: Modifier = Modifier
 ) {
+  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val route = NavDestination.SettingsDestination.route
 
   BaseScreen(
@@ -26,7 +34,14 @@ fun SettingsScreen(
     route = route,
     onMenuItemClick = onMenuItemClick,
     isSearchEnabled = false,
-    content = {},
+    content = {
+      SettingsContent(
+        uiState = uiState,
+        onChangeThemeType = viewModel::changeThemeType,
+        onRetry = viewModel::retry,
+        modifier = Modifier.fillMaxSize()
+      )
+    },
     modifier = modifier
   )
 }
