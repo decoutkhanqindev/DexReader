@@ -40,8 +40,10 @@ fun ProfileContent(
   onRetryLogout: () -> Unit,
   modifier: Modifier = Modifier
 ) {
-  var isShowUpdateDialog by rememberSaveable { mutableStateOf(true) }
-  var isShowLogoutDialog by rememberSaveable { mutableStateOf(true) }
+  var isShowUpdateUserSuccessDialog by rememberSaveable { mutableStateOf(true) }
+  var isShowUpdateUserErrorDialog by rememberSaveable { mutableStateOf(true) }
+  var isShowLogoutUserSuccessDialog by rememberSaveable { mutableStateOf(true) }
+  var isShowLogoutUserErrorDialog by rememberSaveable { mutableStateOf(true) }
   val currentUser = uiState.user
 
   Box(
@@ -81,12 +83,12 @@ fun ProfileContent(
     uiState.isLoading -> LoadingScreen(modifier = modifier)
 
     uiState.isUpdateUserError -> {
-      if (isShowUpdateDialog) {
+      if (isShowUpdateUserErrorDialog) {
         NotificationDialog(
           title = stringResource(R.string.update_profile_failed),
-          onDismissClick = { isShowUpdateDialog = false },
+          onDismissClick = { isShowUpdateUserErrorDialog = false },
           onConfirmClick = {
-            isShowUpdateDialog = false
+            isShowUpdateUserErrorDialog = false
             onRetryUpdate()
           },
         )
@@ -94,12 +96,12 @@ fun ProfileContent(
     }
 
     uiState.isLogoutUserError -> {
-      if (isShowLogoutDialog) {
+      if (isShowLogoutUserErrorDialog) {
         NotificationDialog(
           title = stringResource(R.string.logout_failed_please_try_again),
-          onDismissClick = { isShowLogoutDialog = false },
+          onDismissClick = { isShowLogoutUserErrorDialog = false },
           onConfirmClick = {
-            isShowLogoutDialog = false
+            isShowLogoutUserErrorDialog = false
             onRetryLogout()
           },
         )
@@ -107,26 +109,26 @@ fun ProfileContent(
     }
 
     uiState.isUpdateUserSuccess -> {
-      if (isShowUpdateDialog) {
+      if (isShowUpdateUserSuccessDialog) {
         NotificationDialog(
           icon = Icons.Default.Done,
           title = stringResource(R.string.your_profile_has_been_updated_successfully),
           isEnableDismiss = false,
           confirm = stringResource(R.string.ok),
-          onConfirmClick = { isShowUpdateDialog = false },
+          onConfirmClick = { isShowUpdateUserSuccessDialog = false },
         )
       }
     }
 
     uiState.isLogoutUserSuccess -> {
-      if (isShowLogoutDialog) {
+      if (isShowLogoutUserSuccessDialog) {
         NotificationDialog(
           icon = Icons.Default.Done,
           title = stringResource(R.string.logout_successful),
           isEnableDismiss = false,
           confirm = stringResource(R.string.ok),
           onConfirmClick = {
-            isShowLogoutDialog = false
+            isShowLogoutUserSuccessDialog = false
             onLogoutSuccess()
           },
         )
