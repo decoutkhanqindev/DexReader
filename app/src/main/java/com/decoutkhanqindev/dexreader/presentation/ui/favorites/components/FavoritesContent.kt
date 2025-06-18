@@ -13,6 +13,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.data.mapper.toManga
+import com.decoutkhanqindev.dexreader.domain.model.FavoriteManga
+import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BaseNextPageState
+import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.ui.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.ui.common.indicators.NextPageLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.ui.common.lists.manga.VerticalGridMangaList
@@ -21,12 +24,10 @@ import com.decoutkhanqindev.dexreader.presentation.ui.common.states.LoadingScree
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.AllItemLoadedMessage
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.LoadMoreMessage
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.LoadPageErrorMessage
-import com.decoutkhanqindev.dexreader.presentation.ui.favorites.FavoritesNextPageState
-import com.decoutkhanqindev.dexreader.presentation.ui.favorites.FavoritesUiState
 
 @Composable
 fun FavoritesContent(
-  uiState: FavoritesUiState,
+  uiState: BasePaginationUiState<FavoriteManga>,
   onSelectedManga: (String) -> Unit,
   onObserveFavoriteMangaListNextPage: () -> Unit,
   onRetryObserveFavoriteMangaListNextPage: () -> Unit,
@@ -36,9 +37,9 @@ fun FavoritesContent(
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
 
   when (uiState) {
-    FavoritesUiState.FirstPageLoading -> LoadingScreen(modifier = modifier)
+    BasePaginationUiState.FirstPageLoading -> LoadingScreen(modifier = modifier)
 
-    FavoritesUiState.FirstPageError -> {
+    BasePaginationUiState.FirstPageError -> {
       if (isShowErrorDialog) {
         NotificationDialog(
           onDismissClick = { isShowErrorDialog = false },
@@ -50,8 +51,8 @@ fun FavoritesContent(
       }
     }
 
-    is FavoritesUiState.Content -> {
-      val favoriteMangaList = uiState.favoriteMangaList
+    is BasePaginationUiState.Content<FavoriteManga> -> {
+      val favoriteMangaList = uiState.currentList
       val nextPageState = uiState.nextPageState
 
       if (favoriteMangaList.isEmpty()) {
@@ -65,13 +66,13 @@ fun FavoritesContent(
           onSelectedManga = { onSelectedManga(it.id) },
           loadMoreContent = {
             when (nextPageState) {
-              FavoritesNextPageState.LOADING -> NextPageLoadingIndicator(
+              BaseNextPageState.LOADING -> NextPageLoadingIndicator(
                 modifier = Modifier
                   .fillMaxWidth()
                   .padding(bottom = 12.dp)
               )
 
-              FavoritesNextPageState.ERROR -> LoadPageErrorMessage(
+              BaseNextPageState.ERROR -> LoadPageErrorMessage(
                 message = stringResource(R.string.can_t_load_next_manga_page_please_try_again),
                 onRetry = onRetryObserveFavoriteMangaListNextPage,
                 modifier = Modifier
@@ -79,7 +80,7 @@ fun FavoritesContent(
                   .padding(top = 8.dp)
               )
 
-              FavoritesNextPageState.IDLE -> LoadMoreMessage(
+              BaseNextPageState.IDLE -> LoadMoreMessage(
                 onLoadMore = onObserveFavoriteMangaListNextPage,
                 modifier = Modifier
                   .fillMaxWidth()
@@ -87,7 +88,7 @@ fun FavoritesContent(
                   .padding(bottom = 12.dp)
               )
 
-              FavoritesNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
+              BaseNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
                 title = stringResource(R.string.all_mangas_loaded),
                 modifier = Modifier
                   .fillMaxWidth()

@@ -3,7 +3,10 @@ package com.decoutkhanqindev.dexreader.presentation.ui.favorites
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.decoutkhanqindev.dexreader.domain.model.FavoriteManga
 import com.decoutkhanqindev.dexreader.domain.usecase.favorites.ObserveFavoritesUseCase
+import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BaseNextPageState
+import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BasePaginationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,8 +20,9 @@ import javax.inject.Inject
 class FavoritesViewModel @Inject constructor(
   private val observeFavoritesUseCase: ObserveFavoritesUseCase,
 ) : ViewModel() {
-  private val _uiState = MutableStateFlow<FavoritesUiState>(FavoritesUiState.FirstPageLoading)
-  val uiState: StateFlow<FavoritesUiState> = _uiState.asStateFlow()
+  private val _uiState =
+    MutableStateFlow<BasePaginationUiState<FavoriteManga>>(BasePaginationUiState.FirstPageLoading)
+  val uiState: StateFlow<BasePaginationUiState<FavoriteManga>> = _uiState.asStateFlow()
 
   private val _userId = MutableStateFlow<String?>(null)
 
@@ -31,11 +35,11 @@ class FavoritesViewModel @Inject constructor(
   private fun observeFavoritesFirstPage() {
     cancelObserveFavoritesJob()
     observeFavoritesJob = viewModelScope.launch {
-      _uiState.value = FavoritesUiState.FirstPageLoading
+      _uiState.value = BasePaginationUiState.FirstPageLoading
 
       _userId.collectLatest { userId ->
         if (userId == null) {
-          _uiState.value = FavoritesUiState.FirstPageLoading
+          _uiState.value = BasePaginationUiState.FirstPageLoading
           cancelObserveFavoritesJob()
           return@collectLatest
         }
@@ -49,21 +53,21 @@ class FavoritesViewModel @Inject constructor(
             result
               .onSuccess { favoriteMangaList ->
                 val hasNextPage = favoriteMangaList.size >= MANGA_LIST_PER_PAGE_SIZE
-                _uiState.value = FavoritesUiState.Content(
-                  favoriteMangaList = favoriteMangaList,
+                _uiState.value = BasePaginationUiState.Content(
+                  currentList = favoriteMangaList,
                   currentPage = FIRST_PAGE,
                   nextPageState =
-                    if (!hasNextPage) FavoritesNextPageState.NO_MORE_ITEMS
-                    else FavoritesNextPageState.IDLE
+                    if (!hasNextPage) BaseNextPageState.NO_MORE_ITEMS
+                    else BaseNextPageState.IDLE
                 )
               }
               .onFailure { throwable ->
                 if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null) {
-                  _uiState.value = FavoritesUiState.FirstPageLoading
+                  _uiState.value = BasePaginationUiState.FirstPageLoading
                   return@onFailure
                 }
 
-                _uiState.value = FavoritesUiState.FirstPageError
+                _uiState.value = BasePaginationUiState.FirstPageError
                 Log.d(
                   TAG,
                   "observeFavoritesFirstPage have error: ${throwable.stackTraceToString()}"
@@ -72,9 +76,9 @@ class FavoritesViewModel @Inject constructor(
           }
         } catch (e: Exception) {
           if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null)
-            _uiState.value = FavoritesUiState.FirstPageLoading
+            _uiState.value = BasePaginationUiState.FirstPageLoading
           else {
-            _uiState.value = FavoritesUiState.FirstPageError
+            _uiState.value = BasePaginationUiState.FirstPageError
             Log.d(TAG, "observeFavoritesFirstPage have error: ${e.stackTraceToString()}")
           }
         }
@@ -84,35 +88,34 @@ class FavoritesViewModel @Inject constructor(
 
   fun observeFavoritesNextPage() {
     when (val currentUiState = _uiState.value) {
-      FavoritesUiState.FirstPageLoading,
-      FavoritesUiState.FirstPageError,
-      FavoritesUiState.FirstPageLoading
+      BasePaginationUiState.FirstPageError,
+      BasePaginationUiState.FirstPageLoading
         -> return
 
-      is FavoritesUiState.Content -> {
+      is BasePaginationUiState.Content -> {
         when (currentUiState.nextPageState) {
-          FavoritesNextPageState.LOADING,
-          FavoritesNextPageState.NO_MORE_ITEMS
+          BaseNextPageState.LOADING,
+          BaseNextPageState.NO_MORE_ITEMS
             -> return
 
-          FavoritesNextPageState.ERROR -> retryObserveFavoritesNextPage()
-          FavoritesNextPageState.IDLE -> observeFavoritesNextPageInternal(currentUiState)
+          BaseNextPageState.ERROR -> retryObserveFavoritesNextPage()
+          BaseNextPageState.IDLE -> observeFavoritesNextPageInternal(currentUiState)
         }
       }
     }
   }
 
-  private fun observeFavoritesNextPageInternal(currentUiState: FavoritesUiState.Content) {
+  private fun observeFavoritesNextPageInternal(currentUiState: BasePaginationUiState.Content<FavoriteManga>) {
     observeFavoritesJob = viewModelScope.launch {
-      _uiState.value = currentUiState.copy(nextPageState = FavoritesNextPageState.LOADING)
+      _uiState.value = currentUiState.copy(nextPageState = BaseNextPageState.LOADING)
 
-      val favoriteMangaList = currentUiState.favoriteMangaList
+      val favoriteMangaList = currentUiState.currentList
       val lastFavoriteMangaId = favoriteMangaList.lastOrNull()?.id
       val nextPage = currentUiState.currentPage + 1
 
       _userId.collectLatest { userId ->
         if (userId == null) {
-          _uiState.value = FavoritesUiState.FirstPageLoading
+          _uiState.value = BasePaginationUiState.FirstPageLoading
           cancelObserveFavoritesJob()
           return@collectLatest
         }
@@ -128,18 +131,18 @@ class FavoritesViewModel @Inject constructor(
                 val allFavoriteMangaList = favoriteMangaList + nextPageFavoriteMangaList
                 val hasNextPage = nextPageFavoriteMangaList.size >= MANGA_LIST_PER_PAGE_SIZE
                 _uiState.value = currentUiState.copy(
-                  favoriteMangaList = allFavoriteMangaList,
+                  currentList = allFavoriteMangaList,
                   currentPage = nextPage,
                   nextPageState =
-                    if (!hasNextPage) FavoritesNextPageState.NO_MORE_ITEMS
-                    else FavoritesNextPageState.IDLE
+                    if (!hasNextPage) BaseNextPageState.NO_MORE_ITEMS
+                    else BaseNextPageState.IDLE
                 )
               }
               .onFailure { throwable ->
                 if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null)
                   return@onFailure
 
-                _uiState.value = currentUiState.copy(nextPageState = FavoritesNextPageState.ERROR)
+                _uiState.value = currentUiState.copy(nextPageState = BaseNextPageState.ERROR)
                 Log.d(
                   TAG,
                   "observeFavoritesNextPageInternal have error: ${throwable.stackTraceToString()}"
@@ -150,7 +153,7 @@ class FavoritesViewModel @Inject constructor(
           if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null)
             return@collectLatest
           else {
-            _uiState.value = currentUiState.copy(nextPageState = FavoritesNextPageState.ERROR)
+            _uiState.value = currentUiState.copy(nextPageState = BaseNextPageState.ERROR)
             Log.d(
               TAG,
               "observeFavoritesNextPageInternal setup error: ${e.stackTraceToString()}"
@@ -167,21 +170,15 @@ class FavoritesViewModel @Inject constructor(
   }
 
   fun retry() {
-    if (_uiState.value is FavoritesUiState.FirstPageError)
+    if (_uiState.value is BasePaginationUiState.FirstPageError)
       observeFavoritesFirstPage()
   }
 
   fun retryObserveFavoritesNextPage() {
     val currentUiState = _uiState.value
-    if (currentUiState is FavoritesUiState.Content &&
-      currentUiState.nextPageState == FavoritesNextPageState.ERROR
+    if (currentUiState is BasePaginationUiState.Content &&
+      currentUiState.nextPageState == BaseNextPageState.ERROR
     ) observeFavoritesNextPageInternal(currentUiState)
-  }
-
-  fun reset() {
-    cancelObserveFavoritesJob()
-    _uiState.value = FavoritesUiState.FirstPageLoading
-    _userId.value = null
   }
 
   private fun cancelObserveFavoritesJob() {
