@@ -9,10 +9,8 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -20,27 +18,7 @@ import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.domain.model.ThemeType
-import com.decoutkhanqindev.dexreader.presentation.ui.settings.SettingsViewModel
-
-@Immutable
-data class ExtendedColorScheme(
-  val customColor1: ColorFamily,
-  val customColor2: ColorFamily,
-  val customColor3: ColorFamily,
-  val customColor4: ColorFamily,
-)
-
-@Immutable
-data class ColorFamily(
-  val color: Color,
-  val onColor: Color,
-  val colorContainer: Color,
-  val onColorContainer: Color
-)
-
-val unspecified_scheme = ColorFamily(
-  Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified
-)
+import com.decoutkhanqindev.dexreader.presentation.screens.settings.SettingsViewModel
 
 private val lightScheme = lightColorScheme(
   primary = primaryLight,
@@ -270,168 +248,6 @@ private val highContrastDarkColorScheme = darkColorScheme(
   surfaceContainerHighest = surfaceContainerHighestDarkHighContrast,
 )
 
-val extendedLight = ExtendedColorScheme(
-  customColor1 = ColorFamily(
-    customColor1Light,
-    onCustomColor1Light,
-    customColor1ContainerLight,
-    onCustomColor1ContainerLight,
-  ),
-  customColor2 = ColorFamily(
-    customColor2Light,
-    onCustomColor2Light,
-    customColor2ContainerLight,
-    onCustomColor2ContainerLight,
-  ),
-  customColor3 = ColorFamily(
-    customColor3Light,
-    onCustomColor3Light,
-    customColor3ContainerLight,
-    onCustomColor3ContainerLight,
-  ),
-  customColor4 = ColorFamily(
-    customColor4Light,
-    onCustomColor4Light,
-    customColor4ContainerLight,
-    onCustomColor4ContainerLight,
-  ),
-)
-
-val extendedDark = ExtendedColorScheme(
-  customColor1 = ColorFamily(
-    customColor1Dark,
-    onCustomColor1Dark,
-    customColor1ContainerDark,
-    onCustomColor1ContainerDark,
-  ),
-  customColor2 = ColorFamily(
-    customColor2Dark,
-    onCustomColor2Dark,
-    customColor2ContainerDark,
-    onCustomColor2ContainerDark,
-  ),
-  customColor3 = ColorFamily(
-    customColor3Dark,
-    onCustomColor3Dark,
-    customColor3ContainerDark,
-    onCustomColor3ContainerDark,
-  ),
-  customColor4 = ColorFamily(
-    customColor4Dark,
-    onCustomColor4Dark,
-    customColor4ContainerDark,
-    onCustomColor4ContainerDark,
-  ),
-)
-
-val extendedLightMediumContrast = ExtendedColorScheme(
-  customColor1 = ColorFamily(
-    customColor1LightMediumContrast,
-    onCustomColor1LightMediumContrast,
-    customColor1ContainerLightMediumContrast,
-    onCustomColor1ContainerLightMediumContrast,
-  ),
-  customColor2 = ColorFamily(
-    customColor2LightMediumContrast,
-    onCustomColor2LightMediumContrast,
-    customColor2ContainerLightMediumContrast,
-    onCustomColor2ContainerLightMediumContrast,
-  ),
-  customColor3 = ColorFamily(
-    customColor3LightMediumContrast,
-    onCustomColor3LightMediumContrast,
-    customColor3ContainerLightMediumContrast,
-    onCustomColor3ContainerLightMediumContrast,
-  ),
-  customColor4 = ColorFamily(
-    customColor4LightMediumContrast,
-    onCustomColor4LightMediumContrast,
-    customColor4ContainerLightMediumContrast,
-    onCustomColor4ContainerLightMediumContrast,
-  ),
-)
-
-val extendedLightHighContrast = ExtendedColorScheme(
-  customColor1 = ColorFamily(
-    customColor1LightHighContrast,
-    onCustomColor1LightHighContrast,
-    customColor1ContainerLightHighContrast,
-    onCustomColor1ContainerLightHighContrast,
-  ),
-  customColor2 = ColorFamily(
-    customColor2LightHighContrast,
-    onCustomColor2LightHighContrast,
-    customColor2ContainerLightHighContrast,
-    onCustomColor2ContainerLightHighContrast,
-  ),
-  customColor3 = ColorFamily(
-    customColor3LightHighContrast,
-    onCustomColor3LightHighContrast,
-    customColor3ContainerLightHighContrast,
-    onCustomColor3ContainerLightHighContrast,
-  ),
-  customColor4 = ColorFamily(
-    customColor4LightHighContrast,
-    onCustomColor4LightHighContrast,
-    customColor4ContainerLightHighContrast,
-    onCustomColor4ContainerLightHighContrast,
-  ),
-)
-
-val extendedDarkMediumContrast = ExtendedColorScheme(
-  customColor1 = ColorFamily(
-    customColor1DarkMediumContrast,
-    onCustomColor1DarkMediumContrast,
-    customColor1ContainerDarkMediumContrast,
-    onCustomColor1ContainerDarkMediumContrast,
-  ),
-  customColor2 = ColorFamily(
-    customColor2DarkMediumContrast,
-    onCustomColor2DarkMediumContrast,
-    customColor2ContainerDarkMediumContrast,
-    onCustomColor2ContainerDarkMediumContrast,
-  ),
-  customColor3 = ColorFamily(
-    customColor3DarkMediumContrast,
-    onCustomColor3DarkMediumContrast,
-    customColor3ContainerDarkMediumContrast,
-    onCustomColor3ContainerDarkMediumContrast,
-  ),
-  customColor4 = ColorFamily(
-    customColor4DarkMediumContrast,
-    onCustomColor4DarkMediumContrast,
-    customColor4ContainerDarkMediumContrast,
-    onCustomColor4ContainerDarkMediumContrast,
-  ),
-)
-
-val extendedDarkHighContrast = ExtendedColorScheme(
-  customColor1 = ColorFamily(
-    customColor1DarkHighContrast,
-    onCustomColor1DarkHighContrast,
-    customColor1ContainerDarkHighContrast,
-    onCustomColor1ContainerDarkHighContrast,
-  ),
-  customColor2 = ColorFamily(
-    customColor2DarkHighContrast,
-    onCustomColor2DarkHighContrast,
-    customColor2ContainerDarkHighContrast,
-    onCustomColor2ContainerDarkHighContrast,
-  ),
-  customColor3 = ColorFamily(
-    customColor3DarkHighContrast,
-    onCustomColor3DarkHighContrast,
-    customColor3ContainerDarkHighContrast,
-    onCustomColor3ContainerDarkHighContrast,
-  ),
-  customColor4 = ColorFamily(
-    customColor4DarkHighContrast,
-    onCustomColor4DarkHighContrast,
-    customColor4ContainerDarkHighContrast,
-    onCustomColor4ContainerDarkHighContrast,
-  ),
-)
-
 @Composable
 fun DexReaderTheme(
   dynamicColor: Boolean = false,
@@ -441,7 +257,7 @@ fun DexReaderTheme(
   val viewModel = hiltViewModel<SettingsViewModel>()
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-  val darkTheme = when (uiState.themeType) {
+  val isDarkTheme = when (uiState.themeType) {
     ThemeType.SYSTEM -> isSystemInDarkTheme()
     ThemeType.DARK -> true
     ThemeType.LIGHT -> false
@@ -450,10 +266,10 @@ fun DexReaderTheme(
   val colorScheme = when {
     dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
       val context = LocalContext.current
-      if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+      if (isDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
     }
 
-    darkTheme -> when (contrastLevel) {
+    isDarkTheme -> when (contrastLevel) {
       ContrastLevel.Standard -> darkScheme
       ContrastLevel.Medium -> mediumContrastDarkColorScheme
       ContrastLevel.High -> highContrastDarkColorScheme
@@ -466,31 +282,14 @@ fun DexReaderTheme(
     }
   }
 
-  val extendedColorScheme = when {
-    dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-      if (darkTheme) extendedDark else extendedLight
-    }
-
-    darkTheme -> when (contrastLevel) {
-      ContrastLevel.Standard -> extendedDark
-      ContrastLevel.Medium -> extendedDarkMediumContrast
-      ContrastLevel.High -> extendedDarkHighContrast
-    }
-
-    else -> when (contrastLevel) {
-      ContrastLevel.Standard -> extendedLight
-      ContrastLevel.Medium -> extendedLightMediumContrast
-      ContrastLevel.High -> extendedLightHighContrast
-    }
-  }
-
   val view = LocalView.current
   if (!view.isInEditMode) {
     SideEffect {
       val window = (view.context as Activity).window
+      @Suppress("DEPRECATION")
       window.navigationBarColor = colorScheme.surfaceContainerHighest.toArgb()
-      WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
-      WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars = !darkTheme
+      WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !isDarkTheme
+      WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars = !isDarkTheme
     }
   }
 

@@ -1,0 +1,81 @@
+package com.decoutkhanqindev.dexreader.presentation.screens.home.components
+
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
+import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
+import com.decoutkhanqindev.dexreader.presentation.screens.home.HomeUiState
+
+@Composable
+fun HomeContent(
+  uiState: HomeUiState,
+  onSelectedManga: (String) -> Unit,
+  onRetry: () -> Unit,
+  modifier: Modifier,
+) {
+  var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
+
+  when (uiState) {
+    HomeUiState.Loading -> LoadingScreen(modifier = modifier)
+
+    HomeUiState.Error -> {
+      if (isShowErrorDialog) {
+        NotificationDialog(
+          onDismissClick = { isShowErrorDialog = false },
+          onConfirmClick = {
+            isShowErrorDialog = false
+            onRetry()
+          },
+        )
+      }
+    }
+
+    is HomeUiState.Success -> {
+      LazyColumn(modifier = modifier) {
+        item {
+          MangaListSection(
+            title = stringResource(R.string.latest_update),
+            mangaList = uiState.latestUpdatesMangaList,
+            onSelectedManga = { onSelectedManga(it.id) },
+            modifier = Modifier.fillMaxWidth()
+          )
+        }
+
+        item {
+          MangaListSection(
+            title = stringResource(R.string.trending),
+            mangaList = uiState.trendingMangaList,
+            onSelectedManga = { onSelectedManga(it.id) },
+            modifier = Modifier.fillMaxWidth()
+          )
+        }
+
+        item {
+          MangaListSection(
+            title = stringResource(R.string.new_releases),
+            mangaList = uiState.newReleaseMangaList,
+            onSelectedManga = { onSelectedManga(it.id) },
+            modifier = Modifier.fillMaxWidth()
+          )
+        }
+
+        item {
+          MangaListSection(
+            title = stringResource(R.string.top_rated),
+            mangaList = uiState.topRatedMangaList,
+            onSelectedManga = { onSelectedManga(it.id) },
+            modifier = Modifier.fillMaxWidth()
+          )
+        }
+      }
+    }
+  }
+}

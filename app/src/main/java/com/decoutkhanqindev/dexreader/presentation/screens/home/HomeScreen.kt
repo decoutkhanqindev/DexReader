@@ -1,0 +1,48 @@
+package com.decoutkhanqindev.dexreader.presentation.screens.home
+
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.domain.model.User
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseScreen
+import com.decoutkhanqindev.dexreader.presentation.screens.home.components.HomeContent
+
+@Composable
+fun HomeScreen(
+  isUserLoggedIn: Boolean,
+  currentUser: User?,
+  onSignInClick: () -> Unit,
+  onMenuItemClick: (String) -> Unit,
+  onSearchClick: () -> Unit,
+  onSelectedManga: (String) -> Unit,
+  viewModel: HomeViewModel = hiltViewModel(),
+  modifier: Modifier = Modifier,
+) {
+  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  val route = NavDestination.HomeDestination.route
+
+  BaseScreen(
+    isUserLoggedIn = isUserLoggedIn,
+    currentUser = currentUser,
+    onSignInClick = onSignInClick,
+    title = stringResource(R.string.app_name),
+    route = route,
+    onMenuItemClick = onMenuItemClick,
+    onSearchClick = onSearchClick,
+    content = {
+      HomeContent(
+        uiState = uiState,
+        onSelectedManga = onSelectedManga,
+        onRetry = viewModel::retry,
+        modifier = Modifier.fillMaxSize(),
+      )
+    },
+    modifier = modifier
+  )
+}

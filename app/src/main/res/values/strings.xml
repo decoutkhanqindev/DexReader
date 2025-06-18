@@ -115,6 +115,6 @@
   <string name="change">Change</string>
   <string name="are_you_sure_you_want_to_enable_dynamic_color_theme">Are you sure you want to enable dynamic color theme?</string>
   <string name="theme_change_successful">Theme change successful.</string>
-  <string name="removed_from_history_failed">Removed from history failed.</string>
-  <string name="change_theme_failed">Change theme failed.</string>
+  <string name="removed_from_history_failed">Removed from history failed. Please try again.</string>
+  <string name="change_theme_failed">Change theme failed. Please try again.</string>
 </resources>
