@@ -44,7 +44,7 @@
   <string name="next_chapter">next chapter</string>
   <string name="volume_chapter">Vol %1$s - Ch %2$s</string>
   <string name="unfavorite">Unfavorite</string>
-  <string name="last_chapter">Last chapter</string>
+  <string name="last_chapter">(Last chapter)</string>
   <string name="icon_expand_more">icon expand-more</string>
   <string name="icon_expand_less">icon expand-less</string>
   <string name="no_chapter_pages_available">No chapter pages available.</string>
@@ -106,4 +106,15 @@
   <string name="you_have_removed_from_history_successfully">You have removed from history successfully.</string>
   <string name="language_options">Language Options</string>
   <string name="view_details_or_continue">View Details or Continue?</string>
+  <string name="system">System</string>
+  <string name="dark">Dark Mode</string>
+  <string name="light">Light Mode</string>
+  <string name="theme">Theme Options</string>
+  <string name="dynamic_color">Dynamic Color</string>
+  <string name="are_you_sure_you_want_to_change_the_theme">Are you sure you want to change the theme?</string>
+  <string name="change">Change</string>
+  <string name="are_you_sure_you_want_to_enable_dynamic_color_theme">Are you sure you want to enable dynamic color theme?</string>
+  <string name="theme_change_successful">Theme change successful.</string>
+  <string name="removed_from_history_failed">Removed from history failed.</string>
+  <string name="change_theme_failed">Change theme failed.</string>
 </resources>
