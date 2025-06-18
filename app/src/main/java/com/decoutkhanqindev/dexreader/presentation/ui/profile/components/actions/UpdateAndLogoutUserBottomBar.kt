@@ -31,37 +31,13 @@ fun UpdateAndLogoutUserBottomBar(
   onLogoutClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
-  var isShowUpdateDialog by rememberSaveable { mutableStateOf(false) }
-  var isShowLogoutDialog by rememberSaveable { mutableStateOf(false) }
-
-  if (isShowUpdateDialog) {
-    NotificationDialog(
-      title = stringResource(R.string.are_you_sure_you_want_to_update_with_the_new_changes),
-      onDismissClick = { isShowUpdateDialog = false },
-      confirm = stringResource(R.string.update_profile),
-      onConfirmClick = {
-        onUpdateClick()
-        isShowUpdateDialog = false
-      },
-    )
-  }
-
-  if (isShowLogoutDialog) {
-    NotificationDialog(
-      title = stringResource(R.string.are_you_sure_you_want_to_logout),
-      onDismissClick = { isShowLogoutDialog = false },
-      confirm = stringResource(R.string.logout),
-      onConfirmClick = {
-        onLogoutClick()
-        isShowLogoutDialog = false
-      },
-    )
-  }
+  var isShowUpdateUserDialog by rememberSaveable { mutableStateOf(false) }
+  var isShowLogoutUserDialog by rememberSaveable { mutableStateOf(false) }
 
   BottomAppBar(
     actions = {
       ActionButton(
-        onClick = { isShowLogoutDialog = true },
+        onClick = { isShowLogoutUserDialog = true },
         content = {
           Text(
             text = stringResource(R.string.logout),
@@ -86,7 +62,7 @@ fun UpdateAndLogoutUserBottomBar(
       ) {
         SubmitButton(
           title = stringResource(R.string.update_profile),
-          onSubmitClick = { isShowUpdateDialog = true },
+          onSubmitClick = { isShowUpdateUserDialog = true },
           modifier = Modifier
             .fillMaxWidth()
             .padding(start = 8.dp)
@@ -97,4 +73,28 @@ fun UpdateAndLogoutUserBottomBar(
     contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
     modifier = modifier
   )
+
+  if (isShowUpdateUserDialog) {
+    NotificationDialog(
+      title = stringResource(R.string.are_you_sure_you_want_to_update_with_the_new_changes),
+      onDismissClick = { isShowUpdateUserDialog = false },
+      confirm = stringResource(R.string.update_profile),
+      onConfirmClick = {
+        onUpdateClick()
+        isShowUpdateUserDialog = false
+      },
+    )
+  }
+
+  if (isShowLogoutUserDialog) {
+    NotificationDialog(
+      title = stringResource(R.string.are_you_sure_you_want_to_logout),
+      onDismissClick = { isShowLogoutUserDialog = false },
+      confirm = stringResource(R.string.logout),
+      onConfirmClick = {
+        onLogoutClick()
+        isShowLogoutUserDialog = false
+      },
+    )
+  }
 }
