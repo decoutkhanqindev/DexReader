@@ -4,8 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.domain.model.Manga
+import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.ui.common.states.IdleScreen
-import com.decoutkhanqindev.dexreader.presentation.ui.search.ResultsUiState
 import com.decoutkhanqindev.dexreader.presentation.ui.search.SuggestionsUiState
 import com.decoutkhanqindev.dexreader.presentation.ui.search.components.results.ResultsSection
 import com.decoutkhanqindev.dexreader.presentation.ui.search.components.suggestions.SuggestionsSection
@@ -15,7 +16,7 @@ import com.decoutkhanqindev.dexreader.presentation.ui.search.components.suggesti
 fun SearchContent(
   query: String,
   suggestionsUiState: SuggestionsUiState,
-  resultsUiState: ResultsUiState,
+  resultsUiState: BasePaginationUiState<Manga>,
   isExpanded: Boolean,
   suggestionList: List<String>,
   onSelectedSuggestion: (String) -> Unit,

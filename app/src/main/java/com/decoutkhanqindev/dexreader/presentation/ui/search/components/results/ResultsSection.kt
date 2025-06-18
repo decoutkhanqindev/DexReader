@@ -11,6 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.domain.model.Manga
+import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BaseNextPageState
+import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.ui.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.ui.common.indicators.NextPageLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.ui.common.lists.manga.VerticalGridMangaList
@@ -18,13 +21,11 @@ import com.decoutkhanqindev.dexreader.presentation.ui.common.states.LoadingScree
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.AllItemLoadedMessage
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.LoadMoreMessage
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.LoadPageErrorMessage
-import com.decoutkhanqindev.dexreader.presentation.ui.search.ResultsNextPageState
-import com.decoutkhanqindev.dexreader.presentation.ui.search.ResultsUiState
 
 @Composable
 fun ResultsSection(
   query: String,
-  resultsUiState: ResultsUiState,
+  resultsUiState: BasePaginationUiState<Manga>,
   onSelectedManga: (String) -> Unit,
   onFetchMangaListNextPage: () -> Unit,
   onRetryFetchMangaListNextPage: () -> Unit,
@@ -34,9 +35,9 @@ fun ResultsSection(
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
 
   when (resultsUiState) {
-    ResultsUiState.FirstPageLoading -> LoadingScreen(modifier = modifier)
+    BasePaginationUiState.FirstPageLoading -> LoadingScreen(modifier = modifier)
 
-    ResultsUiState.FirstPageError -> {
+    BasePaginationUiState.FirstPageError -> {
       if (isShowErrorDialog) {
         NotificationDialog(
           onDismissClick = { isShowErrorDialog = false },
@@ -48,8 +49,8 @@ fun ResultsSection(
       }
     }
 
-    is ResultsUiState.Content -> {
-      val mangaList = resultsUiState.mangaList
+    is BasePaginationUiState.Content -> {
+      val mangaList = resultsUiState.currentList
       val nextPageState = resultsUiState.nextPageState
 
       if (mangaList.isEmpty()) {
@@ -63,13 +64,13 @@ fun ResultsSection(
           onSelectedManga = { onSelectedManga(it.id) },
           loadMoreContent = {
             when (nextPageState) {
-              ResultsNextPageState.LOADING -> NextPageLoadingIndicator(
+              BaseNextPageState.LOADING -> NextPageLoadingIndicator(
                 modifier = Modifier
                   .fillMaxWidth()
                   .padding(bottom = 12.dp)
               )
 
-              ResultsNextPageState.ERROR -> LoadPageErrorMessage(
+              BaseNextPageState.ERROR -> LoadPageErrorMessage(
                 message = stringResource(R.string.can_t_load_next_manga_page_please_try_again),
                 onRetry = onRetryFetchMangaListNextPage,
                 modifier = Modifier
@@ -77,7 +78,7 @@ fun ResultsSection(
                   .padding(top = 8.dp)
               )
 
-              ResultsNextPageState.IDLE -> LoadMoreMessage(
+              BaseNextPageState.IDLE -> LoadMoreMessage(
                 onLoadMore = onFetchMangaListNextPage,
                 modifier = Modifier
                   .fillMaxWidth()
@@ -85,7 +86,7 @@ fun ResultsSection(
                   .padding(bottom = 12.dp)
               )
 
-              ResultsNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
+              BaseNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
                 title = stringResource(R.string.all_mangas_loaded),
                 modifier = Modifier
                   .fillMaxWidth()
