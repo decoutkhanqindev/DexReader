@@ -16,10 +16,6 @@ import javax.inject.Singleton
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-annotation class IsDynamicThemeKeyQualifier
-
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
 annotation class ThemeTypeKeyQualifier
 
 @Module
