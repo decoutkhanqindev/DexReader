@@ -57,8 +57,8 @@ sealed class FilterCriteria(
 }
 
 sealed class FilterValue(
+  val id: String,
   val name: String,
-  val id: String
 ) {
   data object Ongoing : FilterValue(
     id = "ongoing",
