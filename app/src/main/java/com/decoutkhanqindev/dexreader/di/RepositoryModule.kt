@@ -6,6 +6,7 @@ import com.decoutkhanqindev.dexreader.data.repository.ChapterRepositoryImpl
 import com.decoutkhanqindev.dexreader.data.repository.FavoritesRepositoryImpl
 import com.decoutkhanqindev.dexreader.data.repository.HistoryRepositoryImpl
 import com.decoutkhanqindev.dexreader.data.repository.MangaRepositoryImpl
+import com.decoutkhanqindev.dexreader.data.repository.SettingsRepositoryImpl
 import com.decoutkhanqindev.dexreader.data.repository.UserRepositoryImpl
 import com.decoutkhanqindev.dexreader.domain.repository.CacheRepository
 import com.decoutkhanqindev.dexreader.domain.repository.CategoryRepository
@@ -13,6 +14,7 @@ import com.decoutkhanqindev.dexreader.domain.repository.ChapterRepository
 import com.decoutkhanqindev.dexreader.domain.repository.FavoritesRepository
 import com.decoutkhanqindev.dexreader.domain.repository.HistoryRepository
 import com.decoutkhanqindev.dexreader.domain.repository.MangaRepository
+import com.decoutkhanqindev.dexreader.domain.repository.SettingsRepository
 import com.decoutkhanqindev.dexreader.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
@@ -56,4 +58,9 @@ interface RepositoryModule {
   fun provideHistoryRepository(
     historyRepositoryImpl: HistoryRepositoryImpl
   ): HistoryRepository
+
+  @Binds
+  fun provideSettingsRepository(
+    settingsRepositoryImpl: SettingsRepositoryImpl
+  ): SettingsRepository
 }
