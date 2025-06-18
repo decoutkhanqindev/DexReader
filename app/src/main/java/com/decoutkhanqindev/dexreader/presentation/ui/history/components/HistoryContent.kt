@@ -28,7 +28,7 @@ fun HistoryContent(
   ) -> Unit,
   onMangaDetailsClick: (String) -> Unit,
   onUpdateRemoveReadingHistoryId: (String) -> Unit,
-  onConfirmRemoveFromHistory: () -> Unit,
+  onRemoveFromHistory: () -> Unit,
   onRetryRemoveFromHistory: () -> Unit,
   onObserveHistoryNextPage: () -> Unit,
   onRetryObserveHistoryNextPage: () -> Unit,
@@ -94,6 +94,7 @@ fun HistoryContent(
         removeFromHistoryUiState.isError -> {
           if (isShowRemoveFromHistoryErrorDialog) {
             NotificationDialog(
+              title = stringResource(R.string.removed_from_history_failed),
               onDismissClick = { isShowRemoveFromHistoryErrorDialog = false },
               onConfirmClick = {
                 isShowRemoveFromHistoryErrorDialog = false
@@ -123,7 +124,7 @@ fun HistoryContent(
           confirm = stringResource(R.string.remove),
           onConfirmClick = {
             isShowRemoveFromHistoryDialog = false
-            onConfirmRemoveFromHistory()
+            onRemoveFromHistory()
           },
         )
       }

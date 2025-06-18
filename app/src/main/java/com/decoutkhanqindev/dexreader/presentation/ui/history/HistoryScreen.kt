@@ -56,7 +56,7 @@ fun HistoryScreen(
           onContinueReadingClick = onContinueReadingClick,
           onMangaDetailsClick = onMangaDetailsClick,
           onUpdateRemoveReadingHistoryId = viewModel::updateRemoveReadingHistoryId,
-          onConfirmRemoveFromHistory = viewModel::removeFromHistory,
+          onRemoveFromHistory = viewModel::removeFromHistory,
           onRetryRemoveFromHistory = viewModel::retryRemoveFromHistory,
           onObserveHistoryNextPage = viewModel::observeHistoryNextPage,
           onRetryObserveHistoryNextPage = viewModel::retryObserveHistoryNextPage,
