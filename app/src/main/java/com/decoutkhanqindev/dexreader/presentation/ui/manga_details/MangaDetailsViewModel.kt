@@ -357,7 +357,7 @@ class MangaDetailsViewModel @Inject constructor(
     }
   }
 
-  fun updateUserId(id: String) {
+  fun updateUserId(id: String?) {
     if (_userId.value == id) return
     _userId.value = id
   }

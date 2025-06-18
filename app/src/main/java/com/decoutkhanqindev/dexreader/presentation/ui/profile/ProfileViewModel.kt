@@ -130,11 +130,11 @@ class ProfileViewModel @Inject constructor(
     }
   }
 
-  fun updateCurrentUser(user: User) {
+  fun updateCurrentUser(user: User?) {
     val currentUiState = _uiState.value
     if (currentUiState.user == user &&
-      currentUiState.updatedName == user.name &&
-      currentUiState.updatedProfilePictureUrl == user.profilePictureUrl
+      currentUiState.updatedName == user?.name &&
+      currentUiState.updatedProfilePictureUrl == user?.profilePictureUrl
     ) return
     _uiState.update {
       it.copy(
@@ -177,21 +177,6 @@ class ProfileViewModel @Inject constructor(
 
   fun retryLogoutUser() {
     if (_uiState.value.isLogoutUserError) logoutUser()
-  }
-
-  fun reset() {
-    _uiState.update {
-      it.copy(
-        isLoading = false,
-        user = null,
-        updatedName = null,
-        updatedProfilePictureUrl = null,
-        isValidName = false,
-        isUpdateUserSuccess = false,
-        isUpdateUserError = false,
-        isLogoutUserError = false
-      )
-    }
   }
 
   companion object {

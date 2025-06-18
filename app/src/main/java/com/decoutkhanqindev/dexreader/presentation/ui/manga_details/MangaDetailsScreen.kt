@@ -54,6 +54,7 @@ fun MangaDetailsScreen(
 
   LaunchedEffect(isUserLoggedIn, currentUser?.id) {
     if (isUserLoggedIn && currentUser != null) viewModel.updateUserId(id = currentUser.id)
+    else viewModel.updateUserId(id = null)
   }
 
   if (isShowFavoritesDialog) {

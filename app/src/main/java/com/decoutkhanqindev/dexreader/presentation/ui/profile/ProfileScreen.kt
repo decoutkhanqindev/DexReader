@@ -44,7 +44,7 @@ fun ProfileScreen(
 
   LaunchedEffect(isUserLoggedIn, currentUser) {
     if (isUserLoggedIn && currentUser != null) viewModel.updateCurrentUser(user = currentUser)
-    else viewModel.reset()
+    else viewModel.updateCurrentUser(user = null)
   }
 
   BaseScreen(

@@ -37,6 +37,7 @@ fun HistoryScreen(
 
   LaunchedEffect(isUserLoggedIn, currentUser?.id) {
     if (isUserLoggedIn && currentUser != null) viewModel.updateUserId(userId = currentUser.id)
+    else viewModel.updateUserId(userId = null)
   }
 
   BaseScreen(

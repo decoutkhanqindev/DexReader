@@ -212,7 +212,7 @@ class HistoryViewModel @Inject constructor(
     }
   }
 
-  fun updateUserId(userId: String) {
+  fun updateUserId(userId: String?) {
     if (_userId.value == userId) return
     _userId.value = userId
   }

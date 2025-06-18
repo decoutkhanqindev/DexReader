@@ -9,7 +9,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BasePaginationUiState
@@ -85,7 +87,9 @@ fun HistoryContent(
           },
           onObserveHistoryNextPage = onObserveHistoryNextPage,
           onRetryObserveHistoryNextPage = onRetryObserveHistoryNextPage,
-          modifier = modifier
+          modifier =
+            if (removeFromHistoryUiState.isLoading) modifier.blur(8.dp)
+            else modifier
         )
       }
 

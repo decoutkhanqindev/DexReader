@@ -350,7 +350,7 @@ class ReaderViewModel @Inject constructor(
     }
   }
 
-  fun updateUserId(userId: String) {
+  fun updateUserId(userId: String?) {
     if (_userId.value == userId) return
     _userId.value = userId
   }
@@ -521,15 +521,6 @@ class ReaderViewModel @Inject constructor(
           Log.d(TAG, "clearExpiredCache error: ${it.stackTraceToString()}")
         }
     }
-  }
-
-  fun reset() {
-    _chapterPagesUiState.value = ChapterPagesUiState.Loading
-    _chapterDetailsUiState.value = ChapterDetailsUiState()
-    _isFetchChapterDetailsDone.value = false
-    _isFetchMangaDetailsDone.value = false
-    _isObserveHistoryDone.value = true
-    _userId.value = null
   }
 
   fun retry() {
