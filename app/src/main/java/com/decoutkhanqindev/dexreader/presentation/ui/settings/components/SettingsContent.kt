@@ -2,7 +2,6 @@ package com.decoutkhanqindev.dexreader.presentation.ui.settings.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
@@ -13,7 +12,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.ThemeType
 import com.decoutkhanqindev.dexreader.presentation.ui.common.dialog.NotificationDialog
@@ -24,13 +22,13 @@ import com.decoutkhanqindev.dexreader.presentation.ui.settings.SettingsUiState
 fun SettingsContent(
   uiState: SettingsUiState,
   onChangeThemeType: (ThemeType) -> Unit,
+  onSetThemeType: () -> Unit,
   onRetry: () -> Unit,
   modifier: Modifier = Modifier
 ) {
-  var selectedThemeType by rememberSaveable { mutableStateOf(uiState.themeType) }
+  var isShowConfirmChangeThemeDialog by rememberSaveable { mutableStateOf(false) }
   var isShowChangeThemeErrorDialog by rememberSaveable { mutableStateOf(true) }
   var isShowChangeThemeSuccessDialog by rememberSaveable { mutableStateOf(true) }
-  var isShowConfirmChangeThemeDialog by rememberSaveable { mutableStateOf(false) }
 
   Column(
     verticalArrangement = Arrangement.Center,
@@ -38,12 +36,12 @@ fun SettingsContent(
     modifier = modifier
   ) {
     ThemeSelectorList(
-      selectedThemeType = selectedThemeType,
+      selectedThemeType = uiState.themeType,
       onSelectedTheme = {
         isShowConfirmChangeThemeDialog = true
-        selectedThemeType = it
+        onChangeThemeType(it)
       },
-      modifier = Modifier.size(200.dp)
+      modifier = Modifier
     )
   }
 
@@ -53,6 +51,7 @@ fun SettingsContent(
     uiState.isChangeThemeError -> {
       if (isShowChangeThemeErrorDialog) {
         NotificationDialog(
+          title = stringResource(R.string.change_theme_failed),
           onDismissClick = { isShowChangeThemeErrorDialog = false },
           onConfirmClick = {
             isShowChangeThemeErrorDialog = false
@@ -82,7 +81,7 @@ fun SettingsContent(
       confirm = stringResource(R.string.change),
       onConfirmClick = {
         isShowConfirmChangeThemeDialog = false
-        onChangeThemeType(selectedThemeType)
+        onSetThemeType()
       },
     )
   }

@@ -38,6 +38,7 @@ fun SettingsScreen(
       SettingsContent(
         uiState = uiState,
         onChangeThemeType = viewModel::changeThemeType,
+        onSetThemeType = viewModel::setThemeType,
         onRetry = viewModel::retry,
         modifier = Modifier.fillMaxSize()
       )

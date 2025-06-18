@@ -53,7 +53,7 @@ class SettingsViewModel @Inject constructor(
     }
   }
 
-  private fun setThemeType() {
+  fun setThemeType() {
     val currentUiState = _uiState.value
     if (currentUiState.isLoading) return
 
@@ -99,7 +99,6 @@ class SettingsViewModel @Inject constructor(
         isChangeThemeError = false
       )
     }
-    setThemeType()
   }
 
   fun retry() {
