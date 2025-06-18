@@ -11,15 +11,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
+import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.ui.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.ui.common.states.IdleScreen
 import com.decoutkhanqindev.dexreader.presentation.ui.common.states.LoadingScreen
-import com.decoutkhanqindev.dexreader.presentation.ui.history.HistoryUiState
 import com.decoutkhanqindev.dexreader.presentation.ui.history.RemoveFromHistoryUiState
 
 @Composable
 fun HistoryContent(
-  historyUiState: HistoryUiState,
+  historyUiState: BasePaginationUiState<ReadingHistory>,
   removeFromHistoryUiState: RemoveFromHistoryUiState,
   onContinueReadingClick: (
     chapterId: String,
@@ -45,9 +46,9 @@ fun HistoryContent(
   var isShowHistoryErrorDialog by rememberSaveable { mutableStateOf(true) }
 
   when (historyUiState) {
-    HistoryUiState.FirstPageLoading -> LoadingScreen(modifier = modifier)
+    BasePaginationUiState.FirstPageLoading -> LoadingScreen(modifier = modifier)
 
-    HistoryUiState.FirstPageError -> {
+    BasePaginationUiState.FirstPageError -> {
       if (isShowHistoryErrorDialog) {
         NotificationDialog(
           onDismissClick = { isShowHistoryErrorDialog = false },
@@ -59,8 +60,8 @@ fun HistoryContent(
       }
     }
 
-    is HistoryUiState.Content -> {
-      val readingHistoryList = historyUiState.readingHistoryList
+    is BasePaginationUiState.Content -> {
+      val readingHistoryList = historyUiState.currentList
       val nextPageState = historyUiState.nextPageState
 
       if (readingHistoryList.isEmpty()) {

@@ -21,18 +21,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
+import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.ui.common.buttons.MoveToTopButton
 import com.decoutkhanqindev.dexreader.presentation.ui.common.indicators.NextPageLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.AllItemLoadedMessage
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.LoadMoreMessage
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.LoadPageErrorMessage
-import com.decoutkhanqindev.dexreader.presentation.ui.history.HistoryNextPageState
 import kotlinx.coroutines.launch
 
 @Composable
 fun ReadingHistoryList(
   readingHistoryList: List<ReadingHistory>,
-  historyNextPageState: HistoryNextPageState,
+  historyNextPageState: BaseNextPageState,
   onSelectedReadingHistory: (
     mangaId: String,
     chapterId: String,
@@ -74,13 +74,13 @@ fun ReadingHistoryList(
 
       item {
         when (historyNextPageState) {
-          HistoryNextPageState.LOADING -> NextPageLoadingIndicator(
+          BaseNextPageState.LOADING -> NextPageLoadingIndicator(
             modifier = Modifier
               .fillMaxWidth()
               .padding(bottom = 12.dp)
           )
 
-          HistoryNextPageState.ERROR -> LoadPageErrorMessage(
+          BaseNextPageState.ERROR -> LoadPageErrorMessage(
             message = stringResource(R.string.can_t_load_next_reading_history_page_please_try_again),
             onRetry = onRetryObserveHistoryNextPage,
             modifier = Modifier
@@ -88,7 +88,7 @@ fun ReadingHistoryList(
               .padding(top = 8.dp)
           )
 
-          HistoryNextPageState.IDLE -> LoadMoreMessage(
+          BaseNextPageState.IDLE -> LoadMoreMessage(
             onLoadMore = onObserveHistoryNextPage,
             modifier = Modifier
               .fillMaxWidth()
@@ -96,7 +96,7 @@ fun ReadingHistoryList(
               .padding(bottom = 12.dp, top = 8.dp)
           )
 
-          HistoryNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
+          BaseNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
             title = "All reading histories loaded.",
             modifier = Modifier
               .fillMaxWidth()

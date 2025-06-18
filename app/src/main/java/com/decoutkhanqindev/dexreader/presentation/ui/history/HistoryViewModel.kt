@@ -3,8 +3,11 @@ package com.decoutkhanqindev.dexreader.presentation.ui.history
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.usecase.history.ObserveHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.history.RemoveFromHistoryUseCase
+import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BaseNextPageState
+import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BasePaginationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,8 +23,9 @@ class HistoryViewModel @Inject constructor(
   private val observeHistoryUseCase: ObserveHistoryUseCase,
   private val removeFromHistoryUseCase: RemoveFromHistoryUseCase
 ) : ViewModel() {
-  private val _historyUiState = MutableStateFlow<HistoryUiState>(HistoryUiState.FirstPageLoading)
-  val historyUiState: StateFlow<HistoryUiState> = _historyUiState.asStateFlow()
+  private val _historyUiState =
+    MutableStateFlow<BasePaginationUiState<ReadingHistory>>(BasePaginationUiState.FirstPageLoading)
+  val historyUiState: StateFlow<BasePaginationUiState<ReadingHistory>> = _historyUiState.asStateFlow()
 
   private val _removeFromHistoryUiState = MutableStateFlow(RemoveFromHistoryUiState())
   val removeFromHistoryUiState: StateFlow<RemoveFromHistoryUiState> =
@@ -38,11 +42,11 @@ class HistoryViewModel @Inject constructor(
   private fun observeHistoryFirstPage() {
     cancelObserveHistoryJob()
     observeHistoryJob = viewModelScope.launch {
-      _historyUiState.value = HistoryUiState.FirstPageLoading
+      _historyUiState.value = BasePaginationUiState.FirstPageLoading
 
       _userId.collectLatest { userId ->
         if (userId == null) {
-          _historyUiState.value = HistoryUiState.FirstPageLoading
+          _historyUiState.value = BasePaginationUiState.FirstPageLoading
           cancelObserveHistoryJob()
           return@collectLatest
         }
@@ -55,29 +59,29 @@ class HistoryViewModel @Inject constructor(
             result
               .onSuccess { readingHistoryList ->
                 val hasNextPage = readingHistoryList.size >= READING_HISTORY_LIST_PER_PAGE_SIZE
-                _historyUiState.value = HistoryUiState.Content(
-                  readingHistoryList = readingHistoryList,
+                _historyUiState.value = BasePaginationUiState.Content(
+                  currentList = readingHistoryList,
                   currentPage = FIRST_PAGE,
                   nextPageState =
-                    if (!hasNextPage) HistoryNextPageState.NO_MORE_ITEMS
-                    else HistoryNextPageState.IDLE
+                    if (!hasNextPage) BaseNextPageState.NO_MORE_ITEMS
+                    else BaseNextPageState.IDLE
                 )
               }
               .onFailure { throwable ->
                 if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null) {
-                  _historyUiState.value = HistoryUiState.FirstPageLoading
+                  _historyUiState.value = BasePaginationUiState.FirstPageLoading
                   return@onFailure
                 }
 
-                _historyUiState.value = HistoryUiState.FirstPageError
+                _historyUiState.value = BasePaginationUiState.FirstPageError
                 Log.d(TAG, "observeHistoryFirstPage have error: ${throwable.stackTraceToString()}")
               }
           }
         } catch (e: Exception) {
           if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null)
-            _historyUiState.value = HistoryUiState.FirstPageLoading
+            _historyUiState.value = BasePaginationUiState.FirstPageLoading
           else {
-            _historyUiState.value = HistoryUiState.FirstPageError
+            _historyUiState.value = BasePaginationUiState.FirstPageError
             Log.d(TAG, "observeHistoryFirstPage have error: ${e.stackTraceToString()}")
           }
         }
@@ -87,35 +91,34 @@ class HistoryViewModel @Inject constructor(
 
   fun observeHistoryNextPage() {
     when (val currentUiState = _historyUiState.value) {
-      HistoryUiState.FirstPageLoading,
-      HistoryUiState.FirstPageError,
-      HistoryUiState.FirstPageLoading,
+      BasePaginationUiState.FirstPageError,
+      BasePaginationUiState.FirstPageLoading,
         -> return
 
-      is HistoryUiState.Content -> {
+      is BasePaginationUiState.Content -> {
         when (currentUiState.nextPageState) {
-          HistoryNextPageState.LOADING,
-          HistoryNextPageState.NO_MORE_ITEMS
+          BaseNextPageState.LOADING,
+          BaseNextPageState.NO_MORE_ITEMS
             -> return
 
-          HistoryNextPageState.ERROR -> retryObserveHistoryNextPage()
-          HistoryNextPageState.IDLE -> observeHistoryNextPageInternal(currentUiState)
+          BaseNextPageState.ERROR -> retryObserveHistoryNextPage()
+          BaseNextPageState.IDLE -> observeHistoryNextPageInternal(currentUiState)
         }
       }
     }
   }
 
-  private fun observeHistoryNextPageInternal(currentUiState: HistoryUiState.Content) {
+  private fun observeHistoryNextPageInternal(currentUiState: BasePaginationUiState.Content<ReadingHistory>) {
     observeHistoryJob = viewModelScope.launch {
-      _historyUiState.value = currentUiState.copy(nextPageState = HistoryNextPageState.LOADING)
+      _historyUiState.value = currentUiState.copy(nextPageState = BaseNextPageState.LOADING)
 
-      val currentReadingHistoryList = currentUiState.readingHistoryList
+      val currentReadingHistoryList = currentUiState.currentList
       val nextPage = currentUiState.currentPage + 1
       val lastReadingHistoryId = currentReadingHistoryList.lastOrNull()?.id
 
       _userId.collectLatest { userId ->
         if (userId == null) {
-          _historyUiState.value = HistoryUiState.FirstPageLoading
+          _historyUiState.value = BasePaginationUiState.FirstPageLoading
           cancelObserveHistoryJob()
           return@collectLatest
         }
@@ -131,11 +134,11 @@ class HistoryViewModel @Inject constructor(
                 val allReadingHistoryList = currentReadingHistoryList + readingHistoryList
                 val hasNextPage = readingHistoryList.size >= READING_HISTORY_LIST_PER_PAGE_SIZE
                 _historyUiState.value = currentUiState.copy(
-                  readingHistoryList = allReadingHistoryList,
+                  currentList = allReadingHistoryList,
                   currentPage = nextPage,
                   nextPageState =
-                    if (!hasNextPage) HistoryNextPageState.NO_MORE_ITEMS
-                    else HistoryNextPageState.IDLE
+                    if (!hasNextPage) BaseNextPageState.NO_MORE_ITEMS
+                    else BaseNextPageState.IDLE
                 )
               }
               .onFailure { throwable ->
@@ -143,7 +146,7 @@ class HistoryViewModel @Inject constructor(
                   return@onFailure
 
                 _historyUiState.value =
-                  currentUiState.copy(nextPageState = HistoryNextPageState.ERROR)
+                  currentUiState.copy(nextPageState = BaseNextPageState.ERROR)
                 Log.d(
                   TAG,
                   "observeHistoryNextPageInternal have error: ${throwable.stackTraceToString()}"
@@ -154,7 +157,7 @@ class HistoryViewModel @Inject constructor(
           if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null)
             return@collectLatest
           else {
-            _historyUiState.value = currentUiState.copy(nextPageState = HistoryNextPageState.ERROR)
+            _historyUiState.value = currentUiState.copy(nextPageState = BaseNextPageState.ERROR)
             Log.d(TAG, "observeHistoryNextPageInternal setup error: ${e.stackTraceToString()}")
           }
         }
@@ -166,7 +169,7 @@ class HistoryViewModel @Inject constructor(
     val currentRemoveFromHistoryUiState = _removeFromHistoryUiState.value
     if (currentRemoveFromHistoryUiState.isLoading ||
       currentRemoveFromHistoryUiState.readingHistoryId == null ||
-      _historyUiState.value !is HistoryUiState.Content
+      _historyUiState.value !is BasePaginationUiState.Content
     ) return
 
     viewModelScope.launch {
@@ -227,25 +230,19 @@ class HistoryViewModel @Inject constructor(
   }
 
   fun retryObserveHistoryFirstPage() {
-    if (_historyUiState.value is HistoryUiState.FirstPageError)
+    if (_historyUiState.value is BasePaginationUiState.FirstPageError)
       observeHistoryFirstPage()
   }
 
   fun retryObserveHistoryNextPage() {
     val currentUiState = _historyUiState.value
-    if (currentUiState is HistoryUiState.Content &&
-      currentUiState.nextPageState == HistoryNextPageState.ERROR
+    if (currentUiState is BasePaginationUiState.Content &&
+      currentUiState.nextPageState == BaseNextPageState.ERROR
     ) observeHistoryNextPageInternal(currentUiState)
   }
 
   fun retryRemoveFromHistory() {
     if (_removeFromHistoryUiState.value.isError) removeFromHistory()
-  }
-
-  fun reset() {
-    _historyUiState.value = HistoryUiState.FirstPageLoading
-    _userId.value = null
-    _removeFromHistoryUiState.value = RemoveFromHistoryUiState()
   }
 
   private fun cancelObserveHistoryJob() {
