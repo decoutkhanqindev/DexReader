@@ -4,8 +4,11 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.domain.usecase.category.GetMangaListByCategoryUseCase
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
+import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BaseNextPageState
+import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BasePaginationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,8 +28,8 @@ class CategoryDetailsViewModel @Inject constructor(
     checkNotNull(savedStateHandle[NavDestination.CategoryDetailsDestination.CATEGORY_TITLE_ARG])
 
   private val _categoryDetailsUiState =
-    MutableStateFlow<CategoryDetailsUiState>(CategoryDetailsUiState.FirstPageLoading)
-  val categoryDetailsUiState: StateFlow<CategoryDetailsUiState> =
+    MutableStateFlow<BasePaginationUiState<Manga>>(BasePaginationUiState.FirstPageLoading)
+  val categoryDetailsUiState: StateFlow<BasePaginationUiState<Manga>> =
     _categoryDetailsUiState.asStateFlow()
 
   private val _categoryCriteriaUiState = MutableStateFlow(CategoryDetailsCriteriaUiState())
@@ -39,7 +42,7 @@ class CategoryDetailsViewModel @Inject constructor(
 
   private fun fetchMangaListByCategoryFirstPage() {
     viewModelScope.launch {
-      _categoryDetailsUiState.value = CategoryDetailsUiState.FirstPageLoading
+      _categoryDetailsUiState.value = BasePaginationUiState.FirstPageLoading
 
       val currentCriteriaUiState = _categoryCriteriaUiState.value
 
@@ -54,16 +57,16 @@ class CategoryDetailsViewModel @Inject constructor(
       )
         .onSuccess { mangaList ->
           val hasNextPage = mangaList.size >= MANGA_LIST_PER_PAGE_SIZE
-          _categoryDetailsUiState.value = CategoryDetailsUiState.Content(
-            mangaList = mangaList,
+          _categoryDetailsUiState.value = BasePaginationUiState.Content(
+            currentList = mangaList,
             currentPage = FIRST_PAGE,
             nextPageState =
-              if (!hasNextPage) CategoryDetailsNextPageState.NO_MORE_ITEMS
-              else CategoryDetailsNextPageState.IDLE
+              if (!hasNextPage) BaseNextPageState.NO_MORE_ITEMS
+              else BaseNextPageState.IDLE
           )
         }
         .onFailure {
-          _categoryDetailsUiState.value = CategoryDetailsUiState.FirstPageError
+          _categoryDetailsUiState.value = BasePaginationUiState.FirstPageError
           Log.d(TAG, "fetchMangaListByCategoryFirstPage have error: ${it.stackTraceToString()}")
         }
     }
@@ -71,32 +74,32 @@ class CategoryDetailsViewModel @Inject constructor(
 
   fun fetchMangaListByCategoryNextPage() {
     when (val currentCategoryDetailsUiState = _categoryDetailsUiState.value) {
-      CategoryDetailsUiState.FirstPageLoading,
-      CategoryDetailsUiState.FirstPageError
+      BasePaginationUiState.FirstPageLoading,
+      BasePaginationUiState.FirstPageError
         -> return
 
-      is CategoryDetailsUiState.Content -> {
+      is BasePaginationUiState.Content -> {
         when (currentCategoryDetailsUiState.nextPageState) {
-          CategoryDetailsNextPageState.LOADING,
-          CategoryDetailsNextPageState.NO_MORE_ITEMS
+          BaseNextPageState.LOADING,
+          BaseNextPageState.NO_MORE_ITEMS
             -> return
 
-          CategoryDetailsNextPageState.ERROR -> retryFetchMangaListByCategoryNextPage()
+          BaseNextPageState.ERROR -> retryFetchMangaListByCategoryNextPage()
 
-          CategoryDetailsNextPageState.IDLE ->
+          BaseNextPageState.IDLE ->
             fetchMangaListByCategoryNextPageInternal(currentCategoryDetailsUiState)
         }
       }
     }
   }
 
-  private fun fetchMangaListByCategoryNextPageInternal(currentCategoryDetailsUiState: CategoryDetailsUiState.Content) {
+  private fun fetchMangaListByCategoryNextPageInternal(currentCategoryDetailsUiState: BasePaginationUiState.Content<Manga>) {
     viewModelScope.launch {
       _categoryDetailsUiState.value =
-        currentCategoryDetailsUiState.copy(nextPageState = CategoryDetailsNextPageState.LOADING)
+        currentCategoryDetailsUiState.copy(nextPageState = BaseNextPageState.LOADING)
 
       val currentCriteriaUiState = _categoryCriteriaUiState.value
-      val currentMangaList = currentCategoryDetailsUiState.mangaList
+      val currentMangaList = currentCategoryDetailsUiState.currentList
       val nextPage = currentCategoryDetailsUiState.currentPage + 1
 
       getMangaListByCategoryUseCase(
@@ -113,16 +116,16 @@ class CategoryDetailsViewModel @Inject constructor(
           val allMangaList = currentMangaList + nextMangaList
           val hasNextPage = nextMangaList.size >= MANGA_LIST_PER_PAGE_SIZE
           _categoryDetailsUiState.value = currentCategoryDetailsUiState.copy(
-            mangaList = allMangaList,
+            currentList = allMangaList,
             currentPage = nextPage,
             nextPageState =
-              if (!hasNextPage) CategoryDetailsNextPageState.NO_MORE_ITEMS
-              else CategoryDetailsNextPageState.IDLE
+              if (!hasNextPage) BaseNextPageState.NO_MORE_ITEMS
+              else BaseNextPageState.IDLE
           )
         }
         .onFailure {
           _categoryDetailsUiState.value =
-            currentCategoryDetailsUiState.copy(nextPageState = CategoryDetailsNextPageState.ERROR)
+            currentCategoryDetailsUiState.copy(nextPageState = BaseNextPageState.ERROR)
           Log.d(
             TAG,
             "fetchMangaListByCategoryNextPageInternal have error: ${it.stackTraceToString()}"
@@ -182,14 +185,14 @@ class CategoryDetailsViewModel @Inject constructor(
   }
 
   fun retry() {
-    if (_categoryDetailsUiState.value is CategoryDetailsUiState.FirstPageError)
+    if (_categoryDetailsUiState.value is BasePaginationUiState.FirstPageError)
       fetchMangaListByCategoryFirstPage()
   }
 
   fun retryFetchMangaListByCategoryNextPage() {
     val currentCategoryDetailsUiState = _categoryDetailsUiState.value
-    if (currentCategoryDetailsUiState is CategoryDetailsUiState.Content &&
-      currentCategoryDetailsUiState.nextPageState == CategoryDetailsNextPageState.ERROR
+    if (currentCategoryDetailsUiState is BasePaginationUiState.Content &&
+      currentCategoryDetailsUiState.nextPageState == BaseNextPageState.ERROR
     ) fetchMangaListByCategoryNextPageInternal(currentCategoryDetailsUiState)
   }
 

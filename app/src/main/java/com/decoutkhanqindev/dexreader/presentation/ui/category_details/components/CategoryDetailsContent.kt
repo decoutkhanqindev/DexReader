@@ -11,11 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.presentation.ui.category_details.CategoryDetailsCriteriaUiState
-import com.decoutkhanqindev.dexreader.presentation.ui.category_details.CategoryDetailsNextPageState
-import com.decoutkhanqindev.dexreader.presentation.ui.category_details.CategoryDetailsUiState
 import com.decoutkhanqindev.dexreader.presentation.ui.category_details.components.filter.FilterBottomSheet
 import com.decoutkhanqindev.dexreader.presentation.ui.category_details.components.sort.SortBottomSheet
+import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BaseNextPageState
+import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.ui.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.ui.common.indicators.NextPageLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.ui.common.lists.manga.VerticalGridMangaList
@@ -26,7 +27,7 @@ import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.LoadPageError
 
 @Composable
 fun CategoryDetailsContent(
-  categoryDetailsUiState: CategoryDetailsUiState,
+  categoryDetailsUiState: BasePaginationUiState<Manga>,
   categoryCriteriaUiState: CategoryDetailsCriteriaUiState,
   isSortBottomSheetVisible: Boolean,
   onSortSheetDismiss: () -> Unit,
@@ -71,9 +72,9 @@ fun CategoryDetailsContent(
   }
 
   when (categoryDetailsUiState) {
-    CategoryDetailsUiState.FirstPageLoading -> LoadingScreen(modifier = modifier)
+    BasePaginationUiState.FirstPageLoading -> LoadingScreen(modifier = modifier)
 
-    CategoryDetailsUiState.FirstPageError -> {
+    BasePaginationUiState.FirstPageError -> {
       if (isShowErrorDialog) {
         NotificationDialog(
           onDismissClick = { isShowErrorDialog = false },
@@ -85,8 +86,8 @@ fun CategoryDetailsContent(
       }
     }
 
-    is CategoryDetailsUiState.Content -> {
-      val mangaList = categoryDetailsUiState.mangaList
+    is BasePaginationUiState.Content<Manga> -> {
+      val mangaList = categoryDetailsUiState.currentList
       val nextPageState = categoryDetailsUiState.nextPageState
 
       VerticalGridMangaList(
@@ -94,13 +95,13 @@ fun CategoryDetailsContent(
         onSelectedManga = { onSelectedManga(it.id) },
         loadMoreContent = {
           when (nextPageState) {
-            CategoryDetailsNextPageState.LOADING -> NextPageLoadingIndicator(
+            BaseNextPageState.LOADING -> NextPageLoadingIndicator(
               modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 12.dp)
             )
 
-            CategoryDetailsNextPageState.ERROR -> LoadPageErrorMessage(
+            BaseNextPageState.ERROR -> LoadPageErrorMessage(
               message = stringResource(R.string.can_t_load_next_manga_page_please_try_again),
               onRetry = onRetryFetchMangaListNextPage,
               modifier = Modifier
@@ -108,7 +109,7 @@ fun CategoryDetailsContent(
                 .padding(top = 8.dp)
             )
 
-            CategoryDetailsNextPageState.IDLE -> LoadMoreMessage(
+            BaseNextPageState.IDLE -> LoadMoreMessage(
               onLoadMore = onFetchMangaListNextPage,
               modifier = Modifier
                 .fillMaxWidth()
@@ -116,7 +117,7 @@ fun CategoryDetailsContent(
                 .padding(bottom = 12.dp)
             )
 
-            CategoryDetailsNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
+            BaseNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
               title = stringResource(R.string.all_mangas_loaded),
               modifier = Modifier
                 .fillMaxWidth()
