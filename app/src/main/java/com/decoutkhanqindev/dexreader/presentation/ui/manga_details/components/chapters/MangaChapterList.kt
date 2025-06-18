@@ -15,11 +15,11 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
+import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.ui.common.indicators.NextPageLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.AllItemLoadedMessage
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.LoadMoreMessage
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.LoadPageErrorMessage
-import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.MangaChaptersNextPageState
 
 @Composable
 fun MangaChapterList(
@@ -31,7 +31,7 @@ fun MangaChapterList(
     lastReadPage: Int,
     mangaId: String
   ) -> Unit,
-  chapterListNextPageState: MangaChaptersNextPageState,
+  chapterListNextPageState: BaseNextPageState,
   onFetchChapterListNextPage: () -> Unit,
   onRetryFetchChapterListNextPage: () -> Unit,
   modifier: Modifier = Modifier
@@ -62,13 +62,13 @@ fun MangaChapterList(
       }
 
       when (chapterListNextPageState) {
-        MangaChaptersNextPageState.LOADING -> NextPageLoadingIndicator(
+        BaseNextPageState.LOADING -> NextPageLoadingIndicator(
           modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 12.dp)
         )
 
-        MangaChaptersNextPageState.ERROR -> LoadPageErrorMessage(
+        BaseNextPageState.ERROR -> LoadPageErrorMessage(
           message = stringResource(R.string.can_t_load_next_chapter_page_please_try_again),
           onRetry = onRetryFetchChapterListNextPage,
           modifier = Modifier
@@ -76,7 +76,7 @@ fun MangaChapterList(
             .padding(top = 8.dp)
         )
 
-        MangaChaptersNextPageState.IDLE -> LoadMoreMessage(
+        BaseNextPageState.IDLE -> LoadMoreMessage(
           onLoadMore = onFetchChapterListNextPage,
           modifier = Modifier
             .fillMaxWidth()
@@ -84,7 +84,7 @@ fun MangaChapterList(
             .padding(bottom = 12.dp)
         )
 
-        MangaChaptersNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
+        BaseNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
           title = stringResource(R.string.all_chapters_loaded),
           modifier = Modifier
             .fillMaxWidth()

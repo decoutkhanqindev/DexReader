@@ -24,10 +24,10 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
+import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.ui.common.buttons.MoveToTopButton
 import com.decoutkhanqindev.dexreader.presentation.ui.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.ui.common.states.LoadingScreen
-import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.MangaChaptersUiState
 import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.MangaDetailsUiState
 import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.components.actions.ActionButtonsSection
 import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.components.chapters.MangaChaptersSection
@@ -38,7 +38,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MangaDetailsContent(
   mangaDetailsUiState: MangaDetailsUiState,
-  mangaChaptersUiState: MangaChaptersUiState,
+  mangaChaptersUiState: BasePaginationUiState<Chapter>,
   readingHistoryList: List<ReadingHistory> = emptyList(),
   startedChapter: Chapter? = null,
   continueChapter: ReadingHistory? = null,
@@ -68,8 +68,8 @@ fun MangaDetailsContent(
 ) {
   val lazyListState = rememberLazyListState()
   val coroutineScope = rememberCoroutineScope()
-  val isMoveToTopButtonVisible = (mangaChaptersUiState is MangaChaptersUiState.Content)
-      && mangaChaptersUiState.chapterList.size > 15
+  val isMoveToTopButtonVisible = (mangaChaptersUiState is BasePaginationUiState.Content)
+      && mangaChaptersUiState.currentList.size > 15
       && lazyListState.firstVisibleItemScrollOffset > 0
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
 

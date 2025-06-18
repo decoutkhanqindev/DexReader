@@ -9,15 +9,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.domain.model.Chapter
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
+import com.decoutkhanqindev.dexreader.presentation.ui.common.base.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.ui.common.indicators.ListLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.ui.common.texts.LoadPageErrorMessage
-import com.decoutkhanqindev.dexreader.presentation.ui.manga_details.MangaChaptersUiState
-
 
 @Composable
 fun MangaChaptersSection(
-  mangaChaptersUiState: MangaChaptersUiState,
+  mangaChaptersUiState: BasePaginationUiState<Chapter>,
   readingHistoryList: List<ReadingHistory> = emptyList(),
   lastChapter: String,
   chapterLanguage: String,
@@ -45,9 +45,9 @@ fun MangaChaptersSection(
     )
 
     when (mangaChaptersUiState) {
-      MangaChaptersUiState.FirstPageLoading -> ListLoadingIndicator(modifier = Modifier.fillMaxSize())
+      BasePaginationUiState.FirstPageLoading -> ListLoadingIndicator(modifier = Modifier.fillMaxSize())
 
-      MangaChaptersUiState.FirstPageError -> LoadPageErrorMessage(
+      BasePaginationUiState.FirstPageError -> LoadPageErrorMessage(
         message = stringResource(R.string.something_went_wrong_while_loading_chapters_please_try_again),
         onRetry = onRetry,
         modifier = Modifier
@@ -55,8 +55,8 @@ fun MangaChaptersSection(
           .padding(horizontal = 4.dp)
       )
 
-      is MangaChaptersUiState.Content -> {
-        val chapterList = mangaChaptersUiState.chapterList
+      is BasePaginationUiState.Content -> {
+        val chapterList = mangaChaptersUiState.currentList
         val chapterListNextPageState = mangaChaptersUiState.nextPageState
 
         MangaChapterList(
