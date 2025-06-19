@@ -1,5 +1,7 @@
 <h1 align="center">📗 Dex Reader 📘 </br> <i>Read to enjoy - Save to remember</i></h1>
 
+## 📃 Introduction
+
 **Dex Reader** is a personal project with a manga reader theme for **Android**, built with **Kotlin** and **Jetpack Compose**, following the principles of **Clean Architecture**. This app fetches content from the **MangaDex API**, providing a seamless and user-friendly manga reading experience.
 
 ## 📱Screenshots
