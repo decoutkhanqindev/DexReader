@@ -65,7 +65,7 @@
   <img src="https://raw.githubusercontent.com/decoutkhanqindev/DexReader/main/app/screenshots/auth/forgot_password/z6721003476526_85c0ed0b02b76ddcc736065ab523b8ec.jpg" height="300"/>
 </p>
 
-# Features
+# 🌟 Features
 
 - 🏠 Displays the latest manga updates, trending series, new releases, and top-rated manga.
 
@@ -84,7 +84,7 @@
 - ⚙️ Dark/Light theme mode and sync with system device.
 
 
-# Tech Stack
+# 🛠️ Tech Stack
 
 - **Programming Language:** [Kotlin](https://kotlinlang.org/)
 
@@ -114,7 +114,7 @@
 
 - **Caching:** Chapter pre-fetching and offline support
 
-# Package Structure
+#  🏗️ Package Structure
 ```
 com.decoutkhanqindev.dexreader/
 ├── data/                   # Data layer
@@ -133,3 +133,45 @@ com.decoutkhanqindev.dexreader/
 ├── di/                     # Dependency injection
 └── utils/                  # Utility funtions
 ```
+
+
+# 🚀 Getting Started
+
+-  **Prerequisites**
+    - Android Studio Hedgehog | 2023.1.1 or latest version.
+    - JDK 11+.
+    - Android SDK API 24+.
+
+- **Installation**
+    - Clone Repository: `git clone https://github.com/decoutkhanqindev/DexReader.git`
+    - Fỉrebase Configuration:
+        - Create a new Firebase project.
+        - Add an Android app with package name: `com.decoutkhanqindev.dexreader`
+        - Download the `google-services.json` file and place it in the `app/` folder.
+    - API URLs Configuration:
+        - Create a `local.properties` file in the root directory.
+        - Add the API URLs:
+        ```
+            BASE_URL=https://api.mangadex.org
+            UPLOAD_URL=https://uploads.mangadex.org
+        ```
+- **Build and Run**
+   ```
+    ./gradlew build
+    ./gradlew installDebug
+   ```
+# 🤝 Contributing
+**Contributions are welcome! Please follow these steps:**
+
+  - Fork the repository.
+
+  - Create a new branch: `git checkout -b feature/your-feature`
+
+  - Commit your changes: `git commit -am 'Add some feature'`
+
+  - Push to the branch: `git push origin feature/your-feature`
+
+  - Open a pull request.
+
+# 📝 License
+This project is developed for educational and personal purposes.
