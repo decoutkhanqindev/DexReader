@@ -67,7 +67,7 @@
 
 # 🌟 Features
 
-- 🏠 Displays the latest manga updates, trending series, new releases, and top-rated manga.
+- 🏠 Displays the latest manga updates, trending series, new releases and top-rated manga.
 
 - 📖 Optimized reader with zoom, fullscreen, chapter navigation; fast page loading and high resolution images; easy switching between previous/next chapters with Caching/Pre-fetching.
 
@@ -77,9 +77,9 @@
 
 - ❤️ Save, manage, and sync favorite manga with your user account.
 
-- 📚 Track manga reading history, resume reading from the last chapter, and an option to clear history.
+- 📚 Track manga reading history, resume reading from the last chapter and an option to clear history.
 
-- 👤 Sign up/Sign in with Firebase Auth, manage personal information, and update your profile.
+- 👤 Sign up/Sign in with Firebase Auth, manage personal information and update your profile.
 
 - ⚙️ Dark/Light theme mode and sync with system device.
 
