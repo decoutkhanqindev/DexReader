@@ -2,7 +2,7 @@
 
 **Dex Reader** is a personal project with a manga reader theme for **Android**, built with **Kotlin** and **Jetpack Compose**, following the principles of **Clean Architecture**. This app fetches content from the **MangaDex API**, providing a seamless and user-friendly manga reading experience.
 
-# Screenshots
+# 📱Screenshots
 
 <p align="start">
   <img src="https://raw.githubusercontent.com/decoutkhanqindev/DexReader/main/app/screenshots/home/z6721003176267_6647fd751e8bb12a8a81d29a330f5269.jpg" height="300"/>
