@@ -67,24 +67,25 @@
 
 # Features
 
-📚 Browse manga with various filters and sorting options
+**Home**: Displays the latest manga updates, trending series, new releases, and top-rated manga.
 
-🔍 Search manga by title
+**Manga Reader**: Optimized reader with zoom, fullscreen, chapter navigation; fast page loading and high resolution images; easy switching between previous/next chapters with Caching/Pre-fetching.
 
-❤️ Save favorites locally or sync across devices
+**Search**: Search manga by title with suggestions.
 
-📖 Smooth manga reader with chapter caching
+**Categories**: Browse manga by category, with sorting and filtering options.
 
-⏱️ Track reading progress and history
+**Favorites**: Save, manage, and sync favorite manga with your user account.
 
-🔐 User authentication with Firebase
+**Reading History**: Track manga reading history, resume reading from the last chapter, and an option to clear history.
 
-🌐 MangaDex API integration
+**User Profile**: Sign up/Sign in with Firebase Auth, manage personal information, and update your profile.
 
-🔄 Data synchronization between devices
+**Settings**: Dark/Light theme mode and sync with system device.
 
 
 # Tech Stack
+
 **Language:** [Kotlin](https://kotlinlang.org/)
 
 **Architecture:** [MVVM](https://www.geeksforgeeks.org/mvvm-model-view-viewmodel-architecture-pattern-in-android/) with [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
