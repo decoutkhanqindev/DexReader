@@ -1,6 +1,6 @@
 <h1 align="center">Dex Reader 📘 </br> <i>Read to enjoy - Save to remember</i></h1>
 
-**Dex Reader** is a personal project with the theme of manga reader application for **Android**, fetching content from **MangaDex API**. Built with **Kotlin**, **Jetpack Compose** and following **Clean Architecture** principles.
+**Dex Reader** is a personal project with a manga reader theme for **Android**, built with **Kotlin** and **Jetpack Compose**, following the principles of **Clean Architecture**. This app fetches content from the **MangaDex API**, providing a seamless and user-friendly manga reading experience.
 
 # Screenshots
 
@@ -67,52 +67,53 @@
 
 # Features
 
-**Home**: Displays the latest manga updates, trending series, new releases, and top-rated manga.
+- 🏠 Displays the latest manga updates, trending series, new releases, and top-rated manga.
 
-**Manga Reader**: Optimized reader with zoom, fullscreen, chapter navigation; fast page loading and high resolution images; easy switching between previous/next chapters with Caching/Pre-fetching.
+- 📖 Optimized reader with zoom, fullscreen, chapter navigation; fast page loading and high resolution images; easy switching between previous/next chapters with Caching/Pre-fetching.
 
-**Search**: Search manga by title with suggestions.
+- 🔍 Search manga by title with suggestions.
 
-**Categories**: Browse manga by category, with sorting and filtering options.
+- 📂 Browse manga by category, with sorting and filtering options.
 
-**Favorites**: Save, manage, and sync favorite manga with your user account.
+- ❤️ Save, manage, and sync favorite manga with your user account.
 
-**Reading History**: Track manga reading history, resume reading from the last chapter, and an option to clear history.
+- 📚 Track manga reading history, resume reading from the last chapter, and an option to clear history.
 
-**User Profile**: Sign up/Sign in with Firebase Auth, manage personal information, and update your profile.
+- 👤 Sign up/Sign in with Firebase Auth, manage personal information, and update your profile.
 
-**Settings**: Dark/Light theme mode and sync with system device.
+- ⚙️ Dark/Light theme mode and sync with system device.
 
 
 # Tech Stack
 
-**Language:** [Kotlin](https://kotlinlang.org/)
+- **Programming Language:** [Kotlin](https://kotlinlang.org/)
 
-**Architecture:** [MVVM](https://www.geeksforgeeks.org/mvvm-model-view-viewmodel-architecture-pattern-in-android/) with [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+- **Architecture:** [MVVM](https://www.geeksforgeeks.org/mvvm-model-view-viewmodel-architecture-pattern-in-android/) with [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 
-**UI:** [Jetpack Compose](https://developer.android.com/compose), [Material 3](https://m3.material.io/develop/android/jetpack-compose)
+- **UI:** [Jetpack Compose](https://developer.android.com/compose), [Material 3](https://m3.material.io/develop/android/jetpack-compose)
 
-**Dependency Injection:** [Dagger Hilt](https://developer.android.com/training/dependency-injection/hilt-android?hl=vi)
+- **Dependency Injection:** [Dagger Hilt](https://developer.android.com/training/dependency-injection/hilt-android?hl=vi)
 
-**Local Database:** [Room](https://developer.android.com/training/data-storage/room)
+- **Local Database:** [Room](https://developer.android.com/training/data-storage/room)
 
-**Preferences Storage:** [DataStore](https://developer.android.com/topic/libraries/architecture/datastore)
+- **Preferences Storage:** [DataStore](https://developer.android.com/topic/libraries/architecture/datastore)
 
-**Networking:** [Retrofit](https://square.github.io/retrofit/ ), [OkHttp](https://square.github.io/okhttp/), [Moshi](https://github.com/square/moshi)
+- **Networking:** [Retrofit](https://square.github.io/retrofit/ ), [OkHttp](https://square.github.io/okhttp/), [Moshi](https://github.com/square/moshi)
 
-**Integrated API**: [MangaDex API](https://api.mangadex.org/docs/)
+- **Integrated API**: [MangaDex API](https://api.mangadex.org/docs/)
 
-**Authentication:** [Firebase Auth](https://firebase.google.com/docs/auth)
+- **Authentication:** [Firebase Auth](https://firebase.google.com/docs/auth)
 
-**Cloud Sync:** [Cloud Firestore](https://firebase.google.com/docs/firestore?hl=vi)
+- **Cloud Sync:** [Cloud Firestore](https://firebase.google.com/docs/firestore?hl=vi)
 
-**Image Loading:** [Coil](https://coil-kt.github.io/coil/)
+- **Image Loading:** [Coil](https://coil-kt.github.io/coil/)
 
-**Navigation:** [Jetpack Navigation Compose](https://developer.android.com/develop/ui/compose/navigation)
+- **Navigation:** [Jetpack Navigation Compose](https://developer.android.com/develop/ui/compose/navigation)
 
-**Asynchronous:** Kotlin [Coroutines](https://developer.android.com/kotlin/coroutines), [Flow](https://developer.android.com/kotlin/flow)
+- **Asynchronous:** Kotlin [Coroutines](https://developer.android.com/kotlin/coroutines), [Flow](https://developer.android.com/kotlin/flow)
 
-**Caching:** Chapter pre-fetching and offline support
+- **Caching:** Chapter pre-fetching and offline support
+
 # Package Structure
 ```
 com.decoutkhanqindev.dexreader/
