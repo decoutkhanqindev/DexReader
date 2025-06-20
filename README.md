@@ -81,7 +81,7 @@
 
 - 📂 Browse manga by category, with sorting and filtering options.
 
-- ❤️ Save, manage, and sync favorite manga with your user account.
+- ❤️ Save, manage and sync favorite manga with your user account.
 
 - 📚 Track manga reading history, resume reading from the last chapter and an option to clear history.
 
