@@ -75,7 +75,7 @@
 
 - 📖 Optimized reader with zoom, fullscreen, fast page loading and high-resolution images
 
-- ↔️ While reading easily navigate between previous/next chapters with Caching/Pre-fetching feature.
+- ↔️ While reading, easily navigate between previous/next chapters with Caching/Pre-fetching feature.
   
 - 🔍 Search manga by title with suggestions.
 
