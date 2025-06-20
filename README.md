@@ -116,7 +116,7 @@
 
 - **Navigation:** [Jetpack Navigation Compose](https://developer.android.com/develop/ui/compose/navigation)
 
-- **Asynchronous:** Kotlin [Coroutines](https://developer.android.com/kotlin/coroutines), [Flows](https://developer.android.com/kotlin/flow)
+- **Asynchronous:** Kotlin [Coroutines](https://developer.android.com/kotlin/coroutines), [Flow](https://developer.android.com/kotlin/flow)
 
 - **Caching:** Chapter pre-fetching and offline support
 
