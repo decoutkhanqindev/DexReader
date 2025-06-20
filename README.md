@@ -73,8 +73,10 @@
 
 - 🏠 Displays the latest manga updates, trending series, new releases and top-rated manga.
 
-- 📖 Optimized reader with zoom, fullscreen, chapter navigation; fast page loading and high resolution images; easy switching between previous/next chapters with Caching/Pre-fetching.
+- 📖 Optimized reader with zoom, fullscreen, fast page loading and high resolution images
 
+- ↔️ While reading easily navigate between previous/next chapters with Caching/Pre-fetching feature.
+  
 - 🔍 Search manga by title with suggestions.
 
 - 📂 Browse manga by category, with sorting and filtering options.
