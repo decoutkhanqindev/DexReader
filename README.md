@@ -70,7 +70,7 @@
 </p>
 
 ##  🎞️ Video
-[![Video](https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+[![Video](https://img.youtube.com/vi/HsdtD7xXBW8/0.jpg)](https://www.youtube.com/watch?v=HsdtD7xXBW8)
 
 ## 🌟 Features
 
