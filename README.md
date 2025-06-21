@@ -1,8 +1,12 @@
-<h1 align="center">Dex Reader 📘 </br> <i>Read to enjoy - Save to remember</i></h1>
+<h1 align="center">
+  📗 Dex Reader 📘 
+</br> 
+  <i>Read to enjoy - Save to remember</i>
+</h1>
 
 **Dex Reader** is a personal project with a manga reader theme for **Android**, built with **Kotlin** and **Jetpack Compose**, following the principles of **Clean Architecture**. This app fetches content from the **MangaDex API**, providing a seamless and user-friendly manga reading experience.
 
-# 📱Screenshots
+## 📱Screenshots
 
 <p align="start">
   <img src="https://raw.githubusercontent.com/decoutkhanqindev/DexReader/main/app/screenshots/home/z6721003176267_6647fd751e8bb12a8a81d29a330f5269.jpg" height="300"/>
@@ -65,17 +69,22 @@
   <img src="https://raw.githubusercontent.com/decoutkhanqindev/DexReader/main/app/screenshots/auth/forgot_password/z6721003476526_85c0ed0b02b76ddcc736065ab523b8ec.jpg" height="300"/>
 </p>
 
-# 🌟 Features
+##  🎞️ Video
+[![Video](https://img.youtube.com/vi/HsdtD7xXBW8/0.jpg)](https://www.youtube.com/watch?v=HsdtD7xXBW8)
+
+## 🌟 Features
 
 - 🏠 Displays the latest manga updates, trending series, new releases and top-rated manga.
 
-- 📖 Optimized reader with zoom, fullscreen, chapter navigation; fast page loading and high resolution images; easy switching between previous/next chapters with Caching/Pre-fetching.
+- 📖 Optimized reader with zoom, fullscreen, fast page loading and high-resolution images
 
+- ↔️ While reading, easily navigate between previous/next chapters with Caching/Pre-fetching feature.
+  
 - 🔍 Search manga by title with suggestions.
 
 - 📂 Browse manga by category, with sorting and filtering options.
 
-- ❤️ Save, manage, and sync favorite manga with your user account.
+- ❤️ Save, manage and sync favorite manga with your user account.
 
 - 📚 Track manga reading history, resume reading from the last chapter and an option to clear history.
 
@@ -84,7 +93,7 @@
 - ⚙️ Dark/Light theme mode and sync with system device.
 
 
-# 🛠️ Tech Stack
+## 🛠️ Tech Stack
 
 - **Programming Language:** [Kotlin](https://kotlinlang.org/)
 
@@ -114,7 +123,7 @@
 
 - **Caching:** Chapter pre-fetching and offline support
 
-#  🏗️ Package Structure
+##  🏗️ Package Structure
 ```
 com.decoutkhanqindev.dexreader/
 ├── data/                   # Data layer
@@ -135,7 +144,7 @@ com.decoutkhanqindev.dexreader/
 ```
 
 
-# 🚀 Getting Started
+## 🚀 Getting Started
 
 -  **Prerequisites**
     - Android Studio Hedgehog | 2023.1.1 or latest version.
@@ -160,7 +169,7 @@ com.decoutkhanqindev.dexreader/
     ./gradlew build
     ./gradlew installDebug
    ```
-# 🤝 Contributing
+## 🤝 Contributing
 **Contributions are welcome! Please follow these steps:**
 
   - Fork the repository.
@@ -173,5 +182,5 @@ com.decoutkhanqindev.dexreader/
 
   - Open a pull request.
 
-# 📝 License
+## 📝 License
 This project is developed for educational and personal purposes.
