@@ -69,8 +69,8 @@
   <img src="https://raw.githubusercontent.com/decoutkhanqindev/DexReader/main/app/screenshots/auth/forgot_password/z6721003476526_85c0ed0b02b76ddcc736065ab523b8ec.jpg" height="300"/>
 </p>
 
-##  🎞️ Video
-[![Video](https://img.youtube.com/vi/HsdtD7xXBW8/0.jpg)](https://www.youtube.com/watch?v=HsdtD7xXBW8)
+##  🎞️ Video Demo
+[![video_demo](https://img.youtube.com/vi/HsdtD7xXBW8/0.jpg)](https://www.youtube.com/watch?v=HsdtD7xXBW8)
 
 ## 🌟 Features
 
