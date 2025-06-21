@@ -69,6 +69,9 @@
   <img src="https://raw.githubusercontent.com/decoutkhanqindev/DexReader/main/app/screenshots/auth/forgot_password/z6721003476526_85c0ed0b02b76ddcc736065ab523b8ec.jpg" height="300"/>
 </p>
 
+##  🎞️ Video
+[![Video](https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+
 ## 🌟 Features
 
 - 🏠 Displays the latest manga updates, trending series, new releases and top-rated manga.
