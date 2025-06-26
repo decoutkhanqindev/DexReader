@@ -67,7 +67,7 @@ fun ReadingHistoryItem(
         Row(
           modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(4.dp)
         ) {
           MangaCoverArt(
             url = readingHistory.mangaCoverUrl,
