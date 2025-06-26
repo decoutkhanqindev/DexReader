@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.history.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -65,9 +66,8 @@ fun ReadingHistoryItem(
         },
       ) {
         Row(
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(4.dp)
+          horizontalArrangement = Arrangement.spacedBy(8.dp),
+          modifier = Modifier.fillMaxWidth().padding(8.dp)
         ) {
           MangaCoverArt(
             url = readingHistory.mangaCoverUrl,
@@ -76,9 +76,7 @@ fun ReadingHistoryItem(
           )
           ReadingHistoryInfo(
             readingHistory = readingHistory,
-            modifier = Modifier
-              .weight(0.75f)
-              .padding(8.dp)
+            modifier = Modifier.weight(0.75f)
           )
         }
       }
