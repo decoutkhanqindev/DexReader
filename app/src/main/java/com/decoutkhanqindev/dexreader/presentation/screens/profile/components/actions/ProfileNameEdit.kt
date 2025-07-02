@@ -39,7 +39,7 @@ fun ProfileNameEdit(
   modifier: Modifier = Modifier
 ) {
   var isEdit by rememberSaveable { mutableStateOf(false) }
-  val focusRequester = remember{ FocusRequester() }
+  val focusRequester = remember { FocusRequester() }
   val focusManager = LocalFocusManager.current
 
   Row(

@@ -54,7 +54,7 @@ class ForgotPasswordViewModel @Inject constructor(
             )
           }
         }
-        .onFailure {
+        .onFailure { throwable ->
           _uiState.update {
             it.copy(
               isLoading = false,
@@ -62,7 +62,7 @@ class ForgotPasswordViewModel @Inject constructor(
               isError = true
             )
           }
-          Log.d(TAG, "sendResetUserPassword have error: ${it.stackTraceToString()}")
+          Log.d(TAG, "sendResetUserPassword have error: ${throwable.stackTraceToString()}")
         }
     }
   }

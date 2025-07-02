@@ -45,9 +45,7 @@ fun ProfilePicturePicker(
         url = url,
         name = name,
       )
-    } else {
-      PersonPicture()
-    }
+    } else PersonPicture()
     Row(
       modifier = Modifier
         .width(80.dp)

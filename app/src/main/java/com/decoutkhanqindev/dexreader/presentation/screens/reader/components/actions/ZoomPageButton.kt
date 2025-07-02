@@ -26,14 +26,12 @@ fun ZoomPageButton(
     modifier = modifier
   ) {
     Icon(
-      imageVector = if (isFullScreen)
-        Icons.Filled.FullscreenExit
-      else
-        Icons.Filled.Fullscreen,
-      contentDescription = if (isFullScreen)
-        stringResource(R.string.exit_fullscreen)
-      else
-        stringResource(R.string.fullscreen),
+      imageVector =
+        if (isFullScreen) Icons.Filled.FullscreenExit
+        else Icons.Filled.Fullscreen,
+      contentDescription =
+        if (isFullScreen) stringResource(R.string.exit_fullscreen)
+        else stringResource(R.string.fullscreen),
       modifier = Modifier.padding(16.dp)
     )
   }
