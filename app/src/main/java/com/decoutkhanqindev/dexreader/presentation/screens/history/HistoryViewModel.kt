@@ -25,7 +25,8 @@ class HistoryViewModel @Inject constructor(
 ) : ViewModel() {
   private val _historyUiState =
     MutableStateFlow<BasePaginationUiState<ReadingHistory>>(BasePaginationUiState.FirstPageLoading)
-  val historyUiState: StateFlow<BasePaginationUiState<ReadingHistory>> = _historyUiState.asStateFlow()
+  val historyUiState: StateFlow<BasePaginationUiState<ReadingHistory>> =
+    _historyUiState.asStateFlow()
 
   private val _removeFromHistoryUiState = MutableStateFlow(RemoveFromHistoryUiState())
   val removeFromHistoryUiState: StateFlow<RemoveFromHistoryUiState> =
@@ -198,7 +199,7 @@ class HistoryViewModel @Inject constructor(
               )
             }
           }
-          .onFailure {
+          .onFailure { throwable ->
             _removeFromHistoryUiState.update {
               it.copy(
                 isLoading = false,
@@ -206,7 +207,7 @@ class HistoryViewModel @Inject constructor(
                 isError = true
               )
             }
-            Log.d(TAG, "removeFromHistory have error: ${it.stackTraceToString()}")
+            Log.d(TAG, "removeFromHistory have error: ${throwable.stackTraceToString()}")
           }
       }
     }
