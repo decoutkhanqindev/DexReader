@@ -3,6 +3,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.manga_details.compon
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,7 +22,7 @@ fun MangaChaptersHeader(
   selectedLanguage: String,
   languageList: List<String>,
   onSelectedLanguage: (String) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   var isShowLanguageBottomSheet by rememberSaveable { mutableStateOf(false) }
 
@@ -31,7 +32,9 @@ fun MangaChaptersHeader(
       selectedLanguage = selectedLanguage,
       onSelectedLanguage = onSelectedLanguage,
       onDismiss = { isShowLanguageBottomSheet = false },
-      modifier = Modifier.fillMaxWidth()
+      modifier = Modifier
+        .fillMaxWidth()
+        .statusBarsPadding()
     )
   }
 
