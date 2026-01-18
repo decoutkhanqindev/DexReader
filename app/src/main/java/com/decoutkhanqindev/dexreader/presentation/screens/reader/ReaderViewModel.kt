@@ -87,7 +87,10 @@ class ReaderViewModel @Inject constructor(
     clearExpiredCache()
     observeHistoryFirstPage()
     fetchChapterDetails()
+    observeIsFetchDataDone()
+  }
 
+  private fun observeIsFetchDataDone() {
     viewModelScope.launch {
       combine(
         _isFetchChapterDetailsDone,
