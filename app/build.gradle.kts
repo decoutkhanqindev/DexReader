@@ -11,12 +11,12 @@ plugins {
 
 android {
   namespace = "com.decoutkhanqindev.dexreader"
-  compileSdk = 35
+  compileSdk = 36
 
   defaultConfig {
     applicationId = "com.decoutkhanqindev.dexreader"
     minSdk = 24
-    targetSdk = 35
+    targetSdk = 36
     versionCode = 1
     versionName = "1.0"
 
@@ -30,13 +30,13 @@ android {
     buildConfigField(
       type = "String",
       name = "BASE_URL",
-      value = properties.getProperty("BASE_URL")
+      value = "\"${properties.getProperty("BASE_URL")}\""
     )
 
     buildConfigField(
       type = "String",
       name = "UPLOAD_URL",
-      value = properties.getProperty("UPLOAD_URL")
+      value = "\"${properties.getProperty("UPLOAD_URL")}\""
     )
   }
 
