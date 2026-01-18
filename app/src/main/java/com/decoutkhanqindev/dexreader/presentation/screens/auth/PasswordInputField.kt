@@ -34,7 +34,7 @@ fun PasswordInputField(
   onPasswordChange: (String) -> Unit,
   isShowError: Boolean = false,
   error: String,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   var isShowPassword by rememberSaveable { mutableStateOf(false) }
 

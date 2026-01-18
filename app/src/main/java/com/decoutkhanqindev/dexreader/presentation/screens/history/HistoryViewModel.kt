@@ -21,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HistoryViewModel @Inject constructor(
   private val observeHistoryUseCase: ObserveHistoryUseCase,
-  private val removeFromHistoryUseCase: RemoveFromHistoryUseCase
+  private val removeFromHistoryUseCase: RemoveFromHistoryUseCase,
 ) : ViewModel() {
   private val _historyUiState =
     MutableStateFlow<BasePaginationUiState<ReadingHistory>>(BasePaginationUiState.FirstPageLoading)
@@ -99,7 +99,7 @@ class HistoryViewModel @Inject constructor(
       is BasePaginationUiState.Content -> {
         when (currentUiState.nextPageState) {
           BaseNextPageState.LOADING,
-          BaseNextPageState.NO_MORE_ITEMS
+          BaseNextPageState.NO_MORE_ITEMS,
             -> return
 
           BaseNextPageState.ERROR -> retryObserveHistoryNextPage()

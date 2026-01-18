@@ -38,7 +38,7 @@ fun ProfileContent(
   onLogoutSuccess: () -> Unit,
   onRetryUpdate: () -> Unit,
   onRetryLogout: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   var isShowUpdateUserSuccessDialog by rememberSaveable { mutableStateOf(true) }
   var isShowUpdateUserErrorDialog by rememberSaveable { mutableStateOf(true) }

@@ -18,7 +18,7 @@ fun CategoryGroupSection(
   group: String,
   categoryList: List<Category>,
   onSelectedCategory: (String, String) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   Column(modifier = modifier) {
     CategoryGroupHeader(

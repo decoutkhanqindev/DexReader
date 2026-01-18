@@ -12,7 +12,7 @@ interface FirebaseFirestoreSource {
   fun observeFavorites(
     userId: String,
     limit: Long,
-    lastFavoriteMangaId: String? = null
+    lastFavoriteMangaId: String? = null,
   ): Flow<List<FavoriteMangaDto>>
 
   suspend fun addToFavorites(userId: String, manga: FavoriteMangaDto)
@@ -23,7 +23,7 @@ interface FirebaseFirestoreSource {
     userId: String,
     limit: Long,
     mangaId: String? = null,
-    lastReadingHistoryId: String? = null
+    lastReadingHistoryId: String? = null,
   ): Flow<List<ReadingHistoryDto>>
 
   suspend fun addAndUpdateToHistory(userId: String, readingHistory: ReadingHistoryDto)

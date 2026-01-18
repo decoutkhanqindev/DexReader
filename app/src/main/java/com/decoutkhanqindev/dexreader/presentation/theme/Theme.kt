@@ -252,7 +252,7 @@ private val highContrastDarkColorScheme = darkColorScheme(
 fun DexReaderTheme(
   dynamicColor: Boolean = false,
   contrastLevel: ContrastLevel = ContrastLevel.Standard,
-  content: @Composable () -> Unit
+  content: @Composable () -> Unit,
 ) {
   val viewModel = hiltViewModel<SettingsViewModel>()
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()

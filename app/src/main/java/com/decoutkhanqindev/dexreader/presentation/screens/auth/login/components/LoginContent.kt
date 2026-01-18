@@ -29,7 +29,7 @@ fun LoginContent(
   onRegisterClick: () -> Unit,
   onForgotPasswordClick: () -> Unit,
   onRetry: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   var isShowSuccessDialog by rememberSaveable { mutableStateOf(true) }
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }

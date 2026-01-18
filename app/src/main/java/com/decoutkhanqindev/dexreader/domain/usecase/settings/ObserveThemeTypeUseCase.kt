@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ObserveThemeTypeUseCase @Inject constructor(
-  private val settingRepository: SettingsRepository
+  private val settingRepository: SettingsRepository,
 ) {
   operator fun invoke(): Flow<Result<ThemeType>> =
     settingRepository.observeThemeType()

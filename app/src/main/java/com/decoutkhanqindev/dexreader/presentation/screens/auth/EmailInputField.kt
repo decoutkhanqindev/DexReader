@@ -24,7 +24,7 @@ fun EmailInputField(
   onEmailChange: (String) -> Unit,
   isShowError: Boolean = false,
   error: String,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   OutlinedTextField(
     value = email,

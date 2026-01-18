@@ -46,5 +46,5 @@ data class ReadingHistoryDto(
   var totalChapterPages: Int = 0,
 
   @ServerTimestamp
-  var createdAt: Date? = null
+  var createdAt: Date? = null,
 )

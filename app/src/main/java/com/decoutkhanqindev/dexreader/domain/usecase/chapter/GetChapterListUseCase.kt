@@ -13,7 +13,7 @@ class GetChapterListUseCase @Inject constructor(
     offset: Int = 0,
     translatedLanguage: String = "en",
     volumeOrder: String = "desc",
-    chapterOrder: String = "desc"
+    chapterOrder: String = "desc",
   ): Result<List<Chapter>> =
     chapterRepository.getChapterList(
       mangaId = mangaId,

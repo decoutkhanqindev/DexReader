@@ -20,7 +20,7 @@ fun CategoriesContent(
   uiState: CategoriesUiState,
   onSelectedCategory: (String, String) -> Unit,
   onRetry: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
 

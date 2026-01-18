@@ -17,7 +17,7 @@ fun BaseDetailsScreen(
   onSearchClick: () -> Unit = {},
   bottomBar: @Composable () -> Unit = {},
   content: @Composable () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   Scaffold(
     topBar = {

@@ -10,7 +10,7 @@ interface ChapterRepository {
     offset: Int = 0,
     translatedLanguage: String = "en",
     volumeOrder: String = "desc",
-    chapterOrder: String = "desc"
+    chapterOrder: String = "desc",
   ): Result<List<Chapter>>
 
   suspend fun getChapterDetails(chapterId: String): Result<Chapter>

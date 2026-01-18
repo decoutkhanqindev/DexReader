@@ -20,7 +20,7 @@ class FavoritesRepositoryImpl @Inject constructor(
   override fun observeFavorites(
     userId: String,
     limit: Int,
-    lastFavoriteMangaId: String?
+    lastFavoriteMangaId: String?,
   ): Flow<Result<List<FavoriteManga>>> =
     firebaseFirestoreSource
       .observeFavorites(
@@ -37,7 +37,7 @@ class FavoritesRepositoryImpl @Inject constructor(
 
   override suspend fun addToFavorites(
     userId: String,
-    manga: FavoriteManga
+    manga: FavoriteManga,
   ): Result<Unit> =
     runSuspendCatching(Dispatchers.IO) {
       firebaseFirestoreSource.addToFavorites(userId, manga.toDto())
@@ -45,7 +45,7 @@ class FavoritesRepositoryImpl @Inject constructor(
 
   override suspend fun removeFromFavorites(
     userId: String,
-    mangaId: String
+    mangaId: String,
   ): Result<Unit> =
     runSuspendCatching(Dispatchers.IO) {
       firebaseFirestoreSource.removeFromFavorites(userId, mangaId)
@@ -53,7 +53,7 @@ class FavoritesRepositoryImpl @Inject constructor(
 
   override fun observeIsFavorite(
     userId: String,
-    mangaId: String
+    mangaId: String,
   ): Flow<Result<Boolean>> =
     firebaseFirestoreSource
       .observeIsFavorite(userId, mangaId)

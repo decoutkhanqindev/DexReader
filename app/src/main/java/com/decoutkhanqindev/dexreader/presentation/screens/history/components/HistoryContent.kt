@@ -27,7 +27,7 @@ fun HistoryContent(
   onContinueReadingClick: (
     chapterId: String,
     lastReadPage: Int,
-    mangaId: String
+    mangaId: String,
   ) -> Unit,
   onMangaDetailsClick: (String) -> Unit,
   onUpdateRemoveReadingHistoryId: (String) -> Unit,
@@ -36,7 +36,7 @@ fun HistoryContent(
   onObserveHistoryNextPage: () -> Unit,
   onRetryObserveHistoryNextPage: () -> Unit,
   onRetryObserveHistoryFirstPage: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   var selectedMangaId by rememberSaveable { mutableStateOf<String?>(null) }
   var selectedChapterId by rememberSaveable { mutableStateOf<String?>(null) }

@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 class ChapterRepositoryImpl @Inject constructor(
-  private val mangaDexApiService: MangaDexApiService
+  private val mangaDexApiService: MangaDexApiService,
 ) : ChapterRepository {
   override suspend fun getChapterList(
     mangaId: String,
@@ -18,7 +18,7 @@ class ChapterRepositoryImpl @Inject constructor(
     offset: Int,
     translatedLanguage: String,
     volumeOrder: String,
-    chapterOrder: String
+    chapterOrder: String,
   ): Result<List<Chapter>> =
     runSuspendCatching(Dispatchers.IO) {
       mangaDexApiService.getChapterList(

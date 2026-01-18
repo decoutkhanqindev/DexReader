@@ -20,7 +20,7 @@ fun ThemeSelectorItem(
   isSelected: Boolean,
   theme: ThemeItem,
   onSelectedTheme: (ThemeType) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   Row(
     modifier = modifier.clickable { onSelectedTheme(theme.type) },

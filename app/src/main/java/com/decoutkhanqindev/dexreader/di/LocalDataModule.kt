@@ -38,6 +38,6 @@ object LocalDataModule {
   @Provides
   @Singleton
   fun provideThemePrefsManager(
-    @ApplicationContext context: Context
+    @ApplicationContext context: Context,
   ): DataStore<Preferences> = context.dataStore
 }

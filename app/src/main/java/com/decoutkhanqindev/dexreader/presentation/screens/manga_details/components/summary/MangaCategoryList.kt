@@ -18,9 +18,9 @@ fun MangaCategoryList(
   categoryList: List<Category>,
   onSelectedCategory: (
     categoryId: String,
-    categoryTitle: String
+    categoryTitle: String,
   ) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   Box(modifier = modifier) {
     LazyRow(

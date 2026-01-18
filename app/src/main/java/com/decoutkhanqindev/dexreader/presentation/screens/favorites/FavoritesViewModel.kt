@@ -89,13 +89,13 @@ class FavoritesViewModel @Inject constructor(
   fun observeFavoritesNextPage() {
     when (val currentUiState = _uiState.value) {
       BasePaginationUiState.FirstPageError,
-      BasePaginationUiState.FirstPageLoading
+      BasePaginationUiState.FirstPageLoading,
         -> return
 
       is BasePaginationUiState.Content -> {
         when (currentUiState.nextPageState) {
           BaseNextPageState.LOADING,
-          BaseNextPageState.NO_MORE_ITEMS
+          BaseNextPageState.NO_MORE_ITEMS,
             -> return
 
           BaseNextPageState.ERROR -> retryObserveFavoritesNextPage()

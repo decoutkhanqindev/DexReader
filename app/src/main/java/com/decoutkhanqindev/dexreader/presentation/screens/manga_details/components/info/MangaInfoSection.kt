@@ -13,7 +13,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCov
 @Composable
 fun MangaInfoSection(
   manga: Manga,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   Row(
     modifier = modifier,

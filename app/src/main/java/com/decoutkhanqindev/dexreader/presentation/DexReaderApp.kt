@@ -11,7 +11,7 @@ import com.decoutkhanqindev.dexreader.presentation.navigation.NavGraph
 @Composable
 fun DexReaderApp(
   viewModel: DexReaderAppViewModel = hiltViewModel(),
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val isUserLoggedIn by viewModel.isUserLoggedIn.collectAsStateWithLifecycle()
   val currentUser by viewModel.userProfile.collectAsStateWithLifecycle()

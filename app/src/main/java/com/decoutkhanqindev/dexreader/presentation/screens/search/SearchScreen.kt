@@ -21,7 +21,7 @@ fun SearchScreen(
   onSelectedManga: (String) -> Unit,
   onNavigateBack: () -> Unit,
   viewModel: SearchViewModel = hiltViewModel(),
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val suggestionsUiState by viewModel.suggestionsUiState.collectAsStateWithLifecycle()
   val resultsUiState by viewModel.resultsUiState.collectAsStateWithLifecycle()

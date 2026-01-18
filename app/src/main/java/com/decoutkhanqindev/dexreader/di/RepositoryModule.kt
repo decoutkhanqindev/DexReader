@@ -26,41 +26,41 @@ import dagger.hilt.components.SingletonComponent
 interface RepositoryModule {
   @Binds
   fun provideMangaRepository(
-    mangaRepositoryImpl: MangaRepositoryImpl
+    mangaRepositoryImpl: MangaRepositoryImpl,
   ): MangaRepository
 
   @Binds
   fun provideChapterRepository(
-    chapterRepositoryImpl: ChapterRepositoryImpl
+    chapterRepositoryImpl: ChapterRepositoryImpl,
   ): ChapterRepository
 
   @Binds
   fun provideCacheRepository(
-    cacheRepositoryImpl: CacheRepositoryImpl
+    cacheRepositoryImpl: CacheRepositoryImpl,
   ): CacheRepository
 
   @Binds
   fun provideCategoryRepository(
-    categoryRepositoryImpl: CategoryRepositoryImpl
+    categoryRepositoryImpl: CategoryRepositoryImpl,
   ): CategoryRepository
 
   @Binds
   fun provideUserRepository(
-    userRepositoryImpl: UserRepositoryImpl
+    userRepositoryImpl: UserRepositoryImpl,
   ): UserRepository
 
   @Binds
   fun provideFavoritesRepository(
-    favoritesRepositoryImpl: FavoritesRepositoryImpl
+    favoritesRepositoryImpl: FavoritesRepositoryImpl,
   ): FavoritesRepository
 
   @Binds
   fun provideHistoryRepository(
-    historyRepositoryImpl: HistoryRepositoryImpl
+    historyRepositoryImpl: HistoryRepositoryImpl,
   ): HistoryRepository
 
   @Binds
   fun provideSettingsRepository(
-    settingsRepositoryImpl: SettingsRepositoryImpl
+    settingsRepositoryImpl: SettingsRepositoryImpl,
   ): SettingsRepository
 }

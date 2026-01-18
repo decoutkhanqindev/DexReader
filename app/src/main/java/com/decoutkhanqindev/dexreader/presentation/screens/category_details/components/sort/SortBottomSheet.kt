@@ -28,9 +28,9 @@ fun SortBottomSheet(
   criteriaState: CategoryDetailsCriteriaUiState,
   onApplyClick: (
     criteriaId: String,
-    orderId: String
+    orderId: String,
   ) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
   var selectedCriteriaId by rememberSaveable {

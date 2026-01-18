@@ -29,7 +29,7 @@ fun ProfilePicturePicker(
   url: String?,
   name: String,
   onSelectedImageUrl: (String) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
     contract = ActivityResultContracts.PickVisualMedia(),

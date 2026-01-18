@@ -28,7 +28,7 @@ fun ReaderContent(
   chapterPageUiState: ChapterPagesUiState,
   onUpdateChapterPage: (Int) -> Unit,
   onRetry: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
 

@@ -19,7 +19,7 @@ fun SuggestionsSection(
   suggestionsUiState: SuggestionsUiState,
   suggestionList: List<String>,
   onSelectedSuggestion: (String) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
 

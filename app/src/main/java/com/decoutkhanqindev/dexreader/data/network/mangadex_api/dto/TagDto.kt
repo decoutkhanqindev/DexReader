@@ -5,12 +5,12 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class TagDto(
-  @Json(name = "id") val id: String,
-  @Json(name = "attributes") val attributes: TagAttributesDto
+  @field:Json(name = "id") val id: String,
+  @field:Json(name = "attributes") val attributes: TagAttributesDto,
 )
 
 @JsonClass(generateAdapter = true)
 data class TagAttributesDto(
-  @Json(name = "name") val name: Map<String, String>? = null, // Tên thể loại
-  @Json(name = "group") val group: String? = null, // Nhóm thể loại
+  @field:Json(name = "name") val name: Map<String, String>? = null, // Tên thể loại
+  @field:Json(name = "group") val group: String? = null, // Nhóm thể loại
 )

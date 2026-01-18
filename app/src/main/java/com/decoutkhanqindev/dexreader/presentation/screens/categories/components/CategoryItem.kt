@@ -16,7 +16,7 @@ import com.decoutkhanqindev.dexreader.domain.model.Category
 fun CategoryItem(
   category: Category,
   onSelectedCategory: (String, String) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   Card(
     onClick = { onSelectedCategory(category.id, category.title) },

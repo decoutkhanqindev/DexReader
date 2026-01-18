@@ -12,7 +12,7 @@ import com.decoutkhanqindev.dexreader.domain.model.Category
 fun CategoryList(
   categoryList: List<Category>,
   onSelectedCategory: (String, String) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   FlowRow(
     modifier = modifier,

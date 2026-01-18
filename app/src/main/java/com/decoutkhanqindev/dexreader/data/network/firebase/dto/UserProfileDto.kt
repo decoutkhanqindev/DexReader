@@ -24,5 +24,5 @@ data class UserProfileDto(
   @ServerTimestamp
   val createdAt: Date? = null,
   @ServerTimestamp
-  val updatedAt: Date? = null
+  val updatedAt: Date? = null,
 )

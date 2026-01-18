@@ -5,16 +5,12 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class AtHomeServerDto(
-  @Json(name = "baseUrl")
-  val baseUrl: String,
-  @Json(name = "chapter")
-  val chapter: ChapterDataDto
+  @field:Json(name = "baseUrl") val baseUrl: String,
+  @field:Json(name = "chapter") val chapter: ChapterDataDto,
 )
 
 @JsonClass(generateAdapter = true)
 data class ChapterDataDto(
-  @Json(name = "hash")
-  val hash: String,
-  @Json(name = "data")
-  val data: List<String>, // Ảnh chất lượng cao
+  @field:Json(name = "hash") val hash: String,
+  @field:Json(name = "data") val data: List<String>, // Ảnh chất lượng cao
 )

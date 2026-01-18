@@ -18,11 +18,10 @@ fun MangaDto.toDomain(uploadUrl: String): Manga {
     ?: "No description ..."
   val authorId = relationships?.find { it.type == "author" }?.attributes?.name ?: "Unknown"
   val artistId = relationships?.find { it.type == "artist" }?.attributes?.name ?: "Unknown"
-  val tags = attributes.tags?.mapNotNull { it.toDomain() } ?: emptyList()
+  val tags = attributes.tags?.map { it.toDomain() } ?: emptyList()
   val status = attributes.status ?: "Unknown"
   val year = attributes.year ?: "Unknown"
   val availableTranslatedLanguages = attributes.availableTranslatedLanguages
-    ?.filterNotNull()
     ?.map { it.toFullLanguageName() }
     ?: emptyList()
   val lastChapter = attributes.lastChapter ?: "Unknown"

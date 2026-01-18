@@ -28,7 +28,7 @@ import com.decoutkhanqindev.dexreader.domain.model.ThemeType
 fun ThemeSelectorList(
   selectedThemeType: ThemeType,
   onSelectedTheme: (ThemeType) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val themeList = listOf<ThemeItem>(
     ThemeItem(

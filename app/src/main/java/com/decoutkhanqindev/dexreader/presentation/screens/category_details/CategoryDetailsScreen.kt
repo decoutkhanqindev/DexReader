@@ -20,7 +20,7 @@ fun CategoryDetailsScreen(
   onSearchClick: () -> Unit,
   onSelectedManga: (String) -> Unit,
   viewModel: CategoryDetailsViewModel = hiltViewModel(),
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val categoryDetailsUiState by viewModel.categoryDetailsUiState.collectAsStateWithLifecycle()
   val categoryCriteriaUiState by viewModel.categoryCriteriaUiState.collectAsStateWithLifecycle()

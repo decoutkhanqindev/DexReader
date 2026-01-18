@@ -36,7 +36,7 @@ class MangaDetailsViewModel @Inject constructor(
   private val addToFavoritesUseCase: AddToFavoritesUseCase,
   private val removeFromFavoritesUseCase: RemoveFromFavoritesUseCase,
   private val observeIsFavoriteUseCase: ObserveIsFavoriteUseCase,
-  private val observeHistoryUseCase: ObserveHistoryUseCase
+  private val observeHistoryUseCase: ObserveHistoryUseCase,
 ) : ViewModel() {
   private val mangaIdFromArg: String =
     checkNotNull(savedStateHandle[NavDestination.MangaDetailsDestination.MANGA_ID_ARG])
@@ -47,7 +47,8 @@ class MangaDetailsViewModel @Inject constructor(
 
   private val _mangaChaptersUiState =
     MutableStateFlow<BasePaginationUiState<Chapter>>(BasePaginationUiState.FirstPageLoading)
-  val mangaChaptersUiState: StateFlow<BasePaginationUiState<Chapter>> = _mangaChaptersUiState.asStateFlow()
+  val mangaChaptersUiState: StateFlow<BasePaginationUiState<Chapter>> =
+    _mangaChaptersUiState.asStateFlow()
 
   private val _chapterLanguage = MutableStateFlow(DEFAULT_CHAPTER_LANGUAGE)
   val chapterLanguage: StateFlow<String> = _chapterLanguage.asStateFlow()
@@ -152,7 +153,7 @@ class MangaDetailsViewModel @Inject constructor(
       is BasePaginationUiState.Content -> {
         when (currentMangaChaptersUiState.nextPageState) {
           BaseNextPageState.LOADING,
-          BaseNextPageState.NO_MORE_ITEMS
+          BaseNextPageState.NO_MORE_ITEMS,
             -> return
 
           BaseNextPageState.ERROR -> retryFetchChapterListNextPage()

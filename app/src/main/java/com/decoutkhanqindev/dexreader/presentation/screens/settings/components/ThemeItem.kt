@@ -6,5 +6,5 @@ import com.decoutkhanqindev.dexreader.domain.model.ThemeType
 data class ThemeItem(
   val type: ThemeType,
   val name: String,
-  val icon: ImageVector
+  val icon: ImageVector,
 )

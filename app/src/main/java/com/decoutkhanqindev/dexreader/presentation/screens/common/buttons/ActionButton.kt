@@ -13,7 +13,7 @@ fun ActionButton(
   enabled: Boolean = true,
   onClick: () -> Unit,
   content: @Composable () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   Button(
     onClick = onClick,

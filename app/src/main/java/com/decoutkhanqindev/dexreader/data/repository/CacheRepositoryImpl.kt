@@ -10,10 +10,10 @@ import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 class CacheRepositoryImpl @Inject constructor(
-  private val chapterCacheDao: ChapterCacheDao
+  private val chapterCacheDao: ChapterCacheDao,
 ) : CacheRepository {
   override suspend fun addChapterCache(
-    mangaId: String, chapterPages: ChapterPages
+    mangaId: String, chapterPages: ChapterPages,
   ): Result<Unit> = runSuspendCatching(Dispatchers.IO) {
     chapterCacheDao.addChapterCache(chapterCacheEntity = chapterPages.toEntity(mangaId))
   }

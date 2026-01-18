@@ -7,8 +7,9 @@ interface FavoritesRepository {
   fun observeFavorites(
     userId: String,
     limit: Int = 20,
-    lastFavoriteMangaId: String? = null
+    lastFavoriteMangaId: String? = null,
   ): Flow<Result<List<FavoriteManga>>>
+
   suspend fun addToFavorites(userId: String, manga: FavoriteManga): Result<Unit>
   suspend fun removeFromFavorites(userId: String, mangaId: String): Result<Unit>
   fun observeIsFavorite(userId: String, mangaId: String): Flow<Result<Boolean>>

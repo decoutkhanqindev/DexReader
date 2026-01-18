@@ -11,5 +11,5 @@ data class ProfileUiState(
   val isUpdateUserSuccess: Boolean = false,
   val isLogoutUserSuccess: Boolean = false,
   val isUpdateUserError: Boolean = false,
-  val isLogoutUserError: Boolean = false
+  val isLogoutUserError: Boolean = false,
 )

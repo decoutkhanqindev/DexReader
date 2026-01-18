@@ -23,11 +23,11 @@ fun ActionButtonsSection(
   onReadingClick: (
     chapterId: String,
     lastReadPage: Int,
-    mangaId: String
+    mangaId: String,
   ) -> Unit,
   isFavorite: Boolean,
   onFavoriteClick: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val isContinueReading = continueChapter != null
   val canRead = startedChapter != null || continueChapter != null
@@ -46,8 +46,7 @@ fun ActionButtonsSection(
             continueChapter.lastReadPage,
             continueChapter.mangaId
           )
-        }
-        else onReadingClick(startedChapter!!.id, 0, startedChapter.mangaId)
+        } else onReadingClick(startedChapter!!.id, 0, startedChapter.mangaId)
       },
       content = {
         Text(

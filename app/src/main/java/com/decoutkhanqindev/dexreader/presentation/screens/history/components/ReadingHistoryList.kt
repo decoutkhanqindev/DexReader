@@ -36,12 +36,12 @@ fun ReadingHistoryList(
   onSelectedReadingHistory: (
     mangaId: String,
     chapterId: String,
-    lastReadPage: Int
+    lastReadPage: Int,
   ) -> Unit,
   onRemoveFromHistory: (String) -> Unit,
   onObserveHistoryNextPage: () -> Unit,
   onRetryObserveHistoryNextPage: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val lazyListState = rememberLazyListState()
   val coroutineScope = rememberCoroutineScope()

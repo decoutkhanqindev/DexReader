@@ -22,7 +22,7 @@ fun CategoriesScreen(
   onSearchClick: () -> Unit,
   onSelectedCategory: (String, String) -> Unit,
   viewModel: CategoriesViewModel = hiltViewModel(),
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val route = NavDestination.CategoriesDestination.route

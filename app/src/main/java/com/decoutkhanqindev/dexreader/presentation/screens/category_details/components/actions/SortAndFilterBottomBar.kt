@@ -19,7 +19,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.Action
 fun SortAndFilterBottomBar(
   onSortClick: () -> Unit,
   onFilterClick: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   BottomAppBar(
     actions = {

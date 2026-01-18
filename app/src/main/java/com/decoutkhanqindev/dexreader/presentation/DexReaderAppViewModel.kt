@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DexReaderAppViewModel @Inject constructor(
   private val observeCurrentUserUseCase: ObserveCurrentUserUseCase,
-  private val observeUserProfileUseCase: ObserveUserProfileUseCase
+  private val observeUserProfileUseCase: ObserveUserProfileUseCase,
 ) : ViewModel() {
   private val _isUserLoggedIn = MutableStateFlow(false)
   val isUserLoggedIn: StateFlow<Boolean> = _isUserLoggedIn.asStateFlow()

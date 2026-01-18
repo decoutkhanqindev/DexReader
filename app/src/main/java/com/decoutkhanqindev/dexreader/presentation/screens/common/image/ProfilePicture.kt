@@ -19,7 +19,7 @@ import coil3.request.crossfade
 fun ProfilePicture(
   url: String,
   name: String,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   AsyncImage(
     model = ImageRequest.Builder(LocalContext.current)

@@ -30,7 +30,7 @@ fun CategoryGroupHeader(
   group: String,
   isExpanded: Boolean,
   onExpandClick: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   Column(modifier = modifier) {
     Row(

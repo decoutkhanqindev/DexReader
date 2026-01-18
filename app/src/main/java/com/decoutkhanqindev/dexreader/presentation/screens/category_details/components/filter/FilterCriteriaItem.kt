@@ -22,7 +22,7 @@ fun FilterCriteriaItem(
   selectedValueIds: List<String>,
   filterValueOptions: List<FilterValue>,
   onSelectedOptions: (List<String>) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   Card(
     modifier = modifier,

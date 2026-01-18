@@ -5,7 +5,7 @@ import com.decoutkhanqindev.dexreader.domain.repository.CategoryRepository
 import javax.inject.Inject
 
 class GetMangaListByCategoryUseCase @Inject constructor(
-  private val categoryRepository: CategoryRepository
+  private val categoryRepository: CategoryRepository,
 ) {
   suspend operator fun invoke(
     categoryId: String,

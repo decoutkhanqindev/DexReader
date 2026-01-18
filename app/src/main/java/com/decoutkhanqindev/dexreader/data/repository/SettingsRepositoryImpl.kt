@@ -16,7 +16,7 @@ import javax.inject.Inject
 class SettingsRepositoryImpl @Inject constructor(
   private val themePrefsManager: DataStore<Preferences>,
   @ThemeTypeKeyQualifier
-  private val themeTypeKey: String
+  private val themeTypeKey: String,
 ) : SettingsRepository {
   private val themeTypePrefsKey = intPreferencesKey(themeTypeKey)
 

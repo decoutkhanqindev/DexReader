@@ -27,7 +27,7 @@ fun ChapterLanguageBottomSheet(
   selectedLanguage: String,
   onSelectedLanguage: (String) -> Unit,
   onDismiss: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val sheetState = rememberModalBottomSheetState()
 

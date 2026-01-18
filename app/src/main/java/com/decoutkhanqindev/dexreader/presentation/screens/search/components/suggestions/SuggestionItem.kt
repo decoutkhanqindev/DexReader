@@ -17,7 +17,7 @@ import com.decoutkhanqindev.dexreader.R
 fun SuggestionItem(
   suggestion: String,
   onSelectedSuggestion: (String) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   DropdownMenuItem(
     text = {

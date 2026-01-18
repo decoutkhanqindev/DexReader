@@ -18,16 +18,16 @@ import javax.inject.Inject
 
 class FirebaseFirestoreSourceImpl @Inject constructor(
   firebaseFirestore: FirebaseFirestore,
-  @UsersCollectionQualifier
+  @param:UsersCollectionQualifier
   private val usersCollection: String,
-  @FavoritesCollectionQualifier
+  @param:FavoritesCollectionQualifier
   private val favoritesCollection: String,
-  @HistoryCollectionQualifier
+  @param:HistoryCollectionQualifier
   private val historyCollection: String,
-  @CreatedAtFieldQualifier
+  @param:CreatedAtFieldQualifier
   private val createdAtField: String,
-  @MangaIdFieldQualifier
-  private val mangaIdField: String
+  @param:MangaIdFieldQualifier
+  private val mangaIdField: String,
 ) : FirebaseFirestoreSource {
   private val usersCollectionRef = firebaseFirestore.collection(usersCollection)
 
@@ -63,7 +63,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
   override fun observeFavorites(
     userId: String,
     limit: Long,
-    lastFavoriteMangaId: String?
+    lastFavoriteMangaId: String?,
   ): Flow<List<FavoriteMangaDto>> = callbackFlow {
     val favoritesCollectionRef = usersCollectionRef
       .document(userId)
@@ -104,7 +104,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
 
   override suspend fun addToFavorites(
     userId: String,
-    manga: FavoriteMangaDto
+    manga: FavoriteMangaDto,
   ) {
     usersCollectionRef
       .document(userId)
@@ -116,7 +116,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
 
   override suspend fun removeFromFavorites(
     userId: String,
-    mangaId: String
+    mangaId: String,
   ) {
     usersCollectionRef
       .document(userId)
@@ -128,7 +128,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
 
   override fun observeIsFavorite(
     userId: String,
-    mangaId: String
+    mangaId: String,
   ): Flow<Boolean> = callbackFlow {
     val favoriteCollectionRef = usersCollectionRef
       .document(userId)
@@ -155,7 +155,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
     userId: String,
     limit: Long,
     mangaId: String?,
-    lastReadingHistoryId: String?
+    lastReadingHistoryId: String?,
   ): Flow<List<ReadingHistoryDto>> = callbackFlow {
     val historyCollectionRef = usersCollectionRef
       .document(userId)
@@ -202,7 +202,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
 
   override suspend fun addAndUpdateToHistory(
     userId: String,
-    readingHistory: ReadingHistoryDto
+    readingHistory: ReadingHistoryDto,
   ) {
     usersCollectionRef
       .document(userId)
@@ -214,7 +214,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
 
   override suspend fun removeFromHistory(
     userId: String,
-    readingHistoryId: String
+    readingHistoryId: String,
   ) {
     usersCollectionRef
       .document(userId)

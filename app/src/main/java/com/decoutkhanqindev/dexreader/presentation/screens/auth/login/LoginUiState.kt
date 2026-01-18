@@ -12,5 +12,5 @@ data class LoginUiState(
   val emailError: AuthError = AuthError.EmailError.Required,
   val passwordError: AuthError = AuthError.PasswordError.Required,
   val userError: AuthError = AuthError.UnknownError,
-  val isError: Boolean = false
+  val isError: Boolean = false,
 )

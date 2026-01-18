@@ -16,7 +16,7 @@ fun MenuItemRow(
   isSelected: Boolean,
   item: MenuItem,
   onItemClick: (String) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   NavigationDrawerItem(
     selected = isSelected,

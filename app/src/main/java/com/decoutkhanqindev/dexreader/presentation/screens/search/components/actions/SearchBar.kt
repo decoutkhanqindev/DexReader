@@ -28,7 +28,7 @@ fun SearchBar(
   onQueryChange: (String) -> Unit,
   onSearch: (String) -> Unit,
   onNavigateBack: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   CenterAlignedTopAppBar(
     title = {

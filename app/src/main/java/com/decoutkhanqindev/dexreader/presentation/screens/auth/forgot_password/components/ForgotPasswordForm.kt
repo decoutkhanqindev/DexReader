@@ -36,7 +36,7 @@ fun ForgotPasswordForm(
   onEmailChange: (String) -> Unit,
   onSubmitClick: () -> Unit,
   onNavigateBack: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   var isShowError by rememberSaveable { mutableStateOf(false) }
   val scrollState = rememberScrollState()

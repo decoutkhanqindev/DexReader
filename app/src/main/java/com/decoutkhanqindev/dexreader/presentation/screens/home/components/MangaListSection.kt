@@ -18,7 +18,7 @@ fun MangaListSection(
   title: String,
   mangaList: List<Manga>,
   onSelectedManga: (Manga) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   Column(modifier = modifier) {
     Text(

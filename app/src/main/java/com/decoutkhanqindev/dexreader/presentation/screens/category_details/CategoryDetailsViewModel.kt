@@ -20,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CategoryDetailsViewModel @Inject constructor(
   savedStateHandle: SavedStateHandle,
-  private val getMangaListByCategoryUseCase: GetMangaListByCategoryUseCase
+  private val getMangaListByCategoryUseCase: GetMangaListByCategoryUseCase,
 ) : ViewModel() {
   private val categoryIdFromArg: String =
     checkNotNull(savedStateHandle[NavDestination.CategoryDetailsDestination.CATEGORY_ID_ARG])
@@ -75,13 +75,13 @@ class CategoryDetailsViewModel @Inject constructor(
   fun fetchMangaListByCategoryNextPage() {
     when (val currentCategoryDetailsUiState = _categoryDetailsUiState.value) {
       BasePaginationUiState.FirstPageLoading,
-      BasePaginationUiState.FirstPageError
+      BasePaginationUiState.FirstPageError,
         -> return
 
       is BasePaginationUiState.Content -> {
         when (currentCategoryDetailsUiState.nextPageState) {
           BaseNextPageState.LOADING,
-          BaseNextPageState.NO_MORE_ITEMS
+          BaseNextPageState.NO_MORE_ITEMS,
             -> return
 
           BaseNextPageState.ERROR -> retryFetchMangaListByCategoryNextPage()
@@ -167,7 +167,7 @@ class CategoryDetailsViewModel @Inject constructor(
 
   fun updateFilteringCriteria(
     statusValueIds: List<String>,
-    contentRatingValueIds: List<String>
+    contentRatingValueIds: List<String>,
   ) {
     val currentCategoryCriteriaUiState = _categoryCriteriaUiState.value
     if ((currentCategoryCriteriaUiState.statusValueIds == statusValueIds || statusValueIds.isEmpty()) &&

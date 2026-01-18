@@ -13,7 +13,7 @@ sealed interface ChapterPagesUiState {
   data object Error : ChapterPagesUiState
   data class Success(
     val currentChapterPage: Int = 1,
-    val chapterPages: ChapterPages
+    val chapterPages: ChapterPages,
   ) : ChapterPagesUiState
 }
 

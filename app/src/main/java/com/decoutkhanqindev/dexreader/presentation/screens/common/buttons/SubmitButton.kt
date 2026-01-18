@@ -15,7 +15,7 @@ fun SubmitButton(
   enabled: Boolean = true,
   title: String,
   onSubmitClick: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   Button(
     enabled = enabled,

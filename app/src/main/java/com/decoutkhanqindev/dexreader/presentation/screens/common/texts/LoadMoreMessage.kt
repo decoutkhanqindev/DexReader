@@ -18,7 +18,7 @@ import com.decoutkhanqindev.dexreader.R
 @Composable
 fun LoadMoreMessage(
   onLoadMore: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   Row(
     modifier = modifier.clickable { onLoadMore() },

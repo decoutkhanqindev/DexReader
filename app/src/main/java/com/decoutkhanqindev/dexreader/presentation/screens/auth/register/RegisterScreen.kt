@@ -12,7 +12,7 @@ fun RegisterScreen(
   onNavigateBack: () -> Unit,
   onRegisterSuccess: () -> Unit,
   viewModel: RegisterViewModel = hiltViewModel(),
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

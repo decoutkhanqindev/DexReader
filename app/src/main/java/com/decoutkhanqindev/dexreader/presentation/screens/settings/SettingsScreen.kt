@@ -21,7 +21,7 @@ fun SettingsScreen(
   onSignInClick: () -> Unit,
   onMenuItemClick: (String) -> Unit,
   viewModel: SettingsViewModel = hiltViewModel(),
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val route = NavDestination.SettingsDestination.route

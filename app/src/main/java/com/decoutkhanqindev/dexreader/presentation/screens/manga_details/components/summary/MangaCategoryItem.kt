@@ -18,9 +18,9 @@ fun MangaCategoryItem(
   category: Category,
   onSelectedCategory: (
     categoryId: String,
-    categoryTitle: String
+    categoryTitle: String,
   ) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   Card(
     modifier = modifier,

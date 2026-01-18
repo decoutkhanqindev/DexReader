@@ -24,10 +24,10 @@ fun ReadingHistoryItem(
   onSelectedReadingHistory: (
     mangaId: String,
     chapterId: String,
-    lastReadPage: Int
+    lastReadPage: Int,
   ) -> Unit,
   onRemoveFromHistory: (String) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val state = rememberSwipeToDismissBoxState(
     confirmValueChange = { value ->
@@ -67,7 +67,9 @@ fun ReadingHistoryItem(
       ) {
         Row(
           horizontalArrangement = Arrangement.spacedBy(8.dp),
-          modifier = Modifier.fillMaxWidth().padding(8.dp)
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
         ) {
           MangaCoverArt(
             url = readingHistory.mangaCoverUrl,

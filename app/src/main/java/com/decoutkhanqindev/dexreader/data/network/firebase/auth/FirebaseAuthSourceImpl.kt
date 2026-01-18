@@ -9,11 +9,11 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class FirebaseAuthSourceImpl @Inject constructor(
-  private val firebaseAuth: FirebaseAuth
+  private val firebaseAuth: FirebaseAuth,
 ) : FirebaseAuthSource {
   override suspend fun registerUser(
     email: String,
-    password: String
+    password: String,
   ): FirebaseUser? {
     val result = firebaseAuth.createUserWithEmailAndPassword(
       email,
@@ -24,7 +24,7 @@ class FirebaseAuthSourceImpl @Inject constructor(
 
   override suspend fun loginUser(
     email: String,
-    password: String
+    password: String,
   ) {
     firebaseAuth.signInWithEmailAndPassword(
       email,

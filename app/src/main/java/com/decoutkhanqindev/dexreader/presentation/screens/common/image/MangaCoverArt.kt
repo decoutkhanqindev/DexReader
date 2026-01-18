@@ -20,7 +20,7 @@ import com.decoutkhanqindev.dexreader.R
 fun MangaCoverArt(
   url: String,
   title: String,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   Card(
     modifier = modifier,

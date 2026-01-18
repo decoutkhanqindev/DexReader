@@ -5,7 +5,4 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class MangaDetailsResponse(
-  @Json(name = "data")
-  val data: MangaDto
-)
+data class MangaDetailsResponse(@field:Json(name = "data") val data: MangaDto)

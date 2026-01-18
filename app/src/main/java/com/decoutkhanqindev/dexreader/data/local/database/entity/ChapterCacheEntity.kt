@@ -18,5 +18,5 @@ data class ChapterCacheEntity(
   @ColumnInfo(name = "totalPages")
   val totalPages: Int, // Tổng số trang
   @ColumnInfo(name = "cachedAt")
-  val cachedAt: Long // Timestamp khi cache
+  val cachedAt: Long, // Timestamp khi cache
 )

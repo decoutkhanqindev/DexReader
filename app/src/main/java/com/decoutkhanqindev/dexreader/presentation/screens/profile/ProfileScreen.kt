@@ -28,7 +28,7 @@ fun ProfileScreen(
   onMenuItemClick: (String) -> Unit,
   onLogoutSuccess: () -> Unit,
   viewModel: ProfileViewModel = hiltViewModel(),
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val route = NavDestination.ProfileDestination.route

@@ -17,7 +17,7 @@ fun VerticalGridFilterCriteriaList(
   onSelectedStatusOptions: (List<String>) -> Unit,
   selectedContentRatingValueIds: List<String>,
   onSelectedContentRatingOptions: (List<String>) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val criteriaList = listOf<FilterCriteria>(
     FilterCriteria.Status,

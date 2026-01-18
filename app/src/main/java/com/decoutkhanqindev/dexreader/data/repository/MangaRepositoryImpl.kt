@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 
 class MangaRepositoryImpl @Inject constructor(
   private val mangaDexApiService: MangaDexApiService,
-  @UploadUrlQualifier private val uploadUrl: String
+  @UploadUrlQualifier private val uploadUrl: String,
 ) : MangaRepository {
   override suspend fun getLatestUpdateMangaList(): Result<List<Manga>> =
     runSuspendCatching(Dispatchers.IO) {
@@ -40,7 +40,7 @@ class MangaRepositoryImpl @Inject constructor(
 
   override suspend fun searchManga(
     query: String,
-    offset: Int
+    offset: Int,
   ): Result<List<Manga>> =
     runSuspendCatching(Dispatchers.IO) {
       mangaDexApiService.searchManga(

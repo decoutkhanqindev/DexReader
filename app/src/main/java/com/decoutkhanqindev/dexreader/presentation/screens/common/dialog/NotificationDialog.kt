@@ -30,7 +30,7 @@ fun NotificationDialog(
   onDismissClick: () -> Unit = {},
   confirm: String = stringResource(R.string.retry),
   onConfirmClick: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   AlertDialog(
     modifier = modifier,

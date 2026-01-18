@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 class CategoryRepositoryImpl @Inject constructor(
   private val mangaDexApiService: MangaDexApiService,
-  @UploadUrlQualifier private val uploadUrl: String
+  @UploadUrlQualifier private val uploadUrl: String,
 ) : CategoryRepository {
   override suspend fun getCategoryList(): Result<List<Category>> =
     runSuspendCatching(Dispatchers.IO) {

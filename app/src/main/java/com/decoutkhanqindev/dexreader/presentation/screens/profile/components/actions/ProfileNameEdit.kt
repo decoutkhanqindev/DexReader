@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.dp
 fun ProfileNameEdit(
   name: String,
   onNameChange: (String) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   var isEdit by rememberSaveable { mutableStateOf(false) }
   val focusRequester = remember { FocusRequester() }

@@ -41,7 +41,7 @@ fun LoginForm(
   onSubmitClick: () -> Unit,
   onRegisterClick: () -> Unit,
   onForgotPasswordClick: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   var isShowError by rememberSaveable { mutableStateOf(false) }
   val scrollState = rememberScrollState()

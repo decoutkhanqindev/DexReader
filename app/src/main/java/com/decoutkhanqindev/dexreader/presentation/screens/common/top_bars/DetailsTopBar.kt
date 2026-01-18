@@ -24,7 +24,7 @@ fun DetailsTopBar(
   onNavigateBack: () -> Unit,
   isSearchEnabled: Boolean = true,
   onSearchClick: () -> Unit = {},
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   CenterAlignedTopAppBar(
     title = {

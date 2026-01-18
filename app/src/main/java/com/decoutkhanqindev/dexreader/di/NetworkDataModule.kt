@@ -87,7 +87,7 @@ object NetworkDataModule {
   @Singleton
   fun provideOkHttpClient(
     authorizationInterceptor: NetworkInterceptor,
-    httpLoggingInterceptor: HttpLoggingInterceptor
+    httpLoggingInterceptor: HttpLoggingInterceptor,
   ): OkHttpClient =
     OkHttpClient.Builder()
       .connectTimeout(30, TimeUnit.SECONDS)
@@ -103,7 +103,7 @@ object NetworkDataModule {
   fun provideRetrofit(
     @BaseUrlQualifier baseUrl: String,
     okHttpClient: OkHttpClient,
-    moshi: Moshi
+    moshi: Moshi,
   ): Retrofit =
     Retrofit.Builder()
       .baseUrl(baseUrl)
@@ -113,7 +113,7 @@ object NetworkDataModule {
 
   @Provides
   fun provideMangaDexApiService(
-    @MangaDexApiServiceQualifier retrofit: Retrofit
+    @MangaDexApiServiceQualifier retrofit: Retrofit,
   ): MangaDexApiService = retrofit.create(MangaDexApiService::class.java)
 
   @Provides
@@ -147,12 +147,12 @@ object NetworkDataModule {
   @Provides
   @Singleton
   fun provideFirebaseAuthSource(
-    firebaseAuthSourceImpl: FirebaseAuthSourceImpl
+    firebaseAuthSourceImpl: FirebaseAuthSourceImpl,
   ): FirebaseAuthSource = firebaseAuthSourceImpl
 
   @Provides
   @Singleton
   fun provideFirebaseFirestoreSource(
-    firebaseFirestoreSourceImpl: FirebaseFirestoreSourceImpl
+    firebaseFirestoreSourceImpl: FirebaseFirestoreSourceImpl,
   ): FirebaseFirestoreSource = firebaseFirestoreSourceImpl
 }

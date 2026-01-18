@@ -21,7 +21,7 @@ fun SortCriteriaItem(
   isSelected: Boolean,
   criteria: SortCriteria,
   onSelectedItem: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   Card(
     onClick = onSelectedItem,

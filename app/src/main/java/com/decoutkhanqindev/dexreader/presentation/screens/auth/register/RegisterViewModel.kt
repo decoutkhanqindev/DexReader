@@ -20,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
   private val registerUserUseCase: RegisterUserUseCase,
-  private val addUserProfileUseCase: AddAndUpdateUserProfileUseCase
+  private val addUserProfileUseCase: AddAndUpdateUserProfileUseCase,
 ) : ViewModel() {
   private val _uiState = MutableStateFlow<RegisterUiState>(RegisterUiState())
   val uiState: StateFlow<RegisterUiState> = _uiState.asStateFlow()

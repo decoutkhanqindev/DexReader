@@ -14,7 +14,7 @@ fun NavHostController.navigatePreserveState(route: String) {
 
 fun NavHostController.navigateClearStack(
   currentRoute: String,
-  destination: String
+  destination: String,
 ) {
   this.navigate(destination) {
     popUpTo(currentRoute) {

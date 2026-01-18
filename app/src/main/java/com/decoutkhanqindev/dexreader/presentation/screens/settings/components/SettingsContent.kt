@@ -26,7 +26,7 @@ fun SettingsContent(
   onChangeThemeType: (ThemeType) -> Unit,
   onSetThemeType: () -> Unit,
   onRetry: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   var isShowConfirmChangeThemeDialog by rememberSaveable { mutableStateOf(false) }
   var isShowChangeThemeErrorDialog by rememberSaveable { mutableStateOf(true) }

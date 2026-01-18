@@ -28,9 +28,9 @@ fun FilterBottomSheet(
   criteriaState: CategoryDetailsCriteriaUiState,
   onApplyClick: (
     statusValueIds: List<String>,
-    contentRatingValueIds: List<String>
+    contentRatingValueIds: List<String>,
   ) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
   var selectedStatusValueIds by rememberSaveable {

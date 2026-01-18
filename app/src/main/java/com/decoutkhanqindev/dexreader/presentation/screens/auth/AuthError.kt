@@ -22,9 +22,9 @@ sealed class AuthError(val message: String) {
     object Required : NameError("Name is required.")
   }
 
-  object UserNotFoundError: AuthError("User not found.")
+  object UserNotFoundError : AuthError("User not found.")
 
-  object SendResetPasswordError: AuthError("Error sending reset password email.")
+  object SendResetPasswordError : AuthError("Error sending reset password email.")
 
   object UnknownError : AuthError("An unexpected error occurred.")
 }

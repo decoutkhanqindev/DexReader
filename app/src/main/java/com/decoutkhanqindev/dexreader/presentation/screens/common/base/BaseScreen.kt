@@ -27,7 +27,7 @@ fun BaseScreen(
   onSearchClick: () -> Unit = {},
   bottomBar: @Composable () -> Unit = {},
   content: @Composable () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
   val coroutineScope = rememberCoroutineScope()

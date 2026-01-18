@@ -25,11 +25,11 @@ fun HistoryScreen(
   onContinueReadingClick: (
     chapterId: String,
     lastReadPage: Int,
-    mangaId: String
+    mangaId: String,
   ) -> Unit,
   onMangaDetailsClick: (String) -> Unit,
   viewModel: HistoryViewModel = hiltViewModel(),
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val historyUiState by viewModel.historyUiState.collectAsStateWithLifecycle()
   val removeFromHistoryUiState by viewModel.removeFromHistoryUiState.collectAsStateWithLifecycle()

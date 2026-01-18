@@ -62,7 +62,7 @@ interface MangaDexApiService {
   suspend fun getMangaDetails(
     @Path("id") mangaId: String,
     @Query("includes[]")
-    includes: List<String> = listOf("cover_art", "author", "artist")
+    includes: List<String> = listOf("cover_art", "author", "artist"),
   ): MangaDetailsResponse
 
   @GET("manga/{id}/feed")
@@ -75,14 +75,14 @@ interface MangaDexApiService {
     @Query("order[volume]") volumeOrder: String = "desc",
     @Query("order[chapter]") chapterOrder: String = "desc",
     @Query("includes[]")
-    includes: List<String> = listOf("scanlation_group")
+    includes: List<String> = listOf("scanlation_group"),
   ): ChapterListResponse
 
   @GET("/chapter/{id}")
   suspend fun getChapterDetails(
     @Path("id") chapterId: String,
     @Query("includes[]")
-    includes: List<String> = listOf("manga", "scanlation_group")
+    includes: List<String> = listOf("manga", "scanlation_group"),
   ): ChapterDetailsResponse
 
   @GET("at-home/server/{id}")

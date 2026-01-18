@@ -24,7 +24,7 @@ import com.decoutkhanqindev.dexreader.R
 @Composable
 fun MangaDescription(
   description: String,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   var isExpanded by rememberSaveable { mutableStateOf(false) }
 

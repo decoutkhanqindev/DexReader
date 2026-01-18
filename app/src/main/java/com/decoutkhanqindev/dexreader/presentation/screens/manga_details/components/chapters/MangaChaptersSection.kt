@@ -26,12 +26,12 @@ fun MangaChaptersSection(
   onSelectedChapter: (
     chapterId: String,
     lastReadPage: Int,
-    mangaId: String
+    mangaId: String,
   ) -> Unit,
   onFetchChapterListNextPage: () -> Unit,
   onRetryFetchChapterListNextPage: () -> Unit,
   onRetry: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   Column(modifier = modifier) {
     MangaChaptersHeader(

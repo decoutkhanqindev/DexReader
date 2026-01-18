@@ -5,12 +5,12 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class CoverArtDto(
-  @Json(name = "id") val id: String, // UUID của ảnh bìa
-  @Json(name = "type") val type: String, // "cover_art"
-  @Json(name = "attributes") val attributes: CoverArtAttributesDto
+  @field:Json(name = "id") val id: String, // UUID của ảnh bìa
+  @field:Json(name = "type") val type: String, // "cover_art"
+  @field:Json(name = "attributes") val attributes: CoverArtAttributesDto,
 )
 
 @JsonClass(generateAdapter = true)
 data class CoverArtAttributesDto(
-  @Json(name = "fileName") val fileName: String // Tên file ảnh bìa
+  @field:Json(name = "fileName") val fileName: String, // Tên file ảnh bìa
 )

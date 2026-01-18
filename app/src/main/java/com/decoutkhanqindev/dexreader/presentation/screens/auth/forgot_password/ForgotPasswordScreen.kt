@@ -12,7 +12,7 @@ fun ForgotPasswordScreen(
   onNavigateBack: () -> Unit,
   onSubmitSuccess: () -> Unit,
   viewModel: ForgotPasswordViewModel = hiltViewModel(),
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

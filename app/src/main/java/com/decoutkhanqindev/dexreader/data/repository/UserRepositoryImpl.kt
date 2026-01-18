@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
   private val firebaseAuthSource: FirebaseAuthSource,
-  private val firebaseFirestoreSource: FirebaseFirestoreSource
+  private val firebaseFirestoreSource: FirebaseFirestoreSource,
 ) : UserRepository {
   override suspend fun registerUser(email: String, password: String): Result<User> =
     runSuspendCatching(Dispatchers.IO) {

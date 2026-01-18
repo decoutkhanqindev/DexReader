@@ -33,19 +33,19 @@ fun CategoryDetailsContent(
   onSortSheetDismiss: () -> Unit,
   onSortApplyClick: (
     criteriaId: String,
-    orderId: String
+    orderId: String,
   ) -> Unit,
   isFilterBottomSheetVisible: Boolean,
   onFilterSheetDismiss: () -> Unit,
   onFilterApplyClick: (
     statusValueIds: List<String>,
-    contentRatingValueIds: List<String>
+    contentRatingValueIds: List<String>,
   ) -> Unit,
   onSelectedManga: (String) -> Unit,
   onFetchMangaListNextPage: () -> Unit,
   onRetryFetchMangaListNextPage: () -> Unit,
   onRetry: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
 

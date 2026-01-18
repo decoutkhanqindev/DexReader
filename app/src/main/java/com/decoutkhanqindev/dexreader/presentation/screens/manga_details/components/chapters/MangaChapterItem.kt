@@ -30,9 +30,9 @@ fun MangaChapterItem(
   onSelectedChapter: (
     chapterId: String,
     lastReadPage: Int,
-    mangaId: String
+    mangaId: String,
   ) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val volume = chapter.volume
   val chapterNumber = chapter.chapterNumber

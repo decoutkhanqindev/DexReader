@@ -20,11 +20,11 @@ import com.decoutkhanqindev.dexreader.R
 @Composable
 fun NameInputField(
   name: String,
-  isValidName: Boolean = true ,
+  isValidName: Boolean = true,
   onNameChange: (String) -> Unit,
   isShowError: Boolean = false,
   error: String,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   OutlinedTextField(
     value = name,

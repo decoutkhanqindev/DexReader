@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SwipeToDismissBackground(
   isSwiping: Boolean,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   Box(
     modifier = modifier

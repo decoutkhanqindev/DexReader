@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 fun SuggestionList(
   suggestionList: List<String>,
   onSelectedSuggestion: (String) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   LazyColumn(modifier = modifier) {
     itemsIndexed(

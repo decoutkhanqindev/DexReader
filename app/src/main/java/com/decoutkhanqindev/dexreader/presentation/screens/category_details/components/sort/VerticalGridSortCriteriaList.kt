@@ -14,7 +14,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.category_details.Sort
 fun VerticalGridSortCriteriaList(
   selectedCriteriaId: String,
   onSelectedItem: (String) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val criteriaList = listOf<SortCriteria>(
     SortCriteria.LatestUpdate,

@@ -29,7 +29,7 @@ fun UpdateAndLogoutUserBottomBar(
   isShowUpdateButton: Boolean,
   onUpdateClick: () -> Unit,
   onLogoutClick: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   var isShowUpdateUserDialog by rememberSaveable { mutableStateOf(false) }
   var isShowLogoutUserDialog by rememberSaveable { mutableStateOf(false) }

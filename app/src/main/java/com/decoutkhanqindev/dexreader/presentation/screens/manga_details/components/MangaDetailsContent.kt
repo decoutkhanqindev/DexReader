@@ -45,7 +45,7 @@ fun MangaDetailsContent(
   onReadingClick: (
     chapterId: String,
     lastReadPage: Int,
-    mangaId: String
+    mangaId: String,
   ) -> Unit,
   isFavorite: Boolean,
   onFavoriteClick: () -> Unit,
@@ -53,18 +53,18 @@ fun MangaDetailsContent(
   onSelectedLanguage: (String) -> Unit,
   onSelectedCategory: (
     categoryId: String,
-    categoryTitle: String
+    categoryTitle: String,
   ) -> Unit,
   onSelectedChapter: (
     chapterId: String,
     lastReadPage: Int,
-    mangaId: String
+    mangaId: String,
   ) -> Unit,
   onFetchChapterListNextPage: () -> Unit,
   onRetryFetchChapterListNextPage: () -> Unit,
   onRetryFetchChapterListFirstPage: () -> Unit,
   onRetry: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val lazyListState = rememberLazyListState()
   val coroutineScope = rememberCoroutineScope()

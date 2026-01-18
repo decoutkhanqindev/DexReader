@@ -20,7 +20,7 @@ import java.util.Locale
 @Composable
 fun MangaInfo(
   manga: Manga,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   Column(
     modifier = modifier,

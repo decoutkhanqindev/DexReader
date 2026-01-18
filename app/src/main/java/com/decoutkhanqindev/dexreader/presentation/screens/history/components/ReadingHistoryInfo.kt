@@ -22,7 +22,7 @@ import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 @Composable
 fun ReadingHistoryInfo(
   readingHistory: ReadingHistory,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   Column(
     modifier = modifier,

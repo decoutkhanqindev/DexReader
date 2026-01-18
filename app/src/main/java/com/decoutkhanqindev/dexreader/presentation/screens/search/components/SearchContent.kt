@@ -24,7 +24,7 @@ fun SearchContent(
   onFetchMangaListNextPage: () -> Unit,
   onRetryFetchMangaListNextPage: () -> Unit,
   onRetry: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   if (query.isEmpty()) {
     IdleScreen(

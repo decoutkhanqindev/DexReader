@@ -15,7 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 @Composable
 fun AllItemLoadedMessage(
   title: String,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   Row(
     modifier = modifier,

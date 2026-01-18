@@ -24,7 +24,7 @@ fun FavoritesScreen(
   onSearchClick: () -> Unit,
   onSelectedManga: (String) -> Unit,
   viewModel: FavoritesViewModel = hiltViewModel(),
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val route = NavDestination.FavoritesDestination.route

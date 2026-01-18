@@ -17,7 +17,7 @@ import com.decoutkhanqindev.dexreader.R
 fun ZoomPageButton(
   isFullScreen: Boolean,
   onClick: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   FloatingActionButton(
     onClick = onClick,

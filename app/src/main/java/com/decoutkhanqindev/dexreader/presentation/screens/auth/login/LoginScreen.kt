@@ -13,7 +13,7 @@ fun LoginScreen(
   onRegisterClick: () -> Unit,
   onForgotPasswordClick: () -> Unit,
   viewModel: LoginViewModel = hiltViewModel(),
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

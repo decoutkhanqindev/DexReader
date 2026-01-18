@@ -5,11 +5,11 @@ import com.decoutkhanqindev.dexreader.domain.repository.CacheRepository
 import javax.inject.Inject
 
 class AddChapterCacheUseCase @Inject constructor(
-  private val cacheRepository: CacheRepository
+  private val cacheRepository: CacheRepository,
 ) {
   suspend operator fun invoke(
     mangaId: String,
-    chapterPages: ChapterPages
+    chapterPages: ChapterPages,
   ): Result<Unit> =
     cacheRepository.addChapterCache(
       mangaId = mangaId,

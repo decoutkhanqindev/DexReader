@@ -26,5 +26,5 @@ data class FavoriteMangaDto(
   var status: String = "",
 
   @ServerTimestamp
-  var createdAt: Date? = null
+  var createdAt: Date? = null,
 )

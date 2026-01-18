@@ -15,13 +15,13 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class HistoryRepositoryImpl @Inject constructor(
-  private val firebaseFirestoreSource: FirebaseFirestoreSource
+  private val firebaseFirestoreSource: FirebaseFirestoreSource,
 ) : HistoryRepository {
   override fun observeHistory(
     userId: String,
     limit: Int,
     mangaId: String?,
-    lastReadingHistoryId: String?
+    lastReadingHistoryId: String?,
   ): Flow<Result<List<ReadingHistory>>> =
     firebaseFirestoreSource
       .observeHistory(
@@ -39,8 +39,8 @@ class HistoryRepositoryImpl @Inject constructor(
 
   override suspend fun addAndUpdateToHistory(
     userId: String,
-    readingHistory: ReadingHistory
-  ): Result<Unit>  =
+    readingHistory: ReadingHistory,
+  ): Result<Unit> =
     runSuspendCatching(Dispatchers.IO) {
       firebaseFirestoreSource.addAndUpdateToHistory(
         userId = userId,
@@ -50,7 +50,7 @@ class HistoryRepositoryImpl @Inject constructor(
 
   override suspend fun removeFromHistory(
     userId: String,
-    readingHistoryId: String
+    readingHistoryId: String,
   ): Result<Unit> =
     runSuspendCatching(Dispatchers.IO) {
       firebaseFirestoreSource.removeFromHistory(

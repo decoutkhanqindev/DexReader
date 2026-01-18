@@ -26,7 +26,7 @@ fun MenuHeader(
   isUserLoggedIn: Boolean,
   currentUser: User?,
   onSignInClick: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   if (isUserLoggedIn) {
     Row(

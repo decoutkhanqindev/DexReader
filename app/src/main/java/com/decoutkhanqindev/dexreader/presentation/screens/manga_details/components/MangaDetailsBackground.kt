@@ -11,7 +11,7 @@ import coil3.request.crossfade
 @Composable
 fun MangaDetailsBackground(
   imageUrl: String,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   AsyncImage(
     model = ImageRequest.Builder(LocalContext.current)

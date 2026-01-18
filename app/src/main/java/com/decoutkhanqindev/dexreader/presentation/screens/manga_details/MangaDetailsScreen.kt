@@ -29,19 +29,19 @@ fun MangaDetailsScreen(
   onReadingClick: (
     chapterId: String,
     lastReadPage: Int,
-    mangaId: String
+    mangaId: String,
   ) -> Unit,
   onSelectedCategory: (
     categoryId: String,
-    categoryTitle: String
+    categoryTitle: String,
   ) -> Unit,
   onSelectedChapter: (
     chapterId: String,
     lastReadPage: Int,
-    mangaId: String
+    mangaId: String,
   ) -> Unit,
   viewModel: MangaDetailsViewModel = hiltViewModel(),
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val mangaDetailsUiState by viewModel.mangaDetailsUiState.collectAsStateWithLifecycle()
   val mangaChaptersUiState by viewModel.mangaChaptersUiState.collectAsStateWithLifecycle()

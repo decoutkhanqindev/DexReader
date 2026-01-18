@@ -15,7 +15,7 @@ fun MenuBody(
   items: List<MenuItem>,
   selectedItemId: String,
   onItemClick: (String) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   LazyColumn(
     modifier = modifier.background(color = MaterialTheme.colorScheme.surface),

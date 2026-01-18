@@ -32,7 +32,7 @@ fun FavoritesContent(
   onObserveFavoriteMangaListNextPage: () -> Unit,
   onRetryObserveFavoriteMangaListNextPage: () -> Unit,
   onRetry: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
 

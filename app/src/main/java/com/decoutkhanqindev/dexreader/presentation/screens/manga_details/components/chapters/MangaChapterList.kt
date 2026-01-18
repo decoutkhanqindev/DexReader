@@ -29,12 +29,12 @@ fun MangaChapterList(
   onSelectedChapter: (
     chapterId: String,
     lastReadPage: Int,
-    mangaId: String
+    mangaId: String,
   ) -> Unit,
   chapterListNextPageState: BaseNextPageState,
   onFetchChapterListNextPage: () -> Unit,
   onRetryFetchChapterListNextPage: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   Column(modifier = modifier) {
     if (chapterList.isEmpty()) {

@@ -18,7 +18,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.category_details.Sort
 fun SortOrderOptions(
   selectedOrderId: String,
   onSelectedOption: (String) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val sortOderOptions = listOf<SortOrder>(
     SortOrder.Descending,

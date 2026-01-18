@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-  private val searchMangaUseCase: SearchMangaUseCase
+  private val searchMangaUseCase: SearchMangaUseCase,
 ) : ViewModel() {
   private val _suggestionsUiState =
     MutableStateFlow<SuggestionsUiState>(SuggestionsUiState.Loading)
@@ -104,7 +104,7 @@ class SearchViewModel @Inject constructor(
       is BasePaginationUiState.Content -> {
         when (currentResultsUiState.nextPageState) {
           BaseNextPageState.LOADING,
-          BaseNextPageState.NO_MORE_ITEMS
+          BaseNextPageState.NO_MORE_ITEMS,
             -> return
 
           BaseNextPageState.ERROR -> retryFetchMangaListNextPage()

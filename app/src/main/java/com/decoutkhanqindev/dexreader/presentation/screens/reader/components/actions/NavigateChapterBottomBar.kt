@@ -30,7 +30,7 @@ fun NavigateChapterBottomBar(
   canNavigateNext: Boolean,
   onNavigatePrevious: () -> Unit,
   onNavigateNext: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   BottomAppBar(
     actions = {
@@ -56,7 +56,7 @@ fun NavigateChapterBottomBar(
           style = MaterialTheme.typography.titleLarge,
           fontWeight = FontWeight.ExtraBold,
         )
-        if(title.isNotBlank()){
+        if (title.isNotBlank()) {
           Text(
             text = title,
             style = MaterialTheme.typography.bodyMedium,
