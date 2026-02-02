@@ -1,7 +1,9 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.auth.register
 
+import androidx.compose.runtime.Immutable
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.AuthError
 
+@Immutable
 data class RegisterUiState(
   val isLoading: Boolean = false,
   val email: String = "",

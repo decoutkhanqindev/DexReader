@@ -1,5 +1,8 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.category_details
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class CategoryDetailsCriteriaUiState(
   val selectedSortCriteriaId: String = SortCriteria.LatestUpdate.id,
   val selectedSortOrderId: String = SortOrder.Descending.id,

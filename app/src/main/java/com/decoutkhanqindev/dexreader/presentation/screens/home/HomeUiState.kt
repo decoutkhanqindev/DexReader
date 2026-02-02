@@ -1,10 +1,13 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.home
 
+import androidx.compose.runtime.Immutable
 import com.decoutkhanqindev.dexreader.domain.model.Manga
 
 sealed interface HomeUiState {
   data object Loading : HomeUiState
   data object Error : HomeUiState
+
+  @Immutable
   data class Success(
     val latestUpdatesMangaList: List<Manga> = emptyList(),
     val trendingMangaList: List<Manga> = emptyList(),

@@ -1,8 +1,5 @@
 package com.decoutkhanqindev.dexreader.domain.model
 
-import androidx.compose.runtime.Immutable
-
-@Immutable
 data class ReadingHistory(
   val id: String,
   val mangaId: String,
