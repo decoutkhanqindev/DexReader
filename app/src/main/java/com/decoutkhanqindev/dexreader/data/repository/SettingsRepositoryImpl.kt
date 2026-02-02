@@ -7,8 +7,8 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import com.decoutkhanqindev.dexreader.di.ThemeTypeKeyQualifier
 import com.decoutkhanqindev.dexreader.domain.model.ThemeType
 import com.decoutkhanqindev.dexreader.domain.repository.SettingsRepository
-import com.decoutkhanqindev.dexreader.utils.runSuspendCatching
-import com.decoutkhanqindev.dexreader.utils.toResultFlow
+import com.decoutkhanqindev.dexreader.utils.AsyncHandler.runSuspendCatching
+import com.decoutkhanqindev.dexreader.utils.AsyncHandler.toResultFlow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

@@ -16,7 +16,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.history.AddAndUpdateToHisto
 import com.decoutkhanqindev.dexreader.domain.usecase.history.ObserveHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaDetailsUseCase
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
-import com.decoutkhanqindev.dexreader.utils.toLanguageCode
+import com.decoutkhanqindev.dexreader.utils.LanguageCodec.toLanguageCode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

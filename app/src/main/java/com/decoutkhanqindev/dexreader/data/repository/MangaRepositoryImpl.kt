@@ -5,7 +5,7 @@ import com.decoutkhanqindev.dexreader.data.network.mangadex_api.MangaDexApiServi
 import com.decoutkhanqindev.dexreader.di.UploadUrlQualifier
 import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.domain.repository.MangaRepository
-import com.decoutkhanqindev.dexreader.utils.runSuspendCatching
+import com.decoutkhanqindev.dexreader.utils.AsyncHandler.runSuspendCatching
 import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
 

@@ -5,7 +5,7 @@ import com.decoutkhanqindev.dexreader.data.network.mangadex_api.MangaDexApiServi
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
 import com.decoutkhanqindev.dexreader.domain.model.ChapterPages
 import com.decoutkhanqindev.dexreader.domain.repository.ChapterRepository
-import com.decoutkhanqindev.dexreader.utils.runSuspendCatching
+import com.decoutkhanqindev.dexreader.utils.AsyncHandler.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 

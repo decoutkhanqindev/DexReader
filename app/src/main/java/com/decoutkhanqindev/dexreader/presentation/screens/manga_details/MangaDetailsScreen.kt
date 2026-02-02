@@ -16,8 +16,8 @@ import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseDetailsScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.MangaDetailsContent
-import com.decoutkhanqindev.dexreader.utils.toFullLanguageName
-import com.decoutkhanqindev.dexreader.utils.toLanguageCode
+import com.decoutkhanqindev.dexreader.utils.LanguageCodec.toFullLanguageName
+import com.decoutkhanqindev.dexreader.utils.LanguageCodec.toLanguageCode
 
 @Composable
 fun MangaDetailsScreen(

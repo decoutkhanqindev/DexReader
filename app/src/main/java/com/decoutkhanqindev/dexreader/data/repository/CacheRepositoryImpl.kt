@@ -5,7 +5,7 @@ import com.decoutkhanqindev.dexreader.data.mapper.toDomain
 import com.decoutkhanqindev.dexreader.data.mapper.toEntity
 import com.decoutkhanqindev.dexreader.domain.model.ChapterPages
 import com.decoutkhanqindev.dexreader.domain.repository.CacheRepository
-import com.decoutkhanqindev.dexreader.utils.runSuspendCatching
+import com.decoutkhanqindev.dexreader.utils.AsyncHandler.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 

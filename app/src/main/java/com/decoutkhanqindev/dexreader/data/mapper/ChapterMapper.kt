@@ -2,8 +2,8 @@ package com.decoutkhanqindev.dexreader.data.mapper
 
 import com.decoutkhanqindev.dexreader.data.network.mangadex_api.dto.ChapterDto
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
-import com.decoutkhanqindev.dexreader.utils.toFullLanguageName
-import com.decoutkhanqindev.dexreader.utils.toTimeAgo
+import com.decoutkhanqindev.dexreader.utils.LanguageCodec.toFullLanguageName
+import com.decoutkhanqindev.dexreader.utils.TimeAgo.toTimeAgo
 
 fun ChapterDto.toDomain(): Chapter {
   val mangaId = relationships?.find { it.type == "manga" }?.id ?: "0"

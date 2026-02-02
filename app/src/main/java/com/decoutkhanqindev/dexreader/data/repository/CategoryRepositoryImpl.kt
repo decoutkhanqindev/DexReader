@@ -6,7 +6,7 @@ import com.decoutkhanqindev.dexreader.di.UploadUrlQualifier
 import com.decoutkhanqindev.dexreader.domain.model.Category
 import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.domain.repository.CategoryRepository
-import com.decoutkhanqindev.dexreader.utils.runSuspendCatching
+import com.decoutkhanqindev.dexreader.utils.AsyncHandler.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
