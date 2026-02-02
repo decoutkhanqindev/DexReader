@@ -8,6 +8,5 @@ interface MangaRepository {
   suspend fun getNewReleaseMangaList(): Result<List<Manga>>
   suspend fun getTopRatedMangaList(): Result<List<Manga>>
   suspend fun getMangaDetails(mangaId: String): Result<Manga>
-
   suspend fun searchManga(query: String, offset: Int): Result<List<Manga>>
 }

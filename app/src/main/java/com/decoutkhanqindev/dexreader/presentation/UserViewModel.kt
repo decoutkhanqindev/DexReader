@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DexReaderAppViewModel @Inject constructor(
+class UserViewModel @Inject constructor(
   private val observeCurrentUserUseCase: ObserveCurrentUserUseCase,
   private val observeUserProfileUseCase: ObserveUserProfileUseCase,
 ) : ViewModel() {
@@ -81,6 +81,6 @@ class DexReaderAppViewModel @Inject constructor(
   }
 
   companion object {
-    private const val TAG = "DexReaderAppViewModel"
+    private const val TAG = "UserViewModel"
   }
 }

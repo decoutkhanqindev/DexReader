@@ -1,6 +1,7 @@
 package com.decoutkhanqindev.dexreader.utils
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlin.contracts.ExperimentalContracts
@@ -27,12 +28,8 @@ suspend inline fun <R> runSuspendCatching(
 }
 
 fun <T> Flow<T>.toResultFlow(): Flow<Result<T>> =
-  this.map { value ->
-    try {
-      Result.success(value)
-    } catch (c: CancellationException) {
-      throw c
-    } catch (e: Throwable) {
-      Result.failure(e)
+  this.map { Result.success(it) }
+    .catch {
+      if (it is CancellationException) throw it
+      else emit(Result.failure(it))
     }
-  }
