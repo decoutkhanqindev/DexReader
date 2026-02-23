@@ -9,7 +9,7 @@ class SendResetPasswordUseCase @Inject constructor(
   private val repository: UserRepository,
 ) {
   suspend operator fun invoke(email: String): Result<Unit> = runSuspendCatching {
-    User.validate(email)
+    User.validateEmail(email)
     repository.sendResetPassword(email)
   }
 }

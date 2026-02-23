@@ -11,7 +11,7 @@ import javax.inject.Inject
 class FirebaseAuthSourceImpl @Inject constructor(
   private val firebaseAuth: FirebaseAuth,
 ) : FirebaseAuthSource {
-  override suspend fun registerUser(
+  override suspend fun register(
     email: String,
     password: String,
   ): FirebaseUser? {
@@ -22,7 +22,7 @@ class FirebaseAuthSourceImpl @Inject constructor(
     return result.user
   }
 
-  override suspend fun loginUser(
+  override suspend fun login(
     email: String,
     password: String,
   ) {
@@ -32,9 +32,9 @@ class FirebaseAuthSourceImpl @Inject constructor(
     ).await()
   }
 
-  override suspend fun logoutUser() = firebaseAuth.signOut()
+  override suspend fun logout() = firebaseAuth.signOut()
 
-  override suspend fun sendResetUserPassword(email: String) {
+  override suspend fun sendResetPassword(email: String) {
     firebaseAuth.sendPasswordResetEmail(email).await()
   }
 

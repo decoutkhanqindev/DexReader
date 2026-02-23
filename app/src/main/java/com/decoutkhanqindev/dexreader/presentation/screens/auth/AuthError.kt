@@ -3,7 +3,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.auth
 import androidx.annotation.StringRes
 import com.decoutkhanqindev.dexreader.R
 
-sealed class AuthError(@StringRes val message: Int) {
+sealed class AuthError(@param:StringRes val message: Int) {
   sealed class EmailError(@StringRes message: Int) : AuthError(message) {
     data object Invalid : EmailError(R.string.invalid_email_format)
     data object Required : EmailError(R.string.email_required)

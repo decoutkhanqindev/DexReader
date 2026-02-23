@@ -9,7 +9,5 @@ class AddAndUpdateUserProfileUseCase @Inject constructor(
   private val repository: UserRepository,
 ) {
   suspend operator fun invoke(user: User): Result<Unit> =
-    runSuspendCatching {
-      repository.addAndUpdateUserProfile(user)
-    }
+    runSuspendCatching { repository.addAndUpdateUserProfile(user) }
 }

@@ -9,6 +9,5 @@ package com.decoutkhanqindev.dexreader.domain.exception
  * - AuthException (sealed)
  * - MangaException (sealed)
  * - FavoritesHistoryException (sealed)
- * - GenericException (sealed)
  */
 sealed class DomainException(cause: Throwable? = null) : Exception(cause)

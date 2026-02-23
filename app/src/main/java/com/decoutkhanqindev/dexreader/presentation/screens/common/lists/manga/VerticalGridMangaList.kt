@@ -16,7 +16,11 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -33,8 +37,11 @@ fun VerticalGridMangaList(
 ) {
   val lazyGridState = rememberLazyGridState()
   val coroutineScope = rememberCoroutineScope()
-  val isMoveToTopButtonVisible = mangaList.size > 15 &&
-      lazyGridState.firstVisibleItemIndex > 0
+  val isMoveToTopButtonVisible by rememberSaveable {
+    derivedStateOf {
+      mangaList.size > 15 && lazyGridState.firstVisibleItemIndex > 0
+    }
+  }
 
   Box(modifier = modifier) {
     LazyVerticalGrid(

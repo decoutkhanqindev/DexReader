@@ -8,7 +8,6 @@ import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.domain.usecase.user.AddAndUpdateUserProfileUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.RegisterUseCase
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.AuthError
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,7 +26,13 @@ class RegisterViewModel @Inject constructor(
 
   fun submit() {
     val currentUiState = _uiState.value
+
     if (currentUiState.isLoading) return
+
+    val currentEmail = currentUiState.email.trim()
+    val currentPassword = currentUiState.password.trim()
+    val currentConfirmPassword = currentUiState.confirmPassword.trim()
+    val currentName = currentUiState.name.trim()
 
     viewModelScope.launch {
       _uiState.update {
@@ -38,47 +43,26 @@ class RegisterViewModel @Inject constructor(
         )
       }
 
-      // Local UI validation for fields not validated by RegisterUseCase
-      if (currentUiState.password != currentUiState.confirmPassword) {
-        _uiState.update {
-          it.copy(
-            isLoading = false,
-            isValidConfirmPassword = false,
-            confirmPasswordError = AuthError.ConfirmPasswordError.DoesNotMatch
-          )
-        }
-        return@launch
-      }
-
-      if (currentUiState.name.isBlank()) {
-        _uiState.update {
-          it.copy(
-            isLoading = false,
-            isValidName = false,
-            nameError = AuthError.NameError.Required
-          )
-        }
-        return@launch
-      }
-
       registerUseCase(
-        email = currentUiState.email.trim(),
-        password = currentUiState.password.trim()
+        email = currentEmail,
+        password = currentPassword,
+        confirmPassword = currentConfirmPassword,
+        name = currentName
       )
         .onSuccess { user ->
-          val newUser =
-            User(
+          addUserProfile(
+            user = User(
               id = user.id,
-              name = currentUiState.name.trim(),
-              email = currentUiState.email.trim(),
+              name = currentName,
+              email = currentEmail,
               profilePictureUrl = null
             )
-          addUserProfile(user = newUser)
+          )
         }
         .onFailure { throwable ->
           _uiState.update { currentState ->
             when (throwable) {
-              is FirebaseAuthUserCollisionException -> {
+              is AuthException.UserAlreadyExists -> {
                 currentState.copy(
                   isLoading = false,
                   isSuccess = false,
@@ -102,6 +86,24 @@ class RegisterViewModel @Inject constructor(
                   isSuccess = false,
                   isValidPassword = false,
                   passwordError = AuthError.PasswordError.Weak
+                )
+              }
+
+              is AuthException.PasswordMismatch -> {
+                currentState.copy(
+                  isLoading = false,
+                  isSuccess = false,
+                  isValidConfirmPassword = false,
+                  confirmPasswordError = AuthError.ConfirmPasswordError.DoesNotMatch
+                )
+              }
+
+              is AuthException.InvalidName -> {
+                currentState.copy(
+                  isLoading = false,
+                  isSuccess = false,
+                  isValidName = false,
+                  nameError = AuthError.NameError.Required
                 )
               }
 

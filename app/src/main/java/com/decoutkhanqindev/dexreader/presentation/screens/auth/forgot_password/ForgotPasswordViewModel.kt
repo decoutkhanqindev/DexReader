@@ -23,7 +23,10 @@ class ForgotPasswordViewModel @Inject constructor(
 
   fun submit() {
     val currentUiState = _uiState.value
+
     if (currentUiState.isLoading) return
+
+    val currentEmail = currentUiState.email.trim()
 
     viewModelScope.launch {
       _uiState.update {
@@ -34,7 +37,7 @@ class ForgotPasswordViewModel @Inject constructor(
         )
       }
 
-      sendResetPasswordUseCase(email = currentUiState.email)
+      sendResetPasswordUseCase(email = currentEmail)
         .onSuccess {
           _uiState.update {
             it.copy(

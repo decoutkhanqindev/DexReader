@@ -11,8 +11,13 @@ class RegisterUseCase @Inject constructor(
   suspend operator fun invoke(
     email: String,
     password: String,
+    confirmPassword: String,
+    name: String,
   ): Result<User> = runSuspendCatching {
-    User.validate(email, password)
+    User.validateEmail(email)
+    User.validatePassword(password)
+    User.validateConfirmPassword(password, confirmPassword)
+    User.validateName(name)
     repository.register(email, password)
   }
 }

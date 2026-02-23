@@ -24,7 +24,11 @@ class LoginViewModel @Inject constructor(
 
   fun submit() {
     val currentUiState = _uiState.value
+
     if (currentUiState.isLoading) return
+
+    val currentEmail = currentUiState.email.trim()
+    val currentPassword = currentUiState.password.trim()
 
     viewModelScope.launch {
       _uiState.update {
@@ -36,8 +40,8 @@ class LoginViewModel @Inject constructor(
       }
 
       userCase(
-        email = currentUiState.email.trim(),
-        password = currentUiState.password.trim()
+        email = currentEmail,
+        password = currentPassword
       )
         .onSuccess {
           _uiState.update {

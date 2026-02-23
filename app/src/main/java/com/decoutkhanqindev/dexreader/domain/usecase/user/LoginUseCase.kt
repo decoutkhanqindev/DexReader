@@ -8,8 +8,12 @@ import javax.inject.Inject
 class LoginUseCase @Inject constructor(
   private val repository: UserRepository,
 ) {
-  suspend operator fun invoke(email: String, password: String): Result<Unit> = runSuspendCatching {
-    User.validate(email, password)
+  suspend operator fun invoke(
+    email: String,
+    password: String,
+  ): Result<Unit> = runSuspendCatching {
+    User.validateEmail(email)
+    User.validatePassword(password)
     repository.login(email, password)
   }
 }
