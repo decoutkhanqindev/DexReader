@@ -30,10 +30,8 @@ import com.decoutkhanqindev.dexreader.R
 fun PasswordInputField(
   isConfirmPassword: Boolean = false,
   password: String,
-  isValidPassword: Boolean = true,
   onPasswordChange: (String) -> Unit,
-  isShowError: Boolean = false,
-  error: String,
+  error: AuthError? = null,
   modifier: Modifier = Modifier,
 ) {
   var isShowPassword by rememberSaveable { mutableStateOf(false) }
@@ -74,35 +72,29 @@ fun PasswordInputField(
       }
     },
     singleLine = true,
-    isError = isShowError && !isValidPassword,
+    isError = error != null,
     supportingText = {
-      if (isShowError && !isValidPassword) {
-        Text(
-          text = error,
-          color = MaterialTheme.colorScheme.error
-        )
+      error?.let {
+        Text(text = stringResource(it.message), color = MaterialTheme.colorScheme.error)
       }
     },
     textStyle = MaterialTheme.typography.bodyLarge,
     visualTransformation =
-      if (isShowPassword) VisualTransformation.None
-      else PasswordVisualTransformation(),
-    keyboardOptions = KeyboardOptions(
-      keyboardType = KeyboardType.Password,
-      imeAction = ImeAction.Next
-    ),
-    colors = OutlinedTextFieldDefaults.colors(
-      focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-      unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-      focusedBorderColor = MaterialTheme.colorScheme.onPrimaryContainer,
-      unfocusedBorderColor = MaterialTheme.colorScheme.onPrimaryContainer,
-      cursorColor = MaterialTheme.colorScheme.onPrimaryContainer,
-      focusedTextColor = MaterialTheme.colorScheme.onSurface,
-      unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-      focusedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
-      unfocusedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
-    ),
+      if (isShowPassword) VisualTransformation.None else PasswordVisualTransformation(),
+    keyboardOptions =
+      KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
+    colors =
+      OutlinedTextFieldDefaults.colors(
+        focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+        focusedBorderColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        unfocusedBorderColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        cursorColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+        unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+        focusedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        unfocusedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+      ),
     modifier = modifier
   )
 }
-

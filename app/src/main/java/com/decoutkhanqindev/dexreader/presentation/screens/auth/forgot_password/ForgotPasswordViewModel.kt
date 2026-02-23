@@ -26,46 +26,29 @@ class ForgotPasswordViewModel @Inject constructor(
 
     if (currentUiState.isLoading) return
 
-    val currentEmail = currentUiState.email.trim()
-
     viewModelScope.launch {
-      _uiState.update {
-        it.copy(
-          isLoading = true,
-          isSuccess = false,
-          isError = false
-        )
-      }
+      _uiState.update { it.copy(isLoading = true, isSuccess = false, isError = false) }
 
-      sendResetPasswordUseCase(email = currentEmail)
+      sendResetPasswordUseCase(email = currentUiState.email.trim())
         .onSuccess {
-          _uiState.update {
-            it.copy(
-              isLoading = false,
-              isSuccess = true,
-              isError = false,
-            )
-          }
+          _uiState.update { it.copy(isLoading = false, isSuccess = true, isError = false) }
         }
         .onFailure { throwable ->
           _uiState.update { currentState ->
             when (throwable) {
-              is AuthException.InvalidEmail -> {
+              is AuthException.Email.Empty ->
                 currentState.copy(
                   isLoading = false,
-                  isSuccess = false,
-                  isValidEmail = false,
+                  emailError = AuthError.EmailError.Required
+                )
+
+              is AuthException.Email.Invalid ->
+                currentState.copy(
+                  isLoading = false,
                   emailError = AuthError.EmailError.Invalid
                 )
-              }
 
-              else -> {
-                currentState.copy(
-                  isLoading = false,
-                  isSuccess = false,
-                  isError = true
-                )
-              }
+              else -> currentState.copy(isLoading = false, isSuccess = false, isError = true)
             }
           }
 
@@ -79,8 +62,7 @@ class ForgotPasswordViewModel @Inject constructor(
     _uiState.update {
       it.copy(
         email = value,
-        emailError = AuthError.UnknownError,
-        isValidEmail = true,
+        emailError = null,
         isLoading = false,
         isSuccess = false,
         isError = false

@@ -20,10 +20,8 @@ import com.decoutkhanqindev.dexreader.R
 @Composable
 fun NameInputField(
   name: String,
-  isValidName: Boolean = true,
   onNameChange: (String) -> Unit,
-  isShowError: Boolean = false,
-  error: String,
+  error: AuthError? = null,
   modifier: Modifier = Modifier,
 ) {
   OutlinedTextField(
@@ -38,37 +36,30 @@ fun NameInputField(
       )
     },
     label = {
-      Text(
-        text = stringResource(R.string.name),
-        style = MaterialTheme.typography.bodyLarge
-      )
+      Text(text = stringResource(R.string.name), style = MaterialTheme.typography.bodyLarge)
     },
     singleLine = true,
-    isError = isShowError && !isValidName,
+    isError = error != null,
     supportingText = {
-      if (isShowError && !isValidName) {
-        Text(
-          text = error,
-          color = MaterialTheme.colorScheme.error
-        )
+      error?.let {
+        Text(text = stringResource(it.message), color = MaterialTheme.colorScheme.error)
       }
     },
     textStyle = MaterialTheme.typography.bodyLarge,
-    keyboardOptions = KeyboardOptions(
-      keyboardType = KeyboardType.Text,
-      imeAction = ImeAction.Next
-    ),
-    colors = OutlinedTextFieldDefaults.colors(
-      focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-      unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-      focusedBorderColor = MaterialTheme.colorScheme.onPrimaryContainer,
-      unfocusedBorderColor = MaterialTheme.colorScheme.onPrimaryContainer,
-      cursorColor = MaterialTheme.colorScheme.onPrimaryContainer,
-      focusedTextColor = MaterialTheme.colorScheme.onSurface,
-      unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-      focusedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
-      unfocusedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
-    ),
+    keyboardOptions =
+      KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next),
+    colors =
+      OutlinedTextFieldDefaults.colors(
+        focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+        focusedBorderColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        unfocusedBorderColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        cursorColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+        unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+        focusedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        unfocusedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+      ),
     modifier = modifier,
   )
 }

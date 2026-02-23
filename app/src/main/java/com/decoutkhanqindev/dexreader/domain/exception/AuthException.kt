@@ -1,25 +1,27 @@
 package com.decoutkhanqindev.dexreader.domain.exception
 
-/** Sealed class for all authentication-related exceptions. */
 sealed class AuthException(override val cause: Throwable? = null) : DomainException(cause = cause) {
-  /** Thrown when email address is invalid or empty. */
-  data class InvalidEmail(override val cause: Throwable? = null) : AuthException(cause)
+  sealed class Email(cause: Throwable? = null) : AuthException(cause) {
+    data class Empty(override val cause: Throwable? = null) : Email(cause)
+    data class Invalid(override val cause: Throwable? = null) : Email(cause)
+  }
 
-  /** Thrown when password doesn't meet security requirements. */
-  data class WeakPassword(override val cause: Throwable? = null) : AuthException(cause)
+  sealed class Password(cause: Throwable? = null) : AuthException(cause) {
+    data class Empty(override val cause: Throwable? = null) : Password(cause)
+    data class Weak(override val cause: Throwable? = null) : Password(cause)
+    data class Incorrect(override val cause: Throwable? = null) : Password(cause)
+  }
 
-  /** Thrown when user account is not found during login or profile operations. */
+  sealed class ConfirmPassword(cause: Throwable? = null) : AuthException(cause) {
+    data class Empty(override val cause: Throwable? = null) : ConfirmPassword(cause)
+    data class Mismatch(override val cause: Throwable? = null) : ConfirmPassword(cause)
+  }
+
+  sealed class Name(cause: Throwable? = null) : AuthException(cause) {
+    data class Empty(override val cause: Throwable? = null) : Name(cause)
+  }
+
+  data class RegistrationFailed(override val cause: Throwable? = null) : AuthException(cause)
   data class UserNotFound(override val cause: Throwable? = null) : AuthException(cause)
-
-  /** Thrown when login credentials are incorrect. */
-  data class InvalidCredentials(override val cause: Throwable? = null) : AuthException(cause)
-
-  /** Thrown when attempting to register with an email that's already in use. */
   data class UserAlreadyExists(override val cause: Throwable? = null) : AuthException(cause)
-
-  /** Thrown when user name is invalid or empty. */
-  data class InvalidName(override val cause: Throwable? = null) : AuthException(cause)
-
-  /** Thrown when password and confirm password do not match. */
-  data class PasswordMismatch(override val cause: Throwable? = null) : AuthException(cause)
 }

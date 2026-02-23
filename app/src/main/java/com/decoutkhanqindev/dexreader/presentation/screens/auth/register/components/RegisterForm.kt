@@ -14,10 +14,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -43,15 +39,15 @@ fun RegisterForm(
   onNavigateBack: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  var isShowError by rememberSaveable { mutableStateOf(false) }
   val scrollState = rememberScrollState()
 
   Card(
     modifier = modifier.verticalScroll(scrollState),
     shape = RoundedCornerShape(16.dp),
-    colors = CardDefaults.cardColors(
-      containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-    )
+    colors =
+      CardDefaults.cardColors(
+        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+      )
   ) {
     Column(
       modifier = Modifier
@@ -75,38 +71,30 @@ fun RegisterForm(
 
       EmailInputField(
         email = uiState.email,
-        isValidEmail = uiState.isValidEmail,
         onEmailChange = { onEmailChange(it) },
-        isShowError = isShowError,
-        error = stringResource(uiState.emailError.message),
+        error = uiState.emailError,
         modifier = Modifier.fillMaxWidth()
       )
 
       PasswordInputField(
         password = uiState.password,
-        isValidPassword = uiState.isValidPassword,
         onPasswordChange = { onPasswordChange(it) },
-        isShowError = isShowError,
-        error = stringResource(uiState.passwordError.message),
+        error = uiState.passwordError,
         modifier = Modifier.fillMaxWidth()
       )
 
       PasswordInputField(
         isConfirmPassword = true,
         password = uiState.confirmPassword,
-        isValidPassword = uiState.isValidConfirmPassword,
         onPasswordChange = { onConfirmPasswordChange(it) },
-        isShowError = isShowError,
-        error = stringResource(uiState.confirmPasswordError.message),
+        error = uiState.confirmPasswordError,
         modifier = Modifier.fillMaxWidth()
       )
 
       NameInputField(
         name = uiState.name,
-        isValidName = uiState.isValidName,
         onNameChange = { onNameChange(it) },
-        isShowError = isShowError,
-        error = stringResource(uiState.nameError.message),
+        error = uiState.nameError,
         modifier = Modifier
           .fillMaxWidth()
           .padding(bottom = 8.dp)
@@ -114,10 +102,7 @@ fun RegisterForm(
 
       SubmitButton(
         title = stringResource(R.string.sign_up),
-        onSubmitClick = {
-          onSubmitClick()
-          isShowError = true
-        },
+        onSubmitClick = { onSubmitClick() },
         modifier = Modifier
           .fillMaxWidth()
           .padding(bottom = 8.dp)

@@ -15,7 +15,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(
+class LoginViewModel
+@Inject
+constructor(
   private val userCase: LoginUseCase,
 ) : ViewModel() {
 
@@ -31,72 +33,40 @@ class LoginViewModel @Inject constructor(
     val currentPassword = currentUiState.password.trim()
 
     viewModelScope.launch {
-      _uiState.update {
-        it.copy(
-          isLoading = true,
-          isSuccess = false,
-          isError = false
-        )
-      }
+      _uiState.update { it.copy(isLoading = true, isSuccess = false, isError = false) }
 
-      userCase(
-        email = currentEmail,
-        password = currentPassword
-      )
+      userCase(email = currentEmail, password = currentPassword)
         .onSuccess {
-          _uiState.update {
-            it.copy(
-              isLoading = false,
-              isSuccess = true,
-              isError = false
-            )
-          }
+          _uiState.update { it.copy(isLoading = false, isSuccess = true, isError = false) }
         }
         .onFailure { throwable ->
           _uiState.update {
             when (throwable) {
-              is AuthException.UserNotFound -> {
-                it.copy(
-                  isLoading = false,
-                  isSuccess = false,
-                  userError = AuthError.UserNotFoundError
-                )
-              }
+              is AuthException.UserNotFound ->
+                it.copy(isLoading = false, userError = AuthError.UserNotFoundError)
 
-              is AuthException.InvalidCredentials -> {
+              is AuthException.Password.Incorrect ->
                 it.copy(
                   isLoading = false,
-                  isSuccess = false,
-                  isValidPassword = false,
                   passwordError = AuthError.PasswordError.Incorrect
                 )
-              }
 
-              is AuthException.InvalidEmail -> {
+              is AuthException.Email.Empty ->
+                it.copy(isLoading = false, emailError = AuthError.EmailError.Required)
+
+              is AuthException.Email.Invalid ->
+                it.copy(isLoading = false, emailError = AuthError.EmailError.Invalid)
+
+              is AuthException.Password.Empty ->
                 it.copy(
                   isLoading = false,
-                  isSuccess = false,
-                  isValidEmail = false,
-                  emailError = AuthError.EmailError.Invalid
+                  passwordError = AuthError.PasswordError.Required
                 )
-              }
 
-              is AuthException.WeakPassword -> {
-                it.copy(
-                  isLoading = false,
-                  isSuccess = false,
-                  isValidPassword = false,
-                  passwordError = AuthError.PasswordError.Weak
-                )
-              }
+              is AuthException.Password.Weak ->
+                it.copy(isLoading = false, passwordError = AuthError.PasswordError.Weak)
 
-              else -> {
-                currentUiState.copy(
-                  isLoading = false,
-                  isSuccess = false,
-                  isError = true
-                )
-              }
+              else -> it.copy(isLoading = false, isSuccess = false, isError = true)
             }
           }
 
@@ -110,8 +80,7 @@ class LoginViewModel @Inject constructor(
     _uiState.update {
       it.copy(
         email = value,
-        emailError = AuthError.UnknownError,
-        isValidEmail = true,
+        emailError = null,
         isLoading = false,
         isSuccess = false,
         isError = false
@@ -124,8 +93,7 @@ class LoginViewModel @Inject constructor(
     _uiState.update {
       it.copy(
         password = value,
-        passwordError = AuthError.UnknownError,
-        isValidPassword = true,
+        passwordError = null,
         isLoading = false,
         isSuccess = false,
         isError = false

@@ -16,10 +16,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -43,15 +39,15 @@ fun LoginForm(
   onForgotPasswordClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  var isShowError by rememberSaveable { mutableStateOf(false) }
   val scrollState = rememberScrollState()
 
   Card(
     modifier = modifier.verticalScroll(scrollState),
     shape = RoundedCornerShape(16.dp),
-    colors = CardDefaults.cardColors(
-      containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-    )
+    colors =
+      CardDefaults.cardColors(
+        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+      )
   ) {
     Column(
       modifier = Modifier
@@ -75,10 +71,8 @@ fun LoginForm(
 
       EmailInputField(
         email = uiState.email,
-        isValidEmail = uiState.isValidEmail,
         onEmailChange = { onEmailChange(it) },
-        isShowError = isShowError,
-        error = stringResource(uiState.emailError.message),
+        error = uiState.emailError,
         modifier = Modifier.fillMaxWidth()
       )
 
@@ -89,10 +83,8 @@ fun LoginForm(
       ) {
         PasswordInputField(
           password = uiState.password,
-          isValidPassword = uiState.isValidPassword,
           onPasswordChange = { onPasswordChange(it) },
-          isShowError = isShowError,
-          error = stringResource(uiState.passwordError.message),
+          error = uiState.passwordError,
           modifier = Modifier.fillMaxWidth()
         )
         Text(
@@ -109,10 +101,7 @@ fun LoginForm(
 
       SubmitButton(
         title = stringResource(R.string.sign_in),
-        onSubmitClick = {
-          onSubmitClick()
-          isShowError = true
-        },
+        onSubmitClick = { onSubmitClick() },
         modifier = Modifier
           .fillMaxWidth()
           .padding(bottom = 8.dp)

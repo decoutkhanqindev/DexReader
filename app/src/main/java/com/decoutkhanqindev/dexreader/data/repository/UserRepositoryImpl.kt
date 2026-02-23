@@ -18,39 +18,47 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class UserRepositoryImpl @Inject constructor(
+class UserRepositoryImpl
+@Inject
+constructor(
   private val firebaseAuthSource: FirebaseAuthSource,
   private val firebaseFirestoreSource: FirebaseFirestoreSource,
 ) : UserRepository {
   override suspend fun register(
     email: String,
     password: String,
-  ): User = withContext(Dispatchers.IO) {
-    try {
-      firebaseAuthSource.register(email, password)?.toDomain()
-        ?: throw IllegalStateException("User registration failed")
-    } catch (e: Exception) {
-      when (e) {
-        is FirebaseAuthUserCollisionException -> throw AuthException.UserAlreadyExists(cause = e)
-        else -> throw e
+  ): User =
+    withContext(Dispatchers.IO) {
+      try {
+        firebaseAuthSource.register(email, password)?.toDomain()
+          ?: throw AuthException.RegistrationFailed()
+      } catch (e: Exception) {
+        when (e) {
+          is FirebaseAuthUserCollisionException ->
+            throw AuthException.UserAlreadyExists(cause = e)
+
+          else -> throw e
+        }
       }
     }
-  }
 
   override suspend fun login(
     email: String,
     password: String,
-  ) = withContext(Dispatchers.IO) {
-    try {
-      firebaseAuthSource.login(email, password)
-    } catch (e: Exception) {
-      when (e) {
-        is FirebaseAuthInvalidUserException -> throw AuthException.UserNotFound(cause = e)
-        is FirebaseAuthInvalidCredentialsException -> throw AuthException.InvalidCredentials(cause = e)
-        else -> throw e
+  ) =
+    withContext(Dispatchers.IO) {
+      try {
+        firebaseAuthSource.login(email, password)
+      } catch (e: Exception) {
+        when (e) {
+          is FirebaseAuthInvalidUserException -> throw AuthException.UserNotFound(cause = e)
+          is FirebaseAuthInvalidCredentialsException ->
+            throw AuthException.Password.Incorrect(cause = e)
+
+          else -> throw e
+        }
       }
     }
-  }
 
   override suspend fun logout() = withContext(Dispatchers.IO) { firebaseAuthSource.logout() }
 

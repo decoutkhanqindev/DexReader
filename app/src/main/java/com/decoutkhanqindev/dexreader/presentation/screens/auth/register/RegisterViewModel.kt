@@ -4,8 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.exception.AuthException
-import com.decoutkhanqindev.dexreader.domain.model.User
-import com.decoutkhanqindev.dexreader.domain.usecase.user.AddAndUpdateUserProfileUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.RegisterUseCase
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.AuthError
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,9 +15,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RegisterViewModel @Inject constructor(
-  private val registerUseCase: RegisterUseCase,
-  private val addUserProfileUseCase: AddAndUpdateUserProfileUseCase,
+class RegisterViewModel
+@Inject
+constructor(
+  private val useCase: RegisterUseCase,
 ) : ViewModel() {
   private val _uiState = MutableStateFlow(RegisterUiState())
   val uiState: StateFlow<RegisterUiState> = _uiState.asStateFlow()
@@ -35,115 +34,72 @@ class RegisterViewModel @Inject constructor(
     val currentName = currentUiState.name.trim()
 
     viewModelScope.launch {
-      _uiState.update {
-        it.copy(
-          isLoading = true,
-          isSuccess = false,
-          isError = false
-        )
-      }
+      _uiState.update { it.copy(isLoading = true, isSuccess = false, isError = false) }
 
-      registerUseCase(
+      useCase(
         email = currentEmail,
         password = currentPassword,
         confirmPassword = currentConfirmPassword,
         name = currentName
       )
-        .onSuccess { user ->
-          addUserProfile(
-            user = User(
-              id = user.id,
-              name = currentName,
-              email = currentEmail,
-              profilePictureUrl = null
-            )
-          )
-        }
+        .onSuccess {}
         .onFailure { throwable ->
           _uiState.update { currentState ->
             when (throwable) {
-              is AuthException.UserAlreadyExists -> {
+              is AuthException.UserAlreadyExists ->
                 currentState.copy(
                   isLoading = false,
-                  isSuccess = false,
-                  isValidEmail = false,
                   emailError = AuthError.EmailError.AlreadyInUse
                 )
-              }
 
-              is AuthException.InvalidEmail -> {
+              is AuthException.Email.Empty ->
                 currentState.copy(
                   isLoading = false,
-                  isSuccess = false,
-                  isValidEmail = false,
+                  emailError = AuthError.EmailError.Required
+                )
+
+              is AuthException.Email.Invalid ->
+                currentState.copy(
+                  isLoading = false,
                   emailError = AuthError.EmailError.Invalid
                 )
-              }
 
-              is AuthException.WeakPassword -> {
+              is AuthException.Password.Empty ->
                 currentState.copy(
                   isLoading = false,
-                  isSuccess = false,
-                  isValidPassword = false,
+                  passwordError = AuthError.PasswordError.Required
+                )
+
+              is AuthException.Password.Weak ->
+                currentState.copy(
+                  isLoading = false,
                   passwordError = AuthError.PasswordError.Weak
                 )
-              }
 
-              is AuthException.PasswordMismatch -> {
+              is AuthException.ConfirmPassword.Empty ->
                 currentState.copy(
                   isLoading = false,
-                  isSuccess = false,
-                  isValidConfirmPassword = false,
-                  confirmPasswordError = AuthError.ConfirmPasswordError.DoesNotMatch
+                  confirmPasswordError = AuthError.ConfirmPasswordError.Required
                 )
-              }
 
-              is AuthException.InvalidName -> {
+              is AuthException.ConfirmPassword.Mismatch ->
                 currentState.copy(
                   isLoading = false,
-                  isSuccess = false,
-                  isValidName = false,
+                  confirmPasswordError =
+                    AuthError.ConfirmPasswordError.DoesNotMatch
+                )
+
+              is AuthException.Name.Empty ->
+                currentState.copy(
+                  isLoading = false,
                   nameError = AuthError.NameError.Required
                 )
-              }
 
-              else -> {
-                currentState.copy(
-                  isLoading = false,
-                  isSuccess = false,
-                  isError = true
-                )
-              }
+              else -> currentState.copy(isLoading = false, isSuccess = false, isError = true)
             }
           }
 
           Log.d(TAG, "submit has error: ${throwable.stackTraceToString()}")
-        }
-    }
-  }
-
-  private fun addUserProfile(user: User) {
-    viewModelScope.launch {
-      addUserProfileUseCase(user)
-        .onSuccess {
-          _uiState.update {
-            it.copy(
-              isLoading = false,
-              isSuccess = true,
-              isError = false
-            )
-          }
-        }
-        .onFailure { throwable ->
-          _uiState.update {
-            it.copy(
-              isLoading = false,
-              isSuccess = false,
-              isError = true,
-            )
-          }
-
-          Log.e(TAG, "addUserProfile has error: ${throwable.stackTraceToString()}")
         }
     }
   }
@@ -153,8 +109,7 @@ class RegisterViewModel @Inject constructor(
     _uiState.update {
       it.copy(
         email = value,
-        emailError = AuthError.UnknownError,
-        isValidEmail = true,
+        emailError = null,
         isLoading = false,
         isSuccess = false,
         isError = false
@@ -167,8 +122,7 @@ class RegisterViewModel @Inject constructor(
     _uiState.update {
       it.copy(
         password = value,
-        passwordError = AuthError.UnknownError,
-        isValidPassword = true,
+        passwordError = null,
         isLoading = false,
         isSuccess = false,
         isError = false
@@ -181,8 +135,7 @@ class RegisterViewModel @Inject constructor(
     _uiState.update { currentState ->
       currentState.copy(
         confirmPassword = value,
-        confirmPasswordError = AuthError.UnknownError,
-        isValidConfirmPassword = true,
+        confirmPasswordError = null,
         isLoading = false,
         isSuccess = false,
         isError = false
@@ -193,14 +146,7 @@ class RegisterViewModel @Inject constructor(
   fun updateName(value: String) {
     if (_uiState.value.name == value) return
     _uiState.update {
-      it.copy(
-        name = value,
-        nameError = AuthError.UnknownError,
-        isValidName = true,
-        isLoading = false,
-        isSuccess = false,
-        isError = false
-      )
+      it.copy(name = value, nameError = null, isLoading = false, isSuccess = false, isError = false)
     }
   }
 

@@ -13,11 +13,13 @@ class RegisterUseCase @Inject constructor(
     password: String,
     confirmPassword: String,
     name: String,
-  ): Result<User> = runSuspendCatching {
+  ): Result<Unit> = runSuspendCatching {
     User.validateEmail(email)
     User.validatePassword(password)
     User.validateConfirmPassword(password, confirmPassword)
     User.validateName(name)
-    repository.register(email, password)
+    val registeredUser = repository.register(email, password)
+    val userProfile = registeredUser.copy(name = name)
+    repository.addAndUpdateUserProfile(userProfile)
   }
 }
