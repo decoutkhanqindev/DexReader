@@ -1,30 +1,33 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.auth
 
-sealed class AuthError(val message: String) {
-  sealed class EmailError(message: String) : AuthError(message) {
-    object Invalid : EmailError("Invalid email format.")
-    object Required : EmailError("Email is required.")
-    object AlreadyInUse : EmailError("Email already in use.")
+import androidx.annotation.StringRes
+import com.decoutkhanqindev.dexreader.R
+
+sealed class AuthError(@StringRes val message: Int) {
+  sealed class EmailError(@StringRes message: Int) : AuthError(message) {
+    data object Invalid : EmailError(R.string.invalid_email_format)
+    data object Required : EmailError(R.string.email_required)
+    data object AlreadyInUse : EmailError(R.string.error_email_already_in_use)
   }
 
-  sealed class PasswordError(message: String) : AuthError(message) {
-    object Weak : PasswordError("Password must be at least 8 characters.")
-    object Incorrect : PasswordError("Incorrect password.")
-    object Required : PasswordError("Password is required.")
+  sealed class PasswordError(@StringRes message: Int) : AuthError(message) {
+    data object Weak : PasswordError(R.string.password_min_length)
+    data object Incorrect : PasswordError(R.string.error_incorrect_password)
+    data object Required : PasswordError(R.string.password_required)
   }
 
-  sealed class ConfirmPasswordError(message: String) : AuthError(message) {
-    object DoesNotMatch : ConfirmPasswordError("Passwords do not match.")
-    object Required : ConfirmPasswordError("Confirm password is required.")
+  sealed class ConfirmPasswordError(@StringRes message: Int) : AuthError(message) {
+    data object DoesNotMatch : ConfirmPasswordError(R.string.password_dont_match)
+    data object Required : ConfirmPasswordError(R.string.confirm_password_required)
   }
 
-  sealed class NameError(message: String) : AuthError(message) {
-    object Required : NameError("Name is required.")
+  sealed class NameError(@StringRes message: Int) : AuthError(message) {
+    data object Required : NameError(R.string.name_required)
   }
 
-  object UserNotFoundError : AuthError("User not found.")
+  data object UserNotFoundError : AuthError(R.string.error_user_not_found)
 
-  object SendResetPasswordError : AuthError("Error sending reset password email.")
+  data object SendResetPasswordError : AuthError(R.string.error_send_reset_password)
 
-  object UnknownError : AuthError("An unexpected error occurred.")
+  data object UnknownError : AuthError(R.string.error_unknown)
 }

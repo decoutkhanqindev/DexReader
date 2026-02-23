@@ -5,13 +5,11 @@ import com.decoutkhanqindev.dexreader.domain.repository.UserRepository
 import com.decoutkhanqindev.dexreader.utils.AsyncHandler.runSuspendCatching
 import javax.inject.Inject
 
-class RegisterUserUseCase @Inject constructor(
+class LoginUseCase @Inject constructor(
   private val repository: UserRepository,
 ) {
-  suspend operator fun invoke(
-    email: String,
-    password: String,
-  ): Result<User> = runSuspendCatching {
-    repository.registerUser(email, password)
+  suspend operator fun invoke(email: String, password: String): Result<Unit> = runSuspendCatching {
+    User.validate(email, password)
+    repository.login(email, password)
   }
 }

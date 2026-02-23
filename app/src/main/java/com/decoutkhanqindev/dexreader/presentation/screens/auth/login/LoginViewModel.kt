@@ -1,13 +1,11 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.auth.login
 
 import android.util.Log
-import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.decoutkhanqindev.dexreader.domain.usecase.user.LoginUserUseCase
+import com.decoutkhanqindev.dexreader.domain.exception.AuthException
+import com.decoutkhanqindev.dexreader.domain.usecase.user.LoginUseCase
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.AuthError
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,13 +16,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-  private val loginUserUserCase: LoginUserUseCase,
+  private val userCase: LoginUseCase,
 ) : ViewModel() {
 
-  private val _uiState = MutableStateFlow<LoginUiState>(LoginUiState())
+  private val _uiState = MutableStateFlow(LoginUiState())
   val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
-  fun loginUser() {
+  fun submit() {
     val currentUiState = _uiState.value
     if (currentUiState.isLoading) return
 
@@ -37,17 +35,7 @@ class LoginViewModel @Inject constructor(
         )
       }
 
-      if (!currentUiState.isValidEmail || !currentUiState.isValidPassword) {
-        _uiState.update {
-          it.copy(
-            isLoading = false,
-            isSuccess = false,
-          )
-        }
-        return@launch
-      }
-
-      loginUserUserCase(
+      userCase(
         email = currentUiState.email.trim(),
         password = currentUiState.password.trim()
       )
@@ -63,7 +51,7 @@ class LoginViewModel @Inject constructor(
         .onFailure { throwable ->
           _uiState.update {
             when (throwable) {
-              is FirebaseAuthInvalidUserException -> {
+              is AuthException.UserNotFound -> {
                 it.copy(
                   isLoading = false,
                   isSuccess = false,
@@ -71,12 +59,30 @@ class LoginViewModel @Inject constructor(
                 )
               }
 
-              is FirebaseAuthInvalidCredentialsException -> {
+              is AuthException.InvalidCredentials -> {
                 it.copy(
                   isLoading = false,
                   isSuccess = false,
                   isValidPassword = false,
                   passwordError = AuthError.PasswordError.Incorrect
+                )
+              }
+
+              is AuthException.InvalidEmail -> {
+                it.copy(
+                  isLoading = false,
+                  isSuccess = false,
+                  isValidEmail = false,
+                  emailError = AuthError.EmailError.Invalid
+                )
+              }
+
+              is AuthException.WeakPassword -> {
+                it.copy(
+                  isLoading = false,
+                  isSuccess = false,
+                  isValidPassword = false,
+                  passwordError = AuthError.PasswordError.Weak
                 )
               }
 
@@ -89,22 +95,19 @@ class LoginViewModel @Inject constructor(
               }
             }
           }
-          Log.d(TAG, "loginUser have error: ${throwable.stackTraceToString()}")
+
+          Log.d(TAG, "submit has error: ${throwable.stackTraceToString()}")
         }
     }
   }
 
-  fun updateEmailField(email: String) {
-    if (_uiState.value.email == email) return
+  fun updateEmail(value: String) {
+    if (_uiState.value.email == value) return
     _uiState.update {
       it.copy(
-        email = email,
-        emailError = when {
-          email.isBlank() -> AuthError.EmailError.Required
-          !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> AuthError.EmailError.Invalid
-          else -> AuthError.UnknownError
-        },
-        isValidEmail = email.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(email).matches(),
+        email = value,
+        emailError = AuthError.UnknownError,
+        isValidEmail = true,
         isLoading = false,
         isSuccess = false,
         isError = false
@@ -112,17 +115,13 @@ class LoginViewModel @Inject constructor(
     }
   }
 
-  fun updatePasswordField(password: String) {
-    if (_uiState.value.password == password) return
+  fun updatePassword(value: String) {
+    if (_uiState.value.password == value) return
     _uiState.update {
       it.copy(
-        password = password,
-        passwordError = when {
-          password.isBlank() -> AuthError.PasswordError.Required
-          password.length < MIN_LENGTH_PASSWORD -> AuthError.PasswordError.Weak
-          else -> AuthError.UnknownError
-        },
-        isValidPassword = password.isNotBlank() && password.length >= MIN_LENGTH_PASSWORD,
+        password = value,
+        passwordError = AuthError.UnknownError,
+        isValidPassword = true,
         isLoading = false,
         isSuccess = false,
         isError = false
@@ -131,11 +130,10 @@ class LoginViewModel @Inject constructor(
   }
 
   fun retry() {
-    if (_uiState.value.isError) loginUser()
+    if (_uiState.value.isError) submit()
   }
 
   companion object {
     private const val TAG = "LoginViewModel"
-    private const val MIN_LENGTH_PASSWORD = 8
   }
 }

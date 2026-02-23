@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.domain.usecase.user.AddAndUpdateUserProfileUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.user.LogoutUserUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.user.LogoutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
   private val updateUserProfileUseCase: AddAndUpdateUserProfileUseCase,
-  private val logoutUserUseCase: LogoutUserUseCase,
+  private val logoutUseCase: LogoutUseCase,
 ) : ViewModel() {
   private val _uiState = MutableStateFlow<ProfileUiState>(ProfileUiState())
   val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
@@ -107,7 +107,7 @@ class ProfileViewModel @Inject constructor(
         )
       }
 
-      logoutUserUseCase()
+      logoutUseCase()
         .onSuccess {
           _uiState.update {
             it.copy(

@@ -19,9 +19,9 @@ fun LoginScreen(
 
   LoginContent(
     uiState = uiState,
-    onEmailChange = viewModel::updateEmailField,
-    onPasswordChange = viewModel::updatePasswordField,
-    onSubmitClick = viewModel::loginUser,
+    onEmailChange = viewModel::updateEmail,
+    onPasswordChange = viewModel::updatePassword,
+    onSubmitClick = viewModel::submit,
     onLoginSuccess = onLoginSuccess,
     onRegisterClick = onRegisterClick,
     onForgotPasswordClick = onForgotPasswordClick,

@@ -18,11 +18,11 @@ fun RegisterScreen(
 
   RegisterContent(
     uiState = uiState,
-    onEmailChange = viewModel::updateEmailField,
-    onPasswordChange = viewModel::updatePasswordField,
-    onConfirmPasswordChange = viewModel::updateConfirmPasswordField,
-    onNameChange = viewModel::updateNameField,
-    onSubmitClick = viewModel::registerUser,
+    onEmailChange = viewModel::updateEmail,
+    onPasswordChange = viewModel::updatePassword,
+    onConfirmPasswordChange = viewModel::updateConfirmPassword,
+    onNameChange = viewModel::updateName,
+    onSubmitClick = viewModel::submit,
     onRegisterSuccess = onRegisterSuccess,
     onNavigateBack = onNavigateBack,
     onRetry = viewModel::retry,

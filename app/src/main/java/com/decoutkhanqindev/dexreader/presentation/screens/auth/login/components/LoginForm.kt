@@ -78,7 +78,7 @@ fun LoginForm(
         isValidEmail = uiState.isValidEmail,
         onEmailChange = { onEmailChange(it) },
         isShowError = isShowError,
-        error = uiState.emailError.message,
+        error = stringResource(uiState.emailError.message),
         modifier = Modifier.fillMaxWidth()
       )
 
@@ -92,7 +92,7 @@ fun LoginForm(
           isValidPassword = uiState.isValidPassword,
           onPasswordChange = { onPasswordChange(it) },
           isShowError = isShowError,
-          error = uiState.passwordError.message,
+          error = stringResource(uiState.passwordError.message),
           modifier = Modifier.fillMaxWidth()
         )
         Text(

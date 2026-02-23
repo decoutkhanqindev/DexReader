@@ -78,7 +78,7 @@ fun RegisterForm(
         isValidEmail = uiState.isValidEmail,
         onEmailChange = { onEmailChange(it) },
         isShowError = isShowError,
-        error = uiState.emailError.message,
+        error = stringResource(uiState.emailError.message),
         modifier = Modifier.fillMaxWidth()
       )
 
@@ -87,7 +87,7 @@ fun RegisterForm(
         isValidPassword = uiState.isValidPassword,
         onPasswordChange = { onPasswordChange(it) },
         isShowError = isShowError,
-        error = uiState.passwordError.message,
+        error = stringResource(uiState.passwordError.message),
         modifier = Modifier.fillMaxWidth()
       )
 
@@ -97,7 +97,7 @@ fun RegisterForm(
         isValidPassword = uiState.isValidConfirmPassword,
         onPasswordChange = { onConfirmPasswordChange(it) },
         isShowError = isShowError,
-        error = uiState.confirmPasswordError.message,
+        error = stringResource(uiState.confirmPasswordError.message),
         modifier = Modifier.fillMaxWidth()
       )
 
@@ -106,7 +106,7 @@ fun RegisterForm(
         isValidName = uiState.isValidName,
         onNameChange = { onNameChange(it) },
         isShowError = isShowError,
-        error = uiState.nameError.message,
+        error = stringResource(uiState.nameError.message),
         modifier = Modifier
           .fillMaxWidth()
           .padding(bottom = 8.dp)

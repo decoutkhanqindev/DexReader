@@ -117,4 +117,9 @@
   <string name="theme_change_successful">Theme change successful.</string>
   <string name="removed_from_history_failed">Removed from history failed. Please try again.</string>
   <string name="change_theme_failed">Change theme failed. Please try again.</string>
+  <string name="error_email_already_in_use">Email already in use.</string>
+  <string name="error_incorrect_password">Incorrect password.</string>
+  <string name="error_user_not_found">User not found.</string>
+  <string name="error_unknown">An unexpected error occurred.</string>
+  <string name="error_send_reset_password">Error sending reset password email.</string>
 </resources>

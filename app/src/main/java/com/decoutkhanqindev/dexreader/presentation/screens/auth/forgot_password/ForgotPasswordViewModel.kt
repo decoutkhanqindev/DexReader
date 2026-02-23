@@ -1,10 +1,10 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.auth.forgot_password
 
 import android.util.Log
-import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.decoutkhanqindev.dexreader.domain.usecase.user.SendResetUserPasswordUseCase
+import com.decoutkhanqindev.dexreader.domain.exception.AuthException
+import com.decoutkhanqindev.dexreader.domain.usecase.user.SendResetPasswordUseCase
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.AuthError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,12 +16,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ForgotPasswordViewModel @Inject constructor(
-  private val sendResetUserPasswordUseCase: SendResetUserPasswordUseCase,
+  private val sendResetPasswordUseCase: SendResetPasswordUseCase,
 ) : ViewModel() {
-  private val _uiState = MutableStateFlow<ForgotPasswordUiState>(ForgotPasswordUiState())
+  private val _uiState = MutableStateFlow(ForgotPasswordUiState())
   val uiState: StateFlow<ForgotPasswordUiState> = _uiState.asStateFlow()
 
-  fun sendResetUserPassword() {
+  fun submit() {
     val currentUiState = _uiState.value
     if (currentUiState.isLoading) return
 
@@ -34,17 +34,7 @@ class ForgotPasswordViewModel @Inject constructor(
         )
       }
 
-      if (!currentUiState.isValidEmail) {
-        _uiState.update {
-          it.copy(
-            isLoading = false,
-            isSuccess = false,
-          )
-        }
-        return@launch
-      }
-
-      sendResetUserPasswordUseCase(email = currentUiState.email)
+      sendResetPasswordUseCase(email = currentUiState.email)
         .onSuccess {
           _uiState.update {
             it.copy(
@@ -55,29 +45,39 @@ class ForgotPasswordViewModel @Inject constructor(
           }
         }
         .onFailure { throwable ->
-          _uiState.update {
-            it.copy(
-              isLoading = false,
-              isSuccess = false,
-              isError = true
-            )
+          _uiState.update { currentState ->
+            when (throwable) {
+              is AuthException.InvalidEmail -> {
+                currentState.copy(
+                  isLoading = false,
+                  isSuccess = false,
+                  isValidEmail = false,
+                  emailError = AuthError.EmailError.Invalid
+                )
+              }
+
+              else -> {
+                currentState.copy(
+                  isLoading = false,
+                  isSuccess = false,
+                  isError = true
+                )
+              }
+            }
           }
-          Log.d(TAG, "sendResetUserPassword have error: ${throwable.stackTraceToString()}")
+
+          Log.d(TAG, "submit has error: ${throwable.stackTraceToString()}")
         }
     }
   }
 
-  fun updateEmailField(email: String) {
-    if (_uiState.value.email == email) return
+  fun updateEmail(value: String) {
+    if (_uiState.value.email == value) return
     _uiState.update {
       it.copy(
-        email = email,
-        emailError = when {
-          email.isBlank() -> AuthError.EmailError.Required
-          !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> AuthError.EmailError.Invalid
-          else -> AuthError.UnknownError
-        },
-        isValidEmail = email.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(email).matches(),
+        email = value,
+        emailError = AuthError.UnknownError,
+        isValidEmail = true,
         isLoading = false,
         isSuccess = false,
         isError = false
@@ -86,7 +86,7 @@ class ForgotPasswordViewModel @Inject constructor(
   }
 
   fun retry() {
-    if (_uiState.value.isError) sendResetUserPassword()
+    if (_uiState.value.isError) submit()
   }
 
   companion object {

@@ -1,12 +1,12 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.auth.register
 
 import android.util.Log
-import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.decoutkhanqindev.dexreader.domain.exception.AuthException
 import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.domain.usecase.user.AddAndUpdateUserProfileUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.user.RegisterUserUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.user.RegisterUseCase
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.AuthError
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,13 +19,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-  private val registerUserUseCase: RegisterUserUseCase,
+  private val registerUseCase: RegisterUseCase,
   private val addUserProfileUseCase: AddAndUpdateUserProfileUseCase,
 ) : ViewModel() {
-  private val _uiState = MutableStateFlow<RegisterUiState>(RegisterUiState())
+  private val _uiState = MutableStateFlow(RegisterUiState())
   val uiState: StateFlow<RegisterUiState> = _uiState.asStateFlow()
 
-  fun registerUser() {
+  fun submit() {
     val currentUiState = _uiState.value
     if (currentUiState.isLoading) return
 
@@ -38,52 +38,84 @@ class RegisterViewModel @Inject constructor(
         )
       }
 
-      if (
-        !currentUiState.isValidEmail ||
-        !currentUiState.isValidPassword ||
-        !currentUiState.isValidConfirmPassword ||
-        !currentUiState.isValidName
-      ) {
+      // Local UI validation for fields not validated by RegisterUseCase
+      if (currentUiState.password != currentUiState.confirmPassword) {
         _uiState.update {
           it.copy(
             isLoading = false,
-            isSuccess = false,
+            isValidConfirmPassword = false,
+            confirmPasswordError = AuthError.ConfirmPasswordError.DoesNotMatch
           )
         }
         return@launch
       }
 
-      registerUserUseCase(
+      if (currentUiState.name.isBlank()) {
+        _uiState.update {
+          it.copy(
+            isLoading = false,
+            isValidName = false,
+            nameError = AuthError.NameError.Required
+          )
+        }
+        return@launch
+      }
+
+      registerUseCase(
         email = currentUiState.email.trim(),
         password = currentUiState.password.trim()
       )
         .onSuccess { user ->
-          val newUser = User(
-            id = user.id,
-            name = currentUiState.name.trim(),
-            email = currentUiState.email.trim(),
-            profilePictureUrl = null
-          )
+          val newUser =
+            User(
+              id = user.id,
+              name = currentUiState.name.trim(),
+              email = currentUiState.email.trim(),
+              profilePictureUrl = null
+            )
           addUserProfile(user = newUser)
         }
         .onFailure { throwable ->
-          _uiState.update { currentUiState ->
-            if (throwable is FirebaseAuthUserCollisionException) {
-              currentUiState.copy(
-                isLoading = false,
-                isSuccess = false,
-                isValidEmail = false,
-                emailError = AuthError.EmailError.AlreadyInUse
-              )
-            } else {
-              currentUiState.copy(
-                isLoading = false,
-                isSuccess = false,
-                isError = true
-              )
+          _uiState.update { currentState ->
+            when (throwable) {
+              is FirebaseAuthUserCollisionException -> {
+                currentState.copy(
+                  isLoading = false,
+                  isSuccess = false,
+                  isValidEmail = false,
+                  emailError = AuthError.EmailError.AlreadyInUse
+                )
+              }
+
+              is AuthException.InvalidEmail -> {
+                currentState.copy(
+                  isLoading = false,
+                  isSuccess = false,
+                  isValidEmail = false,
+                  emailError = AuthError.EmailError.Invalid
+                )
+              }
+
+              is AuthException.WeakPassword -> {
+                currentState.copy(
+                  isLoading = false,
+                  isSuccess = false,
+                  isValidPassword = false,
+                  passwordError = AuthError.PasswordError.Weak
+                )
+              }
+
+              else -> {
+                currentState.copy(
+                  isLoading = false,
+                  isSuccess = false,
+                  isError = true
+                )
+              }
             }
           }
-          Log.d(TAG, "registerUser have error: ${throwable.stackTraceToString()}")
+
+          Log.d(TAG, "submit has error: ${throwable.stackTraceToString()}")
         }
     }
   }
@@ -91,7 +123,7 @@ class RegisterViewModel @Inject constructor(
   private fun addUserProfile(user: User) {
     viewModelScope.launch {
       addUserProfileUseCase(user)
-        .onSuccess { addedUser ->
+        .onSuccess {
           _uiState.update {
             it.copy(
               isLoading = false,
@@ -108,22 +140,19 @@ class RegisterViewModel @Inject constructor(
               isError = true,
             )
           }
-          Log.e(TAG, "addUserProfile have error: ${throwable.stackTraceToString()}")
+
+          Log.e(TAG, "addUserProfile has error: ${throwable.stackTraceToString()}")
         }
     }
   }
 
-  fun updateEmailField(email: String) {
-    if (_uiState.value.email == email) return
+  fun updateEmail(value: String) {
+    if (_uiState.value.email == value) return
     _uiState.update {
       it.copy(
-        email = email,
-        emailError = when {
-          email.isBlank() -> AuthError.EmailError.Required
-          !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> AuthError.EmailError.Invalid
-          else -> AuthError.UnknownError
-        },
-        isValidEmail = email.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(email).matches(),
+        email = value,
+        emailError = AuthError.UnknownError,
+        isValidEmail = true,
         isLoading = false,
         isSuccess = false,
         isError = false
@@ -131,17 +160,13 @@ class RegisterViewModel @Inject constructor(
     }
   }
 
-  fun updatePasswordField(password: String) {
-    if (_uiState.value.password == password) return
+  fun updatePassword(value: String) {
+    if (_uiState.value.password == value) return
     _uiState.update {
       it.copy(
-        password = password,
-        passwordError = when {
-          password.isBlank() -> AuthError.PasswordError.Required
-          password.length < MIN_LENGTH_PASSWORD -> AuthError.PasswordError.Weak
-          else -> AuthError.UnknownError
-        },
-        isValidPassword = password.isNotBlank() && password.length >= MIN_LENGTH_PASSWORD,
+        password = value,
+        passwordError = AuthError.UnknownError,
+        isValidPassword = true,
         isLoading = false,
         isSuccess = false,
         isError = false
@@ -149,17 +174,13 @@ class RegisterViewModel @Inject constructor(
     }
   }
 
-  fun updateConfirmPasswordField(confirmPassword: String) {
-    if (_uiState.value.confirmPassword == confirmPassword) return
+  fun updateConfirmPassword(value: String) {
+    if (_uiState.value.confirmPassword == value) return
     _uiState.update { currentState ->
       currentState.copy(
-        confirmPassword = confirmPassword,
-        confirmPasswordError = when {
-          confirmPassword.isBlank() -> AuthError.ConfirmPasswordError.Required
-          confirmPassword != currentState.password -> AuthError.ConfirmPasswordError.DoesNotMatch
-          else -> AuthError.UnknownError
-        },
-        isValidConfirmPassword = confirmPassword.isNotBlank() && confirmPassword == currentState.password,
+        confirmPassword = value,
+        confirmPasswordError = AuthError.UnknownError,
+        isValidConfirmPassword = true,
         isLoading = false,
         isSuccess = false,
         isError = false
@@ -167,15 +188,13 @@ class RegisterViewModel @Inject constructor(
     }
   }
 
-  fun updateNameField(name: String) {
-    if (_uiState.value.name == name) return
+  fun updateName(value: String) {
+    if (_uiState.value.name == value) return
     _uiState.update {
       it.copy(
-        name = name,
-        nameError =
-          if (name.isBlank()) AuthError.NameError.Required
-          else AuthError.UnknownError,
-        isValidName = name.isNotBlank(),
+        name = value,
+        nameError = AuthError.UnknownError,
+        isValidName = true,
         isLoading = false,
         isSuccess = false,
         isError = false
@@ -184,11 +203,10 @@ class RegisterViewModel @Inject constructor(
   }
 
   fun retry() {
-    if (_uiState.value.isError) registerUser()
+    if (_uiState.value.isError) submit()
   }
 
   companion object {
     private const val TAG = "RegisterViewModel"
-    private const val MIN_LENGTH_PASSWORD = 8
   }
 }
