@@ -25,20 +25,35 @@ object AsyncHandler {
     try {
       Result.success(block())
     } catch (c: CancellationException) {
-      throw c
+      throw c // Rethrow CancellationException to respect coroutine cancellation
     } catch (e: Throwable) {
       Result.failure(e)
     }
   }
 
   /**
+   * Runs a suspend block and catches exceptions with CoroutineContext, returning a Result Properly handles
+   * CancellationException by rethrowing it
+   */
+
+  suspend inline fun <T> runSuspendCatching(
+    crossinline block: suspend () -> T,
+  ): Result<T> = try {
+    Result.success(block())
+  } catch (c: CancellationException) {
+    throw c // Rethrow CancellationException to respect coroutine cancellation
+  } catch (e: Throwable) {
+    Result.failure(e)
+  }
+
+  /**
    * Converts a Flow to a Flow of Results, catching exceptions Properly handles
    * CancellationException by rethrowing it
    */
-  fun <T> Flow<T>.toResultFlow(): Flow<Result<T>> =
+  fun <T> Flow<T>.toFlowResult(): Flow<Result<T>> =
     this.map { Result.success(it) }
       .catch {
-        if (it is CancellationException) throw it
+        if (it is CancellationException) throw it // Rethrow CancellationException to respect coroutine cancellation
         else emit(Result.failure(it))
       }
 }

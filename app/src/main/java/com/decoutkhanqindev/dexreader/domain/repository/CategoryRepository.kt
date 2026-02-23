@@ -4,7 +4,7 @@ import com.decoutkhanqindev.dexreader.domain.model.Category
 import com.decoutkhanqindev.dexreader.domain.model.Manga
 
 interface CategoryRepository {
-  suspend fun getCategoryList(): Result<List<Category>>
+  suspend fun getCategoryList(): List<Category>
   suspend fun getMangaListByCategory(
     categoryId: String,
     offset: Int = 0,
@@ -16,5 +16,5 @@ interface CategoryRepository {
     // filters
     status: List<String> = listOf("ongoing"), // ongoing, completed, hiatus, cancelled
     contentRating: List<String> = listOf("safe"), // safe, suggestive, erotica
-  ): Result<List<Manga>>
+  ): List<Manga>
 }

@@ -2,11 +2,14 @@ package com.decoutkhanqindev.dexreader.domain.usecase.category
 
 import com.decoutkhanqindev.dexreader.domain.model.Category
 import com.decoutkhanqindev.dexreader.domain.repository.CategoryRepository
+import com.decoutkhanqindev.dexreader.utils.AsyncHandler.runSuspendCatching
 import javax.inject.Inject
 
 class GetCategoryListUseCase @Inject constructor(
-  private val categoryRepository: CategoryRepository,
+  private val repository: CategoryRepository,
 ) {
   suspend operator fun invoke(): Result<List<Category>> =
-    categoryRepository.getCategoryList()
+    runSuspendCatching {
+      repository.getCategoryList()
+    }
 }

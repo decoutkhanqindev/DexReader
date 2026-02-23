@@ -2,10 +2,11 @@ package com.decoutkhanqindev.dexreader.domain.usecase.category
 
 import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.domain.repository.CategoryRepository
+import com.decoutkhanqindev.dexreader.utils.AsyncHandler.runSuspendCatching
 import javax.inject.Inject
 
 class GetMangaListByCategoryUseCase @Inject constructor(
-  private val categoryRepository: CategoryRepository,
+  private val repository: CategoryRepository,
 ) {
   suspend operator fun invoke(
     categoryId: String,
@@ -18,8 +19,8 @@ class GetMangaListByCategoryUseCase @Inject constructor(
     // filters
     status: List<String> = listOf("ongoing"), // ongoing, completed, hiatus, cancelled
     contentRating: List<String> = listOf("safe"), // safe, suggestive, erotica
-  ): Result<List<Manga>> =
-    categoryRepository.getMangaListByCategory(
+  ): Result<List<Manga>> = runSuspendCatching {
+    repository.getMangaListByCategory(
       categoryId = categoryId,
       offset = offset,
       lastUpdated = lastUpdated,
@@ -29,4 +30,5 @@ class GetMangaListByCategoryUseCase @Inject constructor(
       status = status,
       contentRating = contentRating
     )
+  }
 }

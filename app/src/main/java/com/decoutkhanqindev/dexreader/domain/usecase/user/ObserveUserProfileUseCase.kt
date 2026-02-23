@@ -2,12 +2,13 @@ package com.decoutkhanqindev.dexreader.domain.usecase.user
 
 import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.domain.repository.UserRepository
+import com.decoutkhanqindev.dexreader.utils.AsyncHandler.toFlowResult
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ObserveUserProfileUseCase @Inject constructor(
-  private val userRepository: UserRepository,
+  private val repository: UserRepository,
 ) {
   operator fun invoke(userId: String): Flow<Result<User?>> =
-    userRepository.observeUserProfile(userId)
+    repository.observeUserProfile(userId).toFlowResult()
 }

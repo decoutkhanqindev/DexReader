@@ -2,11 +2,14 @@ package com.decoutkhanqindev.dexreader.domain.usecase.user
 
 import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.domain.repository.UserRepository
+import com.decoutkhanqindev.dexreader.utils.AsyncHandler.runSuspendCatching
 import javax.inject.Inject
 
 class AddAndUpdateUserProfileUseCase @Inject constructor(
-  private val userRepository: UserRepository,
+  private val repository: UserRepository,
 ) {
   suspend operator fun invoke(user: User): Result<Unit> =
-    userRepository.addAndUpdateUserProfile(user)
+    runSuspendCatching {
+      repository.addAndUpdateUserProfile(user)
+    }
 }

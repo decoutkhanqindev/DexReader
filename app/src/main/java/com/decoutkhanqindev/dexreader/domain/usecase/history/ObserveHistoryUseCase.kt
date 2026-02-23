@@ -2,11 +2,12 @@ package com.decoutkhanqindev.dexreader.domain.usecase.history
 
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.repository.HistoryRepository
+import com.decoutkhanqindev.dexreader.utils.AsyncHandler.toFlowResult
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ObserveHistoryUseCase @Inject constructor(
-  private val historyRepository: HistoryRepository,
+  private val repository: HistoryRepository,
 ) {
   operator fun invoke(
     userId: String,
@@ -14,10 +15,10 @@ class ObserveHistoryUseCase @Inject constructor(
     mangaId: String? = null,
     lastReadingHistoryId: String? = null,
   ): Flow<Result<List<ReadingHistory>>> =
-    historyRepository.observeHistory(
+    repository.observeHistory(
       userId = userId,
       limit = limit,
       mangaId = mangaId,
       lastReadingHistoryId = lastReadingHistoryId
-    )
+    ).toFlowResult()
 }

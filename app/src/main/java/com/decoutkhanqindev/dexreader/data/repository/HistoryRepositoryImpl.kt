@@ -5,13 +5,12 @@ import com.decoutkhanqindev.dexreader.data.mapper.toDto
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.repository.HistoryRepository
-import com.decoutkhanqindev.dexreader.utils.AsyncHandler.runSuspendCatching
-import com.decoutkhanqindev.dexreader.utils.AsyncHandler.toResultFlow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class HistoryRepositoryImpl @Inject constructor(
@@ -22,7 +21,7 @@ class HistoryRepositoryImpl @Inject constructor(
     limit: Int,
     mangaId: String?,
     lastReadingHistoryId: String?,
-  ): Flow<Result<List<ReadingHistory>>> =
+  ): Flow<List<ReadingHistory>> =
     firebaseFirestoreSource
       .observeHistory(
         userId = userId,
@@ -35,27 +34,24 @@ class HistoryRepositoryImpl @Inject constructor(
       }
       .flowOn(Dispatchers.IO)
       .distinctUntilChanged()
-      .toResultFlow()
 
   override suspend fun addAndUpdateToHistory(
     userId: String,
     readingHistory: ReadingHistory,
-  ): Result<Unit> =
-    runSuspendCatching(Dispatchers.IO) {
-      firebaseFirestoreSource.addAndUpdateToHistory(
-        userId = userId,
-        readingHistory = readingHistory.toDto()
-      )
-    }
+  ) = withContext(Dispatchers.IO) {
+    firebaseFirestoreSource.addAndUpdateToHistory(
+      userId = userId,
+      readingHistory = readingHistory.toDto()
+    )
+  }
 
   override suspend fun removeFromHistory(
     userId: String,
     readingHistoryId: String,
-  ): Result<Unit> =
-    runSuspendCatching(Dispatchers.IO) {
-      firebaseFirestoreSource.removeFromHistory(
-        userId = userId,
-        readingHistoryId = readingHistoryId
-      )
-    }
+  ) = withContext(Dispatchers.IO) {
+    firebaseFirestoreSource.removeFromHistory(
+      userId = userId,
+      readingHistoryId = readingHistoryId
+    )
+  }
 }

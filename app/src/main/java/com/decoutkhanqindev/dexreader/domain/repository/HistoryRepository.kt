@@ -9,8 +9,8 @@ interface HistoryRepository {
     limit: Int = 10,
     mangaId: String? = null,
     lastReadingHistoryId: String? = null,
-  ): Flow<Result<List<ReadingHistory>>>
+  ): Flow<List<ReadingHistory>>
 
-  suspend fun addAndUpdateToHistory(userId: String, readingHistory: ReadingHistory): Result<Unit>
-  suspend fun removeFromHistory(userId: String, readingHistoryId: String): Result<Unit>
+  suspend fun addAndUpdateToHistory(userId: String, readingHistory: ReadingHistory)
+  suspend fun removeFromHistory(userId: String, readingHistoryId: String)
 }

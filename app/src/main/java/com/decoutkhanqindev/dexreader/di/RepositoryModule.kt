@@ -25,42 +25,26 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 interface RepositoryModule {
   @Binds
-  fun provideMangaRepository(
-    mangaRepositoryImpl: MangaRepositoryImpl,
-  ): MangaRepository
+  fun provideMangaRepository(repositoryImpl: MangaRepositoryImpl): MangaRepository
 
   @Binds
-  fun provideChapterRepository(
-    chapterRepositoryImpl: ChapterRepositoryImpl,
-  ): ChapterRepository
+  fun provideChapterRepository(repositoryImpl: ChapterRepositoryImpl): ChapterRepository
 
   @Binds
-  fun provideCacheRepository(
-    cacheRepositoryImpl: CacheRepositoryImpl,
-  ): CacheRepository
+  fun provideCacheRepository(repositoryImpl: CacheRepositoryImpl): CacheRepository
 
   @Binds
-  fun provideCategoryRepository(
-    categoryRepositoryImpl: CategoryRepositoryImpl,
-  ): CategoryRepository
+  fun provideCategoryRepository(repositoryImpl: CategoryRepositoryImpl): CategoryRepository
 
   @Binds
-  fun provideUserRepository(
-    userRepositoryImpl: UserRepositoryImpl,
-  ): UserRepository
+  fun provideUserRepository(repositoryImpl: UserRepositoryImpl): UserRepository
 
   @Binds
-  fun provideFavoritesRepository(
-    favoritesRepositoryImpl: FavoritesRepositoryImpl,
-  ): FavoritesRepository
+  fun provideFavoritesRepository(repositoryImpl: FavoritesRepositoryImpl): FavoritesRepository
 
   @Binds
-  fun provideHistoryRepository(
-    historyRepositoryImpl: HistoryRepositoryImpl,
-  ): HistoryRepository
+  fun provideHistoryRepository(repositoryImpl: HistoryRepositoryImpl): HistoryRepository
 
   @Binds
-  fun provideSettingsRepository(
-    settingsRepositoryImpl: SettingsRepositoryImpl,
-  ): SettingsRepository
+  fun provideSettingsRepository(repositoryImpl: SettingsRepositoryImpl): SettingsRepository
 }

@@ -5,13 +5,13 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
   // authentication methods
-  suspend fun registerUser(email: String, password: String): Result<User>
-  suspend fun loginUser(email: String, password: String): Result<Unit>
-  suspend fun logoutUser(): Result<Unit>
-  suspend fun sendResetUserPassword(email: String): Result<Unit>
-  fun observeCurrentUser(): Flow<Result<User?>>
+  suspend fun registerUser(email: String, password: String): User
+  suspend fun loginUser(email: String, password: String)
+  suspend fun logoutUser()
+  suspend fun sendResetUserPassword(email: String)
+  fun observeCurrentUser(): Flow<User?>
 
   // user profile methods
-  suspend fun addAndUpdateUserProfile(user: User): Result<Unit>
-  fun observeUserProfile(userId: String): Flow<Result<User?>>
+  suspend fun addAndUpdateUserProfile(user: User)
+  fun observeUserProfile(userId: String): Flow<User?>
 }

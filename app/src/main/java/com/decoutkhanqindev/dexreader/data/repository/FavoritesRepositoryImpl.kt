@@ -5,13 +5,12 @@ import com.decoutkhanqindev.dexreader.data.mapper.toDto
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
 import com.decoutkhanqindev.dexreader.domain.model.FavoriteManga
 import com.decoutkhanqindev.dexreader.domain.repository.FavoritesRepository
-import com.decoutkhanqindev.dexreader.utils.AsyncHandler.runSuspendCatching
-import com.decoutkhanqindev.dexreader.utils.AsyncHandler.toResultFlow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class FavoritesRepositoryImpl @Inject constructor(
@@ -21,7 +20,7 @@ class FavoritesRepositoryImpl @Inject constructor(
     userId: String,
     limit: Int,
     lastFavoriteMangaId: String?,
-  ): Flow<Result<List<FavoriteManga>>> =
+  ): Flow<List<FavoriteManga>> =
     firebaseFirestoreSource
       .observeFavorites(
         userId = userId,
@@ -33,31 +32,27 @@ class FavoritesRepositoryImpl @Inject constructor(
       }
       .flowOn(Dispatchers.IO)
       .distinctUntilChanged()
-      .toResultFlow()
 
   override suspend fun addToFavorites(
     userId: String,
     manga: FavoriteManga,
-  ): Result<Unit> =
-    runSuspendCatching(Dispatchers.IO) {
-      firebaseFirestoreSource.addToFavorites(userId, manga.toDto())
-    }
+  ) = withContext(Dispatchers.IO) {
+    firebaseFirestoreSource.addToFavorites(userId, manga.toDto())
+  }
 
   override suspend fun removeFromFavorites(
     userId: String,
     mangaId: String,
-  ): Result<Unit> =
-    runSuspendCatching(Dispatchers.IO) {
-      firebaseFirestoreSource.removeFromFavorites(userId, mangaId)
-    }
+  ) = withContext(Dispatchers.IO) {
+    firebaseFirestoreSource.removeFromFavorites(userId, mangaId)
+  }
 
   override fun observeIsFavorite(
     userId: String,
     mangaId: String,
-  ): Flow<Result<Boolean>> =
+  ): Flow<Boolean> =
     firebaseFirestoreSource
       .observeIsFavorite(userId, mangaId)
       .flowOn(Dispatchers.IO)
       .distinctUntilChanged()
-      .toResultFlow()
 }

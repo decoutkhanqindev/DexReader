@@ -6,16 +6,16 @@ import com.decoutkhanqindev.dexreader.di.UploadUrlQualifier
 import com.decoutkhanqindev.dexreader.domain.model.Category
 import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.domain.repository.CategoryRepository
-import com.decoutkhanqindev.dexreader.utils.AsyncHandler.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class CategoryRepositoryImpl @Inject constructor(
   private val mangaDexApiService: MangaDexApiService,
-  @UploadUrlQualifier private val uploadUrl: String,
+  @param:UploadUrlQualifier private val uploadUrl: String,
 ) : CategoryRepository {
-  override suspend fun getCategoryList(): Result<List<Category>> =
-    runSuspendCatching(Dispatchers.IO) {
+  override suspend fun getCategoryList(): List<Category> =
+    withContext(Dispatchers.IO) {
       mangaDexApiService.getTagList().data.map { it.toDomain() }
     }
 
@@ -30,17 +30,16 @@ class CategoryRepositoryImpl @Inject constructor(
     // filters
     status: List<String>, // ongoing, completed, hiatus, cancelled
     contentRating: List<String>, // safe, suggestive, erotica
-  ): Result<List<Manga>> =
-    runSuspendCatching(Dispatchers.IO) {
-      mangaDexApiService.getMangaListByTag(
-        tagId = categoryId,
-        offset = offset,
-        lastUpdated = lastUpdated,
-        followedCount = followedCount,
-        createdAt = createdAt,
-        rating = rating,
-        status = status,
-        contentRating = contentRating
-      ).data.map { it.toDomain(uploadUrl) }
-    }
+  ): List<Manga> = withContext(Dispatchers.IO) {
+    mangaDexApiService.getMangaListByTag(
+      tagId = categoryId,
+      offset = offset,
+      lastUpdated = lastUpdated,
+      followedCount = followedCount,
+      createdAt = createdAt,
+      rating = rating,
+      status = status,
+      contentRating = contentRating
+    ).data.map { it.toDomain(uploadUrl) }
+  }
 }

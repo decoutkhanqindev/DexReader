@@ -2,10 +2,11 @@ package com.decoutkhanqindev.dexreader.domain.usecase.chapter
 
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
 import com.decoutkhanqindev.dexreader.domain.repository.ChapterRepository
+import com.decoutkhanqindev.dexreader.utils.AsyncHandler.runSuspendCatching
 import javax.inject.Inject
 
 class GetChapterListUseCase @Inject constructor(
-  private val chapterRepository: ChapterRepository,
+  private val repository: ChapterRepository,
 ) {
   suspend operator fun invoke(
     mangaId: String,
@@ -14,8 +15,8 @@ class GetChapterListUseCase @Inject constructor(
     translatedLanguage: String = "en",
     volumeOrder: String = "desc",
     chapterOrder: String = "desc",
-  ): Result<List<Chapter>> =
-    chapterRepository.getChapterList(
+  ): Result<List<Chapter>> = runSuspendCatching {
+    repository.getChapterList(
       mangaId = mangaId,
       limit = limit,
       offset = offset,
@@ -23,4 +24,5 @@ class GetChapterListUseCase @Inject constructor(
       volumeOrder = volumeOrder,
       chapterOrder = chapterOrder
     )
+  }
 }

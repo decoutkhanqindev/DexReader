@@ -11,8 +11,8 @@ interface ChapterRepository {
     translatedLanguage: String = "en",
     volumeOrder: String = "desc",
     chapterOrder: String = "desc",
-  ): Result<List<Chapter>>
+  ): List<Chapter>
 
-  suspend fun getChapterDetails(chapterId: String): Result<Chapter>
-  suspend fun getChapterPages(chapterId: String): Result<ChapterPages>
+  suspend fun getChapterDetails(chapterId: String): Chapter
+  suspend fun getChapterPages(chapterId: String): ChapterPages
 }
