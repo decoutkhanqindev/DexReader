@@ -15,6 +15,7 @@ class RegisterUseCase @Inject constructor(
     name: String,
   ): Result<Unit> = runSuspendCatching {
     User.apply {
+      validateEmail(email)
       validatePassword(password)
       validateConfirmPassword(password, confirmPassword)
       validateName(name)

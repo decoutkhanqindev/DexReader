@@ -108,13 +108,7 @@ class ProfileViewModel @Inject constructor(
   }
 
   fun updateCurrentUser(value: User?) {
-    val currentUiState = _uiState.value
-
-    if (currentUiState.currentUser == value &&
-      currentUiState.newName == value?.name &&
-      currentUiState.newProfilePictureUrl == value?.profilePictureUrl
-    ) return
-
+    if (_uiState.value.currentUser == value) return
     _uiState.update {
       it.copy(
         isLoading = false,
