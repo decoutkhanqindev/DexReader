@@ -44,7 +44,7 @@ fun ProfileContent(
   var isShowUpdateUserErrorDialog by rememberSaveable { mutableStateOf(true) }
   var isShowLogoutUserSuccessDialog by rememberSaveable { mutableStateOf(true) }
   var isShowLogoutUserErrorDialog by rememberSaveable { mutableStateOf(true) }
-  val currentUser = uiState.user
+  val currentUser = uiState.currentUser
 
   Box(
     modifier =

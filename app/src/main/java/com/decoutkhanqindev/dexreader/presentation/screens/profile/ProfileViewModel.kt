@@ -3,7 +3,6 @@ package com.decoutkhanqindev.dexreader.presentation.screens.profile
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.decoutkhanqindev.dexreader.domain.exception.AuthException
 import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.domain.usecase.user.LogoutUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.UpdateUserProfileUseCase
@@ -38,9 +37,9 @@ class ProfileViewModel @Inject constructor(
         )
       }
 
-      if (currentUiState.user != null) {
+      if (currentUiState.currentUser != null) {
         updateUserProfileUseCase(
-          currentUser = currentUiState.user,
+          currentUser = currentUiState.currentUser,
           newName = currentUiState.newName,
           newProfilePicUrl = currentUiState.newProfilePictureUrl
         )
@@ -50,28 +49,16 @@ class ProfileViewModel @Inject constructor(
                 isLoading = false,
                 isUpdateUserSuccess = true,
                 isUpdateUserError = false,
-                isValidName = true
               )
             }
           }
           .onFailure { throwable ->
             _uiState.update { currentState ->
-              when (throwable) {
-                is AuthException.Name.Empty ->
-                  currentState.copy(
-                    isLoading = false,
-                    isUpdateUserSuccess = false,
-                    isValidName = false,
-                    isUpdateUserError = true
-                  )
-
-                else ->
-                  currentState.copy(
-                    isLoading = false,
-                    isUpdateUserSuccess = false,
-                    isUpdateUserError = true
-                  )
-              }
+              currentState.copy(
+                isLoading = false,
+                isUpdateUserSuccess = false,
+                isUpdateUserError = true
+              )
             }
 
             Log.d(TAG, "updateUserProfile has error: ${throwable.stackTraceToString()}")
@@ -123,7 +110,7 @@ class ProfileViewModel @Inject constructor(
   fun updateCurrentUser(value: User?) {
     val currentUiState = _uiState.value
 
-    if (currentUiState.user == value &&
+    if (currentUiState.currentUser == value &&
       currentUiState.newName == value?.name &&
       currentUiState.newProfilePictureUrl == value?.profilePictureUrl
     ) return
@@ -131,7 +118,7 @@ class ProfileViewModel @Inject constructor(
     _uiState.update {
       it.copy(
         isLoading = false,
-        user = value,
+        currentUser = value,
         isUpdateUserSuccess = false,
         isUpdateUserError = false
       )
@@ -144,7 +131,6 @@ class ProfileViewModel @Inject constructor(
       it.copy(
         isLoading = false,
         newName = value,
-        isValidName = value.isNotBlank(),
         isUpdateUserSuccess = false,
         isUpdateUserError = false
       )
