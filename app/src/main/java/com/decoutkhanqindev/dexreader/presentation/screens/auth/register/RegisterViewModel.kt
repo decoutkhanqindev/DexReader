@@ -40,7 +40,9 @@ class RegisterViewModel @Inject constructor(
         confirmPassword = currentConfirmPassword,
         name = currentName
       )
-        .onSuccess {}
+        .onSuccess {
+          _uiState.update { it.copy(isLoading = false, isSuccess = true, isError = false) }
+        }
         .onFailure { throwable ->
           _uiState.update { currentState ->
             when (throwable) {

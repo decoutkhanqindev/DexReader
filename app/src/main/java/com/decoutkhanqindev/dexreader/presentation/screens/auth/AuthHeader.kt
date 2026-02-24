@@ -24,7 +24,10 @@ fun AuthHeader(modifier: Modifier = Modifier) {
   Row(
     modifier = modifier,
     verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.Center
+    horizontalArrangement = Arrangement.spacedBy(
+      space = 16.dp,
+      alignment = Alignment.CenterHorizontally
+    )
   ) {
     Icon(
       painter = painterResource(R.drawable.app_icon),

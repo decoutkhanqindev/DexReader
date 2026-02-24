@@ -31,7 +31,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
 ) : FirebaseFirestoreSource {
   private val usersCollectionRef = firebaseFirestore.collection(usersCollection)
 
-  override suspend fun addAndUpdateUserProfile(userProfile: UserProfileDto) {
+  override suspend fun upsertUserProfile(userProfile: UserProfileDto) {
     usersCollectionRef
       .document(userProfile.id)
       .set(userProfile)
@@ -200,7 +200,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
     }
   }
 
-  override suspend fun addAndUpdateToHistory(
+  override suspend fun upsertHistory(
     userId: String,
     readingHistory: ReadingHistoryDto,
   ) {

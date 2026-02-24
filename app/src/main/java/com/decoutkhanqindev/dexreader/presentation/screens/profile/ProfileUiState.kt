@@ -7,8 +7,8 @@ import com.decoutkhanqindev.dexreader.domain.model.User
 data class ProfileUiState(
   val isLoading: Boolean = false,
   val user: User? = null,
-  val updatedName: String? = null,
-  val updatedProfilePictureUrl: String? = null,
+  val newName: String? = null,
+  val newProfilePictureUrl: String? = null,
   val isValidName: Boolean = false,
   val isUpdateUserSuccess: Boolean = false,
   val isLogoutUserSuccess: Boolean = false,

@@ -13,7 +13,6 @@ import kotlin.coroutines.cancellation.CancellationException
  * Provides utilities for error handling in suspend functions and Flow transformations
  */
 object AsyncHandler {
-
   /**
    * Runs a suspend block and catches exceptions, returning a Result Properly handles
    * CancellationException by rethrowing it

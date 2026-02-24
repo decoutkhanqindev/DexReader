@@ -1,6 +1,7 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.auth
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,21 +18,16 @@ fun AuthContent(
   modifier: Modifier = Modifier,
 ) {
   Column(
+    verticalArrangement = Arrangement.Top,
+    horizontalAlignment = Alignment.CenterHorizontally,
     modifier = modifier.background(MaterialTheme.colorScheme.surface)
   ) {
-    Box(
+    AuthHeader(
       modifier = Modifier
         .weight(0.25f)
-        .fillMaxWidth(),
-      contentAlignment = Alignment.Center
-    ) {
-      AuthHeader(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(horizontal = 16.dp)
-          .align(Alignment.Center)
-      )
-    }
+        .fillMaxWidth()
+        .padding(horizontal = 16.dp)
+    )
 
     Box(
       modifier = Modifier

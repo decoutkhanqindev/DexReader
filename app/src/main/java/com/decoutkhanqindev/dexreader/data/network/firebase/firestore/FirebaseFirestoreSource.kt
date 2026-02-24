@@ -6,7 +6,7 @@ import com.decoutkhanqindev.dexreader.data.network.firebase.dto.UserProfileDto
 import kotlinx.coroutines.flow.Flow
 
 interface FirebaseFirestoreSource {
-  suspend fun addAndUpdateUserProfile(userProfile: UserProfileDto)
+  suspend fun upsertUserProfile(userProfile: UserProfileDto)
   fun observeUserProfile(userId: String): Flow<UserProfileDto?>
 
   fun observeFavorites(
@@ -26,6 +26,6 @@ interface FirebaseFirestoreSource {
     lastReadingHistoryId: String? = null,
   ): Flow<List<ReadingHistoryDto>>
 
-  suspend fun addAndUpdateToHistory(userId: String, readingHistory: ReadingHistoryDto)
+  suspend fun upsertHistory(userId: String, readingHistory: ReadingHistoryDto)
   suspend fun removeFromHistory(userId: String, readingHistoryId: String)
 }

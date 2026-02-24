@@ -39,7 +39,7 @@ class HistoryRepositoryImpl @Inject constructor(
     userId: String,
     readingHistory: ReadingHistory,
   ) = withContext(Dispatchers.IO) {
-    firebaseFirestoreSource.addAndUpdateToHistory(
+    firebaseFirestoreSource.upsertHistory(
       userId = userId,
       readingHistory = readingHistory.toDto()
     )

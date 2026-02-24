@@ -34,17 +34,17 @@ fun ProfileScreen(
   val route = NavDestination.ProfileDestination.route
   val isShowUpdateButton by remember(uiState) {
     derivedStateOf {
-      val nameChanged = uiState.updatedName != null
-          && uiState.updatedName != currentUser?.name
-      val picChanged = uiState.updatedProfilePictureUrl != null
-          && uiState.updatedProfilePictureUrl != currentUser?.profilePictureUrl
+      val nameChanged = uiState.newName != null
+          && uiState.newName != currentUser?.name
+      val picChanged = uiState.newProfilePictureUrl != null
+          && uiState.newProfilePictureUrl != currentUser?.profilePictureUrl
       nameChanged || picChanged
     }
   }
 
   LaunchedEffect(isUserLoggedIn, currentUser) {
-    if (isUserLoggedIn && currentUser != null) viewModel.updateCurrentUser(user = currentUser)
-    else viewModel.updateCurrentUser(user = null)
+    if (isUserLoggedIn && currentUser != null) viewModel.updateCurrentUser(value = currentUser)
+    else viewModel.updateCurrentUser(value = null)
   }
 
   BaseScreen(

@@ -19,8 +19,6 @@ class RegisterUseCase @Inject constructor(
       validateConfirmPassword(password, confirmPassword)
       validateName(name)
     }
-    val registeredUser = repository.register(email, password)
-    val userProfile = registeredUser.copy(name = name)
-    repository.addAndUpdateUserProfile(userProfile)
+    repository.register(email, password)
   }
 }

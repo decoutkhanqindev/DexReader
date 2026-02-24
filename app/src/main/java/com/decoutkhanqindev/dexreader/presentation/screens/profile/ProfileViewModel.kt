@@ -3,9 +3,10 @@ package com.decoutkhanqindev.dexreader.presentation.screens.profile
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.decoutkhanqindev.dexreader.domain.exception.AuthException
 import com.decoutkhanqindev.dexreader.domain.model.User
-import com.decoutkhanqindev.dexreader.domain.usecase.user.AddAndUpdateUserProfileUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.LogoutUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.user.UpdateUserProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,10 +17,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-  private val updateUserProfileUseCase: AddAndUpdateUserProfileUseCase,
+  private val updateUserProfileUseCase: UpdateUserProfileUseCase,
   private val logoutUseCase: LogoutUseCase,
 ) : ViewModel() {
-  private val _uiState = MutableStateFlow<ProfileUiState>(ProfileUiState())
+  private val _uiState = MutableStateFlow(ProfileUiState())
   val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
   fun updateUserProfile() {
@@ -37,58 +38,46 @@ class ProfileViewModel @Inject constructor(
         )
       }
 
-      if (currentUiState.updatedName.isNullOrBlank()) {
-        _uiState.update {
-          it.copy(
-            isLoading = false,
-            isUpdateUserSuccess = false,
-            isValidName = false,
-            isUpdateUserError = true
-          )
-        }
-        return@launch
-      }
-
       if (currentUiState.user != null) {
-        val hasNameChanged = currentUiState.user.name != currentUiState.updatedName
-        val hasPicChanged =
-          currentUiState.user.profilePictureUrl != currentUiState.updatedProfilePictureUrl
-        if (!hasNameChanged && !hasPicChanged) {
-          _uiState.update {
-            it.copy(
-              isLoading = false,
-              isUpdateUserError = false,
-              isUpdateUserSuccess = true,
-            )
-          }
-          return@launch
-        }
-
-        val updatedUser = currentUiState.user.copy(
-          name = currentUiState.updatedName,
-          profilePictureUrl = currentUiState.updatedProfilePictureUrl
+        updateUserProfileUseCase(
+          currentUser = currentUiState.user,
+          newName = currentUiState.newName,
+          newProfilePicUrl = currentUiState.newProfilePictureUrl
         )
-
-        updateUserProfileUseCase(user = updatedUser)
           .onSuccess {
             _uiState.update {
               it.copy(
                 isLoading = false,
                 isUpdateUserSuccess = true,
-                isUpdateUserError = false
+                isUpdateUserError = false,
+                isValidName = true
               )
             }
           }
-          .onFailure {
-            _uiState.update {
-              it.copy(
-                isLoading = false,
-                isUpdateUserSuccess = false,
-                isUpdateUserError = true
-              )
+          .onFailure { throwable ->
+            _uiState.update { currentState ->
+              when (throwable) {
+                is AuthException.Name.Empty ->
+                  currentState.copy(
+                    isLoading = false,
+                    isUpdateUserSuccess = false,
+                    isValidName = false,
+                    isUpdateUserError = true
+                  )
+
+                else ->
+                  currentState.copy(
+                    isLoading = false,
+                    isUpdateUserSuccess = false,
+                    isUpdateUserError = true
+                  )
+              }
             }
-            Log.d(TAG, "updateUserProfile have error: ${it.stackTraceToString()}")
+
+            Log.d(TAG, "updateUserProfile has error: ${throwable.stackTraceToString()}")
           }
+      } else {
+        _uiState.update { it.copy(isLoading = false) }
       }
     }
   }
@@ -117,7 +106,7 @@ class ProfileViewModel @Inject constructor(
             )
           }
         }
-        .onFailure {
+        .onFailure { throwable ->
           _uiState.update {
             it.copy(
               isLoading = false,
@@ -125,45 +114,48 @@ class ProfileViewModel @Inject constructor(
               isLogoutUserError = true
             )
           }
-          Log.d(TAG, "logoutUser have error: ${it.stackTraceToString()}")
+
+          Log.d(TAG, "logoutUser has error: ${throwable.stackTraceToString()}")
         }
     }
   }
 
-  fun updateCurrentUser(user: User?) {
+  fun updateCurrentUser(value: User?) {
     val currentUiState = _uiState.value
-    if (currentUiState.user == user &&
-      currentUiState.updatedName == user?.name &&
-      currentUiState.updatedProfilePictureUrl == user?.profilePictureUrl
+
+    if (currentUiState.user == value &&
+      currentUiState.newName == value?.name &&
+      currentUiState.newProfilePictureUrl == value?.profilePictureUrl
     ) return
+
     _uiState.update {
       it.copy(
         isLoading = false,
-        user = user,
+        user = value,
         isUpdateUserSuccess = false,
         isUpdateUserError = false
       )
     }
   }
 
-  fun updateUserName(name: String) {
-    if (_uiState.value.updatedName == name) return
+  fun updateUserName(value: String) {
+    if (_uiState.value.newName == value) return
     _uiState.update {
       it.copy(
         isLoading = false,
-        updatedName = name,
-        isValidName = name.isNotBlank(),
+        newName = value,
+        isValidName = value.isNotBlank(),
         isUpdateUserSuccess = false,
         isUpdateUserError = false
       )
     }
   }
 
-  fun updateUserPicUrl(url: String) {
-    if (_uiState.value.updatedProfilePictureUrl == url) return
+  fun updateUserPicUrl(value: String) {
+    if (_uiState.value.newProfilePictureUrl == value) return
     _uiState.update {
       it.copy(
-        updatedProfilePictureUrl = url,
+        newProfilePictureUrl = value,
         isLoading = false,
         isUpdateUserSuccess = false,
         isUpdateUserError = false
