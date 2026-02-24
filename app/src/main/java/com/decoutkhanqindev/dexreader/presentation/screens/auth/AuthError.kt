@@ -26,8 +26,4 @@ sealed class AuthError(@param:StringRes val message: Int) {
   }
 
   data object UserNotFoundError : AuthError(R.string.error_user_not_found)
-
-  data object SendResetPasswordError : AuthError(R.string.error_send_reset_password)
-
-  data object UnknownError : AuthError(R.string.error_unknown)
 }
