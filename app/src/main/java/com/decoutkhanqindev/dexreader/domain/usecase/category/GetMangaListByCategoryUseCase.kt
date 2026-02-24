@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.domain.usecase.category
 
 import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.domain.repository.CategoryRepository
-import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
+import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendResultCatching
 import javax.inject.Inject
 
 class GetMangaListByCategoryUseCase @Inject constructor(
@@ -19,7 +19,7 @@ class GetMangaListByCategoryUseCase @Inject constructor(
     // filters
     status: List<String> = listOf("ongoing"), // ongoing, completed, hiatus, cancelled
     contentRating: List<String> = listOf("safe"), // safe, suggestive, erotica
-  ): Result<List<Manga>> = runSuspendCatching {
+  ): Result<List<Manga>> = runSuspendResultCatching {
     repository.getMangaListByCategory(
       categoryId = categoryId,
       offset = offset,

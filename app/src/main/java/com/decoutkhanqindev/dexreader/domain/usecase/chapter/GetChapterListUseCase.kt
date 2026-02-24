@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.domain.usecase.chapter
 
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
 import com.decoutkhanqindev.dexreader.domain.repository.ChapterRepository
-import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
+import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendResultCatching
 import javax.inject.Inject
 
 class GetChapterListUseCase @Inject constructor(
@@ -15,7 +15,7 @@ class GetChapterListUseCase @Inject constructor(
     translatedLanguage: String = "en",
     volumeOrder: String = "desc",
     chapterOrder: String = "desc",
-  ): Result<List<Chapter>> = runSuspendCatching {
+  ): Result<List<Chapter>> = runSuspendResultCatching {
     repository.getChapterList(
       mangaId = mangaId,
       limit = limit,

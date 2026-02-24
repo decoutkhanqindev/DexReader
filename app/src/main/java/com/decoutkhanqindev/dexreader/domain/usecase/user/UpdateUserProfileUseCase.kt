@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.domain.usecase.user
 
 import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.domain.repository.UserRepository
-import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
+import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendResultCatching
 import javax.inject.Inject
 
 class UpdateUserProfileUseCase @Inject constructor(
@@ -12,14 +12,14 @@ class UpdateUserProfileUseCase @Inject constructor(
     currentUser: User,
     newName: String?,
     newProfilePicUrl: String?,
-  ): Result<Unit> = runSuspendCatching {
-    val nameToUpdate = newName?.trim() ?: currentUser.name
+  ): Result<Unit> = runSuspendResultCatching {
+    val nameToUpdate = newName?.trim() ?: return@runSuspendResultCatching
     User.validateName(nameToUpdate)
 
     val hasNameChanged = currentUser.name != nameToUpdate
     val hasPicChanged = currentUser.profilePictureUrl != newProfilePicUrl
 
-    if (!hasNameChanged && !hasPicChanged) return@runSuspendCatching
+    if (!hasNameChanged && !hasPicChanged) return@runSuspendResultCatching
 
     val updatedUser = currentUser.copy(
       name = nameToUpdate,

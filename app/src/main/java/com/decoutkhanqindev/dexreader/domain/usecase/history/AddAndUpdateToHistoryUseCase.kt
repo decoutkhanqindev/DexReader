@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.domain.usecase.history
 
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.repository.HistoryRepository
-import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
+import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendResultCatching
 import javax.inject.Inject
 
 class AddAndUpdateToHistoryUseCase @Inject constructor(
@@ -11,7 +11,7 @@ class AddAndUpdateToHistoryUseCase @Inject constructor(
   suspend operator fun invoke(
     userId: String,
     readingHistory: ReadingHistory,
-  ): Result<Unit> = runSuspendCatching {
+  ): Result<Unit> = runSuspendResultCatching {
     repository.addAndUpdateToHistory(
       userId = userId,
       readingHistory = readingHistory
