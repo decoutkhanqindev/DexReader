@@ -3,7 +3,7 @@ package com.decoutkhanqindev.dexreader.data.mapper
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.FavoriteMangaDto
 import com.decoutkhanqindev.dexreader.domain.model.FavoriteManga
 import com.decoutkhanqindev.dexreader.domain.model.Manga
-import com.decoutkhanqindev.dexreader.utils.TimeAgo.toTimeAgo
+import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
 
 fun FavoriteMangaDto.toDomain() =
   FavoriteManga(

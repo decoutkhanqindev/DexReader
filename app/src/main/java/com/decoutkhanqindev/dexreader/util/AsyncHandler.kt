@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.utils
+package com.decoutkhanqindev.dexreader.util
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch

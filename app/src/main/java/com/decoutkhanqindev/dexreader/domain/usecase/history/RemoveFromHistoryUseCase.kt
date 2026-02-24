@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.domain.usecase.history
 
 import com.decoutkhanqindev.dexreader.domain.repository.HistoryRepository
-import com.decoutkhanqindev.dexreader.utils.AsyncHandler.runSuspendCatching
+import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
 import javax.inject.Inject
 
 class RemoveFromHistoryUseCase @Inject constructor(

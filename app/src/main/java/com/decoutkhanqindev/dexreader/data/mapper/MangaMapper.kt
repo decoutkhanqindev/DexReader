@@ -2,8 +2,8 @@ package com.decoutkhanqindev.dexreader.data.mapper
 
 import com.decoutkhanqindev.dexreader.data.network.mangadex_api.dto.MangaDto
 import com.decoutkhanqindev.dexreader.domain.model.Manga
-import com.decoutkhanqindev.dexreader.utils.LanguageCodec.toFullLanguageName
-import com.decoutkhanqindev.dexreader.utils.TimeAgo.toTimeAgo
+import com.decoutkhanqindev.dexreader.util.LanguageCodec.toFullLanguageName
+import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
 
 fun MangaDto.toDomain(uploadUrl: String): Manga {
   val title = attributes.title["en"]

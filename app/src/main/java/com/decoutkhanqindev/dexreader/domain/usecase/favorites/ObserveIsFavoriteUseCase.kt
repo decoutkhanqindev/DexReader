@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.domain.usecase.favorites
 
 import com.decoutkhanqindev.dexreader.domain.repository.FavoritesRepository
-import com.decoutkhanqindev.dexreader.utils.AsyncHandler.toFlowResult
+import com.decoutkhanqindev.dexreader.util.AsyncHandler.toFlowResult
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

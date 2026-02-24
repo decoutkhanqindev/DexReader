@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.utils
+package com.decoutkhanqindev.dexreader.util
 
 /**
  * Language codec utility - bidirectional encoding/decoding between language codes and names

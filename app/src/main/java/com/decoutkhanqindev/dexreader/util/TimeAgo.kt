@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.utils
+package com.decoutkhanqindev.dexreader.util
 
 import java.text.SimpleDateFormat
 import java.util.Date

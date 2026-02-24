@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.domain.usecase.favorites
 
 import com.decoutkhanqindev.dexreader.domain.repository.FavoritesRepository
-import com.decoutkhanqindev.dexreader.utils.AsyncHandler.runSuspendCatching
+import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
 import javax.inject.Inject
 
 class RemoveFromFavoritesUseCase @Inject constructor(

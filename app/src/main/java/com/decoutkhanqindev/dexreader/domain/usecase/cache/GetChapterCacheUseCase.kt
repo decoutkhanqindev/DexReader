@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.domain.usecase.cache
 
 import com.decoutkhanqindev.dexreader.domain.model.ChapterPages
 import com.decoutkhanqindev.dexreader.domain.repository.CacheRepository
-import com.decoutkhanqindev.dexreader.utils.AsyncHandler.runSuspendCatching
+import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
 import javax.inject.Inject
 
 class GetChapterCacheUseCase @Inject constructor(

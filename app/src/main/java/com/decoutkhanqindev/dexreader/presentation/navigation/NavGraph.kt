@@ -22,11 +22,11 @@ import com.decoutkhanqindev.dexreader.presentation.screens.profile.ProfileScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.reader.ReaderScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.search.SearchScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.settings.SettingsScreen
-import com.decoutkhanqindev.dexreader.utils.NavTransitions.navigateClearStack
-import com.decoutkhanqindev.dexreader.utils.NavTransitions.navigatePreserveState
-import com.decoutkhanqindev.dexreader.utils.NavTransitions.slideEnterOnlyTransitions
-import com.decoutkhanqindev.dexreader.utils.NavTransitions.slideFromLeftTransitions
-import com.decoutkhanqindev.dexreader.utils.NavTransitions.slideFromRightTransitions
+import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateClearStack
+import com.decoutkhanqindev.dexreader.util.NavTransitions.navigatePreserveState
+import com.decoutkhanqindev.dexreader.util.NavTransitions.slideEnterOnlyTransitions
+import com.decoutkhanqindev.dexreader.util.NavTransitions.slideFromLeftTransitions
+import com.decoutkhanqindev.dexreader.util.NavTransitions.slideFromRightTransitions
 
 @Composable
 fun NavGraph(

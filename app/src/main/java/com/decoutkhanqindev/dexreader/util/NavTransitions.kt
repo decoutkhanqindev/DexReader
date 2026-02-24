@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.utils
+package com.decoutkhanqindev.dexreader.util
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition

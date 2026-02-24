@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.data.mapper
 
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.ReadingHistoryDto
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
-import com.decoutkhanqindev.dexreader.utils.TimeAgo.toTimeAgo
+import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
 
 fun ReadingHistoryDto.toDomain() =
   ReadingHistory(

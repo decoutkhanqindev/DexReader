@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.domain.usecase.category
 
 import com.decoutkhanqindev.dexreader.domain.model.Category
 import com.decoutkhanqindev.dexreader.domain.repository.CategoryRepository
-import com.decoutkhanqindev.dexreader.utils.AsyncHandler.runSuspendCatching
+import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
 import javax.inject.Inject
 
 class GetCategoryListUseCase @Inject constructor(
