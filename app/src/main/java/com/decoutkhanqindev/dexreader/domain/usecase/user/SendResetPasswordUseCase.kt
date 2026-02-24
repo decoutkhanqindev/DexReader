@@ -8,8 +8,9 @@ import javax.inject.Inject
 class SendResetPasswordUseCase @Inject constructor(
   private val repository: UserRepository,
 ) {
-  suspend operator fun invoke(email: String): Result<Unit> = runSuspendResultCatching {
-    User.validateEmail(email)
-    repository.sendResetPassword(email)
-  }
+  suspend operator fun invoke(email: String): Result<Unit> =
+    runSuspendResultCatching {
+      User.validateEmail(email)
+      repository.sendResetPassword(email)
+    }
 }
