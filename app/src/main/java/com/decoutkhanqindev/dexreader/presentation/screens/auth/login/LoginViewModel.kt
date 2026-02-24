@@ -3,7 +3,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.auth.login
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.decoutkhanqindev.dexreader.domain.exception.AuthException
+import com.decoutkhanqindev.dexreader.domain.exception.UserException
 import com.decoutkhanqindev.dexreader.domain.usecase.user.LoginUseCase
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.AuthError
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,28 +40,28 @@ class LoginViewModel @Inject constructor(
         .onFailure { throwable ->
           _uiState.update {
             when (throwable) {
-              is AuthException.UserNotFound ->
+              is UserException.NotFound ->
                 it.copy(isLoading = false, userError = AuthError.UserNotFoundError)
 
-              is AuthException.Password.Incorrect ->
+              is UserException.Password.Incorrect ->
                 it.copy(
                   isLoading = false,
                   passwordError = AuthError.PasswordError.Incorrect
                 )
 
-              is AuthException.Email.Empty ->
+              is UserException.Email.Empty ->
                 it.copy(isLoading = false, emailError = AuthError.EmailError.Required)
 
-              is AuthException.Email.Invalid ->
+              is UserException.Email.Invalid ->
                 it.copy(isLoading = false, emailError = AuthError.EmailError.Invalid)
 
-              is AuthException.Password.Empty ->
+              is UserException.Password.Empty ->
                 it.copy(
                   isLoading = false,
                   passwordError = AuthError.PasswordError.Required
                 )
 
-              is AuthException.Password.Weak ->
+              is UserException.Password.Weak ->
                 it.copy(isLoading = false, passwordError = AuthError.PasswordError.Weak)
 
               else -> it.copy(isLoading = false, isSuccess = false, isError = true)

@@ -3,7 +3,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.auth.register
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.decoutkhanqindev.dexreader.domain.exception.AuthException
+import com.decoutkhanqindev.dexreader.domain.exception.UserException
 import com.decoutkhanqindev.dexreader.domain.usecase.user.RegisterUseCase
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.AuthError
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,50 +46,50 @@ class RegisterViewModel @Inject constructor(
         .onFailure { throwable ->
           _uiState.update { currentState ->
             when (throwable) {
-              is AuthException.UserAlreadyExists ->
+              is UserException.AlreadyExists ->
                 currentState.copy(
                   isLoading = false,
                   emailError = AuthError.EmailError.AlreadyInUse
                 )
 
-              is AuthException.Email.Empty ->
+              is UserException.Email.Empty ->
                 currentState.copy(
                   isLoading = false,
                   emailError = AuthError.EmailError.Required
                 )
 
-              is AuthException.Email.Invalid ->
+              is UserException.Email.Invalid ->
                 currentState.copy(
                   isLoading = false,
                   emailError = AuthError.EmailError.Invalid
                 )
 
-              is AuthException.Password.Empty ->
+              is UserException.Password.Empty ->
                 currentState.copy(
                   isLoading = false,
                   passwordError = AuthError.PasswordError.Required
                 )
 
-              is AuthException.Password.Weak ->
+              is UserException.Password.Weak ->
                 currentState.copy(
                   isLoading = false,
                   passwordError = AuthError.PasswordError.Weak
                 )
 
-              is AuthException.ConfirmPassword.Empty ->
+              is UserException.ConfirmPassword.Empty ->
                 currentState.copy(
                   isLoading = false,
                   confirmPasswordError = AuthError.ConfirmPasswordError.Required
                 )
 
-              is AuthException.ConfirmPassword.Mismatch ->
+              is UserException.ConfirmPassword.Mismatch ->
                 currentState.copy(
                   isLoading = false,
                   confirmPasswordError =
                     AuthError.ConfirmPasswordError.DoesNotMatch
                 )
 
-              is AuthException.Name.Empty ->
+              is UserException.Name.Empty ->
                 currentState.copy(
                   isLoading = false,
                   nameError = AuthError.NameError.Required

@@ -12,10 +12,8 @@ class LoginUseCase @Inject constructor(
     email: String,
     password: String,
   ): Result<Unit> = runSuspendCatching {
-    User.apply {
-      validateEmail(email)
-      validatePassword(password)
-    }
+    User.validateEmail(email)
+    User.validatePassword(password)
     repository.login(email, password)
   }
 }

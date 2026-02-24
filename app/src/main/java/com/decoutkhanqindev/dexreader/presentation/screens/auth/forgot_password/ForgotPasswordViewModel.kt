@@ -3,7 +3,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.auth.forgot_password
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.decoutkhanqindev.dexreader.domain.exception.AuthException
+import com.decoutkhanqindev.dexreader.domain.exception.UserException
 import com.decoutkhanqindev.dexreader.domain.usecase.user.SendResetPasswordUseCase
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.AuthError
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,13 +37,13 @@ class ForgotPasswordViewModel @Inject constructor(
         .onFailure { throwable ->
           _uiState.update { currentState ->
             when (throwable) {
-              is AuthException.Email.Empty ->
+              is UserException.Email.Empty ->
                 currentState.copy(
                   isLoading = false,
                   emailError = AuthError.EmailError.Required
                 )
 
-              is AuthException.Email.Invalid ->
+              is UserException.Email.Invalid ->
                 currentState.copy(
                   isLoading = false,
                   emailError = AuthError.EmailError.Invalid

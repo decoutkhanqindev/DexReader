@@ -14,12 +14,10 @@ class RegisterUseCase @Inject constructor(
     confirmPassword: String,
     name: String,
   ): Result<Unit> = runSuspendCatching {
-    User.apply {
-      validateEmail(email)
-      validatePassword(password)
-      validateConfirmPassword(password, confirmPassword)
-      validateName(name)
-    }
-    repository.register(email, password)
+    User.validateEmail(email)
+    User.validatePassword(password)
+    User.validateConfirmPassword(password, confirmPassword)
+    User.validateName(name)
+    repository.register(email, password, name)
   }
 }

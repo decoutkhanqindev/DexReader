@@ -4,7 +4,7 @@ import com.decoutkhanqindev.dexreader.data.mapper.toDomain
 import com.decoutkhanqindev.dexreader.data.mapper.toUserProfileDto
 import com.decoutkhanqindev.dexreader.data.network.firebase.auth.FirebaseAuthSource
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
-import com.decoutkhanqindev.dexreader.domain.exception.AuthException
+import com.decoutkhanqindev.dexreader.domain.exception.UserException
 import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.domain.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 class UserRepositoryImpl @Inject constructor(
   private val firebaseAuthSource: FirebaseAuthSource,
@@ -25,14 +26,20 @@ class UserRepositoryImpl @Inject constructor(
   override suspend fun register(
     email: String,
     password: String,
+    name: String,
   ) = withContext(Dispatchers.IO) {
     try {
-      val registeredUser = firebaseAuthSource.register(email, password)?.toDomain()
-        ?: throw AuthException.RegistrationFailed()
+      val registeredUser =
+        firebaseAuthSource.register(email, password)
+          ?.toDomain()
+          ?.copy(name = name)
+          ?: throw UserException.RegistrationFailed()
       firebaseFirestoreSource.upsertUserProfile(userProfile = registeredUser.toUserProfileDto())
+    } catch (e: CancellationException) {
+      throw e // Propagate cancellation exceptions without wrapping
     } catch (e: Exception) {
       when (e) {
-        is FirebaseAuthUserCollisionException -> throw AuthException.UserAlreadyExists(cause = e)
+        is FirebaseAuthUserCollisionException -> throw UserException.AlreadyExists(cause = e)
         else -> throw e
       }
     }
@@ -44,10 +51,12 @@ class UserRepositoryImpl @Inject constructor(
   ) = withContext(Dispatchers.IO) {
     try {
       firebaseAuthSource.login(email, password)
+    } catch (e: CancellationException) {
+      throw e // Propagate cancellation exceptions without wrapping
     } catch (e: Exception) {
       when (e) {
-        is FirebaseAuthInvalidUserException -> throw AuthException.UserNotFound(cause = e)
-        is FirebaseAuthInvalidCredentialsException -> throw AuthException.Password.Incorrect(cause = e)
+        is FirebaseAuthInvalidUserException -> throw UserException.NotFound(cause = e)
+        is FirebaseAuthInvalidCredentialsException -> throw UserException.Password.Incorrect(cause = e)
         else -> throw e
       }
     }
