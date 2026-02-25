@@ -13,7 +13,7 @@ class UpdateUserProfileUseCase @Inject constructor(
     newName: String?,
     newProfilePicUrl: String?,
   ): Result<Unit> = runSuspendResultCatching {
-    val nameToUpdate = newName?.trim() ?: return@runSuspendResultCatching
+    val nameToUpdate = newName?.trim() ?: currentUser.name
     User.validateName(nameToUpdate)
 
     val hasNameChanged = currentUser.name != nameToUpdate
