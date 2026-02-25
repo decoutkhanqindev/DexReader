@@ -53,8 +53,8 @@ class ProfileViewModel @Inject constructor(
             }
           }
           .onFailure { throwable ->
-            _uiState.update { currentState ->
-              currentState.copy(
+            _uiState.update {
+              it.copy(
                 isLoading = false,
                 isUpdateUserSuccess = false,
                 isUpdateUserError = true

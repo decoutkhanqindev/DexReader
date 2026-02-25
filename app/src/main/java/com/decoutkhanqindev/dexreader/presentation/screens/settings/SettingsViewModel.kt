@@ -40,14 +40,14 @@ class SettingsViewModel @Inject constructor(
               )
             }
           }
-          .onFailure {
+          .onFailure { throwable ->
             _uiState.update {
               it.copy(
                 isLoading = false,
                 themeType = ThemeType.SYSTEM,
               )
             }
-            Log.e(TAG, "observeIsDynamicTheme have error: ${it.stackTraceToString()}")
+            Log.e(TAG, "observeIsDynamicTheme have error: ${throwable.stackTraceToString()}")
           }
       }
     }
@@ -76,7 +76,7 @@ class SettingsViewModel @Inject constructor(
             )
           }
         }
-        .onFailure {
+        .onFailure { throwable ->
           _uiState.update {
             it.copy(
               isLoading = false,
@@ -84,7 +84,7 @@ class SettingsViewModel @Inject constructor(
               isChangeThemeError = true
             )
           }
-          Log.e(TAG, "setThemeType have error: ${it.stackTraceToString()}")
+          Log.e(TAG, "setThemeType have error: ${throwable.stackTraceToString()}")
         }
     }
   }

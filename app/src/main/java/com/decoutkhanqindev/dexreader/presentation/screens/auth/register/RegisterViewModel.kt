@@ -44,58 +44,58 @@ class RegisterViewModel @Inject constructor(
           _uiState.update { it.copy(isLoading = false, isSuccess = true, isError = false) }
         }
         .onFailure { throwable ->
-          _uiState.update { currentState ->
+          _uiState.update {
             when (throwable) {
               is UserException.AlreadyExists ->
-                currentState.copy(
+                it.copy(
                   isLoading = false,
                   emailError = AuthError.EmailError.AlreadyInUse
                 )
 
               is UserException.Email.Empty ->
-                currentState.copy(
+                it.copy(
                   isLoading = false,
                   emailError = AuthError.EmailError.Required
                 )
 
               is UserException.Email.Invalid ->
-                currentState.copy(
+                it.copy(
                   isLoading = false,
                   emailError = AuthError.EmailError.Invalid
                 )
 
               is UserException.Password.Empty ->
-                currentState.copy(
+                it.copy(
                   isLoading = false,
                   passwordError = AuthError.PasswordError.Required
                 )
 
               is UserException.Password.Weak ->
-                currentState.copy(
+                it.copy(
                   isLoading = false,
                   passwordError = AuthError.PasswordError.Weak
                 )
 
               is UserException.ConfirmPassword.Empty ->
-                currentState.copy(
+                it.copy(
                   isLoading = false,
                   confirmPasswordError = AuthError.ConfirmPasswordError.Required
                 )
 
               is UserException.ConfirmPassword.Mismatch ->
-                currentState.copy(
+                it.copy(
                   isLoading = false,
                   confirmPasswordError =
                     AuthError.ConfirmPasswordError.DoesNotMatch
                 )
 
               is UserException.Name.Empty ->
-                currentState.copy(
+                it.copy(
                   isLoading = false,
                   nameError = AuthError.NameError.Required
                 )
 
-              else -> currentState.copy(isLoading = false, isSuccess = false, isError = true)
+              else -> it.copy(isLoading = false, isSuccess = false, isError = true)
             }
           }
 
@@ -132,8 +132,8 @@ class RegisterViewModel @Inject constructor(
 
   fun updateConfirmPassword(value: String) {
     if (_uiState.value.confirmPassword == value) return
-    _uiState.update { currentState ->
-      currentState.copy(
+    _uiState.update {
+      it.copy(
         confirmPassword = value,
         confirmPasswordError = null,
         isLoading = false,
