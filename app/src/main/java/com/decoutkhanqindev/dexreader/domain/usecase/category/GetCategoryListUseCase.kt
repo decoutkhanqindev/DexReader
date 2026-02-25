@@ -9,7 +9,5 @@ class GetCategoryListUseCase @Inject constructor(
   private val repository: CategoryRepository,
 ) {
   suspend operator fun invoke(): Result<List<Category>> =
-    runSuspendResultCatching {
-      repository.getCategoryList()
-    }
+    runSuspendResultCatching { repository.getCategoryList() }
 }

@@ -8,7 +8,6 @@ import javax.inject.Inject
 class GetLatestUpdateMangaListUseCase @Inject constructor(
   private val repository: MangaRepository,
 ) {
-  suspend operator fun invoke(): Result<List<Manga>> = runSuspendResultCatching {
-    repository.getLatestUpdateMangaList()
-  }
+  suspend operator fun invoke(): Result<List<Manga>> =
+    runSuspendResultCatching { repository.getLatestUpdateMangaList() }
 }

@@ -9,7 +9,5 @@ class AddToFavoritesUseCase @Inject constructor(
   private val repository: FavoritesRepository,
 ) {
   suspend operator fun invoke(userId: String, manga: FavoriteManga): Result<Unit> =
-    runSuspendResultCatching {
-      repository.addToFavorites(userId, manga)
-    }
+    runSuspendResultCatching { repository.addToFavorites(userId, manga) }
 }

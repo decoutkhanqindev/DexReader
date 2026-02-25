@@ -8,7 +8,5 @@ class RemoveFromFavoritesUseCase @Inject constructor(
   private val repository: FavoritesRepository,
 ) {
   suspend operator fun invoke(userId: String, mangaId: String): Result<Unit> =
-    runSuspendResultCatching {
-      repository.removeFromFavorites(userId, mangaId)
-    }
+    runSuspendResultCatching { repository.removeFromFavorites(userId, mangaId) }
 }

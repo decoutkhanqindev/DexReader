@@ -8,7 +8,5 @@ class DeleteChapterCacheUseCase @Inject constructor(
   private val repository: CacheRepository,
 ) {
   suspend operator fun invoke(chapterId: String): Result<Unit> =
-    runSuspendResultCatching {
-      repository.deleteChapterCache(chapterId)
-    }
+    runSuspendResultCatching { repository.deleteChapterCache(chapterId) }
 }

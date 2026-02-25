@@ -9,7 +9,5 @@ class GetChapterPagesUseCase @Inject constructor(
   private val repository: ChapterRepository,
 ) {
   suspend operator fun invoke(chapterId: String): Result<ChapterPages> =
-    runSuspendResultCatching {
-      repository.getChapterPages(chapterId)
-    }
+    runSuspendResultCatching { repository.getChapterPages(chapterId) }
 }

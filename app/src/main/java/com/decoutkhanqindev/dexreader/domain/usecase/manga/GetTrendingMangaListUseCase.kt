@@ -9,7 +9,5 @@ class GetTrendingMangaListUseCase @Inject constructor(
   private val repository: MangaRepository,
 ) {
   suspend operator fun invoke(): Result<List<Manga>> =
-    runSuspendResultCatching {
-      repository.getTrendingMangaList()
-    }
+    runSuspendResultCatching { repository.getTrendingMangaList() }
 }

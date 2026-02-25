@@ -9,7 +9,5 @@ class SetThemeTypeUseCase @Inject constructor(
   private val repository: SettingsRepository,
 ) {
   suspend operator fun invoke(value: ThemeType): Result<Unit> =
-    runSuspendResultCatching {
-      repository.setThemeType(value)
-    }
+    runSuspendResultCatching { repository.setThemeType(value) }
 }

@@ -9,6 +9,5 @@ import javax.inject.Inject
 class ObserveThemeTypeUseCase @Inject constructor(
   private val repository: SettingsRepository,
 ) {
-  operator fun invoke(): Flow<Result<ThemeType>> =
-    repository.observeThemeType().toFlowResult()
+  operator fun invoke(): Flow<Result<ThemeType>> = repository.observeThemeType().toFlowResult()
 }

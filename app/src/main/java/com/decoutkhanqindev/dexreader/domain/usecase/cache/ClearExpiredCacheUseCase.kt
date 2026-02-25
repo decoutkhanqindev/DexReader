@@ -8,7 +8,5 @@ class ClearExpiredCacheUseCase @Inject constructor(
   private val repository: CacheRepository,
 ) {
   suspend operator fun invoke(expiryTimestamp: Long): Result<Unit> =
-    runSuspendResultCatching {
-      repository.clearExpiredCache(expiryTimestamp)
-    }
+    runSuspendResultCatching { repository.clearExpiredCache(expiryTimestamp) }
 }
