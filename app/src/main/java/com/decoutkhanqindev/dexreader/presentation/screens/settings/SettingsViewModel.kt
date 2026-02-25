@@ -19,7 +19,7 @@ class SettingsViewModel @Inject constructor(
   private val observeThemeTypeUseCase: ObserveThemeTypeUseCase,
   private val setThemeTypeUseCase: SetThemeTypeUseCase,
 ) : ViewModel() {
-  private val _uiState = MutableStateFlow<SettingsUiState>(SettingsUiState())
+  private val _uiState = MutableStateFlow(SettingsUiState())
   val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
 
   init {
@@ -47,6 +47,7 @@ class SettingsViewModel @Inject constructor(
                 themeType = ThemeType.SYSTEM,
               )
             }
+
             Log.e(TAG, "observeIsDynamicTheme have error: ${throwable.stackTraceToString()}")
           }
       }
