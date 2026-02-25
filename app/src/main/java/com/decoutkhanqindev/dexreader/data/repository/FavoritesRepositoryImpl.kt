@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.data.repository
 
 import com.decoutkhanqindev.dexreader.data.mapper.toDomain
-import com.decoutkhanqindev.dexreader.data.mapper.toDto
+import com.decoutkhanqindev.dexreader.data.mapper.toResponse
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
 import com.decoutkhanqindev.dexreader.domain.model.FavoriteManga
 import com.decoutkhanqindev.dexreader.domain.repository.FavoritesRepository
@@ -27,8 +27,8 @@ class FavoritesRepositoryImpl @Inject constructor(
         limit = limit.toLong(),
         lastFavoriteMangaId = lastFavoriteMangaId
       )
-      .map { favoriteMangaDtoList ->
-        favoriteMangaDtoList.map { it.toDomain() }
+      .map { favoriteMangaResponseList ->
+        favoriteMangaResponseList.map { it.toDomain() }
       }
       .flowOn(Dispatchers.IO)
       .distinctUntilChanged()
@@ -37,7 +37,7 @@ class FavoritesRepositoryImpl @Inject constructor(
     userId: String,
     manga: FavoriteManga,
   ) = withContext(Dispatchers.IO) {
-    firebaseFirestoreSource.addToFavorites(userId, manga.toDto())
+    firebaseFirestoreSource.addToFavorites(userId, manga.toResponse())
   }
 
   override suspend fun removeFromFavorites(

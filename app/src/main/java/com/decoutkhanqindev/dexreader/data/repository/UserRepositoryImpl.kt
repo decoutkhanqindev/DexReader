@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.data.repository
 
 import com.decoutkhanqindev.dexreader.data.mapper.toDomain
-import com.decoutkhanqindev.dexreader.data.mapper.toUserProfileDto
+import com.decoutkhanqindev.dexreader.data.mapper.toUserProfileResponse
 import com.decoutkhanqindev.dexreader.data.network.firebase.auth.FirebaseAuthSource
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
 import com.decoutkhanqindev.dexreader.domain.exception.UserException
@@ -35,7 +35,7 @@ class UserRepositoryImpl @Inject constructor(
           ?.toDomain()
           ?.copy(name = name)
           ?: throw UserException.RegistrationFailed()
-      firebaseFirestoreSource.upsertUserProfile(userProfile = registeredUser.toUserProfileDto())
+      firebaseFirestoreSource.upsertUserProfile(userProfile = registeredUser.toUserProfileResponse())
     },
     onCatch = { e ->
       when (e) {
@@ -74,7 +74,7 @@ class UserRepositoryImpl @Inject constructor(
 
   override suspend fun updateUserProfile(user: User) =
     withContext(Dispatchers.IO) {
-      firebaseFirestoreSource.upsertUserProfile(userProfile = user.toUserProfileDto())
+      firebaseFirestoreSource.upsertUserProfile(userProfile = user.toUserProfileResponse())
     }
 
   override fun observeUserProfile(userId: String): Flow<User?> =

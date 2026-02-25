@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.data.mapper
 
-import com.decoutkhanqindev.dexreader.data.network.firebase.dto.UserProfileDto
+import com.decoutkhanqindev.dexreader.data.network.firebase.response.UserProfileResponse
 import com.decoutkhanqindev.dexreader.domain.model.User
 import com.google.firebase.auth.FirebaseUser
 
@@ -12,7 +12,7 @@ fun FirebaseUser.toDomain(): User =
     profilePictureUrl = photoUrl?.toString()
   )
 
-fun UserProfileDto.toDomain(): User =
+fun UserProfileResponse.toDomain(): User =
   User(
     id = id,
     name = name,
@@ -20,8 +20,8 @@ fun UserProfileDto.toDomain(): User =
     profilePictureUrl = profilePictureUrl
   )
 
-fun User.toUserProfileDto(): UserProfileDto =
-  UserProfileDto(
+fun User.toUserProfileResponse(): UserProfileResponse =
+  UserProfileResponse(
     id = id,
     name = name,
     email = email,

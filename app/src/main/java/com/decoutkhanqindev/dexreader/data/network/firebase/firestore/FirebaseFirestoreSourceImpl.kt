@@ -1,8 +1,8 @@
 package com.decoutkhanqindev.dexreader.data.network.firebase.firestore
 
-import com.decoutkhanqindev.dexreader.data.network.firebase.dto.FavoriteMangaDto
-import com.decoutkhanqindev.dexreader.data.network.firebase.dto.ReadingHistoryDto
-import com.decoutkhanqindev.dexreader.data.network.firebase.dto.UserProfileDto
+import com.decoutkhanqindev.dexreader.data.network.firebase.response.FavoriteMangaResponse
+import com.decoutkhanqindev.dexreader.data.network.firebase.response.ReadingHistoryResponse
+import com.decoutkhanqindev.dexreader.data.network.firebase.response.UserProfileResponse
 import com.decoutkhanqindev.dexreader.di.CreatedAtFieldQualifier
 import com.decoutkhanqindev.dexreader.di.FavoritesCollectionQualifier
 import com.decoutkhanqindev.dexreader.di.HistoryCollectionQualifier
@@ -31,14 +31,14 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
 ) : FirebaseFirestoreSource {
   private val usersCollectionRef = firebaseFirestore.collection(usersCollection)
 
-  override suspend fun upsertUserProfile(userProfile: UserProfileDto) {
+  override suspend fun upsertUserProfile(userProfile: UserProfileResponse) {
     usersCollectionRef
       .document(userProfile.id)
       .set(userProfile)
       .await()
   }
 
-  override fun observeUserProfile(userId: String): Flow<UserProfileDto?> = callbackFlow {
+  override fun observeUserProfile(userId: String): Flow<UserProfileResponse?> = callbackFlow {
     val usersDocumentRef = usersCollectionRef.document(userId)
 
     val listenerRegistration = usersDocumentRef.addSnapshotListener { snapshot, error ->
@@ -48,8 +48,8 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
       }
 
       if (snapshot != null && snapshot.exists()) {
-        val userProfileDto = snapshot.toObject(UserProfileDto::class.java)
-        trySend(userProfileDto)
+        val userProfileResponse = snapshot.toObject(UserProfileResponse::class.java)
+        trySend(userProfileResponse)
       } else {
         trySend(null)
       }
@@ -64,7 +64,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
     userId: String,
     limit: Long,
     lastFavoriteMangaId: String?,
-  ): Flow<List<FavoriteMangaDto>> = callbackFlow {
+  ): Flow<List<FavoriteMangaResponse>> = callbackFlow {
     val favoritesCollectionRef = usersCollectionRef
       .document(userId)
       .collection(favoritesCollection)
@@ -90,11 +90,11 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
         return@addSnapshotListener
       }
 
-      val favoriteMangaDtoList = snapshot?.documents?.mapNotNull { document ->
-        document.toObject(FavoriteMangaDto::class.java)?.copy(id = document.id)
+      val favoriteMangaResponseList = snapshot?.documents?.mapNotNull { document ->
+        document.toObject(FavoriteMangaResponse::class.java)?.copy(id = document.id)
       } ?: emptyList()
 
-      trySend(favoriteMangaDtoList)
+      trySend(favoriteMangaResponseList)
     }
 
     awaitClose {
@@ -104,7 +104,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
 
   override suspend fun addToFavorites(
     userId: String,
-    manga: FavoriteMangaDto,
+    manga: FavoriteMangaResponse,
   ) {
     usersCollectionRef
       .document(userId)
@@ -156,7 +156,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
     limit: Long,
     mangaId: String?,
     lastReadingHistoryId: String?,
-  ): Flow<List<ReadingHistoryDto>> = callbackFlow {
+  ): Flow<List<ReadingHistoryResponse>> = callbackFlow {
     val historyCollectionRef = usersCollectionRef
       .document(userId)
       .collection(historyCollection)
@@ -188,11 +188,11 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
         return@addSnapshotListener
       }
 
-      val readingHistoryDtoList = snapshot?.documents?.mapNotNull { document ->
-        document.toObject(ReadingHistoryDto::class.java)?.copy(id = document.id)
+      val readingHistoryResponseList = snapshot?.documents?.mapNotNull { document ->
+        document.toObject(ReadingHistoryResponse::class.java)?.copy(id = document.id)
       } ?: emptyList()
 
-      trySend(readingHistoryDtoList)
+      trySend(readingHistoryResponseList)
     }
 
     awaitClose {
@@ -202,7 +202,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
 
   override suspend fun upsertHistory(
     userId: String,
-    readingHistory: ReadingHistoryDto,
+    readingHistory: ReadingHistoryResponse,
   ) {
     usersCollectionRef
       .document(userId)
@@ -224,4 +224,3 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
       .await()
   }
 }
-

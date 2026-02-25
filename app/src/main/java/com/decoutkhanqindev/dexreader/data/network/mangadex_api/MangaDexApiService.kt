@@ -1,11 +1,11 @@
 package com.decoutkhanqindev.dexreader.data.network.mangadex_api
 
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.dto.AtHomeServerDto
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.ChapterDetailsResponse
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.ChapterListResponse
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.MangaDetailsResponse
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.MangaListResponse
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.TagListResponse
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.at_home.AtHomeServerResponse
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.chapter.ChapterDetailsResponse
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.chapter.ChapterListResponse
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.manga.MangaDetailsResponse
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.manga.MangaListResponse
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.tag.TagListResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -86,7 +86,7 @@ interface MangaDexApiService {
   ): ChapterDetailsResponse
 
   @GET("at-home/server/{id}")
-  suspend fun getChapterPages(@Path("id") chapterId: String): AtHomeServerDto
+  suspend fun getChapterPages(@Path("id") chapterId: String): AtHomeServerResponse
 
   @GET("manga/tag")
   suspend fun getTagList(): TagListResponse

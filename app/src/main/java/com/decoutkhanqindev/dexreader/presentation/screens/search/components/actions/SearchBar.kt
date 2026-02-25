@@ -17,6 +17,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import com.decoutkhanqindev.dexreader.R
@@ -73,10 +74,12 @@ fun SearchBar(
         }
       }
     },
-    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+    colors = TopAppBarDefaults.topAppBarColors(
       containerColor = MaterialTheme.colorScheme.surfaceContainer,
+      scrolledContainerColor = Color.Unspecified,
       navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-      actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+      titleContentColor = Color.Unspecified,
+      actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
     ),
     modifier = modifier
   )

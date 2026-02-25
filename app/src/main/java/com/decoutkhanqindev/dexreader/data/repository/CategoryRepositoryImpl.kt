@@ -16,7 +16,7 @@ class CategoryRepositoryImpl @Inject constructor(
 ) : CategoryRepository {
   override suspend fun getCategoryList(): List<Category> =
     withContext(Dispatchers.IO) {
-      mangaDexApiService.getTagList().data.map { it.toDomain() }
+      mangaDexApiService.getTagList().data?.map { it.toDomain() } ?: emptyList()
     }
 
   override suspend fun getMangaListByCategory(
@@ -40,6 +40,6 @@ class CategoryRepositoryImpl @Inject constructor(
       rating = rating,
       status = status,
       contentRating = contentRating
-    ).data.map { it.toDomain(uploadUrl) }
+    ).data?.map { it.toDomain(uploadUrl) } ?: emptyList()
   }
 }

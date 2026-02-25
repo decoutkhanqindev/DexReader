@@ -1,21 +1,21 @@
 package com.decoutkhanqindev.dexreader.data.network.firebase.firestore
 
-import com.decoutkhanqindev.dexreader.data.network.firebase.dto.FavoriteMangaDto
-import com.decoutkhanqindev.dexreader.data.network.firebase.dto.ReadingHistoryDto
-import com.decoutkhanqindev.dexreader.data.network.firebase.dto.UserProfileDto
+import com.decoutkhanqindev.dexreader.data.network.firebase.response.FavoriteMangaResponse
+import com.decoutkhanqindev.dexreader.data.network.firebase.response.ReadingHistoryResponse
+import com.decoutkhanqindev.dexreader.data.network.firebase.response.UserProfileResponse
 import kotlinx.coroutines.flow.Flow
 
 interface FirebaseFirestoreSource {
-  suspend fun upsertUserProfile(userProfile: UserProfileDto)
-  fun observeUserProfile(userId: String): Flow<UserProfileDto?>
+  suspend fun upsertUserProfile(userProfile: UserProfileResponse)
+  fun observeUserProfile(userId: String): Flow<UserProfileResponse?>
 
   fun observeFavorites(
     userId: String,
     limit: Long,
     lastFavoriteMangaId: String? = null,
-  ): Flow<List<FavoriteMangaDto>>
+  ): Flow<List<FavoriteMangaResponse>>
 
-  suspend fun addToFavorites(userId: String, manga: FavoriteMangaDto)
+  suspend fun addToFavorites(userId: String, manga: FavoriteMangaResponse)
   suspend fun removeFromFavorites(userId: String, mangaId: String)
   fun observeIsFavorite(userId: String, mangaId: String): Flow<Boolean>
 
@@ -24,8 +24,8 @@ interface FirebaseFirestoreSource {
     limit: Long,
     mangaId: String? = null,
     lastReadingHistoryId: String? = null,
-  ): Flow<List<ReadingHistoryDto>>
+  ): Flow<List<ReadingHistoryResponse>>
 
-  suspend fun upsertHistory(userId: String, readingHistory: ReadingHistoryDto)
+  suspend fun upsertHistory(userId: String, readingHistory: ReadingHistoryResponse)
   suspend fun removeFromHistory(userId: String, readingHistoryId: String)
 }

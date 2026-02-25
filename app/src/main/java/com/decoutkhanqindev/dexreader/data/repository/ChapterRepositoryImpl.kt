@@ -27,12 +27,12 @@ class ChapterRepositoryImpl @Inject constructor(
       translatedLanguages = translatedLanguage,
       volumeOrder = volumeOrder,
       chapterOrder = chapterOrder
-    ).data.map { it.toDomain() }
+    ).data?.map { it.toDomain() } ?: emptyList()
   }
 
   override suspend fun getChapterDetails(chapterId: String): Chapter =
     withContext(Dispatchers.IO) {
-      mangaDexApiService.getChapterDetails(chapterId).data.toDomain()
+      mangaDexApiService.getChapterDetails(chapterId).data?.toDomain() ?: throw Exception("Chapter details not found")
     }
 
 

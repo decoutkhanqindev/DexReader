@@ -247,9 +247,9 @@ class MangaDetailsViewModel @Inject constructor(
           addedAt = null
         )
         addToFavoritesUseCase(userId = userId, manga = newFavoriteManga)
-          .onSuccess { Log.d(TAG, "addToFavorites success") }
+          .onSuccess { Log.d(TAG, "adResponseFavorites success") }
           .onFailure {
-            Log.d(TAG, "addToFavorites have error: ${it.stackTraceToString()}")
+            Log.d(TAG, "adResponseFavorites have error: ${it.stackTraceToString()}")
           }
       }
     }

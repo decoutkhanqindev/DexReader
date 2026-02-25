@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.decoutkhanqindev.dexreader.R
@@ -52,11 +53,12 @@ fun DetailsTopBar(
         }
       }
     },
-    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+    colors = TopAppBarDefaults.topAppBarColors(
       containerColor = MaterialTheme.colorScheme.surfaceContainer,
-      titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+      scrolledContainerColor = Color.Unspecified,
       navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-      actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+      titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+      actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
     ),
     modifier = modifier
   )

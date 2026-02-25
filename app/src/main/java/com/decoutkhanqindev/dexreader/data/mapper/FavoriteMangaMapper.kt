@@ -1,11 +1,11 @@
 package com.decoutkhanqindev.dexreader.data.mapper
 
-import com.decoutkhanqindev.dexreader.data.network.firebase.dto.FavoriteMangaDto
+import com.decoutkhanqindev.dexreader.data.network.firebase.response.FavoriteMangaResponse
 import com.decoutkhanqindev.dexreader.domain.model.FavoriteManga
 import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
 
-fun FavoriteMangaDto.toDomain() =
+fun FavoriteMangaResponse.toDomain() =
   FavoriteManga(
     id = id,
     title = title,
@@ -15,8 +15,8 @@ fun FavoriteMangaDto.toDomain() =
     addedAt = createdAt?.time?.toTimeAgo() ?: "Unknown time"
   )
 
-fun FavoriteManga.toDto() =
-  FavoriteMangaDto(
+fun FavoriteManga.toResponse() =
+  FavoriteMangaResponse(
     id = id,
     title = title,
     coverUrl = coverUrl,

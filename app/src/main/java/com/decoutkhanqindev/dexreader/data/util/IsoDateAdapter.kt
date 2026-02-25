@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.data.utils
+package com.decoutkhanqindev.dexreader.data.util
 
 import android.os.Build
 import androidx.annotation.RequiresApi

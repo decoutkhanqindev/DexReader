@@ -1,10 +1,10 @@
-package com.decoutkhanqindev.dexreader.data.network.firebase.dto
+package com.decoutkhanqindev.dexreader.data.network.firebase.response
 
 import com.google.firebase.firestore.PropertyName
 import com.google.firebase.firestore.ServerTimestamp
 import java.util.Date
 
-data class ReadingHistoryDto(
+data class ReadingHistoryResponse(
   @get:PropertyName("reading_history_id")
   @set:PropertyName("reading_history_id")
   var id: String = "",

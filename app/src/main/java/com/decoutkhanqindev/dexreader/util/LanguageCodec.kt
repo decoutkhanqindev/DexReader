@@ -10,7 +10,7 @@ object LanguageCodec {
    * Converts a language code to its full language name
    * Example: "en" -> "English", "ja" -> "Japanese"
    */
-  fun String.toFullLanguageName(): String {
+  fun String?.toFullLanguageName(): String {
     val languageMap = mapOf(
       "en" to "English",
       "af" to "Afrikaans",
@@ -75,14 +75,14 @@ object LanguageCodec {
       "es" to "Spanish (LATAM)",
       "tl" to "Thailand"
     )
-    return languageMap[this] ?: this
+    return languageMap[this] ?: this ?: "Unknown"
   }
 
   /**
    * Converts a full language name to its language code
    * Example: "English" -> "en", "Japanese" -> "ja"
    */
-  fun String.toLanguageCode(): String {
+  fun String?.toLanguageCode(): String {
     val languageMap = mapOf(
       "English" to "en",
       "Afrikaans" to "af",
@@ -147,6 +147,6 @@ object LanguageCodec {
       "Spanish (LATAM)" to "es",
       "Thailand" to "tl"
     )
-    return languageMap[this] ?: this
+    return languageMap[this] ?: this ?: "en"
   }
 }

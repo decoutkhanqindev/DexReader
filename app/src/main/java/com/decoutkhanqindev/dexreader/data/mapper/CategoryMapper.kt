@@ -1,11 +1,11 @@
 package com.decoutkhanqindev.dexreader.data.mapper
 
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.dto.TagDto
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.tag.TagResponse
 import com.decoutkhanqindev.dexreader.domain.model.Category
 
-fun TagDto.toDomain(): Category =
+fun TagResponse.toDomain(): Category =
   Category(
     id = id,
-    title = attributes.name?.get("en") ?: "Unknown",
-    group = attributes.group ?: "Unknown"
+    title = attributes?.name?.get("en") ?: attributes?.name?.values?.firstOrNull() ?: "Unknown",
+    group = attributes?.group ?: "Unknown"
   )

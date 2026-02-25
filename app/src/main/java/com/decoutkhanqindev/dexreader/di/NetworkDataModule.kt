@@ -7,7 +7,7 @@ import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFi
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSourceImpl
 import com.decoutkhanqindev.dexreader.data.network.mangadex_api.MangaDexApiService
 import com.decoutkhanqindev.dexreader.data.network.mangadex_api.interceptor.NetworkInterceptor
-import com.decoutkhanqindev.dexreader.data.utils.IsoDateAdapter
+import com.decoutkhanqindev.dexreader.data.util.IsoDateAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.moshi.Moshi

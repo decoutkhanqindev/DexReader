@@ -15,27 +15,27 @@ class MangaRepositoryImpl @Inject constructor(
 ) : MangaRepository {
   override suspend fun getLatestUpdateMangaList(): List<Manga> =
     withContext(Dispatchers.IO) {
-      mangaDexApiService.getLatestUpdateMangaList().data.map { it.toDomain(uploadUrl) }
+      mangaDexApiService.getLatestUpdateMangaList().data?.map { it.toDomain(uploadUrl) } ?: emptyList()
     }
 
   override suspend fun getTrendingMangaList(): List<Manga> =
     withContext(Dispatchers.IO) {
-      mangaDexApiService.getTrendingMangaList().data.map { it.toDomain(uploadUrl) }
+      mangaDexApiService.getTrendingMangaList().data?.map { it.toDomain(uploadUrl) } ?: emptyList()
     }
 
   override suspend fun getNewReleaseMangaList(): List<Manga> =
     withContext(Dispatchers.IO) {
-      mangaDexApiService.getNewReleaseMangaList().data.map { it.toDomain(uploadUrl) }
+      mangaDexApiService.getNewReleaseMangaList().data?.map { it.toDomain(uploadUrl) } ?: emptyList()
     }
 
   override suspend fun getTopRatedMangaList(): List<Manga> =
     withContext(Dispatchers.IO) {
-      mangaDexApiService.getTopRatedMangaList().data.map { it.toDomain(uploadUrl) }
+      mangaDexApiService.getTopRatedMangaList().data?.map { it.toDomain(uploadUrl) } ?: emptyList()
     }
 
   override suspend fun getMangaDetails(mangaId: String): Manga =
     withContext(Dispatchers.IO) {
-      mangaDexApiService.getMangaDetails(mangaId).data.toDomain(uploadUrl)
+      mangaDexApiService.getMangaDetails(mangaId).data?.toDomain(uploadUrl) ?: throw Exception("Manga details not found")
     }
 
   override suspend fun searchManga(
@@ -45,6 +45,6 @@ class MangaRepositoryImpl @Inject constructor(
     mangaDexApiService.searchManga(
       query = query,
       offset = offset
-    ).data.map { it.toDomain(uploadUrl) }
+    ).data?.map { it.toDomain(uploadUrl) } ?: emptyList()
   }
 }
