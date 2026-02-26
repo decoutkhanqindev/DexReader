@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.at_home
+package com.decoutkhanqindev.dexreader.data.network.mangadex_api.dto.response.at_home
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.data.mapper
 
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.tag.TagResponse
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.dto.response.tag.TagResponse
 import com.decoutkhanqindev.dexreader.domain.model.Category
 
 fun TagResponse.toCategory(): Category =

@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.data.mapper
 
 import com.decoutkhanqindev.dexreader.data.local.database.entity.ChapterCacheEntity
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.at_home.AtHomeServerResponse
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.dto.response.at_home.AtHomeServerResponse
 import com.decoutkhanqindev.dexreader.domain.model.ChapterPages
 
 fun AtHomeServerResponse.toChapterPages(chapterId: String): ChapterPages {

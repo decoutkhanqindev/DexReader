@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.data.mapper
 
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.manga.MangaResponse
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.dto.response.manga.MangaResponse
 import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.util.LanguageCodec.toFullLanguageName
 import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo

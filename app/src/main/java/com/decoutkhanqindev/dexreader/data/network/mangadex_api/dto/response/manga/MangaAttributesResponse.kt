@@ -1,6 +1,6 @@
-package com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.manga
+package com.decoutkhanqindev.dexreader.data.network.mangadex_api.dto.response.manga
 
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.tag.TagResponse
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.dto.response.tag.TagResponse
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
