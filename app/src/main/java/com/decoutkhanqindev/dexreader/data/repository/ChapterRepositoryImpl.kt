@@ -33,7 +33,8 @@ class ChapterRepositoryImpl @Inject constructor(
 
   override suspend fun getChapterDetails(chapterId: String): Chapter =
     withContext(Dispatchers.IO) {
-      mangaDexApiService.getChapterDetails(chapterId).data?.toChapter() ?: throw Exception("Chapter details not found")
+      mangaDexApiService.getChapterDetails(chapterId).data?.toChapter()
+        ?: throw Exception("Chapter details not found")
     }
 
 

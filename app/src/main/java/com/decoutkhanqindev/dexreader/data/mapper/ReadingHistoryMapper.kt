@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.data.mapper
 
-import com.decoutkhanqindev.dexreader.data.network.firebase.response.ReadingHistoryResponse
 import com.decoutkhanqindev.dexreader.data.network.firebase.request.ReadingHistoryRequest
+import com.decoutkhanqindev.dexreader.data.network.firebase.response.ReadingHistoryResponse
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
 

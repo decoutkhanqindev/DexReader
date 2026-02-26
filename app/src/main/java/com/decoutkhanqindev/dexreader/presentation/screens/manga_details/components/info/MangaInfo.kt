@@ -56,7 +56,8 @@ fun MangaInfo(
       modifier = Modifier.padding(bottom = 4.dp)
     )
     Text(
-      text = stringResource(R.string.status,
+      text = stringResource(
+        R.string.status,
         manga.status.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.US) else it.toString() }),
       fontWeight = FontWeight.Bold,
       fontStyle = FontStyle.Italic,
