@@ -33,7 +33,7 @@ fun MangaCategoryItem(
     }
   ) {
     Text(
-      text = category.title.capitalize(Locale.US),
+      text = category.title.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.US) else it.toString() },
       style = MaterialTheme.typography.bodyLarge,
       fontWeight = FontWeight.Bold,
       textAlign = TextAlign.Center,

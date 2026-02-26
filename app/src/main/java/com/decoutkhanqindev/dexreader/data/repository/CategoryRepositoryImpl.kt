@@ -1,6 +1,7 @@
 package com.decoutkhanqindev.dexreader.data.repository
 
-import com.decoutkhanqindev.dexreader.data.mapper.toDomain
+import com.decoutkhanqindev.dexreader.data.mapper.toCategory
+import com.decoutkhanqindev.dexreader.data.mapper.toManga
 import com.decoutkhanqindev.dexreader.data.network.mangadex_api.MangaDexApiService
 import com.decoutkhanqindev.dexreader.di.UploadUrlQualifier
 import com.decoutkhanqindev.dexreader.domain.model.Category
@@ -16,7 +17,7 @@ class CategoryRepositoryImpl @Inject constructor(
 ) : CategoryRepository {
   override suspend fun getCategoryList(): List<Category> =
     withContext(Dispatchers.IO) {
-      mangaDexApiService.getTagList().data?.map { it.toDomain() } ?: emptyList()
+      mangaDexApiService.getTagList().data?.map { it.toCategory() } ?: emptyList()
     }
 
   override suspend fun getMangaListByCategory(
@@ -40,6 +41,6 @@ class CategoryRepositoryImpl @Inject constructor(
       rating = rating,
       status = status,
       contentRating = contentRating
-    ).data?.map { it.toDomain(uploadUrl) } ?: emptyList()
+    ).data?.map { it.toManga(uploadUrl) } ?: emptyList()
   }
 }

@@ -5,7 +5,7 @@ import com.decoutkhanqindev.dexreader.domain.model.Chapter
 import com.decoutkhanqindev.dexreader.util.LanguageCodec.toFullLanguageName
 import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
 
-fun ChapterResponse.toDomain(): Chapter {
+fun ChapterResponse.toChapter(): Chapter {
   val mangaId = relationships?.find { it?.type == "manga" }?.id ?: "0"
   val title = attributes?.title ?: "Untitled"
   val chapterNumber = attributes?.chapter ?: "0"

@@ -4,7 +4,7 @@ import com.decoutkhanqindev.dexreader.data.local.database.entity.ChapterCacheEnt
 import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.at_home.AtHomeServerResponse
 import com.decoutkhanqindev.dexreader.domain.model.ChapterPages
 
-fun AtHomeServerResponse.toDomain(chapterId: String): ChapterPages {
+fun AtHomeServerResponse.toChapterPages(chapterId: String): ChapterPages {
   val hash = chapter?.hash
   val data = chapter?.data
 
@@ -22,7 +22,7 @@ fun AtHomeServerResponse.toDomain(chapterId: String): ChapterPages {
   )
 }
 
-fun ChapterCacheEntity.toDomain(): ChapterPages {
+fun ChapterCacheEntity.toChapterPages(): ChapterPages {
   // {baseUrl}/data/{chapterDataHash}/{pageHash}
   val pageUrls = pageHashes.map { hash ->
     "$baseUrl/data/$chapterDataHash/$hash"
@@ -37,7 +37,7 @@ fun ChapterCacheEntity.toDomain(): ChapterPages {
   )
 }
 
-fun ChapterPages.toEntity(mangaId: String): ChapterCacheEntity {
+fun ChapterPages.toChapterCacheEntity(mangaId: String): ChapterCacheEntity {
   val pageHashes = pageUrls.map { url ->
     url.substringAfterLast("/")
   }

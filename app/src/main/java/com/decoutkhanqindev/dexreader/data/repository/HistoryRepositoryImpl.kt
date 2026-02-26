@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.data.repository
 
-import com.decoutkhanqindev.dexreader.data.mapper.toDomain
-import com.decoutkhanqindev.dexreader.data.mapper.toResponse
+import com.decoutkhanqindev.dexreader.data.mapper.toReadingHistory
+import com.decoutkhanqindev.dexreader.data.mapper.toReadingHistoryRequest
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.repository.HistoryRepository
@@ -30,7 +30,7 @@ class HistoryRepositoryImpl @Inject constructor(
         lastReadingHistoryId = lastReadingHistoryId
       )
       .map { readingHistoryResponseList ->
-        readingHistoryResponseList.map { it.toDomain() }
+        readingHistoryResponseList.map { it.toReadingHistory() }
       }
       .flowOn(Dispatchers.IO)
       .distinctUntilChanged()
@@ -41,7 +41,7 @@ class HistoryRepositoryImpl @Inject constructor(
   ) = withContext(Dispatchers.IO) {
     firebaseFirestoreSource.upsertHistory(
       userId = userId,
-      readingHistory = readingHistory.toResponse()
+      readingHistory = readingHistory.toReadingHistoryRequest()
     )
   }
 

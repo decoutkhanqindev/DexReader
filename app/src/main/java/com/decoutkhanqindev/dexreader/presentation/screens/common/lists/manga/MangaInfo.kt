@@ -47,7 +47,7 @@ fun MangaInfo(
       modifier = Modifier.padding(bottom = 4.dp)
     )
     Text(
-      text = manga.status.capitalize(Locale.US),
+      text = manga.status.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.US) else it.toString() },
       fontWeight = FontWeight.Bold,
       fontStyle = FontStyle.Italic,
       style = MaterialTheme.typography.bodyLarge,

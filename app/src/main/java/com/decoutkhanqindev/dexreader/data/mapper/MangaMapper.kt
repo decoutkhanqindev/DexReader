@@ -5,7 +5,7 @@ import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.util.LanguageCodec.toFullLanguageName
 import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
 
-fun MangaResponse.toDomain(uploadUrl: String): Manga {
+fun MangaResponse.toManga(uploadUrl: String): Manga {
   val title = attributes?.title["en"]
     ?: attributes?.title?.values?.firstOrNull()
     ?: "Untitled"
@@ -19,7 +19,7 @@ fun MangaResponse.toDomain(uploadUrl: String): Manga {
       ?: "No description ..."
   val authorId = relationships?.find { it.type == "author" }?.attributes?.name ?: "Unknown"
   val artistId = relationships?.find { it.type == "artist" }?.attributes?.name ?: "Unknown"
-  val tags = attributes?.tags?.map { it.toDomain() } ?: emptyList()
+  val tags = attributes?.tags?.map { it.toCategory() } ?: emptyList()
   val status = attributes?.status ?: "Unknown"
   val year = attributes?.year ?: "Unknown"
   val availableTranslatedLanguages =

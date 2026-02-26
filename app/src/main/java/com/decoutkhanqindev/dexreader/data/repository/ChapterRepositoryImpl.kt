@@ -1,6 +1,7 @@
 package com.decoutkhanqindev.dexreader.data.repository
 
-import com.decoutkhanqindev.dexreader.data.mapper.toDomain
+import com.decoutkhanqindev.dexreader.data.mapper.toChapter
+import com.decoutkhanqindev.dexreader.data.mapper.toChapterPages
 import com.decoutkhanqindev.dexreader.data.network.mangadex_api.MangaDexApiService
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
 import com.decoutkhanqindev.dexreader.domain.model.ChapterPages
@@ -27,17 +28,17 @@ class ChapterRepositoryImpl @Inject constructor(
       translatedLanguages = translatedLanguage,
       volumeOrder = volumeOrder,
       chapterOrder = chapterOrder
-    ).data?.map { it.toDomain() } ?: emptyList()
+    ).data?.map { it.toChapter() } ?: emptyList()
   }
 
   override suspend fun getChapterDetails(chapterId: String): Chapter =
     withContext(Dispatchers.IO) {
-      mangaDexApiService.getChapterDetails(chapterId).data?.toDomain() ?: throw Exception("Chapter details not found")
+      mangaDexApiService.getChapterDetails(chapterId).data?.toChapter() ?: throw Exception("Chapter details not found")
     }
 
 
   override suspend fun getChapterPages(chapterId: String): ChapterPages =
     withContext(Dispatchers.IO) {
-      mangaDexApiService.getChapterPages(chapterId).toDomain(chapterId)
+      mangaDexApiService.getChapterPages(chapterId).toChapterPages(chapterId)
     }
 }

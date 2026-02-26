@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.data.repository
 
-import com.decoutkhanqindev.dexreader.data.mapper.toDomain
-import com.decoutkhanqindev.dexreader.data.mapper.toUserProfileResponse
+import com.decoutkhanqindev.dexreader.data.mapper.toUser
+import com.decoutkhanqindev.dexreader.data.mapper.toUserProfileRequest
 import com.decoutkhanqindev.dexreader.data.network.firebase.auth.FirebaseAuthSource
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
 import com.decoutkhanqindev.dexreader.domain.exception.UserException
@@ -32,10 +32,10 @@ class UserRepositoryImpl @Inject constructor(
     onExecute = {
       val registeredUser =
         firebaseAuthSource.register(email, password)
-          ?.toDomain()
+          ?.toUser()
           ?.copy(name = name)
           ?: throw UserException.RegistrationFailed()
-      firebaseFirestoreSource.upsertUserProfile(userProfile = registeredUser.toUserProfileResponse())
+      firebaseFirestoreSource.upsertUserProfile(userProfile = registeredUser.toUserProfileRequest())
     },
     onCatch = { e ->
       when (e) {
@@ -68,19 +68,19 @@ class UserRepositoryImpl @Inject constructor(
   override fun observeCurrentUser(): Flow<User?> =
     firebaseAuthSource
       .observeCurrentUser()
-      .map { it?.toDomain() }
+      .map { it?.toUser() }
       .flowOn(Dispatchers.IO)
       .distinctUntilChanged()
 
   override suspend fun updateUserProfile(user: User) =
     withContext(Dispatchers.IO) {
-      firebaseFirestoreSource.upsertUserProfile(userProfile = user.toUserProfileResponse())
+      firebaseFirestoreSource.upsertUserProfile(userProfile = user.toUserProfileRequest())
     }
 
   override fun observeUserProfile(userId: String): Flow<User?> =
     firebaseFirestoreSource
       .observeUserProfile(userId)
-      .map { it?.toDomain() }
+      .map { it?.toUser() }
       .flowOn(Dispatchers.IO)
       .distinctUntilChanged()
 }

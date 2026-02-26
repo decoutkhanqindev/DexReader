@@ -22,7 +22,7 @@ data class UserProfileResponse(
   var profilePictureUrl: String? = null,
 
   @ServerTimestamp
-  val createdAt: Date? = null,
+  var createdAt: Date? = null,
   @ServerTimestamp
-  val updatedAt: Date? = null,
+  var updatedAt: Date? = null,
 )

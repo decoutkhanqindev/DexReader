@@ -3,6 +3,9 @@ package com.decoutkhanqindev.dexreader.data.network.firebase.firestore
 import com.decoutkhanqindev.dexreader.data.network.firebase.response.FavoriteMangaResponse
 import com.decoutkhanqindev.dexreader.data.network.firebase.response.ReadingHistoryResponse
 import com.decoutkhanqindev.dexreader.data.network.firebase.response.UserProfileResponse
+import com.decoutkhanqindev.dexreader.data.network.firebase.request.FavoriteMangaRequest
+import com.decoutkhanqindev.dexreader.data.network.firebase.request.ReadingHistoryRequest
+import com.decoutkhanqindev.dexreader.data.network.firebase.request.UserProfileRequest
 import com.decoutkhanqindev.dexreader.di.CreatedAtFieldQualifier
 import com.decoutkhanqindev.dexreader.di.FavoritesCollectionQualifier
 import com.decoutkhanqindev.dexreader.di.HistoryCollectionQualifier
@@ -31,7 +34,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
 ) : FirebaseFirestoreSource {
   private val usersCollectionRef = firebaseFirestore.collection(usersCollection)
 
-  override suspend fun upsertUserProfile(userProfile: UserProfileResponse) {
+  override suspend fun upsertUserProfile(userProfile: UserProfileRequest) {
     usersCollectionRef
       .document(userProfile.id)
       .set(userProfile)
@@ -104,7 +107,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
 
   override suspend fun addToFavorites(
     userId: String,
-    manga: FavoriteMangaResponse,
+    manga: FavoriteMangaRequest,
   ) {
     usersCollectionRef
       .document(userId)
@@ -202,7 +205,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
 
   override suspend fun upsertHistory(
     userId: String,
-    readingHistory: ReadingHistoryResponse,
+    readingHistory: ReadingHistoryRequest,
   ) {
     usersCollectionRef
       .document(userId)

@@ -1,10 +1,11 @@
 package com.decoutkhanqindev.dexreader.data.mapper
 
 import com.decoutkhanqindev.dexreader.data.network.firebase.response.ReadingHistoryResponse
+import com.decoutkhanqindev.dexreader.data.network.firebase.request.ReadingHistoryRequest
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
 
-fun ReadingHistoryResponse.toDomain() =
+fun ReadingHistoryResponse.toReadingHistory() =
   ReadingHistory(
     id = id,
     mangaId = mangaId,
@@ -19,8 +20,8 @@ fun ReadingHistoryResponse.toDomain() =
     lastReadAt = createdAt?.time.toTimeAgo()
   )
 
-fun ReadingHistory.toResponse() =
-  ReadingHistoryResponse(
+fun ReadingHistory.toReadingHistoryRequest() =
+  ReadingHistoryRequest(
     id = id,
     mangaId = mangaId,
     mangaTitle = mangaTitle,
