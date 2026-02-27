@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.decoutkhanqindev.dexreader.data.local.database.dao.ChapterCacheDao
 import com.decoutkhanqindev.dexreader.data.local.database.entity.ChapterCacheEntity
-import com.decoutkhanqindev.dexreader.data.util.RoomDBTypeConverter
+import com.decoutkhanqindev.dexreader.data.parser.RoomDBTypeConverter
 
 @Database(
   entities = [ChapterCacheEntity::class],

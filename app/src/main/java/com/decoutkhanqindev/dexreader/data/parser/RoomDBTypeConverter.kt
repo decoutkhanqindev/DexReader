@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.data.util
+package com.decoutkhanqindev.dexreader.data.parser
 
 import androidx.room.TypeConverter
 import kotlinx.serialization.json.Json

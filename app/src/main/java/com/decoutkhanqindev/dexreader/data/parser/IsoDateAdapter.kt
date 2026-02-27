@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.data.util
+package com.decoutkhanqindev.dexreader.data.parser
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -19,7 +19,7 @@ object IsoDateAdapter {
         .toInstant()
         .toEpochMilli()
     } catch (e: Exception) {
-      null // Handle parsing errors
+      null
     }
   }
 
