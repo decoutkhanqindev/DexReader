@@ -1,9 +1,13 @@
 package com.decoutkhanqindev.dexreader.data.network.mangadex_api
 
 import com.decoutkhanqindev.dexreader.data.network.mangadex_api.constant.MangaDexApiEndpoints
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.constant.MangaDexApiParams
 import com.decoutkhanqindev.dexreader.data.network.mangadex_api.constant.MangaDexApiPaths
 import com.decoutkhanqindev.dexreader.data.network.mangadex_api.constant.MangaDexApiQueries
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.dto.request.MangaContentRatingParam
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.dto.request.MangaIncludesParam
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.dto.request.MangaLanguageCodeParam
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.dto.request.MangaSortOrderParam
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.dto.request.MangaStatusParam
 import com.decoutkhanqindev.dexreader.data.network.mangadex_api.dto.response.at_home.AtHomeServerResponse
 import com.decoutkhanqindev.dexreader.data.network.mangadex_api.dto.response.chapter.ChapterDetailsResponse
 import com.decoutkhanqindev.dexreader.data.network.mangadex_api.dto.response.chapter.ChapterListResponse
@@ -19,14 +23,15 @@ interface MangaDexApiService {
   suspend fun getLatestUpdateMangaList(
     @Query(MangaDexApiQueries.LIMIT) limit: Int = 20,
     @Query(MangaDexApiQueries.OFFSET) offset: Int = 0,
-    @Query(MangaDexApiQueries.ORDER_UPDATED_AT) lastUpdated: String = MangaDexApiParams.DESC,
-    @Query(MangaDexApiQueries.STATUS) status: String = MangaDexApiParams.ONGOING,
+    @Query(MangaDexApiQueries.ORDER_UPDATED_AT)
+    lastUpdated: String = MangaSortOrderParam.DESC.value,
+    @Query(MangaDexApiQueries.STATUS) status: String = MangaStatusParam.ON_GOING.value,
     @Query(MangaDexApiQueries.INCLUDES)
     includes: List<String> =
       listOf(
-        MangaDexApiParams.COVER_ART,
-        MangaDexApiParams.AUTHOR,
-        MangaDexApiParams.ARTIST
+        MangaIncludesParam.COVER_ART.value,
+        MangaIncludesParam.AUTHOR.value,
+        MangaIncludesParam.ARTIST.value
       ),
   ): MangaListResponse
 
@@ -35,13 +40,13 @@ interface MangaDexApiService {
     @Query(MangaDexApiQueries.LIMIT) limit: Int = 20,
     @Query(MangaDexApiQueries.OFFSET) offset: Int = 0,
     @Query(MangaDexApiQueries.ORDER_FOLLOWED_COUNT)
-    followedCount: String = MangaDexApiParams.DESC,
+    followedCount: String = MangaSortOrderParam.DESC.value,
     @Query(MangaDexApiQueries.INCLUDES)
     includes: List<String> =
       listOf(
-        MangaDexApiParams.COVER_ART,
-        MangaDexApiParams.AUTHOR,
-        MangaDexApiParams.ARTIST
+        MangaIncludesParam.COVER_ART.value,
+        MangaIncludesParam.AUTHOR.value,
+        MangaIncludesParam.ARTIST.value
       ),
   ): MangaListResponse
 
@@ -49,13 +54,13 @@ interface MangaDexApiService {
   suspend fun getNewReleaseMangaList(
     @Query(MangaDexApiQueries.LIMIT) limit: Int = 20,
     @Query(MangaDexApiQueries.OFFSET) offset: Int = 0,
-    @Query(MangaDexApiQueries.ORDER_CREATED_AT) createdAt: String = MangaDexApiParams.DESC,
+    @Query(MangaDexApiQueries.ORDER_CREATED_AT) createdAt: String = MangaSortOrderParam.DESC.value,
     @Query(MangaDexApiQueries.INCLUDES)
     includes: List<String> =
       listOf(
-        MangaDexApiParams.COVER_ART,
-        MangaDexApiParams.AUTHOR,
-        MangaDexApiParams.ARTIST
+        MangaIncludesParam.COVER_ART.value,
+        MangaIncludesParam.AUTHOR.value,
+        MangaIncludesParam.ARTIST.value
       ),
   ): MangaListResponse
 
@@ -63,13 +68,13 @@ interface MangaDexApiService {
   suspend fun getTopRatedMangaList(
     @Query(MangaDexApiQueries.LIMIT) limit: Int = 20,
     @Query(MangaDexApiQueries.OFFSET) offset: Int = 0,
-    @Query(MangaDexApiQueries.ORDER_RATING) rating: String = MangaDexApiParams.DESC,
+    @Query(MangaDexApiQueries.ORDER_RATING) rating: String = MangaSortOrderParam.DESC.value,
     @Query(MangaDexApiQueries.INCLUDES)
     includes: List<String> =
       listOf(
-        MangaDexApiParams.COVER_ART,
-        MangaDexApiParams.AUTHOR,
-        MangaDexApiParams.ARTIST
+        MangaIncludesParam.COVER_ART.value,
+        MangaIncludesParam.AUTHOR.value,
+        MangaIncludesParam.ARTIST.value
       ),
   ): MangaListResponse
 
@@ -78,26 +83,24 @@ interface MangaDexApiService {
     @Query(MangaDexApiQueries.TITLE) query: String,
     @Query(MangaDexApiQueries.LIMIT) limit: Int = 20,
     @Query(MangaDexApiQueries.OFFSET) offset: Int = 0,
-    @Query(MangaDexApiQueries.ORDER_RELEVANCE) order: String = MangaDexApiParams.DESC,
+    @Query(MangaDexApiQueries.ORDER_RELEVANCE) order: String = MangaSortOrderParam.DESC.value,
     @Query(MangaDexApiQueries.INCLUDES)
-    includes: List<String> =
-      listOf(
-        MangaDexApiParams.COVER_ART,
-        MangaDexApiParams.AUTHOR,
-        MangaDexApiParams.ARTIST
-      ),
+    includes: List<String> = listOf(
+      MangaIncludesParam.COVER_ART.value,
+      MangaIncludesParam.AUTHOR.value,
+      MangaIncludesParam.ARTIST.value
+    ),
   ): MangaListResponse
 
   @GET(MangaDexApiEndpoints.MANGA_ID)
   suspend fun getMangaDetails(
     @Path(MangaDexApiPaths.ID) mangaId: String,
     @Query(MangaDexApiQueries.INCLUDES)
-    includes: List<String> =
-      listOf(
-        MangaDexApiParams.COVER_ART,
-        MangaDexApiParams.AUTHOR,
-        MangaDexApiParams.ARTIST
-      ),
+    includes: List<String> = listOf(
+      MangaIncludesParam.COVER_ART.value,
+      MangaIncludesParam.AUTHOR.value,
+      MangaIncludesParam.ARTIST.value
+    ),
   ): MangaDetailsResponse
 
   @GET(MangaDexApiEndpoints.MANGA_FEED)
@@ -106,19 +109,21 @@ interface MangaDexApiService {
     @Query(MangaDexApiQueries.LIMIT) limit: Int = 20,
     @Query(MangaDexApiQueries.OFFSET) offset: Int = 0,
     @Query(MangaDexApiQueries.TRANSLATED_LANGUAGE)
-    translatedLanguages: String = MangaDexApiParams.EN,
-    @Query(MangaDexApiQueries.ORDER_VOLUME) volumeOrder: String = MangaDexApiParams.DESC,
-    @Query(MangaDexApiQueries.ORDER_CHAPTER) chapterOrder: String = MangaDexApiParams.DESC,
+    translatedLanguages: String = MangaLanguageCodeParam.ENGLISH.value,
+    @Query(MangaDexApiQueries.ORDER_VOLUME) volumeOrder: String = MangaSortOrderParam.DESC.value,
+    @Query(MangaDexApiQueries.ORDER_CHAPTER) chapterOrder: String = MangaSortOrderParam.DESC.value,
     @Query(MangaDexApiQueries.INCLUDES)
-    includes: List<String> = listOf(MangaDexApiParams.SCANLATION_GROUP),
+    includes: List<String> = listOf(MangaIncludesParam.SCANLATION_GROUP.value),
   ): ChapterListResponse
 
   @GET(MangaDexApiEndpoints.CHAPTER_ID)
   suspend fun getChapterDetails(
     @Path(MangaDexApiPaths.ID) chapterId: String,
     @Query(MangaDexApiQueries.INCLUDES)
-    includes: List<String> =
-      listOf(MangaDexApiParams.MANGA, MangaDexApiParams.SCANLATION_GROUP),
+    includes: List<String> = listOf(
+      MangaIncludesParam.MANGA.value,
+      MangaIncludesParam.SCANLATION_GROUP.value
+    ),
   ): ChapterDetailsResponse
 
   @GET(MangaDexApiEndpoints.AT_HOME_SERVER_ID)
@@ -139,15 +144,14 @@ interface MangaDexApiService {
     @Query(MangaDexApiQueries.ORDER_RATING) rating: String? = null, // top rated
     // filtering
     @Query(MangaDexApiQueries.STATUS)
-    status: List<String> = listOf(MangaDexApiParams.ONGOING), // ongoing, completed, hiatus, cancelled
+    status: List<String> = listOf(MangaStatusParam.ON_GOING.value), // ongoing, completed, hiatus, cancelled
     @Query(MangaDexApiQueries.CONTENT_RATING)
-    contentRating: List<String> = listOf(MangaDexApiParams.SAFE), // safe, suggestive, erotica
+    contentRating: List<String> = listOf(MangaContentRatingParam.SAFE.value), // safe, suggestive, erotica
     @Query(MangaDexApiQueries.INCLUDES)
-    includes: List<String> =
-      listOf(
-        MangaDexApiParams.COVER_ART,
-        MangaDexApiParams.AUTHOR,
-        MangaDexApiParams.ARTIST
-      ),
+    includes: List<String> = listOf(
+      MangaIncludesParam.COVER_ART.value,
+      MangaIncludesParam.AUTHOR.value,
+      MangaIncludesParam.ARTIST.value
+    ),
   ): MangaListResponse
 }
