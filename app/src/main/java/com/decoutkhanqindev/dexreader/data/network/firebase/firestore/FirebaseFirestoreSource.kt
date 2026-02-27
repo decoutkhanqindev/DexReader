@@ -1,11 +1,11 @@
 package com.decoutkhanqindev.dexreader.data.network.firebase.firestore
 
-import com.decoutkhanqindev.dexreader.data.network.firebase.request.FavoriteMangaRequest
-import com.decoutkhanqindev.dexreader.data.network.firebase.request.ReadingHistoryRequest
-import com.decoutkhanqindev.dexreader.data.network.firebase.request.UserProfileRequest
-import com.decoutkhanqindev.dexreader.data.network.firebase.response.FavoriteMangaResponse
-import com.decoutkhanqindev.dexreader.data.network.firebase.response.ReadingHistoryResponse
-import com.decoutkhanqindev.dexreader.data.network.firebase.response.UserProfileResponse
+import com.decoutkhanqindev.dexreader.data.network.firebase.dto.request.FavoriteMangaRequest
+import com.decoutkhanqindev.dexreader.data.network.firebase.dto.request.ReadingHistoryRequest
+import com.decoutkhanqindev.dexreader.data.network.firebase.dto.request.UserProfileRequest
+import com.decoutkhanqindev.dexreader.data.network.firebase.dto.response.FavoriteMangaResponse
+import com.decoutkhanqindev.dexreader.data.network.firebase.dto.response.ReadingHistoryResponse
+import com.decoutkhanqindev.dexreader.data.network.firebase.dto.response.UserProfileResponse
 import kotlinx.coroutines.flow.Flow
 
 interface FirebaseFirestoreSource {
