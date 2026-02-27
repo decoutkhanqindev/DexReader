@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.data.network.mangadex_api.interceptor
+package com.decoutkhanqindev.dexreader.data.network.interceptor
 
 import jakarta.inject.Inject
 import okhttp3.Interceptor
