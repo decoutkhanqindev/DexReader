@@ -1,3 +1,9 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(git mv:*)",
+      "Bash(mkdir:*)"
+    ]
+  },
   "spinnerTipsEnabled": true
 }

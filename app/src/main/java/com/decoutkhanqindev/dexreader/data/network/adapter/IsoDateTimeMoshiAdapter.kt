@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.data.parser
+package com.decoutkhanqindev.dexreader.data.network.adapter
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -8,7 +8,7 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 
-object IsoDateAdapter {
+object IsoDateTimeMoshiAdapter {
   @RequiresApi(Build.VERSION_CODES.O)
   @FromJson
   fun fromJson(json: String?): Long? {

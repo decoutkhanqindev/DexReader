@@ -7,7 +7,7 @@ import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFi
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSourceImpl
 import com.decoutkhanqindev.dexreader.data.network.mangadex_api.MangaDexApiService
 import com.decoutkhanqindev.dexreader.data.network.interceptor.NetworkInterceptor
-import com.decoutkhanqindev.dexreader.data.parser.IsoDateAdapter
+import com.decoutkhanqindev.dexreader.data.network.adapter.IsoDateTimeMoshiAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.moshi.Moshi
@@ -69,7 +69,7 @@ object NetworkDataModule {
 
   @Provides
   fun provideMoshi(): Moshi = Moshi.Builder()
-    .add(IsoDateAdapter)
+    .add(IsoDateTimeMoshiAdapter)
     .addLast(KotlinJsonAdapterFactory())
     .build()
 

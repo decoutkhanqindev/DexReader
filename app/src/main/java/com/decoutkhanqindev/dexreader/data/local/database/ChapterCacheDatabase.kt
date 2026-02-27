@@ -7,14 +7,13 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.decoutkhanqindev.dexreader.data.local.database.dao.ChapterCacheDao
 import com.decoutkhanqindev.dexreader.data.local.database.entity.ChapterCacheEntity
-import com.decoutkhanqindev.dexreader.data.parser.RoomDBTypeConverter
 
 @Database(
   entities = [ChapterCacheEntity::class],
   version = 2,
   exportSchema = false
 )
-@TypeConverters(RoomDBTypeConverter::class)
+@TypeConverters(StringListTypeConverter::class)
 abstract class ChapterCacheDatabase : RoomDatabase() {
   abstract fun chapterCacheDao(): ChapterCacheDao
 

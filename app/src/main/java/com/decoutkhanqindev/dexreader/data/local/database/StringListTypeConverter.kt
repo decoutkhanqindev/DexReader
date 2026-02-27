@@ -1,9 +1,9 @@
-package com.decoutkhanqindev.dexreader.data.parser
+package com.decoutkhanqindev.dexreader.data.local.database
 
 import androidx.room.TypeConverter
 import kotlinx.serialization.json.Json
 
-object RoomDBTypeConverter {
+object StringListTypeConverter {
   @TypeConverter
   fun fromStringList(list: List<String>?): String? = list?.let { Json.encodeToString(it) }
 
