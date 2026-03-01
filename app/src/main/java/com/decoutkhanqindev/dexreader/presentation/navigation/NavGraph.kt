@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.forgot_password.ForgotPasswordScreen
@@ -32,9 +33,10 @@ import com.decoutkhanqindev.dexreader.util.NavTransitions.slideFromRightTransiti
 fun NavGraph(
   isUserLoggedIn: Boolean,
   currentUser: User?,
-  navHostController: NavHostController,
   modifier: Modifier = Modifier,
 ) {
+  val navHostController = rememberNavController()
+
   NavHost(
     navController = navHostController,
     startDestination = NavDestination.HomeDestination.route,

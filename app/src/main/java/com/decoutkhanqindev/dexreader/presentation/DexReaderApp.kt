@@ -15,12 +15,10 @@ fun DexReaderApp(
 ) {
   val isUserLoggedIn by viewModel.isUserLoggedIn.collectAsStateWithLifecycle()
   val currentUser by viewModel.userProfile.collectAsStateWithLifecycle()
-  val navHostController = rememberNavController()
 
   NavGraph(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
-    navHostController = navHostController,
     modifier = modifier
   )
 }
