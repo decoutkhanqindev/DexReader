@@ -27,12 +27,11 @@ interface MangaDexApiService {
     lastUpdated: String = MangaSortOrderParam.DESC.value,
     @Query(MangaDexApiQueries.STATUS) status: String = MangaStatusParam.ON_GOING.value,
     @Query(MangaDexApiQueries.INCLUDES)
-    includes: List<String> =
-      listOf(
-        MangaIncludesParam.COVER_ART.value,
-        MangaIncludesParam.AUTHOR.value,
-        MangaIncludesParam.ARTIST.value
-      ),
+    includes: List<String> = listOf(
+      MangaIncludesParam.COVER_ART.value,
+      MangaIncludesParam.AUTHOR.value,
+      MangaIncludesParam.ARTIST.value
+    ),
   ): MangaListResponse
 
   @GET(MangaDexApiEndpoints.MANGA)
@@ -42,12 +41,11 @@ interface MangaDexApiService {
     @Query(MangaDexApiQueries.ORDER_FOLLOWED_COUNT)
     followedCount: String = MangaSortOrderParam.DESC.value,
     @Query(MangaDexApiQueries.INCLUDES)
-    includes: List<String> =
-      listOf(
-        MangaIncludesParam.COVER_ART.value,
-        MangaIncludesParam.AUTHOR.value,
-        MangaIncludesParam.ARTIST.value
-      ),
+    includes: List<String> = listOf(
+      MangaIncludesParam.COVER_ART.value,
+      MangaIncludesParam.AUTHOR.value,
+      MangaIncludesParam.ARTIST.value
+    ),
   ): MangaListResponse
 
   @GET(MangaDexApiEndpoints.MANGA)
@@ -56,12 +54,11 @@ interface MangaDexApiService {
     @Query(MangaDexApiQueries.OFFSET) offset: Int = 0,
     @Query(MangaDexApiQueries.ORDER_CREATED_AT) createdAt: String = MangaSortOrderParam.DESC.value,
     @Query(MangaDexApiQueries.INCLUDES)
-    includes: List<String> =
-      listOf(
-        MangaIncludesParam.COVER_ART.value,
-        MangaIncludesParam.AUTHOR.value,
-        MangaIncludesParam.ARTIST.value
-      ),
+    includes: List<String> = listOf(
+      MangaIncludesParam.COVER_ART.value,
+      MangaIncludesParam.AUTHOR.value,
+      MangaIncludesParam.ARTIST.value
+    ),
   ): MangaListResponse
 
   @GET(MangaDexApiEndpoints.MANGA)
@@ -70,12 +67,11 @@ interface MangaDexApiService {
     @Query(MangaDexApiQueries.OFFSET) offset: Int = 0,
     @Query(MangaDexApiQueries.ORDER_RATING) rating: String = MangaSortOrderParam.DESC.value,
     @Query(MangaDexApiQueries.INCLUDES)
-    includes: List<String> =
-      listOf(
-        MangaIncludesParam.COVER_ART.value,
-        MangaIncludesParam.AUTHOR.value,
-        MangaIncludesParam.ARTIST.value
-      ),
+    includes: List<String> = listOf(
+      MangaIncludesParam.COVER_ART.value,
+      MangaIncludesParam.AUTHOR.value,
+      MangaIncludesParam.ARTIST.value
+    ),
   ): MangaListResponse
 
   @GET(MangaDexApiEndpoints.MANGA)

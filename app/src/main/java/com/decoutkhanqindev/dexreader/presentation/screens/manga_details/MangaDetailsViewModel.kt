@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
 import com.decoutkhanqindev.dexreader.domain.model.FavoriteManga
+import com.decoutkhanqindev.dexreader.domain.model.MangaLanguage
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
+import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortOrder
 import com.decoutkhanqindev.dexreader.domain.usecase.chapter.GetChapterListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.favorites.AddToFavoritesUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.favorites.ObserveIsFavoriteUseCase
@@ -50,8 +52,8 @@ class MangaDetailsViewModel @Inject constructor(
   val mangaChaptersUiState: StateFlow<BasePaginationUiState<Chapter>> =
     _mangaChaptersUiState.asStateFlow()
 
-  private val _chapterLanguage = MutableStateFlow(DEFAULT_CHAPTER_LANGUAGE)
-  val chapterLanguage: StateFlow<String> = _chapterLanguage.asStateFlow()
+  private val _chapterLanguage = MutableStateFlow(MangaLanguage.ENGLISH)
+  val chapterLanguage: StateFlow<MangaLanguage> = _chapterLanguage.asStateFlow()
 
   private val _userId = MutableStateFlow<String?>(null)
 
@@ -104,9 +106,8 @@ class MangaDetailsViewModel @Inject constructor(
       getChapterListUseCase(
         mangaId = mangaIdFromArg,
         limit = 1,
-        translatedLanguage = chapterLanguage.value,
-        volumeOrder = ASC_ORDER,
-        chapterOrder = ASC_ORDER
+        language = _chapterLanguage.value,
+        sortOrder = MangaSortOrder.ASC,
       )
         .onSuccess {
           if (it.isNotEmpty()) _startedChapter.value = it.first()
@@ -125,7 +126,7 @@ class MangaDetailsViewModel @Inject constructor(
 
       getChapterListUseCase(
         mangaId = mangaIdFromArg,
-        translatedLanguage = chapterLanguage.value
+        language = _chapterLanguage.value,
       )
         .onSuccess { chapterList ->
           val hasNextPage = chapterList.size >= CHAPTER_LIST_PER_PAGE_SIZE
@@ -176,7 +177,7 @@ class MangaDetailsViewModel @Inject constructor(
       getChapterListUseCase(
         mangaId = mangaIdFromArg,
         offset = currentMangaList.size,
-        translatedLanguage = chapterLanguage.value
+        language = _chapterLanguage.value,
       )
         .onSuccess { nextChapterList ->
           val updatedChapterList = currentMangaList + nextChapterList
@@ -363,7 +364,7 @@ class MangaDetailsViewModel @Inject constructor(
     _userId.value = id
   }
 
-  fun updateChapterLanguage(language: String) {
+  fun updateChapterLanguage(language: MangaLanguage) {
     if (_chapterLanguage.value == language) return
     _chapterLanguage.value = language
     fetchFirstChapter()
@@ -409,8 +410,6 @@ class MangaDetailsViewModel @Inject constructor(
   companion object {
     private const val TAG = "MangaDetailsViewModel"
     private const val FIRST_PAGE = 1
-    private const val ASC_ORDER = "asc"
-    private const val DEFAULT_CHAPTER_LANGUAGE = "en"
     private const val CHAPTER_LIST_PER_PAGE_SIZE = 20
     private const val READING_HISTORY_LIST_PER_PAGE_SIZE = 50
     private const val PERMISSION_DENIED_EXCEPTION = "PERMISSION_DENIED"

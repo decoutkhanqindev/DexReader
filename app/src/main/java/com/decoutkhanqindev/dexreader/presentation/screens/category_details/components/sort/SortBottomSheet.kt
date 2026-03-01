@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailsCriteriaUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
+import com.decoutkhanqindev.dexreader.util.CriteriaCodec.toSortCriteriaId
+import com.decoutkhanqindev.dexreader.util.CriteriaCodec.toSortOrderId
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,10 +36,10 @@ fun SortBottomSheet(
 ) {
   val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
   var selectedCriteriaId by rememberSaveable {
-    mutableStateOf(criteriaState.selectedSortCriteriaId)
+    mutableStateOf(criteriaState.sortCriteria.toSortCriteriaId())
   }
   var selectedOrderId by rememberSaveable {
-    mutableStateOf(criteriaState.selectedSortOrderId)
+    mutableStateOf(criteriaState.sortOrder.toSortOrderId())
   }
 
   ModalBottomSheet(

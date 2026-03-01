@@ -1,8 +1,10 @@
 package com.decoutkhanqindev.dexreader.util
 
+import com.decoutkhanqindev.dexreader.domain.model.MangaLanguage
+
 /**
- * Language codec utility - bidirectional encoding/decoding between language codes and names
- * Encodes: "English" → "en" | Decodes: "en" → "English"
+ * Language codec utility - bidirectional encoding/decoding between language names and domain types.
+ * Display names are a presentation concern and live here.
  */
 object LanguageCodec {
 
@@ -149,4 +151,80 @@ object LanguageCodec {
     )
     return languageMap[this] ?: this ?: "en"
   }
+
+  /**
+   * Maps a MangaLanguage domain enum to its display name for the UI.
+   * Display names are a presentation concern and belong here, not in the domain model.
+   */
+  fun MangaLanguage.toDisplayName(): String = when (this) {
+    MangaLanguage.ENGLISH -> "English"
+    MangaLanguage.AFRIKAANS -> "Afrikaans"
+    MangaLanguage.ALBANIAN -> "Albanian"
+    MangaLanguage.ARABIC -> "Arabic"
+    MangaLanguage.AZERBAIJANI -> "Azerbaijani"
+    MangaLanguage.BASQUE -> "Basque"
+    MangaLanguage.BELARUSIAN -> "Belarusian"
+    MangaLanguage.BENGALI -> "Bengali"
+    MangaLanguage.BULGARIAN -> "Bulgarian"
+    MangaLanguage.BURMESE -> "Burmese"
+    MangaLanguage.CATALAN -> "Catalan"
+    MangaLanguage.CHINESE_SIMPLIFIED -> "Chinese (Simplified)"
+    MangaLanguage.CHINESE_TRADITIONAL -> "Chinese (Traditional)"
+    MangaLanguage.CHUVASH -> "Chuvash"
+    MangaLanguage.CROATIAN -> "Croatian"
+    MangaLanguage.CZECH -> "Czech"
+    MangaLanguage.DANISH -> "Danish"
+    MangaLanguage.DUTCH -> "Dutch"
+    MangaLanguage.ESPERANTO -> "Esperanto"
+    MangaLanguage.ESTONIAN -> "Estonian"
+    MangaLanguage.FILIPINO -> "Filipino"
+    MangaLanguage.FINNISH -> "Finnish"
+    MangaLanguage.FRENCH -> "French"
+    MangaLanguage.GEORGIAN -> "Georgian"
+    MangaLanguage.GERMAN -> "German"
+    MangaLanguage.GREEK -> "Greek"
+    MangaLanguage.HEBREW -> "Hebrew"
+    MangaLanguage.HINDI -> "Hindi"
+    MangaLanguage.HUNGARIAN -> "Hungarian"
+    MangaLanguage.INDONESIAN -> "Indonesian"
+    MangaLanguage.IRISH -> "Irish"
+    MangaLanguage.ITALIAN -> "Italian"
+    MangaLanguage.JAPANESE -> "Japanese"
+    MangaLanguage.JAVANESE -> "Javanese"
+    MangaLanguage.KAZAKH -> "Kazakh"
+    MangaLanguage.KOREAN -> "Korean"
+    MangaLanguage.LATIN -> "Latin"
+    MangaLanguage.LITHUANIAN -> "Lithuanian"
+    MangaLanguage.MALAY -> "Malay"
+    MangaLanguage.MONGOLIAN -> "Mongolian"
+    MangaLanguage.NEPALI -> "Nepali"
+    MangaLanguage.NORWEGIAN -> "Norwegian"
+    MangaLanguage.PERSIAN -> "Persian"
+    MangaLanguage.POLISH -> "Polish"
+    MangaLanguage.PORTUGUESE_BR -> "Portuguese (BR)"
+    MangaLanguage.ROMANIAN -> "Romanian"
+    MangaLanguage.RUSSIAN -> "Russian"
+    MangaLanguage.SERBIAN -> "Serbian"
+    MangaLanguage.SLOVAK -> "Slovak"
+    MangaLanguage.SLOVENIAN -> "Slovenian"
+    MangaLanguage.SPANISH -> "Spanish (LATAM)"
+    MangaLanguage.SPANISH_LATAM -> "Spanish (LATAM)"
+    MangaLanguage.SWEDISH -> "Swedish"
+    MangaLanguage.TAMIL -> "Tamil"
+    MangaLanguage.TELUGU -> "Telugu"
+    MangaLanguage.THAI -> "Thai"
+    MangaLanguage.THAILAND -> "Thailand"
+    MangaLanguage.TURKISH -> "Turkish"
+    MangaLanguage.UKRAINIAN -> "Ukrainian"
+    MangaLanguage.URDU -> "Urdu"
+    MangaLanguage.UZBEK -> "Uzbek"
+    MangaLanguage.VIETNAMESE -> "Vietnamese"
+    MangaLanguage.UNKNOWN -> "Unknown"
+  }
+
+  /**
+   * Converts a display name (from the UI language selector) back to a MangaLanguage domain enum.
+   */
+  fun String.toMangaLanguageByName(): MangaLanguage =
+    MangaLanguage.entries.find { it.toDisplayName() == this } ?: MangaLanguage.UNKNOWN
 }

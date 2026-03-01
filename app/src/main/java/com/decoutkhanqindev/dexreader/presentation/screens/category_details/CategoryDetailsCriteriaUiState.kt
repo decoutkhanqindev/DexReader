@@ -1,15 +1,15 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.category_details
 
 import androidx.compose.runtime.Immutable
+import com.decoutkhanqindev.dexreader.domain.model.criteria.filter.MangaContentRatingFilter
+import com.decoutkhanqindev.dexreader.domain.model.criteria.filter.MangaStatusFilter
+import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortCriteria
+import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortOrder
 
 @Immutable
 data class CategoryDetailsCriteriaUiState(
-  val selectedSortCriteriaId: String = SortCriteria.LatestUpdate.id,
-  val selectedSortOrderId: String = SortOrder.Descending.id,
-  val lastUpdatedOrderId: String? = null,
-  val followedCountOrderId: String? = null,
-  val createdAtOrderId: String? = null,
-  val ratingOrderId: String? = null,
-  val statusValueIds: List<String> = listOf(FilterValue.Ongoing.id),
-  val contentRatingValueIds: List<String> = listOf(FilterValue.Safe.id),
+  val sortCriteria: MangaSortCriteria = MangaSortCriteria.LATEST_UPDATE,
+  val sortOrder: MangaSortOrder = MangaSortOrder.DESC,
+  val statusFilter: List<MangaStatusFilter> = listOf(MangaStatusFilter.ON_GOING),
+  val contentRatingFilter: List<MangaContentRatingFilter> = listOf(MangaContentRatingFilter.SAFE),
 )

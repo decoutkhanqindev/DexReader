@@ -5,7 +5,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
+import com.decoutkhanqindev.dexreader.domain.model.MangaLanguage
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
+import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortOrder
 import com.decoutkhanqindev.dexreader.domain.usecase.cache.AddChapterCacheUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.cache.ClearExpiredCacheUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.cache.GetChapterCacheUseCase
@@ -16,7 +18,6 @@ import com.decoutkhanqindev.dexreader.domain.usecase.history.AddAndUpdateToHisto
 import com.decoutkhanqindev.dexreader.domain.usecase.history.ObserveHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaDetailsUseCase
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
-import com.decoutkhanqindev.dexreader.util.LanguageCodec.toLanguageCode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -67,7 +68,7 @@ class ReaderViewModel @Inject constructor(
 
   private var mangaTitle: String? = null
   private var mangaCoverUrl: String? = null
-  private var chapterLanguage: String? = null
+  private var chapterLanguage: MangaLanguage? = null
 
   private var currentChapterList: List<Chapter> = emptyList()
   private var hasNextChapterListPage = true
@@ -119,7 +120,7 @@ class ReaderViewModel @Inject constructor(
             )
           }
 
-          chapterLanguage = chapter.translatedLanguage.toLanguageCode()
+          chapterLanguage = chapter.translatedLanguage
 
           if (currentChapterList.isEmpty() && chapterLanguage != null)
             fetchChapterListFirstPage()
@@ -234,9 +235,8 @@ class ReaderViewModel @Inject constructor(
 
       getChapterListUseCase(
         mangaId = mangaIdFromArg,
-        translatedLanguage = chapterLanguage!!,
-        volumeOrder = ASC_ORDER,
-        chapterOrder = ASC_ORDER,
+        language = chapterLanguage ?: MangaLanguage.ENGLISH,
+        sortOrder = MangaSortOrder.ASC,
       )
         .onSuccess { chapterList ->
           isFetchingChapterList = false
@@ -261,9 +261,8 @@ class ReaderViewModel @Inject constructor(
       getChapterListUseCase(
         mangaId = mangaIdFromArg,
         offset = currentChapterList.size,
-        translatedLanguage = chapterLanguage!!,
-        volumeOrder = ASC_ORDER,
-        chapterOrder = ASC_ORDER,
+        language = chapterLanguage ?: MangaLanguage.ENGLISH,
+        sortOrder = MangaSortOrder.ASC,
       )
         .onSuccess { nextChapterList ->
           isFetchingChapterList = false
@@ -550,7 +549,6 @@ class ReaderViewModel @Inject constructor(
     private const val TAG = "ReaderViewModel"
     private const val CHAPTER_LIST_PER_PAGE_SIZE = 20
     private const val READING_HISTORY_LIST_PER_PAGE_SIZE = 50
-    private const val ASC_ORDER = "asc"
     private const val NEARED_LAST_CHAPTER_COUNT = 5
     private const val DELAY_TIME_MILLIS = 100L
     private const val CACHE_EXPIRY_TIME_MILLIS = 24 * 60 * 60 * 1000L // 24h

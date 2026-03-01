@@ -2,19 +2,19 @@ package com.decoutkhanqindev.dexreader.domain.repository
 
 import com.decoutkhanqindev.dexreader.domain.model.Category
 import com.decoutkhanqindev.dexreader.domain.model.Manga
+import com.decoutkhanqindev.dexreader.domain.model.criteria.filter.MangaContentRatingFilter
+import com.decoutkhanqindev.dexreader.domain.model.criteria.filter.MangaStatusFilter
+import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortCriteria
+import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortOrder
 
 interface CategoryRepository {
   suspend fun getCategoryList(): List<Category>
   suspend fun getMangaListByCategory(
     categoryId: String,
     offset: Int = 0,
-    // sorting
-    lastUpdated: String? = null, // latest update
-    followedCount: String? = null, // trending
-    createdAt: String? = null, // new release
-    rating: String? = null, // top rated
-    // filters
-    status: List<String> = listOf("ongoing"), // ongoing, completed, hiatus, cancelled
-    contentRating: List<String> = listOf("safe"), // safe, suggestive, erotica
+    sortCriteria: MangaSortCriteria = MangaSortCriteria.LATEST_UPDATE,
+    sortOrder: MangaSortOrder = MangaSortOrder.DESC,
+    statusFilter: List<MangaStatusFilter> = listOf(MangaStatusFilter.ON_GOING),
+    contentRatingFilter: List<MangaContentRatingFilter> = listOf(MangaContentRatingFilter.SAFE),
   ): List<Manga>
 }

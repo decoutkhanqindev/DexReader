@@ -1,16 +1,13 @@
 package com.decoutkhanqindev.dexreader.data.network.firebase.firestore
 
+import com.decoutkhanqindev.dexreader.data.network.firebase.constant.FirestoreCollections
+import com.decoutkhanqindev.dexreader.data.network.firebase.constant.FirestoreFields
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.request.FavoriteMangaRequest
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.request.ReadingHistoryRequest
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.request.UserProfileRequest
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.response.FavoriteMangaResponse
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.response.ReadingHistoryResponse
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.response.UserProfileResponse
-import com.decoutkhanqindev.dexreader.di.CreatedAtFieldQualifier
-import com.decoutkhanqindev.dexreader.di.FavoritesCollectionQualifier
-import com.decoutkhanqindev.dexreader.di.HistoryCollectionQualifier
-import com.decoutkhanqindev.dexreader.di.MangaIdFieldQualifier
-import com.decoutkhanqindev.dexreader.di.UsersCollectionQualifier
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.channels.awaitClose
@@ -21,18 +18,8 @@ import javax.inject.Inject
 
 class FirebaseFirestoreSourceImpl @Inject constructor(
   firebaseFirestore: FirebaseFirestore,
-  @param:UsersCollectionQualifier
-  private val usersCollection: String,
-  @param:FavoritesCollectionQualifier
-  private val favoritesCollection: String,
-  @param:HistoryCollectionQualifier
-  private val historyCollection: String,
-  @param:CreatedAtFieldQualifier
-  private val createdAtField: String,
-  @param:MangaIdFieldQualifier
-  private val mangaIdField: String,
 ) : FirebaseFirestoreSource {
-  private val usersCollectionRef = firebaseFirestore.collection(usersCollection)
+  private val usersCollectionRef = firebaseFirestore.collection(FirestoreCollections.USERS)
 
   override suspend fun upsertUserProfile(userProfile: UserProfileRequest) {
     usersCollectionRef
@@ -70,10 +57,10 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
   ): Flow<List<FavoriteMangaResponse>> = callbackFlow {
     val favoritesCollectionRef = usersCollectionRef
       .document(userId)
-      .collection(favoritesCollection)
+      .collection(FirestoreCollections.FAVORITES)
 
     var query = favoritesCollectionRef
-      .orderBy(createdAtField, Query.Direction.DESCENDING)
+      .orderBy(FirestoreFields.CREATED_AT, Query.Direction.DESCENDING)
       .limit(limit)
 
     val lastFavoriteManga = lastFavoriteMangaId?.let { id ->
@@ -111,7 +98,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
   ) {
     usersCollectionRef
       .document(userId)
-      .collection(favoritesCollection)
+      .collection(FirestoreCollections.FAVORITES)
       .document(manga.id)
       .set(manga)
       .await()
@@ -123,7 +110,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
   ) {
     usersCollectionRef
       .document(userId)
-      .collection(favoritesCollection)
+      .collection(FirestoreCollections.FAVORITES)
       .document(mangaId)
       .delete()
       .await()
@@ -135,7 +122,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
   ): Flow<Boolean> = callbackFlow {
     val favoriteCollectionRef = usersCollectionRef
       .document(userId)
-      .collection(favoritesCollection)
+      .collection(FirestoreCollections.FAVORITES)
       .document(mangaId)
 
     val listenerRegistration = favoriteCollectionRef.addSnapshotListener { snapshot, error ->
@@ -162,16 +149,16 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
   ): Flow<List<ReadingHistoryResponse>> = callbackFlow {
     val historyCollectionRef = usersCollectionRef
       .document(userId)
-      .collection(historyCollection)
+      .collection(FirestoreCollections.HISTORY)
 
     var query: Query = historyCollectionRef
 
     mangaId?.let { id ->
-      query = query.whereEqualTo(mangaIdField, id)
+      query = query.whereEqualTo(FirestoreFields.MANGA_ID, id)
     }
 
     query = query
-      .orderBy(createdAtField, Query.Direction.DESCENDING)
+      .orderBy(FirestoreFields.CREATED_AT, Query.Direction.DESCENDING)
       .limit(limit)
 
     val lastReadingHistory = lastReadingHistoryId?.let { id ->
@@ -209,7 +196,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
   ) {
     usersCollectionRef
       .document(userId)
-      .collection(historyCollection)
+      .collection(FirestoreCollections.HISTORY)
       .document(readingHistory.id)
       .set(readingHistory)
       .await()
@@ -221,7 +208,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
   ) {
     usersCollectionRef
       .document(userId)
-      .collection(historyCollection)
+      .collection(FirestoreCollections.HISTORY)
       .document(readingHistoryId)
       .delete()
       .await()

@@ -2,9 +2,12 @@ package com.decoutkhanqindev.dexreader.data.repository
 
 import com.decoutkhanqindev.dexreader.data.mapper.toChapter
 import com.decoutkhanqindev.dexreader.data.mapper.toChapterPages
+import com.decoutkhanqindev.dexreader.data.mapper.toParam
 import com.decoutkhanqindev.dexreader.data.network.mangadex_api.MangaDexApiService
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
 import com.decoutkhanqindev.dexreader.domain.model.ChapterPages
+import com.decoutkhanqindev.dexreader.domain.model.MangaLanguage
+import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortOrder
 import com.decoutkhanqindev.dexreader.domain.repository.ChapterRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -17,17 +20,16 @@ class ChapterRepositoryImpl @Inject constructor(
     mangaId: String,
     limit: Int,
     offset: Int,
-    translatedLanguage: String,
-    volumeOrder: String,
-    chapterOrder: String,
+    language: MangaLanguage,
+    sortOrder: MangaSortOrder,
   ): List<Chapter> = withContext(Dispatchers.IO) {
     mangaDexApiService.getChapterList(
       mangaId = mangaId,
       limit = limit,
       offset = offset,
-      translatedLanguages = translatedLanguage,
-      volumeOrder = volumeOrder,
-      chapterOrder = chapterOrder
+      translatedLanguages = language.toParam(),
+      volumeOrder = sortOrder.toParam(),
+      chapterOrder = sortOrder.toParam(),
     ).data?.map { it.toChapter() } ?: emptyList()
   }
 
@@ -36,7 +38,6 @@ class ChapterRepositoryImpl @Inject constructor(
       mangaDexApiService.getChapterDetails(chapterId).data?.toChapter()
         ?: throw Exception("Chapter details not found")
     }
-
 
   override suspend fun getChapterPages(chapterId: String): ChapterPages =
     withContext(Dispatchers.IO) {

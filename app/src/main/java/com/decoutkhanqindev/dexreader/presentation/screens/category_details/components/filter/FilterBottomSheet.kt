@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailsCriteriaUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
+import com.decoutkhanqindev.dexreader.util.CriteriaCodec.toFilterValueId
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,10 +35,10 @@ fun FilterBottomSheet(
 ) {
   val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
   var selectedStatusValueIds by rememberSaveable {
-    mutableStateOf(criteriaState.statusValueIds)
+    mutableStateOf(criteriaState.statusFilter.map { it.toFilterValueId() })
   }
   var selectedContentRatingValueIds by rememberSaveable {
-    mutableStateOf(criteriaState.contentRatingValueIds)
+    mutableStateOf(criteriaState.contentRatingFilter.map { it.toFilterValueId() })
   }
 
   ModalBottomSheet(

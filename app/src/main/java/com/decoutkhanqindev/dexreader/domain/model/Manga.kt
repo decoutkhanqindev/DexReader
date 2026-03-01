@@ -10,7 +10,7 @@ data class Manga(
   val categories: List<Category>,
   val status: String,
   val year: String,
-  val availableTranslatedLanguages: List<String>,
+  val availableTranslatedLanguages: List<MangaLanguage>,
   val lastChapter: String,
   val lastUpdated: String,
 )

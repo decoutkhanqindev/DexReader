@@ -7,5 +7,5 @@ data class Chapter(
   val chapterNumber: String,
   val volume: String,
   val publishAt: String,
-  val translatedLanguage: String,
+  val translatedLanguage: MangaLanguage,
 )

@@ -30,6 +30,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.Notific
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.MangaDetailsUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.actions.ActionButtonsSection
+import com.decoutkhanqindev.dexreader.util.LanguageCodec.toDisplayName
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.chapters.MangaChaptersSection
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.info.MangaInfoSection
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.summary.MangaSummarySection
@@ -92,7 +93,7 @@ fun MangaDetailsContent(
       is MangaDetailsUiState.Success -> {
         val manga = mangaDetailsUiState.manga
         val mangaCoverUrl = manga.coverUrl
-        val chapterLanguageList = manga.availableTranslatedLanguages
+        val chapterLanguageList = manga.availableTranslatedLanguages.map { it.toDisplayName() }
         val lastChapter = manga.lastChapter
 
         MangaDetailsBackground(

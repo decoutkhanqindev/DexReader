@@ -5,6 +5,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.model.Manga
+import com.decoutkhanqindev.dexreader.domain.model.criteria.filter.MangaContentRatingFilter
+import com.decoutkhanqindev.dexreader.domain.model.criteria.filter.MangaStatusFilter
+import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortCriteria
+import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortOrder
 import com.decoutkhanqindev.dexreader.domain.usecase.category.GetMangaListByCategoryUseCase
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
@@ -48,12 +52,10 @@ class CategoryDetailsViewModel @Inject constructor(
 
       getMangaListByCategoryUseCase(
         categoryId = categoryIdFromArg,
-        lastUpdated = currentCriteriaUiState.lastUpdatedOrderId,
-        followedCount = currentCriteriaUiState.followedCountOrderId,
-        createdAt = currentCriteriaUiState.createdAtOrderId,
-        rating = currentCriteriaUiState.ratingOrderId,
-        status = currentCriteriaUiState.statusValueIds,
-        contentRating = currentCriteriaUiState.contentRatingValueIds
+        sortCriteria = currentCriteriaUiState.sortCriteria,
+        sortOrder = currentCriteriaUiState.sortOrder,
+        statusFilter = currentCriteriaUiState.statusFilter,
+        contentRatingFilter = currentCriteriaUiState.contentRatingFilter,
       )
         .onSuccess { mangaList ->
           val hasNextPage = mangaList.size >= MANGA_LIST_PER_PAGE_SIZE
@@ -105,12 +107,10 @@ class CategoryDetailsViewModel @Inject constructor(
       getMangaListByCategoryUseCase(
         categoryId = categoryIdFromArg,
         offset = currentMangaList.size,
-        lastUpdated = currentCriteriaUiState.lastUpdatedOrderId,
-        followedCount = currentCriteriaUiState.followedCountOrderId,
-        createdAt = currentCriteriaUiState.createdAtOrderId,
-        rating = currentCriteriaUiState.ratingOrderId,
-        status = currentCriteriaUiState.statusValueIds,
-        contentRating = currentCriteriaUiState.contentRatingValueIds
+        sortCriteria = currentCriteriaUiState.sortCriteria,
+        sortOrder = currentCriteriaUiState.sortOrder,
+        statusFilter = currentCriteriaUiState.statusFilter,
+        contentRatingFilter = currentCriteriaUiState.contentRatingFilter,
       )
         .onSuccess { nextMangaList ->
           val allMangaList = currentMangaList + nextMangaList
@@ -134,34 +134,25 @@ class CategoryDetailsViewModel @Inject constructor(
     }
   }
 
-
   fun updateSortingCriteria(
     criteriaId: String,
     orderId: String,
   ) {
-    val currentCategoryCriteriaUiState = _categoryCriteriaUiState.value
-    if (currentCategoryCriteriaUiState.selectedSortCriteriaId == criteriaId &&
-      currentCategoryCriteriaUiState.selectedSortOrderId == orderId
-    ) return
+    val newSortCriteria = when (criteriaId) {
+      SortCriteria.LatestUpdate.id -> MangaSortCriteria.LATEST_UPDATE
+      SortCriteria.Trending.id     -> MangaSortCriteria.TRENDING
+      SortCriteria.NewReleases.id  -> MangaSortCriteria.MOST_VIEWED
+      SortCriteria.TopRated.id     -> MangaSortCriteria.TOP_RATED
+      else                         -> MangaSortCriteria.LATEST_UPDATE
+    }
+    val newSortOrder = if (orderId == SortOrder.Ascending.id) MangaSortOrder.ASC else MangaSortOrder.DESC
+
+    val current = _categoryCriteriaUiState.value
+    if (current.sortCriteria == newSortCriteria && current.sortOrder == newSortOrder) return
 
     _categoryCriteriaUiState.update {
-      it.copy(
-        selectedSortCriteriaId = criteriaId,
-        selectedSortOrderId = orderId,
-        lastUpdatedOrderId = null,
-        followedCountOrderId = null,
-        createdAtOrderId = null,
-        ratingOrderId = null
-      )
+      it.copy(sortCriteria = newSortCriteria, sortOrder = newSortOrder)
     }
-
-    when (criteriaId) {
-      SortCriteria.LatestUpdate.id -> _categoryCriteriaUiState.update { it.copy(lastUpdatedOrderId = orderId) }
-      SortCriteria.Trending.id -> _categoryCriteriaUiState.update { it.copy(followedCountOrderId = orderId) }
-      SortCriteria.NewReleases.id -> _categoryCriteriaUiState.update { it.copy(createdAtOrderId = orderId) }
-      SortCriteria.TopRated.id -> _categoryCriteriaUiState.update { it.copy(ratingOrderId = orderId) }
-    }
-
     fetchMangaListByCategoryFirstPage()
   }
 
@@ -169,18 +160,31 @@ class CategoryDetailsViewModel @Inject constructor(
     statusValueIds: List<String>,
     contentRatingValueIds: List<String>,
   ) {
-    val currentCategoryCriteriaUiState = _categoryCriteriaUiState.value
-    if ((currentCategoryCriteriaUiState.statusValueIds == statusValueIds || statusValueIds.isEmpty()) &&
-      (currentCategoryCriteriaUiState.contentRatingValueIds == contentRatingValueIds || contentRatingValueIds.isEmpty())
-    ) return
+    val newStatusFilter = statusValueIds.mapNotNull { id ->
+      when (id) {
+        FilterValue.Ongoing.id   -> MangaStatusFilter.ON_GOING
+        FilterValue.Completed.id -> MangaStatusFilter.COMPLETED
+        FilterValue.Hiatus.id    -> MangaStatusFilter.HIATUS
+        FilterValue.Cancelled.id -> MangaStatusFilter.CANCELLED
+        else                     -> null
+      }
+    }.ifEmpty { return }
+
+    val newContentRatingFilter = contentRatingValueIds.mapNotNull { id ->
+      when (id) {
+        FilterValue.Safe.id       -> MangaContentRatingFilter.SAFE
+        FilterValue.Suggestive.id -> MangaContentRatingFilter.SUGGESTIVE
+        FilterValue.Erotica.id    -> MangaContentRatingFilter.EROTICA
+        else                      -> null
+      }
+    }.ifEmpty { return }
+
+    val current = _categoryCriteriaUiState.value
+    if (current.statusFilter == newStatusFilter && current.contentRatingFilter == newContentRatingFilter) return
 
     _categoryCriteriaUiState.update {
-      it.copy(
-        statusValueIds = statusValueIds,
-        contentRatingValueIds = contentRatingValueIds
-      )
+      it.copy(statusFilter = newStatusFilter, contentRatingFilter = newContentRatingFilter)
     }
-
     fetchMangaListByCategoryFirstPage()
   }
 

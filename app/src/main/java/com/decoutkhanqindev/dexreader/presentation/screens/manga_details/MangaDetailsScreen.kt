@@ -16,8 +16,8 @@ import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseDetailsScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.MangaDetailsContent
-import com.decoutkhanqindev.dexreader.util.LanguageCodec.toFullLanguageName
-import com.decoutkhanqindev.dexreader.util.LanguageCodec.toLanguageCode
+import com.decoutkhanqindev.dexreader.util.LanguageCodec.toDisplayName
+import com.decoutkhanqindev.dexreader.util.LanguageCodec.toMangaLanguageByName
 
 @Composable
 fun MangaDetailsScreen(
@@ -90,8 +90,8 @@ fun MangaDetailsScreen(
             isShowFavoritesDialog = true
           }
         },
-        chapterLanguage = chapterLanguage.toFullLanguageName(),
-        onSelectedLanguage = { viewModel.updateChapterLanguage(it.toLanguageCode()) },
+        chapterLanguage = chapterLanguage.toDisplayName(),
+        onSelectedLanguage = { viewModel.updateChapterLanguage(it.toMangaLanguageByName()) },
         onSelectedCategory = onSelectedCategory,
         onSelectedChapter = onSelectedChapter,
         onFetchChapterListNextPage = viewModel::fetchChapterListNextPage,

@@ -1,13 +1,13 @@
 package com.decoutkhanqindev.dexreader.di
 
 import com.decoutkhanqindev.dexreader.BuildConfig
+import com.decoutkhanqindev.dexreader.data.network.adapter.IsoDateTimeMoshiAdapter
 import com.decoutkhanqindev.dexreader.data.network.firebase.auth.FirebaseAuthSource
 import com.decoutkhanqindev.dexreader.data.network.firebase.auth.FirebaseAuthSourceImpl
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSourceImpl
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.MangaDexApiService
 import com.decoutkhanqindev.dexreader.data.network.interceptor.NetworkInterceptor
-import com.decoutkhanqindev.dexreader.data.network.adapter.IsoDateTimeMoshiAdapter
+import com.decoutkhanqindev.dexreader.data.network.mangadex_api.MangaDexApiService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.moshi.Moshi
@@ -35,26 +35,6 @@ annotation class UploadUrlQualifier
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
 annotation class MangaDexApiServiceQualifier
-
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-annotation class UsersCollectionQualifier
-
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-annotation class FavoritesCollectionQualifier
-
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-annotation class HistoryCollectionQualifier
-
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-annotation class CreatedAtFieldQualifier
-
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-annotation class MangaIdFieldQualifier
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -115,26 +95,6 @@ object NetworkDataModule {
   fun provideMangaDexApiService(
     @MangaDexApiServiceQualifier retrofit: Retrofit,
   ): MangaDexApiService = retrofit.create(MangaDexApiService::class.java)
-
-  @Provides
-  @UsersCollectionQualifier
-  fun provideUsersCollection(): String = "users"
-
-  @Provides
-  @FavoritesCollectionQualifier
-  fun provideFavoritesCollection(): String = "favorites"
-
-  @Provides
-  @HistoryCollectionQualifier
-  fun provideHistoryCollection(): String = "history"
-
-  @Provides
-  @CreatedAtFieldQualifier
-  fun provideCreatedAtField(): String = "createdAt"
-
-  @Provides
-  @MangaIdFieldQualifier
-  fun provideMangaIdField(): String = "manga_id"
 
   @Provides
   @Singleton
