@@ -2,6 +2,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.categories
 
 import androidx.compose.runtime.Immutable
 import com.decoutkhanqindev.dexreader.domain.model.Category
+import com.decoutkhanqindev.dexreader.presentation.model.CategoryTypeOption
 
 sealed interface CategoriesUiState {
   data object Loading : CategoriesUiState
@@ -9,9 +10,6 @@ sealed interface CategoriesUiState {
 
   @Immutable
   data class Success(
-    val genreList: List<Category> = emptyList(),
-    val themeList: List<Category> = emptyList(),
-    val formatList: List<Category> = emptyList(),
-    val contentList: List<Category> = emptyList(),
+    val categoryMap: Map<CategoryTypeOption, List<Category>> = emptyMap(),
   ) : CategoriesUiState
 }
