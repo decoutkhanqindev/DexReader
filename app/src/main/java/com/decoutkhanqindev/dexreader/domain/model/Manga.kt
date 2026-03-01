@@ -13,4 +13,15 @@ data class Manga(
   val availableTranslatedLanguages: List<MangaLanguage>,
   val lastChapter: String,
   val lastUpdated: String,
-)
+) {
+  companion object {
+    const val DEFAULT_TITLE = "Untitled"
+    const val DEFAULT_DESCRIPTION = "No description"
+    const val DEFAULT_AUTHOR = "Unknown"
+    const val DEFAULT_ARTIST = "Unknown"
+    const val DEFAULT_STATUS = "Unknown"
+    const val DEFAULT_YEAR = "Unknown"
+    const val DEFAULT_LAST_CHAPTER = "Unknown"
+    const val DEFAULT_LAST_UPDATED = ""
+  }
+}

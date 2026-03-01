@@ -14,7 +14,7 @@ object MangaMapper {
   fun MangaResponse.toManga(uploadUrl: String): Manga {
     val title = attributes?.title[MangaLanguageCodeParam.ENGLISH.value]
       ?: attributes?.title?.values?.firstOrNull()
-      ?: "Untitled"
+      ?: Manga.DEFAULT_TITLE
     val coverUrl =
       relationships?.find { it.type == MangaIncludesParam.COVER_ART.value }.let { coverArt ->
         "$uploadUrl/${MangaDexApiEndpoints.COVER_PATH}/${id}/${coverArt?.attributes?.fileName}"
@@ -22,21 +22,21 @@ object MangaMapper {
     val description =
       attributes?.description?.get(MangaLanguageCodeParam.ENGLISH.value)
         ?: attributes?.description?.values?.firstOrNull()
-        ?: "No description ..."
+        ?: Manga.DEFAULT_DESCRIPTION
     val authorId =
       relationships?.find { it.type == MangaIncludesParam.AUTHOR.value }?.attributes?.name
-        ?: "Unknown"
+        ?: Manga.DEFAULT_AUTHOR
     val artistId =
       relationships?.find { it.type == MangaIncludesParam.ARTIST.value }?.attributes?.name
-        ?: "Unknown"
+        ?: Manga.DEFAULT_ARTIST
     val tags = attributes?.tags?.map { it.toCategory() } ?: emptyList()
-    val status = attributes?.status ?: "Unknown"
-    val year = attributes?.year ?: "Unknown"
+    val status = attributes?.status ?: Manga.DEFAULT_STATUS
+    val year = attributes?.year ?: Manga.DEFAULT_YEAR
     val availableTranslatedLanguages =
       attributes?.availableTranslatedLanguages
         ?.map { it.toMangaLanguage() }
         ?: emptyList()
-    val lastChapter = attributes?.lastChapter ?: "Unknown"
+    val lastChapter = attributes?.lastChapter ?: Manga.DEFAULT_LAST_CHAPTER
     val lastUpdated = attributes?.updatedAt.toTimeAgo()
 
     return Manga(

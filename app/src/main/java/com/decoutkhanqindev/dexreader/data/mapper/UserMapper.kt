@@ -10,8 +10,8 @@ object UserMapper {
   fun FirebaseUser.toUser(): User =
     User(
       id = uid,
-      name = displayName ?: "",
-      email = email ?: "",
+      name = displayName ?: User.DEFAULT_NAME,
+      email = email ?: User.DEFAULT_EMAIL,
       profilePictureUrl = photoUrl?.toString()
     )
 

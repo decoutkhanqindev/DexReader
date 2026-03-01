@@ -9,6 +9,8 @@ data class User(
   val profilePictureUrl: String?,
 ) {
   companion object {
+    const val DEFAULT_NAME = ""
+    const val DEFAULT_EMAIL = ""
     private const val MIN_PASSWORD_LENGTH = 8
     private val EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[a-zA-Z]{2,}$".toRegex()
 

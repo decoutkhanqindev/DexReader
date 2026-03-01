@@ -15,7 +15,7 @@ object FavoriteMangaMapper {
       coverUrl = coverUrl,
       author = author,
       status = status,
-      addedAt = createdAt?.time?.toTimeAgo() ?: "Unknown time"
+      addedAt = createdAt?.time?.toTimeAgo() ?: FavoriteManga.DEFAULT_ADDED_AT
     )
 
   fun FavoriteManga.toFavoriteMangaRequest() =

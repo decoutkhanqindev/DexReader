@@ -10,7 +10,7 @@ object CategoryMapper {
     Category(
       id = id,
       title = attributes?.name?.get(MangaLanguageCodeParam.ENGLISH.value)
-        ?: attributes?.name?.values?.firstOrNull() ?: "Unknown",
-      group = attributes?.group ?: "Unknown"
+        ?: attributes?.name?.values?.firstOrNull() ?: Category.DEFAULT_TITLE,
+      group = attributes?.group ?: Category.DEFAULT_GROUP
     )
 }

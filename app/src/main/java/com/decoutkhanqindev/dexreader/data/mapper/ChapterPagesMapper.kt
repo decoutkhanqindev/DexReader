@@ -18,8 +18,8 @@ object ChapterPagesMapper {
 
     return ChapterPages(
       chapterId = chapterId,
-      baseUrl = baseUrl ?: "",
-      chapterDataHash = hash ?: "",
+      baseUrl = baseUrl ?: ChapterPages.DEFAULT_BASE_URL,
+      chapterDataHash = hash ?: ChapterPages.DEFAULT_HASH,
       pageUrls = pageUrls,
       totalPages = pageUrls.size
     )
