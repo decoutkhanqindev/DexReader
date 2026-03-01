@@ -1,8 +1,8 @@
 package com.decoutkhanqindev.dexreader.data.repository
 
 import com.decoutkhanqindev.dexreader.data.local.database.dao.ChapterCacheDao
-import com.decoutkhanqindev.dexreader.data.mapper.toChapterCacheEntity
-import com.decoutkhanqindev.dexreader.data.mapper.toChapterPages
+import com.decoutkhanqindev.dexreader.data.mapper.ChapterPagesMapper.toChapterCacheEntity
+import com.decoutkhanqindev.dexreader.data.mapper.ChapterPagesMapper.toChapterPages
 import com.decoutkhanqindev.dexreader.domain.model.ChapterPages
 import com.decoutkhanqindev.dexreader.domain.repository.CacheRepository
 import kotlinx.coroutines.Dispatchers

@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.data.repository
 
-import com.decoutkhanqindev.dexreader.data.mapper.toUser
-import com.decoutkhanqindev.dexreader.data.mapper.toUserProfileRequest
+import com.decoutkhanqindev.dexreader.data.mapper.UserMapper.toUser
+import com.decoutkhanqindev.dexreader.data.mapper.UserMapper.toUserProfileRequest
 import com.decoutkhanqindev.dexreader.data.network.firebase.auth.FirebaseAuthSource
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
 import com.decoutkhanqindev.dexreader.domain.exception.UserException

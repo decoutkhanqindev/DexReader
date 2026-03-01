@@ -6,37 +6,40 @@ import com.decoutkhanqindev.dexreader.domain.model.FavoriteManga
 import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
 
-fun FavoriteMangaResponse.toFavoriteManga() =
-  FavoriteManga(
-    id = id,
-    title = title,
-    coverUrl = coverUrl,
-    author = author,
-    status = status,
-    addedAt = createdAt?.time?.toTimeAgo() ?: "Unknown time"
-  )
+object FavoriteMangaMapper {
 
-fun FavoriteManga.toFavoriteMangaRequest() =
-  FavoriteMangaRequest(
-    id = id,
-    title = title,
-    coverUrl = coverUrl,
-    author = author,
-    status = status,
-  )
+  fun FavoriteMangaResponse.toFavoriteManga() =
+    FavoriteManga(
+      id = id,
+      title = title,
+      coverUrl = coverUrl,
+      author = author,
+      status = status,
+      addedAt = createdAt?.time?.toTimeAgo() ?: "Unknown time"
+    )
 
-fun FavoriteManga.toManga() =
-  Manga(
-    id = id,
-    title = title,
-    coverUrl = coverUrl,
-    description = "",
-    author = author,
-    artist = "",
-    categories = emptyList(),
-    status = status,
-    year = "",
-    availableTranslatedLanguages = emptyList(),
-    lastChapter = "",
-    lastUpdated = ""
-  )
+  fun FavoriteManga.toFavoriteMangaRequest() =
+    FavoriteMangaRequest(
+      id = id,
+      title = title,
+      coverUrl = coverUrl,
+      author = author,
+      status = status,
+    )
+
+  fun FavoriteManga.toManga() =
+    Manga(
+      id = id,
+      title = title,
+      coverUrl = coverUrl,
+      description = "",
+      author = author,
+      artist = "",
+      categories = emptyList(),
+      status = status,
+      year = "",
+      availableTranslatedLanguages = emptyList(),
+      lastChapter = "",
+      lastUpdated = ""
+    )
+}

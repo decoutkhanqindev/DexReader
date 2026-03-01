@@ -5,31 +5,34 @@ import com.decoutkhanqindev.dexreader.data.network.firebase.dto.response.Reading
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
 
-fun ReadingHistoryResponse.toReadingHistory() =
-  ReadingHistory(
-    id = id,
-    mangaId = mangaId,
-    mangaTitle = mangaTitle,
-    mangaCoverUrl = mangaCoverUrl,
-    chapterId = chapterId,
-    chapterTitle = chapterTitle,
-    chapterNumber = chapterNumber,
-    chapterVolume = chapterVolume,
-    lastReadPage = lastReadPage,
-    totalChapterPages = totalChapterPages,
-    lastReadAt = createdAt?.time.toTimeAgo()
-  )
+object ReadingHistoryMapper {
 
-fun ReadingHistory.toReadingHistoryRequest() =
-  ReadingHistoryRequest(
-    id = id,
-    mangaId = mangaId,
-    mangaTitle = mangaTitle,
-    mangaCoverUrl = mangaCoverUrl,
-    chapterId = chapterId,
-    chapterTitle = chapterTitle,
-    chapterNumber = chapterNumber,
-    chapterVolume = chapterVolume,
-    lastReadPage = lastReadPage,
-    totalChapterPages = totalChapterPages,
-  )
+  fun ReadingHistoryResponse.toReadingHistory() =
+    ReadingHistory(
+      id = id,
+      mangaId = mangaId,
+      mangaTitle = mangaTitle,
+      mangaCoverUrl = mangaCoverUrl,
+      chapterId = chapterId,
+      chapterTitle = chapterTitle,
+      chapterNumber = chapterNumber,
+      chapterVolume = chapterVolume,
+      lastReadPage = lastReadPage,
+      totalChapterPages = totalChapterPages,
+      lastReadAt = createdAt?.time.toTimeAgo()
+    )
+
+  fun ReadingHistory.toReadingHistoryRequest() =
+    ReadingHistoryRequest(
+      id = id,
+      mangaId = mangaId,
+      mangaTitle = mangaTitle,
+      mangaCoverUrl = mangaCoverUrl,
+      chapterId = chapterId,
+      chapterTitle = chapterTitle,
+      chapterNumber = chapterNumber,
+      chapterVolume = chapterVolume,
+      lastReadPage = lastReadPage,
+      totalChapterPages = totalChapterPages,
+    )
+}

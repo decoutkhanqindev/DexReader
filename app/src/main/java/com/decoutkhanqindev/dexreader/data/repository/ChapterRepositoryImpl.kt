@@ -1,8 +1,8 @@
 package com.decoutkhanqindev.dexreader.data.repository
 
-import com.decoutkhanqindev.dexreader.data.mapper.toChapter
-import com.decoutkhanqindev.dexreader.data.mapper.toChapterPages
-import com.decoutkhanqindev.dexreader.data.mapper.toParam
+import com.decoutkhanqindev.dexreader.data.mapper.ChapterMapper.toChapter
+import com.decoutkhanqindev.dexreader.data.mapper.ChapterPagesMapper.toChapterPages
+import com.decoutkhanqindev.dexreader.data.mapper.ParamMapper.toParam
 import com.decoutkhanqindev.dexreader.data.network.mangadex_api.MangaDexApiService
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
 import com.decoutkhanqindev.dexreader.domain.model.ChapterPages

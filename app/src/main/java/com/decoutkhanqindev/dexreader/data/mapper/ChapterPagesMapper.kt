@@ -5,51 +5,54 @@ import com.decoutkhanqindev.dexreader.data.network.mangadex_api.constant.MangaDe
 import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.at_home.AtHomeServerResponse
 import com.decoutkhanqindev.dexreader.domain.model.ChapterPages
 
-fun AtHomeServerResponse.toChapterPages(chapterId: String): ChapterPages {
-  val hash = chapter?.hash
-  val data = chapter?.data
+object ChapterPagesMapper {
 
-  // {baseUrl}/data/{chapterDataHash}/{pageHash}
-  val pageUrls = data?.map { pageHash ->
-    "$baseUrl/${MangaDexApiEndpoints.DATA_PATH}/$hash/$pageHash"
-  } ?: emptyList()
+  fun AtHomeServerResponse.toChapterPages(chapterId: String): ChapterPages {
+    val hash = chapter?.hash
+    val data = chapter?.data
 
-  return ChapterPages(
-    chapterId = chapterId,
-    baseUrl = baseUrl ?: "",
-    chapterDataHash = hash ?: "",
-    pageUrls = pageUrls,
-    totalPages = pageUrls.size
-  )
-}
+    // {baseUrl}/data/{chapterDataHash}/{pageHash}
+    val pageUrls = data?.map { pageHash ->
+      "$baseUrl/${MangaDexApiEndpoints.DATA_PATH}/$hash/$pageHash"
+    } ?: emptyList()
 
-fun ChapterCacheEntity.toChapterPages(): ChapterPages {
-  // {baseUrl}/data/{chapterDataHash}/{pageHash}
-  val pageUrls = pageHashes.map { hash ->
-    "$baseUrl/${MangaDexApiEndpoints.DATA_PATH}/$chapterDataHash/$hash"
+    return ChapterPages(
+      chapterId = chapterId,
+      baseUrl = baseUrl ?: "",
+      chapterDataHash = hash ?: "",
+      pageUrls = pageUrls,
+      totalPages = pageUrls.size
+    )
   }
 
-  return ChapterPages(
-    chapterId = chapterId,
-    baseUrl = baseUrl,
-    chapterDataHash = chapterDataHash,
-    pageUrls = pageUrls,
-    totalPages = pageUrls.size
-  )
-}
+  fun ChapterCacheEntity.toChapterPages(): ChapterPages {
+    // {baseUrl}/data/{chapterDataHash}/{pageHash}
+    val pageUrls = pageHashes.map { hash ->
+      "$baseUrl/${MangaDexApiEndpoints.DATA_PATH}/$chapterDataHash/$hash"
+    }
 
-fun ChapterPages.toChapterCacheEntity(mangaId: String): ChapterCacheEntity {
-  val pageHashes = pageUrls.map { url ->
-    url.substringAfterLast("/")
+    return ChapterPages(
+      chapterId = chapterId,
+      baseUrl = baseUrl,
+      chapterDataHash = chapterDataHash,
+      pageUrls = pageUrls,
+      totalPages = pageUrls.size
+    )
   }
 
-  return ChapterCacheEntity(
-    chapterId = chapterId,
-    mangaId = mangaId,
-    baseUrl = baseUrl,
-    chapterDataHash = chapterDataHash,
-    pageHashes = pageHashes,
-    totalPages = pageUrls.size,
-    cachedAt = System.currentTimeMillis()
-  )
+  fun ChapterPages.toChapterCacheEntity(mangaId: String): ChapterCacheEntity {
+    val pageHashes = pageUrls.map { url ->
+      url.substringAfterLast("/")
+    }
+
+    return ChapterCacheEntity(
+      chapterId = chapterId,
+      mangaId = mangaId,
+      baseUrl = baseUrl,
+      chapterDataHash = chapterDataHash,
+      pageHashes = pageHashes,
+      totalPages = pageUrls.size,
+      cachedAt = System.currentTimeMillis()
+    )
+  }
 }

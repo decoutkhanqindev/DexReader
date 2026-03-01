@@ -1,8 +1,8 @@
 package com.decoutkhanqindev.dexreader.data.repository
 
-import com.decoutkhanqindev.dexreader.data.mapper.toCategory
-import com.decoutkhanqindev.dexreader.data.mapper.toManga
-import com.decoutkhanqindev.dexreader.data.mapper.toParam
+import com.decoutkhanqindev.dexreader.data.mapper.CategoryMapper.toCategory
+import com.decoutkhanqindev.dexreader.data.mapper.MangaMapper.toManga
+import com.decoutkhanqindev.dexreader.data.mapper.ParamMapper.toParam
 import com.decoutkhanqindev.dexreader.data.network.mangadex_api.MangaDexApiService
 import com.decoutkhanqindev.dexreader.di.UploadUrlQualifier
 import com.decoutkhanqindev.dexreader.domain.model.Category
