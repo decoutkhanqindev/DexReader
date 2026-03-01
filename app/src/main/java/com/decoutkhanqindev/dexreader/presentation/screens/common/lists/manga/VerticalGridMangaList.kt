@@ -53,7 +53,7 @@ fun VerticalGridMangaList(
       itemsIndexed(
         items = mangaList,
         key = { index, manga -> "${manga.id}_$index" }
-      ) { index, manga ->
+      ) { _, manga ->
         MangaItem(
           manga = manga,
           onSelectedManga = onSelectedManga,
