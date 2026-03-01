@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.decoutkhanqindev.dexreader.domain.exception.FavoritesHistoryException
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
 import com.decoutkhanqindev.dexreader.domain.model.MangaLanguage
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
@@ -167,7 +168,12 @@ class ReaderViewModel @Inject constructor(
       getChapterCacheUseCase(chapterId = chapterIdToFetch)
         .onSuccess { chapterPages ->
           if (!isPrefetch) {
-            val initialChapterPage = getInitialChapterPage(chapterId = chapterIdToFetch)
+            val initialChapterPage = ReadingHistory.findInitialPage(
+              chapterId = chapterIdToFetch,
+              navChapterId = chapterIdFromArg,
+              navPage = lastReadPageFromArg,
+              historyList = currentReadingHistoryList,
+            )
             _chapterPagesUiState.value = ChapterPagesUiState.Success(
               chapterPages = chapterPages,
               currentChapterPage = initialChapterPage
@@ -184,7 +190,12 @@ class ReaderViewModel @Inject constructor(
       getChapterPagesUseCase(chapterId = chapterIdToFetch)
         .onSuccess { chapterPages ->
           if (!isPrefetch) {
-            val initialChapterPage = getInitialChapterPage(chapterId = chapterIdToFetch)
+            val initialChapterPage = ReadingHistory.findInitialPage(
+              chapterId = chapterIdToFetch,
+              navChapterId = chapterIdFromArg,
+              navPage = lastReadPageFromArg,
+              historyList = currentReadingHistoryList,
+            )
             _chapterPagesUiState.value = ChapterPagesUiState.Success(
               chapterPages = chapterPages,
               currentChapterPage = initialChapterPage
@@ -205,19 +216,6 @@ class ReaderViewModel @Inject constructor(
           Log.d(TAG, "getChapterPagesUseCase have error: ${it.stackTraceToString()}")
         }
     }
-  }
-
-  private fun getInitialChapterPage(chapterId: String): Int {
-    if (chapterId == chapterIdFromArg && lastReadPageFromArg > 0)
-      return lastReadPageFromArg
-
-    if (currentReadingHistory != null && currentReadingHistory!!.chapterId == chapterId)
-      return currentReadingHistory!!.lastReadPage
-
-    val historyForCurrentChapter = currentReadingHistoryList.find { it.chapterId == chapterId }
-    if (historyForCurrentChapter != null) return historyForCurrentChapter.lastReadPage
-
-    return 1
   }
 
   private fun prefetchNextChapterPages() {
@@ -370,7 +368,7 @@ class ReaderViewModel @Inject constructor(
     viewModelScope.launch {
       _userId.value?.let { userId ->
         val newReadingHistory = ReadingHistory(
-          id = "${mangaIdFromArg}_${currentChapterId}",
+          id = ReadingHistory.generateId(mangaIdFromArg, currentChapterId),
           mangaId = mangaIdFromArg,
           mangaTitle = mangaTitle!!,
           mangaCoverUrl = mangaCoverUrl!!,
@@ -422,7 +420,7 @@ class ReaderViewModel @Inject constructor(
             .onFailure { throwable ->
               isObservingReadingHistoryList = false
 
-              if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null)
+              if (throwable is FavoritesHistoryException.PermissionDenied && _userId.value == null)
                 return@onFailure
 
               currentReadingHistoryList = emptyList()
@@ -469,7 +467,7 @@ class ReaderViewModel @Inject constructor(
             .onFailure { throwable ->
               isObservingReadingHistoryList = false
 
-              if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null)
+              if (throwable is FavoritesHistoryException.PermissionDenied && _userId.value == null)
                 return@onFailure
 
               hasNextReadingHistoryListPage = false
@@ -515,8 +513,7 @@ class ReaderViewModel @Inject constructor(
 
   private fun clearExpiredCache() {
     viewModelScope.launch {
-      val expiryTimestamp = System.currentTimeMillis() - CACHE_EXPIRY_TIME_MILLIS
-      clearExpiredCacheUseCase(expiryTimestamp)
+      clearExpiredCacheUseCase()
         .onSuccess { Log.d(TAG, "clearExpiredCache success.") }
         .onFailure {
           Log.d(TAG, "clearExpiredCache error: ${it.stackTraceToString()}")
@@ -550,7 +547,5 @@ class ReaderViewModel @Inject constructor(
     private const val READING_HISTORY_LIST_PER_PAGE_SIZE = 50
     private const val NEARED_LAST_CHAPTER_COUNT = 5
     private const val DELAY_TIME_MILLIS = 100L
-    private const val CACHE_EXPIRY_TIME_MILLIS = 24 * 60 * 60 * 1000L // 24h
-    private const val PERMISSION_DENIED_EXCEPTION = "PERMISSION_DENIED"
   }
 }

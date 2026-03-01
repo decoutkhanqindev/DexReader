@@ -3,6 +3,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.history
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.decoutkhanqindev.dexreader.domain.exception.FavoritesHistoryException
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.usecase.history.ObserveHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.history.RemoveFromHistoryUseCase
@@ -69,7 +70,7 @@ class HistoryViewModel @Inject constructor(
                 )
               }
               .onFailure { throwable ->
-                if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null) {
+                if (throwable is FavoritesHistoryException.PermissionDenied && _userId.value == null) {
                   _historyUiState.value = BasePaginationUiState.FirstPageLoading
                   return@onFailure
                 }
@@ -79,7 +80,7 @@ class HistoryViewModel @Inject constructor(
               }
           }
         } catch (e: Exception) {
-          if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null)
+          if (e is FavoritesHistoryException.PermissionDenied && _userId.value == null)
             _historyUiState.value = BasePaginationUiState.FirstPageLoading
           else {
             _historyUiState.value = BasePaginationUiState.FirstPageError
@@ -143,7 +144,7 @@ class HistoryViewModel @Inject constructor(
                 )
               }
               .onFailure { throwable ->
-                if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null)
+                if (throwable is FavoritesHistoryException.PermissionDenied && _userId.value == null)
                   return@onFailure
 
                 _historyUiState.value =
@@ -155,7 +156,7 @@ class HistoryViewModel @Inject constructor(
               }
           }
         } catch (e: Exception) {
-          if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null)
+          if (e is FavoritesHistoryException.PermissionDenied && _userId.value == null)
             return@collectLatest
           else {
             _historyUiState.value = currentUiState.copy(nextPageState = BaseNextPageState.ERROR)
@@ -260,6 +261,5 @@ class HistoryViewModel @Inject constructor(
     private const val TAG = "HistoryViewModel"
     private const val FIRST_PAGE = 1
     private const val READING_HISTORY_LIST_PER_PAGE_SIZE = 10
-    private const val PERMISSION_DENIED_EXCEPTION = "PERMISSION_DENIED"
   }
 }

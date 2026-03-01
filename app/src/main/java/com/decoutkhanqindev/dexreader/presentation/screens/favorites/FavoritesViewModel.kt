@@ -3,6 +3,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.favorites
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.decoutkhanqindev.dexreader.domain.exception.FavoritesHistoryException
 import com.decoutkhanqindev.dexreader.domain.model.FavoriteManga
 import com.decoutkhanqindev.dexreader.domain.usecase.favorites.ObserveFavoritesUseCase
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
@@ -62,7 +63,7 @@ class FavoritesViewModel @Inject constructor(
                 )
               }
               .onFailure { throwable ->
-                if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null) {
+                if (throwable is FavoritesHistoryException.PermissionDenied && _userId.value == null) {
                   _uiState.value = BasePaginationUiState.FirstPageLoading
                   return@onFailure
                 }
@@ -75,7 +76,7 @@ class FavoritesViewModel @Inject constructor(
               }
           }
         } catch (e: Exception) {
-          if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null)
+          if (e is FavoritesHistoryException.PermissionDenied && _userId.value == null)
             _uiState.value = BasePaginationUiState.FirstPageLoading
           else {
             _uiState.value = BasePaginationUiState.FirstPageError
@@ -139,7 +140,7 @@ class FavoritesViewModel @Inject constructor(
                 )
               }
               .onFailure { throwable ->
-                if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null)
+                if (throwable is FavoritesHistoryException.PermissionDenied && _userId.value == null)
                   return@onFailure
 
                 _uiState.value = currentUiState.copy(nextPageState = BaseNextPageState.ERROR)
@@ -150,7 +151,7 @@ class FavoritesViewModel @Inject constructor(
               }
           }
         } catch (e: Exception) {
-          if (e.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null)
+          if (e is FavoritesHistoryException.PermissionDenied && _userId.value == null)
             return@collectLatest
           else {
             _uiState.value = currentUiState.copy(nextPageState = BaseNextPageState.ERROR)
@@ -195,6 +196,5 @@ class FavoritesViewModel @Inject constructor(
     private const val TAG = "FavoritesViewModel"
     private const val FIRST_PAGE = 1
     private const val MANGA_LIST_PER_PAGE_SIZE = 20
-    private const val PERMISSION_DENIED_EXCEPTION = "PERMISSION_DENIED"
   }
 }

@@ -3,10 +3,13 @@ package com.decoutkhanqindev.dexreader.data.repository
 import com.decoutkhanqindev.dexreader.data.mapper.FavoriteMangaMapper.toFavoriteManga
 import com.decoutkhanqindev.dexreader.data.mapper.FavoriteMangaMapper.toFavoriteMangaRequest
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
+import com.decoutkhanqindev.dexreader.domain.exception.FavoritesHistoryException
 import com.decoutkhanqindev.dexreader.domain.model.FavoriteManga
 import com.decoutkhanqindev.dexreader.domain.repository.FavoritesRepository
+import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -29,6 +32,11 @@ class FavoritesRepositoryImpl @Inject constructor(
       )
       .map { favoriteMangaResponseList ->
         favoriteMangaResponseList.map { it.toFavoriteManga() }
+      }
+      .catch { e ->
+        if (e is FirebaseFirestoreException && e.code == FirebaseFirestoreException.Code.PERMISSION_DENIED)
+          throw FavoritesHistoryException.PermissionDenied(cause = e)
+        else throw e
       }
       .flowOn(Dispatchers.IO)
       .distinctUntilChanged()
@@ -53,6 +61,11 @@ class FavoritesRepositoryImpl @Inject constructor(
   ): Flow<Boolean> =
     firebaseFirestoreSource
       .observeIsFavorite(userId, mangaId)
+      .catch { e ->
+        if (e is FirebaseFirestoreException && e.code == FirebaseFirestoreException.Code.PERMISSION_DENIED)
+          throw FavoritesHistoryException.PermissionDenied(cause = e)
+        else throw e
+      }
       .flowOn(Dispatchers.IO)
       .distinctUntilChanged()
 }

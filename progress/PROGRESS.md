@@ -81,9 +81,6 @@ All 11 properties across 6 domain models renamed to remove DTO/API naming leakag
 
 All call sites updated across data mappers, use cases, ViewModels, and composables.
 
-**Remaining minor cleanup (deferred):**
-- [ ] Delete `MangaLanguageCodeParam` — replace usages in `ParamMapper` with inline ISO string constants
-
 ### Phase 6 — ViewModel Business Logic Extraction 🔲 TODO
 Extract remaining business logic from ViewModels into Use Cases. See `memory/refactoring-gaps.md` for full inventory.
 

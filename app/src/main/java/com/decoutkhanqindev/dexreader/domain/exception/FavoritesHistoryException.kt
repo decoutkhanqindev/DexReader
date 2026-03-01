@@ -10,4 +10,7 @@ sealed class FavoritesHistoryException(override val cause: Throwable? = null) :
 
   data class HistoryNotFound(override val cause: Throwable? = null) :
     FavoritesHistoryException(cause)
+
+  data class PermissionDenied(override val cause: Throwable? = null) :
+    FavoritesHistoryException(cause)
 }

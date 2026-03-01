@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.decoutkhanqindev.dexreader.domain.exception.FavoritesHistoryException
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
-import com.decoutkhanqindev.dexreader.domain.model.FavoriteManga
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortOrder
 import com.decoutkhanqindev.dexreader.domain.usecase.chapter.GetChapterListUseCase
@@ -84,10 +84,7 @@ class MangaDetailsViewModel @Inject constructor(
   private val _startedChapter = MutableStateFlow<Chapter?>(null)
   val startedChapter: StateFlow<Chapter?> = _startedChapter.asStateFlow()
   val continueChapter: StateFlow<ReadingHistory?> = _readingHistoryList
-    .map { historyList ->
-      historyList.firstOrNull { it.lastReadPage < it.pageCount - 1 } // chapter is not finish reading
-        ?: historyList.firstOrNull() // all have been read, get the most recently read chapter
-    }
+    .map { ReadingHistory.findContinueTarget(it) }
     .stateIn(
       scope = viewModelScope,
       started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
@@ -235,7 +232,7 @@ class MangaDetailsViewModel @Inject constructor(
               .onFailure { throwable ->
                 _isFavorite.value = false
 
-                if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null)
+                if (throwable is FavoritesHistoryException.PermissionDenied && _userId.value == null)
                   return@onFailure
 
                 Log.d(TAG, "observeIsFavorite have error: ${throwable.stackTraceToString()}")
@@ -251,17 +248,8 @@ class MangaDetailsViewModel @Inject constructor(
     if (currentUiState !is MangaDetailsUiState.Success) return
 
     viewModelScope.launch {
-      val manga = currentUiState.manga
       _userId.value?.let { userId ->
-        val newFavoriteManga = FavoriteManga(
-          id = manga.id,
-          title = manga.title,
-          coverUrl = manga.coverUrl,
-          author = manga.author,
-          status = manga.status,
-          addedAt = null
-        )
-        addToFavoritesUseCase(userId = userId, manga = newFavoriteManga)
+        addToFavoritesUseCase(userId = userId, manga = currentUiState.manga)
           .onSuccess { Log.d(TAG, "adResponseFavorites success") }
           .onFailure {
             Log.d(TAG, "adResponseFavorites have error: ${it.stackTraceToString()}")
@@ -317,7 +305,7 @@ class MangaDetailsViewModel @Inject constructor(
             .onFailure { throwable ->
               isObservingReadingHistoryList = false
 
-              if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null)
+              if (throwable is FavoritesHistoryException.PermissionDenied && _userId.value == null)
                 return@onFailure
 
               _readingHistoryList.value = emptyList()
@@ -362,7 +350,7 @@ class MangaDetailsViewModel @Inject constructor(
             .onFailure { throwable ->
               isObservingReadingHistoryList = false
 
-              if (throwable.message?.contains(PERMISSION_DENIED_EXCEPTION) == true && _userId.value == null)
+              if (throwable is FavoritesHistoryException.PermissionDenied && _userId.value == null)
                 return@onFailure
 
               hasNextReadingHistoryListPage = false
@@ -426,7 +414,6 @@ class MangaDetailsViewModel @Inject constructor(
     private const val FIRST_PAGE = 1
     private const val CHAPTER_LIST_PER_PAGE_SIZE = 20
     private const val READING_HISTORY_LIST_PER_PAGE_SIZE = 50
-    private const val PERMISSION_DENIED_EXCEPTION = "PERMISSION_DENIED"
     private const val STOP_TIMEOUT_MILLIS = 5000L
   }
 }

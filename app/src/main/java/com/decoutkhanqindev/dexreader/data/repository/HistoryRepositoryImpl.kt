@@ -3,10 +3,13 @@ package com.decoutkhanqindev.dexreader.data.repository
 import com.decoutkhanqindev.dexreader.data.mapper.ReadingHistoryMapper.toReadingHistory
 import com.decoutkhanqindev.dexreader.data.mapper.ReadingHistoryMapper.toReadingHistoryRequest
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
+import com.decoutkhanqindev.dexreader.domain.exception.FavoritesHistoryException
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.repository.HistoryRepository
+import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -31,6 +34,11 @@ class HistoryRepositoryImpl @Inject constructor(
       )
       .map { readingHistoryResponseList ->
         readingHistoryResponseList.map { it.toReadingHistory() }
+      }
+      .catch { e ->
+        if (e is FirebaseFirestoreException && e.code == FirebaseFirestoreException.Code.PERMISSION_DENIED)
+          throw FavoritesHistoryException.PermissionDenied(cause = e)
+        else throw e
       }
       .flowOn(Dispatchers.IO)
       .distinctUntilChanged()
