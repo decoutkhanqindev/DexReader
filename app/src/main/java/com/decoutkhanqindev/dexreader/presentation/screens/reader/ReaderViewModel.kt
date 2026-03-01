@@ -52,8 +52,7 @@ class ReaderViewModel @Inject constructor(
 
   private var currentChapterId: String = chapterIdFromArg
 
-  private val _chapterDetailsUiState =
-    MutableStateFlow<ChapterDetailsUiState>(ChapterDetailsUiState())
+  private val _chapterDetailsUiState = MutableStateFlow(ChapterDetailsUiState())
   val chapterDetailsUiState: StateFlow<ChapterDetailsUiState> = _chapterDetailsUiState.asStateFlow()
 
   private val _chapterPagesUiState =
@@ -115,12 +114,12 @@ class ReaderViewModel @Inject constructor(
           _chapterDetailsUiState.update {
             it.copy(
               volume = chapter.volume,
-              chapterNumber = chapter.chapterNumber,
+              chapterNumber = chapter.number,
               title = chapter.title
             )
           }
 
-          chapterLanguage = chapter.translatedLanguage
+          chapterLanguage = chapter.language
 
           if (currentChapterList.isEmpty() && chapterLanguage != null)
             fetchChapterListFirstPage()
@@ -380,7 +379,7 @@ class ReaderViewModel @Inject constructor(
           chapterNumber = currentChapterDetailsState.chapterNumber,
           chapterVolume = currentChapterDetailsState.volume,
           lastReadPage = currentChapterPagesState.currentChapterPage,
-          totalChapterPages = currentChapterPagesState.chapterPages.totalPages,
+          pageCount = currentChapterPagesState.chapterPages.totalPages,
           lastReadAt = null
         )
         addAndUpdateToHistoryUseCase(userId = userId, readingHistory = newReadingHistory)

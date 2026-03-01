@@ -48,7 +48,7 @@ fun ReaderContent(
     }
 
     is ChapterPagesUiState.Success -> {
-      val chapterPages = chapterPageUiState.chapterPages.pageUrls
+      val chapterPages = chapterPageUiState.chapterPages.pages
       val currentPage = chapterPageUiState.currentChapterPage
       val totalPages = chapterPageUiState.chapterPages.totalPages
 

@@ -9,22 +9,24 @@ import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
 object ChapterMapper {
 
   fun ChapterResponse.toChapter(): Chapter {
-    val mangaId = relationships?.find { it?.type == MangaIncludesParam.MANGA.value }?.id ?: Chapter.DEFAULT_MANGA_ID
+    val mangaId =
+      relationships?.find { it?.type == MangaIncludesParam.MANGA.value }?.id
+        ?: Chapter.DEFAULT_MANGA_ID
     val title = attributes?.title ?: Chapter.DEFAULT_TITLE
-    val chapterNumber = attributes?.chapter ?: Chapter.DEFAULT_CHAPTER_NUMBER
+    val number = attributes?.chapter ?: Chapter.DEFAULT_CHAPTER_NUMBER
     val volume = attributes?.volume ?: Chapter.DEFAULT_VOLUME
-    val publishAt = attributes?.publishAt.toTimeAgo()
-    val translatedLanguage =
+    val publishedAt = attributes?.publishAt.toTimeAgo()
+    val language =
       attributes?.translatedLanguage?.toMangaLanguage() ?: Chapter.DEFAULT_LANGUAGE
 
     return Chapter(
       id = id,
       mangaId = mangaId,
       title = title,
-      chapterNumber = chapterNumber,
+      number = number,
       volume = volume,
-      publishAt = publishAt,
-      translatedLanguage = translatedLanguage
+      publishedAt = publishedAt,
+      language = language
     )
   }
 }

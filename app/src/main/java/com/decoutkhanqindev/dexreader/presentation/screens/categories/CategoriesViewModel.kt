@@ -3,12 +3,16 @@ package com.decoutkhanqindev.dexreader.presentation.screens.categories
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.decoutkhanqindev.dexreader.domain.model.Category
+import com.decoutkhanqindev.dexreader.domain.model.CategoryType
 import com.decoutkhanqindev.dexreader.domain.usecase.category.GetCategoryListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,10 +32,19 @@ class CategoriesViewModel @Inject constructor(
 
       getCategoryListUseCase()
         .onSuccess { categoryList ->
-          val genreList = categoryList.filter { it.group == CategoryGroup.Genre.id }
-          val themeList = categoryList.filter { it.group == CategoryGroup.Theme.id }
-          val formatList = categoryList.filter { it.group == CategoryGroup.Format.id }
-          val contentList = categoryList.filter { it.group == CategoryGroup.Content.id }
+          var genreList: List<Category> = emptyList()
+          var themeList: List<Category> = emptyList()
+          var formatList: List<Category> = emptyList()
+          var contentList: List<Category> = emptyList()
+
+          // Switch to Default dispatcher for CPU-intensive filtering operations
+          withContext(Dispatchers.Default) {
+            genreList = categoryList.filter { it.type == CategoryType.GENRE }
+            themeList = categoryList.filter { it.type == CategoryType.THEME }
+            formatList = categoryList.filter { it.type == CategoryType.FORMAT }
+            contentList = categoryList.filter { it.type == CategoryType.CONTENT }
+          }
+
           _uiState.value = CategoriesUiState.Success(
             genreList = genreList,
             themeList = themeList,

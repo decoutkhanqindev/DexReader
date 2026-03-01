@@ -3,8 +3,8 @@ package com.decoutkhanqindev.dexreader.domain.model
 data class ChapterPages(
   val chapterId: String,
   val baseUrl: String,
-  val chapterDataHash: String,
-  val pageUrls: List<String>,
+  val dataHash: String,
+  val pages: List<String>,
   val totalPages: Int,
 ) {
   companion object {

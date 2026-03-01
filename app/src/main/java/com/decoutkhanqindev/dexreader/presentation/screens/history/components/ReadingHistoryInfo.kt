@@ -48,7 +48,7 @@ fun ReadingHistoryInfo(
         text = stringResource(
           R.string.reader_title,
           readingHistory.lastReadPage,
-          readingHistory.totalChapterPages
+          readingHistory.pageCount
         ),
         style = MaterialTheme.typography.titleMedium,
         fontWeight = FontWeight.ExtraBold,

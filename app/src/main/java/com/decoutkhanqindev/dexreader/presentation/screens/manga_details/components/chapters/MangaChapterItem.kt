@@ -24,7 +24,7 @@ import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 
 @Composable
 fun MangaChapterItem(
-  lastChapter: String,
+  latestChapter: String,
   chapter: Chapter,
   readingHistory: ReadingHistory? = null,
   onSelectedChapter: (
@@ -35,7 +35,7 @@ fun MangaChapterItem(
   modifier: Modifier = Modifier,
 ) {
   val volume = chapter.volume
-  val chapterNumber = chapter.chapterNumber
+  val number = chapter.number
 
   Card(
     modifier = modifier,
@@ -63,12 +63,12 @@ fun MangaChapterItem(
       ) {
         Row(modifier = Modifier.weight(0.7f)) {
           Text(
-            text = stringResource(R.string.volume_chapter, volume, chapterNumber),
+            text = stringResource(R.string.volume_chapter, volume, number),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.ExtraBold,
             modifier = Modifier.padding(end = 4.dp)
           )
-          if (lastChapter == chapterNumber) {
+          if (latestChapter == number) {
             Text(
               text = stringResource(R.string.last_chapter),
               style = MaterialTheme.typography.titleMedium,
@@ -82,7 +82,7 @@ fun MangaChapterItem(
             text = stringResource(
               R.string.reader_title,
               readingHistory.lastReadPage,
-              readingHistory.totalChapterPages
+              readingHistory.pageCount
             ),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.ExtraBold,
@@ -104,7 +104,7 @@ fun MangaChapterItem(
           modifier = Modifier.weight(0.6f)
         )
         Text(
-          text = chapter.publishAt,
+          text = chapter.publishedAt,
           style = MaterialTheme.typography.bodyLarge,
           fontWeight = FontWeight.Bold,
           fontStyle = FontStyle.Italic,

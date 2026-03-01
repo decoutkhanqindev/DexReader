@@ -60,7 +60,7 @@ class MangaDetailsViewModel @Inject constructor(
   val availableLanguages: StateFlow<List<MangaLanguageName>> = _mangaDetailsUiState
     .map { state ->
       if (state is MangaDetailsUiState.Success)
-        state.manga.availableTranslatedLanguages.map { it.toMangaLanguageName() }
+        state.manga.availableLanguages.map { it.toMangaLanguageName() }
       else emptyList()
     }
     .stateIn(
@@ -85,7 +85,7 @@ class MangaDetailsViewModel @Inject constructor(
   val startedChapter: StateFlow<Chapter?> = _startedChapter.asStateFlow()
   val continueChapter: StateFlow<ReadingHistory?> = _readingHistoryList
     .map { historyList ->
-      historyList.firstOrNull { it.lastReadPage < it.totalChapterPages - 1 } // chapter is not finish reading
+      historyList.firstOrNull { it.lastReadPage < it.pageCount - 1 } // chapter is not finish reading
         ?: historyList.firstOrNull() // all have been read, get the most recently read chapter
     }
     .stateIn(

@@ -18,7 +18,7 @@ object ReadingHistoryMapper {
       chapterNumber = chapterNumber,
       chapterVolume = chapterVolume,
       lastReadPage = lastReadPage,
-      totalChapterPages = totalChapterPages,
+      pageCount = totalChapterPages,
       lastReadAt = createdAt?.time.toTimeAgo()
     )
 
@@ -33,6 +33,6 @@ object ReadingHistoryMapper {
       chapterNumber = chapterNumber,
       chapterVolume = chapterVolume,
       lastReadPage = lastReadPage,
-      totalChapterPages = totalChapterPages,
+      totalChapterPages = pageCount,
     )
 }

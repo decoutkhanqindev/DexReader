@@ -38,8 +38,8 @@ object FavoriteMangaMapper {
       categories = emptyList(),
       status = status,
       year = "",
-      availableTranslatedLanguages = emptyList(),
-      lastChapter = "",
-      lastUpdated = ""
+      availableLanguages = emptyList(),
+      latestChapter = "",
+      updatedAt = ""
     )
 }

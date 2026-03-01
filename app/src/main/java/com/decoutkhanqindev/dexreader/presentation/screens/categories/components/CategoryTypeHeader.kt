@@ -24,10 +24,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.model.CategoryTypeOption
 
 @Composable
-fun CategoryGroupHeader(
-  group: String,
+fun CategoryTypeHeader(
+  type: CategoryTypeOption,
   isExpanded: Boolean,
   onExpandClick: () -> Unit,
   modifier: Modifier = Modifier,
@@ -40,7 +41,7 @@ fun CategoryGroupHeader(
         .padding(horizontal = 12.dp)
     ) {
       Text(
-        text = group,
+        text = stringResource(type.nameRes),
         style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.ExtraBold,
         modifier = Modifier

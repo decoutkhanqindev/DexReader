@@ -57,7 +57,7 @@ fun ProfileContent(
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
       ProfilePicturePicker(
-        url = uiState.newProfilePictureUrl ?: currentUser?.profilePictureUrl,
+        url = uiState.newAvatarUrl ?: currentUser?.avatarUrl,
         name = uiState.newName ?: currentUser?.name ?: "",
         onSelectedImageUrl = onUpdatePicUrlChange,
         modifier = Modifier

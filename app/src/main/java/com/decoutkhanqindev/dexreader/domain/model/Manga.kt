@@ -10,9 +10,9 @@ data class Manga(
   val categories: List<Category>,
   val status: String,
   val year: String,
-  val availableTranslatedLanguages: List<MangaLanguage>,
-  val lastChapter: String,
-  val lastUpdated: String,
+  val availableLanguages: List<MangaLanguage>,
+  val latestChapter: String,
+  val updatedAt: String,
 ) {
   companion object {
     const val DEFAULT_TITLE = "Untitled"

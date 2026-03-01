@@ -67,10 +67,21 @@ Fallback values extracted from mapper raw string literals into domain model `com
 
 All 6 affected mapper files reference `ModelName.DEFAULT_*` — no more raw fallback literals.
 
-### Phase 5 — Type Fixes 🔲 TODO (Next Session)
-- [ ] Fix `Manga.availableTranslatedLanguages: List<String>` → `List<MangaLanguage>`
-  - `MangaMapper` already calls `.toMangaLanguage()` into a local var — just needs the field type changed
-  - Update anywhere it's consumed in presentation (`MangaDetailsViewModel`, `MangaDetailsScreen`)
+### Phase 5 — Domain Model Property Renames ✅ DONE
+All 11 properties across 6 domain models renamed to remove DTO/API naming leakage:
+
+| Model | Old → New |
+|---|---|
+| `Chapter` | `publishAt` → `publishedAt`, `translatedLanguage` → `language`, `chapterNumber` → `number` |
+| `Manga` | `availableTranslatedLanguages` → `availableLanguages`, `lastUpdated` → `updatedAt`, `lastChapter` → `latestChapter` |
+| `ChapterPages` | `chapterDataHash` → `dataHash`, `pageUrls` → `pages` |
+| `Category` | `group` → `type` |
+| `ReadingHistory` | `totalChapterPages` → `pageCount` |
+| `User` | `profilePictureUrl` → `avatarUrl` |
+
+All call sites updated across data mappers, use cases, ViewModels, and composables.
+
+**Remaining minor cleanup (deferred):**
 - [ ] Delete `MangaLanguageCodeParam` — replace usages in `ParamMapper` with inline ISO string constants
 
 ### Phase 6 — ViewModel Business Logic Extraction 🔲 TODO

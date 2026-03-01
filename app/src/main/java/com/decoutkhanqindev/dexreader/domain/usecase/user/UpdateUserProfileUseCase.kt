@@ -11,19 +11,19 @@ class UpdateUserProfileUseCase @Inject constructor(
   suspend operator fun invoke(
     currentUser: User,
     newName: String?,
-    newProfilePicUrl: String?,
+    newAvatarUrl: String?,
   ): Result<Unit> = runSuspendResultCatching {
     val nameToUpdate = newName?.trim() ?: currentUser.name
     User.validateName(nameToUpdate)
 
     val hasNameChanged = currentUser.name != nameToUpdate
-    val hasPicChanged = currentUser.profilePictureUrl != newProfilePicUrl
+    val hasAvatarChanged = currentUser.avatarUrl != newAvatarUrl
 
-    if (!hasNameChanged && !hasPicChanged) return@runSuspendResultCatching
+    if (!hasNameChanged && !hasAvatarChanged) return@runSuspendResultCatching
 
     val updatedUser = currentUser.copy(
       name = nameToUpdate,
-      profilePictureUrl = newProfilePicUrl
+      avatarUrl = newAvatarUrl
     )
 
     repository.updateUserProfile(updatedUser)

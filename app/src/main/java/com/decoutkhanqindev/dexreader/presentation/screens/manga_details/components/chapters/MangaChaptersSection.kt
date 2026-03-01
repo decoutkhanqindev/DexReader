@@ -20,7 +20,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPage
 fun MangaChaptersSection(
   mangaChaptersUiState: BasePaginationUiState<Chapter>,
   readingHistoryList: List<ReadingHistory> = emptyList(),
-  lastChapter: String,
+  latestChapter: String,
   chapterLanguage: MangaLanguageName,
   chapterLanguageList: List<MangaLanguageName>,
   onSelectedLanguage: (MangaLanguageName) -> Unit,
@@ -61,7 +61,7 @@ fun MangaChaptersSection(
         val chapterListNextPageState = mangaChaptersUiState.nextPageState
 
         MangaChapterList(
-          lastChapter = lastChapter,
+          latestChapter = latestChapter,
           chapterList = chapterList,
           readingHistoryList = readingHistoryList,
           onSelectedChapter = onSelectedChapter,

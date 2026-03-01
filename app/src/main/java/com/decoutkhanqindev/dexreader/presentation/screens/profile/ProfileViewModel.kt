@@ -41,7 +41,7 @@ class ProfileViewModel @Inject constructor(
         updateUserProfileUseCase(
           currentUser = currentUiState.currentUser,
           newName = currentUiState.newName,
-          newProfilePicUrl = currentUiState.newProfilePictureUrl
+          newAvatarUrl = currentUiState.newAvatarUrl
         )
           .onSuccess {
             _uiState.update {
@@ -132,10 +132,10 @@ class ProfileViewModel @Inject constructor(
   }
 
   fun updateUserPicUrl(value: String) {
-    if (_uiState.value.newProfilePictureUrl == value) return
+    if (_uiState.value.newAvatarUrl == value) return
     _uiState.update {
       it.copy(
-        newProfilePictureUrl = value,
+        newAvatarUrl = value,
         isLoading = false,
         isUpdateUserSuccess = false,
         isUpdateUserError = false

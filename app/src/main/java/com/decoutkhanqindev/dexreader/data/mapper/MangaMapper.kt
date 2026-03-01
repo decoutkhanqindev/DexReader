@@ -32,12 +32,12 @@ object MangaMapper {
     val tags = attributes?.tags?.map { it.toCategory() } ?: emptyList()
     val status = attributes?.status ?: Manga.DEFAULT_STATUS
     val year = attributes?.year ?: Manga.DEFAULT_YEAR
-    val availableTranslatedLanguages =
+    val availableLanguages =
       attributes?.availableTranslatedLanguages
         ?.map { it.toMangaLanguage() }
         ?: emptyList()
-    val lastChapter = attributes?.lastChapter ?: Manga.DEFAULT_LAST_CHAPTER
-    val lastUpdated = attributes?.updatedAt.toTimeAgo()
+    val latestChapter = attributes?.lastChapter ?: Manga.DEFAULT_LAST_CHAPTER
+    val updatedAt = attributes?.updatedAt.toTimeAgo()
 
     return Manga(
       id = id,
@@ -49,9 +49,9 @@ object MangaMapper {
       categories = tags,
       status = status,
       year = year,
-      availableTranslatedLanguages = availableTranslatedLanguages,
-      lastChapter = lastChapter,
-      lastUpdated = lastUpdated,
+      availableLanguages = availableLanguages,
+      latestChapter = latestChapter,
+      updatedAt = updatedAt,
     )
   }
 }

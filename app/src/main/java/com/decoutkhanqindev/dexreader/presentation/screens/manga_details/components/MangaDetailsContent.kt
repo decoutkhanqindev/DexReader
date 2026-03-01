@@ -13,8 +13,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -70,9 +72,13 @@ fun MangaDetailsContent(
 ) {
   val lazyListState = rememberLazyListState()
   val coroutineScope = rememberCoroutineScope()
-  val isMoveToTopButtonVisible = (mangaChaptersUiState is BasePaginationUiState.Content)
-      && mangaChaptersUiState.currentList.size > 15
-      && lazyListState.firstVisibleItemScrollOffset > 0
+  val isMoveToTopButtonVisible by remember {
+    derivedStateOf {
+      (mangaChaptersUiState is BasePaginationUiState.Content)
+          && mangaChaptersUiState.currentList.size > 15
+          && lazyListState.firstVisibleItemScrollOffset > 0
+    }
+  }
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
 
   Box(modifier = modifier) {
@@ -94,7 +100,7 @@ fun MangaDetailsContent(
       is MangaDetailsUiState.Success -> {
         val manga = mangaDetailsUiState.manga
         val mangaCoverUrl = manga.coverUrl
-        val lastChapter = manga.lastChapter
+        val latestChapter = manga.latestChapter
 
         MangaDetailsBackground(
           imageUrl = mangaCoverUrl,
@@ -152,7 +158,7 @@ fun MangaDetailsContent(
             MangaChaptersSection(
               mangaChaptersUiState = mangaChaptersUiState,
               readingHistoryList = readingHistoryList,
-              lastChapter = lastChapter,
+              latestChapter = latestChapter,
               chapterLanguage = chapterLanguage,
               chapterLanguageList = availableLanguages,
               onSelectedLanguage = onSelectedLanguage,

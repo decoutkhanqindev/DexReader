@@ -6,12 +6,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.decoutkhanqindev.dexreader.presentation.model.CategoryTypeOption
 import com.decoutkhanqindev.dexreader.presentation.screens.categories.CategoriesUiState
-import com.decoutkhanqindev.dexreader.presentation.screens.categories.CategoryGroup
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 
@@ -40,7 +41,12 @@ fun CategoriesContent(
     }
 
     is CategoriesUiState.Success -> {
-      var expandedGroup by rememberSaveable { mutableStateOf<String?>(null) }
+      var expandedType by rememberSaveable(
+        stateSaver = Saver(
+          save = { it?.name },
+          restore = { it.let { name -> CategoryTypeOption.valueOf(name) } }
+        )
+      ) { mutableStateOf<CategoryTypeOption?>(null) }
 
       LazyColumn(
         modifier = modifier
@@ -48,13 +54,13 @@ fun CategoriesContent(
           .padding(horizontal = 4.dp)
       ) {
         item {
-          CategoryGroupSection(
-            isExpanded = expandedGroup == CategoryGroup.Genre.name,
+          CategoryTypeSection(
+            isExpanded = expandedType == CategoryTypeOption.GENRE,
             onExpandClick = {
-              expandedGroup = if (expandedGroup == CategoryGroup.Genre.name) null
-              else CategoryGroup.Genre.name
+              expandedType = if (expandedType == CategoryTypeOption.GENRE) null
+              else CategoryTypeOption.GENRE
             },
-            group = CategoryGroup.Genre.name,
+            type = CategoryTypeOption.GENRE,
             categoryList = uiState.genreList,
             onSelectedCategory = onSelectedCategory,
             modifier = Modifier
@@ -64,13 +70,13 @@ fun CategoriesContent(
         }
 
         item {
-          CategoryGroupSection(
-            isExpanded = expandedGroup == CategoryGroup.Theme.name,
+          CategoryTypeSection(
+            isExpanded = expandedType == CategoryTypeOption.THEME,
             onExpandClick = {
-              expandedGroup = if (expandedGroup == CategoryGroup.Theme.name) null
-              else CategoryGroup.Theme.name
+              expandedType = if (expandedType == CategoryTypeOption.THEME) null
+              else CategoryTypeOption.THEME
             },
-            group = CategoryGroup.Theme.name,
+            type = CategoryTypeOption.THEME,
             categoryList = uiState.themeList,
             onSelectedCategory = onSelectedCategory,
             modifier = Modifier
@@ -80,13 +86,13 @@ fun CategoriesContent(
         }
 
         item {
-          CategoryGroupSection(
-            isExpanded = expandedGroup == CategoryGroup.Format.name,
+          CategoryTypeSection(
+            isExpanded = expandedType == CategoryTypeOption.FORMAT,
             onExpandClick = {
-              expandedGroup = if (expandedGroup == CategoryGroup.Format.name) null
-              else CategoryGroup.Format.name
+              expandedType = if (expandedType == CategoryTypeOption.FORMAT) null
+              else CategoryTypeOption.FORMAT
             },
-            group = CategoryGroup.Format.name,
+            type = CategoryTypeOption.FORMAT,
             categoryList = uiState.formatList,
             onSelectedCategory = onSelectedCategory,
             modifier = Modifier
@@ -96,13 +102,13 @@ fun CategoriesContent(
         }
 
         item {
-          CategoryGroupSection(
-            isExpanded = expandedGroup == CategoryGroup.Content.name,
+          CategoryTypeSection(
+            isExpanded = expandedType == CategoryTypeOption.CONTENT,
             onExpandClick = {
-              expandedGroup = if (expandedGroup == CategoryGroup.Content.name) null
-              else CategoryGroup.Content.name
+              expandedType = if (expandedType == CategoryTypeOption.CONTENT) null
+              else CategoryTypeOption.CONTENT
             },
-            group = CategoryGroup.Content.name,
+            type = CategoryTypeOption.CONTENT,
             categoryList = uiState.contentList,
             onSelectedCategory = onSelectedCategory,
             modifier = Modifier

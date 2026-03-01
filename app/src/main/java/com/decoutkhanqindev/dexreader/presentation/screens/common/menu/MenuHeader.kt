@@ -34,9 +34,9 @@ fun MenuHeader(
       horizontalArrangement = Arrangement.spacedBy(16.dp),
       verticalAlignment = Alignment.CenterVertically
     ) {
-      if (currentUser?.profilePictureUrl != null) {
+      if (currentUser?.avatarUrl != null) {
         ProfilePicture(
-          url = currentUser.profilePictureUrl,
+          url = currentUser.avatarUrl,
           name = currentUser.name,
           modifier = Modifier.weight(0.25f)
         )

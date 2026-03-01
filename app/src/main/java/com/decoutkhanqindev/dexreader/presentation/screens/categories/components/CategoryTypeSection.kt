@@ -10,19 +10,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.decoutkhanqindev.dexreader.domain.model.Category
+import com.decoutkhanqindev.dexreader.presentation.model.CategoryTypeOption
 
 @Composable
-fun CategoryGroupSection(
+fun CategoryTypeSection(
   isExpanded: Boolean,
   onExpandClick: () -> Unit,
-  group: String,
+  type: CategoryTypeOption,
   categoryList: List<Category>,
   onSelectedCategory: (String, String) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Column(modifier = modifier) {
-    CategoryGroupHeader(
-      group = group,
+    CategoryTypeHeader(
+      type = type,
       isExpanded = isExpanded,
       onExpandClick = onExpandClick,
       modifier = Modifier.fillMaxWidth()

@@ -12,7 +12,7 @@ object UserMapper {
       id = uid,
       name = displayName ?: User.DEFAULT_NAME,
       email = email ?: User.DEFAULT_EMAIL,
-      profilePictureUrl = photoUrl?.toString()
+      avatarUrl = photoUrl?.toString()
     )
 
   fun UserProfileResponse.toUser(): User =
@@ -20,7 +20,7 @@ object UserMapper {
       id = id,
       name = name,
       email = email,
-      profilePictureUrl = profilePictureUrl
+      avatarUrl = profilePictureUrl
     )
 
   fun User.toUserProfileRequest(): UserProfileRequest =
@@ -28,6 +28,6 @@ object UserMapper {
       id = id,
       name = name,
       email = email,
-      profilePictureUrl = profilePictureUrl
+      profilePictureUrl = avatarUrl
     )
 }

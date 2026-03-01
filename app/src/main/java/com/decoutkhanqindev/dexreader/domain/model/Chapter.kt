@@ -4,10 +4,10 @@ data class Chapter(
   val id: String,
   val mangaId: String,
   val title: String,
-  val chapterNumber: String,
+  val number: String,
   val volume: String,
-  val publishAt: String,
-  val translatedLanguage: MangaLanguage,
+  val publishedAt: String,
+  val language: MangaLanguage,
 ) {
   companion object {
     const val DEFAULT_MANGA_ID = "0"

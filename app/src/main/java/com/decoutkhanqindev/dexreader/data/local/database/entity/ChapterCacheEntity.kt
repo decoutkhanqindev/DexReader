@@ -12,7 +12,7 @@ data class ChapterCacheEntity(
   @ColumnInfo(name = "baseUrl")
   val baseUrl: String, // Base URL từ /at-home/server/{chapter_id}
   @ColumnInfo(name = "chapterDataHash")
-  val chapterDataHash: String,  //  Hash của dữ liệu chương dùng để tạo URL ảnh
+  val dataHash: String,  //  Hash của dữ liệu chương dùng để tạo URL ảnh
   @ColumnInfo(name = "pageHashes")
   val pageHashes: List<String>, // Danh sách tên file ảnh (hash) của các trang
   @ColumnInfo(name = "totalPages")

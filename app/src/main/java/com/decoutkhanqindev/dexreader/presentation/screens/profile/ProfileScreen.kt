@@ -36,8 +36,8 @@ fun ProfileScreen(
     derivedStateOf {
       val nameChanged = uiState.newName != null
           && uiState.newName != currentUser?.name
-      val picChanged = uiState.newProfilePictureUrl != null
-          && uiState.newProfilePictureUrl != currentUser?.profilePictureUrl
+      val picChanged = uiState.newAvatarUrl != null
+          && uiState.newAvatarUrl != currentUser?.avatarUrl
       nameChanged || picChanged
     }
   }

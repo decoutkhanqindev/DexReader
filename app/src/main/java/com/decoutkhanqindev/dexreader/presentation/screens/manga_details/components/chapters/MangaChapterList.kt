@@ -23,7 +23,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPage
 
 @Composable
 fun MangaChapterList(
-  lastChapter: String,
+  latestChapter: String,
   chapterList: List<Chapter>,
   readingHistoryList: List<ReadingHistory> = emptyList(),
   onSelectedChapter: (
@@ -49,8 +49,9 @@ fun MangaChapterList(
     } else {
       chapterList.forEach { chapter ->
         val readingHistory = readingHistoryList.find { it.chapterId == chapter.id }
+
         MangaChapterItem(
-          lastChapter = lastChapter,
+          latestChapter = latestChapter,
           chapter = chapter,
           readingHistory = readingHistory,
           onSelectedChapter = onSelectedChapter,
