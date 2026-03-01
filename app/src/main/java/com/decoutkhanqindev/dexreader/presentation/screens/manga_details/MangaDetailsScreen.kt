@@ -16,8 +16,6 @@ import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseDetailsScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.MangaDetailsContent
-import com.decoutkhanqindev.dexreader.util.LanguageCodec.toDisplayName
-import com.decoutkhanqindev.dexreader.util.LanguageCodec.toMangaLanguageByName
 
 @Composable
 fun MangaDetailsScreen(
@@ -46,6 +44,7 @@ fun MangaDetailsScreen(
   val mangaDetailsUiState by viewModel.mangaDetailsUiState.collectAsStateWithLifecycle()
   val mangaChaptersUiState by viewModel.mangaChaptersUiState.collectAsStateWithLifecycle()
   val chapterLanguage by viewModel.chapterLanguage.collectAsStateWithLifecycle()
+  val availableLanguages by viewModel.availableLanguages.collectAsStateWithLifecycle()
   val readingHistoryList by viewModel.readingHistoryList.collectAsStateWithLifecycle()
   val startedChapter by viewModel.startedChapter.collectAsStateWithLifecycle()
   val continueChapter by viewModel.continueChapter.collectAsStateWithLifecycle()
@@ -86,12 +85,11 @@ fun MangaDetailsScreen(
           if (isUserLoggedIn) {
             if (isFavorite) viewModel.removeFromFavorites()
             else viewModel.addToFavorites()
-          } else {
-            isShowFavoritesDialog = true
-          }
+          } else isShowFavoritesDialog = true
         },
-        chapterLanguage = chapterLanguage.toDisplayName(),
-        onSelectedLanguage = { viewModel.updateChapterLanguage(it.toMangaLanguageByName()) },
+        chapterLanguage = chapterLanguage,
+        availableLanguages = availableLanguages,
+        onSelectedLanguage = { viewModel.updateChapterLanguage(it) },
         onSelectedCategory = onSelectedCategory,
         onSelectedChapter = onSelectedChapter,
         onFetchChapterListNextPage = viewModel::fetchChapterListNextPage,

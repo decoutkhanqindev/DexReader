@@ -5,11 +5,15 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.model.Manga
-import com.decoutkhanqindev.dexreader.domain.model.criteria.filter.MangaContentRatingFilter
-import com.decoutkhanqindev.dexreader.domain.model.criteria.filter.MangaStatusFilter
-import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortCriteria
-import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortOrder
 import com.decoutkhanqindev.dexreader.domain.usecase.category.GetMangaListByCategoryUseCase
+import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaContentRatingFilter
+import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortCriteria
+import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortOrder
+import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaStatusFilter
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaContentRatingFilterOption
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortCriteriaOption
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortOrderOption
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaStatusFilterOption
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
@@ -52,10 +56,10 @@ class CategoryDetailsViewModel @Inject constructor(
 
       getMangaListByCategoryUseCase(
         categoryId = categoryIdFromArg,
-        sortCriteria = currentCriteriaUiState.sortCriteria,
-        sortOrder = currentCriteriaUiState.sortOrder,
-        statusFilter = currentCriteriaUiState.statusFilter,
-        contentRatingFilter = currentCriteriaUiState.contentRatingFilter,
+        sortCriteria = currentCriteriaUiState.sortCriteria.toMangaSortCriteria(),
+        sortOrder = currentCriteriaUiState.sortOrder.toMangaSortOrder(),
+        statusFilter = currentCriteriaUiState.statusFilter.map { it.toMangaStatusFilter() },
+        contentRatingFilter = currentCriteriaUiState.contentRatingFilter.map { it.toMangaContentRatingFilter() },
       )
         .onSuccess { mangaList ->
           val hasNextPage = mangaList.size >= MANGA_LIST_PER_PAGE_SIZE
@@ -107,10 +111,10 @@ class CategoryDetailsViewModel @Inject constructor(
       getMangaListByCategoryUseCase(
         categoryId = categoryIdFromArg,
         offset = currentMangaList.size,
-        sortCriteria = currentCriteriaUiState.sortCriteria,
-        sortOrder = currentCriteriaUiState.sortOrder,
-        statusFilter = currentCriteriaUiState.statusFilter,
-        contentRatingFilter = currentCriteriaUiState.contentRatingFilter,
+        sortCriteria = currentCriteriaUiState.sortCriteria.toMangaSortCriteria(),
+        sortOrder = currentCriteriaUiState.sortOrder.toMangaSortOrder(),
+        statusFilter = currentCriteriaUiState.statusFilter.map { it.toMangaStatusFilter() },
+        contentRatingFilter = currentCriteriaUiState.contentRatingFilter.map { it.toMangaContentRatingFilter() },
       )
         .onSuccess { nextMangaList ->
           val allMangaList = currentMangaList + nextMangaList
@@ -135,55 +139,27 @@ class CategoryDetailsViewModel @Inject constructor(
   }
 
   fun updateSortingCriteria(
-    criteriaId: String,
-    orderId: String,
+    sortCriteria: MangaSortCriteriaOption,
+    sortOrder: MangaSortOrderOption,
   ) {
-    val newSortCriteria = when (criteriaId) {
-      SortCriteria.LatestUpdate.id -> MangaSortCriteria.LATEST_UPDATE
-      SortCriteria.Trending.id     -> MangaSortCriteria.TRENDING
-      SortCriteria.NewReleases.id  -> MangaSortCriteria.MOST_VIEWED
-      SortCriteria.TopRated.id     -> MangaSortCriteria.TOP_RATED
-      else                         -> MangaSortCriteria.LATEST_UPDATE
-    }
-    val newSortOrder = if (orderId == SortOrder.Ascending.id) MangaSortOrder.ASC else MangaSortOrder.DESC
-
     val current = _categoryCriteriaUiState.value
-    if (current.sortCriteria == newSortCriteria && current.sortOrder == newSortOrder) return
+    if (current.sortCriteria == sortCriteria && current.sortOrder == sortOrder) return
 
     _categoryCriteriaUiState.update {
-      it.copy(sortCriteria = newSortCriteria, sortOrder = newSortOrder)
+      it.copy(sortCriteria = sortCriteria, sortOrder = sortOrder)
     }
     fetchMangaListByCategoryFirstPage()
   }
 
   fun updateFilteringCriteria(
-    statusValueIds: List<String>,
-    contentRatingValueIds: List<String>,
+    statusFilter: List<MangaStatusFilterOption>,
+    contentRatingFilter: List<MangaContentRatingFilterOption>,
   ) {
-    val newStatusFilter = statusValueIds.mapNotNull { id ->
-      when (id) {
-        FilterValue.Ongoing.id   -> MangaStatusFilter.ON_GOING
-        FilterValue.Completed.id -> MangaStatusFilter.COMPLETED
-        FilterValue.Hiatus.id    -> MangaStatusFilter.HIATUS
-        FilterValue.Cancelled.id -> MangaStatusFilter.CANCELLED
-        else                     -> null
-      }
-    }.ifEmpty { return }
-
-    val newContentRatingFilter = contentRatingValueIds.mapNotNull { id ->
-      when (id) {
-        FilterValue.Safe.id       -> MangaContentRatingFilter.SAFE
-        FilterValue.Suggestive.id -> MangaContentRatingFilter.SUGGESTIVE
-        FilterValue.Erotica.id    -> MangaContentRatingFilter.EROTICA
-        else                      -> null
-      }
-    }.ifEmpty { return }
-
     val current = _categoryCriteriaUiState.value
-    if (current.statusFilter == newStatusFilter && current.contentRatingFilter == newContentRatingFilter) return
+    if (current.statusFilter == statusFilter && current.contentRatingFilter == contentRatingFilter) return
 
     _categoryCriteriaUiState.update {
-      it.copy(statusFilter = newStatusFilter, contentRatingFilter = newContentRatingFilter)
+      it.copy(statusFilter = statusFilter, contentRatingFilter = contentRatingFilter)
     }
     fetchMangaListByCategoryFirstPage()
   }

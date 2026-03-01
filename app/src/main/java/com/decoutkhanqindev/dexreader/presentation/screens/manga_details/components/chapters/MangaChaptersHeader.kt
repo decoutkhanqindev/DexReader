@@ -16,12 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.model.MangaLanguageName
 
 @Composable
 fun MangaChaptersHeader(
-  selectedLanguage: String,
-  languageList: List<String>,
-  onSelectedLanguage: (String) -> Unit,
+  selectedLanguage: MangaLanguageName,
+  languageList: List<MangaLanguageName>,
+  onSelectedLanguage: (MangaLanguageName) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   var isShowLanguageBottomSheet by rememberSaveable { mutableStateOf(false) }
@@ -51,7 +52,7 @@ fun MangaChaptersHeader(
         .fillMaxWidth()
     )
     Text(
-      text = selectedLanguage,
+      text = stringResource(selectedLanguage.value),
       style = MaterialTheme.typography.titleMedium,
       fontWeight = FontWeight.Bold,
       modifier = Modifier.clickable { isShowLanguageBottomSheet = true }

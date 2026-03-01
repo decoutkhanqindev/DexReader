@@ -24,13 +24,13 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
+import com.decoutkhanqindev.dexreader.presentation.model.MangaLanguageName
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.MoveToTopButton
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.MangaDetailsUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.actions.ActionButtonsSection
-import com.decoutkhanqindev.dexreader.util.LanguageCodec.toDisplayName
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.chapters.MangaChaptersSection
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.info.MangaInfoSection
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.summary.MangaSummarySection
@@ -50,8 +50,9 @@ fun MangaDetailsContent(
   ) -> Unit,
   isFavorite: Boolean,
   onFavoriteClick: () -> Unit,
-  chapterLanguage: String,
-  onSelectedLanguage: (String) -> Unit,
+  chapterLanguage: MangaLanguageName,
+  availableLanguages: List<MangaLanguageName>,
+  onSelectedLanguage: (MangaLanguageName) -> Unit,
   onSelectedCategory: (
     categoryId: String,
     categoryTitle: String,
@@ -93,7 +94,6 @@ fun MangaDetailsContent(
       is MangaDetailsUiState.Success -> {
         val manga = mangaDetailsUiState.manga
         val mangaCoverUrl = manga.coverUrl
-        val chapterLanguageList = manga.availableTranslatedLanguages.map { it.toDisplayName() }
         val lastChapter = manga.lastChapter
 
         MangaDetailsBackground(
@@ -154,7 +154,7 @@ fun MangaDetailsContent(
               readingHistoryList = readingHistoryList,
               lastChapter = lastChapter,
               chapterLanguage = chapterLanguage,
-              chapterLanguageList = chapterLanguageList,
+              chapterLanguageList = availableLanguages,
               onSelectedLanguage = onSelectedLanguage,
               onSelectedChapter = onSelectedChapter,
               onFetchChapterListNextPage = onFetchChapterListNextPage,

@@ -45,20 +45,14 @@ fun CategoryDetailsScreen(
         categoryCriteriaUiState = categoryCriteriaUiState,
         isSortBottomSheetVisible = isShowSortBottomSheet,
         onSortSheetDismiss = { isShowSortBottomSheet = false },
-        onSortApplyClick = { criteriaId, orderId ->
-          viewModel.updateSortingCriteria(
-            criteriaId = criteriaId,
-            orderId = orderId
-          )
+        onSortApplyClick = { sortCriteria, sortOrder ->
+          viewModel.updateSortingCriteria(sortCriteria, sortOrder)
           isShowSortBottomSheet = false
         },
         isFilterBottomSheetVisible = isShowFilterBottomSheet,
         onFilterSheetDismiss = { isShowFilterBottomSheet = false },
-        onFilterApplyClick = { statusValueIds, contentRatingValueIds ->
-          viewModel.updateFilteringCriteria(
-            statusValueIds = statusValueIds,
-            contentRatingValueIds = contentRatingValueIds
-          )
+        onFilterApplyClick = { statusFilter, contentRatingFilter ->
+          viewModel.updateFilteringCriteria(statusFilter, contentRatingFilter)
           isShowFilterBottomSheet = false
         },
         onSelectedManga = onSelectedManga,

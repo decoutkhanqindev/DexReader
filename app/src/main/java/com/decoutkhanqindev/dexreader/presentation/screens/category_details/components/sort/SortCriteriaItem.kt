@@ -11,15 +11,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.screens.category_details.SortCriteria
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortCriteriaOption
 
 @Composable
 fun SortCriteriaItem(
   isSelected: Boolean,
-  criteria: SortCriteria,
+  criteria: MangaSortCriteriaOption,
   onSelectedItem: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -40,7 +41,7 @@ fun SortCriteriaItem(
       verticalArrangement = Arrangement.Center
     ) {
       Text(
-        text = criteria.name,
+        text = stringResource(criteria.nameRes),
         style = MaterialTheme.typography.titleMedium,
         fontWeight = FontWeight.ExtraBold,
         textAlign = TextAlign.Center,

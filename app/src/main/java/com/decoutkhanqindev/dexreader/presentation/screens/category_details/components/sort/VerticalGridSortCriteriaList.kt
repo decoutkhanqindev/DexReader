@@ -8,30 +8,23 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.screens.category_details.SortCriteria
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortCriteriaOption
 
 @Composable
 fun VerticalGridSortCriteriaList(
-  selectedCriteriaId: String,
-  onSelectedItem: (String) -> Unit,
+  selectedCriteria: MangaSortCriteriaOption,
+  onSelectedItem: (MangaSortCriteriaOption) -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  val criteriaList = listOf<SortCriteria>(
-    SortCriteria.LatestUpdate,
-    SortCriteria.Trending,
-    SortCriteria.NewReleases,
-    SortCriteria.TopRated
-  )
-
   LazyVerticalGrid(
     columns = GridCells.Fixed(2),
     modifier = modifier
   ) {
-    items(criteriaList, key = { it.id }) { criteria ->
+    items(MangaSortCriteriaOption.entries, key = { it.name }) { criteria ->
       SortCriteriaItem(
-        isSelected = selectedCriteriaId == criteria.id,
+        isSelected = selectedCriteria == criteria,
         criteria = criteria,
-        onSelectedItem = { onSelectedItem(criteria.id) },
+        onSelectedItem = { onSelectedItem(criteria) },
         modifier = Modifier
           .padding(4.dp)
           .size(50.dp)

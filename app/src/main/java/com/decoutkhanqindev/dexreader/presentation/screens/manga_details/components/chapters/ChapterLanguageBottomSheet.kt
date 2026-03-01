@@ -19,13 +19,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.model.MangaLanguageName
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChapterLanguageBottomSheet(
-  languageList: List<String>,
-  selectedLanguage: String,
-  onSelectedLanguage: (String) -> Unit,
+  languageList: List<MangaLanguageName>,
+  selectedLanguage: MangaLanguageName,
+  onSelectedLanguage: (MangaLanguageName) -> Unit,
   onDismiss: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -61,11 +62,14 @@ fun ChapterLanguageBottomSheet(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
-        items(languageList.size, key = { index -> "${languageList[index]}_$index" }) { index ->
+        items(
+          count = languageList.size,
+          key = { index -> "${languageList[index].name}_$index" }
+        ) { index ->
           val language = languageList[index]
           val isSelected = language == selectedLanguage
           Text(
-            text = language,
+            text = stringResource(language.value),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = if (isSelected) FontWeight.ExtraBold else FontWeight.Light,
             modifier = Modifier

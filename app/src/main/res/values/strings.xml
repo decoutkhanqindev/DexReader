@@ -122,4 +122,15 @@
   <string name="error_user_not_found">User not found.</string>
   <string name="error_unknown">An unexpected error occurred.</string>
   <string name="error_send_reset_password">Error sending reset password email.</string>
+  <string name="sort_order_ascending">Ascending</string>
+  <string name="sort_order_descending">Descending</string>
+  <string name="filter_status">Status</string>
+  <string name="filter_content_rating">Content Rating</string>
+  <string name="status_on_going">Ongoing</string>
+  <string name="status_completed">Completed</string>
+  <string name="status_hiatus">Hiatus</string>
+  <string name="status_cancelled">Cancelled</string>
+  <string name="content_rating_safe">Safe</string>
+  <string name="content_rating_suggestive">Suggestive</string>
+  <string name="content_rating_erotica">Erotica</string>
 </resources>

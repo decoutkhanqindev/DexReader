@@ -10,43 +10,44 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.screens.category_details.FilterValue
 
 @Composable
-fun FilterValueOptions(
-  selectedValueIds: List<String>,
-  filterValueOptions: List<FilterValue>,
-  onSelectedOptions: (List<String>) -> Unit,
+fun <T> FilterValueOptions(
+  options: List<T>,
+  selectedOptions: List<T>,
+  nameResOf: (T) -> Int,
+  onSelectedOptions: (List<T>) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Column(
     modifier = modifier,
     verticalArrangement = Arrangement.spacedBy(space = 16.dp),
   ) {
-    filterValueOptions.forEach { option ->
+    options.forEach { option ->
       Row(
         modifier = Modifier
           .fillMaxWidth()
           .selectable(
-            selected = selectedValueIds.contains(option.id),
+            selected = selectedOptions.contains(option),
             onClick = {
-              if (selectedValueIds.contains(option.id))
-                onSelectedOptions(selectedValueIds - option.id)
-              else onSelectedOptions(selectedValueIds + option.id)
+              if (selectedOptions.contains(option))
+                onSelectedOptions(selectedOptions - option)
+              else onSelectedOptions(selectedOptions + option)
             },
             role = Role.Checkbox
           ),
         horizontalArrangement = Arrangement.spacedBy(space = 8.dp)
       ) {
         Checkbox(
-          checked = selectedValueIds.contains(option.id),
+          checked = selectedOptions.contains(option),
           onCheckedChange = null
         )
         Text(
-          text = option.name,
+          text = stringResource(nameResOf(option)),
           style = MaterialTheme.typography.bodyLarge,
           fontWeight = FontWeight.Bold,
         )

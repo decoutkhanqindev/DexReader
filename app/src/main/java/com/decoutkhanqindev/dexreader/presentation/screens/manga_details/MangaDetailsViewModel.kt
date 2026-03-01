@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
 import com.decoutkhanqindev.dexreader.domain.model.FavoriteManga
-import com.decoutkhanqindev.dexreader.domain.model.MangaLanguage
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortOrder
 import com.decoutkhanqindev.dexreader.domain.usecase.chapter.GetChapterListUseCase
@@ -15,6 +14,9 @@ import com.decoutkhanqindev.dexreader.domain.usecase.favorites.ObserveIsFavorite
 import com.decoutkhanqindev.dexreader.domain.usecase.favorites.RemoveFromFavoritesUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.history.ObserveHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaDetailsUseCase
+import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguage
+import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguageName
+import com.decoutkhanqindev.dexreader.presentation.model.MangaLanguageName
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
@@ -52,8 +54,20 @@ class MangaDetailsViewModel @Inject constructor(
   val mangaChaptersUiState: StateFlow<BasePaginationUiState<Chapter>> =
     _mangaChaptersUiState.asStateFlow()
 
-  private val _chapterLanguage = MutableStateFlow(MangaLanguage.ENGLISH)
-  val chapterLanguage: StateFlow<MangaLanguage> = _chapterLanguage.asStateFlow()
+  private val _chapterLanguage = MutableStateFlow(MangaLanguageName.ENGLISH)
+  val chapterLanguage: StateFlow<MangaLanguageName> = _chapterLanguage.asStateFlow()
+
+  val availableLanguages: StateFlow<List<MangaLanguageName>> = _mangaDetailsUiState
+    .map { state ->
+      if (state is MangaDetailsUiState.Success)
+        state.manga.availableTranslatedLanguages.map { it.toMangaLanguageName() }
+      else emptyList()
+    }
+    .stateIn(
+      scope = viewModelScope,
+      started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
+      initialValue = emptyList()
+    )
 
   private val _userId = MutableStateFlow<String?>(null)
 
@@ -106,7 +120,7 @@ class MangaDetailsViewModel @Inject constructor(
       getChapterListUseCase(
         mangaId = mangaIdFromArg,
         limit = 1,
-        language = _chapterLanguage.value,
+        language = _chapterLanguage.value.toMangaLanguage(),
         sortOrder = MangaSortOrder.ASC,
       )
         .onSuccess {
@@ -126,7 +140,7 @@ class MangaDetailsViewModel @Inject constructor(
 
       getChapterListUseCase(
         mangaId = mangaIdFromArg,
-        language = _chapterLanguage.value,
+        language = _chapterLanguage.value.toMangaLanguage(),
       )
         .onSuccess { chapterList ->
           val hasNextPage = chapterList.size >= CHAPTER_LIST_PER_PAGE_SIZE
@@ -177,7 +191,7 @@ class MangaDetailsViewModel @Inject constructor(
       getChapterListUseCase(
         mangaId = mangaIdFromArg,
         offset = currentMangaList.size,
-        language = _chapterLanguage.value,
+        language = _chapterLanguage.value.toMangaLanguage(),
       )
         .onSuccess { nextChapterList ->
           val updatedChapterList = currentMangaList + nextChapterList
@@ -364,7 +378,7 @@ class MangaDetailsViewModel @Inject constructor(
     _userId.value = id
   }
 
-  fun updateChapterLanguage(language: MangaLanguage) {
+  fun updateChapterLanguage(language: MangaLanguageName) {
     if (_chapterLanguage.value == language) return
     _chapterLanguage.value = language
     fetchFirstChapter()

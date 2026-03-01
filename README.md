@@ -4,7 +4,9 @@
   <i>Read to enjoy - Save to remember</i>
 </h1>
 
-**Dex Reader** is a personal project with a manga reader theme for **Android**, built with **Kotlin** and **Jetpack Compose**, following the principles of **Clean Architecture**. This app fetches content from the **MangaDex API**, providing a seamless and user-friendly manga reading experience.
+**Dex Reader** is a personal project with a manga reader theme for **Android**, built with **Kotlin
+** and **Jetpack Compose**, following the principles of **Clean Architecture**. This app fetches
+content from the **MangaDex API**, providing a seamless and user-friendly manga reading experience.
 
 ## 📱Screenshots
 
@@ -69,7 +71,8 @@
   <img src="https://raw.githubusercontent.com/decoutkhanqindev/DexReader/main/app/screenshots/auth/forgot_password/z6721003476526_85c0ed0b02b76ddcc736065ab523b8ec.jpg" height="300"/>
 </p>
 
-##  🎞️ Video Demo
+## 🎞️ Video Demo
+
 [![video_demo](https://img.youtube.com/vi/HsdtD7xXBW8/0.jpg)](https://www.youtube.com/watch?v=HsdtD7xXBW8)
 
 ## 🌟 Features
@@ -78,36 +81,43 @@
 
 - 📖 Optimized reader with zoom, fullscreen, fast page loading and high-resolution images
 
-- ↔️ While reading, easily navigate between previous/next chapters with Caching/Pre-fetching feature.
-  
+- ↔️ While reading, easily navigate between previous/next chapters with Caching/Pre-fetching
+  feature.
+
 - 🔍 Search manga by title with suggestions.
 
 - 📂 Browse manga by category, with sorting and filtering options.
 
 - ❤️ Save, manage and sync favorite manga with your user account.
 
-- 📚 Track manga reading history, resume reading from the last chapter and an option to clear history.
+- 📚 Track manga reading history, resume reading from the last chapter and an option to clear
+  history.
 
 - 👤 Sign up/Sign in with Firebase Auth, manage personal information and update your profile.
 
 - ⚙️ Dark/Light theme mode and sync with system device.
 
-
 ## 🛠️ Tech Stack
 
 - **Programming Language:** [Kotlin](https://kotlinlang.org/)
 
-- **Architecture:** [MVVM](https://www.geeksforgeeks.org/mvvm-model-view-viewmodel-architecture-pattern-in-android/) with [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+- **Architecture:
+  ** [MVVM](https://www.geeksforgeeks.org/mvvm-model-view-viewmodel-architecture-pattern-in-android/)
+  with [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 
-- **UI:** [Jetpack Compose](https://developer.android.com/compose), [Material 3](https://m3.material.io/develop/android/jetpack-compose)
+- **UI:
+  ** [Jetpack Compose](https://developer.android.com/compose), [Material 3](https://m3.material.io/develop/android/jetpack-compose)
 
-- **Dependency Injection:** [Dagger Hilt](https://developer.android.com/training/dependency-injection/hilt-android?hl=vi)
+- **Dependency Injection:
+  ** [Dagger Hilt](https://developer.android.com/training/dependency-injection/hilt-android?hl=vi)
 
 - **Local Database:** [Room](https://developer.android.com/training/data-storage/room)
 
-- **Preferences Storage:** [DataStore](https://developer.android.com/topic/libraries/architecture/datastore)
+- **Preferences Storage:
+  ** [DataStore](https://developer.android.com/topic/libraries/architecture/datastore)
 
-- **Networking:** [Retrofit](https://square.github.io/retrofit/ ), [OkHttp](https://square.github.io/okhttp/), [Moshi](https://github.com/square/moshi)
+- **Networking:
+  ** [Retrofit](https://square.github.io/retrofit/ ), [OkHttp](https://square.github.io/okhttp/), [Moshi](https://github.com/square/moshi)
 
 - **Integrated API**: [MangaDex API](https://api.mangadex.org/docs/)
 
@@ -117,13 +127,16 @@
 
 - **Image Loading:** [Coil](https://coil-kt.github.io/coil/)
 
-- **Navigation:** [Jetpack Navigation Compose](https://developer.android.com/develop/ui/compose/navigation)
+- **Navigation:
+  ** [Jetpack Navigation Compose](https://developer.android.com/develop/ui/compose/navigation)
 
-- **Asynchronous:** Kotlin [Coroutines](https://developer.android.com/kotlin/coroutines), [Flow](https://developer.android.com/kotlin/flow)
+- **Asynchronous:**
+  Kotlin [Coroutines](https://developer.android.com/kotlin/coroutines), [Flow](https://developer.android.com/kotlin/flow)
 
 - **Caching:** Chapter pre-fetching and offline support
 
-##  🏗️ Package Structure
+## 🏗️ Package Structure
+
 ```
 com.decoutkhanqindev.dexreader/
 ├── data/                   # Data layer
@@ -143,10 +156,9 @@ com.decoutkhanqindev.dexreader/
 └── utils/                  # Utility funtions
 ```
 
-
 ## 🚀 Getting Started
 
--  **Prerequisites**
+- **Prerequisites**
     - Android Studio Hedgehog | 2023.1.1 or latest version.
     - JDK 11+.
     - Android SDK API 24+.
@@ -169,18 +181,21 @@ com.decoutkhanqindev.dexreader/
     ./gradlew build
     ./gradlew installDebug
    ```
+
 ## 🤝 Contributing
+
 **Contributions are welcome! Please follow these steps:**
 
-  - Fork the repository.
+- Fork the repository.
 
-  - Create a new branch: `git checkout -b feature/your-feature`
+- Create a new branch: `git checkout -b feature/your-feature`
 
-  - Commit your changes: `git commit -am 'Add some feature'`
+- Commit your changes: `git commit -am 'Add some feature'`
 
-  - Push to the branch: `git push origin feature/your-feature`
+- Push to the branch: `git push origin feature/your-feature`
 
-  - Open a pull request.
+- Open a pull request.
 
 ## 📝 License
+
 This project is developed for educational and personal purposes.

@@ -13,15 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.screens.category_details.FilterCriteria
-import com.decoutkhanqindev.dexreader.presentation.screens.category_details.FilterValue
 
 @Composable
-fun FilterCriteriaItem(
-  criteria: FilterCriteria,
-  selectedValueIds: List<String>,
-  filterValueOptions: List<FilterValue>,
-  onSelectedOptions: (List<String>) -> Unit,
+fun <T> FilterCriteriaItem(
+  title: String,
+  options: List<T>,
+  selectedOptions: List<T>,
+  nameResOf: (T) -> Int,
+  onSelectedOptions: (List<T>) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Card(
@@ -37,7 +36,7 @@ fun FilterCriteriaItem(
         .padding(8.dp)
     ) {
       Text(
-        text = criteria.name,
+        text = title,
         style = MaterialTheme.typography.titleMedium,
         fontWeight = FontWeight.ExtraBold,
         textAlign = TextAlign.Center,
@@ -46,8 +45,9 @@ fun FilterCriteriaItem(
           .padding(bottom = 12.dp)
       )
       FilterValueOptions(
-        selectedValueIds = selectedValueIds,
-        filterValueOptions = filterValueOptions,
+        options = options,
+        selectedOptions = selectedOptions,
+        nameResOf = nameResOf,
         onSelectedOptions = onSelectedOptions,
         modifier = Modifier.fillMaxWidth()
       )

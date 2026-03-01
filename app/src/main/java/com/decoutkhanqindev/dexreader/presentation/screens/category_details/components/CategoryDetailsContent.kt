@@ -12,6 +12,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.Manga
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaContentRatingFilterOption
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortCriteriaOption
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortOrderOption
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaStatusFilterOption
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailsCriteriaUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.filter.FilterBottomSheet
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.sort.SortBottomSheet
@@ -32,14 +36,14 @@ fun CategoryDetailsContent(
   isSortBottomSheetVisible: Boolean,
   onSortSheetDismiss: () -> Unit,
   onSortApplyClick: (
-    criteriaId: String,
-    orderId: String,
+    sortCriteria: MangaSortCriteriaOption,
+    sortOrder: MangaSortOrderOption,
   ) -> Unit,
   isFilterBottomSheetVisible: Boolean,
   onFilterSheetDismiss: () -> Unit,
   onFilterApplyClick: (
-    statusValueIds: List<String>,
-    contentRatingValueIds: List<String>,
+    statusFilter: List<MangaStatusFilterOption>,
+    contentRatingFilter: List<MangaContentRatingFilterOption>,
   ) -> Unit,
   onSelectedManga: (String) -> Unit,
   onFetchMangaListNextPage: () -> Unit,

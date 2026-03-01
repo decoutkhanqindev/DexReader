@@ -15,14 +15,15 @@ string-based state from the category sort/filter UI and correcting the
 **Before:** 8 fields (4 nullable `*OrderId` strings + 2 `List<String>` + 2 selected-id strings)
 **After:** 4 typed domain enum fields — no raw strings in UI state.
 
-| Old field | New field | Type |
-|---|---|---|
-| `selectedSortCriteriaId`, `lastUpdatedOrderId`, `followedCountOrderId`, `createdAtOrderId`, `ratingOrderId` | `sortCriteria` | `MangaSortCriteria` |
-| `selectedSortOrderId` | `sortOrder` | `MangaSortOrder` |
-| `statusValueIds` | `statusFilter` | `List<MangaStatusFilter>` |
-| `contentRatingValueIds` | `contentRatingFilter` | `List<MangaContentRatingFilter>` |
+| Old field                                                                                                   | New field             | Type                             |
+|-------------------------------------------------------------------------------------------------------------|-----------------------|----------------------------------|
+| `selectedSortCriteriaId`, `lastUpdatedOrderId`, `followedCountOrderId`, `createdAtOrderId`, `ratingOrderId` | `sortCriteria`        | `MangaSortCriteria`              |
+| `selectedSortOrderId`                                                                                       | `sortOrder`           | `MangaSortOrder`                 |
+| `statusValueIds`                                                                                            | `statusFilter`        | `List<MangaStatusFilter>`        |
+| `contentRatingValueIds`                                                                                     | `contentRatingFilter` | `List<MangaContentRatingFilter>` |
 
 3 bridge helpers deleted from `CategoryDetailsViewModel`:
+
 - `deriveSortParams()` — decoded nullable string fields back into domain enums
 - `String.toMangaStatusFilter()` — decoded status string IDs
 - `String.toMangaContentRatingFilter()` — decoded content rating string IDs
@@ -63,16 +64,16 @@ MangaContentRatingFilter → FilterValue.*.id (toFilterValueId)
 
 ## Files Changed
 
-| File | Change |
-|---|---|
-| `util/CriteriaCodec.kt` | **NEW** — domain enum → UI string ID codec |
-| `presentation/.../CategoryDetailsCriteriaUiState.kt` | Full replacement: 8 strings → 4 domain enums |
-| `presentation/.../CategoryDetailsViewModel.kt` | Remove 3 bridges; simplify `updateSortingCriteria` + `updateFilteringCriteria`; direct enum reads in fetch functions |
-| `presentation/.../sort/SortBottomSheet.kt` | Init local state via `CriteriaCodec` instead of reading old string fields |
-| `presentation/.../filter/FilterBottomSheet.kt` | Init local state via `CriteriaCodec` instead of reading old string fields |
-| `domain/model/Manga.kt` | `availableTranslatedLanguages: List<String>` → `List<MangaLanguage>` |
-| `data/mapper/MangaMapper.kt` | `toFullLanguageName()` → `toMangaLanguage()`; remove wrong-layer import |
-| `presentation/.../manga_details/components/MangaDetailsContent.kt` | `.map { it.toDisplayName() }` at read boundary |
+| File                                                               | Change                                                                                                               |
+|--------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|
+| `util/CriteriaCodec.kt`                                            | **NEW** — domain enum → UI string ID codec                                                                           |
+| `presentation/.../CategoryDetailsCriteriaUiState.kt`               | Full replacement: 8 strings → 4 domain enums                                                                         |
+| `presentation/.../CategoryDetailsViewModel.kt`                     | Remove 3 bridges; simplify `updateSortingCriteria` + `updateFilteringCriteria`; direct enum reads in fetch functions |
+| `presentation/.../sort/SortBottomSheet.kt`                         | Init local state via `CriteriaCodec` instead of reading old string fields                                            |
+| `presentation/.../filter/FilterBottomSheet.kt`                     | Init local state via `CriteriaCodec` instead of reading old string fields                                            |
+| `domain/model/Manga.kt`                                            | `availableTranslatedLanguages: List<String>` → `List<MangaLanguage>`                                                 |
+| `data/mapper/MangaMapper.kt`                                       | `toFullLanguageName()` → `toMangaLanguage()`; remove wrong-layer import                                              |
+| `presentation/.../manga_details/components/MangaDetailsContent.kt` | `.map { it.toDisplayName() }` at read boundary                                                                       |
 
 ---
 
@@ -99,12 +100,12 @@ Everything below that boundary uses domain enums.
 
 ## Phase 1 + Phase 2 Status
 
-| Enum | Data layer param | Domain model | Presentation |
-|---|---|---|---|
-| `MangaLanguage` | `toParam()` ✓ | `Chapter.translatedLanguage` ✓ `Manga.availableTranslatedLanguages` ✓ | `toDisplayName()` ✓ |
-| `MangaSortCriteria` | via `GetMangaListByCategoryUseCase` ✓ | `CategoryDetailsCriteriaUiState.sortCriteria` ✓ | `toSortCriteriaId()` ✓ |
-| `MangaSortOrder` | `toParam()` ✓ | `CategoryDetailsCriteriaUiState.sortOrder` ✓ | `toSortOrderId()` ✓ |
-| `MangaStatusFilter` | `toParam()` ✓ | `CategoryDetailsCriteriaUiState.statusFilter` ✓ | `toFilterValueId()` ✓ |
-| `MangaContentRatingFilter` | `toParam()` ✓ | `CategoryDetailsCriteriaUiState.contentRatingFilter` ✓ | `toFilterValueId()` ✓ |
+| Enum                       | Data layer param                      | Domain model                                                          | Presentation           |
+|----------------------------|---------------------------------------|-----------------------------------------------------------------------|------------------------|
+| `MangaLanguage`            | `toParam()` ✓                         | `Chapter.translatedLanguage` ✓ `Manga.availableTranslatedLanguages` ✓ | `toDisplayName()` ✓    |
+| `MangaSortCriteria`        | via `GetMangaListByCategoryUseCase` ✓ | `CategoryDetailsCriteriaUiState.sortCriteria` ✓                       | `toSortCriteriaId()` ✓ |
+| `MangaSortOrder`           | `toParam()` ✓                         | `CategoryDetailsCriteriaUiState.sortOrder` ✓                          | `toSortOrderId()` ✓    |
+| `MangaStatusFilter`        | `toParam()` ✓                         | `CategoryDetailsCriteriaUiState.statusFilter` ✓                       | `toFilterValueId()` ✓  |
+| `MangaContentRatingFilter` | `toParam()` ✓                         | `CategoryDetailsCriteriaUiState.contentRatingFilter` ✓                | `toFilterValueId()` ✓  |
 
 All 5 domain enums are fully wired end-to-end with no raw strings crossing layer boundaries.

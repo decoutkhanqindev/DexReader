@@ -9,34 +9,30 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.screens.category_details.SortOrder
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortOrderOption
 
 @Composable
 fun SortOrderOptions(
-  selectedOrderId: String,
-  onSelectedOption: (String) -> Unit,
+  selectedOrder: MangaSortOrderOption,
+  onSelectedOption: (MangaSortOrderOption) -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  val sortOderOptions = listOf<SortOrder>(
-    SortOrder.Descending,
-    SortOrder.Ascending,
-  )
-
   Row(
     modifier = modifier,
     horizontalArrangement = Arrangement.Center,
     verticalAlignment = Alignment.CenterVertically
   ) {
-    sortOderOptions.forEach { option ->
+    MangaSortOrderOption.entries.forEach { option ->
       Row(
         modifier = Modifier
           .weight(1f)
           .selectable(
-            selected = selectedOrderId == option.id,
-            onClick = { onSelectedOption(option.id) },
+            selected = selectedOrder == option,
+            onClick = { onSelectedOption(option) },
             role = Role.RadioButton
           ),
         verticalAlignment = Alignment.CenterVertically,
@@ -46,11 +42,11 @@ fun SortOrderOptions(
         )
       ) {
         RadioButton(
-          selected = selectedOrderId == option.id,
+          selected = selectedOrder == option,
           onClick = null
         )
         Text(
-          text = option.name,
+          text = stringResource(option.nameRes),
           style = MaterialTheme.typography.bodyLarge,
           fontWeight = FontWeight.Bold,
         )

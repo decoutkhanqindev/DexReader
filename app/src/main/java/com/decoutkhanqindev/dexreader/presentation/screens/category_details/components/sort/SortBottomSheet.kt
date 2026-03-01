@@ -10,6 +10,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -18,10 +19,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortCriteriaOption
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortOrderOption
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailsCriteriaUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
-import com.decoutkhanqindev.dexreader.util.CriteriaCodec.toSortCriteriaId
-import com.decoutkhanqindev.dexreader.util.CriteriaCodec.toSortOrderId
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,17 +30,27 @@ fun SortBottomSheet(
   onDismiss: () -> Unit,
   criteriaState: CategoryDetailsCriteriaUiState,
   onApplyClick: (
-    criteriaId: String,
-    orderId: String,
+    sortCriteria: MangaSortCriteriaOption,
+    sortOrder: MangaSortOrderOption,
   ) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-  var selectedCriteriaId by rememberSaveable {
-    mutableStateOf(criteriaState.sortCriteria.toSortCriteriaId())
+  var selectedCriteria by rememberSaveable(
+    stateSaver = Saver(
+      save = { it.name },
+      restore = { MangaSortCriteriaOption.valueOf(it) }
+    )
+  ) {
+    mutableStateOf(criteriaState.sortCriteria)
   }
-  var selectedOrderId by rememberSaveable {
-    mutableStateOf(criteriaState.sortOrder.toSortOrderId())
+  var selectedOrder by rememberSaveable(
+    stateSaver = Saver(
+      save = { it.name },
+      restore = { MangaSortOrderOption.valueOf(it) }
+    )
+  ) {
+    mutableStateOf(criteriaState.sortOrder)
   }
 
   ModalBottomSheet(
@@ -58,16 +69,16 @@ fun SortBottomSheet(
     )
 
     VerticalGridSortCriteriaList(
-      selectedCriteriaId = selectedCriteriaId,
-      onSelectedItem = { selectedCriteriaId = it },
+      selectedCriteria = selectedCriteria,
+      onSelectedItem = { selectedCriteria = it },
       modifier = Modifier
         .fillMaxWidth()
         .padding(bottom = 12.dp)
     )
 
     SortOrderOptions(
-      selectedOrderId = selectedOrderId,
-      onSelectedOption = { selectedOrderId = it },
+      selectedOrder = selectedOrder,
+      onSelectedOption = { selectedOrder = it },
       modifier = Modifier
         .fillMaxWidth()
         .padding(bottom = 24.dp)
@@ -76,7 +87,7 @@ fun SortBottomSheet(
     SubmitButton(
       title = stringResource(R.string.apply),
       onSubmitClick = {
-        onApplyClick(selectedCriteriaId, selectedOrderId)
+        onApplyClick(selectedCriteria, selectedOrder)
         onDismiss()
       },
       modifier = Modifier
@@ -86,4 +97,3 @@ fun SortBottomSheet(
     )
   }
 }
-
