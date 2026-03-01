@@ -308,9 +308,8 @@ class ReaderViewModel @Inject constructor(
   }
 
   private fun prefetchChapterListNextPage(currentChapterIndex: Int) {
-    val isNearedLastChapter =
-      currentChapterIndex >= (currentChapterList.lastIndex - NEARED_LAST_CHAPTER_COUNT)
-    if (isNearedLastChapter && hasNextChapterListPage && currentChapterList.isNotEmpty())
+    if (Chapter.shouldPrefetchNextPage(currentChapterIndex, currentChapterList.size)
+      && hasNextChapterListPage)
       fetchChapterListNextPage()
   }
 
@@ -367,8 +366,8 @@ class ReaderViewModel @Inject constructor(
 
     viewModelScope.launch {
       _userId.value?.let { userId ->
-        val newReadingHistory = ReadingHistory(
-          id = ReadingHistory.generateId(mangaIdFromArg, currentChapterId),
+        addAndUpdateToHistoryUseCase(
+          userId = userId,
           mangaId = mangaIdFromArg,
           mangaTitle = mangaTitle!!,
           mangaCoverUrl = mangaCoverUrl!!,
@@ -378,9 +377,7 @@ class ReaderViewModel @Inject constructor(
           chapterVolume = currentChapterDetailsState.volume,
           lastReadPage = currentChapterPagesState.currentChapterPage,
           pageCount = currentChapterPagesState.chapterPages.totalPages,
-          lastReadAt = null
         )
-        addAndUpdateToHistoryUseCase(userId = userId, readingHistory = newReadingHistory)
           .onSuccess { Log.d(TAG, "addAndUpdateToHistory success") }
           .onFailure {
             Log.d(TAG, "addAndUpdateToHistory error: ${it.stackTraceToString()}")
@@ -545,7 +542,6 @@ class ReaderViewModel @Inject constructor(
     private const val TAG = "ReaderViewModel"
     private const val CHAPTER_LIST_PER_PAGE_SIZE = 20
     private const val READING_HISTORY_LIST_PER_PAGE_SIZE = 50
-    private const val NEARED_LAST_CHAPTER_COUNT = 5
     private const val DELAY_TIME_MILLIS = 100L
   }
 }

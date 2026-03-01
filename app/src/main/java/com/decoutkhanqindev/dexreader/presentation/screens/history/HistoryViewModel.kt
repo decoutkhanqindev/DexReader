@@ -60,13 +60,10 @@ class HistoryViewModel @Inject constructor(
           ).collect { result ->
             result
               .onSuccess { readingHistoryList ->
-                val hasNextPage = readingHistoryList.size >= READING_HISTORY_LIST_PER_PAGE_SIZE
                 _historyUiState.value = BasePaginationUiState.Content(
                   currentList = readingHistoryList,
                   currentPage = FIRST_PAGE,
-                  nextPageState =
-                    if (!hasNextPage) BaseNextPageState.NO_MORE_ITEMS
-                    else BaseNextPageState.IDLE
+                  nextPageState = BaseNextPageState.fromPageSize(readingHistoryList.size, READING_HISTORY_LIST_PER_PAGE_SIZE)
                 )
               }
               .onFailure { throwable ->
@@ -134,13 +131,10 @@ class HistoryViewModel @Inject constructor(
             result
               .onSuccess { readingHistoryList ->
                 val allReadingHistoryList = currentReadingHistoryList + readingHistoryList
-                val hasNextPage = readingHistoryList.size >= READING_HISTORY_LIST_PER_PAGE_SIZE
                 _historyUiState.value = currentUiState.copy(
                   currentList = allReadingHistoryList,
                   currentPage = nextPage,
-                  nextPageState =
-                    if (!hasNextPage) BaseNextPageState.NO_MORE_ITEMS
-                    else BaseNextPageState.IDLE
+                  nextPageState = BaseNextPageState.fromPageSize(readingHistoryList.size, READING_HISTORY_LIST_PER_PAGE_SIZE)
                 )
               }
               .onFailure { throwable ->

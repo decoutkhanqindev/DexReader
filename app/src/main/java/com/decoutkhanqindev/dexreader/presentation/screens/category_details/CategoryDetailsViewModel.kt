@@ -62,13 +62,10 @@ class CategoryDetailsViewModel @Inject constructor(
         contentRatingFilter = currentCriteriaUiState.contentRatingFilter.map { it.toMangaContentRatingFilter() },
       )
         .onSuccess { mangaList ->
-          val hasNextPage = mangaList.size >= MANGA_LIST_PER_PAGE_SIZE
           _categoryDetailsUiState.value = BasePaginationUiState.Content(
             currentList = mangaList,
             currentPage = FIRST_PAGE,
-            nextPageState =
-              if (!hasNextPage) BaseNextPageState.NO_MORE_ITEMS
-              else BaseNextPageState.IDLE
+            nextPageState = BaseNextPageState.fromPageSize(mangaList.size, MANGA_LIST_PER_PAGE_SIZE)
           )
         }
         .onFailure {
@@ -118,13 +115,10 @@ class CategoryDetailsViewModel @Inject constructor(
       )
         .onSuccess { nextMangaList ->
           val allMangaList = currentMangaList + nextMangaList
-          val hasNextPage = nextMangaList.size >= MANGA_LIST_PER_PAGE_SIZE
           _categoryDetailsUiState.value = currentCategoryDetailsUiState.copy(
             currentList = allMangaList,
             currentPage = nextPage,
-            nextPageState =
-              if (!hasNextPage) BaseNextPageState.NO_MORE_ITEMS
-              else BaseNextPageState.IDLE
+            nextPageState = BaseNextPageState.fromPageSize(nextMangaList.size, MANGA_LIST_PER_PAGE_SIZE)
           )
         }
         .onFailure {

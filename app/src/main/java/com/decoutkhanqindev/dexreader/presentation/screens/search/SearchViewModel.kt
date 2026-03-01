@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.model.Manga
+import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaSuggestionsUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.SearchMangaUseCase
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
@@ -26,6 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
   private val searchMangaUseCase: SearchMangaUseCase,
+  private val getMangaSuggestionsUseCase: GetMangaSuggestionsUseCase,
 ) : ViewModel() {
   private val _suggestionsUiState =
     MutableStateFlow<SuggestionsUiState>(SuggestionsUiState.Loading)
@@ -50,10 +52,8 @@ class SearchViewModel @Inject constructor(
       flow {
         _suggestionsUiState.value = SuggestionsUiState.Loading
 
-        searchMangaUseCase(query)
-          .onSuccess { mangaList ->
-            val titleList =
-              mangaList.map { manga -> manga.title }.take(TAKE_SUGGESTION_LIST_SIZE)
+        getMangaSuggestionsUseCase(query)
+          .onSuccess { titleList ->
             _suggestionsUiState.value = SuggestionsUiState.Success
             emit(titleList)
           }
@@ -76,13 +76,10 @@ class SearchViewModel @Inject constructor(
 
       searchMangaUseCase(query.value)
         .onSuccess { mangaList ->
-          val hasNextPage = mangaList.size >= MANGA_LIST_PER_PAGE_SIZE
           _resultsUiState.value = BasePaginationUiState.Content(
             currentList = mangaList,
             currentPage = FIRST_PAGE,
-            nextPageState =
-              if (!hasNextPage) BaseNextPageState.NO_MORE_ITEMS
-              else BaseNextPageState.IDLE
+            nextPageState = BaseNextPageState.fromPageSize(mangaList.size, MANGA_LIST_PER_PAGE_SIZE)
           )
         }
         .onFailure {
@@ -129,13 +126,10 @@ class SearchViewModel @Inject constructor(
       )
         .onSuccess { nextMangaList ->
           val allMangaList = currentMangaList + nextMangaList
-          val hasNextPage = nextMangaList.size >= MANGA_LIST_PER_PAGE_SIZE
           _resultsUiState.value = currentResultsUiState.copy(
             currentList = allMangaList,
             currentPage = nextPage,
-            nextPageState =
-              if (!hasNextPage) BaseNextPageState.NO_MORE_ITEMS
-              else BaseNextPageState.IDLE
+            nextPageState = BaseNextPageState.fromPageSize(nextMangaList.size, MANGA_LIST_PER_PAGE_SIZE)
           )
         }
         .onFailure {
@@ -165,7 +159,6 @@ class SearchViewModel @Inject constructor(
 
   companion object {
     private const val TAG = "SearchViewModel"
-    private const val TAKE_SUGGESTION_LIST_SIZE = 10
     private const val FIRST_PAGE = 1
     private const val MANGA_LIST_PER_PAGE_SIZE = 20
     private const val DEBOUNCE_TIME_MILLIS = 500L

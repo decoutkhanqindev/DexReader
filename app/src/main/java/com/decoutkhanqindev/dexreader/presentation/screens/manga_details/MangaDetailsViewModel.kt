@@ -140,13 +140,10 @@ class MangaDetailsViewModel @Inject constructor(
         language = _chapterLanguage.value.toMangaLanguage(),
       )
         .onSuccess { chapterList ->
-          val hasNextPage = chapterList.size >= CHAPTER_LIST_PER_PAGE_SIZE
           _mangaChaptersUiState.value = BasePaginationUiState.Content(
             currentList = chapterList,
             currentPage = FIRST_PAGE,
-            nextPageState =
-              if (!hasNextPage) BaseNextPageState.NO_MORE_ITEMS
-              else BaseNextPageState.IDLE
+            nextPageState = BaseNextPageState.fromPageSize(chapterList.size, CHAPTER_LIST_PER_PAGE_SIZE)
           )
         }
         .onFailure {
@@ -192,13 +189,10 @@ class MangaDetailsViewModel @Inject constructor(
       )
         .onSuccess { nextChapterList ->
           val updatedChapterList = currentMangaList + nextChapterList
-          val hasNextPage = nextChapterList.size >= CHAPTER_LIST_PER_PAGE_SIZE
           _mangaChaptersUiState.value = currentMangaChaptersUiState.copy(
             currentList = updatedChapterList,
             currentPage = nextPage,
-            nextPageState =
-              if (!hasNextPage) BaseNextPageState.NO_MORE_ITEMS
-              else BaseNextPageState.IDLE
+            nextPageState = BaseNextPageState.fromPageSize(nextChapterList.size, CHAPTER_LIST_PER_PAGE_SIZE)
           )
         }
         .onFailure {

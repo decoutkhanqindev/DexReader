@@ -14,9 +14,3 @@ sealed interface BasePaginationUiState<out T> {
   ) : BasePaginationUiState<T>
 }
 
-enum class BaseNextPageState {
-  IDLE,
-  LOADING,
-  NO_MORE_ITEMS,
-  ERROR
-}

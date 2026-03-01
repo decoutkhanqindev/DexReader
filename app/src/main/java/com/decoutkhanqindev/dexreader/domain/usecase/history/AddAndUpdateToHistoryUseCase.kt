@@ -10,11 +10,29 @@ class AddAndUpdateToHistoryUseCase @Inject constructor(
 ) {
   suspend operator fun invoke(
     userId: String,
-    readingHistory: ReadingHistory,
+    mangaId: String,
+    mangaTitle: String,
+    mangaCoverUrl: String,
+    chapterId: String,
+    chapterTitle: String,
+    chapterNumber: String,
+    chapterVolume: String,
+    lastReadPage: Int,
+    pageCount: Int,
   ): Result<Unit> = runSuspendResultCatching {
-    repository.addAndUpdateToHistory(
-      userId = userId,
-      readingHistory = readingHistory
+    val readingHistory = ReadingHistory(
+      id = ReadingHistory.generateId(mangaId, chapterId),
+      mangaId = mangaId,
+      mangaTitle = mangaTitle,
+      mangaCoverUrl = mangaCoverUrl,
+      chapterId = chapterId,
+      chapterTitle = chapterTitle,
+      chapterNumber = chapterNumber,
+      chapterVolume = chapterVolume,
+      lastReadPage = lastReadPage,
+      pageCount = pageCount,
+      lastReadAt = null
     )
+    repository.addAndUpdateToHistory(userId, readingHistory)
   }
 }

@@ -53,13 +53,10 @@ class FavoritesViewModel @Inject constructor(
           ).collect { result ->
             result
               .onSuccess { favoriteMangaList ->
-                val hasNextPage = favoriteMangaList.size >= MANGA_LIST_PER_PAGE_SIZE
                 _uiState.value = BasePaginationUiState.Content(
                   currentList = favoriteMangaList,
                   currentPage = FIRST_PAGE,
-                  nextPageState =
-                    if (!hasNextPage) BaseNextPageState.NO_MORE_ITEMS
-                    else BaseNextPageState.IDLE
+                  nextPageState = BaseNextPageState.fromPageSize(favoriteMangaList.size, MANGA_LIST_PER_PAGE_SIZE)
                 )
               }
               .onFailure { throwable ->
@@ -130,13 +127,10 @@ class FavoritesViewModel @Inject constructor(
             result
               .onSuccess { nextPageFavoriteMangaList ->
                 val allFavoriteMangaList = favoriteMangaList + nextPageFavoriteMangaList
-                val hasNextPage = nextPageFavoriteMangaList.size >= MANGA_LIST_PER_PAGE_SIZE
                 _uiState.value = currentUiState.copy(
                   currentList = allFavoriteMangaList,
                   currentPage = nextPage,
-                  nextPageState =
-                    if (!hasNextPage) BaseNextPageState.NO_MORE_ITEMS
-                    else BaseNextPageState.IDLE
+                  nextPageState = BaseNextPageState.fromPageSize(nextPageFavoriteMangaList.size, MANGA_LIST_PER_PAGE_SIZE)
                 )
               }
               .onFailure { throwable ->
