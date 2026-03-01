@@ -1,46 +1,73 @@
 # DexReader — Claude Session Handoff
 
 ## Status
-**Current phase:** Domain Layer Refactoring — CategoryType enum migration + Clean Architecture enforcement
-**Overall progress:** All enum/rename/mapper-pattern phases complete; CA violation (client-side filter in VM) fixed; refactoring gaps in other VMs remain
+**Current phase:** Business Logic Extraction — all known ViewModel CA gaps resolved
+**Overall progress:** All enum/rename/mapper/grouping phases complete; all 8 identified CA gaps done; Phase 7 A–D complete; minor remaining items in `ReaderViewModel` (E, F) deferred to next session
 
 ---
 
 ## Completed This Session
 
-- **CategoryGroup → CategoryType migration (full)**
-  - Deleted `CategoryGroup.kt` (sealed class with hardcoded `id`/`name` strings)
-  - Created `domain/model/CategoryType.kt` — pure enum: `GENRE, THEME, FORMAT, CONTENT, UNKNOWN`
-  - Created `presentation/model/CategoryTypeOption.kt` — `@StringRes val nameRes: Int` per entry
-  - Created `presentation/mapper/CategoryTypeMapper.kt` — `CategoryType.toCategoryTypeOption()` only (domain → presentation direction; inverse not needed)
-  - Updated `Category.type: String` → `Category.type: CategoryType`; `DEFAULT_GROUP` → `DEFAULT_TYPE = CategoryType.UNKNOWN`
-  - Updated `CategoryMapper` — private `String.toCategoryType()` via case-insensitive `entries.firstOrNull`
-  - Renamed components: `CategoryGroupSection` → `CategoryTypeSection`, `CategoryGroupHeader` → `CategoryTypeHeader`
-  - Added 5 string resources: `category_type_genre/theme/format/content/unknown`
+### Phase 6 — MangaDetailsViewModel (Gaps #2 + #5)
+- **Gap #2:** `AddToFavoritesUseCase` now accepts `Manga` instead of `FavoriteManga`; constructs `FavoriteManga` internally — VM no longer imports `FavoriteManga`
+- **Gap #5:** `ReadingHistory.findContinueTarget(historyList)` added to companion object; `MangaDetailsViewModel.continueChapter` StateFlow delegates to it
 
-- **Clean Architecture fix: client-side filter moved out of ViewModel**
-  - `GetCategoryListUseCase` return type changed: `Result<List<Category>>` → `Result<Map<CategoryType, List<Category>>>`; `groupBy { it.type }` runs inside the use case
-  - `CategoriesUiState.Success` changed from 4 named `List<Category>` fields → single `Map<CategoryTypeOption, List<Category>> categoryMap`
-  - `CategoriesViewModel.onSuccess` now converts domain map → presentation map: `CategoryTypeOption.entries.filter { != UNKNOWN }.associateWith { option -> grouped[CategoryType.valueOf(option.name)] ?: emptyList() }`
-  - `CategoriesContent` replaced 4 hardcoded `item {}` blocks with single dynamic `items(uiState.categoryMap.keys.toList(), key = { it.name })` — data-driven, order guaranteed by enum ordinal
-  - Fixed null-safety bug in `Saver.restore`: `it.let` → `it?.let`
+### Gaps #3 + #6 — ReaderViewModel domain helpers
+- **Gap #3:** `ReadingHistory.generateId(mangaId, chapterId)` companion method added; `ReaderViewModel` uses it
+- **Gap #6:** `ReadingHistory.findInitialPage(chapterId, navChapterId, navPage, historyList)` companion method added; `getInitialChapterPage()` private VM method deleted
+
+### Gap #4 — ClearExpiredCacheUseCase
+- `ClearExpiredCacheUseCase.invoke()` now takes no parameters; owns `CACHE_EXPIRY_MILLIS = 24 * 60 * 60 * 1000L` internally
+- `ReaderViewModel` call site updated (no-arg), `CACHE_EXPIRY_TIME_MILLIS` constant removed from VM
+
+### Gap #8 — HomeViewModel import fix
+- `import jakarta.inject.Inject` → `import javax.inject.Inject`
+
+### Gap #7 — FavoritesHistoryException.PermissionDenied (4 VMs)
+- Added `PermissionDenied` subtype to `domain/exception/FavoritesHistoryException.kt`
+- `FavoritesRepositoryImpl`: `.catch` operator added to `observeIsFavorite()` and `observeFavorites()` — maps `FirebaseFirestoreException(PERMISSION_DENIED)` → `FavoritesHistoryException.PermissionDenied`
+- `HistoryRepositoryImpl`: same `.catch` mapping added to `observeHistory()`
+- All 4 VMs (`MangaDetailsViewModel`, `ReaderViewModel`, `FavoritesViewModel`, `HistoryViewModel`): string-match `throwable.message?.contains(PERMISSION_DENIED_EXCEPTION)` replaced with type check `throwable is FavoritesHistoryException.PermissionDenied`; `PERMISSION_DENIED_EXCEPTION` constant removed from all VMs
+
+### Phase 7 — Business Logic Extraction (A–D)
+
+**A — ReadingHistory construction out of ReaderViewModel**
+- `AddAndUpdateToHistoryUseCase.invoke()` now accepts 10 raw fields and constructs `ReadingHistory` internally using `ReadingHistory.generateId()`
+- `ReaderViewModel` passes raw fields; no longer constructs `ReadingHistory` directly
+
+**B — BaseNextPageState.fromPageSize() companion factory**
+- `BaseNextPageState` gains `companion object { fun fromPageSize(resultSize: Int, pageSize: Int): BaseNextPageState }`
+- All 6 VMs updated: `CategoryDetailsViewModel`, `SearchViewModel`, `MangaDetailsViewModel`, `FavoritesViewModel`, `HistoryViewModel`, `ReaderViewModel` — inline `if (list.size >= PAGE_SIZE) IDLE else NO_MORE_ITEMS` replaced with `BaseNextPageState.fromPageSize(list.size, PAGE_SIZE)`
+- **Note:** `ReaderViewModel.hasNextChapterListPage` is a plain `Boolean` field (not StateFlow-based pagination) — deliberately NOT converted
+
+**C — GetMangaSuggestionsUseCase (new)**
+- New `domain/usecase/manga/GetMangaSuggestionsUseCase.kt`: calls `repository.searchManga(query, offset=0).take(SUGGESTION_LIMIT).map { it.title }`; owns `SUGGESTION_LIMIT = 10`
+- `SearchViewModel` now injects and delegates to this use case; `TAKE_SUGGESTION_LIST_SIZE` constant removed; no longer calls `searchMangaUseCase` for suggestions
+
+**D — Chapter.shouldPrefetchNextPage() domain helper**
+- `Chapter.kt` companion object gains `shouldPrefetchNextPage(currentIndex, listSize): Boolean` with `PREFETCH_THRESHOLD = 5`
+- `ReaderViewModel.prefetchChapterListNextPage()` call site delegates to it; `NEARED_LAST_CHAPTER_COUNT` constant removed
 
 ---
 
 ## Next Session — Start Here
 
-1. Open `memory/refactoring-gaps.md` — review remaining business logic still in ViewModels
-2. Next refactoring target: pick the highest-value gap from `refactoring-gaps.md` and apply the same pattern (move logic to UseCase, simplify VM)
+1. Open `memory/refactoring-gaps.md` — two items remain (E and F) in `ReaderViewModel`
+2. **Item E:** `updateChapterNavState()` — chapter navigation state logic lives inside VM; move rule to domain model or use case
+3. **Item F:** `combine` of 3 boolean flags — data coordination logic in `ReaderViewModel`; evaluate if it belongs in a use case
+4. After E + F: check `Phase 8` (MangaLanguageCodeParam cleanup in `ParamMapper`/`CategoryMapper`)
 
 ---
 
 ## Important Context
 
-- **`CategoryTypeMapper.toCategoryTypeOption()`** exists but has no active call site yet — it's infrastructure for any future code path that needs to surface a `CategoryType` to the UI layer
-- **`CategoryType.valueOf(option.name)`** is used inline in `CategoriesViewModel` for the reverse lookup — no mapper for that direction by design (user decision)
-- **Enum name identity rule** — `CategoryType.GENRE.name == CategoryTypeOption.GENRE.name == "GENRE"` — all three-layer enums share identical entry names, enabling `valueOf(name)` without a lookup table
-- **Use case grouping pattern** — when a VM needs data pre-grouped/pre-filtered, move the transformation into the use case (`groupBy`, `filter`, etc.); VM only maps `Result` → `UiState`
-- **`CategoriesContent` ordering** — section order (Genre → Theme → Format → Content) is guaranteed by `CategoryTypeOption.entries` ordinal, not by API response order
+- **Exception mapping boundary:** Firebase `FirebaseFirestoreException(PERMISSION_DENIED)` is now caught at the **repository layer** (`.catch` on the Flow) and remapped to `FavoritesHistoryException.PermissionDenied` before reaching any VM — VMs only do type checks, never string matching
+- **`toFlowResult()` in `AsyncHandler`:** wraps Flow exceptions as `Result.failure` — the `.catch` must be applied upstream of `toFlowResult()` for the mapping to work
+- **`ReadingHistory.generateId()`** is called both in `AddAndUpdateToHistoryUseCase` and retained in `ReaderViewModel` for ID lookup (read path) — this is intentional
+- **`GetMangaSuggestionsUseCase`** uses `.take()` instead of a `limit` param because `MangaRepository.searchManga` has no `limit` parameter — rule still moves out of VM
+- **`ReaderViewModel.hasNextChapterListPage`** is a stateful `Boolean` field driving manual job orchestration, not a `BasePaginationUiState`-based list — `fromPageSize()` deliberately not applied there
+- **`BaseNextPageState.fromPageSize()`** is the single source of truth for the "has more pages" heuristic — `resultSize >= pageSize` → `IDLE`, else `NO_MORE_ITEMS`
+- **Enum name identity rule** — all three-layer enums share identical entry names, enabling `valueOf(name)` without a lookup table (established in earlier phases)
 
 ---
 
@@ -48,16 +75,20 @@
 
 | File | Change |
 |---|---|
-| `domain/model/CategoryType.kt` | **new** — domain enum |
-| `domain/model/Category.kt` | `type: String` → `type: CategoryType`; `DEFAULT_GROUP` → `DEFAULT_TYPE` |
-| `data/mapper/CategoryMapper.kt` | private `String.toCategoryType()` added |
-| `domain/usecase/category/GetCategoryListUseCase.kt` | return type → `Map<CategoryType, List<Category>>`; `groupBy` inside |
-| `presentation/model/CategoryTypeOption.kt` | **new** — presentation enum with `@StringRes nameRes` |
-| `presentation/mapper/CategoryTypeMapper.kt` | **new** — `toCategoryTypeOption()` only |
-| `presentation/screens/categories/CategoriesUiState.kt` | `Success` → `Map<CategoryTypeOption, List<Category>>` |
-| `presentation/screens/categories/CategoriesViewModel.kt` | domain map → presentation map conversion |
-| `presentation/screens/categories/components/CategoriesContent.kt` | dynamic `items()`, null-safety fix |
-| `presentation/screens/categories/components/CategoryTypeSection.kt` | renamed from `CategoryGroupSection` |
-| `presentation/screens/categories/components/CategoryTypeHeader.kt` | renamed from `CategoryGroupHeader` |
-| `presentation/screens/categories/CategoryGroup.kt` | **deleted** |
-| `res/values/strings.xml` | 5 new `category_type_*` entries |
+| `domain/exception/FavoritesHistoryException.kt` | Added `PermissionDenied` subtype |
+| `domain/model/ReadingHistory.kt` | Added `generateId()`, `findContinueTarget()`, `findInitialPage()` to companion |
+| `domain/model/Chapter.kt` | Added `shouldPrefetchNextPage()` + `PREFETCH_THRESHOLD` to companion |
+| `domain/usecase/favorites/AddToFavoritesUseCase.kt` | Param `manga: FavoriteManga` → `manga: Manga`; constructs `FavoriteManga` internally |
+| `domain/usecase/history/AddAndUpdateToHistoryUseCase.kt` | Accepts 10 raw fields; constructs `ReadingHistory` internally |
+| `domain/usecase/cache/ClearExpiredCacheUseCase.kt` | `invoke()` takes no params; owns `CACHE_EXPIRY_MILLIS` internally |
+| `domain/usecase/manga/GetMangaSuggestionsUseCase.kt` | **new** — extracts suggestion fetch + take/map from `SearchViewModel` |
+| `data/repository/FavoritesRepositoryImpl.kt` | `.catch` mapping added to `observeIsFavorite()` + `observeFavorites()` |
+| `data/repository/HistoryRepositoryImpl.kt` | `.catch` mapping added to `observeHistory()` |
+| `presentation/screens/common/base/BaseNextPageState.kt` | Added `companion object { fun fromPageSize(...) }` |
+| `presentation/screens/manga_details/MangaDetailsViewModel.kt` | Removed `FavoriteManga` import/construction; delegates `continueChapter` + PERMISSION_DENIED; uses `fromPageSize()` |
+| `presentation/screens/reader/ReaderViewModel.kt` | Delegates `findInitialPage`, `shouldPrefetchNextPage`, `clearExpiredCacheUseCase()`; removes `ReadingHistory` construction + PERMISSION_DENIED + constants |
+| `presentation/screens/search/SearchViewModel.kt` | Injects `GetMangaSuggestionsUseCase`; uses `fromPageSize()` |
+| `presentation/screens/category_details/CategoryDetailsViewModel.kt` | Uses `fromPageSize()` |
+| `presentation/screens/favorites/FavoritesViewModel.kt` | PERMISSION_DENIED type check; uses `fromPageSize()` |
+| `presentation/screens/history/HistoryViewModel.kt` | PERMISSION_DENIED type check; uses `fromPageSize()` |
+| `presentation/screens/home/HomeViewModel.kt` | `jakarta.inject` → `javax.inject` |

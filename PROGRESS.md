@@ -9,8 +9,8 @@
 | 3 | Domain Model Default Constants — companion object fallbacks | ✅ done |
 | 4 | Mapper Object Pattern — wrap all data mappers in `object` | ✅ done |
 | 5 | CategoryGroup → CategoryType — sealed class → domain enum | ✅ done |
-| 6 | CA Fix: UseCase Grouping — move client-side transforms out of VMs | ✅ done (categories) |
-| 7 | Remaining CA Gaps — business logic still in other ViewModels | 🔲 todo |
+| 6 | CA Fix: UseCase Grouping — move client-side transforms out of VMs (categories) | ✅ done |
+| 7 | Business Logic Extraction — all remaining CA gaps in ViewModels | ✅ done |
 | 8 | MangaLanguageCodeParam cleanup | 🔲 todo |
 
 ---
@@ -81,12 +81,50 @@ Call sites use qualified static import: `import ObjectName.functionName`
 - `CategoriesViewModel`: converts domain map → presentation map using `CategoryTypeOption.entries.associateWith { option -> grouped[CategoryType.valueOf(option.name)] ?: emptyList() }`
 - `CategoriesContent`: 4 hardcoded `item {}` → single dynamic `items(categoryMap.keys.toList())`
 
-### Phase 7 — Remaining CA Gaps 🔲
-See `memory/refactoring-gaps.md` for full list of business logic still in ViewModels.
+### Phase 7 — Business Logic Extraction ✅
 
-Known items:
-- Pagination heuristic (`hasNextPage = list.size >= PAGE_SIZE`) in `CategoryDetailsViewModel` — borderline, low priority
-- Other VMs with inline business logic (TBD from gaps file)
+All 8 identified CA gaps resolved. Grouped by sub-phase:
+
+#### Phase 6 extension — MangaDetailsViewModel (Gaps #2 + #5)
+- **Gap #2:** `AddToFavoritesUseCase` accepts `Manga`, builds `FavoriteManga` internally; VM no longer imports `FavoriteManga`
+- **Gap #5:** `ReadingHistory.findContinueTarget(historyList)` companion method; VM delegates to it
+
+#### Gaps #3 + #6 — ReaderViewModel domain helpers
+- **Gap #3:** `ReadingHistory.generateId(mangaId, chapterId)` companion method; VM uses it
+- **Gap #6:** `ReadingHistory.findInitialPage(chapterId, navChapterId, navPage, historyList)` companion method; `getInitialChapterPage()` private VM method deleted
+
+#### Gap #4 — ClearExpiredCacheUseCase autonomy
+- `invoke()` takes no params; owns `CACHE_EXPIRY_MILLIS = 24h` internally
+- VM constant `CACHE_EXPIRY_TIME_MILLIS` removed
+
+#### Gap #8 — HomeViewModel import fix
+- `jakarta.inject.Inject` → `javax.inject.Inject`
+
+#### Gap #7 — FavoritesHistoryException.PermissionDenied
+- New `PermissionDenied` subtype in `domain/exception/FavoritesHistoryException.kt`
+- `FavoritesRepositoryImpl` + `HistoryRepositoryImpl`: `.catch` operator maps `FirebaseFirestoreException(PERMISSION_DENIED)` at the repo boundary
+- All 4 VMs: `throwable.message?.contains(PERMISSION_DENIED_EXCEPTION)` → `throwable is FavoritesHistoryException.PermissionDenied`; constant removed
+
+#### Phase 7 Item A — ReadingHistory construction out of VMs
+- `AddAndUpdateToHistoryUseCase.invoke()` accepts 10 raw fields; constructs `ReadingHistory` internally
+- `ReaderViewModel` passes raw fields
+
+#### Phase 7 Item B — BaseNextPageState.fromPageSize()
+- `companion object { fun fromPageSize(resultSize: Int, pageSize: Int): BaseNextPageState }` added
+- All 6 VMs updated: `CategoryDetailsViewModel`, `SearchViewModel`, `MangaDetailsViewModel`, `FavoritesViewModel`, `HistoryViewModel`, `ReaderViewModel`
+- `ReaderViewModel.hasNextChapterListPage` Boolean field deliberately NOT converted (different pagination model)
+
+#### Phase 7 Item C — GetMangaSuggestionsUseCase
+- New use case: `repository.searchManga(query, offset=0).take(SUGGESTION_LIMIT).map { it.title }`; owns `SUGGESTION_LIMIT = 10`
+- `SearchViewModel` injects it; `TAKE_SUGGESTION_LIST_SIZE` constant removed
+
+#### Phase 7 Item D — Chapter.shouldPrefetchNextPage()
+- `Chapter.shouldPrefetchNextPage(currentIndex, listSize): Boolean` with `PREFETCH_THRESHOLD = 5` in companion
+- `ReaderViewModel.NEARED_LAST_CHAPTER_COUNT` removed; delegates to domain method
+
+#### Remaining (deferred to next session)
+- **Item E:** `updateChapterNavState()` navigation logic in `ReaderViewModel`
+- **Item F:** `combine` of 3 boolean flags coordination in `ReaderViewModel`
 
 ### Phase 8 — MangaLanguageCodeParam cleanup 🔲
 `MangaLanguageCodeParam` still used internally in `ParamMapper` and `CategoryMapper` (ENGLISH key lookup). Can be replaced with a direct string constant once the team agrees on the approach.
@@ -101,8 +139,14 @@ Known items:
 | Presentation Option enums hold `@StringRes` | Only presentation layer can reference Android resources |
 | Mapper objects use `valueOf(this.name)` | Enum entry names are kept identical across layers — no lookup table needed |
 | `toCategoryType()` mapper NOT created | Inverse direction (presentation → domain) not needed for category type; inline `CategoryType.valueOf(option.name)` used in ViewModel |
-| `GetCategoryListUseCase` returns grouped map | Client-side `filter {}` belongs in UseCase per domain guidelines (Gray Area rule) |
+| `GetCategoryListUseCase` returns grouped map | Client-side `filter {}` belongs in UseCase per domain guidelines |
 | `CategoriesUiState.Success` uses `Map<CategoryTypeOption, List<Category>>` | Presentation map key = presentation type; ViewModel is the domain→presentation boundary |
 | `CategoriesContent` iterates map keys dynamically | Decoupled from hardcoded 4-section assumption; if API drops a type, no crash |
 | `ChapterCacheEntity` column name kept as `chapterDataHash` | Changing Room column name requires a DB migration; Kotlin property renamed, `@ColumnInfo` preserved |
 | Firebase DTOs not renamed | They're at the network boundary; mapper is the adapter |
+| Exception mapping at repository boundary | VM should only see domain exceptions (`FavoritesHistoryException.PermissionDenied`), not Firebase internals (`FirebaseFirestoreException`) |
+| `.catch` before `toFlowResult()` | Exception remapping must happen on the raw Flow before wrapping in `Result` |
+| `GetMangaSuggestionsUseCase` uses `.take()` not `limit` param | `MangaRepository.searchManga` has no `limit` parameter; `.take()` is idiomatic Kotlin and rule still moves out of VM |
+| `ReaderViewModel.hasNextChapterListPage` Boolean not migrated | It drives manual job orchestration, not `BasePaginationUiState`-based pagination; `fromPageSize()` not applicable |
+| `BaseNextPageState.fromPageSize()` is single source of truth | Eliminates inline `if (size >= pageSize) IDLE else NO_MORE_ITEMS` duplicated across 6 VMs |
+| Domain model companion methods for pure rules | `ReadingHistory.generateId/findContinueTarget/findInitialPage`, `Chapter.shouldPrefetchNextPage` — pure functions with no dependencies belong in the domain model, not VMs |
