@@ -3,7 +3,8 @@
     "allow": [
       "Bash(git mv:*)",
       "Bash(mkdir:*)",
-      "Bash(git:*)"
+      "Bash(git:*)",
+      "WebSearch"
     ]
   },
   "spinnerTipsEnabled": true

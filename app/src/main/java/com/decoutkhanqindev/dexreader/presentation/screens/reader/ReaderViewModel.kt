@@ -97,10 +97,10 @@ class ReaderViewModel @Inject constructor(
         _isFetchChapterDetailsDone,
         _isFetchMangaDetailsDone,
         _isObserveHistoryDone,
-      ) { chapterDetailsDone, mangaDetailsDone, historyDone ->
-        chapterDetailsDone && mangaDetailsDone && historyDone
-      }.collectLatest { isDataDone ->
-        if (isDataDone && _chapterPagesUiState.value is ChapterPagesUiState.Loading) {
+      ) { isChapterDetailsDone, isMangaDetailsDone, isHistoryDone ->
+        isChapterDetailsDone && isMangaDetailsDone && isHistoryDone
+      }.collectLatest { isAllDataDone ->
+        if (isAllDataDone && _chapterPagesUiState.value is ChapterPagesUiState.Loading) {
           delay(DELAY_TIME_MILLIS)
           fetchChapterPages()
         }
@@ -277,40 +277,38 @@ class ReaderViewModel @Inject constructor(
 
   private fun updateChapterNavState() {
     viewModelScope.launch {
-      val currentChapterIndex = currentChapterList.indexOfFirst { it.id == currentChapterId }
-      if (currentChapterIndex == -1) {
-        _chapterNavUiState.update {
-          it.copy(canNavigateNext = hasNextChapterListPage)
-        }
+      val nav = Chapter.determineNavPosition(
+        currentChapterId = currentChapterId,
+        chapterList = currentChapterList,
+        hasNextPage = hasNextChapterListPage
+      )
+
+      if (nav.foundAtIndex == -1) {
+        _chapterNavUiState.update { it.copy(canNavigateNext = hasNextChapterListPage) }
         if (hasNextChapterListPage) fetchChapterListNextPage()
         return@launch
       }
 
-      val isFirstChapter = currentChapterIndex == 0
-      val isLastChapter = currentChapterIndex == currentChapterList.lastIndex
-
       _chapterNavUiState.update {
         it.copy(
           currentChapterId = currentChapterId,
-          previousChapterId =
-            if (!isFirstChapter) currentChapterList[currentChapterIndex - 1].id
-            else null,
-          nextChapterId =
-            if (!isLastChapter) currentChapterList[currentChapterIndex + 1].id
-            else null,
-          canNavigatePrevious = !isFirstChapter,
-          canNavigateNext = !isLastChapter || hasNextChapterListPage,
+          previousChapterId = nav.previousChapterId,
+          nextChapterId = nav.nextChapterId,
+          canNavigatePrevious = nav.canNavigatePrevious,
+          canNavigateNext = nav.canNavigateNext,
         )
       }
 
-      prefetchChapterListNextPage(currentChapterIndex)
+      prefetchChapterListNextPage(nav.foundAtIndex)
     }
   }
 
   private fun prefetchChapterListNextPage(currentChapterIndex: Int) {
-    if (Chapter.shouldPrefetchNextPage(currentChapterIndex, currentChapterList.size)
-      && hasNextChapterListPage)
-      fetchChapterListNextPage()
+    if (Chapter.isPrefetchNextPage(
+        currentIndex = currentChapterIndex,
+        listSize = currentChapterList.size
+      ) && hasNextChapterListPage
+    ) fetchChapterListNextPage()
   }
 
   fun navigateToPreviousChapter() {

@@ -1,74 +1,39 @@
-# DexReader — Refactor Progress
+# DexReader — Refactoring Progress
 
-## Overall Goal
-Full Clean Architecture refactor: domain models own their types, mappers are pure converters, ViewModels are the domain↔presentation boundary, composables are pure receivers with no business logic.
+## Phase Overview
+
+| # | Phase | Status |
+|---|---|---|
+| 1 | Domain Enums — replace raw strings with typed enums end-to-end | ✅ done |
+| 2 | Domain Model Property Renames — domain-meaningful names | ✅ done |
+| 3 | Domain Model Default Constants — companion object fallbacks | ✅ done |
+| 4 | Mapper Object Pattern — wrap all data mappers in `object` | ✅ done |
+| 5 | CategoryGroup → CategoryType — sealed class → domain enum | ✅ done |
+| 6 | CA Fix: UseCase Grouping — move client-side transforms out of VMs (categories) | ✅ done |
+| 7 | Business Logic Extraction — all remaining CA gaps in ViewModels | ✅ done |
+| 8 | CA Audit + Bug Fix — full VM review, CancellationException swallowing fixed | ✅ done |
 
 ---
 
-## Phases
+## Phase Detail
 
-### Phase 0 — Structural Reorganization ✅ DONE
-- Renamed + relocated Room and Moshi adapters
-- Renamed util classes to `parser` package
-- Moved `NetworkInterceptor` to centralized package
-- Reorganized network DTOs into `mangadex_api` and `firebase` sub-packages
-- Added Firestore collection/field constants for all Firestore access
-- Moved `NavHostController` initialization to `NavGraph` composable
+### Phase 1 — Domain Enums ✅
+All 5 domain enums wired end-to-end across all three layers:
 
-### Phase 1 — Domain Enum Wiring ✅ DONE
-All 5 domain enums (`MangaLanguage`, `MangaSortCriteria`, `MangaSortOrder`, `MangaStatusFilter`, `MangaContentRatingFilter`) wired end-to-end through all layers.
+| Domain enum | Presentation Option enum | Mapper |
+|---|---|---|
+| `MangaLanguage` | `MangaLanguageName` (@StringRes) | `LanguageMapper` |
+| `MangaSortCriteria` | `MangaSortCriteriaOption` | `CriteriaMapper` |
+| `MangaSortOrder` | `MangaSortOrderOption` | `CriteriaMapper` |
+| `MangaStatusFilter` | `MangaStatusFilterOption` | `CriteriaMapper` |
+| `MangaContentRatingFilter` | `MangaContentRatingFilterOption` | `CriteriaMapper` |
 
-**Data layer (`ParamMapper.kt`):**
-- `MangaLanguage.toParam()` / `MangaStatusFilter.toParam()` / etc. — domain → API query param
-- `String.toMangaLanguage()` — ISO code string → domain enum (data layer only)
+- ISO/API strings live only in `data/` (`ParamMapper`, `ChapterMapper`)
+- `@StringRes` lives only in `presentation/model/`
+- Mapper objects in `presentation/mapper/` use `valueOf(this.name)` — enum name identity across layers
+- `rememberSaveable` for enum state: `Saver(save = { it.name }, restore = { Enum.valueOf(it) })`
 
-**Presentation layer (`LanguageMapper.kt`, `CriteriaMapper.kt`):**
-- `MangaLanguage ↔ MangaLanguageName` via `valueOf(name)`
-- `*Option ↔ domain enum` via `valueOf(name)` for all 4 criteria enums
-
-**`Chapter.translatedLanguage`** changed from `String` → `MangaLanguage`
-
-**Remaining minor item:** Delete `MangaLanguageCodeParam` (only used internally in `ParamMapper`)
-
-### Phase 2 — Presentation Enum Migration ✅ DONE
-Replaced all stringly-typed and sealed-class criteria with proper presentation-layer enums.
-
-**`MangaLanguageName` (`presentation/model/`):**
-- Pure enum with `@StringRes val value: Int`
-- `LanguageMapper.kt` handles `MangaLanguage ↔ MangaLanguageName`
-- Deleted: `util/LanguageCodec.kt`
-
-**Criteria Option enums (`presentation/model/criteria/sort/` and `criteria/filter/`):**
-- `MangaSortCriteriaOption`, `MangaSortOrderOption` — in `criteria/sort/`
-- `MangaStatusFilterOption`, `MangaContentRatingFilterOption` — in `criteria/filter/`
-- All have `@StringRes val nameRes: Int`; composables use `option.nameRes` directly
-- `CriteriaMapper.kt` handles `*Option → domain enum` via `valueOf(name)`
-- `CategoryDetailsViewModel` is the single conversion point
-- `CategoryDetailsCriteriaUiState` holds only Option enums
-- Generic composables: `FilterCriteriaItem<T>`, `FilterValueOptions<T>` with `nameResOf: (T) -> Int`
-- Deleted: `util/CriteriaCodec.kt`, `CategoryDetailsCriteria.kt`
-
-### Phase 3 — Mapper Objects ✅ DONE
-All 8 data layer mapper files (`CategoryMapper`, `ChapterMapper`, `ChapterPagesMapper`, `MangaMapper`, `ParamMapper`, `FavoriteMangaMapper`, `ReadingHistoryMapper`, `UserMapper`) wrapped in `object` singletons.
-
-All call sites updated to use qualified static imports: `import ObjectName.functionName`.
-
-### Phase 4 — Domain Model Default Constants ✅ DONE
-Fallback values extracted from mapper raw string literals into domain model `companion object` constants.
-
-| Model | Constants |
-|---|---|
-| `Manga` | `DEFAULT_TITLE`, `DEFAULT_DESCRIPTION`, `DEFAULT_AUTHOR`, `DEFAULT_ARTIST`, `DEFAULT_STATUS`, `DEFAULT_YEAR`, `DEFAULT_LAST_CHAPTER`, `DEFAULT_LAST_UPDATED` |
-| `Chapter` | `DEFAULT_MANGA_ID`, `DEFAULT_TITLE`, `DEFAULT_CHAPTER_NUMBER`, `DEFAULT_VOLUME`, `DEFAULT_LANGUAGE` |
-| `Category` | `DEFAULT_TITLE`, `DEFAULT_GROUP` |
-| `ChapterPages` | `DEFAULT_BASE_URL`, `DEFAULT_HASH` |
-| `FavoriteManga` | `DEFAULT_ADDED_AT` |
-| `User` | `DEFAULT_NAME`, `DEFAULT_EMAIL` |
-
-All 6 affected mapper files reference `ModelName.DEFAULT_*` — no more raw fallback literals.
-
-### Phase 5 — Domain Model Property Renames ✅ DONE
-All 11 properties across 6 domain models renamed to remove DTO/API naming leakage:
+### Phase 2 — Domain Model Property Renames ✅
 
 | Model | Old → New |
 |---|---|
@@ -79,37 +44,142 @@ All 11 properties across 6 domain models renamed to remove DTO/API naming leakag
 | `ReadingHistory` | `totalChapterPages` → `pageCount` |
 | `User` | `profilePictureUrl` → `avatarUrl` |
 
-All call sites updated across data mappers, use cases, ViewModels, and composables.
+- `ChapterCacheEntity.chapterDataHash` → Kotlin property `dataHash`; `@ColumnInfo(name = "chapterDataHash")` kept for Room DB column compat
+- Firebase DTOs kept as-is — mapper is the boundary
 
-### Phase 6 — ViewModel Business Logic Extraction 🔲 TODO
-Extract remaining business logic from ViewModels into Use Cases. See `memory/refactoring-gaps.md` for full inventory.
+### Phase 3 — Domain Model Default Constants ✅
+All domain models own fallback values as `companion object` constants:
+- `Manga` — `DEFAULT_TITLE/DESCRIPTION/AUTHOR/ARTIST/STATUS/YEAR/LAST_CHAPTER/LAST_UPDATED`
+- `Chapter` — `DEFAULT_MANGA_ID/TITLE/CHAPTER_NUMBER/VOLUME/LANGUAGE`
+- `Category` — `DEFAULT_TITLE`, `DEFAULT_TYPE` (= `CategoryType.UNKNOWN`)
+- `ChapterPages` — `DEFAULT_BASE_URL/HASH`
+- `FavoriteManga` — `DEFAULT_ADDED_AT`
+- `User` — `DEFAULT_NAME/EMAIL`
 
-Known gaps:
-- Filtering/pagination state logic in `CategoryDetailsViewModel`
-- Reading progress calculations in `ReaderViewModel`
-- Any direct repository calls in VMs that bypass use cases
+### Phase 4 — Mapper Object Pattern ✅
+All 8 data layer mappers wrapped in `object`:
+`CategoryMapper`, `ChapterMapper`, `ChapterPagesMapper`, `MangaMapper`, `ParamMapper`, `FavoriteMangaMapper`, `ReadingHistoryMapper`, `UserMapper`
+
+Call sites use qualified static import: `import ObjectName.functionName`
+
+### Phase 5 — CategoryGroup → CategoryType ✅
+- `CategoryGroup` sealed class deleted
+- `domain/model/CategoryType.kt` — `GENRE, THEME, FORMAT, CONTENT, UNKNOWN`
+- `presentation/model/CategoryTypeOption.kt` — `@StringRes val nameRes: Int`
+- `presentation/mapper/CategoryTypeMapper.kt` — `CategoryType.toCategoryTypeOption()` (domain → presentation only)
+- `Category.type: String` → `Category.type: CategoryType`
+- `CategoryMapper` — private `String.toCategoryType()` via case-insensitive `entries.firstOrNull`
+- Components renamed: `CategoryGroupSection` → `CategoryTypeSection`, `CategoryGroupHeader` → `CategoryTypeHeader`
+- 5 string resources added
+
+### Phase 6 — CA Fix: UseCase Grouping ✅ (categories screen)
+**Problem:** `CategoriesViewModel` was doing `categoryList.filter { it.type == CategoryType.GENRE }` × 4 — client-side filter belongs in UseCase per domain layer guidelines.
+
+**Fix:**
+- `GetCategoryListUseCase` now returns `Result<Map<CategoryType, List<Category>>>` with `groupBy { it.type }` inside
+- `CategoriesUiState.Success`: 4 named lists → `Map<CategoryTypeOption, List<Category>> categoryMap`
+- `CategoriesViewModel`: converts domain map → presentation map using `CategoryTypeOption.entries.associateWith { option -> grouped[CategoryType.valueOf(option.name)] ?: emptyList() }`
+- `CategoriesContent`: 4 hardcoded `item {}` → single dynamic `items(categoryMap.keys.toList())`
+
+### Phase 7 — Business Logic Extraction ✅
+
+All 8 identified CA gaps resolved. Grouped by sub-phase:
+
+#### Phase 6 extension — MangaDetailsViewModel (Gaps #2 + #5)
+- **Gap #2:** `AddToFavoritesUseCase` accepts `Manga`, builds `FavoriteManga` internally; VM no longer imports `FavoriteManga`
+- **Gap #5:** `ReadingHistory.findContinueTarget(historyList)` companion method; VM delegates to it
+
+#### Gaps #3 + #6 — ReaderViewModel domain helpers
+- **Gap #3:** `ReadingHistory.generateId(mangaId, chapterId)` companion method; VM uses it
+- **Gap #6:** `ReadingHistory.findInitialPage(chapterId, navChapterId, navPage, historyList)` companion method; `getInitialChapterPage()` private VM method deleted
+
+#### Gap #4 — ClearExpiredCacheUseCase autonomy
+- `invoke()` takes no params; owns `CACHE_EXPIRY_MILLIS = 24h` internally
+- VM constant `CACHE_EXPIRY_TIME_MILLIS` removed
+
+#### Gap #8 — HomeViewModel import fix
+- `jakarta.inject.Inject` → `javax.inject.Inject`
+
+#### Gap #7 — FavoritesHistoryException.PermissionDenied
+- New `PermissionDenied` subtype in `domain/exception/FavoritesHistoryException.kt`
+- `FavoritesRepositoryImpl` + `HistoryRepositoryImpl`: `.catch` operator maps `FirebaseFirestoreException(PERMISSION_DENIED)` at the repo boundary
+- All 4 VMs: `throwable.message?.contains(PERMISSION_DENIED_EXCEPTION)` → `throwable is FavoritesHistoryException.PermissionDenied`; constant removed
+
+#### Phase 7 Item A — ReadingHistory construction out of VMs
+- `AddAndUpdateToHistoryUseCase.invoke()` accepts 10 raw fields; constructs `ReadingHistory` internally
+- `ReaderViewModel` passes raw fields
+
+#### Phase 7 Item B — BaseNextPageState.fromPageSize()
+- `companion object { fun fromPageSize(resultSize: Int, pageSize: Int): BaseNextPageState }` added
+- All 6 VMs updated: `CategoryDetailsViewModel`, `SearchViewModel`, `MangaDetailsViewModel`, `FavoritesViewModel`, `HistoryViewModel`, `ReaderViewModel`
+- `ReaderViewModel.hasNextChapterListPage` Boolean field deliberately NOT converted (different pagination model)
+
+#### Phase 7 Item C — GetMangaSuggestionsUseCase
+- New use case: `repository.searchManga(query, offset=0).take(SUGGESTION_LIMIT).map { it.title }`; owns `SUGGESTION_LIMIT = 10`
+- `SearchViewModel` injects it; `TAKE_SUGGESTION_LIST_SIZE` constant removed
+
+#### Phase 7 Item D — Chapter.shouldPrefetchNextPage() / isPrefetchNextPage()
+- `Chapter.isPrefetchNextPage(currentIndex, listSize): Boolean` with `PREFETCH_THRESHOLD = 5` in companion
+- `ReaderViewModel.NEARED_LAST_CHAPTER_COUNT` removed; delegates to domain method
+
+#### Phase 7 Item E — Chapter.NavPosition + determineNavPosition()
+- `Chapter.NavPosition` nested data class added: `foundAtIndex`, `previousChapterId`, `nextChapterId`, `canNavigatePrevious`, `canNavigateNext`
+- `Chapter.determineNavPosition(currentChapterId, chapterList, hasNextPage): NavPosition` companion method added — pure list-index computation, zero Android dependencies
+- `ReaderViewModel.updateChapterNavState()` body replaced: delegates to `Chapter.determineNavPosition()`, passes `nav.foundAtIndex` directly to `prefetchChapterListNextPage()`
+- All inline `indexOfFirst`, `isFirstChapter`, `isLastChapter` locals eliminated from VM
+
+#### Phase 7 Item F — observeIsFetchDataDone() combine (kept as-is)
+- Evaluated: `combine(_isFetchChapterDetailsDone, _isFetchMangaDetailsDone, _isObserveHistoryDone) { a, b, c -> a && b && c }` is coroutine/flow **orchestration** — a loading gate waiting for 3 parallel async operations
+- No domain business rule here; `delay() + fetchChapterPages()` is VM-level side-effect coordination
+- **Decision:** kept exactly as-is in `ReaderViewModel`
+
+---
+
+### Phase 8 — CA Audit + CancellationException Bug Fix ✅
+
+#### Full VM Audit
+Reviewed all 14 ViewModels against `DOMAIN_LAYER_GUIDELINES.md`. 12 VMs confirmed clean. One structural bug found.
+
+**Audit result — all VMs clean except:**
+
+| VM | Finding |
+|---|---|
+| `FavoritesViewModel` | `catch (e: Exception)` swallows `CancellationException` in 2 places |
+| `HistoryViewModel` | Same pattern in 2 places |
+
+All other VMs (`LoginViewModel`, `RegisterViewModel`, `ForgotPasswordViewModel`, `ProfileViewModel`, `UserViewModel`, `SettingsViewModel`, `HomeViewModel`, `CategoriesViewModel`, `CategoryDetailsViewModel`, `MangaDetailsViewModel`, `SearchViewModel`, `ReaderViewModel`) pass audit with no CA violations.
+
+#### CancellationException Fix
+**Root cause:** `toFlowResult()` correctly rethrows `CancellationException` (does not wrap it as `Result.failure`). However, the rethrown exception still propagates through `collect { }` and reaches the outer `try-catch (e: Exception)` in both VMs. Since `CancellationException extends Exception`, it was caught and swallowed — setting `FirstPageError` state on routine job cancellation.
+
+**Fix applied:** Added `catch (c: CancellationException) { throw c }` before each `catch (e: Exception)` block, plus `import kotlin.coroutines.cancellation.CancellationException` in both files.
+
+Locations fixed (4 total):
+- `FavoritesViewModel.observeFavoritesFirstPage()`
+- `FavoritesViewModel.observeFavoritesNextPageInternal()`
+- `HistoryViewModel.observeHistoryFirstPage()`
+- `HistoryViewModel.observeHistoryNextPageInternal()`
 
 ---
 
 ## Architecture Decisions Log
 
-### Decision: `valueOf(name)` for cross-layer enum mapping
-**Why:** Presentation Option enum entry names mirror domain enum entry names exactly. This makes mapping a zero-cost name lookup with no `when` expression. Enforced by convention — entry names must stay in sync.
-
-### Decision: Option enums own their `@StringRes`
-**Why:** String resource IDs belong in the presentation layer. Putting them in the enum constructor means composables never need a `when` block for display — just `stringResource(option.nameRes)`. Section title strings that aren't per-option remain as direct `R.string.*` references.
-
-### Decision: ViewModel as the domain↔presentation boundary
-**Why:** Composables should be pure, stateless receivers. All `Option → domain enum` conversion happens in the ViewModel before calling use cases. Composables never import domain layer types.
-
-### Decision: Mapper `object` singletons (not companion objects, not top-level)
-**Why:** `object` is the idiomatic Kotlin singleton. It keeps mappers stateless, testable, and namespaced without needing a class instance. Call sites use static extension imports: `import ObjectName.functionName`.
-
-### Decision: Domain model companion constants for defaults
-**Why:** Fallback values are domain knowledge ("Untitled", "Unknown", `MangaLanguage.ENGLISH`). Scattering them as raw literals across mapper files violates single-source-of-truth. Domain models own their semantic defaults; mappers are pure converters.
-
-### Decision: FavoriteManga.toManga() empty strings are intentional
-**Why:** FavoriteManga doesn't store description, artist, year, etc. Those fields are explicitly `""` — not fallback defaults. They must NOT be replaced with `Manga.DEFAULT_*` (which have different semantic values like `"No description ..."`).
-
-### Decision: `rememberSaveable` enum state with custom `Saver`
-**Why:** Enum values aren't Parcelable by default. Using `Saver(save = { it.name }, restore = { Enum.valueOf(it) })` and `listSaver(...)` for lists keeps state across process death without adding `@Parcelize` to presentation enums.
+| Decision | Rationale |
+|---|---|
+| Domain enums have zero Android/framework imports | Domain layer must be pure Kotlin |
+| Presentation Option enums hold `@StringRes` | Only presentation layer can reference Android resources |
+| Mapper objects use `valueOf(this.name)` | Enum entry names are kept identical across layers — no lookup table needed |
+| `toCategoryType()` mapper NOT created | Inverse direction (presentation → domain) not needed for category type; inline `CategoryType.valueOf(option.name)` used in ViewModel |
+| `GetCategoryListUseCase` returns grouped map | Client-side `filter {}` belongs in UseCase per domain guidelines |
+| `CategoriesUiState.Success` uses `Map<CategoryTypeOption, List<Category>>` | Presentation map key = presentation type; ViewModel is the domain→presentation boundary |
+| `CategoriesContent` iterates map keys dynamically | Decoupled from hardcoded 4-section assumption; if API drops a type, no crash |
+| `ChapterCacheEntity` column name kept as `chapterDataHash` | Changing Room column name requires a DB migration; Kotlin property renamed, `@ColumnInfo` preserved |
+| Firebase DTOs not renamed | They're at the network boundary; mapper is the adapter |
+| Exception mapping at repository boundary | VM should only see domain exceptions (`FavoritesHistoryException.PermissionDenied`), not Firebase internals (`FirebaseFirestoreException`) |
+| `.catch` before `toFlowResult()` | Exception remapping must happen on the raw Flow before wrapping in `Result` |
+| `GetMangaSuggestionsUseCase` uses `.take()` not `limit` param | `MangaRepository.searchManga` has no `limit` parameter; `.take()` is idiomatic Kotlin and rule still moves out of VM |
+| `ReaderViewModel.hasNextChapterListPage` Boolean not migrated | It drives manual job orchestration, not `BasePaginationUiState`-based pagination; `fromPageSize()` not applicable |
+| `BaseNextPageState.fromPageSize()` is single source of truth | Eliminates inline `if (size >= pageSize) IDLE else NO_MORE_ITEMS` duplicated across 6 VMs |
+| Domain model companion methods for pure rules | `ReadingHistory.generateId/findContinueTarget/findInitialPage`, `Chapter.isPrefetchNextPage/determineNavPosition` — pure functions with no dependencies belong in the domain model, not VMs |
+| `observeIsFetchDataDone()` kept in VM | `combine` of 3 loading flags is coroutine orchestration (loading gate), not a domain rule — no use case extraction needed |
+| `catch (c: CancellationException) { throw c }` before `catch (e: Exception)` | `toFlowResult()` rethrows `CancellationException` but does not absorb it — it still propagates through `collect { }` to the outer VM catch; must be rethrown to preserve structured concurrency |

@@ -1,126 +1,83 @@
-# DexReader - Claude Code Session Guide
+# DexReader — Claude Session Handoff
 
 ## Status
-**Phase:** Clean Architecture Refactor — Domain Model Defaults + Mapper Objects
-**Overall:** ~70% through the full refactor plan. All mapper, enum, and domain-default work is complete. Remaining gaps are VM business logic extraction and one type fix.
+**Current phase:** All phases complete — CA audit passed, all bugs fixed
+**Overall progress:** All enum/rename/mapper/grouping phases complete; all Phase 7 items (A–F) complete; Phase 8 CA audit done + CancellationException bug fixed in FavoritesViewModel and HistoryViewModel
 
 ---
 
 ## Completed This Session
 
-- **CategoryDetailsCriteria enum migration** — replaced sealed class (`SortCriteria`, `SortOrder`, `FilterValue`) with 4 pure presentation Option enums:
-  - `presentation/model/criteria/sort/MangaSortCriteriaOption.kt`
-  - `presentation/model/criteria/sort/MangaSortOrderOption.kt`
-  - `presentation/model/criteria/filter/MangaStatusFilterOption.kt`
-  - `presentation/model/criteria/filter/MangaContentRatingFilterOption.kt`
-  - All have `@StringRes val nameRes: Int` — composables use `option.nameRes` directly
-- **`presentation/mapper/CriteriaMapper.kt`** — maps Option enums → domain enums via `valueOf(name)`
-- **`CategoryDetailsViewModel`** — all domain↔presentation conversion moved here; composables receive only Option enums
-- **`CategoryDetailsCriteriaUiState`** — holds 4 Option enum fields (not domain enums)
-- **Sort/Filter composables** made generic — `FilterCriteriaItem<T>`, `FilterValueOptions<T>` with `nameResOf: (T) -> Int`
-- **`rememberSaveable` Savers** for enum state: `Saver(save = { it.name }, restore = { Enum.valueOf(it) })`
-- **Deleted** `util/CriteriaCodec.kt` and `CategoryDetailsCriteria.kt`
-- **All mapper functions wrapped in `object`** — 8 data layer mappers now singleton objects; call sites use `ObjectName.functionName` qualified static imports
-- **Domain model companion constants** — fallback defaults moved from mapper raw literals into domain models:
-  - `Manga`, `Chapter`, `Category`, `ChapterPages`, `FavoriteManga`, `User` all have `companion object { const val DEFAULT_* }`
-  - All 6 affected mapper files updated to reference `ModelName.DEFAULT_*`
+### Phase 7 Item E — Chapter.NavPosition + determineNavPosition()
+- `Chapter.NavPosition` nested data class added to `domain/model/Chapter.kt`:
+  - Fields: `foundAtIndex`, `previousChapterId`, `nextChapterId`, `canNavigatePrevious`, `canNavigateNext`
+- `Chapter.determineNavPosition(currentChapterId, chapterList, hasNextPage): NavPosition` companion method added — pure list-index computation, zero Android dependencies
+- `ReaderViewModel.updateChapterNavState()` body replaced: delegates to `Chapter.determineNavPosition()`, passes `nav.foundAtIndex` to `prefetchChapterListNextPage()`
+- Inline locals (`isFirstChapter`, `isLastChapter`, `currentChapterIndex`) eliminated from VM
+
+### Phase 7 Item F — observeIsFetchDataDone() (kept as-is)
+- Evaluated: `combine` of 3 boolean flags is coroutine **orchestration** (loading gate), not a domain rule
+- `delay() + fetchChapterPages()` is VM-level side-effect coordination
+- Decision: no extraction needed — kept exactly as-is
+
+### Phase 8 — Full CA Audit (14 ViewModels)
+Reviewed every VM against `DOMAIN_LAYER_GUIDELINES.md`. Results:
+
+| VM | Result |
+|---|---|
+| `LoginViewModel` | ✅ Clean |
+| `RegisterViewModel` | ✅ Clean |
+| `ForgotPasswordViewModel` | ✅ Clean |
+| `ProfileViewModel` | ✅ Clean |
+| `UserViewModel` | ✅ Clean |
+| `SettingsViewModel` | ✅ Clean |
+| `HomeViewModel` | ✅ Clean |
+| `CategoriesViewModel` | ✅ Clean |
+| `CategoryDetailsViewModel` | ✅ Clean |
+| `MangaDetailsViewModel` | ✅ Clean |
+| `SearchViewModel` | ✅ Clean |
+| `ReaderViewModel` | ✅ Clean |
+| `FavoritesViewModel` | 🚨 CancellationException swallowed — **fixed** |
+| `HistoryViewModel` | 🚨 CancellationException swallowed — **fixed** |
+
+### Phase 8 — CancellationException Bug Fix
+**Problem:** Both VMs had `try { observeUseCase(...).collect { } } catch (e: Exception) { ... }`. `toFlowResult()` correctly rethrows `CancellationException` (doesn't wrap it as `Result.failure`), but the rethrown exception still propagates through `collect { }` and reaches the outer `catch (e: Exception)`. Since `CancellationException extends Exception`, it was silently swallowed — setting `FirstPageError` state on routine job cancellation (e.g. when `retry()` calls `cancelObserveFavoritesJob()` while observing is active).
+
+**Fix:** Added `catch (c: CancellationException) { throw c }` before each `catch (e: Exception)`, plus `import kotlin.coroutines.cancellation.CancellationException`.
+
+4 locations fixed:
+- `FavoritesViewModel.observeFavoritesFirstPage()`
+- `FavoritesViewModel.observeFavoritesNextPageInternal()`
+- `HistoryViewModel.observeHistoryFirstPage()`
+- `HistoryViewModel.observeHistoryNextPageInternal()`
 
 ---
 
-## Next Session - Start Here
+## Next Session — Start Here
 
-**First step:** Open `app/src/main/java/com/decoutkhanqindev/dexreader/domain/model/Manga.kt`
-
-**Task:** Fix `availableTranslatedLanguages: List<String>` → `List<MangaLanguage>`
-- This is the last remaining type gap from Phase 1 (domain enum wiring)
-- Requires updating: `MangaMapper.kt` (already calls `.toMangaLanguage()` — just remove the intermediate `String` storage), anywhere `availableTranslatedLanguages` is consumed in presentation
-- Then check `MangaDetailsViewModel` and `MangaDetailsScreen` for how the list is displayed
-
-**After that:**
-- Delete `MangaLanguageCodeParam` enum (still used only inside `ParamMapper` — replace with raw ISO strings or inline constants)
-- Address remaining VM business logic gaps (see `refactoring-gaps.md` in memory dir)
+No deferred CA items remain. All 14 VMs are clean. Next work is feature development or further refactoring as needed.
 
 ---
 
 ## Important Context
 
-### Enum naming convention (critical)
-Option enum entry names **must exactly match** their domain enum entry names — this enables safe `valueOf(name)` mapping with zero when-expressions. Never rename entries in isolation.
-
-### Mapper object pattern
-All mappers are now `object` singletons. Cross-object calls use qualified static imports:
-```kotlin
-import com.decoutkhanqindev.dexreader.data.mapper.CategoryMapper.toCategory
-```
-
-### Domain defaults vs intentional empties
-In `FavoriteMangaMapper.toManga()`, fields like `description = ""`, `artist = ""`, `year = ""` are **intentional** (FavoriteManga doesn't store those fields) — NOT fallback defaults. Do not replace them with `Manga.DEFAULT_*` which have different semantic values (e.g. `"No description ..."`).
-
-### String resources location
-- Per-option display strings → live in the Option enum constructor (`nameRes: Int`)
-- Section header strings (e.g. `R.string.filter_status`) → remain as direct references in the composable that uses them
-
-### Layer boundaries
-- `LanguageCodec.kt` is deleted — display name logic now in `presentation/mapper/LanguageMapper.kt`
-- `CriteriaCodec.kt` is deleted — criteria codec logic now in `presentation/mapper/CriteriaMapper.kt`
-- `ParamMapper.kt` (data layer) owns all ISO code strings and API param strings
+- **`toFlowResult()` and CancellationException:** `toFlowResult()` rethrows `CancellationException` — it does NOT absorb it. The exception still propagates through `collect { }` in the VM. Any outer `try-catch (e: Exception)` in a VM MUST add `catch (c: CancellationException) { throw c }` first.
+- **Exception mapping boundary:** Firebase `FirebaseFirestoreException(PERMISSION_DENIED)` is caught at the **repository layer** (`.catch` on the Flow) and remapped to `FavoritesHistoryException.PermissionDenied` — VMs only do type checks, never string matching
+- **`toFlowResult()` placement:** the `.catch` for exception remapping must be applied upstream of `toFlowResult()` in repo impls for the mapping to work
+- **`ReadingHistory.generateId()`** is called both in `AddAndUpdateToHistoryUseCase` (write path) and in `ReaderViewModel` (read/lookup path) — intentional
+- **`GetMangaSuggestionsUseCase`** uses `.take()` not a `limit` param — `MangaRepository.searchManga` has no `limit` parameter
+- **`ReaderViewModel.hasNextChapterListPage`** is a plain `Boolean` driving manual job orchestration — `fromPageSize()` deliberately not applied
+- **`BaseNextPageState.fromPageSize()`** is single source of truth for "has more pages" heuristic
+- **Enum name identity rule** — all three-layer enums share identical entry names; `valueOf(name)` works without a lookup table
+- **`observeIsFetchDataDone()` in `ReaderViewModel`** — intentionally kept in VM; it is loading-gate orchestration, not a domain rule
 
 ---
 
 ## Files Modified This Session
 
-### New files
-- `presentation/model/criteria/sort/MangaSortCriteriaOption.kt`
-- `presentation/model/criteria/sort/MangaSortOrderOption.kt`
-- `presentation/model/criteria/filter/MangaStatusFilterOption.kt`
-- `presentation/model/criteria/filter/MangaContentRatingFilterOption.kt`
-- `presentation/mapper/CriteriaMapper.kt`
-
-### Deleted files
-- `util/CriteriaCodec.kt`
-- `presentation/screens/category_details/CategoryDetailsCriteria.kt`
-
-### Domain models (companion constants added)
-- `domain/model/Manga.kt`
-- `domain/model/Chapter.kt`
-- `domain/model/Category.kt`
-- `domain/model/ChapterPages.kt`
-- `domain/model/FavoriteManga.kt`
-- `domain/model/User.kt`
-
-### Data mappers (object wrapping + domain constant refs)
-- `data/mapper/MangaMapper.kt`
-- `data/mapper/ChapterMapper.kt`
-- `data/mapper/CategoryMapper.kt`
-- `data/mapper/ChapterPagesMapper.kt`
-- `data/mapper/FavoriteMangaMapper.kt`
-- `data/mapper/UserMapper.kt`
-- `data/mapper/ReadingHistoryMapper.kt`
-- `data/mapper/ParamMapper.kt`
-
-### Repositories (updated for object mapper imports)
-- `data/repository/CategoryRepositoryImpl.kt`
-- `data/repository/ChapterRepositoryImpl.kt`
-- `data/repository/MangaRepositoryImpl.kt`
-- `data/repository/CacheRepositoryImpl.kt`
-- `data/repository/FavoritesRepositoryImpl.kt`
-- `data/repository/HistoryRepositoryImpl.kt`
-- `data/repository/UserRepositoryImpl.kt`
-
-### Presentation (criteria composables + sort/filter sheets)
-- `presentation/screens/category_details/CategoryDetailsCriteriaUiState.kt`
-- `presentation/screens/category_details/CategoryDetailsViewModel.kt`
-- `presentation/screens/category_details/components/SortBottomSheet.kt`
-- `presentation/screens/category_details/components/FilterBottomSheet.kt`
-- `presentation/screens/category_details/components/SortCriteriaItem.kt`
-- `presentation/screens/category_details/components/SortOrderOptions.kt`
-- `presentation/screens/category_details/components/VerticalGridSortCriteriaList.kt`
-- `presentation/screens/category_details/components/FilterCriteriaItem.kt`
-- `presentation/screens/category_details/components/FilterValueOptions.kt`
-- `presentation/screens/category_details/components/VerticalGridFilterCriteriaList.kt`
-- `presentation/screens/category_details/CategoryDetailsContent.kt`
-- `presentation/screens/category_details/CategoryDetailsScreen.kt`
-- `presentation/screens/favorites/components/FavoritesContent.kt`
-
-### Resources
-- `app/src/main/res/values/strings.xml` (added sort/filter/status/content-rating strings)
+| File | Change |
+|---|---|
+| `domain/model/Chapter.kt` | Added `NavPosition` nested data class + `determineNavPosition()` companion method |
+| `presentation/screens/reader/ReaderViewModel.kt` | `updateChapterNavState()` delegates to `Chapter.determineNavPosition()`; passes `nav.foundAtIndex` to `prefetchChapterListNextPage()` |
+| `presentation/screens/favorites/FavoritesViewModel.kt` | Added `catch (c: CancellationException) { throw c }` in 2 places + import |
+| `presentation/screens/history/HistoryViewModel.kt` | Added `catch (c: CancellationException) { throw c }` in 2 places + import |

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.exception.FavoritesHistoryException
 import com.decoutkhanqindev.dexreader.domain.model.FavoriteManga
+import kotlin.coroutines.cancellation.CancellationException
 import com.decoutkhanqindev.dexreader.domain.usecase.favorites.ObserveFavoritesUseCase
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
@@ -72,6 +73,8 @@ class FavoritesViewModel @Inject constructor(
                 )
               }
           }
+        } catch (c: CancellationException) {
+          throw c
         } catch (e: Exception) {
           if (e is FavoritesHistoryException.PermissionDenied && _userId.value == null)
             _uiState.value = BasePaginationUiState.FirstPageLoading
@@ -144,6 +147,8 @@ class FavoritesViewModel @Inject constructor(
                 )
               }
           }
+        } catch (c: CancellationException) {
+          throw c
         } catch (e: Exception) {
           if (e is FavoritesHistoryException.PermissionDenied && _userId.value == null)
             return@collectLatest

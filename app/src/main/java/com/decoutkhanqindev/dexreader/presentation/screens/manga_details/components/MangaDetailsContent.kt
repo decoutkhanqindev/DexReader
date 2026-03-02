@@ -72,7 +72,7 @@ fun MangaDetailsContent(
 ) {
   val lazyListState = rememberLazyListState()
   val coroutineScope = rememberCoroutineScope()
-  val isMoveToTopButtonVisible by remember {
+  val isMoveToTopButtonVisible by remember(mangaChaptersUiState, lazyListState) {
     derivedStateOf {
       (mangaChaptersUiState is BasePaginationUiState.Content)
           && mangaChaptersUiState.currentList.size > 15

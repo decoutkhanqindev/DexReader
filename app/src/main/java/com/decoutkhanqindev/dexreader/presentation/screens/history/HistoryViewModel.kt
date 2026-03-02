@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.exception.FavoritesHistoryException
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
+import kotlin.coroutines.cancellation.CancellationException
 import com.decoutkhanqindev.dexreader.domain.usecase.history.ObserveHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.history.RemoveFromHistoryUseCase
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
@@ -76,6 +77,8 @@ class HistoryViewModel @Inject constructor(
                 Log.d(TAG, "observeHistoryFirstPage have error: ${throwable.stackTraceToString()}")
               }
           }
+        } catch (c: CancellationException) {
+          throw c
         } catch (e: Exception) {
           if (e is FavoritesHistoryException.PermissionDenied && _userId.value == null)
             _historyUiState.value = BasePaginationUiState.FirstPageLoading
@@ -149,6 +152,8 @@ class HistoryViewModel @Inject constructor(
                 )
               }
           }
+        } catch (c: CancellationException) {
+          throw c
         } catch (e: Exception) {
           if (e is FavoritesHistoryException.PermissionDenied && _userId.value == null)
             return@collectLatest
