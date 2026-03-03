@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.data.repository
 
 import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toApiDomainException
 import com.decoutkhanqindev.dexreader.data.mapper.MangaMapper.toManga
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.MangaDexApiService
+import com.decoutkhanqindev.dexreader.data.network.api.ApiService
 import com.decoutkhanqindev.dexreader.di.UploadUrlQualifier
 import com.decoutkhanqindev.dexreader.domain.exception.MangaException
 import com.decoutkhanqindev.dexreader.domain.model.Manga
@@ -14,14 +14,14 @@ import kotlinx.coroutines.Dispatchers
 class MangaRepositoryImpl
 @Inject
 constructor(
-  private val mangaDexApiService: MangaDexApiService,
+  private val apiService: ApiService,
   @param:UploadUrlQualifier private val uploadUrl: String,
 ) : MangaRepository {
   override suspend fun getLatestUpdateMangaList(): List<Manga> =
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        mangaDexApiService.getLatestUpdateMangaList().data?.map {
+        apiService.getLatestUpdateMangaList().data?.map {
           it.toManga(uploadUrl)
         }
           ?: emptyList()
@@ -33,7 +33,7 @@ constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        mangaDexApiService.getTrendingMangaList().data?.map { it.toManga(uploadUrl) }
+        apiService.getTrendingMangaList().data?.map { it.toManga(uploadUrl) }
           ?: emptyList()
       },
       onCatch = { it.toApiDomainException() }
@@ -43,7 +43,7 @@ constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        mangaDexApiService.getNewReleaseMangaList().data?.map { it.toManga(uploadUrl) }
+        apiService.getNewReleaseMangaList().data?.map { it.toManga(uploadUrl) }
           ?: emptyList()
       },
       onCatch = { it.toApiDomainException() }
@@ -53,7 +53,7 @@ constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        mangaDexApiService.getTopRatedMangaList().data?.map { it.toManga(uploadUrl) }
+        apiService.getTopRatedMangaList().data?.map { it.toManga(uploadUrl) }
           ?: emptyList()
       },
       onCatch = { it.toApiDomainException() }
@@ -63,7 +63,7 @@ constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        mangaDexApiService.getMangaDetails(mangaId).data?.toManga(uploadUrl)
+        apiService.getMangaDetails(mangaId).data?.toManga(uploadUrl)
           ?: throw MangaException.NotFound()
       },
       onCatch = { it.toApiDomainException() }
@@ -76,7 +76,7 @@ constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        mangaDexApiService.searchManga(query = query, offset = offset).data?.map {
+        apiService.searchManga(query = query, offset = offset).data?.map {
           it.toManga(uploadUrl)
         }
           ?: emptyList()

@@ -4,7 +4,7 @@ import com.decoutkhanqindev.dexreader.data.mapper.CategoryMapper.toCategory
 import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toApiDomainException
 import com.decoutkhanqindev.dexreader.data.mapper.MangaMapper.toManga
 import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toParam
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.MangaDexApiService
+import com.decoutkhanqindev.dexreader.data.network.api.ApiService
 import com.decoutkhanqindev.dexreader.di.UploadUrlQualifier
 import com.decoutkhanqindev.dexreader.domain.model.Category
 import com.decoutkhanqindev.dexreader.domain.model.Manga
@@ -20,14 +20,14 @@ import javax.inject.Inject
 class CategoryRepositoryImpl
 @Inject
 constructor(
-  private val mangaDexApiService: MangaDexApiService,
+  private val apiService: ApiService,
   @param:UploadUrlQualifier private val uploadUrl: String,
 ) : CategoryRepository {
   override suspend fun getCategoryList(): List<Category> =
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        mangaDexApiService.getTagList().data?.map { it.toCategory() } ?: emptyList()
+        apiService.getTagList().data?.map { it.toCategory() } ?: emptyList()
       },
       onCatch = { it.toApiDomainException() }
     )
@@ -44,7 +44,7 @@ constructor(
       context = Dispatchers.IO,
       onExecute = {
         val orderValue = sortOrder.toParam()
-        mangaDexApiService.getMangaListByTag(
+        apiService.getMangaListByTag(
           tagId = categoryId,
           offset = offset,
           lastUpdated =

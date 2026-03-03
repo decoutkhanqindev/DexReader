@@ -2,10 +2,10 @@ package com.decoutkhanqindev.dexreader.data.mapper
 
 import com.decoutkhanqindev.dexreader.data.mapper.CategoryMapper.toCategory
 import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toMangaLanguage
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.constant.MangaDexApiEndpoints
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.param.MangaIncludesParam
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.param.MangaLanguageCodeParam
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.manga.MangaResponse
+import com.decoutkhanqindev.dexreader.data.network.api.constant.ApiEndpoints
+import com.decoutkhanqindev.dexreader.data.network.api.param.MangaIncludesParam
+import com.decoutkhanqindev.dexreader.data.network.api.param.MangaLanguageCodeParam
+import com.decoutkhanqindev.dexreader.data.network.api.response.manga.MangaResponse
 import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
 
@@ -17,7 +17,7 @@ object MangaMapper {
       ?: Manga.DEFAULT_TITLE
     val coverUrl =
       relationships?.find { it.type == MangaIncludesParam.COVER_ART.value }.let { coverArt ->
-        "$uploadUrl/${MangaDexApiEndpoints.COVER_PATH}/${id}/${coverArt?.attributes?.fileName}"
+        "$uploadUrl/${ApiEndpoints.COVER_PATH}/${id}/${coverArt?.attributes?.fileName}"
       }
     val description =
       attributes?.description?.get(MangaLanguageCodeParam.ENGLISH.value)

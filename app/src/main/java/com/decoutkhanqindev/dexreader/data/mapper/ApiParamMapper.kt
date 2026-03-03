@@ -1,9 +1,9 @@
 package com.decoutkhanqindev.dexreader.data.mapper
 
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.param.MangaContentRatingParam
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.param.MangaLanguageCodeParam
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.param.MangaSortOrderParam
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.param.MangaStatusParam
+import com.decoutkhanqindev.dexreader.data.network.api.param.MangaContentRatingParam
+import com.decoutkhanqindev.dexreader.data.network.api.param.MangaLanguageCodeParam
+import com.decoutkhanqindev.dexreader.data.network.api.param.MangaSortOrderParam
+import com.decoutkhanqindev.dexreader.data.network.api.param.MangaStatusParam
 import com.decoutkhanqindev.dexreader.domain.model.MangaLanguage
 import com.decoutkhanqindev.dexreader.domain.model.criteria.filter.MangaContentRatingFilter
 import com.decoutkhanqindev.dexreader.domain.model.criteria.filter.MangaStatusFilter

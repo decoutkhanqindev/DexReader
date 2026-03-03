@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.data.mapper
 
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.param.MangaLanguageCodeParam
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.tag.TagResponse
+import com.decoutkhanqindev.dexreader.data.network.api.param.MangaLanguageCodeParam
+import com.decoutkhanqindev.dexreader.data.network.api.response.tag.TagResponse
 import com.decoutkhanqindev.dexreader.domain.model.Category
 import com.decoutkhanqindev.dexreader.domain.model.CategoryType
 

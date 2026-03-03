@@ -7,7 +7,7 @@ import com.decoutkhanqindev.dexreader.data.network.firebase.auth.FirebaseAuthSou
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSourceImpl
 import com.decoutkhanqindev.dexreader.data.network.interceptor.NetworkInterceptor
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.MangaDexApiService
+import com.decoutkhanqindev.dexreader.data.network.api.ApiService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.moshi.Moshi
@@ -94,7 +94,7 @@ object NetworkDataModule {
   @Provides
   fun provideMangaDexApiService(
     @MangaDexApiServiceQualifier retrofit: Retrofit,
-  ): MangaDexApiService = retrofit.create(MangaDexApiService::class.java)
+  ): ApiService = retrofit.create(ApiService::class.java)
 
   @Provides
   @Singleton

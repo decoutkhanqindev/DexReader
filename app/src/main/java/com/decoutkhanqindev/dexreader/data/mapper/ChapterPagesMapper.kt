@@ -1,8 +1,8 @@
 package com.decoutkhanqindev.dexreader.data.mapper
 
 import com.decoutkhanqindev.dexreader.data.local.database.entity.ChapterCacheEntity
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.constant.MangaDexApiEndpoints
-import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.at_home.AtHomeServerResponse
+import com.decoutkhanqindev.dexreader.data.network.api.constant.ApiEndpoints
+import com.decoutkhanqindev.dexreader.data.network.api.response.at_home.AtHomeServerResponse
 import com.decoutkhanqindev.dexreader.domain.model.ChapterPages
 
 object ChapterPagesMapper {
@@ -13,7 +13,7 @@ object ChapterPagesMapper {
 
     // {baseUrl}/data/{dataHash}/{pageHash}
     val pages = data?.map { pageHash ->
-      "$baseUrl/${MangaDexApiEndpoints.DATA_PATH}/$hash/$pageHash"
+      "$baseUrl/${ApiEndpoints.DATA_PATH}/$hash/$pageHash"
     } ?: emptyList()
 
     return ChapterPages(
@@ -28,7 +28,7 @@ object ChapterPagesMapper {
   fun ChapterCacheEntity.toChapterPages(): ChapterPages {
     // {baseUrl}/data/{dataHash}/{pageHash}
     val pages = pageHashes.map { hash ->
-      "$baseUrl/${MangaDexApiEndpoints.DATA_PATH}/$dataHash/$hash"
+      "$baseUrl/${ApiEndpoints.DATA_PATH}/$dataHash/$hash"
     }
 
     return ChapterPages(
