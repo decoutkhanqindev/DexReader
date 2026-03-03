@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.data.mapper
 
-import com.decoutkhanqindev.dexreader.data.mapper.ParamMapper.toMangaLanguage
+import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toMangaLanguage
 import com.decoutkhanqindev.dexreader.data.network.mangadex_api.param.MangaIncludesParam
 import com.decoutkhanqindev.dexreader.data.network.mangadex_api.response.chapter.ChapterResponse
 import com.decoutkhanqindev.dexreader.domain.model.Chapter

@@ -1,9 +1,10 @@
 package com.decoutkhanqindev.dexreader.data.repository
 
+import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toHistoryDomainException
 import com.decoutkhanqindev.dexreader.data.mapper.ReadingHistoryMapper.toReadingHistory
 import com.decoutkhanqindev.dexreader.data.mapper.ReadingHistoryMapper.toReadingHistoryRequest
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
-import com.decoutkhanqindev.dexreader.domain.exception.FavoritesHistoryException
+import com.decoutkhanqindev.dexreader.domain.exception.HistoryException
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.repository.HistoryRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
@@ -16,7 +17,9 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class HistoryRepositoryImpl @Inject constructor(
+class HistoryRepositoryImpl
+@Inject
+constructor(
   private val firebaseFirestoreSource: FirebaseFirestoreSource,
 ) : HistoryRepository {
   override fun observeHistory(
@@ -36,8 +39,10 @@ class HistoryRepositoryImpl @Inject constructor(
         readingHistoryResponseList.map { it.toReadingHistory() }
       }
       .catch { e ->
-        if (e is FirebaseFirestoreException && e.code == FirebaseFirestoreException.Code.PERMISSION_DENIED)
-          throw FavoritesHistoryException.PermissionDenied(cause = e)
+        if (e is FirebaseFirestoreException &&
+          e.code == FirebaseFirestoreException.Code.PERMISSION_DENIED
+        )
+          throw HistoryException.PermissionDenied(cause = e)
         else throw e
       }
       .flowOn(Dispatchers.IO)
@@ -46,46 +51,30 @@ class HistoryRepositoryImpl @Inject constructor(
   override suspend fun addAndUpdateToHistory(
     userId: String,
     readingHistory: ReadingHistory,
-  ) = runSuspendCatching(
-    context = Dispatchers.IO,
-    onExecute = {
-      firebaseFirestoreSource.upsertHistory(
-        userId = userId,
-        readingHistory = readingHistory.toReadingHistoryRequest()
-      )
-    },
-    onCatch = { e ->
-      when (e) {
-        is FavoritesHistoryException -> throw e
-        is FirebaseFirestoreException ->
-          if (e.code == FirebaseFirestoreException.Code.PERMISSION_DENIED)
-            throw FavoritesHistoryException.PermissionDenied(cause = e)
-          else throw e
-        else -> throw e
-      }
-    }
-  )
+  ) =
+    runSuspendCatching(
+      context = Dispatchers.IO,
+      onExecute = {
+        firebaseFirestoreSource.upsertHistory(
+          userId = userId,
+          readingHistory = readingHistory.toReadingHistoryRequest()
+        )
+      },
+      onCatch = { it.toHistoryDomainException() }
+    )
 
   override suspend fun removeFromHistory(
     userId: String,
     readingHistoryId: String,
-  ) = runSuspendCatching(
-    context = Dispatchers.IO,
-    onExecute = {
-      firebaseFirestoreSource.removeFromHistory(
-        userId = userId,
-        readingHistoryId = readingHistoryId
-      )
-    },
-    onCatch = { e ->
-      when (e) {
-        is FavoritesHistoryException -> throw e
-        is FirebaseFirestoreException ->
-          if (e.code == FirebaseFirestoreException.Code.PERMISSION_DENIED)
-            throw FavoritesHistoryException.PermissionDenied(cause = e)
-          else throw e
-        else -> throw e
-      }
-    }
-  )
+  ) =
+    runSuspendCatching(
+      context = Dispatchers.IO,
+      onExecute = {
+        firebaseFirestoreSource.removeFromHistory(
+          userId = userId,
+          readingHistoryId = readingHistoryId
+        )
+      },
+      onCatch = { it.toHistoryDomainException() }
+    )
 }

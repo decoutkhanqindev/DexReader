@@ -5,9 +5,9 @@ import com.decoutkhanqindev.dexreader.domain.model.criteria.filter.MangaStatusFi
 import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortCriteria
 import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortOrder
 import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaContentRatingFilterOption
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaStatusFilterOption
 import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortCriteriaOption
 import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortOrderOption
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaStatusFilterOption
 
 object CriteriaMapper {
 

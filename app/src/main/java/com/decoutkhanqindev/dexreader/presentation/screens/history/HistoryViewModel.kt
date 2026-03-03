@@ -3,9 +3,8 @@ package com.decoutkhanqindev.dexreader.presentation.screens.history
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.decoutkhanqindev.dexreader.domain.exception.FavoritesHistoryException
+import com.decoutkhanqindev.dexreader.domain.exception.HistoryException
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
-import kotlin.coroutines.cancellation.CancellationException
 import com.decoutkhanqindev.dexreader.domain.usecase.history.ObserveHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.history.RemoveFromHistoryUseCase
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
@@ -19,14 +18,19 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 @HiltViewModel
-class HistoryViewModel @Inject constructor(
+class HistoryViewModel
+@Inject
+constructor(
   private val observeHistoryUseCase: ObserveHistoryUseCase,
   private val removeFromHistoryUseCase: RemoveFromHistoryUseCase,
 ) : ViewModel() {
   private val _historyUiState =
-    MutableStateFlow<BasePaginationUiState<ReadingHistory>>(BasePaginationUiState.FirstPageLoading)
+    MutableStateFlow<BasePaginationUiState<ReadingHistory>>(
+      BasePaginationUiState.FirstPageLoading
+    )
   val historyUiState: StateFlow<BasePaginationUiState<ReadingHistory>> =
     _historyUiState.asStateFlow()
 
@@ -44,65 +48,72 @@ class HistoryViewModel @Inject constructor(
 
   private fun observeHistoryFirstPage() {
     cancelObserveHistoryJob()
-    observeHistoryJob = viewModelScope.launch {
-      _historyUiState.value = BasePaginationUiState.FirstPageLoading
+    observeHistoryJob =
+      viewModelScope.launch {
+        _historyUiState.value = BasePaginationUiState.FirstPageLoading
 
-      _userId.collectLatest { userId ->
-        if (userId == null) {
-          _historyUiState.value = BasePaginationUiState.FirstPageLoading
-          cancelObserveHistoryJob()
-          return@collectLatest
-        }
-
-        try {
-          observeHistoryUseCase(
-            userId = userId,
-            limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
-          ).collect { result ->
-            result
-              .onSuccess { readingHistoryList ->
-                _historyUiState.value = BasePaginationUiState.Content(
-                  currentList = readingHistoryList,
-                  currentPage = FIRST_PAGE,
-                  nextPageState = BaseNextPageState.fromPageSize(readingHistoryList.size, READING_HISTORY_LIST_PER_PAGE_SIZE)
-                )
-              }
-              .onFailure { throwable ->
-                if (throwable is FavoritesHistoryException.PermissionDenied && _userId.value == null) {
-                  _historyUiState.value = BasePaginationUiState.FirstPageLoading
-                  return@onFailure
-                }
-
-                _historyUiState.value = BasePaginationUiState.FirstPageError
-                Log.d(TAG, "observeHistoryFirstPage have error: ${throwable.stackTraceToString()}")
-              }
-          }
-        } catch (c: CancellationException) {
-          throw c
-        } catch (e: Exception) {
-          if (e is FavoritesHistoryException.PermissionDenied && _userId.value == null)
+        _userId.collectLatest { userId ->
+          if (userId == null) {
             _historyUiState.value = BasePaginationUiState.FirstPageLoading
-          else {
-            _historyUiState.value = BasePaginationUiState.FirstPageError
-            Log.d(TAG, "observeHistoryFirstPage have error: ${e.stackTraceToString()}")
+            cancelObserveHistoryJob()
+            return@collectLatest
+          }
+
+          try {
+            observeHistoryUseCase(
+              userId = userId,
+              limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
+            )
+              .collect { result ->
+                result
+                  .onSuccess { readingHistoryList ->
+                    _historyUiState.value =
+                      BasePaginationUiState.Content(
+                        currentList = readingHistoryList,
+                        currentPage = FIRST_PAGE,
+                        nextPageState =
+                          BaseNextPageState.fromPageSize(
+                            readingHistoryList.size,
+                            READING_HISTORY_LIST_PER_PAGE_SIZE
+                          )
+                      )
+                  }
+                  .onFailure { throwable ->
+                    if (throwable is HistoryException.PermissionDenied &&
+                      _userId.value == null
+                    ) {
+                      _historyUiState.value =
+                        BasePaginationUiState.FirstPageLoading
+                      return@onFailure
+                    }
+
+                    _historyUiState.value = BasePaginationUiState.FirstPageError
+                    Log.d(
+                      TAG,
+                      "observeHistoryFirstPage have error: ${throwable.stackTraceToString()}"
+                    )
+                  }
+              }
+          } catch (c: CancellationException) {
+            throw c
+          } catch (e: Exception) {
+            if (e is HistoryException.PermissionDenied && _userId.value == null)
+              _historyUiState.value = BasePaginationUiState.FirstPageLoading
+            else {
+              _historyUiState.value = BasePaginationUiState.FirstPageError
+              Log.d(TAG, "observeHistoryFirstPage have error: ${e.stackTraceToString()}")
+            }
           }
         }
       }
-    }
   }
 
   fun observeHistoryNextPage() {
     when (val currentUiState = _historyUiState.value) {
-      BasePaginationUiState.FirstPageError,
-      BasePaginationUiState.FirstPageLoading,
-        -> return
-
+      BasePaginationUiState.FirstPageError, BasePaginationUiState.FirstPageLoading -> return
       is BasePaginationUiState.Content -> {
         when (currentUiState.nextPageState) {
-          BaseNextPageState.LOADING,
-          BaseNextPageState.NO_MORE_ITEMS,
-            -> return
-
+          BaseNextPageState.LOADING, BaseNextPageState.NO_MORE_ITEMS -> return
           BaseNextPageState.ERROR -> retryObserveHistoryNextPage()
           BaseNextPageState.IDLE -> observeHistoryNextPageInternal(currentUiState)
         }
@@ -110,60 +121,78 @@ class HistoryViewModel @Inject constructor(
     }
   }
 
-  private fun observeHistoryNextPageInternal(currentUiState: BasePaginationUiState.Content<ReadingHistory>) {
-    observeHistoryJob = viewModelScope.launch {
-      _historyUiState.value = currentUiState.copy(nextPageState = BaseNextPageState.LOADING)
+  private fun observeHistoryNextPageInternal(
+    currentUiState: BasePaginationUiState.Content<ReadingHistory>,
+  ) {
+    observeHistoryJob =
+      viewModelScope.launch {
+        _historyUiState.value = currentUiState.copy(nextPageState = BaseNextPageState.LOADING)
 
-      val currentReadingHistoryList = currentUiState.currentList
-      val nextPage = currentUiState.currentPage + 1
-      val lastReadingHistoryId = currentReadingHistoryList.lastOrNull()?.id
+        val currentReadingHistoryList = currentUiState.currentList
+        val nextPage = currentUiState.currentPage + 1
+        val lastReadingHistoryId = currentReadingHistoryList.lastOrNull()?.id
 
-      _userId.collectLatest { userId ->
-        if (userId == null) {
-          _historyUiState.value = BasePaginationUiState.FirstPageLoading
-          cancelObserveHistoryJob()
-          return@collectLatest
-        }
-
-        try {
-          observeHistoryUseCase(
-            userId = userId,
-            limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
-            lastReadingHistoryId = lastReadingHistoryId
-          ).collect { result ->
-            result
-              .onSuccess { readingHistoryList ->
-                val allReadingHistoryList = currentReadingHistoryList + readingHistoryList
-                _historyUiState.value = currentUiState.copy(
-                  currentList = allReadingHistoryList,
-                  currentPage = nextPage,
-                  nextPageState = BaseNextPageState.fromPageSize(readingHistoryList.size, READING_HISTORY_LIST_PER_PAGE_SIZE)
-                )
-              }
-              .onFailure { throwable ->
-                if (throwable is FavoritesHistoryException.PermissionDenied && _userId.value == null)
-                  return@onFailure
-
-                _historyUiState.value =
-                  currentUiState.copy(nextPageState = BaseNextPageState.ERROR)
-                Log.d(
-                  TAG,
-                  "observeHistoryNextPageInternal have error: ${throwable.stackTraceToString()}"
-                )
-              }
-          }
-        } catch (c: CancellationException) {
-          throw c
-        } catch (e: Exception) {
-          if (e is FavoritesHistoryException.PermissionDenied && _userId.value == null)
+        _userId.collectLatest { userId ->
+          if (userId == null) {
+            _historyUiState.value = BasePaginationUiState.FirstPageLoading
+            cancelObserveHistoryJob()
             return@collectLatest
-          else {
-            _historyUiState.value = currentUiState.copy(nextPageState = BaseNextPageState.ERROR)
-            Log.d(TAG, "observeHistoryNextPageInternal setup error: ${e.stackTraceToString()}")
+          }
+
+          try {
+            observeHistoryUseCase(
+              userId = userId,
+              limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
+              lastReadingHistoryId = lastReadingHistoryId
+            )
+              .collect { result ->
+                result
+                  .onSuccess { readingHistoryList ->
+                    val allReadingHistoryList =
+                      currentReadingHistoryList + readingHistoryList
+                    _historyUiState.value =
+                      currentUiState.copy(
+                        currentList = allReadingHistoryList,
+                        currentPage = nextPage,
+                        nextPageState =
+                          BaseNextPageState.fromPageSize(
+                            readingHistoryList.size,
+                            READING_HISTORY_LIST_PER_PAGE_SIZE
+                          )
+                      )
+                  }
+                  .onFailure { throwable ->
+                    if (throwable is HistoryException.PermissionDenied &&
+                      _userId.value == null
+                    )
+                      return@onFailure
+
+                    _historyUiState.value =
+                      currentUiState.copy(
+                        nextPageState = BaseNextPageState.ERROR
+                      )
+                    Log.d(
+                      TAG,
+                      "observeHistoryNextPageInternal have error: ${throwable.stackTraceToString()}"
+                    )
+                  }
+              }
+          } catch (c: CancellationException) {
+            throw c
+          } catch (e: Exception) {
+            if (e is HistoryException.PermissionDenied && _userId.value == null)
+              return@collectLatest
+            else {
+              _historyUiState.value =
+                currentUiState.copy(nextPageState = BaseNextPageState.ERROR)
+              Log.d(
+                TAG,
+                "observeHistoryNextPageInternal setup error: ${e.stackTraceToString()}"
+              )
+            }
           }
         }
       }
-    }
   }
 
   fun removeFromHistory() {
@@ -171,24 +200,18 @@ class HistoryViewModel @Inject constructor(
     if (currentRemoveFromHistoryUiState.isLoading ||
       currentRemoveFromHistoryUiState.readingHistoryId == null ||
       _historyUiState.value !is BasePaginationUiState.Content
-    ) return
+    )
+      return
 
     viewModelScope.launch {
       _removeFromHistoryUiState.update {
-        it.copy(
-          isLoading = true,
-          isSuccess = false,
-          isError = false
-        )
+        it.copy(isLoading = true, isSuccess = false, isError = false)
       }
 
       val readingHistoryId = currentRemoveFromHistoryUiState.readingHistoryId
 
       _userId.value?.let { userId ->
-        removeFromHistoryUseCase(
-          userId = userId,
-          readingHistoryId = readingHistoryId
-        )
+        removeFromHistoryUseCase(userId = userId, readingHistoryId = readingHistoryId)
           .onSuccess {
             _removeFromHistoryUiState.update {
               it.copy(
@@ -201,11 +224,7 @@ class HistoryViewModel @Inject constructor(
           }
           .onFailure { throwable ->
             _removeFromHistoryUiState.update {
-              it.copy(
-                isLoading = false,
-                isSuccess = false,
-                isError = true
-              )
+              it.copy(isLoading = false, isSuccess = false, isError = true)
             }
             Log.d(TAG, "removeFromHistory have error: ${throwable.stackTraceToString()}")
           }
@@ -231,15 +250,15 @@ class HistoryViewModel @Inject constructor(
   }
 
   fun retryObserveHistoryFirstPage() {
-    if (_historyUiState.value is BasePaginationUiState.FirstPageError)
-      observeHistoryFirstPage()
+    if (_historyUiState.value is BasePaginationUiState.FirstPageError) observeHistoryFirstPage()
   }
 
   fun retryObserveHistoryNextPage() {
     val currentUiState = _historyUiState.value
     if (currentUiState is BasePaginationUiState.Content &&
       currentUiState.nextPageState == BaseNextPageState.ERROR
-    ) observeHistoryNextPageInternal(currentUiState)
+    )
+      observeHistoryNextPageInternal(currentUiState)
   }
 
   fun retryRemoveFromHistory() {

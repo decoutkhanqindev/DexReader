@@ -9,7 +9,7 @@ import com.decoutkhanqindev.dexreader.domain.model.criteria.filter.MangaContentR
 import com.decoutkhanqindev.dexreader.domain.model.criteria.filter.MangaStatusFilter
 import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortOrder
 
-object ParamMapper {
+object ApiParamMapper {
 
   // Enum names are identical across domain and data layers,
   // so valueOf(name) is safe and avoids duplicating large when expressions.

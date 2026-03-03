@@ -1,83 +1,116 @@
 # DexReader — Claude Session Handoff
 
 ## Status
-**Current phase:** All phases complete — CA audit passed, all bugs fixed
-**Overall progress:** All enum/rename/mapper/grouping phases complete; all Phase 7 items (A–F) complete; Phase 8 CA audit done + CancellationException bug fixed in FavoritesViewModel and HistoryViewModel
+
+**Current phase:** Phase 9 — Domain Exception Refactoring + Mapper Extraction (complete)
+**Overall progress:** All 9 phases complete. Domain exceptions restructured, exception mappers
+centralized in `data/mapper/ExceptionMapper.kt`, all repos cleaned.
 
 ---
 
 ## Completed This Session
 
-### Phase 7 Item E — Chapter.NavPosition + determineNavPosition()
-- `Chapter.NavPosition` nested data class added to `domain/model/Chapter.kt`:
-  - Fields: `foundAtIndex`, `previousChapterId`, `nextChapterId`, `canNavigatePrevious`, `canNavigateNext`
-- `Chapter.determineNavPosition(currentChapterId, chapterList, hasNextPage): NavPosition` companion method added — pure list-index computation, zero Android dependencies
-- `ReaderViewModel.updateChapterNavState()` body replaced: delegates to `Chapter.determineNavPosition()`, passes `nav.foundAtIndex` to `prefetchChapterListNextPage()`
-- Inline locals (`isFirstChapter`, `isLastChapter`, `currentChapterIndex`) eliminated from VM
+### Phase 9A — Domain Exception Hierarchy Refactoring
 
-### Phase 7 Item F — observeIsFetchDataDone() (kept as-is)
-- Evaluated: `combine` of 3 boolean flags is coroutine **orchestration** (loading gate), not a domain rule
-- `delay() + fetchChapterPages()` is VM-level side-effect coordination
-- Decision: no extraction needed — kept exactly as-is
+- **`DomainException.kt`**: Added `NetworkUnavailable`, `ServiceRequestFailed`, `Unknown` as
+  top-level subtypes with `message` parameter on base class
+- **`MangaException.kt`**: Added `ChapterDataNotFound`, changed all leaf exceptions from
+  `data class` to `class`
+- **`UserException.kt`**: Changed all leaf exceptions from `data class` to `class`
+- **`FavoritesException.kt` [NEW]**: Split from `FavoritesHistoryException` — contains
+  `PermissionDenied`
+- **`HistoryException.kt` [NEW]**: Split from `FavoritesHistoryException` — contains
+  `PermissionDenied`
+- **Deleted**: `RemoteException.kt`, `CacheException.kt`, `FavoritesHistoryException.kt`
 
-### Phase 8 — Full CA Audit (14 ViewModels)
-Reviewed every VM against `DOMAIN_LAYER_GUIDELINES.md`. Results:
+### Phase 9B — Repository Exception Mapping
 
-| VM | Result |
-|---|---|
-| `LoginViewModel` | ✅ Clean |
-| `RegisterViewModel` | ✅ Clean |
-| `ForgotPasswordViewModel` | ✅ Clean |
-| `ProfileViewModel` | ✅ Clean |
-| `UserViewModel` | ✅ Clean |
-| `SettingsViewModel` | ✅ Clean |
-| `HomeViewModel` | ✅ Clean |
-| `CategoriesViewModel` | ✅ Clean |
-| `CategoryDetailsViewModel` | ✅ Clean |
-| `MangaDetailsViewModel` | ✅ Clean |
-| `SearchViewModel` | ✅ Clean |
-| `ReaderViewModel` | ✅ Clean |
-| `FavoritesViewModel` | 🚨 CancellationException swallowed — **fixed** |
-| `HistoryViewModel` | 🚨 CancellationException swallowed — **fixed** |
+- All 7 repo impls updated to map infrastructure exceptions to domain exceptions
+- `CacheRepositoryImpl`: `CacheException.NotFound` → `MangaException.ChapterDataNotFound`,
+  all `else` → `DomainException.Unknown`
+- `MangaRepositoryImpl`, `CategoryRepositoryImpl`, `ChapterRepositoryImpl`: centralized API
+  exception mapping (`HttpException` → `ServiceRequestFailed`, `IOException` → `NetworkUnavailable`)
+- `FavoritesRepositoryImpl`, `HistoryRepositoryImpl`: centralized Firestore exception mapping
+- `UserRepositoryImpl`: hermetic boundary added (`else → DomainException.Unknown`)
 
-### Phase 8 — CancellationException Bug Fix
-**Problem:** Both VMs had `try { observeUseCase(...).collect { } } catch (e: Exception) { ... }`. `toFlowResult()` correctly rethrows `CancellationException` (doesn't wrap it as `Result.failure`), but the rethrown exception still propagates through `collect { }` and reaches the outer `catch (e: Exception)`. Since `CancellationException extends Exception`, it was silently swallowed — setting `FirstPageError` state on routine job cancellation (e.g. when `retry()` calls `cancelObserveFavoritesJob()` while observing is active).
+### Phase 9C — Mapper Functions → Extension Functions
 
-**Fix:** Added `catch (c: CancellationException) { throw c }` before each `catch (e: Exception)`, plus `import kotlin.coroutines.cancellation.CancellationException`.
+- Converted all `mapApiException(e)` / `mapFirestoreException(e)` private functions to
+  `Exception.mapToDomainException()` extension functions in each repo impl
 
-4 locations fixed:
-- `FavoritesViewModel.observeFavoritesFirstPage()`
-- `FavoritesViewModel.observeFavoritesNextPageInternal()`
-- `HistoryViewModel.observeHistoryFirstPage()`
-- `HistoryViewModel.observeHistoryNextPageInternal()`
+### Phase 9D — Extract Exception Mappers to `ExceptionMapper.kt`
+
+- Created `data/mapper/ExceptionMapper.kt` with 4 extension functions following project's
+  `object` + extension function pattern:
+  - `Exception.toApiDomainException()` — used by Manga, Category, Chapter repos
+  - `Exception.toFavoritesDomainException()` — used by Favorites repo
+  - `Exception.toHistoryDomainException()` — used by History repo
+  - `Exception.toCacheDomainException()` — used by Cache repo
+- Removed all private mapper functions from 6 repo impls
+- Cleaned up unused imports (`DomainException`, `HttpException`, `IOException`, `retrofit2`)
+
+### Phase 9E — Presentation Layer Updates
+
+- `FavoritesViewModel`: `FavoritesHistoryException` → `FavoritesException`
+- `HistoryViewModel`: `FavoritesHistoryException` → `HistoryException`
+- `MangaDetailsViewModel`: Split into `FavoritesException` and `HistoryException` by context
+- `ReaderViewModel`: `FavoritesHistoryException` → `HistoryException`
+
+### Misc
+
+- `AsyncHandler.kt`: Added explicit `CancellationException` rethrowing in `runSuspendResultCatching`
+  and `toFlowResult` to preserve structured concurrency
 
 ---
 
 ## Next Session — Start Here
 
-No deferred CA items remain. All 14 VMs are clean. Next work is feature development or further refactoring as needed.
+No deferred items remain. All 9 phases complete. Possible next steps:
+
+- **Unit tests** for exception mapping in repos and ViewModels (currently no test coverage)
+- Feature development as needed
+- The user renamed `ParamMapper` → `ApiParamMapper` (their own change outside this session's scope)
 
 ---
 
 ## Important Context
 
-- **`toFlowResult()` and CancellationException:** `toFlowResult()` rethrows `CancellationException` — it does NOT absorb it. The exception still propagates through `collect { }` in the VM. Any outer `try-catch (e: Exception)` in a VM MUST add `catch (c: CancellationException) { throw c }` first.
-- **Exception mapping boundary:** Firebase `FirebaseFirestoreException(PERMISSION_DENIED)` is caught at the **repository layer** (`.catch` on the Flow) and remapped to `FavoritesHistoryException.PermissionDenied` — VMs only do type checks, never string matching
-- **`toFlowResult()` placement:** the `.catch` for exception remapping must be applied upstream of `toFlowResult()` in repo impls for the mapping to work
-- **`ReadingHistory.generateId()`** is called both in `AddAndUpdateToHistoryUseCase` (write path) and in `ReaderViewModel` (read/lookup path) — intentional
-- **`GetMangaSuggestionsUseCase`** uses `.take()` not a `limit` param — `MangaRepository.searchManga` has no `limit` parameter
-- **`ReaderViewModel.hasNextChapterListPage`** is a plain `Boolean` driving manual job orchestration — `fromPageSize()` deliberately not applied
-- **`BaseNextPageState.fromPageSize()`** is single source of truth for "has more pages" heuristic
-- **Enum name identity rule** — all three-layer enums share identical entry names; `valueOf(name)` works without a lookup table
-- **`observeIsFetchDataDone()` in `ReaderViewModel`** — intentionally kept in VM; it is loading-gate orchestration, not a domain rule
+- **Exception naming by business domain**: Exceptions grouped by feature (`MangaException`,
+  `UserException`, `FavoritesException`, `HistoryException`), not infrastructure topology
+- **Hermetic domain boundary**: All repos wrap unknown exceptions in `DomainException.Unknown` —
+  no infrastructure exceptions leak into domain/presentation layers
+- **`ExceptionMapper` follows project pattern**: `object` with extension functions, imported
+  via `import ExceptionMapper.toXxxDomainException`
+- **`data class` → `class` for leaf exceptions**: Structural equality for exceptions is rarely
+  needed; reduces boilerplate
+- **`FavoritesHistoryException` fully removed**: Split into `FavoritesException` and
+  `HistoryException` to decouple features
+- **`ParamMapper` renamed to `ApiParamMapper`**: Done by user outside this session
 
 ---
 
 ## Files Modified This Session
 
-| File | Change |
-|---|---|
-| `domain/model/Chapter.kt` | Added `NavPosition` nested data class + `determineNavPosition()` companion method |
-| `presentation/screens/reader/ReaderViewModel.kt` | `updateChapterNavState()` delegates to `Chapter.determineNavPosition()`; passes `nav.foundAtIndex` to `prefetchChapterListNextPage()` |
-| `presentation/screens/favorites/FavoritesViewModel.kt` | Added `catch (c: CancellationException) { throw c }` in 2 places + import |
-| `presentation/screens/history/HistoryViewModel.kt` | Added `catch (c: CancellationException) { throw c }` in 2 places + import |
+| File                                                          | Change                                                        |
+| ------------------------------------------------------------- | ------------------------------------------------------------- |
+| `domain/exception/DomainException.kt`                         | Added `NetworkUnavailable`, `ServiceRequestFailed`, `Unknown` |
+| `domain/exception/MangaException.kt`                          | Added `ChapterDataNotFound`, `data class` → `class`           |
+| `domain/exception/UserException.kt`                           | `data class` → `class`                                        |
+| `domain/exception/FavoritesException.kt`                      | **[NEW]** split from `FavoritesHistoryException`              |
+| `domain/exception/HistoryException.kt`                        | **[NEW]** split from `FavoritesHistoryException`              |
+| `domain/exception/RemoteException.kt`                         | **[DELETED]**                                                 |
+| `domain/exception/CacheException.kt`                          | **[DELETED]**                                                 |
+| `domain/exception/FavoritesHistoryException.kt`               | **[DELETED]**                                                 |
+| `data/mapper/ExceptionMapper.kt`                              | **[NEW]** centralized exception mapping                       |
+| `data/repository/MangaRepositoryImpl.kt`                      | Uses `toApiDomainException()`                                 |
+| `data/repository/CategoryRepositoryImpl.kt`                   | Uses `toApiDomainException()`                                 |
+| `data/repository/ChapterRepositoryImpl.kt`                    | Uses `toApiDomainException()`                                 |
+| `data/repository/CacheRepositoryImpl.kt`                      | Uses `toCacheDomainException()`                               |
+| `data/repository/FavoritesRepositoryImpl.kt`                  | Uses `toFavoritesDomainException()`                           |
+| `data/repository/HistoryRepositoryImpl.kt`                    | Uses `toHistoryDomainException()`                             |
+| `data/repository/UserRepositoryImpl.kt`                       | Hermetic boundary added                                       |
+| `presentation/screens/favorites/FavoritesViewModel.kt`        | `FavoritesException`                                          |
+| `presentation/screens/history/HistoryViewModel.kt`            | `HistoryException`                                            |
+| `presentation/screens/manga_details/MangaDetailsViewModel.kt` | Split exceptions                                              |
+| `presentation/screens/reader/ReaderViewModel.kt`              | `HistoryException`                                            |
+| `util/AsyncHandler.kt`                                        | `CancellationException` rethrowing                            |

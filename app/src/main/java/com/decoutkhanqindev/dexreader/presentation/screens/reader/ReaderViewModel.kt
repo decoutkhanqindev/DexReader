@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.decoutkhanqindev.dexreader.domain.exception.FavoritesHistoryException
+import com.decoutkhanqindev.dexreader.domain.exception.HistoryException
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
 import com.decoutkhanqindev.dexreader.domain.model.MangaLanguage
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
@@ -32,7 +32,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ReaderViewModel @Inject constructor(
+class ReaderViewModel
+@Inject
+constructor(
   savedStateHandle: SavedStateHandle,
   private val getChapterListUseCase: GetChapterListUseCase,
   private val getChapterDetailsUseCase: GetChapterDetailsUseCase,
@@ -99,12 +101,13 @@ class ReaderViewModel @Inject constructor(
         _isObserveHistoryDone,
       ) { isChapterDetailsDone, isMangaDetailsDone, isHistoryDone ->
         isChapterDetailsDone && isMangaDetailsDone && isHistoryDone
-      }.collectLatest { isAllDataDone ->
-        if (isAllDataDone && _chapterPagesUiState.value is ChapterPagesUiState.Loading) {
-          delay(DELAY_TIME_MILLIS)
-          fetchChapterPages()
-        }
       }
+        .collectLatest { isAllDataDone ->
+          if (isAllDataDone && _chapterPagesUiState.value is ChapterPagesUiState.Loading) {
+            delay(DELAY_TIME_MILLIS)
+            fetchChapterPages()
+          }
+        }
     }
   }
 
@@ -125,8 +128,7 @@ class ReaderViewModel @Inject constructor(
           if (currentChapterList.isEmpty() && chapterLanguage != null)
             fetchChapterListFirstPage()
 
-          if (mangaTitle == null && mangaCoverUrl == null)
-            fetchMangaDetails()
+          if (mangaTitle == null && mangaCoverUrl == null) fetchMangaDetails()
 
           _isFetchChapterDetailsDone.value = true
         }
@@ -156,8 +158,7 @@ class ReaderViewModel @Inject constructor(
 
   private fun fetchChapterPages(isPrefetch: Boolean = false) {
     val chapterIdToFetch =
-      if (isPrefetch) _chapterNavUiState.value.nextChapterId ?: return
-      else currentChapterId
+      if (isPrefetch) _chapterNavUiState.value.nextChapterId ?: return else currentChapterId
 
     if (chapterIdToFetch.isBlank()) return
 
@@ -168,16 +169,18 @@ class ReaderViewModel @Inject constructor(
       getChapterCacheUseCase(chapterId = chapterIdToFetch)
         .onSuccess { chapterPages ->
           if (!isPrefetch) {
-            val initialChapterPage = ReadingHistory.findInitialPage(
-              chapterId = chapterIdToFetch,
-              navChapterId = chapterIdFromArg,
-              navPage = lastReadPageFromArg,
-              historyList = currentReadingHistoryList,
-            )
-            _chapterPagesUiState.value = ChapterPagesUiState.Success(
-              chapterPages = chapterPages,
-              currentChapterPage = initialChapterPage
-            )
+            val initialChapterPage =
+              ReadingHistory.findInitialPage(
+                chapterId = chapterIdToFetch,
+                navChapterId = chapterIdFromArg,
+                navPage = lastReadPageFromArg,
+                historyList = currentReadingHistoryList,
+              )
+            _chapterPagesUiState.value =
+              ChapterPagesUiState.Success(
+                chapterPages = chapterPages,
+                currentChapterPage = initialChapterPage
+              )
             prefetchNextChapterPages()
           }
           return@launch
@@ -190,29 +193,33 @@ class ReaderViewModel @Inject constructor(
       getChapterPagesUseCase(chapterId = chapterIdToFetch)
         .onSuccess { chapterPages ->
           if (!isPrefetch) {
-            val initialChapterPage = ReadingHistory.findInitialPage(
-              chapterId = chapterIdToFetch,
-              navChapterId = chapterIdFromArg,
-              navPage = lastReadPageFromArg,
-              historyList = currentReadingHistoryList,
-            )
-            _chapterPagesUiState.value = ChapterPagesUiState.Success(
-              chapterPages = chapterPages,
-              currentChapterPage = initialChapterPage
-            )
+            val initialChapterPage =
+              ReadingHistory.findInitialPage(
+                chapterId = chapterIdToFetch,
+                navChapterId = chapterIdFromArg,
+                navPage = lastReadPageFromArg,
+                historyList = currentReadingHistoryList,
+              )
+            _chapterPagesUiState.value =
+              ChapterPagesUiState.Success(
+                chapterPages = chapterPages,
+                currentChapterPage = initialChapterPage
+              )
           }
 
           addChapterCacheUseCase(mangaId = mangaIdFromArg, chapterPages = chapterPages)
             .onSuccess { Log.d(TAG, "addChapterCacheUseCase success") }
             .onFailure {
-              Log.d(TAG, "addChapterCacheUseCase have error: ${it.stackTraceToString()}")
+              Log.d(
+                TAG,
+                "addChapterCacheUseCase have error: ${it.stackTraceToString()}"
+              )
             }
 
           if (!isPrefetch) prefetchNextChapterPages()
         }
         .onFailure {
-          if (!isPrefetch)
-            _chapterPagesUiState.value = ChapterPagesUiState.Error
+          if (!isPrefetch) _chapterPagesUiState.value = ChapterPagesUiState.Error
           Log.d(TAG, "getChapterPagesUseCase have error: ${it.stackTraceToString()}")
         }
     }
@@ -277,11 +284,12 @@ class ReaderViewModel @Inject constructor(
 
   private fun updateChapterNavState() {
     viewModelScope.launch {
-      val nav = Chapter.determineNavPosition(
-        currentChapterId = currentChapterId,
-        chapterList = currentChapterList,
-        hasNextPage = hasNextChapterListPage
-      )
+      val nav =
+        Chapter.determineNavPosition(
+          currentChapterId = currentChapterId,
+          chapterList = currentChapterList,
+          hasNextPage = hasNextChapterListPage
+        )
 
       if (nav.foundAtIndex == -1) {
         _chapterNavUiState.update { it.copy(canNavigateNext = hasNextChapterListPage) }
@@ -308,7 +316,8 @@ class ReaderViewModel @Inject constructor(
         currentIndex = currentChapterIndex,
         listSize = currentChapterList.size
       ) && hasNextChapterListPage
-    ) fetchChapterListNextPage()
+    )
+      fetchChapterListNextPage()
   }
 
   fun navigateToPreviousChapter() {
@@ -357,10 +366,12 @@ class ReaderViewModel @Inject constructor(
     val currentChapterDetailsState = _chapterDetailsUiState.value
     val currentChapterPagesState = _chapterPagesUiState.value
 
-    if (mangaTitle == null || mangaCoverUrl == null ||
+    if (mangaTitle == null ||
+      mangaCoverUrl == null ||
       currentChapterDetailsState == ChapterDetailsUiState() ||
       currentChapterPagesState !is ChapterPagesUiState.Success
-    ) return
+    )
+      return
 
     viewModelScope.launch {
       _userId.value?.let { userId ->
@@ -377,9 +388,7 @@ class ReaderViewModel @Inject constructor(
           pageCount = currentChapterPagesState.chapterPages.totalPages,
         )
           .onSuccess { Log.d(TAG, "addAndUpdateToHistory success") }
-          .onFailure {
-            Log.d(TAG, "addAndUpdateToHistory error: ${it.stackTraceToString()}")
-          }
+          .onFailure { Log.d(TAG, "addAndUpdateToHistory error: ${it.stackTraceToString()}") }
       }
     }
   }
@@ -388,90 +397,106 @@ class ReaderViewModel @Inject constructor(
     if (isObservingReadingHistoryList) return
 
     cancelObserveHistoryJob()
-    observeHistoryJob = viewModelScope.launch {
-      _isObserveHistoryDone.value = false
-      isObservingReadingHistoryList = true
+    observeHistoryJob =
+      viewModelScope.launch {
+        _isObserveHistoryDone.value = false
+        isObservingReadingHistoryList = true
 
-      _userId.collectLatest { userId ->
-        if (userId == null) {
-          _isObserveHistoryDone.value = true
-          cancelObserveHistoryJob()
-          return@collectLatest
-        }
+        _userId.collectLatest { userId ->
+          if (userId == null) {
+            _isObserveHistoryDone.value = true
+            cancelObserveHistoryJob()
+            return@collectLatest
+          }
 
-        observeHistoryUseCase(
-          userId = userId,
-          mangaId = mangaIdFromArg,
-          limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
-        ).collect { result ->
-          result
-            .onSuccess { readingHistoryList ->
-              isObservingReadingHistoryList = false
-              currentReadingHistoryList = readingHistoryList
-              hasNextReadingHistoryListPage =
-                readingHistoryList.size >= READING_HISTORY_LIST_PER_PAGE_SIZE
-              updateCurrentReadingHistory(isFromHistory = true)
-            }
-            .onFailure { throwable ->
-              isObservingReadingHistoryList = false
+          observeHistoryUseCase(
+            userId = userId,
+            mangaId = mangaIdFromArg,
+            limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
+          )
+            .collect { result ->
+              result
+                .onSuccess { readingHistoryList ->
+                  isObservingReadingHistoryList = false
+                  currentReadingHistoryList = readingHistoryList
+                  hasNextReadingHistoryListPage =
+                    readingHistoryList.size >=
+                        READING_HISTORY_LIST_PER_PAGE_SIZE
+                  updateCurrentReadingHistory(isFromHistory = true)
+                }
+                .onFailure { throwable ->
+                  isObservingReadingHistoryList = false
 
-              if (throwable is FavoritesHistoryException.PermissionDenied && _userId.value == null)
-                return@onFailure
+                  if (throwable is HistoryException.PermissionDenied &&
+                    _userId.value == null
+                  )
+                    return@onFailure
 
-              currentReadingHistoryList = emptyList()
-              hasNextReadingHistoryListPage = false
-              _isObserveHistoryDone.value = true
-              Log.d(TAG, "observeHistoryFirstPage have error: ${throwable.stackTraceToString()}")
+                  currentReadingHistoryList = emptyList()
+                  hasNextReadingHistoryListPage = false
+                  _isObserveHistoryDone.value = true
+                  Log.d(
+                    TAG,
+                    "observeHistoryFirstPage have error: ${throwable.stackTraceToString()}"
+                  )
+                }
             }
         }
       }
-    }
   }
 
   private fun observeHistoryNextPage() {
     if (!hasNextReadingHistoryListPage || isObservingReadingHistoryList) return
 
-    observeHistoryJob = viewModelScope.launch {
-      val previousState = _isObserveHistoryDone.value
-      _isObserveHistoryDone.value = false
-      isObservingReadingHistoryList = true
+    observeHistoryJob =
+      viewModelScope.launch {
+        val previousState = _isObserveHistoryDone.value
+        _isObserveHistoryDone.value = false
+        isObservingReadingHistoryList = true
 
-      _userId.collectLatest { userId ->
-        if (userId == null) {
-          _isObserveHistoryDone.value = previousState
-          cancelObserveHistoryJob()
-          return@collectLatest
-        }
+        _userId.collectLatest { userId ->
+          if (userId == null) {
+            _isObserveHistoryDone.value = previousState
+            cancelObserveHistoryJob()
+            return@collectLatest
+          }
 
-        val lastReadingHistoryId = currentReadingHistoryList.lastOrNull()?.id
+          val lastReadingHistoryId = currentReadingHistoryList.lastOrNull()?.id
 
-        observeHistoryUseCase(
-          userId = userId,
-          limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
-          mangaId = mangaIdFromArg,
-          lastReadingHistoryId = lastReadingHistoryId
-        ).collect { result ->
-          result
-            .onSuccess { readingHistoryList ->
-              isObservingReadingHistoryList = false
-              currentReadingHistoryList += readingHistoryList
-              hasNextReadingHistoryListPage =
-                readingHistoryList.size >= READING_HISTORY_LIST_PER_PAGE_SIZE
-              updateCurrentReadingHistory(isFromHistory = true)
-            }
-            .onFailure { throwable ->
-              isObservingReadingHistoryList = false
+          observeHistoryUseCase(
+            userId = userId,
+            limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
+            mangaId = mangaIdFromArg,
+            lastReadingHistoryId = lastReadingHistoryId
+          )
+            .collect { result ->
+              result
+                .onSuccess { readingHistoryList ->
+                  isObservingReadingHistoryList = false
+                  currentReadingHistoryList += readingHistoryList
+                  hasNextReadingHistoryListPage =
+                    readingHistoryList.size >=
+                        READING_HISTORY_LIST_PER_PAGE_SIZE
+                  updateCurrentReadingHistory(isFromHistory = true)
+                }
+                .onFailure { throwable ->
+                  isObservingReadingHistoryList = false
 
-              if (throwable is FavoritesHistoryException.PermissionDenied && _userId.value == null)
-                return@onFailure
+                  if (throwable is HistoryException.PermissionDenied &&
+                    _userId.value == null
+                  )
+                    return@onFailure
 
-              hasNextReadingHistoryListPage = false
-              _isObserveHistoryDone.value = previousState
-              Log.d(TAG, "observeHistoryNextPage have error: ${throwable.stackTraceToString()}")
+                  hasNextReadingHistoryListPage = false
+                  _isObserveHistoryDone.value = previousState
+                  Log.d(
+                    TAG,
+                    "observeHistoryNextPage have error: ${throwable.stackTraceToString()}"
+                  )
+                }
             }
         }
       }
-    }
   }
 
   private fun updateCurrentReadingHistory(isFromHistory: Boolean = false) {
@@ -508,11 +533,9 @@ class ReaderViewModel @Inject constructor(
 
   private fun clearExpiredCache() {
     viewModelScope.launch {
-      clearExpiredCacheUseCase()
-        .onSuccess { Log.d(TAG, "clearExpiredCache success.") }
-        .onFailure {
-          Log.d(TAG, "clearExpiredCache error: ${it.stackTraceToString()}")
-        }
+      clearExpiredCacheUseCase().onSuccess { Log.d(TAG, "clearExpiredCache success.") }.onFailure {
+        Log.d(TAG, "clearExpiredCache error: ${it.stackTraceToString()}")
+      }
     }
   }
 

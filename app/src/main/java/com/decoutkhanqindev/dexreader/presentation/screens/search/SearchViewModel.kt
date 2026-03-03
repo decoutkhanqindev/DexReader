@@ -129,7 +129,10 @@ class SearchViewModel @Inject constructor(
           _resultsUiState.value = currentResultsUiState.copy(
             currentList = allMangaList,
             currentPage = nextPage,
-            nextPageState = BaseNextPageState.fromPageSize(nextMangaList.size, MANGA_LIST_PER_PAGE_SIZE)
+            nextPageState = BaseNextPageState.fromPageSize(
+              nextMangaList.size,
+              MANGA_LIST_PER_PAGE_SIZE
+            )
           )
         }
         .onFailure {

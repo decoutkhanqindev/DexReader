@@ -11,9 +11,9 @@ import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toManga
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortOrder
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaStatusFilter
 import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaContentRatingFilterOption
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaStatusFilterOption
 import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortCriteriaOption
 import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortOrderOption
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaStatusFilterOption
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
@@ -118,7 +118,10 @@ class CategoryDetailsViewModel @Inject constructor(
           _categoryDetailsUiState.value = currentCategoryDetailsUiState.copy(
             currentList = allMangaList,
             currentPage = nextPage,
-            nextPageState = BaseNextPageState.fromPageSize(nextMangaList.size, MANGA_LIST_PER_PAGE_SIZE)
+            nextPageState = BaseNextPageState.fromPageSize(
+              nextMangaList.size,
+              MANGA_LIST_PER_PAGE_SIZE
+            )
           )
         }
         .onFailure {

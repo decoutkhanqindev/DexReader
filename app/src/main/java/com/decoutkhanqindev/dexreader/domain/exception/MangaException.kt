@@ -1,6 +1,7 @@
 package com.decoutkhanqindev.dexreader.domain.exception
 
-sealed class MangaException(override val cause: Throwable? = null) : DomainException(cause) {
-  data class NotFound(override val cause: Throwable? = null) : MangaException(cause)
-  data class ChapterNotFound(override val cause: Throwable? = null) : MangaException(cause)
+sealed class MangaException(cause: Throwable? = null) : DomainException(cause = cause) {
+  class NotFound(cause: Throwable? = null) : MangaException(cause)
+  class ChapterNotFound(cause: Throwable? = null) : MangaException(cause)
+  class ChapterDataNotFound(cause: Throwable? = null) : MangaException(cause)
 }

@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.data.mapper
 
 import com.decoutkhanqindev.dexreader.data.mapper.CategoryMapper.toCategory
-import com.decoutkhanqindev.dexreader.data.mapper.ParamMapper.toMangaLanguage
+import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toMangaLanguage
 import com.decoutkhanqindev.dexreader.data.network.mangadex_api.constant.MangaDexApiEndpoints
 import com.decoutkhanqindev.dexreader.data.network.mangadex_api.param.MangaIncludesParam
 import com.decoutkhanqindev.dexreader.data.network.mangadex_api.param.MangaLanguageCodeParam

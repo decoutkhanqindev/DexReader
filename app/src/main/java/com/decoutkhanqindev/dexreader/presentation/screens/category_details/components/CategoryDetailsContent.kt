@@ -13,9 +13,9 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaContentRatingFilterOption
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaStatusFilterOption
 import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortCriteriaOption
 import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortOrderOption
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaStatusFilterOption
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailsCriteriaUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.filter.FilterBottomSheet
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.sort.SortBottomSheet
