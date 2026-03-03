@@ -6,6 +6,7 @@ import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFi
 import com.decoutkhanqindev.dexreader.domain.exception.FavoritesHistoryException
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.repository.HistoryRepository
+import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -13,7 +14,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class HistoryRepositoryImpl @Inject constructor(
@@ -46,20 +46,46 @@ class HistoryRepositoryImpl @Inject constructor(
   override suspend fun addAndUpdateToHistory(
     userId: String,
     readingHistory: ReadingHistory,
-  ) = withContext(Dispatchers.IO) {
-    firebaseFirestoreSource.upsertHistory(
-      userId = userId,
-      readingHistory = readingHistory.toReadingHistoryRequest()
-    )
-  }
+  ) = runSuspendCatching(
+    context = Dispatchers.IO,
+    onExecute = {
+      firebaseFirestoreSource.upsertHistory(
+        userId = userId,
+        readingHistory = readingHistory.toReadingHistoryRequest()
+      )
+    },
+    onCatch = { e ->
+      when (e) {
+        is FavoritesHistoryException -> throw e
+        is FirebaseFirestoreException ->
+          if (e.code == FirebaseFirestoreException.Code.PERMISSION_DENIED)
+            throw FavoritesHistoryException.PermissionDenied(cause = e)
+          else throw e
+        else -> throw e
+      }
+    }
+  )
 
   override suspend fun removeFromHistory(
     userId: String,
     readingHistoryId: String,
-  ) = withContext(Dispatchers.IO) {
-    firebaseFirestoreSource.removeFromHistory(
-      userId = userId,
-      readingHistoryId = readingHistoryId
-    )
-  }
+  ) = runSuspendCatching(
+    context = Dispatchers.IO,
+    onExecute = {
+      firebaseFirestoreSource.removeFromHistory(
+        userId = userId,
+        readingHistoryId = readingHistoryId
+      )
+    },
+    onCatch = { e ->
+      when (e) {
+        is FavoritesHistoryException -> throw e
+        is FirebaseFirestoreException ->
+          if (e.code == FirebaseFirestoreException.Code.PERMISSION_DENIED)
+            throw FavoritesHistoryException.PermissionDenied(cause = e)
+          else throw e
+        else -> throw e
+      }
+    }
+  )
 }

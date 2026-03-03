@@ -6,6 +6,7 @@ import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFi
 import com.decoutkhanqindev.dexreader.domain.exception.FavoritesHistoryException
 import com.decoutkhanqindev.dexreader.domain.model.FavoriteManga
 import com.decoutkhanqindev.dexreader.domain.repository.FavoritesRepository
+import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -13,7 +14,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class FavoritesRepositoryImpl @Inject constructor(
@@ -44,16 +44,42 @@ class FavoritesRepositoryImpl @Inject constructor(
   override suspend fun addToFavorites(
     userId: String,
     manga: FavoriteManga,
-  ) = withContext(Dispatchers.IO) {
-    firebaseFirestoreSource.addToFavorites(userId, manga.toFavoriteMangaRequest())
-  }
+  ) = runSuspendCatching(
+    context = Dispatchers.IO,
+    onExecute = {
+      firebaseFirestoreSource.addToFavorites(userId, manga.toFavoriteMangaRequest())
+    },
+    onCatch = { e ->
+      when (e) {
+        is FavoritesHistoryException -> throw e
+        is FirebaseFirestoreException ->
+          if (e.code == FirebaseFirestoreException.Code.PERMISSION_DENIED)
+            throw FavoritesHistoryException.PermissionDenied(cause = e)
+          else throw e
+        else -> throw e
+      }
+    }
+  )
 
   override suspend fun removeFromFavorites(
     userId: String,
     mangaId: String,
-  ) = withContext(Dispatchers.IO) {
-    firebaseFirestoreSource.removeFromFavorites(userId, mangaId)
-  }
+  ) = runSuspendCatching(
+    context = Dispatchers.IO,
+    onExecute = {
+      firebaseFirestoreSource.removeFromFavorites(userId, mangaId)
+    },
+    onCatch = { e ->
+      when (e) {
+        is FavoritesHistoryException -> throw e
+        is FirebaseFirestoreException ->
+          if (e.code == FirebaseFirestoreException.Code.PERMISSION_DENIED)
+            throw FavoritesHistoryException.PermissionDenied(cause = e)
+          else throw e
+        else -> throw e
+      }
+    }
+  )
 
   override fun observeIsFavorite(
     userId: String,

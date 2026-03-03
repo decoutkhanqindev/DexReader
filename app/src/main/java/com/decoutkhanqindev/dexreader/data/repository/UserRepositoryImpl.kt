@@ -63,7 +63,17 @@ class UserRepositoryImpl @Inject constructor(
   override suspend fun logout() = withContext(Dispatchers.IO) { firebaseAuthSource.logout() }
 
   override suspend fun sendResetPassword(email: String) =
-    withContext(Dispatchers.IO) { firebaseAuthSource.sendResetPassword(email) }
+    runSuspendCatching(
+      context = Dispatchers.IO,
+      onExecute = { firebaseAuthSource.sendResetPassword(email) },
+      onCatch = { e ->
+        when (e) {
+          is UserException -> throw e
+          is FirebaseAuthInvalidUserException -> throw UserException.NotFound(cause = e)
+          else -> throw e
+        }
+      }
+    )
 
   override fun observeCurrentUser(): Flow<User?> =
     firebaseAuthSource
@@ -73,9 +83,18 @@ class UserRepositoryImpl @Inject constructor(
       .distinctUntilChanged()
 
   override suspend fun updateUserProfile(user: User) =
-    withContext(Dispatchers.IO) {
-      firebaseFirestoreSource.upsertUserProfile(userProfile = user.toUserProfileRequest())
-    }
+    runSuspendCatching(
+      context = Dispatchers.IO,
+      onExecute = {
+        firebaseFirestoreSource.upsertUserProfile(userProfile = user.toUserProfileRequest())
+      },
+      onCatch = { e ->
+        when (e) {
+          is UserException -> throw e
+          else -> throw e
+        }
+      }
+    )
 
   override fun observeUserProfile(userId: String): Flow<User?> =
     firebaseFirestoreSource
