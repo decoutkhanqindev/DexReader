@@ -3,9 +3,9 @@ package com.decoutkhanqindev.dexreader.presentation.screens.auth.register
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.decoutkhanqindev.dexreader.domain.exception.UserException
 import com.decoutkhanqindev.dexreader.domain.usecase.user.RegisterUseCase
-import com.decoutkhanqindev.dexreader.presentation.screens.auth.AuthError
+import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toUserError
+import com.decoutkhanqindev.dexreader.presentation.model.error.UserError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -45,56 +45,11 @@ class RegisterViewModel @Inject constructor(
         }
         .onFailure { throwable ->
           _uiState.update {
-            when (throwable) {
-              is UserException.AlreadyExists ->
-                it.copy(
-                  isLoading = false,
-                  emailError = AuthError.EmailError.AlreadyInUse
-                )
-
-              is UserException.Email.Empty ->
-                it.copy(
-                  isLoading = false,
-                  emailError = AuthError.EmailError.Required
-                )
-
-              is UserException.Email.Invalid ->
-                it.copy(
-                  isLoading = false,
-                  emailError = AuthError.EmailError.Invalid
-                )
-
-              is UserException.Password.Empty ->
-                it.copy(
-                  isLoading = false,
-                  passwordError = AuthError.PasswordError.Required
-                )
-
-              is UserException.Password.Weak ->
-                it.copy(
-                  isLoading = false,
-                  passwordError = AuthError.PasswordError.Weak
-                )
-
-              is UserException.ConfirmPassword.Empty ->
-                it.copy(
-                  isLoading = false,
-                  confirmPasswordError = AuthError.ConfirmPasswordError.Required
-                )
-
-              is UserException.ConfirmPassword.Mismatch ->
-                it.copy(
-                  isLoading = false,
-                  confirmPasswordError =
-                    AuthError.ConfirmPasswordError.DoesNotMatch
-                )
-
-              is UserException.Name.Empty ->
-                it.copy(
-                  isLoading = false,
-                  nameError = AuthError.NameError.Required
-                )
-
+            when (val error = throwable.toUserError()) {
+              is UserError.EmailError -> it.copy(isLoading = false, emailError = error)
+              is UserError.PasswordError -> it.copy(isLoading = false, passwordError = error)
+              is UserError.ConfirmPasswordError -> it.copy(isLoading = false, confirmPasswordError = error)
+              is UserError.NameError -> it.copy(isLoading = false, nameError = error)
               else -> it.copy(isLoading = false, isSuccess = false, isError = true)
             }
           }

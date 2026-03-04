@@ -78,9 +78,10 @@ fun CategoryDetailsContent(
   when (categoryDetailsUiState) {
     BasePaginationUiState.FirstPageLoading -> LoadingScreen(modifier = modifier)
 
-    BasePaginationUiState.FirstPageError -> {
+    is BasePaginationUiState.FirstPageError -> {
       if (isShowErrorDialog) {
         NotificationDialog(
+          title = stringResource(categoryDetailsUiState.error.messageRes),
           onDismissClick = { isShowErrorDialog = false },
           onConfirmClick = {
             isShowErrorDialog = false

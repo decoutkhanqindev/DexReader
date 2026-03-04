@@ -79,7 +79,7 @@ constructor(
                       return@onFailure
                     }
 
-                    _uiState.value = BasePaginationUiState.FirstPageError
+                    _uiState.value = BasePaginationUiState.FirstPageError()
                     Log.d(
                       TAG,
                       "observeFavoritesFirstPage have error: ${throwable.stackTraceToString()}"
@@ -89,12 +89,8 @@ constructor(
           } catch (c: CancellationException) {
             throw c
           } catch (e: Exception) {
-            if (e is FavoritesException.PermissionDenied && _userId.value == null)
-              _uiState.value = BasePaginationUiState.FirstPageLoading
-            else {
-              _uiState.value = BasePaginationUiState.FirstPageError
-              Log.d(TAG, "observeFavoritesFirstPage have error: ${e.stackTraceToString()}")
-            }
+            _uiState.value = BasePaginationUiState.FirstPageError()
+            Log.d(TAG, "observeFavoritesFirstPage have error: ${e.stackTraceToString()}")
           }
         }
       }
@@ -102,7 +98,7 @@ constructor(
 
   fun observeFavoritesNextPage() {
     when (val currentUiState = _uiState.value) {
-      BasePaginationUiState.FirstPageError, BasePaginationUiState.FirstPageLoading -> return
+      is BasePaginationUiState.FirstPageError, BasePaginationUiState.FirstPageLoading -> return
       is BasePaginationUiState.Content -> {
         when (currentUiState.nextPageState) {
           BaseNextPageState.LOADING, BaseNextPageState.NO_MORE_ITEMS -> return
@@ -173,15 +169,11 @@ constructor(
           } catch (c: CancellationException) {
             throw c
           } catch (e: Exception) {
-            if (e is FavoritesException.PermissionDenied && _userId.value == null)
-              return@collectLatest
-            else {
-              _uiState.value = currentUiState.copy(nextPageState = BaseNextPageState.ERROR)
-              Log.d(
-                TAG,
-                "observeFavoritesNextPageInternal setup error: ${e.stackTraceToString()}"
-              )
-            }
+            _uiState.value = currentUiState.copy(nextPageState = BaseNextPageState.ERROR)
+            Log.d(
+              TAG,
+              "observeFavoritesNextPageInternal setup error: ${e.stackTraceToString()}"
+            )
           }
         }
       }

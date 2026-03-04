@@ -3,9 +3,9 @@ package com.decoutkhanqindev.dexreader.presentation.screens.auth.login
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.decoutkhanqindev.dexreader.domain.exception.UserException
 import com.decoutkhanqindev.dexreader.domain.usecase.user.LoginUseCase
-import com.decoutkhanqindev.dexreader.presentation.screens.auth.AuthError
+import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toUserError
+import com.decoutkhanqindev.dexreader.presentation.model.error.UserError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,31 +39,10 @@ class LoginViewModel @Inject constructor(
         }
         .onFailure { throwable ->
           _uiState.update {
-            when (throwable) {
-              is UserException.NotFound ->
-                it.copy(isLoading = false, userError = AuthError.UserNotFoundError)
-
-              is UserException.Password.Incorrect ->
-                it.copy(
-                  isLoading = false,
-                  passwordError = AuthError.PasswordError.Incorrect
-                )
-
-              is UserException.Email.Empty ->
-                it.copy(isLoading = false, emailError = AuthError.EmailError.Required)
-
-              is UserException.Email.Invalid ->
-                it.copy(isLoading = false, emailError = AuthError.EmailError.Invalid)
-
-              is UserException.Password.Empty ->
-                it.copy(
-                  isLoading = false,
-                  passwordError = AuthError.PasswordError.Required
-                )
-
-              is UserException.Password.Weak ->
-                it.copy(isLoading = false, passwordError = AuthError.PasswordError.Weak)
-
+            when (val error = throwable.toUserError()) {
+              is UserError.UserNotFoundError -> it.copy(isLoading = false, userError = error)
+              is UserError.EmailError -> it.copy(isLoading = false, emailError = error)
+              is UserError.PasswordError -> it.copy(isLoading = false, passwordError = error)
               else -> it.copy(isLoading = false, isSuccess = false, isError = true)
             }
           }

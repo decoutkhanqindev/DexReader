@@ -16,12 +16,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.model.error.UserError
 
 @Composable
 fun NameInputField(
   name: String,
   onNameChange: (String) -> Unit,
-  error: AuthError? = null,
+  error: UserError? = null,
   modifier: Modifier = Modifier,
 ) {
   OutlinedTextField(
@@ -42,7 +43,7 @@ fun NameInputField(
     isError = error != null,
     supportingText = {
       error?.let {
-        Text(text = stringResource(it.message), color = MaterialTheme.colorScheme.error)
+        Text(text = stringResource(it.messageRes), color = MaterialTheme.colorScheme.error)
       }
     },
     textStyle = MaterialTheme.typography.bodyLarge,

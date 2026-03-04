@@ -35,9 +35,10 @@ fun ReaderContent(
   when (chapterPageUiState) {
     ChapterPagesUiState.Loading -> LoadingScreen(modifier = modifier)
 
-    ChapterPagesUiState.Error -> {
+    is ChapterPagesUiState.Error -> {
       if (isShowErrorDialog) {
         NotificationDialog(
+          title = stringResource(chapterPageUiState.error.messageRes),
           onDismissClick = { isShowErrorDialog = false },
           onConfirmClick = {
             isShowErrorDialog = false

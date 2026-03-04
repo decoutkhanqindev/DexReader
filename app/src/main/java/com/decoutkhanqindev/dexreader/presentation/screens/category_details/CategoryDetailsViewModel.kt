@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.domain.usecase.category.GetMangaListByCategoryUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaContentRatingFilter
+import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortCriteria
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortOrder
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaStatusFilter
@@ -68,9 +69,9 @@ class CategoryDetailsViewModel @Inject constructor(
             nextPageState = BaseNextPageState.fromPageSize(mangaList.size, MANGA_LIST_PER_PAGE_SIZE)
           )
         }
-        .onFailure {
-          _categoryDetailsUiState.value = BasePaginationUiState.FirstPageError
-          Log.d(TAG, "fetchMangaListByCategoryFirstPage have error: ${it.stackTraceToString()}")
+        .onFailure { throwable ->
+          _categoryDetailsUiState.value = BasePaginationUiState.FirstPageError(throwable.toFeatureError())
+          Log.d(TAG, "fetchMangaListByCategoryFirstPage have error: ${throwable.stackTraceToString()}")
         }
     }
   }
@@ -78,7 +79,7 @@ class CategoryDetailsViewModel @Inject constructor(
   fun fetchMangaListByCategoryNextPage() {
     when (val currentCategoryDetailsUiState = _categoryDetailsUiState.value) {
       BasePaginationUiState.FirstPageLoading,
-      BasePaginationUiState.FirstPageError,
+      is BasePaginationUiState.FirstPageError,
         -> return
 
       is BasePaginationUiState.Content -> {

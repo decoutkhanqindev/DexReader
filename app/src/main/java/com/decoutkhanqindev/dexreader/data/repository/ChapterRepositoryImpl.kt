@@ -1,9 +1,9 @@
 package com.decoutkhanqindev.dexreader.data.repository
 
+import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toParam
 import com.decoutkhanqindev.dexreader.data.mapper.ChapterMapper.toChapter
 import com.decoutkhanqindev.dexreader.data.mapper.ChapterPagesMapper.toChapterPages
 import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toApiDomainException
-import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toParam
 import com.decoutkhanqindev.dexreader.data.network.api.ApiService
 import com.decoutkhanqindev.dexreader.domain.exception.MangaException
 import com.decoutkhanqindev.dexreader.domain.model.Chapter

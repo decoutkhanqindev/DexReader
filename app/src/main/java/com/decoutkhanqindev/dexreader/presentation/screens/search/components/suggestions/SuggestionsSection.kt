@@ -26,9 +26,10 @@ fun SuggestionsSection(
   when (suggestionsUiState) {
     SuggestionsUiState.Loading -> LoadingScreen(modifier = modifier)
 
-    SuggestionsUiState.Error -> {
+    is SuggestionsUiState.Error -> {
       if (isShowErrorDialog) {
         NotificationDialog(
+          title = stringResource(suggestionsUiState.error.messageRes),
           onDismissClick = { isShowErrorDialog = false },
           onConfirmClick = { isShowErrorDialog = false },
         )

@@ -87,7 +87,7 @@ constructor(
                       return@onFailure
                     }
 
-                    _historyUiState.value = BasePaginationUiState.FirstPageError
+                    _historyUiState.value = BasePaginationUiState.FirstPageError()
                     Log.d(
                       TAG,
                       "observeHistoryFirstPage have error: ${throwable.stackTraceToString()}"
@@ -97,12 +97,8 @@ constructor(
           } catch (c: CancellationException) {
             throw c
           } catch (e: Exception) {
-            if (e is HistoryException.PermissionDenied && _userId.value == null)
-              _historyUiState.value = BasePaginationUiState.FirstPageLoading
-            else {
-              _historyUiState.value = BasePaginationUiState.FirstPageError
-              Log.d(TAG, "observeHistoryFirstPage have error: ${e.stackTraceToString()}")
-            }
+            _historyUiState.value = BasePaginationUiState.FirstPageError()
+            Log.d(TAG, "observeHistoryFirstPage have error: ${e.stackTraceToString()}")
           }
         }
       }
@@ -110,7 +106,7 @@ constructor(
 
   fun observeHistoryNextPage() {
     when (val currentUiState = _historyUiState.value) {
-      BasePaginationUiState.FirstPageError, BasePaginationUiState.FirstPageLoading -> return
+      is BasePaginationUiState.FirstPageError, BasePaginationUiState.FirstPageLoading -> return
       is BasePaginationUiState.Content -> {
         when (currentUiState.nextPageState) {
           BaseNextPageState.LOADING, BaseNextPageState.NO_MORE_ITEMS -> return
@@ -180,16 +176,12 @@ constructor(
           } catch (c: CancellationException) {
             throw c
           } catch (e: Exception) {
-            if (e is HistoryException.PermissionDenied && _userId.value == null)
-              return@collectLatest
-            else {
-              _historyUiState.value =
-                currentUiState.copy(nextPageState = BaseNextPageState.ERROR)
-              Log.d(
-                TAG,
-                "observeHistoryNextPageInternal setup error: ${e.stackTraceToString()}"
-              )
-            }
+            _historyUiState.value =
+              currentUiState.copy(nextPageState = BaseNextPageState.ERROR)
+            Log.d(
+              TAG,
+              "observeHistoryNextPageInternal setup error: ${e.stackTraceToString()}"
+            )
           }
         }
       }

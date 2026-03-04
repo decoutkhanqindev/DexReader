@@ -39,9 +39,10 @@ fun FavoritesContent(
   when (uiState) {
     BasePaginationUiState.FirstPageLoading -> LoadingScreen(modifier = modifier)
 
-    BasePaginationUiState.FirstPageError -> {
+    is BasePaginationUiState.FirstPageError -> {
       if (isShowErrorDialog) {
         NotificationDialog(
+          title = stringResource(uiState.error.messageRes),
           onDismissClick = { isShowErrorDialog = false },
           onConfirmClick = {
             isShowErrorDialog = false

@@ -13,6 +13,7 @@
 | 7   | Business Logic Extraction — all remaining CA gaps in ViewModels                | ✅ done |
 | 8   | CA Audit + Bug Fix — full VM review, CancellationException swallowing fixed    | ✅ done |
 | 9   | Domain Exception Refactoring + Mapper Extraction                               | ✅ done |
+| 10  | Presentation Error Handling — FeatureError/UserError + ErrorMapper             | ✅ done |
 
 ---
 
@@ -249,6 +250,43 @@ business domain. Leaked infrastructure details into domain layer.
 
 ---
 
+### Phase 10 — Presentation Error Handling + ErrorMapper ✅
+
+#### 10A — Full Tier 2 Exception Handling (FeatureError wired end-to-end)
+
+**Problem:** All feature UiState error variants were bare `data object`s with no message info.
+Every screen showed the same hardcoded generic string regardless of the actual failure cause.
+
+**Fix:**
+
+- `FeatureError` sealed class created with `Network`, `MangaNotFound`, `ChapterNotFound`, `Generic`
+  subtypes, each carrying `@param:StringRes val messageRes: Int`
+- All 6 error UiState variants converted: `data object Error` → `data class Error(val error: FeatureError = FeatureError.Generic)`
+- `BasePaginationUiState.FirstPageError` same conversion
+- All `when` branch equality comparisons updated to `is` checks throughout VMs and composables
+- 6 feature VMs: inline exception → FeatureError mapping in `onFailure` blocks; `MangaDetailsViewModel`
+  adds `MangaException.NotFound → MangaNotFound`, `ReaderViewModel` adds `ChapterNotFound`
+- 9 composables: pass `stringResource(error.messageRes)` to `NotificationDialog` title
+
+#### 10B — ErrorMapper + Model Reorganisation
+
+**Problem:** Error types (`AuthError`, `FeatureError`) were scattered in screen packages.
+Inline `when (throwable)` mapping blocks were duplicated across 6 feature VMs and 3 auth VMs.
+
+**Fix:**
+
+- `AuthError` renamed → `UserError`, moved to `presentation/model/`
+- `FeatureError` moved to `presentation/model/`
+- `presentation/mapper/ErrorMapper` created (`object`, follows project pattern):
+  - `Throwable.toFeatureError(): FeatureError` — single place for domain → feature error mapping
+  - `Throwable.toUserError(): UserError?` — single place for `UserException` → `UserError` mapping
+- All 6 feature VMs: inline `when (throwable)` replaced with `throwable.toFeatureError()`
+- All 3 auth VMs: inline `when (throwable is UserException.*)` replaced with
+  `when (val error = throwable.toUserError())` branching on `UserError` subtypes
+- Old `AuthError.kt` and `FeatureError.kt` files deleted from screen packages
+
+---
+
 ## Architecture Decisions Log
 
 | Decision                                                                     | Rationale                                                                                                                                                          |
@@ -275,3 +313,9 @@ business domain. Leaked infrastructure details into domain layer.
 | `FavoritesHistoryException` split into two                                   | Favorites and History are distinct features that should not share exception types                                                                                  |
 | Leaf exceptions as `class` not `data class`                                  | Structural equality for exceptions is rarely needed; reduces boilerplate                                                                                           |
 | `ExceptionMapper` centralized in `data/mapper/`                              | Follows project's `object` + extension function mapper pattern; eliminates duplicate private mapper functions across 6 repos                                       |
+| `FeatureError` / `UserError` in `presentation/model/`, not in screen packages | Error types are presentation-layer models shared across screens — belong in `model/`, not co-located with a specific screen                                        |
+| `ErrorMapper` in `presentation/mapper/`, same `object` pattern               | Single source of truth for domain → presentation error mapping; VMs never import `R.string.*` directly                                                             |
+| `toUserError()` returns nullable `UserError?`                                 | `null` signals "no specific UI error to show" (e.g. `RegistrationFailed`); caller handles with `else -> isError = true`                                            |
+| `toFeatureError()` returns non-nullable `FeatureError`                        | Every throwable has a displayable fallback (`Generic`); no null-handling needed at call sites                                                                       |
+| Default `FeatureError.Generic` on all error data classes                      | All existing no-arg `Error()` / `FirstPageError()` call sites compile unchanged after `data object → data class` conversion                                        |
+| `ReaderViewModel` keeps `MangaException` import after refactor               | `if (throwable is MangaException.ChapterNotFound)` is control flow (decides whether to set error state), not just mapping — the condition must remain in the VM    |

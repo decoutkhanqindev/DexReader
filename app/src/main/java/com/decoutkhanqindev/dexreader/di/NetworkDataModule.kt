@@ -2,12 +2,12 @@ package com.decoutkhanqindev.dexreader.di
 
 import com.decoutkhanqindev.dexreader.BuildConfig
 import com.decoutkhanqindev.dexreader.data.network.adapter.IsoDateTimeMoshiAdapter
+import com.decoutkhanqindev.dexreader.data.network.api.ApiService
 import com.decoutkhanqindev.dexreader.data.network.firebase.auth.FirebaseAuthSource
 import com.decoutkhanqindev.dexreader.data.network.firebase.auth.FirebaseAuthSourceImpl
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSourceImpl
 import com.decoutkhanqindev.dexreader.data.network.interceptor.NetworkInterceptor
-import com.decoutkhanqindev.dexreader.data.network.api.ApiService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.moshi.Moshi

@@ -37,9 +37,10 @@ fun ResultsSection(
   when (resultsUiState) {
     BasePaginationUiState.FirstPageLoading -> LoadingScreen(modifier = modifier)
 
-    BasePaginationUiState.FirstPageError -> {
+    is BasePaginationUiState.FirstPageError -> {
       if (isShowErrorDialog) {
         NotificationDialog(
+          title = stringResource(resultsUiState.error.messageRes),
           onDismissClick = { isShowErrorDialog = false },
           onConfirmClick = {
             isShowErrorDialog = false

@@ -50,9 +50,10 @@ fun HistoryContent(
   when (historyUiState) {
     BasePaginationUiState.FirstPageLoading -> LoadingScreen(modifier = modifier)
 
-    BasePaginationUiState.FirstPageError -> {
+    is BasePaginationUiState.FirstPageError -> {
       if (isShowHistoryErrorDialog) {
         NotificationDialog(
+          title = stringResource(historyUiState.error.messageRes),
           onDismissClick = { isShowHistoryErrorDialog = false },
           onConfirmClick = {
             isShowHistoryErrorDialog = false

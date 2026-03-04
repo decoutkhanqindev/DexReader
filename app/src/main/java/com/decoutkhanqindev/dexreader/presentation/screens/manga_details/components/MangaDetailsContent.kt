@@ -23,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
@@ -85,9 +86,10 @@ fun MangaDetailsContent(
     when (mangaDetailsUiState) {
       MangaDetailsUiState.Loading -> LoadingScreen(modifier = Modifier.fillMaxSize())
 
-      MangaDetailsUiState.Error -> {
+      is MangaDetailsUiState.Error -> {
         if (isShowErrorDialog) {
           NotificationDialog(
+            title = stringResource(mangaDetailsUiState.error.messageRes),
             onDismissClick = { isShowErrorDialog = false },
             onConfirmClick = {
               isShowErrorDialog = false

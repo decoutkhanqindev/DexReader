@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.auth.login
 
 import androidx.compose.runtime.Immutable
-import com.decoutkhanqindev.dexreader.presentation.screens.auth.AuthError
+import com.decoutkhanqindev.dexreader.presentation.model.error.UserError
 
 @Immutable
 data class LoginUiState(
@@ -9,8 +9,8 @@ data class LoginUiState(
   val email: String = "",
   val password: String = "",
   val isSuccess: Boolean = false,
-  val emailError: AuthError? = null,
-  val passwordError: AuthError? = null,
-  val userError: AuthError? = null,
+  val emailError: UserError? = null,
+  val passwordError: UserError? = null,
+  val userError: UserError? = null,
   val isError: Boolean = false,
 )

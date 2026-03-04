@@ -2,10 +2,11 @@ package com.decoutkhanqindev.dexreader.presentation.screens.manga_details
 
 import androidx.compose.runtime.Immutable
 import com.decoutkhanqindev.dexreader.domain.model.Manga
+import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureError
 
 sealed interface MangaDetailsUiState {
   data object Loading : MangaDetailsUiState
-  data object Error : MangaDetailsUiState
+  data class Error(val error: FeatureError = FeatureError.Generic) : MangaDetailsUiState
 
   @Immutable
   data class Success(val manga: Manga) : MangaDetailsUiState

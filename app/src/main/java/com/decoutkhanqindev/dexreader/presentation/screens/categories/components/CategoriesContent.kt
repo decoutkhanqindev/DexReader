@@ -11,6 +11,7 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.CategoryTypeOption
 import com.decoutkhanqindev.dexreader.presentation.screens.categories.CategoriesUiState
@@ -29,9 +30,10 @@ fun CategoriesContent(
   when (uiState) {
     CategoriesUiState.Loading -> LoadingScreen(modifier = modifier)
 
-    CategoriesUiState.Error -> {
+    is CategoriesUiState.Error -> {
       if (isShowErrorDialog) {
         NotificationDialog(
+          title = stringResource(uiState.error.messageRes),
           onDismissClick = { isShowErrorDialog = false },
           onConfirmClick = {
             isShowErrorDialog = false

@@ -12,6 +12,9 @@
   <string name="top_rated">Top Rated</string>
   <string name="retry">Retry</string>
   <string name="oops_something_went_wrong_please_try_again">Oops, something went wrong. Please try again.</string>
+  <string name="no_internet_connection">No internet connection. Please check your connection and try again.</string>
+  <string name="manga_not_available">This manga is no longer available.</string>
+  <string name="chapter_not_available">This chapter is no longer available.</string>
   <string name="search_manga_placeholder">Enter manga title …</string>
   <string name="sorry_no_manga_found_with_title">Sorry, no manga with title %s was found.\nPlease try again with a different title.</string>
   <string name="not_found">not found</string>

@@ -15,6 +15,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.favorites.ObserveIsFavorite
 import com.decoutkhanqindev.dexreader.domain.usecase.favorites.RemoveFromFavoritesUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.history.ObserveHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaDetailsUseCase
+import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguage
 import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguageName
 import com.decoutkhanqindev.dexreader.presentation.model.MangaLanguageName
@@ -32,6 +33,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 @HiltViewModel
 class MangaDetailsViewModel
@@ -108,9 +110,9 @@ constructor(
     viewModelScope.launch {
       getMangaDetailsUseCase(mangaId = mangaIdFromArg)
         .onSuccess { _mangaDetailsUiState.value = MangaDetailsUiState.Success(manga = it) }
-        .onFailure {
-          _mangaDetailsUiState.value = MangaDetailsUiState.Error
-          Log.d(TAG, "fetchMangaDetails have error: ${it.stackTraceToString()}")
+        .onFailure { throwable ->
+          _mangaDetailsUiState.value = MangaDetailsUiState.Error(throwable.toFeatureError())
+          Log.d(TAG, "fetchMangaDetails have error: ${throwable.stackTraceToString()}")
         }
     }
   }
@@ -154,16 +156,16 @@ constructor(
                 )
             )
         }
-        .onFailure {
-          _mangaChaptersUiState.value = BasePaginationUiState.FirstPageError
-          Log.d(TAG, "fetchChapterListFirstPage have error: ${it.stackTraceToString()}")
+        .onFailure { throwable ->
+          _mangaChaptersUiState.value = BasePaginationUiState.FirstPageError(throwable.toFeatureError())
+          Log.d(TAG, "fetchChapterListFirstPage have error: ${throwable.stackTraceToString()}")
         }
     }
   }
 
   fun fetchChapterListNextPage() {
     when (val currentMangaChaptersUiState = _mangaChaptersUiState.value) {
-      BasePaginationUiState.FirstPageLoading, BasePaginationUiState.FirstPageError -> return
+      BasePaginationUiState.FirstPageLoading, is BasePaginationUiState.FirstPageError -> return
       is BasePaginationUiState.Content -> {
         when (currentMangaChaptersUiState.nextPageState) {
           BaseNextPageState.LOADING, BaseNextPageState.NO_MORE_ITEMS -> return
@@ -228,15 +230,22 @@ constructor(
               return@collectLatest
             }
 
-            observeIsFavoriteUseCase(userId = userId, mangaId = mangaId).collect { result ->
-              result.onSuccess { _isFavorite.value = it }.onFailure { throwable ->
-                _isFavorite.value = false
+            try {
+              observeIsFavoriteUseCase(userId = userId, mangaId = mangaId).collect { result ->
+                result.onSuccess { _isFavorite.value = it }.onFailure { throwable ->
+                  _isFavorite.value = false
 
-                if (throwable is FavoritesException.PermissionDenied && _userId.value == null)
-                  return@onFailure
+                  if (throwable is FavoritesException.PermissionDenied && _userId.value == null)
+                    return@onFailure
 
-                Log.d(TAG, "observeIsFavorite have error: ${throwable.stackTraceToString()}")
+                  Log.d(TAG, "observeIsFavorite have error: ${throwable.stackTraceToString()}")
+                }
               }
+            } catch (c: CancellationException) {
+              throw c
+            } catch (e: Exception) {
+              _isFavorite.value = false
+              Log.d(TAG, "observeIsFavorite have error: ${e.stackTraceToString()}")
             }
           }
         }
@@ -288,39 +297,48 @@ constructor(
             return@collectLatest
           }
 
-          observeHistoryUseCase(
-            userId = userId,
-            mangaId = mangaIdFromArg,
-            limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
-          )
-            .collect { result ->
-              result
-                .onSuccess { readingHistoryList ->
-                  isObservingReadingHistoryList = false
-                  _readingHistoryList.value = readingHistoryList
-                  hasNextReadingHistoryListPage =
-                    readingHistoryList.size >=
-                        READING_HISTORY_LIST_PER_PAGE_SIZE
+          try {
+            observeHistoryUseCase(
+              userId = userId,
+              mangaId = mangaIdFromArg,
+              limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
+            )
+              .collect { result ->
+                result
+                  .onSuccess { readingHistoryList ->
+                    isObservingReadingHistoryList = false
+                    _readingHistoryList.value = readingHistoryList
+                    hasNextReadingHistoryListPage =
+                      readingHistoryList.size >=
+                          READING_HISTORY_LIST_PER_PAGE_SIZE
 
-                  if (hasNextReadingHistoryListPage) observeHistoryNextPage()
-                  else return@onSuccess
-                }
-                .onFailure { throwable ->
-                  isObservingReadingHistoryList = false
+                    if (hasNextReadingHistoryListPage) observeHistoryNextPage()
+                    else return@onSuccess
+                  }
+                  .onFailure { throwable ->
+                    isObservingReadingHistoryList = false
 
-                  if (throwable is HistoryException.PermissionDenied &&
-                    _userId.value == null
-                  )
-                    return@onFailure
+                    if (throwable is HistoryException.PermissionDenied &&
+                      _userId.value == null
+                    )
+                      return@onFailure
 
-                  _readingHistoryList.value = emptyList()
-                  hasNextReadingHistoryListPage = false
-                  Log.d(
-                    TAG,
-                    "observeHistoryFirstPage have error: ${throwable.stackTraceToString()}"
-                  )
-                }
-            }
+                    _readingHistoryList.value = emptyList()
+                    hasNextReadingHistoryListPage = false
+                    Log.d(
+                      TAG,
+                      "observeHistoryFirstPage have error: ${throwable.stackTraceToString()}"
+                    )
+                  }
+              }
+          } catch (c: CancellationException) {
+            throw c
+          } catch (e: Exception) {
+            isObservingReadingHistoryList = false
+            _readingHistoryList.value = emptyList()
+            hasNextReadingHistoryListPage = false
+            Log.d(TAG, "observeHistoryFirstPage have error: ${e.stackTraceToString()}")
+          }
         }
       }
   }
@@ -340,39 +358,47 @@ constructor(
 
           val lastReadingHistoryId = _readingHistoryList.value.lastOrNull()?.id
 
-          observeHistoryUseCase(
-            userId = userId,
-            limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
-            mangaId = mangaIdFromArg,
-            lastReadingHistoryId = lastReadingHistoryId
-          )
-            .collect { result ->
-              result
-                .onSuccess { readingHistoryList ->
-                  isObservingReadingHistoryList = false
-                  _readingHistoryList.value += readingHistoryList
-                  hasNextReadingHistoryListPage =
-                    readingHistoryList.size >=
-                        READING_HISTORY_LIST_PER_PAGE_SIZE
+          try {
+            observeHistoryUseCase(
+              userId = userId,
+              limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
+              mangaId = mangaIdFromArg,
+              lastReadingHistoryId = lastReadingHistoryId
+            )
+              .collect { result ->
+                result
+                  .onSuccess { readingHistoryList ->
+                    isObservingReadingHistoryList = false
+                    _readingHistoryList.value += readingHistoryList
+                    hasNextReadingHistoryListPage =
+                      readingHistoryList.size >=
+                          READING_HISTORY_LIST_PER_PAGE_SIZE
 
-                  if (hasNextReadingHistoryListPage) observeHistoryNextPage()
-                  else return@onSuccess
-                }
-                .onFailure { throwable ->
-                  isObservingReadingHistoryList = false
+                    if (hasNextReadingHistoryListPage) observeHistoryNextPage()
+                    else return@onSuccess
+                  }
+                  .onFailure { throwable ->
+                    isObservingReadingHistoryList = false
 
-                  if (throwable is HistoryException.PermissionDenied &&
-                    _userId.value == null
-                  )
-                    return@onFailure
+                    if (throwable is HistoryException.PermissionDenied &&
+                      _userId.value == null
+                    )
+                      return@onFailure
 
-                  hasNextReadingHistoryListPage = false
-                  Log.d(
-                    TAG,
-                    "observeHistoryNextPage have error: ${throwable.stackTraceToString()}"
-                  )
-                }
-            }
+                    hasNextReadingHistoryListPage = false
+                    Log.d(
+                      TAG,
+                      "observeHistoryNextPage have error: ${throwable.stackTraceToString()}"
+                    )
+                  }
+              }
+          } catch (c: CancellationException) {
+            throw c
+          } catch (e: Exception) {
+            isObservingReadingHistoryList = false
+            hasNextReadingHistoryListPage = false
+            Log.d(TAG, "observeHistoryNextPage have error: ${e.stackTraceToString()}")
+          }
         }
       }
   }

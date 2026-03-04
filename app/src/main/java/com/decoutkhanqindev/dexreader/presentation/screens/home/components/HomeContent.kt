@@ -26,9 +26,10 @@ fun HomeContent(
   when (uiState) {
     HomeUiState.Loading -> LoadingScreen(modifier = modifier)
 
-    HomeUiState.Error -> {
+    is HomeUiState.Error -> {
       if (isShowErrorDialog) {
         NotificationDialog(
+          title = stringResource(uiState.error.messageRes),
           onDismissClick = { isShowErrorDialog = false },
           onConfirmClick = {
             isShowErrorDialog = false

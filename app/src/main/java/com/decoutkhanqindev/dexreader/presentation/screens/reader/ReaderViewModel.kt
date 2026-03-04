@@ -5,7 +5,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.exception.HistoryException
+import com.decoutkhanqindev.dexreader.domain.exception.MangaException
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
+import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.domain.model.MangaLanguage
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortOrder
@@ -30,6 +32,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 @HiltViewModel
 class ReaderViewModel
@@ -132,10 +135,13 @@ constructor(
 
           _isFetchChapterDetailsDone.value = true
         }
-        .onFailure {
+        .onFailure { throwable ->
           _chapterDetailsUiState.update { ChapterDetailsUiState() }
           _isFetchChapterDetailsDone.value = true
-          Log.e(TAG, "fetchChapterDetails have error: ${it.stackTraceToString()}")
+          if (throwable is MangaException.ChapterNotFound) {
+            _chapterPagesUiState.value = ChapterPagesUiState.Error(throwable.toFeatureError())
+          }
+          Log.e(TAG, "fetchChapterDetails have error: ${throwable.stackTraceToString()}")
         }
     }
   }
@@ -218,9 +224,11 @@ constructor(
 
           if (!isPrefetch) prefetchNextChapterPages()
         }
-        .onFailure {
-          if (!isPrefetch) _chapterPagesUiState.value = ChapterPagesUiState.Error
-          Log.d(TAG, "getChapterPagesUseCase have error: ${it.stackTraceToString()}")
+        .onFailure { throwable ->
+          if (!isPrefetch) {
+            _chapterPagesUiState.value = ChapterPagesUiState.Error(throwable.toFeatureError())
+          }
+          Log.d(TAG, "getChapterPagesUseCase have error: ${throwable.stackTraceToString()}")
         }
     }
   }
@@ -409,38 +417,48 @@ constructor(
             return@collectLatest
           }
 
-          observeHistoryUseCase(
-            userId = userId,
-            mangaId = mangaIdFromArg,
-            limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
-          )
-            .collect { result ->
-              result
-                .onSuccess { readingHistoryList ->
-                  isObservingReadingHistoryList = false
-                  currentReadingHistoryList = readingHistoryList
-                  hasNextReadingHistoryListPage =
-                    readingHistoryList.size >=
-                        READING_HISTORY_LIST_PER_PAGE_SIZE
-                  updateCurrentReadingHistory(isFromHistory = true)
-                }
-                .onFailure { throwable ->
-                  isObservingReadingHistoryList = false
+          try {
+            observeHistoryUseCase(
+              userId = userId,
+              mangaId = mangaIdFromArg,
+              limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
+            )
+              .collect { result ->
+                result
+                  .onSuccess { readingHistoryList ->
+                    isObservingReadingHistoryList = false
+                    currentReadingHistoryList = readingHistoryList
+                    hasNextReadingHistoryListPage =
+                      readingHistoryList.size >=
+                          READING_HISTORY_LIST_PER_PAGE_SIZE
+                    updateCurrentReadingHistory(isFromHistory = true)
+                  }
+                  .onFailure { throwable ->
+                    isObservingReadingHistoryList = false
 
-                  if (throwable is HistoryException.PermissionDenied &&
-                    _userId.value == null
-                  )
-                    return@onFailure
+                    if (throwable is HistoryException.PermissionDenied &&
+                      _userId.value == null
+                    )
+                      return@onFailure
 
-                  currentReadingHistoryList = emptyList()
-                  hasNextReadingHistoryListPage = false
-                  _isObserveHistoryDone.value = true
-                  Log.d(
-                    TAG,
-                    "observeHistoryFirstPage have error: ${throwable.stackTraceToString()}"
-                  )
-                }
-            }
+                    currentReadingHistoryList = emptyList()
+                    hasNextReadingHistoryListPage = false
+                    _isObserveHistoryDone.value = true
+                    Log.d(
+                      TAG,
+                      "observeHistoryFirstPage have error: ${throwable.stackTraceToString()}"
+                    )
+                  }
+              }
+          } catch (c: CancellationException) {
+            throw c
+          } catch (e: Exception) {
+            isObservingReadingHistoryList = false
+            currentReadingHistoryList = emptyList()
+            hasNextReadingHistoryListPage = false
+            _isObserveHistoryDone.value = true
+            Log.d(TAG, "observeHistoryFirstPage have error: ${e.stackTraceToString()}")
+          }
         }
       }
   }
@@ -463,38 +481,45 @@ constructor(
 
           val lastReadingHistoryId = currentReadingHistoryList.lastOrNull()?.id
 
-          observeHistoryUseCase(
-            userId = userId,
-            limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
-            mangaId = mangaIdFromArg,
-            lastReadingHistoryId = lastReadingHistoryId
-          )
-            .collect { result ->
-              result
-                .onSuccess { readingHistoryList ->
-                  isObservingReadingHistoryList = false
-                  currentReadingHistoryList += readingHistoryList
-                  hasNextReadingHistoryListPage =
-                    readingHistoryList.size >=
-                        READING_HISTORY_LIST_PER_PAGE_SIZE
-                  updateCurrentReadingHistory(isFromHistory = true)
-                }
-                .onFailure { throwable ->
-                  isObservingReadingHistoryList = false
+          try {
+            observeHistoryUseCase(
+              userId = userId,
+              limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
+              mangaId = mangaIdFromArg,
+              lastReadingHistoryId = lastReadingHistoryId
+            )
+              .collect { result ->
+                result
+                  .onSuccess { readingHistoryList ->
+                    isObservingReadingHistoryList = false
+                    currentReadingHistoryList += readingHistoryList
+                    hasNextReadingHistoryListPage =
+                      readingHistoryList.size >= READING_HISTORY_LIST_PER_PAGE_SIZE
+                    updateCurrentReadingHistory(isFromHistory = true)
+                  }
+                  .onFailure { throwable ->
+                    isObservingReadingHistoryList = false
 
-                  if (throwable is HistoryException.PermissionDenied &&
-                    _userId.value == null
-                  )
-                    return@onFailure
+                    if (throwable is HistoryException.PermissionDenied &&
+                      _userId.value == null
+                    ) return@onFailure
 
-                  hasNextReadingHistoryListPage = false
-                  _isObserveHistoryDone.value = previousState
-                  Log.d(
-                    TAG,
-                    "observeHistoryNextPage have error: ${throwable.stackTraceToString()}"
-                  )
-                }
-            }
+                    hasNextReadingHistoryListPage = false
+                    _isObserveHistoryDone.value = previousState
+                    Log.d(
+                      TAG,
+                      "observeHistoryNextPage have error: ${throwable.stackTraceToString()}"
+                    )
+                  }
+              }
+          } catch (c: CancellationException) {
+            throw c
+          } catch (e: Exception) {
+            isObservingReadingHistoryList = false
+            hasNextReadingHistoryListPage = false
+            _isObserveHistoryDone.value = previousState
+            Log.d(TAG, "observeHistoryNextPage have error: ${e.stackTraceToString()}")
+          }
         }
       }
   }

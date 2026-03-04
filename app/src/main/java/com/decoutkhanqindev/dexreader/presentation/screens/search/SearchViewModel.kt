@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaSuggestionsUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.SearchMangaUseCase
+import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -57,10 +58,10 @@ class SearchViewModel @Inject constructor(
             _suggestionsUiState.value = SuggestionsUiState.Success
             emit(titleList)
           }
-          .onFailure {
-            _suggestionsUiState.value = SuggestionsUiState.Error
+          .onFailure { throwable ->
+            _suggestionsUiState.value = SuggestionsUiState.Error(throwable.toFeatureError())
             emit(emptyList())
-            Log.d(TAG, "suggestionList have error: ${it.stackTraceToString()}")
+            Log.d(TAG, "suggestionList have error: ${throwable.stackTraceToString()}")
           }
       }
     }
@@ -82,11 +83,11 @@ class SearchViewModel @Inject constructor(
             nextPageState = BaseNextPageState.fromPageSize(mangaList.size, MANGA_LIST_PER_PAGE_SIZE)
           )
         }
-        .onFailure {
-          _resultsUiState.value = BasePaginationUiState.FirstPageError
+        .onFailure { throwable ->
+          _resultsUiState.value = BasePaginationUiState.FirstPageError(throwable.toFeatureError())
           Log.d(
             TAG,
-            "fetchMangaListFirstPage have error: ${it.stackTraceToString()}"
+            "fetchMangaListFirstPage have error: ${throwable.stackTraceToString()}"
           )
         }
     }
@@ -95,7 +96,7 @@ class SearchViewModel @Inject constructor(
   fun fetchMangaListNextPage() {
     when (val currentResultsUiState = _resultsUiState.value) {
       BasePaginationUiState.FirstPageLoading,
-      BasePaginationUiState.FirstPageError,
+      is BasePaginationUiState.FirstPageError,
         -> return
 
       is BasePaginationUiState.Content -> {

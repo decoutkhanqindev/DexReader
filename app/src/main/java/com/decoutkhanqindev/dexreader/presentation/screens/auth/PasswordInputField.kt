@@ -25,13 +25,14 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.model.error.UserError
 
 @Composable
 fun PasswordInputField(
   isConfirmPassword: Boolean = false,
   password: String,
   onPasswordChange: (String) -> Unit,
-  error: AuthError? = null,
+  error: UserError? = null,
   modifier: Modifier = Modifier,
 ) {
   var isShowPassword by rememberSaveable { mutableStateOf(false) }
@@ -75,7 +76,7 @@ fun PasswordInputField(
     isError = error != null,
     supportingText = {
       error?.let {
-        Text(text = stringResource(it.message), color = MaterialTheme.colorScheme.error)
+        Text(text = stringResource(it.messageRes), color = MaterialTheme.colorScheme.error)
       }
     },
     textStyle = MaterialTheme.typography.bodyLarge,
