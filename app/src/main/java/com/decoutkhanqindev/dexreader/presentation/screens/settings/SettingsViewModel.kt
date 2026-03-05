@@ -3,9 +3,11 @@ package com.decoutkhanqindev.dexreader.presentation.screens.settings
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.decoutkhanqindev.dexreader.domain.model.ThemeType
-import com.decoutkhanqindev.dexreader.domain.usecase.settings.ObserveThemeTypeUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.settings.SetThemeTypeUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.settings.ObserveThemeModeUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.settings.SaveThemeModeUseCase
+import com.decoutkhanqindev.dexreader.presentation.mapper.ThemeMapper.toThemeMode
+import com.decoutkhanqindev.dexreader.presentation.mapper.ThemeMapper.toThemeOption
+import com.decoutkhanqindev.dexreader.presentation.model.ThemeOption
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,27 +18,27 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-  private val observeThemeTypeUseCase: ObserveThemeTypeUseCase,
-  private val setThemeTypeUseCase: SetThemeTypeUseCase,
+  private val observeThemeModeUseCase: ObserveThemeModeUseCase,
+  private val saveThemeModeUseCase: SaveThemeModeUseCase,
 ) : ViewModel() {
   private val _uiState = MutableStateFlow(SettingsUiState())
   val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
 
   init {
-    observeThemeType()
+    observeThemeOption()
   }
 
-  private fun observeThemeType() {
+  private fun observeThemeOption() {
     viewModelScope.launch {
       _uiState.update { it.copy(isLoading = true) }
 
-      observeThemeTypeUseCase().collect { result ->
+      observeThemeModeUseCase().collect { result ->
         result
-          .onSuccess { type ->
+          .onSuccess { mode ->
             _uiState.update {
               it.copy(
                 isLoading = false,
-                themeType = type,
+                themeOption = mode.toThemeOption(),
               )
             }
           }
@@ -44,7 +46,7 @@ class SettingsViewModel @Inject constructor(
             _uiState.update {
               it.copy(
                 isLoading = false,
-                themeType = ThemeType.SYSTEM,
+                themeOption = ThemeOption.SYSTEM,
               )
             }
 
@@ -54,7 +56,7 @@ class SettingsViewModel @Inject constructor(
     }
   }
 
-  fun setThemeType() {
+  fun saveThemeOption() {
     val currentUiState = _uiState.value
     if (currentUiState.isLoading) return
 
@@ -62,18 +64,18 @@ class SettingsViewModel @Inject constructor(
       _uiState.update {
         it.copy(
           isLoading = true,
-          isChangeThemeSuccess = false,
-          isChangeThemeError = false
+          isSuccess = false,
+          isError = false,
         )
       }
 
-      setThemeTypeUseCase(currentUiState.themeType)
+      saveThemeModeUseCase(currentUiState.themeOption.toThemeMode())
         .onSuccess {
           _uiState.update {
             it.copy(
               isLoading = false,
-              isChangeThemeSuccess = true,
-              isChangeThemeError = false
+              isSuccess = true,
+              isError = false
             )
           }
         }
@@ -81,8 +83,8 @@ class SettingsViewModel @Inject constructor(
           _uiState.update {
             it.copy(
               isLoading = false,
-              isChangeThemeSuccess = false,
-              isChangeThemeError = true
+              isSuccess = false,
+              isError = true
             )
           }
           Log.e(TAG, "setThemeType have error: ${throwable.stackTraceToString()}")
@@ -90,20 +92,20 @@ class SettingsViewModel @Inject constructor(
     }
   }
 
-  fun changeThemeType(type: ThemeType) {
-    if (_uiState.value.themeType == type) return
+  fun updateThemeOption(value: ThemeOption) {
+    if (_uiState.value.themeOption == value) return
     _uiState.update {
       it.copy(
         isLoading = false,
-        themeType = type,
-        isChangeThemeSuccess = false,
-        isChangeThemeError = false
+        themeOption = value,
+        isSuccess = false,
+        isError = false,
       )
     }
   }
 
   fun retry() {
-    if (_uiState.value.isChangeThemeError) setThemeType()
+    if (_uiState.value.isError) saveThemeOption()
   }
 
   companion object {

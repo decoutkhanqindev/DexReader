@@ -1,5 +1,5 @@
 package com.decoutkhanqindev.dexreader.domain.model
 
-enum class ThemeType {
+enum class ThemeMode {
   SYSTEM, DARK, LIGHT
 }

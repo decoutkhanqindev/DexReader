@@ -15,7 +15,7 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.domain.model.ThemeType
+import com.decoutkhanqindev.dexreader.presentation.model.ThemeOption
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.settings.SettingsUiState
@@ -23,8 +23,8 @@ import com.decoutkhanqindev.dexreader.presentation.screens.settings.SettingsUiSt
 @Composable
 fun SettingsContent(
   uiState: SettingsUiState,
-  onChangeThemeType: (ThemeType) -> Unit,
-  onSetThemeType: () -> Unit,
+  onThemeOptionClick: (ThemeOption) -> Unit,
+  onSaveThemeOption: () -> Unit,
   onRetry: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -39,11 +39,11 @@ fun SettingsContent(
       if (uiState.isLoading) modifier.blur(8.dp)
       else modifier
   ) {
-    ThemeSelectorList(
-      selectedThemeType = uiState.themeType,
-      onSelectedTheme = {
+    ThemeModeList(
+      selectedItem = uiState.themeOption,
+      onItemClick = {
         isShowConfirmChangeThemeDialog = true
-        onChangeThemeType(it)
+        onThemeOptionClick(it)
       },
       modifier = Modifier
     )
@@ -52,7 +52,7 @@ fun SettingsContent(
   when {
     uiState.isLoading -> LoadingScreen(modifier = modifier)
 
-    uiState.isChangeThemeError -> {
+    uiState.isError -> {
       if (isShowChangeThemeErrorDialog) {
         NotificationDialog(
           title = stringResource(R.string.change_theme_failed),
@@ -65,7 +65,7 @@ fun SettingsContent(
       }
     }
 
-    uiState.isChangeThemeSuccess -> {
+    uiState.isSuccess -> {
       if (isShowChangeThemeSuccessDialog) {
         NotificationDialog(
           icon = Icons.Default.Done,
@@ -85,7 +85,7 @@ fun SettingsContent(
       confirm = stringResource(R.string.change),
       onConfirmClick = {
         isShowConfirmChangeThemeDialog = false
-        onSetThemeType()
+        onSaveThemeOption()
       },
     )
   }

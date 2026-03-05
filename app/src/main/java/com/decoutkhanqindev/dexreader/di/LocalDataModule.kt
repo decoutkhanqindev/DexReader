@@ -16,7 +16,7 @@ import javax.inject.Singleton
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-annotation class ThemeTypeKeyQualifier
+annotation class ThemeModeKeyQualifier
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -32,8 +32,8 @@ object LocalDataModule {
     chapterCacheDatabase.chapterCacheDao()
 
   @Provides
-  @ThemeTypeKeyQualifier
-  fun provideThemeTypeKey(): String = "theme_type"
+  @ThemeModeKeyQualifier
+  fun provideThemeModeKey(): String = "theme_mode"
 
   @Provides
   @Singleton

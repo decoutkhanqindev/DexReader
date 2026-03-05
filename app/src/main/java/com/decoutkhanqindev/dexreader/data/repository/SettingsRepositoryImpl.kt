@@ -4,8 +4,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
-import com.decoutkhanqindev.dexreader.di.ThemeTypeKeyQualifier
-import com.decoutkhanqindev.dexreader.domain.model.ThemeType
+import com.decoutkhanqindev.dexreader.di.ThemeModeKeyQualifier
+import com.decoutkhanqindev.dexreader.domain.model.ThemeMode
 import com.decoutkhanqindev.dexreader.domain.repository.SettingsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -13,18 +13,18 @@ import javax.inject.Inject
 
 class SettingsRepositoryImpl @Inject constructor(
   private val themePrefsManager: DataStore<Preferences>,
-  @param:ThemeTypeKeyQualifier private val themeTypeKey: String,
+  @param:ThemeModeKeyQualifier private val themeModeKey: String,
 ) : SettingsRepository {
-  private val themeTypePrefsKey = intPreferencesKey(themeTypeKey)
+  private val themeModePrefsKey = intPreferencesKey(themeModeKey)
 
-  override fun observeThemeType(): Flow<ThemeType> =
+  override fun observeThemeMode(): Flow<ThemeMode> =
     themePrefsManager.data.map { prefs ->
-      ThemeType.entries[prefs[themeTypePrefsKey] ?: 0]
+      ThemeMode.entries[prefs[themeModePrefsKey] ?: 0]
     }
 
-  override suspend fun setThemeType(value: ThemeType) {
+  override suspend fun saveThemeMode(value: ThemeMode) {
     themePrefsManager.edit { prefs ->
-      prefs[themeTypePrefsKey] = value.ordinal
+      prefs[themeModePrefsKey] = value.ordinal
     }
   }
 }

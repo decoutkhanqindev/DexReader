@@ -17,7 +17,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.decoutkhanqindev.dexreader.domain.model.ThemeType
+import com.decoutkhanqindev.dexreader.presentation.model.ThemeOption
 import com.decoutkhanqindev.dexreader.presentation.screens.settings.SettingsViewModel
 
 private val lightScheme = lightColorScheme(
@@ -257,11 +257,12 @@ fun DexReaderTheme(
   val viewModel = hiltViewModel<SettingsViewModel>()
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-  val isDarkTheme = when (uiState.themeType) {
-    ThemeType.SYSTEM -> isSystemInDarkTheme()
-    ThemeType.DARK -> true
-    ThemeType.LIGHT -> false
-  }
+  val isDarkTheme =
+    when (uiState.themeOption) {
+      ThemeOption.SYSTEM -> isSystemInDarkTheme()
+      ThemeOption.DARK -> true
+      ThemeOption.LIGHT -> false
+    }
 
   val colorScheme = when {
     dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {

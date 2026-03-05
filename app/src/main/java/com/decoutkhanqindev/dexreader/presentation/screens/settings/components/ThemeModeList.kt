@@ -6,10 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.LightMode
-import androidx.compose.material.icons.filled.PhoneAndroid
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -22,32 +18,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.domain.model.ThemeType
+import com.decoutkhanqindev.dexreader.presentation.model.ThemeOption
 
 @Composable
-fun ThemeSelectorList(
-  selectedThemeType: ThemeType,
-  onSelectedTheme: (ThemeType) -> Unit,
+fun ThemeModeList(
+  selectedItem: ThemeOption,
+  onItemClick: (ThemeOption) -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  val themeList = listOf<ThemeItem>(
-    ThemeItem(
-      type = ThemeType.LIGHT,
-      name = stringResource(R.string.light),
-      icon = Icons.Default.LightMode
-    ),
-    ThemeItem(
-      type = ThemeType.DARK,
-      name = stringResource(R.string.dark),
-      icon = Icons.Default.DarkMode
-    ),
-    ThemeItem(
-      type = ThemeType.SYSTEM,
-      name = stringResource(R.string.system),
-      icon = Icons.Default.PhoneAndroid
-    ),
-  )
-
   Card(
     shape = MaterialTheme.shapes.medium,
     elevation = CardDefaults.cardElevation(8.dp),
@@ -72,11 +50,11 @@ fun ThemeSelectorList(
         )
       }
 
-      items(themeList, key = { it.type }) { theme ->
-        ThemeSelectorItem(
-          isSelected = selectedThemeType == theme.type,
-          theme = theme,
-          onSelectedTheme = onSelectedTheme,
+      items(ThemeOption.entries, key = { it }) {
+        ThemeModeItem(
+          isSelected = it == selectedItem,
+          item = it,
+          onClick = onItemClick,
           modifier = Modifier.fillMaxWidth()
         )
       }

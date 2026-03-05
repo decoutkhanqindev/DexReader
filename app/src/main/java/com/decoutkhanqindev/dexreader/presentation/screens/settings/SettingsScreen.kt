@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.User
@@ -37,8 +37,8 @@ fun SettingsScreen(
     content = {
       SettingsContent(
         uiState = uiState,
-        onChangeThemeType = viewModel::changeThemeType,
-        onSetThemeType = viewModel::setThemeType,
+        onThemeOptionClick = viewModel::updateThemeOption,
+        onSaveThemeOption = viewModel::saveThemeOption,
         onRetry = viewModel::retry,
         modifier = Modifier.fillMaxSize()
       )
