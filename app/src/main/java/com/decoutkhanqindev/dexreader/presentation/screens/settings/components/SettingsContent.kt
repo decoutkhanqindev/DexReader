@@ -1,7 +1,9 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.settings.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
@@ -28,65 +30,73 @@ fun SettingsContent(
   onRetry: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  var isShowConfirmChangeThemeDialog by rememberSaveable { mutableStateOf(false) }
-  var isShowChangeThemeErrorDialog by rememberSaveable { mutableStateOf(true) }
-  var isShowChangeThemeSuccessDialog by rememberSaveable { mutableStateOf(true) }
+  var isShowSaveDialog by rememberSaveable { mutableStateOf(false) }
+  var isShowSuccessDialog by rememberSaveable { mutableStateOf(true) }
+  var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
 
-  Column(
-    verticalArrangement = Arrangement.Center,
-    horizontalAlignment = Alignment.CenterHorizontally,
-    modifier =
-      if (uiState.isLoading) modifier.blur(8.dp)
-      else modifier
+  Box(
+    contentAlignment = Alignment.Center,
+    modifier = modifier,
   ) {
-    ThemeModeList(
-      selectedItem = uiState.themeOption,
-      onItemClick = {
-        isShowConfirmChangeThemeDialog = true
-        onThemeOptionClick(it)
-      },
+    Column(
+      verticalArrangement = Arrangement.Center,
+      horizontalAlignment = Alignment.CenterHorizontally,
       modifier = Modifier
-    )
-  }
+        .fillMaxSize()
+        .let {
+          if (uiState.isLoading) it.blur(8.dp)
+          else it
+        }
+    ) {
+      ThemeModeList(
+        selectedItem = uiState.themeOption,
+        onItemClick = {
+          isShowSaveDialog = true
+          onThemeOptionClick(it)
+        },
+        modifier = Modifier
+      )
+    }
 
-  when {
-    uiState.isLoading -> LoadingScreen(modifier = modifier)
+    when {
+      uiState.isLoading -> LoadingScreen(modifier = Modifier.fillMaxSize())
 
-    uiState.isError -> {
-      if (isShowChangeThemeErrorDialog) {
-        NotificationDialog(
-          title = stringResource(R.string.change_theme_failed),
-          onDismissClick = { isShowChangeThemeErrorDialog = false },
-          onConfirmClick = {
-            isShowChangeThemeErrorDialog = false
-            onRetry()
-          },
-        )
+      uiState.isError -> {
+        if (isShowErrorDialog) {
+          NotificationDialog(
+            title = stringResource(R.string.change_theme_failed),
+            onDismissClick = { isShowErrorDialog = false },
+            onConfirmClick = {
+              isShowErrorDialog = false
+              onRetry()
+            },
+          )
+        }
+      }
+
+      uiState.isSuccess -> {
+        if (isShowSuccessDialog) {
+          NotificationDialog(
+            icon = Icons.Default.Done,
+            title = stringResource(R.string.theme_change_successful),
+            isEnableDismiss = false,
+            confirm = stringResource(R.string.ok),
+            onConfirmClick = { isShowSuccessDialog = false },
+          )
+        }
       }
     }
 
-    uiState.isSuccess -> {
-      if (isShowChangeThemeSuccessDialog) {
-        NotificationDialog(
-          icon = Icons.Default.Done,
-          title = stringResource(R.string.theme_change_successful),
-          isEnableDismiss = false,
-          confirm = stringResource(R.string.ok),
-          onConfirmClick = { isShowChangeThemeSuccessDialog = false },
-        )
-      }
+    if (isShowSaveDialog) {
+      NotificationDialog(
+        title = stringResource(R.string.are_you_sure_you_want_to_change_the_theme),
+        onDismissClick = { isShowSaveDialog = false },
+        confirm = stringResource(R.string.change),
+        onConfirmClick = {
+          isShowSaveDialog = false
+          onSaveThemeOption()
+        },
+      )
     }
-  }
-
-  if (isShowConfirmChangeThemeDialog) {
-    NotificationDialog(
-      title = stringResource(R.string.are_you_sure_you_want_to_change_the_theme),
-      onDismissClick = { isShowConfirmChangeThemeDialog = false },
-      confirm = stringResource(R.string.change),
-      onConfirmClick = {
-        isShowConfirmChangeThemeDialog = false
-        onSaveThemeOption()
-      },
-    )
   }
 }
