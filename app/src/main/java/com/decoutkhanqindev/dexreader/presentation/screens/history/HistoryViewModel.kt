@@ -3,7 +3,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.history
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.decoutkhanqindev.dexreader.domain.exception.HistoryException
+import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.usecase.history.ObserveHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.history.RemoveFromHistoryUseCase
@@ -79,7 +79,7 @@ constructor(
                       )
                   }
                   .onFailure { throwable ->
-                    if (throwable is HistoryException.PermissionDenied &&
+                    if (throwable is BusinessException.Resource.AccessDenied &&
                       _userId.value == null
                     ) {
                       _historyUiState.value =
@@ -158,7 +158,8 @@ constructor(
                       )
                   }
                   .onFailure { throwable ->
-                    if (throwable is HistoryException.PermissionDenied &&
+                    if (throwable is
+                          com.decoutkhanqindev.dexreader.domain.exception.BusinessException.Resource.AccessDenied &&
                       _userId.value == null
                     )
                       return@onFailure

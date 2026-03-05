@@ -1,10 +1,10 @@
 package com.decoutkhanqindev.dexreader.data.repository
 
-import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFavoritesDomainException
+import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirestoreException
 import com.decoutkhanqindev.dexreader.data.mapper.FavoriteMangaMapper.toFavoriteManga
 import com.decoutkhanqindev.dexreader.data.mapper.FavoriteMangaMapper.toFavoriteMangaRequest
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
-import com.decoutkhanqindev.dexreader.domain.exception.FavoritesException
+import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.model.FavoriteManga
 import com.decoutkhanqindev.dexreader.domain.repository.FavoritesRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
@@ -40,7 +40,7 @@ constructor(
         if (e is FirebaseFirestoreException &&
           e.code == FirebaseFirestoreException.Code.PERMISSION_DENIED
         )
-          throw FavoritesException.PermissionDenied(cause = e)
+          throw BusinessException.Resource.AccessDenied(cause = e)
         else throw e
       }
       .flowOn(Dispatchers.IO)
@@ -55,7 +55,7 @@ constructor(
       onExecute = {
         firebaseFirestoreSource.addToFavorites(userId, manga.toFavoriteMangaRequest())
       },
-      onCatch = { it.toFavoritesDomainException() }
+      onCatch = { it.toFirestoreException() }
     )
 
   override suspend fun removeFromFavorites(
@@ -65,7 +65,7 @@ constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = { firebaseFirestoreSource.removeFromFavorites(userId, mangaId) },
-      onCatch = { it.toFavoritesDomainException() }
+      onCatch = { it.toFirestoreException() }
     )
 
   override fun observeIsFavorite(
@@ -78,7 +78,7 @@ constructor(
         if (e is FirebaseFirestoreException &&
           e.code == FirebaseFirestoreException.Code.PERMISSION_DENIED
         )
-          throw FavoritesException.PermissionDenied(cause = e)
+          throw BusinessException.Resource.AccessDenied(cause = e)
         else throw e
       }
       .flowOn(Dispatchers.IO)

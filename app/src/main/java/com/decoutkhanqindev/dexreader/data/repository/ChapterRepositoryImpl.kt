@@ -3,9 +3,8 @@ package com.decoutkhanqindev.dexreader.data.repository
 import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toParam
 import com.decoutkhanqindev.dexreader.data.mapper.ChapterMapper.toChapter
 import com.decoutkhanqindev.dexreader.data.mapper.ChapterPagesMapper.toChapterPages
-import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toApiDomainException
+import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toDomainException
 import com.decoutkhanqindev.dexreader.data.network.api.ApiService
-import com.decoutkhanqindev.dexreader.domain.exception.MangaException
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
 import com.decoutkhanqindev.dexreader.domain.model.ChapterPages
 import com.decoutkhanqindev.dexreader.domain.model.MangaLanguage
@@ -42,7 +41,7 @@ constructor(
           ?.map { it.toChapter() }
           ?: emptyList()
       },
-      onCatch = { it.toApiDomainException() }
+      onCatch = { it.toDomainException() }
     )
 
   override suspend fun getChapterDetails(chapterId: String): Chapter =
@@ -50,17 +49,16 @@ constructor(
       context = Dispatchers.IO,
       onExecute = {
         apiService.getChapterDetails(chapterId).data?.toChapter()
-          ?: throw MangaException.ChapterNotFound()
+          ?: throw com.decoutkhanqindev.dexreader.domain.exception
+            .BusinessException.Resource.ChapterNotFound()
       },
-      onCatch = { it.toApiDomainException() }
+      onCatch = { it.toDomainException() }
     )
 
   override suspend fun getChapterPages(chapterId: String): ChapterPages =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = {
-        apiService.getChapterPages(chapterId).toChapterPages(chapterId)
-      },
-      onCatch = { it.toApiDomainException() }
+      onExecute = { apiService.getChapterPages(chapterId).toChapterPages(chapterId) },
+      onCatch = { it.toDomainException() }
     )
 }

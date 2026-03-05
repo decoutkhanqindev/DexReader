@@ -40,9 +40,9 @@ class LoginViewModel @Inject constructor(
         .onFailure { throwable ->
           _uiState.update {
             when (val error = throwable.toUserError()) {
-              is UserError.UserNotFoundError -> it.copy(isLoading = false, userError = error)
-              is UserError.EmailError -> it.copy(isLoading = false, emailError = error)
-              is UserError.PasswordError -> it.copy(isLoading = false, passwordError = error)
+              is UserError.NotFound -> it.copy(isLoading = false, userError = error)
+              is UserError.Email -> it.copy(isLoading = false, emailError = error)
+              is UserError.Password -> it.copy(isLoading = false, passwordError = error)
               else -> it.copy(isLoading = false, isSuccess = false, isError = true)
             }
           }

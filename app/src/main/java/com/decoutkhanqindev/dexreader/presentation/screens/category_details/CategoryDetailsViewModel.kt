@@ -7,10 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.domain.usecase.category.GetMangaListByCategoryUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaContentRatingFilter
-import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortCriteria
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortOrder
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaStatusFilter
+import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaContentRatingFilterOption
 import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaStatusFilterOption
 import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortCriteriaOption
@@ -70,8 +70,12 @@ class CategoryDetailsViewModel @Inject constructor(
           )
         }
         .onFailure { throwable ->
-          _categoryDetailsUiState.value = BasePaginationUiState.FirstPageError(throwable.toFeatureError())
-          Log.d(TAG, "fetchMangaListByCategoryFirstPage have error: ${throwable.stackTraceToString()}")
+          _categoryDetailsUiState.value =
+            BasePaginationUiState.FirstPageError(throwable.toFeatureError())
+          Log.d(
+            TAG,
+            "fetchMangaListByCategoryFirstPage have error: ${throwable.stackTraceToString()}"
+          )
         }
     }
   }

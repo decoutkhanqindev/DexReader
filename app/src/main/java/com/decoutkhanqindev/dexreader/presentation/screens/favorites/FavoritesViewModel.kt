@@ -3,7 +3,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.favorites
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.decoutkhanqindev.dexreader.domain.exception.FavoritesException
+import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.model.FavoriteManga
 import com.decoutkhanqindev.dexreader.domain.usecase.favorites.ObserveFavoritesUseCase
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
@@ -72,7 +72,7 @@ constructor(
                       )
                   }
                   .onFailure { throwable ->
-                    if (throwable is FavoritesException.PermissionDenied &&
+                    if (throwable is BusinessException.Resource.AccessDenied &&
                       _userId.value == null
                     ) {
                       _uiState.value = BasePaginationUiState.FirstPageLoading
@@ -151,7 +151,8 @@ constructor(
                       )
                   }
                   .onFailure { throwable ->
-                    if (throwable is FavoritesException.PermissionDenied &&
+                    if (throwable is
+                          com.decoutkhanqindev.dexreader.domain.exception.BusinessException.Resource.AccessDenied &&
                       _userId.value == null
                     )
                       return@onFailure

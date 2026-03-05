@@ -4,10 +4,8 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.decoutkhanqindev.dexreader.domain.exception.HistoryException
-import com.decoutkhanqindev.dexreader.domain.exception.MangaException
+import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
-import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.domain.model.MangaLanguage
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortOrder
@@ -20,6 +18,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.chapter.GetChapterPagesUseC
 import com.decoutkhanqindev.dexreader.domain.usecase.history.AddAndUpdateToHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.history.ObserveHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaDetailsUseCase
+import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -138,7 +137,7 @@ constructor(
         .onFailure { throwable ->
           _chapterDetailsUiState.update { ChapterDetailsUiState() }
           _isFetchChapterDetailsDone.value = true
-          if (throwable is MangaException.ChapterNotFound) {
+          if (throwable is BusinessException.Resource.ChapterNotFound) {
             _chapterPagesUiState.value = ChapterPagesUiState.Error(throwable.toFeatureError())
           }
           Log.e(TAG, "fetchChapterDetails have error: ${throwable.stackTraceToString()}")
@@ -436,7 +435,7 @@ constructor(
                   .onFailure { throwable ->
                     isObservingReadingHistoryList = false
 
-                    if (throwable is HistoryException.PermissionDenied &&
+                    if (throwable is BusinessException.Resource.AccessDenied &&
                       _userId.value == null
                     )
                       return@onFailure
@@ -500,7 +499,7 @@ constructor(
                   .onFailure { throwable ->
                     isObservingReadingHistoryList = false
 
-                    if (throwable is HistoryException.PermissionDenied &&
+                    if (throwable is BusinessException.Resource.AccessDenied &&
                       _userId.value == null
                     ) return@onFailure
 

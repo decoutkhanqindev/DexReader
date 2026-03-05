@@ -37,7 +37,7 @@ class ForgotPasswordViewModel @Inject constructor(
         .onFailure { throwable ->
           _uiState.update {
             when (val error = throwable.toUserError()) {
-              is UserError.EmailError -> it.copy(isLoading = false, emailError = error)
+              is UserError.Email -> it.copy(isLoading = false, emailError = error)
               else -> it.copy(isLoading = false, isSuccess = false, isError = true)
             }
           }

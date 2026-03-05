@@ -15,7 +15,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RegisterViewModel @Inject constructor(
+class RegisterViewModel
+@Inject
+constructor(
   private val useCase: RegisterUseCase,
 ) : ViewModel() {
   private val _uiState = MutableStateFlow(RegisterUiState())
@@ -46,10 +48,15 @@ class RegisterViewModel @Inject constructor(
         .onFailure { throwable ->
           _uiState.update {
             when (val error = throwable.toUserError()) {
-              is UserError.EmailError -> it.copy(isLoading = false, emailError = error)
-              is UserError.PasswordError -> it.copy(isLoading = false, passwordError = error)
-              is UserError.ConfirmPasswordError -> it.copy(isLoading = false, confirmPasswordError = error)
-              is UserError.NameError -> it.copy(isLoading = false, nameError = error)
+              is UserError.Email -> it.copy(isLoading = false, emailError = error)
+              is UserError.Password -> it.copy(isLoading = false, passwordError = error)
+              is UserError.ConfirmPassword ->
+                it.copy(isLoading = false, confirmPasswordError = error)
+
+              is UserError.Name -> it.copy(isLoading = false, nameError = error)
+              is UserError.RegistrationFailed ->
+                it.copy(isLoading = false, isSuccess = false, isError = true)
+
               else -> it.copy(isLoading = false, isSuccess = false, isError = true)
             }
           }

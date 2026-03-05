@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.data.repository
 
 import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toParam
 import com.decoutkhanqindev.dexreader.data.mapper.CategoryMapper.toCategory
-import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toApiDomainException
+import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toDomainException
 import com.decoutkhanqindev.dexreader.data.mapper.MangaMapper.toManga
 import com.decoutkhanqindev.dexreader.data.network.api.ApiService
 import com.decoutkhanqindev.dexreader.di.UploadUrlQualifier
@@ -29,7 +29,7 @@ constructor(
       onExecute = {
         apiService.getTagList().data?.map { it.toCategory() } ?: emptyList()
       },
-      onCatch = { it.toApiDomainException() }
+      onCatch = { it.toDomainException() }
     )
 
   override suspend fun getMangaListByCategory(
@@ -66,6 +66,6 @@ constructor(
           ?.map { it.toManga(uploadUrl) }
           ?: emptyList()
       },
-      onCatch = { it.toApiDomainException() }
+      onCatch = { it.toDomainException() }
     )
 }

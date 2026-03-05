@@ -3,8 +3,7 @@ package com.decoutkhanqindev.dexreader.data.repository
 import com.decoutkhanqindev.dexreader.data.local.database.dao.ChapterCacheDao
 import com.decoutkhanqindev.dexreader.data.mapper.ChapterPagesMapper.toChapterCacheEntity
 import com.decoutkhanqindev.dexreader.data.mapper.ChapterPagesMapper.toChapterPages
-import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toCacheDomainException
-import com.decoutkhanqindev.dexreader.domain.exception.MangaException
+import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toCacheException
 import com.decoutkhanqindev.dexreader.domain.model.ChapterPages
 import com.decoutkhanqindev.dexreader.domain.repository.CacheRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
@@ -27,7 +26,7 @@ constructor(
           chapterCacheEntity = chapterPages.toChapterCacheEntity(mangaId)
         )
       },
-      onCatch = { it.toCacheDomainException() }
+      onCatch = { it.toCacheException() }
     )
 
   override suspend fun getChapterCache(chapterId: String): ChapterPages =
@@ -35,22 +34,23 @@ constructor(
       context = Dispatchers.IO,
       onExecute = {
         chapterCacheDao.getChapterCache(chapterId)?.toChapterPages()
-          ?: throw MangaException.ChapterDataNotFound()
+          ?: throw com.decoutkhanqindev.dexreader.domain.exception
+            .BusinessException.Resource.ChapterDataNotFound()
       },
-      onCatch = { it.toCacheDomainException() }
+      onCatch = { it.toCacheException() }
     )
 
   override suspend fun deleteChapterCache(chapterId: String) =
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = { chapterCacheDao.deleteChapterCache(chapterId) },
-      onCatch = { it.toCacheDomainException() }
+      onCatch = { it.toCacheException() }
     )
 
   override suspend fun clearExpiredCache(expiryTimestamp: Long) =
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = { chapterCacheDao.clearExpiredCache(expiryTimestamp) },
-      onCatch = { it.toCacheDomainException() }
+      onCatch = { it.toCacheException() }
     )
 }

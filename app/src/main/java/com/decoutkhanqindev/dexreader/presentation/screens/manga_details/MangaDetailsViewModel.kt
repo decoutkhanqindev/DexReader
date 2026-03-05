@@ -4,8 +4,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.decoutkhanqindev.dexreader.domain.exception.FavoritesException
-import com.decoutkhanqindev.dexreader.domain.exception.HistoryException
+import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortOrder
@@ -157,7 +156,8 @@ constructor(
             )
         }
         .onFailure { throwable ->
-          _mangaChaptersUiState.value = BasePaginationUiState.FirstPageError(throwable.toFeatureError())
+          _mangaChaptersUiState.value =
+            BasePaginationUiState.FirstPageError(throwable.toFeatureError())
           Log.d(TAG, "fetchChapterListFirstPage have error: ${throwable.stackTraceToString()}")
         }
     }
@@ -235,7 +235,7 @@ constructor(
                 result.onSuccess { _isFavorite.value = it }.onFailure { throwable ->
                   _isFavorite.value = false
 
-                  if (throwable is FavoritesException.PermissionDenied && _userId.value == null)
+                  if (throwable is BusinessException.Resource.AccessDenied && _userId.value == null)
                     return@onFailure
 
                   Log.d(TAG, "observeIsFavorite have error: ${throwable.stackTraceToString()}")
@@ -318,7 +318,7 @@ constructor(
                   .onFailure { throwable ->
                     isObservingReadingHistoryList = false
 
-                    if (throwable is HistoryException.PermissionDenied &&
+                    if (throwable is BusinessException.Resource.AccessDenied &&
                       _userId.value == null
                     )
                       return@onFailure
@@ -380,7 +380,7 @@ constructor(
                   .onFailure { throwable ->
                     isObservingReadingHistoryList = false
 
-                    if (throwable is HistoryException.PermissionDenied &&
+                    if (throwable is BusinessException.Resource.AccessDenied &&
                       _userId.value == null
                     )
                       return@onFailure

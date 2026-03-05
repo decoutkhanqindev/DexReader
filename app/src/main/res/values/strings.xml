@@ -15,6 +15,8 @@
   <string name="no_internet_connection">No internet connection. Please check your connection and try again.</string>
   <string name="manga_not_available">This manga is no longer available.</string>
   <string name="chapter_not_available">This chapter is no longer available.</string>
+  <string name="error_server_unavailable">Server error. Please try again later.</string>
+  <string name="error_access_denied">Access denied. Please sign in again.</string>
   <string name="search_manga_placeholder">Enter manga title …</string>
   <string name="sorry_no_manga_found_with_title">Sorry, no manga with title %s was found.\nPlease try again with a different title.</string>
   <string name="not_found">not found</string>

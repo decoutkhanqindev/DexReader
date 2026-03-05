@@ -1,10 +1,9 @@
 package com.decoutkhanqindev.dexreader.data.repository
 
-import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toApiDomainException
+import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toDomainException
 import com.decoutkhanqindev.dexreader.data.mapper.MangaMapper.toManga
 import com.decoutkhanqindev.dexreader.data.network.api.ApiService
 import com.decoutkhanqindev.dexreader.di.UploadUrlQualifier
-import com.decoutkhanqindev.dexreader.domain.exception.MangaException
 import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.domain.repository.MangaRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
@@ -21,12 +20,10 @@ constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        apiService.getLatestUpdateMangaList().data?.map {
-          it.toManga(uploadUrl)
-        }
+        apiService.getLatestUpdateMangaList().data?.map { it.toManga(uploadUrl) }
           ?: emptyList()
       },
-      onCatch = { it.toApiDomainException() }
+      onCatch = { it.toDomainException() }
     )
 
   override suspend fun getTrendingMangaList(): List<Manga> =
@@ -36,7 +33,7 @@ constructor(
         apiService.getTrendingMangaList().data?.map { it.toManga(uploadUrl) }
           ?: emptyList()
       },
-      onCatch = { it.toApiDomainException() }
+      onCatch = { it.toDomainException() }
     )
 
   override suspend fun getNewReleaseMangaList(): List<Manga> =
@@ -46,7 +43,7 @@ constructor(
         apiService.getNewReleaseMangaList().data?.map { it.toManga(uploadUrl) }
           ?: emptyList()
       },
-      onCatch = { it.toApiDomainException() }
+      onCatch = { it.toDomainException() }
     )
 
   override suspend fun getTopRatedMangaList(): List<Manga> =
@@ -56,7 +53,7 @@ constructor(
         apiService.getTopRatedMangaList().data?.map { it.toManga(uploadUrl) }
           ?: emptyList()
       },
-      onCatch = { it.toApiDomainException() }
+      onCatch = { it.toDomainException() }
     )
 
   override suspend fun getMangaDetails(mangaId: String): Manga =
@@ -64,9 +61,10 @@ constructor(
       context = Dispatchers.IO,
       onExecute = {
         apiService.getMangaDetails(mangaId).data?.toManga(uploadUrl)
-          ?: throw MangaException.NotFound()
+          ?: throw com.decoutkhanqindev.dexreader.domain.exception
+            .BusinessException.Resource.MangaNotFound()
       },
-      onCatch = { it.toApiDomainException() }
+      onCatch = { it.toDomainException() }
     )
 
   override suspend fun searchManga(
@@ -81,6 +79,6 @@ constructor(
         }
           ?: emptyList()
       },
-      onCatch = { it.toApiDomainException() }
+      onCatch = { it.toDomainException() }
     )
 }

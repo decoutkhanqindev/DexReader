@@ -1,10 +1,10 @@
 package com.decoutkhanqindev.dexreader.data.repository
 
-import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toHistoryDomainException
+import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirestoreException
 import com.decoutkhanqindev.dexreader.data.mapper.ReadingHistoryMapper.toReadingHistory
 import com.decoutkhanqindev.dexreader.data.mapper.ReadingHistoryMapper.toReadingHistoryRequest
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
-import com.decoutkhanqindev.dexreader.domain.exception.HistoryException
+import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.repository.HistoryRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
@@ -42,7 +42,7 @@ constructor(
         if (e is FirebaseFirestoreException &&
           e.code == FirebaseFirestoreException.Code.PERMISSION_DENIED
         )
-          throw HistoryException.PermissionDenied(cause = e)
+          throw BusinessException.Resource.AccessDenied(cause = e)
         else throw e
       }
       .flowOn(Dispatchers.IO)
@@ -60,7 +60,7 @@ constructor(
           readingHistory = readingHistory.toReadingHistoryRequest()
         )
       },
-      onCatch = { it.toHistoryDomainException() }
+      onCatch = { it.toFirestoreException() }
     )
 
   override suspend fun removeFromHistory(
@@ -75,6 +75,6 @@ constructor(
           readingHistoryId = readingHistoryId
         )
       },
-      onCatch = { it.toHistoryDomainException() }
+      onCatch = { it.toFirestoreException() }
     )
 }

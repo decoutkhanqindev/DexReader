@@ -2,18 +2,18 @@
 
 ## Phase Overview
 
-| #   | Phase                                                                          | Status  |
-| --- | ------------------------------------------------------------------------------ | ------- |
-| 1   | Domain Enums — replace raw strings with typed enums end-to-end                 | ✅ done |
-| 2   | Domain Model Property Renames — domain-meaningful names                        | ✅ done |
-| 3   | Domain Model Default Constants — companion object fallbacks                    | ✅ done |
-| 4   | Mapper Object Pattern — wrap all data mappers in `object`                      | ✅ done |
-| 5   | CategoryGroup → CategoryType — sealed class → domain enum                      | ✅ done |
-| 6   | CA Fix: UseCase Grouping — move client-side transforms out of VMs (categories) | ✅ done |
-| 7   | Business Logic Extraction — all remaining CA gaps in ViewModels                | ✅ done |
-| 8   | CA Audit + Bug Fix — full VM review, CancellationException swallowing fixed    | ✅ done |
-| 9   | Domain Exception Refactoring + Mapper Extraction                               | ✅ done |
-| 10  | Presentation Error Handling — FeatureError/UserError + ErrorMapper             | ✅ done |
+| #  | Phase                                                                          | Status |
+|----|--------------------------------------------------------------------------------|--------|
+| 1  | Domain Enums — replace raw strings with typed enums end-to-end                 | ✅ done |
+| 2  | Domain Model Property Renames — domain-meaningful names                        | ✅ done |
+| 3  | Domain Model Default Constants — companion object fallbacks                    | ✅ done |
+| 4  | Mapper Object Pattern — wrap all data mappers in `object`                      | ✅ done |
+| 5  | CategoryGroup → CategoryType — sealed class → domain enum                      | ✅ done |
+| 6  | CA Fix: UseCase Grouping — move client-side transforms out of VMs (categories) | ✅ done |
+| 7  | Business Logic Extraction — all remaining CA gaps in ViewModels                | ✅ done |
+| 8  | CA Audit + Bug Fix — full VM review, CancellationException swallowing fixed    | ✅ done |
+| 9  | Domain Exception Refactoring + Mapper Extraction                               | ✅ done |
+| 10 | Presentation Error Handling — FeatureError/UserError + ErrorMapper             | ✅ done |
 
 ---
 
@@ -24,7 +24,7 @@
 All 5 domain enums wired end-to-end across all three layers:
 
 | Domain enum                | Presentation Option enum         | Mapper           |
-| -------------------------- | -------------------------------- | ---------------- |
+|----------------------------|----------------------------------|------------------|
 | `MangaLanguage`            | `MangaLanguageName` (@StringRes) | `LanguageMapper` |
 | `MangaSortCriteria`        | `MangaSortCriteriaOption`        | `CriteriaMapper` |
 | `MangaSortOrder`           | `MangaSortOrderOption`           | `CriteriaMapper` |
@@ -40,7 +40,7 @@ All 5 domain enums wired end-to-end across all three layers:
 ### Phase 2 — Domain Model Property Renames ✅
 
 | Model            | Old → New                                                                                                           |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------- |
+|------------------|---------------------------------------------------------------------------------------------------------------------|
 | `Chapter`        | `publishAt` → `publishedAt`, `translatedLanguage` → `language`, `chapterNumber` → `number`                          |
 | `Manga`          | `availableTranslatedLanguages` → `availableLanguages`, `lastUpdated` → `updatedAt`, `lastChapter` → `latestChapter` |
 | `ChapterPages`   | `chapterDataHash` → `dataHash`, `pageUrls` → `pages`                                                                |
@@ -189,7 +189,7 @@ structural bug found.
 **Audit result — all VMs clean except:**
 
 | VM                   | Finding                                                             |
-| -------------------- | ------------------------------------------------------------------- |
+|----------------------|---------------------------------------------------------------------|
 | `FavoritesViewModel` | `catch (e: Exception)` swallows `CancellationException` in 2 places |
 | `HistoryViewModel`   | Same pattern in 2 places                                            |
 
@@ -214,7 +214,8 @@ business domain. Leaked infrastructure details into domain layer.
 
 **Fix:**
 
-- Added top-level `DomainException` subtypes: `NetworkUnavailable`, `ServiceRequestFailed`, `Unknown`
+- Added top-level `DomainException` subtypes: `NetworkUnavailable`, `ServiceRequestFailed`,
+  `Unknown`
 - Added `MangaException.ChapterDataNotFound` (replaces `CacheException.NotFound`)
 - Split `FavoritesHistoryException` → `FavoritesException` + `HistoryException`
 - Deleted: `RemoteException.kt`, `CacheException.kt`, `FavoritesHistoryException.kt`
@@ -234,10 +235,10 @@ business domain. Leaked infrastructure details into domain layer.
 #### 9D — Extraction to `ExceptionMapper.kt`
 
 - Created `data/mapper/ExceptionMapper.kt` — `object` with 4 extension functions:
-  - `Exception.toApiDomainException()` — `HttpException`, `IOException` → `DomainException`
-  - `Exception.toFavoritesDomainException()` — `FirebaseFirestoreException` → `FavoritesException`
-  - `Exception.toHistoryDomainException()` — `FirebaseFirestoreException` → `HistoryException`
-  - `Exception.toCacheDomainException()` — `DomainException` passthrough, else `Unknown`
+    - `Exception.toApiDomainException()` — `HttpException`, `IOException` → `DomainException`
+    - `Exception.toFavoritesDomainException()` — `FirebaseFirestoreException` → `FavoritesException`
+    - `Exception.toHistoryDomainException()` — `FirebaseFirestoreException` → `HistoryException`
+    - `Exception.toCacheDomainException()` — `DomainException` passthrough, else `Unknown`
 - All private mapper functions removed from 6 repo impls
 - Unused imports cleaned up
 
@@ -261,10 +262,12 @@ Every screen showed the same hardcoded generic string regardless of the actual f
 
 - `FeatureError` sealed class created with `Network`, `MangaNotFound`, `ChapterNotFound`, `Generic`
   subtypes, each carrying `@param:StringRes val messageRes: Int`
-- All 6 error UiState variants converted: `data object Error` → `data class Error(val error: FeatureError = FeatureError.Generic)`
+- All 6 error UiState variants converted: `data object Error` →
+  `data class Error(val error: FeatureError = FeatureError.Generic)`
 - `BasePaginationUiState.FirstPageError` same conversion
 - All `when` branch equality comparisons updated to `is` checks throughout VMs and composables
-- 6 feature VMs: inline exception → FeatureError mapping in `onFailure` blocks; `MangaDetailsViewModel`
+- 6 feature VMs: inline exception → FeatureError mapping in `onFailure` blocks;
+  `MangaDetailsViewModel`
   adds `MangaException.NotFound → MangaNotFound`, `ReaderViewModel` adds `ChapterNotFound`
 - 9 composables: pass `stringResource(error.messageRes)` to `NotificationDialog` title
 
@@ -278,8 +281,8 @@ Inline `when (throwable)` mapping blocks were duplicated across 6 feature VMs an
 - `AuthError` renamed → `UserError`, moved to `presentation/model/`
 - `FeatureError` moved to `presentation/model/`
 - `presentation/mapper/ErrorMapper` created (`object`, follows project pattern):
-  - `Throwable.toFeatureError(): FeatureError` — single place for domain → feature error mapping
-  - `Throwable.toUserError(): UserError?` — single place for `UserException` → `UserError` mapping
+    - `Throwable.toFeatureError(): FeatureError` — single place for domain → feature error mapping
+    - `Throwable.toUserError(): UserError?` — single place for `UserException` → `UserError` mapping
 - All 6 feature VMs: inline `when (throwable)` replaced with `throwable.toFeatureError()`
 - All 3 auth VMs: inline `when (throwable is UserException.*)` replaced with
   `when (val error = throwable.toUserError())` branching on `UserError` subtypes
@@ -289,33 +292,33 @@ Inline `when (throwable)` mapping blocks were duplicated across 6 feature VMs an
 
 ## Architecture Decisions Log
 
-| Decision                                                                     | Rationale                                                                                                                                                          |
-| ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Domain enums have zero Android/framework imports                             | Domain layer must be pure Kotlin                                                                                                                                   |
-| Presentation Option enums hold `@StringRes`                                  | Only presentation layer can reference Android resources                                                                                                            |
-| Mapper objects use `valueOf(this.name)`                                      | Enum entry names are kept identical across layers — no lookup table needed                                                                                         |
-| `toCategoryType()` mapper NOT created                                        | Inverse direction (presentation → domain) not needed for category type; inline `CategoryType.valueOf(option.name)` used in ViewModel                               |
-| `GetCategoryListUseCase` returns grouped map                                 | Client-side `filter {}` belongs in UseCase per domain guidelines                                                                                                   |
-| `CategoriesUiState.Success` uses `Map<CategoryTypeOption, List<Category>>`   | Presentation map key = presentation type; ViewModel is the domain→presentation boundary                                                                            |
-| `CategoriesContent` iterates map keys dynamically                            | Decoupled from hardcoded 4-section assumption; if API drops a type, no crash                                                                                       |
-| `ChapterCacheEntity` column name kept as `chapterDataHash`                   | Changing Room column name requires a DB migration; Kotlin property renamed, `@ColumnInfo` preserved                                                                |
-| Firebase DTOs not renamed                                                    | They're at the network boundary; mapper is the adapter                                                                                                             |
-| Exception mapping at repository boundary                                     | VM should only see domain exceptions, not Firebase/Retrofit internals                                                                                              |
-| `.catch` before `toFlowResult()`                                             | Exception remapping must happen on the raw Flow before wrapping in `Result`                                                                                        |
-| `GetMangaSuggestionsUseCase` uses `.take()` not `limit` param                | `MangaRepository.searchManga` has no `limit` parameter; `.take()` is idiomatic Kotlin                                                                              |
-| `ReaderViewModel.hasNextChapterListPage` Boolean not migrated                | It drives manual job orchestration, not `BasePaginationUiState`-based pagination                                                                                   |
-| `BaseNextPageState.fromPageSize()` is single source of truth                 | Eliminates inline `if (size >= pageSize) IDLE else NO_MORE_ITEMS` duplicated across 6 VMs                                                                          |
-| Domain model companion methods for pure rules                                | `ReadingHistory.generateId/findContinueTarget/findInitialPage`, `Chapter.isPrefetchNextPage/determineNavPosition` — pure functions belong in domain model, not VMs |
-| `observeIsFetchDataDone()` kept in VM                                        | `combine` of 3 loading flags is coroutine orchestration (loading gate), not a domain rule                                                                          |
-| `catch (c: CancellationException) { throw c }` before `catch (e: Exception)` | `toFlowResult()` rethrows `CancellationException` — must be rethrown to preserve structured concurrency                                                            |
-| Exceptions grouped by business domain, not infrastructure                    | `MangaException`, `FavoritesException`, `HistoryException` etc. — not `RemoteException`, `CacheException`                                                          |
-| Hermetic domain boundary via `DomainException.Unknown`                       | All unmapped framework exceptions wrapped — no infrastructure details leak into domain/presentation                                                                |
-| `FavoritesHistoryException` split into two                                   | Favorites and History are distinct features that should not share exception types                                                                                  |
-| Leaf exceptions as `class` not `data class`                                  | Structural equality for exceptions is rarely needed; reduces boilerplate                                                                                           |
-| `ExceptionMapper` centralized in `data/mapper/`                              | Follows project's `object` + extension function mapper pattern; eliminates duplicate private mapper functions across 6 repos                                       |
+| Decision                                                                      | Rationale                                                                                                                                                          |
+|-------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Domain enums have zero Android/framework imports                              | Domain layer must be pure Kotlin                                                                                                                                   |
+| Presentation Option enums hold `@StringRes`                                   | Only presentation layer can reference Android resources                                                                                                            |
+| Mapper objects use `valueOf(this.name)`                                       | Enum entry names are kept identical across layers — no lookup table needed                                                                                         |
+| `toCategoryType()` mapper NOT created                                         | Inverse direction (presentation → domain) not needed for category type; inline `CategoryType.valueOf(option.name)` used in ViewModel                               |
+| `GetCategoryListUseCase` returns grouped map                                  | Client-side `filter {}` belongs in UseCase per domain guidelines                                                                                                   |
+| `CategoriesUiState.Success` uses `Map<CategoryTypeOption, List<Category>>`    | Presentation map key = presentation type; ViewModel is the domain→presentation boundary                                                                            |
+| `CategoriesContent` iterates map keys dynamically                             | Decoupled from hardcoded 4-section assumption; if API drops a type, no crash                                                                                       |
+| `ChapterCacheEntity` column name kept as `chapterDataHash`                    | Changing Room column name requires a DB migration; Kotlin property renamed, `@ColumnInfo` preserved                                                                |
+| Firebase DTOs not renamed                                                     | They're at the network boundary; mapper is the adapter                                                                                                             |
+| Exception mapping at repository boundary                                      | VM should only see domain exceptions, not Firebase/Retrofit internals                                                                                              |
+| `.catch` before `toFlowResult()`                                              | Exception remapping must happen on the raw Flow before wrapping in `Result`                                                                                        |
+| `GetMangaSuggestionsUseCase` uses `.take()` not `limit` param                 | `MangaRepository.searchManga` has no `limit` parameter; `.take()` is idiomatic Kotlin                                                                              |
+| `ReaderViewModel.hasNextChapterListPage` Boolean not migrated                 | It drives manual job orchestration, not `BasePaginationUiState`-based pagination                                                                                   |
+| `BaseNextPageState.fromPageSize()` is single source of truth                  | Eliminates inline `if (size >= pageSize) IDLE else NO_MORE_ITEMS` duplicated across 6 VMs                                                                          |
+| Domain model companion methods for pure rules                                 | `ReadingHistory.generateId/findContinueTarget/findInitialPage`, `Chapter.isPrefetchNextPage/determineNavPosition` — pure functions belong in domain model, not VMs |
+| `observeIsFetchDataDone()` kept in VM                                         | `combine` of 3 loading flags is coroutine orchestration (loading gate), not a domain rule                                                                          |
+| `catch (c: CancellationException) { throw c }` before `catch (e: Exception)`  | `toFlowResult()` rethrows `CancellationException` — must be rethrown to preserve structured concurrency                                                            |
+| Exceptions grouped by business domain, not infrastructure                     | `MangaException`, `FavoritesException`, `HistoryException` etc. — not `RemoteException`, `CacheException`                                                          |
+| Hermetic domain boundary via `DomainException.Unknown`                        | All unmapped framework exceptions wrapped — no infrastructure details leak into domain/presentation                                                                |
+| `FavoritesHistoryException` split into two                                    | Favorites and History are distinct features that should not share exception types                                                                                  |
+| Leaf exceptions as `class` not `data class`                                   | Structural equality for exceptions is rarely needed; reduces boilerplate                                                                                           |
+| `ExceptionMapper` centralized in `data/mapper/`                               | Follows project's `object` + extension function mapper pattern; eliminates duplicate private mapper functions across 6 repos                                       |
 | `FeatureError` / `UserError` in `presentation/model/`, not in screen packages | Error types are presentation-layer models shared across screens — belong in `model/`, not co-located with a specific screen                                        |
-| `ErrorMapper` in `presentation/mapper/`, same `object` pattern               | Single source of truth for domain → presentation error mapping; VMs never import `R.string.*` directly                                                             |
+| `ErrorMapper` in `presentation/mapper/`, same `object` pattern                | Single source of truth for domain → presentation error mapping; VMs never import `R.string.*` directly                                                             |
 | `toUserError()` returns nullable `UserError?`                                 | `null` signals "no specific UI error to show" (e.g. `RegistrationFailed`); caller handles with `else -> isError = true`                                            |
-| `toFeatureError()` returns non-nullable `FeatureError`                        | Every throwable has a displayable fallback (`Generic`); no null-handling needed at call sites                                                                       |
+| `toFeatureError()` returns non-nullable `FeatureError`                        | Every throwable has a displayable fallback (`Generic`); no null-handling needed at call sites                                                                      |
 | Default `FeatureError.Generic` on all error data classes                      | All existing no-arg `Error()` / `FirstPageError()` call sites compile unchanged after `data object → data class` conversion                                        |
-| `ReaderViewModel` keeps `MangaException` import after refactor               | `if (throwable is MangaException.ChapterNotFound)` is control flow (decides whether to set error state), not just mapping — the condition must remain in the VM    |
+| `ReaderViewModel` keeps `MangaException` import after refactor                | `if (throwable is MangaException.ChapterNotFound)` is control flow (decides whether to set error state), not just mapping — the condition must remain in the VM    |

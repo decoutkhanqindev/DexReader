@@ -10,9 +10,6 @@ import com.decoutkhanqindev.dexreader.domain.model.criteria.filter.MangaStatusFi
 import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortOrder
 
 object ApiParamMapper {
-
-  // Enum names are identical across domain and data layers,
-  // so valueOf(name) is safe and avoids duplicating large when expressions.
   fun MangaStatusFilter.toParam(): String =
     MangaStatusParam.valueOf(this.name).value
 
@@ -25,7 +22,6 @@ object ApiParamMapper {
   fun MangaLanguage.toParam(): String =
     MangaLanguageCodeParam.valueOf(this.name).value
 
-  // ISO code (from API) → domain enum — for data layer use only
   fun String.toMangaLanguage(): MangaLanguage =
     MangaLanguageCodeParam.entries.find { it.value == this }
       ?.let { MangaLanguage.valueOf(it.name) }

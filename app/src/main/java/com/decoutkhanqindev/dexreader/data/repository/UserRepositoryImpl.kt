@@ -4,8 +4,8 @@ import com.decoutkhanqindev.dexreader.data.mapper.UserMapper.toUser
 import com.decoutkhanqindev.dexreader.data.mapper.UserMapper.toUserProfileRequest
 import com.decoutkhanqindev.dexreader.data.network.firebase.auth.FirebaseAuthSource
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
-import com.decoutkhanqindev.dexreader.domain.exception.DomainException
-import com.decoutkhanqindev.dexreader.domain.exception.UserException
+import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
+import com.decoutkhanqindev.dexreader.domain.exception.InfrastructureException
 import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.domain.repository.UserRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
@@ -39,7 +39,7 @@ constructor(
             .register(email, password)
             ?.toUser()
             ?.copy(name = name)
-            ?: throw UserException.RegistrationFailed()
+            ?: throw BusinessException.Auth.RegistrationFailed()
         firebaseFirestoreSource.upsertUserProfile(
           userProfile = registeredUser.toUserProfileRequest()
         )
@@ -47,9 +47,9 @@ constructor(
       onCatch = { e ->
         when (e) {
           is FirebaseAuthUserCollisionException ->
-            throw UserException.AlreadyExists(cause = e)
+            throw BusinessException.Auth.UserAlreadyExists(cause = e)
 
-          else -> throw DomainException.Unknown(cause = e)
+          else -> throw InfrastructureException.Unexpected(cause = e)
         }
       }
     )
@@ -63,11 +63,13 @@ constructor(
       onExecute = { firebaseAuthSource.login(email, password) },
       onCatch = { e ->
         when (e) {
-          is FirebaseAuthInvalidUserException -> throw UserException.NotFound(cause = e)
-          is FirebaseAuthInvalidCredentialsException ->
-            throw UserException.Password.Incorrect(cause = e)
+          is FirebaseAuthInvalidUserException ->
+            throw BusinessException.Auth.UserNotFound(cause = e)
 
-          else -> throw DomainException.Unknown(cause = e)
+          is FirebaseAuthInvalidCredentialsException ->
+            throw BusinessException.Auth.InvalidCredentials(cause = e)
+
+          else -> throw InfrastructureException.Unexpected(cause = e)
         }
       }
     )
@@ -80,9 +82,11 @@ constructor(
       onExecute = { firebaseAuthSource.sendResetPassword(email) },
       onCatch = { e ->
         when (e) {
-          is UserException -> throw e
-          is FirebaseAuthInvalidUserException -> throw UserException.NotFound(cause = e)
-          else -> throw DomainException.Unknown(cause = e)
+          is BusinessException.Auth -> throw e
+          is FirebaseAuthInvalidUserException ->
+            throw BusinessException.Auth.UserNotFound(cause = e)
+
+          else -> throw InfrastructureException.Unexpected(cause = e)
         }
       }
     )
@@ -104,8 +108,8 @@ constructor(
       },
       onCatch = { e ->
         when (e) {
-          is UserException -> throw e
-          else -> throw DomainException.Unknown(cause = e)
+          is BusinessException.Auth -> throw e
+          else -> throw InfrastructureException.Unexpected(cause = e)
         }
       }
     )
