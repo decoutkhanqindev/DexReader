@@ -21,7 +21,7 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.ThemeOption
 
 @Composable
-fun ThemeModeList(
+fun ThemeOptionList(
   selectedItem: ThemeOption,
   onItemClick: (ThemeOption) -> Unit,
   modifier: Modifier = Modifier,
@@ -51,7 +51,7 @@ fun ThemeModeList(
       }
 
       items(ThemeOption.entries, key = { it }) {
-        ThemeModeItem(
+        ThemeOptionItem(
           isSelected = it == selectedItem,
           item = it,
           onClick = onItemClick,

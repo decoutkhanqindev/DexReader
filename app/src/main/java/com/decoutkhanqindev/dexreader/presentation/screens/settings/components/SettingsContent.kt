@@ -48,7 +48,7 @@ fun SettingsContent(
           else it
         }
     ) {
-      ThemeModeList(
+      ThemeOptionList(
         selectedItem = uiState.themeOption,
         onItemClick = {
           isShowSaveDialog = true

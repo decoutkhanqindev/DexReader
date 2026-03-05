@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.ThemeOption
 
 @Composable
-fun ThemeModeItem(
+fun ThemeOptionItem(
   isSelected: Boolean,
   item: ThemeOption,
   onClick: (ThemeOption) -> Unit,
