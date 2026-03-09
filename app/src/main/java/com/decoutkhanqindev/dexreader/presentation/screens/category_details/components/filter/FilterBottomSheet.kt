@@ -19,8 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaContentRatingFilterOption
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaStatusFilterOption
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaContentRatingFilterUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaStatusFilterUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailsCriteriaUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
 
@@ -30,8 +30,8 @@ fun FilterBottomSheet(
   onDismiss: () -> Unit,
   criteriaState: CategoryDetailsCriteriaUiState,
   onApplyClick: (
-    statusFilter: List<MangaStatusFilterOption>,
-    contentRatingFilter: List<MangaContentRatingFilterOption>,
+    statusFilter: List<MangaStatusFilterUiModel>,
+    contentRatingFilter: List<MangaContentRatingFilterUiModel>,
   ) -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -39,7 +39,7 @@ fun FilterBottomSheet(
   var selectedStatusOptions by rememberSaveable(
     stateSaver = listSaver(
       save = { list -> list.map { it.name } },
-      restore = { names -> names.map { MangaStatusFilterOption.valueOf(it) } }
+      restore = { names -> names.map { MangaStatusFilterUiModel.valueOf(it) } }
     )
   ) {
     mutableStateOf(criteriaState.statusFilter)
@@ -47,7 +47,7 @@ fun FilterBottomSheet(
   var selectedContentRatingOptions by rememberSaveable(
     stateSaver = listSaver(
       save = { list -> list.map { it.name } },
-      restore = { names -> names.map { MangaContentRatingFilterOption.valueOf(it) } }
+      restore = { names -> names.map { MangaContentRatingFilterUiModel.valueOf(it) } }
     )
   ) {
     mutableStateOf(criteriaState.contentRatingFilter)
@@ -70,9 +70,9 @@ fun FilterBottomSheet(
 
     VerticalGridFilterCriteriaList(
       selectedStatusOptions = selectedStatusOptions,
-      onSelectedStatusOptions = { selectedStatusOptions = it },
+      onStatusOptionsSelect = { selectedStatusOptions = it },
       selectedContentRatingOptions = selectedContentRatingOptions,
-      onSelectedContentRatingOptions = { selectedContentRatingOptions = it },
+      onContentRatingOptionsSelect = { selectedContentRatingOptions = it },
       modifier = Modifier
         .fillMaxWidth()
         .padding(bottom = 24.dp)

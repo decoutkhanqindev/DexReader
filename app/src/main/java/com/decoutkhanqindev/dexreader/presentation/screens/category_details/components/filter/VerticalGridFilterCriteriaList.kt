@@ -9,15 +9,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaContentRatingFilterOption
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaStatusFilterOption
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaContentRatingFilterUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaStatusFilterUiModel
 
 @Composable
 fun VerticalGridFilterCriteriaList(
-  selectedStatusOptions: List<MangaStatusFilterOption>,
-  onSelectedStatusOptions: (List<MangaStatusFilterOption>) -> Unit,
-  selectedContentRatingOptions: List<MangaContentRatingFilterOption>,
-  onSelectedContentRatingOptions: (List<MangaContentRatingFilterOption>) -> Unit,
+  selectedStatusOptions: List<MangaStatusFilterUiModel>,
+  onStatusOptionsSelect: (List<MangaStatusFilterUiModel>) -> Unit,
+  selectedContentRatingOptions: List<MangaContentRatingFilterUiModel>,
+  onContentRatingOptionsSelect: (List<MangaContentRatingFilterUiModel>) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   LazyVerticalGrid(
@@ -27,10 +27,10 @@ fun VerticalGridFilterCriteriaList(
     item {
       FilterCriteriaItem(
         title = stringResource(R.string.filter_status),
-        options = MangaStatusFilterOption.entries,
-        selectedOptions = selectedStatusOptions,
+        items = MangaStatusFilterUiModel.entries,
+        selectedItems = selectedStatusOptions,
         nameResOf = { it.nameRes },
-        onSelectedOptions = onSelectedStatusOptions,
+        onItemsSelect = onStatusOptionsSelect,
         modifier = Modifier
           .fillMaxWidth()
           .padding(4.dp)
@@ -39,10 +39,10 @@ fun VerticalGridFilterCriteriaList(
     item {
       FilterCriteriaItem(
         title = stringResource(R.string.filter_content_rating),
-        options = MangaContentRatingFilterOption.entries,
-        selectedOptions = selectedContentRatingOptions,
+        items = MangaContentRatingFilterUiModel.entries,
+        selectedItems = selectedContentRatingOptions,
         nameResOf = { it.nameRes },
-        onSelectedOptions = onSelectedContentRatingOptions,
+        onItemsSelect = onContentRatingOptionsSelect,
         modifier = Modifier
           .fillMaxWidth()
           .padding(4.dp)

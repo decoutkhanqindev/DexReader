@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.model.CategoryType
 import com.decoutkhanqindev.dexreader.domain.usecase.category.GetCategoryListUseCase
-import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
-import com.decoutkhanqindev.dexreader.presentation.model.CategoryTypeOption
+import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureUiError
+import com.decoutkhanqindev.dexreader.presentation.model.CategoryTypeUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,13 +31,13 @@ class CategoriesViewModel @Inject constructor(
 
       getCategoryListUseCase()
         .onSuccess { grouped ->
-          val categoryMap = CategoryTypeOption.entries
-            .filter { it != CategoryTypeOption.UNKNOWN }
+          val categoryMap = CategoryTypeUiModel.entries
+            .filter { it != CategoryTypeUiModel.UNKNOWN }
             .associateWith { option -> grouped[CategoryType.valueOf(option.name)] ?: emptyList() }
           _uiState.value = CategoriesUiState.Success(categoryMap = categoryMap)
         }
         .onFailure { throwable ->
-          _uiState.value = CategoriesUiState.Error(throwable.toFeatureError())
+          _uiState.value = CategoriesUiState.Error(throwable.toFeatureUiError())
           Log.e(TAG, "fetchTagList have error: ${throwable.stackTraceToString()}")
         }
     }

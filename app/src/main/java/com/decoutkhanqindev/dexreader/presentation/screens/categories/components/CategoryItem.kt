@@ -14,17 +14,17 @@ import com.decoutkhanqindev.dexreader.domain.model.Category
 
 @Composable
 fun CategoryItem(
-  category: Category,
-  onSelectedCategory: (String, String) -> Unit,
+  item: Category,
+  onClick: (String, String) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Card(
-    onClick = { onSelectedCategory(category.id, category.title) },
+    onClick = { onClick(item.id, item.title) },
     shape = MaterialTheme.shapes.large,
     modifier = modifier,
   ) {
     Text(
-      text = category.title,
+      text = item.title,
       style = MaterialTheme.typography.bodyLarge,
       fontWeight = FontWeight.Bold,
       textAlign = TextAlign.Center,

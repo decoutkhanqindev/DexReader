@@ -6,20 +6,22 @@ import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.settings.ObserveThemeModeUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.settings.SaveThemeModeUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.ThemeMapper.toThemeMode
-import com.decoutkhanqindev.dexreader.presentation.mapper.ThemeMapper.toThemeOption
-import com.decoutkhanqindev.dexreader.presentation.model.ThemeOption
+import com.decoutkhanqindev.dexreader.presentation.mapper.ThemeMapper.toThemeUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.ThemeUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor(
-  private val observeThemeModeUseCase: ObserveThemeModeUseCase,
-  private val saveThemeModeUseCase: SaveThemeModeUseCase,
+class SettingsViewModel
+@Inject
+constructor(
+        private val observeThemeModeUseCase: ObserveThemeModeUseCase,
+        private val saveThemeModeUseCase: SaveThemeModeUseCase,
 ) : ViewModel() {
   private val _uiState = MutableStateFlow(SettingsUiState())
   val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
@@ -34,24 +36,24 @@ class SettingsViewModel @Inject constructor(
 
       observeThemeModeUseCase().collect { result ->
         result
-          .onSuccess { mode ->
-            _uiState.update {
-              it.copy(
-                isLoading = false,
-                themeOption = mode.toThemeOption(),
-              )
-            }
-          }
-          .onFailure { throwable ->
-            _uiState.update {
-              it.copy(
-                isLoading = false,
-                themeOption = ThemeOption.SYSTEM,
-              )
-            }
+                .onSuccess { mode ->
+                  _uiState.update {
+                    it.copy(
+                            isLoading = false,
+                            themeOption = mode.toThemeUiModel(),
+                    )
+                  }
+                }
+                .onFailure { throwable ->
+                  _uiState.update {
+                    it.copy(
+                            isLoading = false,
+                            themeOption = ThemeUiModel.SYSTEM,
+                    )
+                  }
 
-            Log.e(TAG, "observeIsDynamicTheme have error: ${throwable.stackTraceToString()}")
-          }
+                  Log.e(TAG, "observeIsDynamicTheme have error: ${throwable.stackTraceToString()}")
+                }
       }
     }
   }
@@ -63,43 +65,31 @@ class SettingsViewModel @Inject constructor(
     viewModelScope.launch {
       _uiState.update {
         it.copy(
-          isLoading = true,
-          isSuccess = false,
-          isError = false,
+                isLoading = true,
+                isSuccess = false,
+                isError = false,
         )
       }
 
       saveThemeModeUseCase(currentUiState.themeOption.toThemeMode())
-        .onSuccess {
-          _uiState.update {
-            it.copy(
-              isLoading = false,
-              isSuccess = true,
-              isError = false
-            )
-          }
-        }
-        .onFailure { throwable ->
-          _uiState.update {
-            it.copy(
-              isLoading = false,
-              isSuccess = false,
-              isError = true
-            )
-          }
-          Log.e(TAG, "setThemeType have error: ${throwable.stackTraceToString()}")
-        }
+              .onSuccess {
+                _uiState.update { it.copy(isLoading = false, isSuccess = true, isError = false) }
+              }
+              .onFailure { throwable ->
+                _uiState.update { it.copy(isLoading = false, isSuccess = false, isError = true) }
+                Log.e(TAG, "setThemeType have error: ${throwable.stackTraceToString()}")
+              }
     }
   }
 
-  fun updateThemeOption(value: ThemeOption) {
+  fun updateThemeOption(value: ThemeUiModel) {
     if (_uiState.value.themeOption == value) return
     _uiState.update {
       it.copy(
-        isLoading = false,
-        themeOption = value,
-        isSuccess = false,
-        isError = false,
+              isLoading = false,
+              themeOption = value,
+              isSuccess = false,
+              isError = false,
       )
     }
   }

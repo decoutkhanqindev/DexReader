@@ -17,10 +17,10 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun <T> FilterCriteriaItem(
   title: String,
-  options: List<T>,
-  selectedOptions: List<T>,
+  items: List<T>,
+  selectedItems: List<T>,
   nameResOf: (T) -> Int,
-  onSelectedOptions: (List<T>) -> Unit,
+  onItemsSelect: (List<T>) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Card(
@@ -45,10 +45,10 @@ fun <T> FilterCriteriaItem(
           .padding(bottom = 12.dp)
       )
       FilterValueOptions(
-        options = options,
-        selectedOptions = selectedOptions,
+        options = items,
+        selectedItems = selectedItems,
         nameResOf = nameResOf,
-        onSelectedOptions = onSelectedOptions,
+        onItemsSelect = onItemsSelect,
         modifier = Modifier.fillMaxWidth()
       )
     }

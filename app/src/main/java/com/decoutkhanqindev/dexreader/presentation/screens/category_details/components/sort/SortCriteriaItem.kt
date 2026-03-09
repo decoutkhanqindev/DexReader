@@ -15,17 +15,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortCriteriaOption
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortCriteriaUiModel
 
 @Composable
 fun SortCriteriaItem(
   isSelected: Boolean,
-  criteria: MangaSortCriteriaOption,
-  onSelectedItem: () -> Unit,
+  item: MangaSortCriteriaUiModel,
+  onClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Card(
-    onClick = onSelectedItem,
+    onClick = onClick,
     colors = CardDefaults.cardColors(
       containerColor = if (isSelected) MaterialTheme.colorScheme.surfaceVariant
       else MaterialTheme.colorScheme.surfaceContainerHigh,
@@ -41,7 +41,7 @@ fun SortCriteriaItem(
       verticalArrangement = Arrangement.Center
     ) {
       Text(
-        text = stringResource(criteria.nameRes),
+        text = stringResource(item.nameRes),
         style = MaterialTheme.typography.titleMedium,
         fontWeight = FontWeight.ExtraBold,
         textAlign = TextAlign.Center,

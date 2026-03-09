@@ -18,7 +18,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.chapter.GetChapterPagesUseC
 import com.decoutkhanqindev.dexreader.domain.usecase.history.AddAndUpdateToHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.history.ObserveHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaDetailsUseCase
-import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
+import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureUiError
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -138,7 +138,7 @@ constructor(
           _chapterDetailsUiState.update { ChapterDetailsUiState() }
           _isFetchChapterDetailsDone.value = true
           if (throwable is BusinessException.Resource.ChapterNotFound) {
-            _chapterPagesUiState.value = ChapterPagesUiState.Error(throwable.toFeatureError())
+            _chapterPagesUiState.value = ChapterPagesUiState.Error(throwable.toFeatureUiError())
           }
           Log.e(TAG, "fetchChapterDetails have error: ${throwable.stackTraceToString()}")
         }
@@ -225,7 +225,7 @@ constructor(
         }
         .onFailure { throwable ->
           if (!isPrefetch) {
-            _chapterPagesUiState.value = ChapterPagesUiState.Error(throwable.toFeatureError())
+            _chapterPagesUiState.value = ChapterPagesUiState.Error(throwable.toFeatureUiError())
           }
           Log.d(TAG, "getChapterPagesUseCase have error: ${throwable.stackTraceToString()}")
         }

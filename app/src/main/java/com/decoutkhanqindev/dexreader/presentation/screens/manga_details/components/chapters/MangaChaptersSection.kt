@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.Chapter
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
-import com.decoutkhanqindev.dexreader.presentation.model.MangaLanguageName
+import com.decoutkhanqindev.dexreader.presentation.model.MangaLanguageUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.ListLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPageErrorMessage
@@ -21,9 +21,9 @@ fun MangaChaptersSection(
   mangaChaptersUiState: BasePaginationUiState<Chapter>,
   readingHistoryList: List<ReadingHistory> = emptyList(),
   latestChapter: String,
-  chapterLanguage: MangaLanguageName,
-  chapterLanguageList: List<MangaLanguageName>,
-  onSelectedLanguage: (MangaLanguageName) -> Unit,
+  chapterLanguage: MangaLanguageUiModel,
+  chapterLanguageList: List<MangaLanguageUiModel>,
+  onSelectedLanguage: (MangaLanguageUiModel) -> Unit,
   onSelectedChapter: (
     chapterId: String,
     lastReadPage: Int,

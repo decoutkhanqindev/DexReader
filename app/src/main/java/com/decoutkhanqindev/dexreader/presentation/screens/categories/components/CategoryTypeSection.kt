@@ -10,15 +10,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.decoutkhanqindev.dexreader.domain.model.Category
-import com.decoutkhanqindev.dexreader.presentation.model.CategoryTypeOption
+import com.decoutkhanqindev.dexreader.presentation.model.CategoryTypeUiModel
 
 @Composable
 fun CategoryTypeSection(
   isExpanded: Boolean,
   onExpandClick: () -> Unit,
-  type: CategoryTypeOption,
+  type: CategoryTypeUiModel,
   categoryList: List<Category>,
-  onSelectedCategory: (String, String) -> Unit,
+  onCategoryClick: (String, String) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Column(modifier = modifier) {
@@ -34,8 +34,8 @@ fun CategoryTypeSection(
       exit = shrinkVertically() + fadeOut()
     ) {
       CategoryList(
-        categoryList = categoryList,
-        onSelectedCategory = onSelectedCategory,
+        items = categoryList,
+        onItemClick = onCategoryClick,
         modifier = Modifier.fillMaxWidth()
       )
     }

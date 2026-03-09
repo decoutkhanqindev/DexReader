@@ -29,7 +29,7 @@ fun ReadingHistoryItem(
   onRemoveFromHistory: (String) -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  val state = rememberSwipeToDismissBoxState(
+  val swipeToDismissBoxState = rememberSwipeToDismissBoxState(
     confirmValueChange = { value ->
       if (value == SwipeToDismissBoxValue.EndToStart) {
         onRemoveFromHistory(readingHistory.id)
@@ -37,10 +37,10 @@ fun ReadingHistoryItem(
       } else false
     }
   )
-  val isSwiping = state.dismissDirection == SwipeToDismissBoxValue.EndToStart
+  val isSwiping = swipeToDismissBoxState.dismissDirection == SwipeToDismissBoxValue.EndToStart
 
   SwipeToDismissBox(
-    state = state,
+    state = swipeToDismissBoxState,
     backgroundContent = {
       SwipeToDismissBackground(
         isSwiping = isSwiping,

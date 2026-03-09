@@ -6,10 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaSuggestionsUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.SearchMangaUseCase
-import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
+import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureUiError
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,124 +24,122 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel @Inject constructor(
-  private val searchMangaUseCase: SearchMangaUseCase,
-  private val getMangaSuggestionsUseCase: GetMangaSuggestionsUseCase,
+class SearchViewModel
+@Inject
+constructor(
+        private val searchMangaUseCase: SearchMangaUseCase,
+        private val getMangaSuggestionsUseCase: GetMangaSuggestionsUseCase,
 ) : ViewModel() {
-  private val _suggestionsUiState =
-    MutableStateFlow<SuggestionsUiState>(SuggestionsUiState.Loading)
+  private val _suggestionsUiState = MutableStateFlow<SuggestionsUiState>(SuggestionsUiState.Loading)
   val suggestionsUiState: StateFlow<SuggestionsUiState> = _suggestionsUiState.asStateFlow()
 
   private val _resultsUiState =
-    MutableStateFlow<BasePaginationUiState<Manga>>(BasePaginationUiState.FirstPageLoading)
+          MutableStateFlow<BasePaginationUiState<Manga>>(BasePaginationUiState.FirstPageLoading)
   val resultsUiState: StateFlow<BasePaginationUiState<Manga>> = _resultsUiState.asStateFlow()
 
   private val _query = MutableStateFlow("")
   val query: StateFlow<String> = _query.asStateFlow()
 
-  @OptIn(
-    FlowPreview::class,
-    ExperimentalCoroutinesApi::class
-  )
-  val suggestionList = query
-    .filter { it.isNotEmpty() }
-    .debounce(DEBOUNCE_TIME_MILLIS)
-    .distinctUntilChanged()
-    .flatMapLatest { query ->
-      flow {
-        _suggestionsUiState.value = SuggestionsUiState.Loading
+  @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
+  val suggestionList =
+          query
+                  .filter { it.isNotEmpty() }
+                  .debounce(DEBOUNCE_TIME_MILLIS)
+                  .distinctUntilChanged()
+                  .flatMapLatest { query ->
+                    flow {
+                      _suggestionsUiState.value = SuggestionsUiState.Loading
 
-        getMangaSuggestionsUseCase(query)
-          .onSuccess { titleList ->
-            _suggestionsUiState.value = SuggestionsUiState.Success
-            emit(titleList)
-          }
-          .onFailure { throwable ->
-            _suggestionsUiState.value = SuggestionsUiState.Error(throwable.toFeatureError())
-            emit(emptyList())
-            Log.d(TAG, "suggestionList have error: ${throwable.stackTraceToString()}")
-          }
-      }
-    }
-    .stateIn(
-      scope = viewModelScope,
-      started = WhileSubscribed(WHILE_SUBSCRIBED_STOP_TIMEOUT_MILLIS),
-      initialValue = emptyList()
-    )
+                      getMangaSuggestionsUseCase(query)
+                              .onSuccess { titleList ->
+                                _suggestionsUiState.value = SuggestionsUiState.Success
+                                emit(titleList)
+                              }
+                              .onFailure { throwable ->
+                                _suggestionsUiState.value =
+                                        SuggestionsUiState.Error(throwable.toFeatureUiError())
+                                emit(emptyList())
+                                Log.d(
+                                        TAG,
+                                        "suggestionList have error: ${throwable.stackTraceToString()}"
+                                )
+                              }
+                    }
+                  }
+                  .stateIn(
+                          scope = viewModelScope,
+                          started = WhileSubscribed(WHILE_SUBSCRIBED_STOP_TIMEOUT_MILLIS),
+                          initialValue = emptyList()
+                  )
 
   fun fetchMangaListFirstPage() {
     viewModelScope.launch {
       _resultsUiState.value = BasePaginationUiState.FirstPageLoading
 
       searchMangaUseCase(query.value)
-        .onSuccess { mangaList ->
-          _resultsUiState.value = BasePaginationUiState.Content(
-            currentList = mangaList,
-            currentPage = FIRST_PAGE,
-            nextPageState = BaseNextPageState.fromPageSize(mangaList.size, MANGA_LIST_PER_PAGE_SIZE)
-          )
-        }
-        .onFailure { throwable ->
-          _resultsUiState.value = BasePaginationUiState.FirstPageError(throwable.toFeatureError())
-          Log.d(
-            TAG,
-            "fetchMangaListFirstPage have error: ${throwable.stackTraceToString()}"
-          )
-        }
+              .onSuccess { mangaList ->
+                _resultsUiState.value =
+                        BasePaginationUiState.Content(
+                                currentList = mangaList,
+                                currentPage = FIRST_PAGE,
+                                nextPageState =
+                                        BaseNextPageState.fromPageSize(
+                                                mangaList.size,
+                                                MANGA_LIST_PER_PAGE_SIZE
+                                        )
+                        )
+              }
+              .onFailure { throwable ->
+                _resultsUiState.value =
+                        BasePaginationUiState.FirstPageError(throwable.toFeatureUiError())
+                Log.d(TAG, "fetchMangaListFirstPage have error: ${throwable.stackTraceToString()}")
+              }
     }
   }
 
   fun fetchMangaListNextPage() {
     when (val currentResultsUiState = _resultsUiState.value) {
-      BasePaginationUiState.FirstPageLoading,
-      is BasePaginationUiState.FirstPageError,
-        -> return
-
+      BasePaginationUiState.FirstPageLoading, is BasePaginationUiState.FirstPageError, -> return
       is BasePaginationUiState.Content -> {
         when (currentResultsUiState.nextPageState) {
-          BaseNextPageState.LOADING,
-          BaseNextPageState.NO_MORE_ITEMS,
-            -> return
-
+          BaseNextPageState.LOADING, BaseNextPageState.NO_MORE_ITEMS, -> return
           BaseNextPageState.ERROR -> retryFetchMangaListNextPage()
-
           BaseNextPageState.IDLE -> fetchMangaListNextPageInternal(currentResultsUiState)
         }
       }
     }
   }
 
-  private fun fetchMangaListNextPageInternal(currentResultsUiState: BasePaginationUiState.Content<Manga>) {
+  private fun fetchMangaListNextPageInternal(
+          currentResultsUiState: BasePaginationUiState.Content<Manga>
+  ) {
     viewModelScope.launch {
-      _resultsUiState.value =
-        currentResultsUiState.copy(nextPageState = BaseNextPageState.LOADING)
+      _resultsUiState.value = currentResultsUiState.copy(nextPageState = BaseNextPageState.LOADING)
 
       val currentMangaList = currentResultsUiState.currentList
       val nextPage = currentResultsUiState.currentPage + 1
 
-      searchMangaUseCase(
-        query = query.value,
-        offset = currentMangaList.size
-      )
-        .onSuccess { nextMangaList ->
-          val allMangaList = currentMangaList + nextMangaList
-          _resultsUiState.value = currentResultsUiState.copy(
-            currentList = allMangaList,
-            currentPage = nextPage,
-            nextPageState = BaseNextPageState.fromPageSize(
-              nextMangaList.size,
-              MANGA_LIST_PER_PAGE_SIZE
-            )
-          )
-        }
-        .onFailure {
-          _resultsUiState.value =
-            currentResultsUiState.copy(nextPageState = BaseNextPageState.ERROR)
-          Log.d(TAG, "fetchMangaListNextPageInternal have error: ${it.stackTraceToString()}")
-        }
+      searchMangaUseCase(query = query.value, offset = currentMangaList.size)
+              .onSuccess { nextMangaList ->
+                val allMangaList = currentMangaList + nextMangaList
+                _resultsUiState.value =
+                        currentResultsUiState.copy(
+                                currentList = allMangaList,
+                                currentPage = nextPage,
+                                nextPageState =
+                                        BaseNextPageState.fromPageSize(
+                                                nextMangaList.size,
+                                                MANGA_LIST_PER_PAGE_SIZE
+                                        )
+                        )
+              }
+              .onFailure {
+                _resultsUiState.value =
+                        currentResultsUiState.copy(nextPageState = BaseNextPageState.ERROR)
+                Log.d(TAG, "fetchMangaListNextPageInternal have error: ${it.stackTraceToString()}")
+              }
     }
   }
 
@@ -150,15 +149,15 @@ class SearchViewModel @Inject constructor(
   }
 
   fun retry() {
-    if (_resultsUiState.value is BasePaginationUiState.FirstPageError)
-      fetchMangaListFirstPage()
+    if (_resultsUiState.value is BasePaginationUiState.FirstPageError) fetchMangaListFirstPage()
   }
 
   fun retryFetchMangaListNextPage() {
     val currentResultsUiState = _resultsUiState.value
     if (currentResultsUiState is BasePaginationUiState.Content &&
-      currentResultsUiState.nextPageState == BaseNextPageState.ERROR
-    ) fetchMangaListNextPageInternal(currentResultsUiState)
+                    currentResultsUiState.nextPageState == BaseNextPageState.ERROR
+    )
+            fetchMangaListNextPageInternal(currentResultsUiState)
   }
 
   companion object {

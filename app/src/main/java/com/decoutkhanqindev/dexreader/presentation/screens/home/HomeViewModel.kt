@@ -7,8 +7,8 @@ import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetLatestUpdateMangaL
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetNewReleaseMangaListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetTopRatedMangaListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetTrendingMangaListUseCase
-import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
-import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureError
+import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureUiError
+import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureUiError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -62,7 +62,7 @@ class HomeViewModel @Inject constructor(
         )
       } else {
         val throwable = results.firstOrNull { it.isFailure }?.exceptionOrNull()
-        _uiState.value = HomeUiState.Error(throwable?.toFeatureError() ?: FeatureError.Generic)
+        _uiState.value = HomeUiState.Error(throwable?.toFeatureUiError() ?: FeatureUiError.Generic)
         Log.e(TAG, "fetchMangaLists have error: ${throwable?.stackTraceToString()}")
       }
     }

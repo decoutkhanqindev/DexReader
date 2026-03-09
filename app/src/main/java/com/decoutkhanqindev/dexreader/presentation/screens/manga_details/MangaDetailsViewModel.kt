@@ -14,10 +14,10 @@ import com.decoutkhanqindev.dexreader.domain.usecase.favorites.ObserveIsFavorite
 import com.decoutkhanqindev.dexreader.domain.usecase.favorites.RemoveFromFavoritesUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.history.ObserveHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaDetailsUseCase
-import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
+import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureUiError
 import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguage
-import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguageName
-import com.decoutkhanqindev.dexreader.presentation.model.MangaLanguageName
+import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguageUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.MangaLanguageUiModel
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
@@ -58,14 +58,14 @@ constructor(
   val mangaChaptersUiState: StateFlow<BasePaginationUiState<Chapter>> =
     _mangaChaptersUiState.asStateFlow()
 
-  private val _chapterLanguage = MutableStateFlow(MangaLanguageName.ENGLISH)
-  val chapterLanguage: StateFlow<MangaLanguageName> = _chapterLanguage.asStateFlow()
+  private val _chapterLanguage = MutableStateFlow(MangaLanguageUiModel.ENGLISH)
+  val chapterLanguage: StateFlow<MangaLanguageUiModel> = _chapterLanguage.asStateFlow()
 
-  val availableLanguages: StateFlow<List<MangaLanguageName>> =
+  val availableLanguages: StateFlow<List<MangaLanguageUiModel>> =
     _mangaDetailsUiState
       .map { state ->
         if (state is MangaDetailsUiState.Success)
-          state.manga.availableLanguages.map { it.toMangaLanguageName() }
+          state.manga.availableLanguages.map { it.toMangaLanguageUiModel() }
         else emptyList()
       }
       .stateIn(
@@ -110,7 +110,7 @@ constructor(
       getMangaDetailsUseCase(mangaId = mangaIdFromArg)
         .onSuccess { _mangaDetailsUiState.value = MangaDetailsUiState.Success(manga = it) }
         .onFailure { throwable ->
-          _mangaDetailsUiState.value = MangaDetailsUiState.Error(throwable.toFeatureError())
+          _mangaDetailsUiState.value = MangaDetailsUiState.Error(throwable.toFeatureUiError())
           Log.d(TAG, "fetchMangaDetails have error: ${throwable.stackTraceToString()}")
         }
     }
@@ -157,7 +157,7 @@ constructor(
         }
         .onFailure { throwable ->
           _mangaChaptersUiState.value =
-            BasePaginationUiState.FirstPageError(throwable.toFeatureError())
+            BasePaginationUiState.FirstPageError(throwable.toFeatureUiError())
           Log.d(TAG, "fetchChapterListFirstPage have error: ${throwable.stackTraceToString()}")
         }
     }
@@ -408,7 +408,7 @@ constructor(
     _userId.value = id
   }
 
-  fun updateChapterLanguage(language: MangaLanguageName) {
+  fun updateChapterLanguage(language: MangaLanguageUiModel) {
     if (_chapterLanguage.value == language) return
     _chapterLanguage.value = language
     fetchFirstChapter()

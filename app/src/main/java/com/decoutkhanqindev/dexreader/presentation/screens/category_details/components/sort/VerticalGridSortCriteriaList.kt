@@ -5,26 +5,30 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortCriteriaOption
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortCriteriaUiModel
 
 @Composable
 fun VerticalGridSortCriteriaList(
-  selectedCriteria: MangaSortCriteriaOption,
-  onSelectedItem: (MangaSortCriteriaOption) -> Unit,
+  selectedItem: MangaSortCriteriaUiModel,
+  onItemClick: (MangaSortCriteriaUiModel) -> Unit,
   modifier: Modifier = Modifier,
 ) {
+  val lazyGridState = rememberLazyGridState()
+
   LazyVerticalGrid(
+    state = lazyGridState,
     columns = GridCells.Fixed(2),
     modifier = modifier
   ) {
-    items(MangaSortCriteriaOption.entries, key = { it.name }) { criteria ->
+    items(MangaSortCriteriaUiModel.entries, key = { it.name }) { criteria ->
       SortCriteriaItem(
-        isSelected = selectedCriteria == criteria,
-        criteria = criteria,
-        onSelectedItem = { onSelectedItem(criteria) },
+        isSelected = selectedItem == criteria,
+        item = criteria,
+        onClick = { onItemClick(criteria) },
         modifier = Modifier
           .padding(4.dp)
           .size(50.dp)

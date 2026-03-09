@@ -36,9 +36,10 @@ fun RegisterContent(
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
 
   Box(
-    modifier =
-      if (uiState.isLoading) modifier.blur(8.dp)
-      else modifier
+    modifier = modifier.let {
+      if (uiState.isLoading) it.blur(8.dp)
+      else it
+    }
   ) {
     AuthContent(
       modifier = Modifier.fillMaxSize(),

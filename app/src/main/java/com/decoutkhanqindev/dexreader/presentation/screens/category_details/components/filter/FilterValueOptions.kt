@@ -18,9 +18,9 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun <T> FilterValueOptions(
   options: List<T>,
-  selectedOptions: List<T>,
+  selectedItems: List<T>,
   nameResOf: (T) -> Int,
-  onSelectedOptions: (List<T>) -> Unit,
+  onItemsSelect: (List<T>) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Column(
@@ -32,18 +32,18 @@ fun <T> FilterValueOptions(
         modifier = Modifier
           .fillMaxWidth()
           .selectable(
-            selected = selectedOptions.contains(option),
+            selected = selectedItems.contains(option),
             onClick = {
-              if (selectedOptions.contains(option))
-                onSelectedOptions(selectedOptions - option)
-              else onSelectedOptions(selectedOptions + option)
+              if (selectedItems.contains(option))
+                onItemsSelect(selectedItems - option)
+              else onItemsSelect(selectedItems + option)
             },
             role = Role.Checkbox
           ),
         horizontalArrangement = Arrangement.spacedBy(space = 8.dp)
       ) {
         Checkbox(
-          checked = selectedOptions.contains(option),
+          checked = selectedItems.contains(option),
           onCheckedChange = null
         )
         Text(

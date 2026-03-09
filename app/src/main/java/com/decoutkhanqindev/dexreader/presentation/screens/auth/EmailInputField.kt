@@ -16,18 +16,18 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.error.UserError
+import com.decoutkhanqindev.dexreader.presentation.model.error.UserUiError
 
 @Composable
 fun EmailInputField(
-  email: String,
-  onEmailChange: (String) -> Unit,
-  error: UserError? = null,
+  value: String,
+  onValueChange: (String) -> Unit,
+  error: UserUiError? = null,
   modifier: Modifier = Modifier,
 ) {
   OutlinedTextField(
-    value = email,
-    onValueChange = onEmailChange,
+    value = value,
+    onValueChange = onValueChange,
     leadingIcon = {
       Icon(
         imageVector = Icons.Default.Email,

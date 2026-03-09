@@ -70,8 +70,8 @@ fun LoginForm(
       Spacer(modifier = Modifier.height(16.dp))
 
       EmailInputField(
-        email = uiState.email,
-        onEmailChange = { onEmailChange(it) },
+        value = uiState.email,
+        onValueChange = { onEmailChange(it) },
         error = uiState.emailError,
         modifier = Modifier.fillMaxWidth()
       )
@@ -82,8 +82,8 @@ fun LoginForm(
           .padding(bottom = 16.dp),
       ) {
         PasswordInputField(
-          password = uiState.password,
-          onPasswordChange = { onPasswordChange(it) },
+          value = uiState.password,
+          onValueChange = { onPasswordChange(it) },
           error = uiState.passwordError,
           modifier = Modifier.fillMaxWidth()
         )

@@ -14,33 +14,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.model.ThemeOption
+import com.decoutkhanqindev.dexreader.presentation.model.ThemeUiModel
 
 @Composable
 fun ThemeOptionItem(
-  isSelected: Boolean,
-  item: ThemeOption,
-  onClick: (ThemeOption) -> Unit,
-  modifier: Modifier = Modifier,
+        isSelected: Boolean,
+        item: ThemeUiModel,
+        onClick: (ThemeUiModel) -> Unit,
+        modifier: Modifier = Modifier,
 ) {
   Row(
-    modifier = modifier.clickable { onClick(item) },
-    verticalAlignment = Alignment.CenterVertically,
+          modifier = modifier.clickable { onClick(item) },
+          verticalAlignment = Alignment.CenterVertically,
   ) {
     RadioButton(
-      selected = isSelected,
-      onClick = { onClick(item) },
+            selected = isSelected,
+            onClick = { onClick(item) },
     )
     Text(
-      text = stringResource(item.nameRes),
-      style = MaterialTheme.typography.bodyLarge,
-      fontWeight = FontWeight.Bold,
-      modifier = Modifier.padding(end = 4.dp)
+            text = stringResource(item.nameRes),
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(end = 4.dp)
     )
-    Icon(
-      imageVector = item.icon,
-      contentDescription = item.name,
-      modifier = Modifier.size(24.dp)
-    )
+    Icon(imageVector = item.icon, contentDescription = item.name, modifier = Modifier.size(24.dp))
   }
 }

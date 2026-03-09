@@ -18,44 +18,40 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.ThemeOption
+import com.decoutkhanqindev.dexreader.presentation.model.ThemeUiModel
 
 @Composable
 fun ThemeOptionList(
-  selectedItem: ThemeOption,
-  onItemClick: (ThemeOption) -> Unit,
-  modifier: Modifier = Modifier,
+        selectedItem: ThemeUiModel,
+        onItemClick: (ThemeUiModel) -> Unit,
+        modifier: Modifier = Modifier,
 ) {
   Card(
-    shape = MaterialTheme.shapes.medium,
-    elevation = CardDefaults.cardElevation(8.dp),
-    modifier = modifier
+          shape = MaterialTheme.shapes.medium,
+          elevation = CardDefaults.cardElevation(8.dp),
+          modifier = modifier
   ) {
     LazyColumn(
-      verticalArrangement = Arrangement.Center,
-      horizontalAlignment = Alignment.CenterHorizontally,
-      modifier = Modifier
-        .padding(24.dp)
-        .width(165.dp)
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(24.dp).width(165.dp)
     ) {
       item {
         Text(
-          text = stringResource(R.string.theme),
-          style = MaterialTheme.typography.titleLarge,
-          fontWeight = FontWeight.ExtraBold,
-          textAlign = TextAlign.Center,
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 12.dp)
+                text = stringResource(R.string.theme),
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.ExtraBold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
         )
       }
 
-      items(ThemeOption.entries, key = { it }) {
+      items(ThemeUiModel.entries, key = { it }) {
         ThemeOptionItem(
-          isSelected = it == selectedItem,
-          item = it,
-          onClick = onItemClick,
-          modifier = Modifier.fillMaxWidth()
+                isSelected = it == selectedItem,
+                item = it,
+                onClick = onItemClick,
+                modifier = Modifier.fillMaxWidth()
         )
       }
     }

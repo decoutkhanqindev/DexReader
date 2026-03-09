@@ -25,26 +25,26 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.error.UserError
+import com.decoutkhanqindev.dexreader.presentation.model.error.UserUiError
 
 @Composable
 fun PasswordInputField(
-  isConfirmPassword: Boolean = false,
-  password: String,
-  onPasswordChange: (String) -> Unit,
-  error: UserError? = null,
+  isConfirmed: Boolean = false,
+  value: String,
+  onValueChange: (String) -> Unit,
+  error: UserUiError? = null,
   modifier: Modifier = Modifier,
 ) {
   var isShowPassword by rememberSaveable { mutableStateOf(false) }
 
   OutlinedTextField(
-    value = password,
-    onValueChange = onPasswordChange,
+    value = value,
+    onValueChange = onValueChange,
     leadingIcon = {
       Icon(
         imageVector = Icons.Default.Lock,
         contentDescription =
-          if (isConfirmPassword) stringResource(R.string.confirm_password)
+          if (isConfirmed) stringResource(R.string.confirm_password)
           else stringResource(R.string.password),
         tint = MaterialTheme.colorScheme.onPrimaryContainer,
         modifier = Modifier.size(24.dp)
@@ -53,7 +53,7 @@ fun PasswordInputField(
     label = {
       Text(
         text =
-          if (isConfirmPassword) stringResource(R.string.confirm_password)
+          if (isConfirmed) stringResource(R.string.confirm_password)
           else stringResource(R.string.password),
         style = MaterialTheme.typography.bodyLarge
       )

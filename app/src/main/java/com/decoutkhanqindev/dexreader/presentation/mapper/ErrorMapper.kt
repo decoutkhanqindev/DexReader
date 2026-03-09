@@ -3,34 +3,34 @@ package com.decoutkhanqindev.dexreader.presentation.mapper
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.exception.InfrastructureException
 import com.decoutkhanqindev.dexreader.domain.exception.ValidationException
-import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureError
-import com.decoutkhanqindev.dexreader.presentation.model.error.UserError
+import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureUiError
+import com.decoutkhanqindev.dexreader.presentation.model.error.UserUiError
 
 object ErrorMapper {
-  fun Throwable.toFeatureError(): FeatureError =
+  fun Throwable.toFeatureUiError(): FeatureUiError =
     when (this) {
-      is InfrastructureException.NetworkUnavailable -> FeatureError.NetworkUnavailable
-      is InfrastructureException.ServerUnavailable -> FeatureError.ServerUnavailable
-      is BusinessException.Resource.AccessDenied -> FeatureError.AccessDenied
-      is BusinessException.Resource.MangaNotFound -> FeatureError.MangaNotFound
-      is BusinessException.Resource.ChapterNotFound -> FeatureError.ChapterNotFound
-      is BusinessException.Resource.ChapterDataNotFound -> FeatureError.ChapterNotFound
-      else -> FeatureError.Generic
+      is InfrastructureException.NetworkUnavailable -> FeatureUiError.NetworkUnavailable
+      is InfrastructureException.ServerUnavailable -> FeatureUiError.ServerUnavailable
+      is BusinessException.Resource.AccessDenied -> FeatureUiError.AccessDenied
+      is BusinessException.Resource.MangaNotFound -> FeatureUiError.MangaNotFound
+      is BusinessException.Resource.ChapterNotFound -> FeatureUiError.ChapterNotFound
+      is BusinessException.Resource.ChapterDataNotFound -> FeatureUiError.ChapterNotFound
+      else -> FeatureUiError.Generic
     }
 
-  fun Throwable.toUserError(): UserError? =
+  fun Throwable.toUserUiError(): UserUiError? =
     when (this) {
-      is ValidationException.Email.Empty -> UserError.Email.Required
-      is ValidationException.Email.Invalid -> UserError.Email.Invalid
-      is ValidationException.Password.Empty -> UserError.Password.Required
-      is ValidationException.Password.TooWeak -> UserError.Password.Weak
-      is ValidationException.ConfirmPassword.Empty -> UserError.ConfirmPassword.Required
-      is ValidationException.ConfirmPassword.Mismatch -> UserError.ConfirmPassword.DoesNotMatch
-      is ValidationException.Name.Empty -> UserError.Name.Required
-      is BusinessException.Auth.UserNotFound -> UserError.NotFound
-      is BusinessException.Auth.UserAlreadyExists -> UserError.Email.AlreadyInUse
-      is BusinessException.Auth.InvalidCredentials -> UserError.Password.Incorrect
-      is BusinessException.Auth.RegistrationFailed -> UserError.RegistrationFailed
+      is ValidationException.Email.Empty -> UserUiError.Email.Required
+      is ValidationException.Email.Invalid -> UserUiError.Email.Invalid
+      is ValidationException.Password.Empty -> UserUiError.Password.Required
+      is ValidationException.Password.TooWeak -> UserUiError.Password.Weak
+      is ValidationException.ConfirmPassword.Empty -> UserUiError.ConfirmPassword.Required
+      is ValidationException.ConfirmPassword.Mismatch -> UserUiError.ConfirmPassword.DoesNotMatch
+      is ValidationException.Name.Empty -> UserUiError.Name.Required
+      is BusinessException.Auth.UserNotFound -> UserUiError.NotFound
+      is BusinessException.Auth.UserAlreadyExists -> UserUiError.Email.AlreadyInUse
+      is BusinessException.Auth.InvalidCredentials -> UserUiError.Password.Incorrect
+      is BusinessException.Auth.RegistrationFailed -> UserUiError.RegistrationFailed
       else -> null
     }
 }

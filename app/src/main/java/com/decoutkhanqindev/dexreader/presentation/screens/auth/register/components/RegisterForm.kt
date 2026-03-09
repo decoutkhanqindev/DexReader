@@ -70,30 +70,30 @@ fun RegisterForm(
       Spacer(modifier = Modifier.height(16.dp))
 
       EmailInputField(
-        email = uiState.email,
-        onEmailChange = { onEmailChange(it) },
+        value = uiState.email,
+        onValueChange = { onEmailChange(it) },
         error = uiState.emailError,
         modifier = Modifier.fillMaxWidth()
       )
 
       PasswordInputField(
-        password = uiState.password,
-        onPasswordChange = { onPasswordChange(it) },
+        value = uiState.password,
+        onValueChange = { onPasswordChange(it) },
         error = uiState.passwordError,
         modifier = Modifier.fillMaxWidth()
       )
 
       PasswordInputField(
-        isConfirmPassword = true,
-        password = uiState.confirmPassword,
-        onPasswordChange = { onConfirmPasswordChange(it) },
+        isConfirmed = true,
+        value = uiState.confirmPassword,
+        onValueChange = { onConfirmPasswordChange(it) },
         error = uiState.confirmPasswordError,
         modifier = Modifier.fillMaxWidth()
       )
 
       NameInputField(
-        name = uiState.name,
-        onNameChange = { onNameChange(it) },
+        value = uiState.name,
+        onValueChange = { onNameChange(it) },
         error = uiState.nameError,
         modifier = Modifier
           .fillMaxWidth()

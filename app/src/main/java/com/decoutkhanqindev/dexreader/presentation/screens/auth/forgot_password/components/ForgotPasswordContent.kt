@@ -33,9 +33,10 @@ fun ForgotPasswordContent(
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
 
   Box(
-    modifier =
-      if (uiState.isLoading) modifier.blur(8.dp)
-      else modifier
+    modifier = modifier.let {
+      if (uiState.isLoading) it.blur(8.dp)
+      else it
+    }
   ) {
     AuthContent(
       modifier = Modifier.fillMaxSize(),
@@ -49,33 +50,33 @@ fun ForgotPasswordContent(
         )
       }
     )
-  }
 
-  when {
-    uiState.isLoading -> LoadingScreen(modifier = modifier)
+    when {
+      uiState.isLoading -> LoadingScreen(modifier = modifier)
 
-    uiState.isError -> {
-      if (isShowErrorDialog) {
-        NotificationDialog(
-          title = stringResource(R.string.submit_reset_password_failed_please_try_again),
-          onDismissClick = { isShowErrorDialog = false },
-          onConfirmClick = onRetry,
-        )
+      uiState.isError -> {
+        if (isShowErrorDialog) {
+          NotificationDialog(
+            title = stringResource(R.string.submit_reset_password_failed_please_try_again),
+            onDismissClick = { isShowErrorDialog = false },
+            onConfirmClick = onRetry,
+          )
+        }
       }
-    }
 
-    uiState.isSuccess -> {
-      if (isShowSuccessDialog) {
-        NotificationDialog(
-          icon = Icons.Default.Done,
-          title = stringResource(R.string.submit_reset_password_successful),
-          isEnableDismiss = false,
-          confirm = stringResource(R.string.ok),
-          onConfirmClick = {
-            isShowSuccessDialog = false
-            onSubmitSuccess()
-          },
-        )
+      uiState.isSuccess -> {
+        if (isShowSuccessDialog) {
+          NotificationDialog(
+            icon = Icons.Default.Done,
+            title = stringResource(R.string.submit_reset_password_successful),
+            isEnableDismiss = false,
+            confirm = stringResource(R.string.ok),
+            onConfirmClick = {
+              isShowSuccessDialog = false
+              onSubmitSuccess()
+            },
+          )
+        }
       }
     }
   }

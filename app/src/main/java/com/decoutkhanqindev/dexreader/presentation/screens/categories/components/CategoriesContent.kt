@@ -13,7 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.model.CategoryTypeOption
+import com.decoutkhanqindev.dexreader.presentation.model.CategoryTypeUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.categories.CategoriesUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
@@ -21,7 +21,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.states.Loading
 @Composable
 fun CategoriesContent(
   uiState: CategoriesUiState,
-  onSelectedCategory: (String, String) -> Unit,
+  onCategoryClick: (String, String) -> Unit,
   onRetry: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -47,9 +47,9 @@ fun CategoriesContent(
       var expandedType by rememberSaveable(
         stateSaver = Saver(
           save = { it?.name },
-          restore = { it?.let { name -> CategoryTypeOption.valueOf(name) } }
+          restore = { CategoryTypeUiModel.valueOf(it) }
         )
-      ) { mutableStateOf<CategoryTypeOption?>(null) }
+      ) { mutableStateOf<CategoryTypeUiModel?>(null) }
 
       LazyColumn(
         modifier = modifier
@@ -65,7 +65,7 @@ fun CategoriesContent(
             onExpandClick = { expandedType = if (expandedType == type) null else type },
             type = type,
             categoryList = uiState.categoryMap[type] ?: emptyList(),
-            onSelectedCategory = onSelectedCategory,
+            onCategoryClick = onCategoryClick,
             modifier = Modifier
               .fillMaxWidth()
               .padding(bottom = 12.dp)

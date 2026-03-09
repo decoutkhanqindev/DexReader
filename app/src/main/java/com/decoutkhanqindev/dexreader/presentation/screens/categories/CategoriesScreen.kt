@@ -20,7 +20,7 @@ fun CategoriesScreen(
   onSignInClick: () -> Unit,
   onMenuItemClick: (String) -> Unit,
   onSearchClick: () -> Unit,
-  onSelectedCategory: (String, String) -> Unit,
+  onCategoryClick: (String, String) -> Unit,
   viewModel: CategoriesViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
 ) {
@@ -38,7 +38,7 @@ fun CategoriesScreen(
     content = {
       CategoriesContent(
         uiState = uiState,
-        onSelectedCategory = onSelectedCategory,
+        onCategoryClick = onCategoryClick,
         onRetry = viewModel::retry,
         modifier = Modifier.fillMaxSize()
       )

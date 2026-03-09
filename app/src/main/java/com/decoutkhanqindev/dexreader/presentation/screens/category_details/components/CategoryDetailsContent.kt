@@ -12,10 +12,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.domain.model.Manga
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaContentRatingFilterOption
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaStatusFilterOption
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortCriteriaOption
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortOrderOption
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaContentRatingFilterUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaStatusFilterUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortCriteriaUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortOrderUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailsCriteriaUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.filter.FilterBottomSheet
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.sort.SortBottomSheet
@@ -31,21 +31,21 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPage
 
 @Composable
 fun CategoryDetailsContent(
-  categoryDetailsUiState: BasePaginationUiState<Manga>,
-  categoryCriteriaUiState: CategoryDetailsCriteriaUiState,
+  detailsUiState: BasePaginationUiState<Manga>,
+  criteriaUiState: CategoryDetailsCriteriaUiState,
   isSortBottomSheetVisible: Boolean,
   onSortSheetDismiss: () -> Unit,
   onSortApplyClick: (
-    sortCriteria: MangaSortCriteriaOption,
-    sortOrder: MangaSortOrderOption,
+    sortCriteria: MangaSortCriteriaUiModel,
+    sortOrder: MangaSortOrderUiModel,
   ) -> Unit,
   isFilterBottomSheetVisible: Boolean,
   onFilterSheetDismiss: () -> Unit,
   onFilterApplyClick: (
-    statusFilter: List<MangaStatusFilterOption>,
-    contentRatingFilter: List<MangaContentRatingFilterOption>,
+    statusFilter: List<MangaStatusFilterUiModel>,
+    contentRatingFilter: List<MangaContentRatingFilterUiModel>,
   ) -> Unit,
-  onSelectedManga: (String) -> Unit,
+  onMangaClick: (String) -> Unit,
   onFetchMangaListNextPage: () -> Unit,
   onRetryFetchMangaListNextPage: () -> Unit,
   onRetry: () -> Unit,
@@ -56,7 +56,7 @@ fun CategoryDetailsContent(
   if (isSortBottomSheetVisible) {
     SortBottomSheet(
       onDismiss = onSortSheetDismiss,
-      criteriaState = categoryCriteriaUiState,
+      criteriaState = criteriaUiState,
       onApplyClick = { criteriaId, orderId ->
         onSortApplyClick(criteriaId, orderId)
       },
@@ -67,7 +67,7 @@ fun CategoryDetailsContent(
   if (isFilterBottomSheetVisible) {
     FilterBottomSheet(
       onDismiss = onFilterSheetDismiss,
-      criteriaState = categoryCriteriaUiState,
+      criteriaState = criteriaUiState,
       onApplyClick = { statusValueIds, contentRatingValueIds ->
         onFilterApplyClick(statusValueIds, contentRatingValueIds)
       },
@@ -75,13 +75,13 @@ fun CategoryDetailsContent(
     )
   }
 
-  when (categoryDetailsUiState) {
+  when (detailsUiState) {
     BasePaginationUiState.FirstPageLoading -> LoadingScreen(modifier = modifier)
 
     is BasePaginationUiState.FirstPageError -> {
       if (isShowErrorDialog) {
         NotificationDialog(
-          title = stringResource(categoryDetailsUiState.error.messageRes),
+          title = stringResource(detailsUiState.error.messageRes),
           onDismissClick = { isShowErrorDialog = false },
           onConfirmClick = {
             isShowErrorDialog = false
@@ -92,12 +92,12 @@ fun CategoryDetailsContent(
     }
 
     is BasePaginationUiState.Content<Manga> -> {
-      val mangaList = categoryDetailsUiState.currentList
-      val nextPageState = categoryDetailsUiState.nextPageState
+      val mangaList = detailsUiState.currentList
+      val nextPageState = detailsUiState.nextPageState
 
       VerticalGridMangaList(
         mangaList = mangaList,
-        onSelectedManga = { onSelectedManga(it.id) },
+        onSelectedManga = { onMangaClick(it.id) },
         loadMoreContent = {
           when (nextPageState) {
             BaseNextPageState.LOADING -> NextPageLoadingIndicator(

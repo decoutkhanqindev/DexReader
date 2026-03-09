@@ -1,11 +1,11 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.common.base
 
 import androidx.compose.runtime.Immutable
-import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureError
+import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureUiError
 
 sealed interface BasePaginationUiState<out T> {
   data object FirstPageLoading : BasePaginationUiState<Nothing>
-  data class FirstPageError(val error: FeatureError = FeatureError.Generic) :
+  data class FirstPageError(val error: FeatureUiError = FeatureUiError.Generic) :
     BasePaginationUiState<Nothing>
 
   @Immutable

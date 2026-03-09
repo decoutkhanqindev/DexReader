@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.user.SendResetPasswordUseCase
-import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toUserError
-import com.decoutkhanqindev.dexreader.presentation.model.error.UserError
+import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toUserUiError
+import com.decoutkhanqindev.dexreader.presentation.model.error.UserUiError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -36,8 +36,8 @@ class ForgotPasswordViewModel @Inject constructor(
         }
         .onFailure { throwable ->
           _uiState.update {
-            when (val error = throwable.toUserError()) {
-              is UserError.Email -> it.copy(isLoading = false, emailError = error)
+            when (val error = throwable.toUserUiError()) {
+              is UserUiError.Email -> it.copy(isLoading = false, emailError = error)
               else -> it.copy(isLoading = false, isSuccess = false, isError = true)
             }
           }

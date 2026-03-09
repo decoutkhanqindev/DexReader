@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.user.LoginUseCase
-import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toUserError
-import com.decoutkhanqindev.dexreader.presentation.model.error.UserError
+import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toUserUiError
+import com.decoutkhanqindev.dexreader.presentation.model.error.UserUiError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,10 +39,10 @@ class LoginViewModel @Inject constructor(
         }
         .onFailure { throwable ->
           _uiState.update {
-            when (val error = throwable.toUserError()) {
-              is UserError.NotFound -> it.copy(isLoading = false, userError = error)
-              is UserError.Email -> it.copy(isLoading = false, emailError = error)
-              is UserError.Password -> it.copy(isLoading = false, passwordError = error)
+            when (val error = throwable.toUserUiError()) {
+              is UserUiError.NotFound -> it.copy(isLoading = false, userError = error)
+              is UserUiError.Email -> it.copy(isLoading = false, emailError = error)
+              is UserUiError.Password -> it.copy(isLoading = false, passwordError = error)
               else -> it.copy(isLoading = false, isSuccess = false, isError = true)
             }
           }

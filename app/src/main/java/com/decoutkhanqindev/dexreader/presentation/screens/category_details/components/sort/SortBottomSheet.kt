@@ -19,8 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortCriteriaOption
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortOrderOption
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortCriteriaUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortOrderUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailsCriteriaUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
 
@@ -30,8 +30,8 @@ fun SortBottomSheet(
   onDismiss: () -> Unit,
   criteriaState: CategoryDetailsCriteriaUiState,
   onApplyClick: (
-    sortCriteria: MangaSortCriteriaOption,
-    sortOrder: MangaSortOrderOption,
+    sortCriteria: MangaSortCriteriaUiModel,
+    sortOrder: MangaSortOrderUiModel,
   ) -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -39,7 +39,7 @@ fun SortBottomSheet(
   var selectedCriteria by rememberSaveable(
     stateSaver = Saver(
       save = { it.name },
-      restore = { MangaSortCriteriaOption.valueOf(it) }
+      restore = { MangaSortCriteriaUiModel.valueOf(it) }
     )
   ) {
     mutableStateOf(criteriaState.sortCriteria)
@@ -47,7 +47,7 @@ fun SortBottomSheet(
   var selectedOrder by rememberSaveable(
     stateSaver = Saver(
       save = { it.name },
-      restore = { MangaSortOrderOption.valueOf(it) }
+      restore = { MangaSortOrderUiModel.valueOf(it) }
     )
   ) {
     mutableStateOf(criteriaState.sortOrder)
@@ -69,16 +69,16 @@ fun SortBottomSheet(
     )
 
     VerticalGridSortCriteriaList(
-      selectedCriteria = selectedCriteria,
-      onSelectedItem = { selectedCriteria = it },
+      selectedItem = selectedCriteria,
+      onItemClick = { selectedCriteria = it },
       modifier = Modifier
         .fillMaxWidth()
         .padding(bottom = 12.dp)
     )
 
     SortOrderOptions(
-      selectedOrder = selectedOrder,
-      onSelectedOption = { selectedOrder = it },
+      selectedItem = selectedOrder,
+      onItemClick = { selectedOrder = it },
       modifier = Modifier
         .fillMaxWidth()
         .padding(bottom = 24.dp)

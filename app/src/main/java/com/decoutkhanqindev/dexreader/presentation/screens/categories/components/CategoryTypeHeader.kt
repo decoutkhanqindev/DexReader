@@ -24,11 +24,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.CategoryTypeOption
+import com.decoutkhanqindev.dexreader.presentation.model.CategoryTypeUiModel
 
 @Composable
 fun CategoryTypeHeader(
-  type: CategoryTypeOption,
+  type: CategoryTypeUiModel,
   isExpanded: Boolean,
   onExpandClick: () -> Unit,
   modifier: Modifier = Modifier,

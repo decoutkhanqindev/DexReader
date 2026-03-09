@@ -18,12 +18,12 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseDetai
 fun CategoryDetailsScreen(
   onNavigateBack: () -> Unit,
   onSearchClick: () -> Unit,
-  onSelectedManga: (String) -> Unit,
+  onMangaClick: (String) -> Unit,
   viewModel: CategoryDetailsViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
 ) {
-  val categoryDetailsUiState by viewModel.categoryDetailsUiState.collectAsStateWithLifecycle()
-  val categoryCriteriaUiState by viewModel.categoryCriteriaUiState.collectAsStateWithLifecycle()
+  val detailsUiState by viewModel.categoryDetailsUiState.collectAsStateWithLifecycle()
+  val criteriaUiState by viewModel.categoryCriteriaUiState.collectAsStateWithLifecycle()
   val categoryTitle = viewModel.categoryTitleFromArg
   var isShowSortBottomSheet by rememberSaveable { mutableStateOf(false) }
   var isShowFilterBottomSheet by rememberSaveable { mutableStateOf(false) }
@@ -41,8 +41,8 @@ fun CategoryDetailsScreen(
     },
     content = {
       CategoryDetailsContent(
-        categoryDetailsUiState = categoryDetailsUiState,
-        categoryCriteriaUiState = categoryCriteriaUiState,
+        detailsUiState = detailsUiState,
+        criteriaUiState = criteriaUiState,
         isSortBottomSheetVisible = isShowSortBottomSheet,
         onSortSheetDismiss = { isShowSortBottomSheet = false },
         onSortApplyClick = { sortCriteria, sortOrder ->
@@ -55,7 +55,7 @@ fun CategoryDetailsScreen(
           viewModel.updateFilteringCriteria(statusFilter, contentRatingFilter)
           isShowFilterBottomSheet = false
         },
-        onSelectedManga = onSelectedManga,
+        onMangaClick = onMangaClick,
         onFetchMangaListNextPage = viewModel::fetchMangaListByCategoryNextPage,
         onRetryFetchMangaListNextPage = viewModel::retryFetchMangaListByCategoryNextPage,
         onRetry = viewModel::retry,

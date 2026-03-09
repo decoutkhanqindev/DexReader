@@ -3,7 +3,7 @@ package com.decoutkhanqindev.dexreader.presentation.model
 import androidx.annotation.StringRes
 import com.decoutkhanqindev.dexreader.R
 
-enum class MangaLanguageName(@param:StringRes val value: Int) {
+enum class MangaLanguageUiModel(@param:StringRes val value: Int) {
   ENGLISH(R.string.lang_english),
   AFRIKAANS(R.string.lang_afrikaans),
   ALBANIAN(R.string.lang_albanian),

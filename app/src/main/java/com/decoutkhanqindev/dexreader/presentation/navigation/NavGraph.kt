@@ -103,7 +103,7 @@ fun NavGraph(
           onSearchClick = {
             navHostController.navigate(route = NavDestination.SearchDestination.route)
           },
-          onSelectedCategory = { categoryId, categoryTitle ->
+          onCategoryClick = { categoryId, categoryTitle ->
             navHostController.navigate(
               route = "${NavDestination.CategoryDetailsDestination.route}/$categoryId/$categoryTitle"
             )
@@ -135,7 +135,7 @@ fun NavGraph(
           onSearchClick = {
             navHostController.navigate(route = NavDestination.SearchDestination.route)
           },
-          onSelectedManga = { mangaId ->
+          onMangaClick = { mangaId ->
             navHostController.navigate(
               route = "${NavDestination.MangaDetailsDestination.route}/$mangaId"
             )

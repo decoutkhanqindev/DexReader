@@ -10,8 +10,8 @@ import com.decoutkhanqindev.dexreader.domain.model.Category
 
 @Composable
 fun CategoryList(
-  categoryList: List<Category>,
-  onSelectedCategory: (String, String) -> Unit,
+  items: List<Category>,
+  onItemClick: (String, String) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   FlowRow(
@@ -19,10 +19,10 @@ fun CategoryList(
     horizontalArrangement = Arrangement.spacedBy(8.dp),
     verticalArrangement = Arrangement.spacedBy(8.dp),
   ) {
-    categoryList.forEach { category ->
+    items.forEach {
       CategoryItem(
-        category = category,
-        onSelectedCategory = onSelectedCategory,
+        item = it,
+        onClick = onItemClick,
         modifier = Modifier.wrapContentWidth()
       )
     }

@@ -10,11 +10,11 @@ import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toManga
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortCriteria
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortOrder
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaStatusFilter
-import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaContentRatingFilterOption
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaStatusFilterOption
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortCriteriaOption
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortOrderOption
+import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureUiError
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaContentRatingFilterUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaStatusFilterUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortCriteriaUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortOrderUiModel
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
@@ -71,7 +71,7 @@ class CategoryDetailsViewModel @Inject constructor(
         }
         .onFailure { throwable ->
           _categoryDetailsUiState.value =
-            BasePaginationUiState.FirstPageError(throwable.toFeatureError())
+            BasePaginationUiState.FirstPageError(throwable.toFeatureUiError())
           Log.d(
             TAG,
             "fetchMangaListByCategoryFirstPage have error: ${throwable.stackTraceToString()}"
@@ -141,8 +141,8 @@ class CategoryDetailsViewModel @Inject constructor(
   }
 
   fun updateSortingCriteria(
-    sortCriteria: MangaSortCriteriaOption,
-    sortOrder: MangaSortOrderOption,
+    sortCriteria: MangaSortCriteriaUiModel,
+    sortOrder: MangaSortOrderUiModel,
   ) {
     val current = _categoryCriteriaUiState.value
     if (current.sortCriteria == sortCriteria && current.sortOrder == sortOrder) return
@@ -154,8 +154,8 @@ class CategoryDetailsViewModel @Inject constructor(
   }
 
   fun updateFilteringCriteria(
-    statusFilter: List<MangaStatusFilterOption>,
-    contentRatingFilter: List<MangaContentRatingFilterOption>,
+    statusFilter: List<MangaStatusFilterUiModel>,
+    contentRatingFilter: List<MangaContentRatingFilterUiModel>,
   ) {
     val current = _categoryCriteriaUiState.value
     if (current.statusFilter == statusFilter && current.contentRatingFilter == contentRatingFilter) return

@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.reader
 
 import androidx.compose.runtime.Immutable
 import com.decoutkhanqindev.dexreader.domain.model.ChapterPages
-import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureError
+import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureUiError
 
 @Immutable
 data class ChapterDetailsUiState(
@@ -13,7 +13,7 @@ data class ChapterDetailsUiState(
 
 sealed interface ChapterPagesUiState {
   data object Loading : ChapterPagesUiState
-  data class Error(val error: FeatureError = FeatureError.Generic) : ChapterPagesUiState
+  data class Error(val error: FeatureUiError = FeatureUiError.Generic) : ChapterPagesUiState
 
   @Immutable
   data class Success(
