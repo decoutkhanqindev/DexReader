@@ -11,12 +11,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.domain.model.Manga
+import com.decoutkhanqindev.dexreader.presentation.model.MangaUiModel
 
 
 @Composable
 fun MangaSummarySection(
-  manga: Manga,
+  manga: MangaUiModel,
   onSelectedCategory: (
     categoryId: String,
     categoryTitle: String,

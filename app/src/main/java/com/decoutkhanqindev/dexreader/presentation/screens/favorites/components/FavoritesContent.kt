@@ -12,8 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.data.mapper.FavoriteMangaMapper.toManga
-import com.decoutkhanqindev.dexreader.domain.model.FavoriteManga
+import com.decoutkhanqindev.dexreader.presentation.model.MangaUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
@@ -27,7 +26,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPage
 
 @Composable
 fun FavoritesContent(
-  uiState: BasePaginationUiState<FavoriteManga>,
+  uiState: BasePaginationUiState<MangaUiModel>,
   onSelectedManga: (String) -> Unit,
   onObserveFavoriteMangaListNextPage: () -> Unit,
   onRetryObserveFavoriteMangaListNextPage: () -> Unit,
@@ -52,7 +51,7 @@ fun FavoritesContent(
       }
     }
 
-    is BasePaginationUiState.Content<FavoriteManga> -> {
+    is BasePaginationUiState.Content<MangaUiModel> -> {
       val favoriteMangaList = uiState.currentList
       val nextPageState = uiState.nextPageState
 
@@ -63,7 +62,7 @@ fun FavoritesContent(
         )
       } else {
         VerticalGridMangaList(
-          mangaList = favoriteMangaList.map { it.toManga() },
+          mangaList = favoriteMangaList,
           onSelectedManga = { onSelectedManga(it.id) },
           loadMoreContent = {
             when (nextPageState) {

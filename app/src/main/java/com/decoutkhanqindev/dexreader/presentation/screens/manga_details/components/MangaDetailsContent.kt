@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components
 
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
@@ -25,9 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.domain.model.Chapter
-import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
+import com.decoutkhanqindev.dexreader.presentation.model.ChapterUiModel
 import com.decoutkhanqindev.dexreader.presentation.model.MangaLanguageUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.ReadingHistoryUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.MoveToTopButton
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
@@ -37,15 +38,17 @@ import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.compone
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.chapters.MangaChaptersSection
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.info.MangaInfoSection
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.summary.MangaSummarySection
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 
 @Composable
 fun MangaDetailsContent(
   mangaDetailsUiState: MangaDetailsUiState,
-  mangaChaptersUiState: BasePaginationUiState<Chapter>,
-  readingHistoryList: List<ReadingHistory> = emptyList(),
-  startedChapter: Chapter? = null,
-  continueChapter: ReadingHistory? = null,
+  mangaChaptersUiState: BasePaginationUiState<ChapterUiModel>,
+  readingHistoryList: ImmutableList<ReadingHistoryUiModel> = persistentListOf(),
+  startedChapterId: String? = null,
+  continueChapter: ReadingHistoryUiModel? = null,
   onReadingClick: (
     chapterId: String,
     lastReadPage: Int,
@@ -54,7 +57,7 @@ fun MangaDetailsContent(
   isFavorite: Boolean,
   onFavoriteClick: () -> Unit,
   chapterLanguage: MangaLanguageUiModel,
-  availableLanguages: List<MangaLanguageUiModel>,
+  availableLanguages: ImmutableList<MangaLanguageUiModel>,
   onSelectedLanguage: (MangaLanguageUiModel) -> Unit,
   onSelectedCategory: (
     categoryId: String,
@@ -115,7 +118,7 @@ fun MangaDetailsContent(
             .fillMaxSize()
             .background(
               brush = Brush.verticalGradient(
-                colors = listOf(
+                colors = persistentListOf(
                   MaterialTheme.colorScheme.surface.copy(0.8f),
                   MaterialTheme.colorScheme.surface.copy(1f)
                 )
@@ -134,7 +137,8 @@ fun MangaDetailsContent(
 
           item {
             ActionButtonsSection(
-              startedChapter = startedChapter,
+              startedChapterId = startedChapterId,
+              mangaId = manga.id,
               continueChapter = continueChapter,
               onReadingClick = onReadingClick,
               isFavorite = isFavorite,

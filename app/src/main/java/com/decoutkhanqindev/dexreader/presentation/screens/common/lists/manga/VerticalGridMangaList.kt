@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.common.lists.manga
 
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
@@ -23,14 +24,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.domain.model.Manga
+import com.decoutkhanqindev.dexreader.presentation.model.MangaUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.MoveToTopButton
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 
 @Composable
 fun VerticalGridMangaList(
-  mangaList: List<Manga>,
-  onSelectedManga: (Manga) -> Unit,
+  mangaList: ImmutableList<MangaUiModel>,
+  onSelectedManga: (MangaUiModel) -> Unit,
   loadMoreContent: @Composable () -> Unit,
   modifier: Modifier = Modifier,
 ) {

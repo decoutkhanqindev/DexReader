@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.filter
 
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,13 +15,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun <T> FilterValueOptions(
-  options: List<T>,
-  selectedItems: List<T>,
+  options: ImmutableList<T>,
+  selectedItems: ImmutableList<T>,
   nameResOf: (T) -> Int,
-  onItemsSelect: (List<T>) -> Unit,
+  onItemsSelect: (ImmutableList<T>) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Column(
@@ -35,8 +38,8 @@ fun <T> FilterValueOptions(
             selected = selectedItems.contains(option),
             onClick = {
               if (selectedItems.contains(option))
-                onItemsSelect(selectedItems - option)
-              else onItemsSelect(selectedItems + option)
+                onItemsSelect(selectedItems.toPersistentList().remove(option))
+              else onItemsSelect(selectedItems.toPersistentList().add(option))
             },
             role = Role.Checkbox
           ),

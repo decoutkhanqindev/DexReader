@@ -1,10 +1,13 @@
 package com.decoutkhanqindev.dexreader.presentation.mapper
 
+
 import com.decoutkhanqindev.dexreader.domain.model.FavoriteManga
 import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.presentation.mapper.CategoryUiMapper.toCategoryUiModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguageUiModel
 import com.decoutkhanqindev.dexreader.presentation.model.MangaUiModel
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
 object MangaUiMapper {
   fun Manga.toMangaUiModel(): MangaUiModel = MangaUiModel(
@@ -14,10 +17,10 @@ object MangaUiMapper {
     description = description,
     author = author,
     artist = artist,
-    categories = categories.map { it.toCategoryUiModel() },
+    categories = categories.map { it.toCategoryUiModel() }.toPersistentList(),
     status = status.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() },
     year = year,
-    availableLanguages = availableLanguages.map { it.toMangaLanguageUiModel() },
+    availableLanguages = availableLanguages.map { it.toMangaLanguageUiModel() }.toPersistentList(),
     latestChapter = latestChapter,
     updatedAt = updatedAt,
   )
@@ -29,10 +32,10 @@ object MangaUiMapper {
     description = "",
     author = author,
     artist = "",
-    categories = emptyList(),
+    categories = persistentListOf(),
     status = status.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() },
     year = "",
-    availableLanguages = emptyList(),
+    availableLanguages = persistentListOf(),
     latestChapter = "",
     updatedAt = "",
   )

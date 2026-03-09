@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.filter
 
+
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -11,13 +12,15 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaContentRatingFilterUiModel
 import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaStatusFilterUiModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun VerticalGridFilterCriteriaList(
-  selectedStatusOptions: List<MangaStatusFilterUiModel>,
-  onStatusOptionsSelect: (List<MangaStatusFilterUiModel>) -> Unit,
-  selectedContentRatingOptions: List<MangaContentRatingFilterUiModel>,
-  onContentRatingOptionsSelect: (List<MangaContentRatingFilterUiModel>) -> Unit,
+  selectedStatusOptions: ImmutableList<MangaStatusFilterUiModel>,
+  onStatusOptionsSelect: (ImmutableList<MangaStatusFilterUiModel>) -> Unit,
+  selectedContentRatingOptions: ImmutableList<MangaContentRatingFilterUiModel>,
+  onContentRatingOptionsSelect: (ImmutableList<MangaContentRatingFilterUiModel>) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   LazyVerticalGrid(
@@ -27,7 +30,7 @@ fun VerticalGridFilterCriteriaList(
     item {
       FilterCriteriaItem(
         title = stringResource(R.string.filter_status),
-        items = MangaStatusFilterUiModel.entries,
+        items = MangaStatusFilterUiModel.entries.toPersistentList(),
         selectedItems = selectedStatusOptions,
         nameResOf = { it.nameRes },
         onItemsSelect = onStatusOptionsSelect,
@@ -39,7 +42,7 @@ fun VerticalGridFilterCriteriaList(
     item {
       FilterCriteriaItem(
         title = stringResource(R.string.filter_content_rating),
-        items = MangaContentRatingFilterUiModel.entries,
+        items = MangaContentRatingFilterUiModel.entries.toPersistentList(),
         selectedItems = selectedContentRatingOptions,
         nameResOf = { it.nameRes },
         onItemsSelect = onContentRatingOptionsSelect,

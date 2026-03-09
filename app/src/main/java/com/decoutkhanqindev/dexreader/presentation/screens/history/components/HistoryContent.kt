@@ -13,7 +13,7 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
+import com.decoutkhanqindev.dexreader.presentation.model.ReadingHistoryUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScreen
@@ -22,7 +22,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.history.RemoveFromHis
 
 @Composable
 fun HistoryContent(
-  historyUiState: BasePaginationUiState<ReadingHistory>,
+  historyUiState: BasePaginationUiState<ReadingHistoryUiModel>,
   removeFromHistoryUiState: RemoveFromHistoryUiState,
   onContinueReadingClick: (
     chapterId: String,

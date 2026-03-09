@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.filter
 
+
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,6 +24,8 @@ import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaCo
 import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaStatusFilterUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailsCriteriaUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toPersistentList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,16 +33,16 @@ fun FilterBottomSheet(
   onDismiss: () -> Unit,
   criteriaState: CategoryDetailsCriteriaUiState,
   onApplyClick: (
-    statusFilter: List<MangaStatusFilterUiModel>,
-    contentRatingFilter: List<MangaContentRatingFilterUiModel>,
+    statusFilter: ImmutableList<MangaStatusFilterUiModel>,
+    contentRatingFilter: ImmutableList<MangaContentRatingFilterUiModel>,
   ) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-  var selectedStatusOptions by rememberSaveable(
+  var selectedStatusOptions: ImmutableList<MangaStatusFilterUiModel> by rememberSaveable(
     stateSaver = listSaver(
       save = { list -> list.map { it.name } },
-      restore = { names -> names.map { MangaStatusFilterUiModel.valueOf(it) } }
+      restore = { names -> names.map { MangaStatusFilterUiModel.valueOf(it) }.toPersistentList() }
     )
   ) {
     mutableStateOf(criteriaState.statusFilter)
@@ -47,7 +50,9 @@ fun FilterBottomSheet(
   var selectedContentRatingOptions by rememberSaveable(
     stateSaver = listSaver(
       save = { list -> list.map { it.name } },
-      restore = { names -> names.map { MangaContentRatingFilterUiModel.valueOf(it) } }
+      restore = { names ->
+        names.map { MangaContentRatingFilterUiModel.valueOf(it) }.toPersistentList()
+      }
     )
   ) {
     mutableStateOf(criteriaState.contentRatingFilter)

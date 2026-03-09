@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.search.components.suggestions
 
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -12,12 +13,13 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.Notific
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.search.SuggestionsUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.search.components.results.ResultsNotFoundMessage
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun SuggestionsSection(
   query: String,
   suggestionsUiState: SuggestionsUiState,
-  suggestionList: List<String>,
+  suggestionList: ImmutableList<String>,
   onSelectedSuggestion: (String) -> Unit,
   modifier: Modifier = Modifier,
 ) {

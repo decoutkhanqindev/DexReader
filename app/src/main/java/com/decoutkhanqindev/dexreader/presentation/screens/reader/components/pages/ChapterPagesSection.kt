@@ -1,15 +1,17 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.reader.components.pages
 
+
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun ChapterPagesSection(
-  chapterPages: List<String>,
+  chapterPages: ImmutableList<String>,
   currentPage: Int,
   totalPages: Int,
   onUpdateChapterPage: (Int) -> Unit,

@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.categories
 
+
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,6 +10,8 @@ import com.decoutkhanqindev.dexreader.presentation.mapper.CategoryUiMapper.toCat
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureUiError
 import com.decoutkhanqindev.dexreader.presentation.model.CategoryTypeUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,7 +40,7 @@ class CategoriesViewModel @Inject constructor(
               .filter { it != CategoryTypeUiModel.UNKNOWN }
               .associateWith { type ->
                 (grouped[CategoryType.valueOf(type.name)]
-                  ?: emptyList()).map { it.toCategoryUiModel() }
+                  ?: persistentListOf()).map { it.toCategoryUiModel() }.toPersistentList()
               }
           _uiState.value = CategoriesUiState.Success(categoryMap = categoryMap)
         }

@@ -5,8 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.domain.usecase.user.LogoutUseCase
-import com.decoutkhanqindev.dexreader.presentation.mapper.UserUiMapper.toUserUiModel
 import com.decoutkhanqindev.dexreader.domain.usecase.user.UpdateUserProfileUseCase
+import com.decoutkhanqindev.dexreader.presentation.mapper.UserUiMapper.toDomainUser
+import com.decoutkhanqindev.dexreader.presentation.model.UserUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -110,13 +111,13 @@ class ProfileViewModel @Inject constructor(
     }
   }
 
-  fun updateCurrentUser(value: User?) {
-    if (currentDomainUser == value) return
-    currentDomainUser = value
+  fun updateCurrentUser(value: UserUiModel?) {
+    if (currentDomainUser?.id == value?.id) return
+    currentDomainUser = value?.toDomainUser()
     _uiState.update {
       it.copy(
         isLoading = false,
-        currentUser = value?.toUserUiModel(),
+        currentUser = value,
         isUpdateUserSuccess = false,
         isUpdateUserError = false
       )

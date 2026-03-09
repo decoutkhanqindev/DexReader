@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.filter
 
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,14 +14,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun <T> FilterCriteriaItem(
   title: String,
-  items: List<T>,
-  selectedItems: List<T>,
+  items: ImmutableList<T>,
+  selectedItems: ImmutableList<T>,
   nameResOf: (T) -> Int,
-  onItemsSelect: (List<T>) -> Unit,
+  onItemsSelect: (ImmutableList<T>) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Card(

@@ -9,10 +9,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.domain.model.User
+import com.decoutkhanqindev.dexreader.presentation.model.UserUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseDetailsScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.MangaDetailsContent
@@ -20,7 +20,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.compone
 @Composable
 fun MangaDetailsScreen(
   isUserLoggedIn: Boolean,
-  currentUser: User?,
+  currentUser: UserUiModel?,
   onNavigateBack: () -> Unit,
   onSearchClick: () -> Unit,
   onSignInClick: () -> Unit,
@@ -46,7 +46,7 @@ fun MangaDetailsScreen(
   val chapterLanguage by viewModel.chapterLanguage.collectAsStateWithLifecycle()
   val availableLanguages by viewModel.availableLanguages.collectAsStateWithLifecycle()
   val readingHistoryList by viewModel.readingHistoryList.collectAsStateWithLifecycle()
-  val startedChapter by viewModel.startedChapter.collectAsStateWithLifecycle()
+  val startedChapterId by viewModel.startedChapterId.collectAsStateWithLifecycle()
   val continueChapter by viewModel.continueChapter.collectAsStateWithLifecycle()
   val isFavorite by viewModel.isFavorite.collectAsStateWithLifecycle()
   var isShowFavoritesDialog by rememberSaveable { mutableStateOf(false) }
@@ -77,7 +77,7 @@ fun MangaDetailsScreen(
         mangaDetailsUiState = mangaDetailsUiState,
         mangaChaptersUiState = mangaChaptersUiState,
         readingHistoryList = readingHistoryList,
-        startedChapter = startedChapter,
+        startedChapterId = startedChapterId,
         continueChapter = continueChapter,
         onReadingClick = onReadingClick,
         isFavorite = isFavorite,

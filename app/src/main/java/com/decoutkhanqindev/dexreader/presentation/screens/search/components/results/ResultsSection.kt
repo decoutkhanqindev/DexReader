@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.domain.model.Manga
+import com.decoutkhanqindev.dexreader.presentation.model.MangaUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
@@ -25,7 +25,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPage
 @Composable
 fun ResultsSection(
   query: String,
-  resultsUiState: BasePaginationUiState<Manga>,
+  resultsUiState: BasePaginationUiState<MangaUiModel>,
   onSelectedManga: (String) -> Unit,
   onFetchMangaListNextPage: () -> Unit,
   onRetryFetchMangaListNextPage: () -> Unit,

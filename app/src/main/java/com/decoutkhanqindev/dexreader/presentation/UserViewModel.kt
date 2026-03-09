@@ -6,11 +6,16 @@ import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.model.User
 import com.decoutkhanqindev.dexreader.domain.usecase.user.ObserveCurrentUserUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.ObserveUserProfileUseCase
+import com.decoutkhanqindev.dexreader.presentation.mapper.UserUiMapper.toUserUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.UserUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,8 +27,14 @@ class UserViewModel @Inject constructor(
   private val _isUserLoggedIn = MutableStateFlow(false)
   val isUserLoggedIn: StateFlow<Boolean> = _isUserLoggedIn.asStateFlow()
 
-  private val _userProfile = MutableStateFlow<User?>(null)
-  val userProfile: StateFlow<User?> = _userProfile.asStateFlow()
+  private val _domainUserProfile = MutableStateFlow<User?>(null)
+  val userProfile: StateFlow<UserUiModel?> = _domainUserProfile
+    .map { it?.toUserUiModel() }
+    .stateIn(
+      scope = viewModelScope,
+      started = SharingStarted.Eagerly,
+      initialValue = null
+    )
 
   // manage observe user profile job
   private var userProfileJob: Job? = null
@@ -43,7 +54,7 @@ class UserViewModel @Inject constructor(
               // user is null like user logged out
               // clear user profile state and cancel user profile job
               cancelUserProfileJob()
-              _userProfile.value = null
+              _domainUserProfile.value = null
             }
           }
           .onFailure {
@@ -61,9 +72,9 @@ class UserViewModel @Inject constructor(
     userProfileJob = viewModelScope.launch {
       observeUserProfileUseCase(userId).collect { result ->
         result
-          .onSuccess { _userProfile.value = it }
+          .onSuccess { _domainUserProfile.value = it }
           .onFailure {
-            _userProfile.value = null
+            _domainUserProfile.value = null
             Log.d(TAG, "observeUserProfile have error: ${it.stackTraceToString()}")
           }
       }

@@ -15,13 +15,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.domain.model.Manga
+import com.decoutkhanqindev.dexreader.presentation.model.MangaUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
 
 @Composable
 fun MangaItem(
-  manga: Manga,
-  onSelectedManga: (Manga) -> Unit,
+  manga: MangaUiModel,
+  onSelectedManga: (MangaUiModel) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Card(

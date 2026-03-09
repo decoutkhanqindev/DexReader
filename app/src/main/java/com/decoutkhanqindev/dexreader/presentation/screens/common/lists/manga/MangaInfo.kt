@@ -15,12 +15,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.domain.model.Manga
-import java.util.Locale
+import com.decoutkhanqindev.dexreader.presentation.model.MangaUiModel
 
 @Composable
 fun MangaInfo(
-  manga: Manga,
+  manga: MangaUiModel,
   modifier: Modifier = Modifier,
 ) {
   Column(
@@ -47,7 +46,7 @@ fun MangaInfo(
       modifier = Modifier.padding(bottom = 4.dp)
     )
     Text(
-      text = manga.status.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.US) else it.toString() },
+      text = manga.status,
       fontWeight = FontWeight.Bold,
       fontStyle = FontStyle.Italic,
       style = MaterialTheme.typography.bodyLarge,

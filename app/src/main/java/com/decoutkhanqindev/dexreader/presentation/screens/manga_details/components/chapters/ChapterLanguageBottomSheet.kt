@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.chapters
 
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,11 +21,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.MangaLanguageUiModel
+import kotlinx.collections.immutable.ImmutableList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChapterLanguageBottomSheet(
-  languageList: List<MangaLanguageUiModel>,
+  languageList: ImmutableList<MangaLanguageUiModel>,
   selectedLanguage: MangaLanguageUiModel,
   onSelectedLanguage: (MangaLanguageUiModel) -> Unit,
   onDismiss: () -> Unit,

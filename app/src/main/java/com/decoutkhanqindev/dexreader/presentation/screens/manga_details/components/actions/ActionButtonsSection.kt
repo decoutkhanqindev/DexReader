@@ -12,14 +12,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.domain.model.Chapter
-import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
+import com.decoutkhanqindev.dexreader.presentation.model.ReadingHistoryUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
 
 @Composable
 fun ActionButtonsSection(
-  startedChapter: Chapter? = null,
-  continueChapter: ReadingHistory? = null,
+  startedChapterId: String? = null,
+  mangaId: String = "",
+  continueChapter: ReadingHistoryUiModel? = null,
   onReadingClick: (
     chapterId: String,
     lastReadPage: Int,
@@ -30,7 +30,7 @@ fun ActionButtonsSection(
   modifier: Modifier = Modifier,
 ) {
   val isContinueReading = continueChapter != null
-  val canRead = startedChapter != null || continueChapter != null
+  val canRead = startedChapterId != null || continueChapter != null
 
   Row(
     modifier = modifier,
@@ -46,7 +46,11 @@ fun ActionButtonsSection(
             continueChapter.lastReadPage,
             continueChapter.mangaId
           )
-        } else onReadingClick(startedChapter!!.id, 0, startedChapter.mangaId)
+        } else onReadingClick(
+          startedChapterId!!,
+          0,
+          mangaId
+        )
       },
       content = {
         Text(

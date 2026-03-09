@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.categories.components
 
+
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,6 +18,8 @@ import com.decoutkhanqindev.dexreader.presentation.model.CategoryTypeUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.categories.CategoriesUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun CategoriesContent(
@@ -57,14 +60,14 @@ fun CategoriesContent(
           .padding(horizontal = 4.dp)
       ) {
         items(
-          items = uiState.categoryMap.keys.toList(),
+          items = uiState.categoryMap.keys.toPersistentList(),
           key = { it.name }
         ) { type ->
           CategoryTypeSection(
             isExpanded = expandedType == type,
             onExpandClick = { expandedType = if (expandedType == type) null else type },
             type = type,
-            categoryList = uiState.categoryMap[type] ?: emptyList(),
+            categoryList = uiState.categoryMap[type] ?: persistentListOf(),
             onCategoryClick = onCategoryClick,
             modifier = Modifier
               .fillMaxWidth()

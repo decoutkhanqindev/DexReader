@@ -17,39 +17,39 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.model.ThemeUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
-import com.decoutkhanqindev.dexreader.presentation.model.ThemeUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.settings.SettingsUiState
 
 @Composable
 fun SettingsContent(
-        uiState: SettingsUiState,
-        onThemeOptionClick: (ThemeUiModel) -> Unit,
-        onSaveThemeOption: () -> Unit,
-        onRetry: () -> Unit,
-        modifier: Modifier = Modifier,
+  uiState: SettingsUiState,
+  onThemeOptionClick: (ThemeUiModel) -> Unit,
+  onSaveThemeOption: () -> Unit,
+  onRetry: () -> Unit,
+  modifier: Modifier = Modifier,
 ) {
   var isShowSaveDialog by rememberSaveable { mutableStateOf(false) }
   var isShowSuccessDialog by rememberSaveable { mutableStateOf(true) }
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
 
   Box(
-          contentAlignment = Alignment.Center,
-          modifier = modifier,
+    contentAlignment = Alignment.Center,
+    modifier = modifier,
   ) {
     Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize().let { if (uiState.isLoading) it.blur(8.dp) else it }
+      verticalArrangement = Arrangement.Center,
+      horizontalAlignment = Alignment.CenterHorizontally,
+      modifier = Modifier.fillMaxSize().let { if (uiState.isLoading) it.blur(8.dp) else it }
     ) {
       ThemeOptionList(
-              selectedItem = uiState.themeOption,
-              onItemClick = {
-                isShowSaveDialog = true
-                onThemeOptionClick(it)
-              },
-              modifier = Modifier
+        selectedItem = uiState.themeOption,
+        onItemClick = {
+          isShowSaveDialog = true
+          onThemeOptionClick(it)
+        },
+        modifier = Modifier
       )
     }
 
@@ -58,23 +58,24 @@ fun SettingsContent(
       uiState.isError -> {
         if (isShowErrorDialog) {
           NotificationDialog(
-                  title = stringResource(R.string.change_theme_failed),
-                  onDismissClick = { isShowErrorDialog = false },
-                  onConfirmClick = {
-                    isShowErrorDialog = false
-                    onRetry()
-                  },
+            title = stringResource(R.string.change_theme_failed),
+            onDismissClick = { isShowErrorDialog = false },
+            onConfirmClick = {
+              isShowErrorDialog = false
+              onRetry()
+            },
           )
         }
       }
+
       uiState.isSuccess -> {
         if (isShowSuccessDialog) {
           NotificationDialog(
-                  icon = Icons.Default.Done,
-                  title = stringResource(R.string.theme_change_successful),
-                  isEnableDismiss = false,
-                  confirm = stringResource(R.string.ok),
-                  onConfirmClick = { isShowSuccessDialog = false },
+            icon = Icons.Default.Done,
+            title = stringResource(R.string.theme_change_successful),
+            isEnableDismiss = false,
+            confirm = stringResource(R.string.ok),
+            onConfirmClick = { isShowSuccessDialog = false },
           )
         }
       }
@@ -82,13 +83,13 @@ fun SettingsContent(
 
     if (isShowSaveDialog) {
       NotificationDialog(
-              title = stringResource(R.string.are_you_sure_you_want_to_change_the_theme),
-              onDismissClick = { isShowSaveDialog = false },
-              confirm = stringResource(R.string.change),
-              onConfirmClick = {
-                isShowSaveDialog = false
-                onSaveThemeOption()
-              },
+        title = stringResource(R.string.are_you_sure_you_want_to_change_the_theme),
+        onDismissClick = { isShowSaveDialog = false },
+        confirm = stringResource(R.string.change),
+        onConfirmClick = {
+          isShowSaveDialog = false
+          onSaveThemeOption()
+        },
       )
     }
   }

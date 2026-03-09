@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.summary
 
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,11 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.domain.model.Category
+import com.decoutkhanqindev.dexreader.presentation.model.CategoryUiModel
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun MangaCategoryList(
-  categoryList: List<Category>,
+  categoryList: ImmutableList<CategoryUiModel>,
   onSelectedCategory: (
     categoryId: String,
     categoryTitle: String,

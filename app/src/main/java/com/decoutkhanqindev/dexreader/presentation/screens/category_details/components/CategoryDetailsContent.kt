@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.category_details.components
 
+
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -11,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.domain.model.Manga
+import com.decoutkhanqindev.dexreader.presentation.model.MangaUiModel
 import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaContentRatingFilterUiModel
 import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaStatusFilterUiModel
 import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortCriteriaUiModel
@@ -28,10 +29,11 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.states.Loading
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.AllItemLoadedMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadMoreMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPageErrorMessage
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun CategoryDetailsContent(
-  detailsUiState: BasePaginationUiState<Manga>,
+  detailsUiState: BasePaginationUiState<MangaUiModel>,
   criteriaUiState: CategoryDetailsCriteriaUiState,
   isSortBottomSheetVisible: Boolean,
   onSortSheetDismiss: () -> Unit,
@@ -42,8 +44,8 @@ fun CategoryDetailsContent(
   isFilterBottomSheetVisible: Boolean,
   onFilterSheetDismiss: () -> Unit,
   onFilterApplyClick: (
-    statusFilter: List<MangaStatusFilterUiModel>,
-    contentRatingFilter: List<MangaContentRatingFilterUiModel>,
+    statusFilter: ImmutableList<MangaStatusFilterUiModel>,
+    contentRatingFilter: ImmutableList<MangaContentRatingFilterUiModel>,
   ) -> Unit,
   onMangaClick: (String) -> Unit,
   onFetchMangaListNextPage: () -> Unit,
@@ -91,7 +93,7 @@ fun CategoryDetailsContent(
       }
     }
 
-    is BasePaginationUiState.Content<Manga> -> {
+    is BasePaginationUiState.Content<MangaUiModel> -> {
       val mangaList = detailsUiState.currentList
       val nextPageState = detailsUiState.nextPageState
 

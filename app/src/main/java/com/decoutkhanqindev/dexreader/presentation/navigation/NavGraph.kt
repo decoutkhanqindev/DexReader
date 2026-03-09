@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.navigation
 
+
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -8,7 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.decoutkhanqindev.dexreader.domain.model.User
+import com.decoutkhanqindev.dexreader.presentation.model.UserUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.forgot_password.ForgotPasswordScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.login.LoginScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.register.RegisterScreen
@@ -31,7 +32,7 @@ import com.decoutkhanqindev.dexreader.util.NavTransitions.slideFromRightTransiti
 @Composable
 fun NavGraph(
   isUserLoggedIn: Boolean,
-  currentUser: User?,
+  currentUser: UserUiModel?,
   modifier: Modifier = Modifier,
 ) {
   val navHostController = rememberNavController()

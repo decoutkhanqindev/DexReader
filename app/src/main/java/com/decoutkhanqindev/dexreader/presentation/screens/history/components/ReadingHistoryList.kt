@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.history.components
 
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
@@ -20,18 +21,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
+import com.decoutkhanqindev.dexreader.presentation.model.ReadingHistoryUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.MoveToTopButton
 import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.NextPageLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.AllItemLoadedMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadMoreMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPageErrorMessage
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 
 @Composable
 fun ReadingHistoryList(
-  readingHistoryList: List<ReadingHistory>,
+  readingHistoryList: ImmutableList<ReadingHistoryUiModel>,
   historyNextPageState: BaseNextPageState,
   onSelectedReadingHistory: (
     mangaId: String,

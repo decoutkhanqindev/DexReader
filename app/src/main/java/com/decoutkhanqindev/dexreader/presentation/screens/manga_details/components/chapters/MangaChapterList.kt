@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.chapters
 
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,19 +14,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.domain.model.Chapter
-import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
+import com.decoutkhanqindev.dexreader.presentation.model.ChapterUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.ReadingHistoryUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.NextPageLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.AllItemLoadedMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadMoreMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPageErrorMessage
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun MangaChapterList(
   latestChapter: String,
-  chapterList: List<Chapter>,
-  readingHistoryList: List<ReadingHistory> = emptyList(),
+  chapterList: ImmutableList<ChapterUiModel>,
+  readingHistoryList: ImmutableList<ReadingHistoryUiModel> = persistentListOf(),
   onSelectedChapter: (
     chapterId: String,
     lastReadPage: Int,

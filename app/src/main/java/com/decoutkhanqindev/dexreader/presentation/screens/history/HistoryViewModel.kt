@@ -4,12 +4,14 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
-import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.usecase.history.ObserveHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.history.RemoveFromHistoryUseCase
+import com.decoutkhanqindev.dexreader.presentation.mapper.ReadingHistoryUiMapper.toReadingHistoryUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.ReadingHistoryUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,10 +30,10 @@ constructor(
   private val removeFromHistoryUseCase: RemoveFromHistoryUseCase,
 ) : ViewModel() {
   private val _historyUiState =
-    MutableStateFlow<BasePaginationUiState<ReadingHistory>>(
+    MutableStateFlow<BasePaginationUiState<ReadingHistoryUiModel>>(
       BasePaginationUiState.FirstPageLoading
     )
-  val historyUiState: StateFlow<BasePaginationUiState<ReadingHistory>> =
+  val historyUiState: StateFlow<BasePaginationUiState<ReadingHistoryUiModel>> =
     _historyUiState.asStateFlow()
 
   private val _removeFromHistoryUiState = MutableStateFlow(RemoveFromHistoryUiState())
@@ -69,7 +71,8 @@ constructor(
                   .onSuccess { readingHistoryList ->
                     _historyUiState.value =
                       BasePaginationUiState.Content(
-                        currentList = readingHistoryList,
+                        currentList = readingHistoryList.map { it.toReadingHistoryUiModel() }
+                          .toPersistentList(),
                         currentPage = FIRST_PAGE,
                         nextPageState =
                           BaseNextPageState.fromPageSize(
@@ -118,7 +121,7 @@ constructor(
   }
 
   private fun observeHistoryNextPageInternal(
-    currentUiState: BasePaginationUiState.Content<ReadingHistory>,
+    currentUiState: BasePaginationUiState.Content<ReadingHistoryUiModel>,
   ) {
     observeHistoryJob =
       viewModelScope.launch {
@@ -145,7 +148,7 @@ constructor(
                 result
                   .onSuccess { readingHistoryList ->
                     val allReadingHistoryList =
-                      currentReadingHistoryList + readingHistoryList
+                      (currentReadingHistoryList + readingHistoryList.map { it.toReadingHistoryUiModel() }).toPersistentList()
                     _historyUiState.value =
                       currentUiState.copy(
                         currentList = allReadingHistoryList,
@@ -158,8 +161,7 @@ constructor(
                       )
                   }
                   .onFailure { throwable ->
-                    if (throwable is
-                          com.decoutkhanqindev.dexreader.domain.exception.BusinessException.Resource.AccessDenied &&
+                    if (throwable is BusinessException.Resource.AccessDenied &&
                       _userId.value == null
                     )
                       return@onFailure
@@ -248,7 +250,7 @@ constructor(
 
   fun retryObserveHistoryNextPage() {
     val currentUiState = _historyUiState.value
-    if (currentUiState is BasePaginationUiState.Content &&
+    if (currentUiState is BasePaginationUiState.Content<ReadingHistoryUiModel> &&
       currentUiState.nextPageState == BaseNextPageState.ERROR
     )
       observeHistoryNextPageInternal(currentUiState)

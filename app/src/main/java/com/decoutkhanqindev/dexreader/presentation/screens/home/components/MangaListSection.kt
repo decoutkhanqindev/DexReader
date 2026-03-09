@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.home.components
 
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -9,15 +10,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.domain.model.Manga
+import com.decoutkhanqindev.dexreader.presentation.model.MangaUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.lists.manga.HorizontalMangaList
+import kotlinx.collections.immutable.ImmutableList
 
 
 @Composable
 fun MangaListSection(
   title: String,
-  mangaList: List<Manga>,
-  onSelectedManga: (Manga) -> Unit,
+  mangaList: ImmutableList<MangaUiModel>,
+  onSelectedManga: (MangaUiModel) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Column(modifier = modifier) {

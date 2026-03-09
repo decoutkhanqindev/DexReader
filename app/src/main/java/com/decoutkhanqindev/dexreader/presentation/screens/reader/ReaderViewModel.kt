@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.reader
 
+
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -22,6 +23,9 @@ import com.decoutkhanqindev.dexreader.presentation.mapper.ChapterPagesUiMapper.t
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureUiError
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -75,11 +79,11 @@ constructor(
   private var mangaCoverUrl: String? = null
   private var chapterLanguage: MangaLanguage? = null
 
-  private var currentChapterList: List<Chapter> = emptyList()
+  private var currentChapterList: ImmutableList<Chapter> = persistentListOf()
   private var hasNextChapterListPage = true
   private var isFetchingChapterList = false
 
-  private var currentReadingHistoryList: List<ReadingHistory> = emptyList()
+  private var currentReadingHistoryList: ImmutableList<ReadingHistory> = persistentListOf()
   private var hasNextReadingHistoryListPage = true
   private var isObservingReadingHistoryList = false
   private var currentReadingHistory: ReadingHistory? = null
@@ -252,13 +256,13 @@ constructor(
       )
         .onSuccess { chapterList ->
           isFetchingChapterList = false
-          currentChapterList = chapterList
+          currentChapterList = chapterList.toPersistentList()
           hasNextChapterListPage = currentChapterList.size >= CHAPTER_LIST_PER_PAGE_SIZE
           updateChapterNavState()
         }
         .onFailure {
           isFetchingChapterList = false
-          currentChapterList = emptyList()
+          currentChapterList = persistentListOf()
           hasNextChapterListPage = false
           Log.d(TAG, "fetchChapterListFirstPage error: ${it.stackTraceToString()}")
         }
@@ -278,7 +282,7 @@ constructor(
       )
         .onSuccess { nextChapterList ->
           isFetchingChapterList = false
-          currentChapterList += nextChapterList
+          currentChapterList = (currentChapterList + nextChapterList).toPersistentList()
           hasNextChapterListPage = nextChapterList.size >= CHAPTER_LIST_PER_PAGE_SIZE
           updateChapterNavState()
         }
@@ -427,7 +431,7 @@ constructor(
                 result
                   .onSuccess { readingHistoryList ->
                     isObservingReadingHistoryList = false
-                    currentReadingHistoryList = readingHistoryList
+                    currentReadingHistoryList = readingHistoryList.toPersistentList()
                     hasNextReadingHistoryListPage =
                       readingHistoryList.size >=
                           READING_HISTORY_LIST_PER_PAGE_SIZE
@@ -441,7 +445,7 @@ constructor(
                     )
                       return@onFailure
 
-                    currentReadingHistoryList = emptyList()
+                    currentReadingHistoryList = persistentListOf()
                     hasNextReadingHistoryListPage = false
                     _isObserveHistoryDone.value = true
                     Log.d(
@@ -454,7 +458,7 @@ constructor(
             throw c
           } catch (e: Exception) {
             isObservingReadingHistoryList = false
-            currentReadingHistoryList = emptyList()
+            currentReadingHistoryList = persistentListOf()
             hasNextReadingHistoryListPage = false
             _isObserveHistoryDone.value = true
             Log.d(TAG, "observeHistoryFirstPage have error: ${e.stackTraceToString()}")
@@ -492,7 +496,8 @@ constructor(
                 result
                   .onSuccess { readingHistoryList ->
                     isObservingReadingHistoryList = false
-                    currentReadingHistoryList += readingHistoryList
+                    currentReadingHistoryList =
+                      (currentReadingHistoryList + readingHistoryList).toPersistentList()
                     hasNextReadingHistoryListPage =
                       readingHistoryList.size >= READING_HISTORY_LIST_PER_PAGE_SIZE
                     updateCurrentReadingHistory(isFromHistory = true)

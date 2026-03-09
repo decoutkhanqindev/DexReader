@@ -8,7 +8,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.domain.model.User
+import com.decoutkhanqindev.dexreader.presentation.model.UserUiModel
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.screens.categories.components.CategoriesContent
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseScreen
@@ -16,7 +16,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseScree
 @Composable
 fun CategoriesScreen(
   isUserLoggedIn: Boolean,
-  currentUser: User?,
+  currentUser: UserUiModel?,
   onSignInClick: () -> Unit,
   onMenuItemClick: (String) -> Unit,
   onSearchClick: () -> Unit,

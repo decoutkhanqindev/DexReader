@@ -1,16 +1,18 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.category_details
 
+
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.domain.usecase.category.GetMangaListByCategoryUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaContentRatingFilter
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortCriteria
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortOrder
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaStatusFilter
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureUiError
+import com.decoutkhanqindev.dexreader.presentation.mapper.MangaUiMapper.toMangaUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.MangaUiModel
 import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaContentRatingFilterUiModel
 import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaStatusFilterUiModel
 import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortCriteriaUiModel
@@ -19,6 +21,8 @@ import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,8 +41,8 @@ class CategoryDetailsViewModel @Inject constructor(
     checkNotNull(savedStateHandle[NavDestination.CategoryDetailsDestination.CATEGORY_TITLE_ARG])
 
   private val _categoryDetailsUiState =
-    MutableStateFlow<BasePaginationUiState<Manga>>(BasePaginationUiState.FirstPageLoading)
-  val categoryDetailsUiState: StateFlow<BasePaginationUiState<Manga>> =
+    MutableStateFlow<BasePaginationUiState<MangaUiModel>>(BasePaginationUiState.FirstPageLoading)
+  val categoryDetailsUiState: StateFlow<BasePaginationUiState<MangaUiModel>> =
     _categoryDetailsUiState.asStateFlow()
 
   private val _categoryCriteriaUiState = MutableStateFlow(CategoryDetailsCriteriaUiState())
@@ -64,7 +68,7 @@ class CategoryDetailsViewModel @Inject constructor(
       )
         .onSuccess { mangaList ->
           _categoryDetailsUiState.value = BasePaginationUiState.Content(
-            currentList = mangaList,
+            currentList = mangaList.map { it.toMangaUiModel() }.toPersistentList(),
             currentPage = FIRST_PAGE,
             nextPageState = BaseNextPageState.fromPageSize(mangaList.size, MANGA_LIST_PER_PAGE_SIZE)
           )
@@ -101,7 +105,7 @@ class CategoryDetailsViewModel @Inject constructor(
     }
   }
 
-  private fun fetchMangaListByCategoryNextPageInternal(currentCategoryDetailsUiState: BasePaginationUiState.Content<Manga>) {
+  private fun fetchMangaListByCategoryNextPageInternal(currentCategoryDetailsUiState: BasePaginationUiState.Content<MangaUiModel>) {
     viewModelScope.launch {
       _categoryDetailsUiState.value =
         currentCategoryDetailsUiState.copy(nextPageState = BaseNextPageState.LOADING)
@@ -119,7 +123,8 @@ class CategoryDetailsViewModel @Inject constructor(
         contentRatingFilter = currentCriteriaUiState.contentRatingFilter.map { it.toMangaContentRatingFilter() },
       )
         .onSuccess { nextMangaList ->
-          val allMangaList = currentMangaList + nextMangaList
+          val allMangaList =
+            (currentMangaList + nextMangaList.map { it.toMangaUiModel() }).toPersistentList()
           _categoryDetailsUiState.value = currentCategoryDetailsUiState.copy(
             currentList = allMangaList,
             currentPage = nextPage,
@@ -154,8 +159,8 @@ class CategoryDetailsViewModel @Inject constructor(
   }
 
   fun updateFilteringCriteria(
-    statusFilter: List<MangaStatusFilterUiModel>,
-    contentRatingFilter: List<MangaContentRatingFilterUiModel>,
+    statusFilter: ImmutableList<MangaStatusFilterUiModel>,
+    contentRatingFilter: ImmutableList<MangaContentRatingFilterUiModel>,
   ) {
     val current = _categoryCriteriaUiState.value
     if (current.statusFilter == statusFilter && current.contentRatingFilter == contentRatingFilter) return
@@ -173,7 +178,7 @@ class CategoryDetailsViewModel @Inject constructor(
 
   fun retryFetchMangaListByCategoryNextPage() {
     val currentCategoryDetailsUiState = _categoryDetailsUiState.value
-    if (currentCategoryDetailsUiState is BasePaginationUiState.Content &&
+    if (currentCategoryDetailsUiState is BasePaginationUiState.Content<MangaUiModel> &&
       currentCategoryDetailsUiState.nextPageState == BaseNextPageState.ERROR
     ) fetchMangaListByCategoryNextPageInternal(currentCategoryDetailsUiState)
   }

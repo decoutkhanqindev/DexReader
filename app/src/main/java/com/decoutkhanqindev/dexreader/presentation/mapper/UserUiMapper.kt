@@ -10,4 +10,11 @@ object UserUiMapper {
     email = email,
     avatarUrl = avatarUrl,
   )
+
+  fun UserUiModel.toDomainUser(): User = User(
+    id = id,
+    name = name,
+    email = email,
+    avatarUrl = avatarUrl,
+  )
 }

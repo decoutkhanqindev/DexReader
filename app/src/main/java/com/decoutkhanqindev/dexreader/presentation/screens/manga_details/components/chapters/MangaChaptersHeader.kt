@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.chapters
 
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,11 +18,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.MangaLanguageUiModel
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun MangaChaptersHeader(
   selectedLanguage: MangaLanguageUiModel,
-  languageList: List<MangaLanguageUiModel>,
+  languageList: ImmutableList<MangaLanguageUiModel>,
   onSelectedLanguage: (MangaLanguageUiModel) -> Unit,
   modifier: Modifier = Modifier,
 ) {

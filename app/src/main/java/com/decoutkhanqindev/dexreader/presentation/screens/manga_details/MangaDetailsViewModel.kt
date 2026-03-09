@@ -1,11 +1,12 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.manga_details
 
+
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
-import com.decoutkhanqindev.dexreader.domain.model.Chapter
+import com.decoutkhanqindev.dexreader.domain.model.Manga
 import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortOrder
 import com.decoutkhanqindev.dexreader.domain.usecase.chapter.GetChapterListUseCase
@@ -14,14 +15,21 @@ import com.decoutkhanqindev.dexreader.domain.usecase.favorites.ObserveIsFavorite
 import com.decoutkhanqindev.dexreader.domain.usecase.favorites.RemoveFromFavoritesUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.history.ObserveHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaDetailsUseCase
+import com.decoutkhanqindev.dexreader.presentation.mapper.ChapterUiMapper.toChapterUiModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureUiError
 import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguage
-import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguageUiModel
+import com.decoutkhanqindev.dexreader.presentation.mapper.MangaUiMapper.toMangaUiModel
+import com.decoutkhanqindev.dexreader.presentation.mapper.ReadingHistoryUiMapper.toReadingHistoryUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.ChapterUiModel
 import com.decoutkhanqindev.dexreader.presentation.model.MangaLanguageUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.ReadingHistoryUiModel
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -54,24 +62,24 @@ constructor(
   val mangaDetailsUiState: StateFlow<MangaDetailsUiState> = _mangaDetailsUiState.asStateFlow()
 
   private val _mangaChaptersUiState =
-    MutableStateFlow<BasePaginationUiState<Chapter>>(BasePaginationUiState.FirstPageLoading)
-  val mangaChaptersUiState: StateFlow<BasePaginationUiState<Chapter>> =
+    MutableStateFlow<BasePaginationUiState<ChapterUiModel>>(BasePaginationUiState.FirstPageLoading)
+  val mangaChaptersUiState: StateFlow<BasePaginationUiState<ChapterUiModel>> =
     _mangaChaptersUiState.asStateFlow()
 
   private val _chapterLanguage = MutableStateFlow(MangaLanguageUiModel.ENGLISH)
   val chapterLanguage: StateFlow<MangaLanguageUiModel> = _chapterLanguage.asStateFlow()
 
-  val availableLanguages: StateFlow<List<MangaLanguageUiModel>> =
+  val availableLanguages: StateFlow<ImmutableList<MangaLanguageUiModel>> =
     _mangaDetailsUiState
       .map { state ->
         if (state is MangaDetailsUiState.Success)
-          state.manga.availableLanguages.map { it.toMangaLanguageUiModel() }
-        else emptyList()
+          state.manga.availableLanguages
+        else persistentListOf()
       }
       .stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
-        initialValue = emptyList()
+        initialValue = persistentListOf()
       )
 
   private val _userId = MutableStateFlow<String?>(null)
@@ -80,17 +88,27 @@ constructor(
   val isFavorite: StateFlow<Boolean> = _isFavorite.asStateFlow()
   private var observeIsFavoriteJob: Job? = null
 
-  private val _readingHistoryList = MutableStateFlow<List<ReadingHistory>>(emptyList())
-  val readingHistoryList: StateFlow<List<ReadingHistory>> = _readingHistoryList.asStateFlow()
+  private val _domainManga = MutableStateFlow<Manga?>(null)
+
+  private val _readingHistoryList =
+    MutableStateFlow<ImmutableList<ReadingHistory>>(persistentListOf())
+  val readingHistoryList: StateFlow<ImmutableList<ReadingHistoryUiModel>> =
+    _readingHistoryList
+      .map { list -> list.map { it.toReadingHistoryUiModel() }.toPersistentList() }
+      .stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
+        initialValue = persistentListOf()
+      )
   private var hasNextReadingHistoryListPage = true
   private var isObservingReadingHistoryList = false
   private var observeHistoryJob: Job? = null
 
-  private val _startedChapter = MutableStateFlow<Chapter?>(null)
-  val startedChapter: StateFlow<Chapter?> = _startedChapter.asStateFlow()
-  val continueChapter: StateFlow<ReadingHistory?> =
+  private val _startedChapterId = MutableStateFlow<String?>(null)
+  val startedChapterId: StateFlow<String?> = _startedChapterId.asStateFlow()
+  val continueChapter: StateFlow<ReadingHistoryUiModel?> =
     _readingHistoryList
-      .map { ReadingHistory.findContinueTarget(it) }
+      .map { ReadingHistory.findContinueTarget(it)?.toReadingHistoryUiModel() }
       .stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
@@ -108,7 +126,10 @@ constructor(
   private fun fetchMangaDetails() {
     viewModelScope.launch {
       getMangaDetailsUseCase(mangaId = mangaIdFromArg)
-        .onSuccess { _mangaDetailsUiState.value = MangaDetailsUiState.Success(manga = it) }
+        .onSuccess {
+          _domainManga.value = it
+          _mangaDetailsUiState.value = MangaDetailsUiState.Success(manga = it.toMangaUiModel())
+        }
         .onFailure { throwable ->
           _mangaDetailsUiState.value = MangaDetailsUiState.Error(throwable.toFeatureUiError())
           Log.d(TAG, "fetchMangaDetails have error: ${throwable.stackTraceToString()}")
@@ -125,11 +146,11 @@ constructor(
         sortOrder = MangaSortOrder.ASC,
       )
         .onSuccess {
-          if (it.isNotEmpty()) _startedChapter.value = it.first()
-          else _startedChapter.value = null
+          if (it.isNotEmpty()) _startedChapterId.value = it.first().id
+          else _startedChapterId.value = null
         }
         .onFailure {
-          _startedChapter.value = null
+          _startedChapterId.value = null
           Log.d(TAG, "fetchFirstChapter have error: ${it.stackTraceToString()}")
         }
     }
@@ -146,7 +167,7 @@ constructor(
         .onSuccess { chapterList ->
           _mangaChaptersUiState.value =
             BasePaginationUiState.Content(
-              currentList = chapterList,
+              currentList = chapterList.map { it.toChapterUiModel() }.toPersistentList(),
               currentPage = FIRST_PAGE,
               nextPageState =
                 BaseNextPageState.fromPageSize(
@@ -177,7 +198,7 @@ constructor(
   }
 
   private fun fetchChapterListNextPageInternal(
-    currentMangaChaptersUiState: BasePaginationUiState.Content<Chapter>,
+    currentMangaChaptersUiState: BasePaginationUiState.Content<ChapterUiModel>,
   ) {
     viewModelScope.launch {
       _mangaChaptersUiState.value =
@@ -192,10 +213,10 @@ constructor(
         language = _chapterLanguage.value.toMangaLanguage(),
       )
         .onSuccess { nextChapterList ->
-          val updatedChapterList = currentMangaList + nextChapterList
+          val updatedChapterList = currentMangaList + nextChapterList.map { it.toChapterUiModel() }
           _mangaChaptersUiState.value =
             currentMangaChaptersUiState.copy(
-              currentList = updatedChapterList,
+              currentList = updatedChapterList.toPersistentList(),
               currentPage = nextPage,
               nextPageState =
                 BaseNextPageState.fromPageSize(
@@ -253,12 +274,11 @@ constructor(
   }
 
   fun addToFavorites() {
-    val currentUiState = _mangaDetailsUiState.value
-    if (currentUiState !is MangaDetailsUiState.Success) return
+    val domainManga = _domainManga.value ?: return
 
     viewModelScope.launch {
       _userId.value?.let { userId ->
-        addToFavoritesUseCase(userId = userId, manga = currentUiState.manga)
+        addToFavoritesUseCase(userId = userId, manga = domainManga)
           .onSuccess { Log.d(TAG, "adResponseFavorites success") }
           .onFailure {
             Log.d(TAG, "adResponseFavorites have error: ${it.stackTraceToString()}")
@@ -307,7 +327,7 @@ constructor(
                 result
                   .onSuccess { readingHistoryList ->
                     isObservingReadingHistoryList = false
-                    _readingHistoryList.value = readingHistoryList
+                    _readingHistoryList.value = readingHistoryList.toPersistentList()
                     hasNextReadingHistoryListPage =
                       readingHistoryList.size >=
                           READING_HISTORY_LIST_PER_PAGE_SIZE
@@ -323,7 +343,7 @@ constructor(
                     )
                       return@onFailure
 
-                    _readingHistoryList.value = emptyList()
+                    _readingHistoryList.value = persistentListOf()
                     hasNextReadingHistoryListPage = false
                     Log.d(
                       TAG,
@@ -335,7 +355,7 @@ constructor(
             throw c
           } catch (e: Exception) {
             isObservingReadingHistoryList = false
-            _readingHistoryList.value = emptyList()
+            _readingHistoryList.value = persistentListOf()
             hasNextReadingHistoryListPage = false
             Log.d(TAG, "observeHistoryFirstPage have error: ${e.stackTraceToString()}")
           }
@@ -369,7 +389,8 @@ constructor(
                 result
                   .onSuccess { readingHistoryList ->
                     isObservingReadingHistoryList = false
-                    _readingHistoryList.value += readingHistoryList
+                    _readingHistoryList.value =
+                      (_readingHistoryList.value + readingHistoryList).toPersistentList()
                     hasNextReadingHistoryListPage =
                       readingHistoryList.size >=
                           READING_HISTORY_LIST_PER_PAGE_SIZE
@@ -417,7 +438,7 @@ constructor(
 
   fun retry() {
     if (_mangaDetailsUiState.value is MangaDetailsUiState.Error) fetchMangaDetails()
-    if (_startedChapter.value == null) fetchFirstChapter()
+    if (_startedChapterId.value == null) fetchFirstChapter()
     if (_mangaChaptersUiState.value is BasePaginationUiState.FirstPageError)
       fetchChapterListFirstPage()
     observeIsFavorite()
@@ -431,7 +452,7 @@ constructor(
 
   fun retryFetchChapterListNextPage() {
     val currentMangaChaptersUiState = _mangaChaptersUiState.value
-    if (currentMangaChaptersUiState is BasePaginationUiState.Content &&
+    if (currentMangaChaptersUiState is BasePaginationUiState.Content<ChapterUiModel> &&
       currentMangaChaptersUiState.nextPageState == BaseNextPageState.ERROR
     )
       fetchChapterListNextPageInternal(currentMangaChaptersUiState)

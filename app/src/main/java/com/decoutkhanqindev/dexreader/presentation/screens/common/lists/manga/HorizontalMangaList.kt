@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.common.lists.manga
 
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,12 +13,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.domain.model.Manga
+import com.decoutkhanqindev.dexreader.presentation.model.MangaUiModel
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun HorizontalMangaList(
-  mangaList: List<Manga>,
-  onSelectedManga: (Manga) -> Unit,
+  mangaList: ImmutableList<MangaUiModel>,
+  onSelectedManga: (MangaUiModel) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Box(modifier = modifier) {

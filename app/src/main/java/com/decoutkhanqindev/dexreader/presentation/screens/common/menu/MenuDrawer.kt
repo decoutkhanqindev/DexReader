@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.common.menu
 
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,13 +22,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.domain.model.User
+import com.decoutkhanqindev.dexreader.presentation.model.UserUiModel
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun MenuDrawer(
   isUserLoggedIn: Boolean,
-  currentUser: User?,
+  currentUser: UserUiModel?,
   onSignInClick: () -> Unit,
   drawerState: DrawerState,
   selectedItemId: String,
@@ -35,7 +37,7 @@ fun MenuDrawer(
   content: @Composable () -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  val items = listOf(
+  val items = persistentListOf(
     MenuItem(
       id = NavDestination.HomeDestination.route,
       title = stringResource(R.string.home_menu_item),

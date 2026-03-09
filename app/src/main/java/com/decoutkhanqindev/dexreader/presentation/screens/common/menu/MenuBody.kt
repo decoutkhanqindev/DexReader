@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.common.menu
 
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,10 +10,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun MenuBody(
-  items: List<MenuItem>,
+  items: ImmutableList<MenuItem>,
   selectedItemId: String,
   onItemClick: (String) -> Unit,
   modifier: Modifier = Modifier,

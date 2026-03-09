@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.categories.components
 
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -11,13 +12,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.decoutkhanqindev.dexreader.presentation.model.CategoryTypeUiModel
 import com.decoutkhanqindev.dexreader.presentation.model.CategoryUiModel
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun CategoryTypeSection(
   isExpanded: Boolean,
   onExpandClick: () -> Unit,
   type: CategoryTypeUiModel,
-  categoryList: List<CategoryUiModel>,
+  categoryList: ImmutableList<CategoryUiModel>,
   onCategoryClick: (String, String) -> Unit,
   modifier: Modifier = Modifier,
 ) {
