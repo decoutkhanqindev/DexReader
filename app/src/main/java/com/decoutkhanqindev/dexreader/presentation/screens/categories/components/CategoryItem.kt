@@ -10,11 +10,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.domain.model.Category
+import com.decoutkhanqindev.dexreader.presentation.model.CategoryUiModel
 
 @Composable
 fun CategoryItem(
-  item: Category,
+  item: CategoryUiModel,
   onClick: (String, String) -> Unit,
   modifier: Modifier = Modifier,
 ) {

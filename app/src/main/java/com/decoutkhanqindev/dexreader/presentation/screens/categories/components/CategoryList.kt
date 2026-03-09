@@ -6,11 +6,11 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.domain.model.Category
+import com.decoutkhanqindev.dexreader.presentation.model.CategoryUiModel
 
 @Composable
 fun CategoryList(
-  items: List<Category>,
+  items: List<CategoryUiModel>,
   onItemClick: (String, String) -> Unit,
   modifier: Modifier = Modifier,
 ) {

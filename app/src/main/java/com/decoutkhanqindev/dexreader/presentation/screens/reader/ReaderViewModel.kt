@@ -18,6 +18,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.chapter.GetChapterPagesUseC
 import com.decoutkhanqindev.dexreader.domain.usecase.history.AddAndUpdateToHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.history.ObserveHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaDetailsUseCase
+import com.decoutkhanqindev.dexreader.presentation.mapper.ChapterPagesUiMapper.toChapterPagesUiModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureUiError
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -183,7 +184,7 @@ constructor(
               )
             _chapterPagesUiState.value =
               ChapterPagesUiState.Success(
-                chapterPages = chapterPages,
+                chapterPages = chapterPages.toChapterPagesUiModel(),
                 currentChapterPage = initialChapterPage
               )
             prefetchNextChapterPages()
@@ -207,7 +208,7 @@ constructor(
               )
             _chapterPagesUiState.value =
               ChapterPagesUiState.Success(
-                chapterPages = chapterPages,
+                chapterPages = chapterPages.toChapterPagesUiModel(),
                 currentChapterPage = initialChapterPage
               )
           }

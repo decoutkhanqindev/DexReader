@@ -1,8 +1,8 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.categories
 
 import androidx.compose.runtime.Immutable
-import com.decoutkhanqindev.dexreader.domain.model.Category
 import com.decoutkhanqindev.dexreader.presentation.model.CategoryTypeUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.CategoryUiModel
 import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureUiError
 
 sealed interface CategoriesUiState {
@@ -11,6 +11,6 @@ sealed interface CategoriesUiState {
 
   @Immutable
   data class Success(
-    val categoryMap: Map<CategoryTypeUiModel, List<Category>> = emptyMap(),
+    val categoryMap: Map<CategoryTypeUiModel, List<CategoryUiModel>> = emptyMap(),
   ) : CategoriesUiState
 }

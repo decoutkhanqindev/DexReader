@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.model.CategoryType
 import com.decoutkhanqindev.dexreader.domain.usecase.category.GetCategoryListUseCase
+import com.decoutkhanqindev.dexreader.presentation.mapper.CategoryUiMapper.toCategoryUiModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureUiError
 import com.decoutkhanqindev.dexreader.presentation.model.CategoryTypeUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,9 +32,13 @@ class CategoriesViewModel @Inject constructor(
 
       getCategoryListUseCase()
         .onSuccess { grouped ->
-          val categoryMap = CategoryTypeUiModel.entries
-            .filter { it != CategoryTypeUiModel.UNKNOWN }
-            .associateWith { option -> grouped[CategoryType.valueOf(option.name)] ?: emptyList() }
+          val categoryMap =
+            CategoryTypeUiModel.entries
+              .filter { it != CategoryTypeUiModel.UNKNOWN }
+              .associateWith { type ->
+                (grouped[CategoryType.valueOf(type.name)]
+                  ?: emptyList()).map { it.toCategoryUiModel() }
+              }
           _uiState.value = CategoriesUiState.Success(categoryMap = categoryMap)
         }
         .onFailure { throwable ->
