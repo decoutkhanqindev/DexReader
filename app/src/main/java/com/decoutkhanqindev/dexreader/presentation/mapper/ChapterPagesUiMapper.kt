@@ -7,7 +7,7 @@ import kotlinx.collections.immutable.toPersistentList
 object ChapterPagesUiMapper {
   fun ChapterPages.toChapterPagesUiModel(): ChapterPagesUiModel = ChapterPagesUiModel(
     chapterId = chapterId,
-    pageImageUrls = pages.map { page -> "$baseUrl/data/$dataHash/$page" }.toPersistentList(),
+    pageImageUrls = pages.toPersistentList(),
     totalPages = totalPages,
   )
 }

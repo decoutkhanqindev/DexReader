@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.settings.ObserveThemeModeUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.settings.SaveThemeModeUseCase
-import com.decoutkhanqindev.dexreader.presentation.mapper.ThemeMapper.toThemeMode
-import com.decoutkhanqindev.dexreader.presentation.mapper.ThemeMapper.toThemeUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.ThemeUiModel
+import com.decoutkhanqindev.dexreader.presentation.mapper.ThemeModeUiMapper.toThemeMode
+import com.decoutkhanqindev.dexreader.presentation.mapper.ThemeModeUiMapper.toThemeModeUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.ThemeModeUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -40,7 +40,7 @@ constructor(
             _uiState.update {
               it.copy(
                 isLoading = false,
-                themeOption = mode.toThemeUiModel(),
+                themeOption = mode.toThemeModeUiModel(),
               )
             }
           }
@@ -48,7 +48,7 @@ constructor(
             _uiState.update {
               it.copy(
                 isLoading = false,
-                themeOption = ThemeUiModel.SYSTEM,
+                themeOption = ThemeModeUiModel.SYSTEM,
               )
             }
 
@@ -82,7 +82,7 @@ constructor(
     }
   }
 
-  fun updateThemeOption(value: ThemeUiModel) {
+  fun updateThemeOption(value: ThemeModeUiModel) {
     if (_uiState.value.themeOption == value) return
     _uiState.update {
       it.copy(

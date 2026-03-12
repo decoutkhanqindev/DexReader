@@ -7,7 +7,9 @@
       "WebSearch",
       "mcp__ide__getDiagnostics",
       "Bash(./gradlew :app:compileDebugKotlin:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Read(//mnt/c/Users/ADMIN/.claude/**)",
+      "Read(//c/Users/ADMIN/.claude/plans//**)"
     ]
   },
   "spinnerTipsEnabled": true

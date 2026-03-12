@@ -18,12 +18,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.ThemeUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.ThemeModeUiModel
 
 @Composable
 fun ThemeOptionList(
-  selectedItem: ThemeUiModel,
-  onItemClick: (ThemeUiModel) -> Unit,
+  selectedItem: ThemeModeUiModel,
+  onItemClick: (ThemeModeUiModel) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Card(
@@ -50,7 +50,7 @@ fun ThemeOptionList(
         )
       }
 
-      items(ThemeUiModel.entries, key = { it }) {
+      items(ThemeModeUiModel.entries, key = { it }) {
         ThemeOptionItem(
           isSelected = it == selectedItem,
           item = it,
