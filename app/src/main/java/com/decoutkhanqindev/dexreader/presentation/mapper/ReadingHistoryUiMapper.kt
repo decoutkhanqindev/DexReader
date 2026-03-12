@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.mapper
 
-import com.decoutkhanqindev.dexreader.domain.model.ReadingHistory
+import com.decoutkhanqindev.dexreader.domain.model.user.ReadingHistory
 import com.decoutkhanqindev.dexreader.presentation.model.ReadingHistoryUiModel
 
 object ReadingHistoryUiMapper {

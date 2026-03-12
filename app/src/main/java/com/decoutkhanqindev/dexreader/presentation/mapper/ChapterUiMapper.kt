@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.mapper
 
-import com.decoutkhanqindev.dexreader.domain.model.Chapter
+import com.decoutkhanqindev.dexreader.domain.model.manga.Chapter
 import com.decoutkhanqindev.dexreader.presentation.model.ChapterUiModel
 
 object ChapterUiMapper {

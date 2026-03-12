@@ -4,8 +4,8 @@ import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toDomainExcept
 import com.decoutkhanqindev.dexreader.data.mapper.MangaMapper.toManga
 import com.decoutkhanqindev.dexreader.data.network.api.ApiService
 import com.decoutkhanqindev.dexreader.di.UploadUrlQualifier
-import com.decoutkhanqindev.dexreader.domain.model.Manga
-import com.decoutkhanqindev.dexreader.domain.repository.MangaRepository
+import com.decoutkhanqindev.dexreader.domain.model.manga.Manga
+import com.decoutkhanqindev.dexreader.domain.repository.manga.MangaRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
 import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers

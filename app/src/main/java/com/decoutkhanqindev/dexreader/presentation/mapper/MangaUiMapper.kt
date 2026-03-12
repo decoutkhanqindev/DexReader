@@ -1,8 +1,8 @@
 package com.decoutkhanqindev.dexreader.presentation.mapper
 
 
-import com.decoutkhanqindev.dexreader.domain.model.FavoriteManga
-import com.decoutkhanqindev.dexreader.domain.model.Manga
+import com.decoutkhanqindev.dexreader.domain.model.manga.FavoriteManga
+import com.decoutkhanqindev.dexreader.domain.model.manga.Manga
 import com.decoutkhanqindev.dexreader.presentation.mapper.CategoryUiMapper.toCategoryUiModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguageUiModel
 import com.decoutkhanqindev.dexreader.presentation.model.MangaUiModel

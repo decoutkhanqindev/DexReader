@@ -3,7 +3,7 @@ package com.decoutkhanqindev.dexreader.data.mapper
 import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toMangaLanguage
 import com.decoutkhanqindev.dexreader.data.network.api.param.MangaIncludesParam
 import com.decoutkhanqindev.dexreader.data.network.api.response.chapter.ChapterResponse
-import com.decoutkhanqindev.dexreader.domain.model.Chapter
+import com.decoutkhanqindev.dexreader.domain.model.manga.Chapter
 import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
 
 object ChapterMapper {

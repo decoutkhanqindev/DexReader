@@ -5,8 +5,8 @@ import com.decoutkhanqindev.dexreader.data.mapper.FavoriteMangaMapper.toFavorite
 import com.decoutkhanqindev.dexreader.data.mapper.FavoriteMangaMapper.toFavoriteMangaRequest
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
-import com.decoutkhanqindev.dexreader.domain.model.FavoriteManga
-import com.decoutkhanqindev.dexreader.domain.repository.FavoritesRepository
+import com.decoutkhanqindev.dexreader.domain.model.manga.FavoriteManga
+import com.decoutkhanqindev.dexreader.domain.repository.user.FavoritesRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.Dispatchers

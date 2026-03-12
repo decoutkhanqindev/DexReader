@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.domain.usecase.manga
 
-import com.decoutkhanqindev.dexreader.domain.model.Manga
-import com.decoutkhanqindev.dexreader.domain.repository.MangaRepository
+import com.decoutkhanqindev.dexreader.domain.model.manga.Manga
+import com.decoutkhanqindev.dexreader.domain.repository.manga.MangaRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendResultCatching
 import javax.inject.Inject
 

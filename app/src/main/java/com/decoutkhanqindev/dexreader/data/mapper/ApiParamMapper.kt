@@ -4,7 +4,7 @@ import com.decoutkhanqindev.dexreader.data.network.api.param.MangaContentRatingP
 import com.decoutkhanqindev.dexreader.data.network.api.param.MangaLanguageCodeParam
 import com.decoutkhanqindev.dexreader.data.network.api.param.MangaSortOrderParam
 import com.decoutkhanqindev.dexreader.data.network.api.param.MangaStatusParam
-import com.decoutkhanqindev.dexreader.domain.model.MangaLanguage
+import com.decoutkhanqindev.dexreader.domain.model.manga.MangaLanguage
 import com.decoutkhanqindev.dexreader.domain.model.criteria.filter.MangaContentRatingFilter
 import com.decoutkhanqindev.dexreader.domain.model.criteria.filter.MangaStatusFilter
 import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortOrder

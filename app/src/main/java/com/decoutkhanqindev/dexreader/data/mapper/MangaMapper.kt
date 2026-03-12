@@ -6,7 +6,7 @@ import com.decoutkhanqindev.dexreader.data.network.api.constant.ApiEndpoints
 import com.decoutkhanqindev.dexreader.data.network.api.param.MangaIncludesParam
 import com.decoutkhanqindev.dexreader.data.network.api.param.MangaLanguageCodeParam
 import com.decoutkhanqindev.dexreader.data.network.api.response.manga.MangaResponse
-import com.decoutkhanqindev.dexreader.domain.model.Manga
+import com.decoutkhanqindev.dexreader.domain.model.manga.Manga
 import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
 
 object MangaMapper {

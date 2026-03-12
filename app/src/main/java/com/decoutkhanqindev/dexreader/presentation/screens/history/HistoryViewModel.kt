@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
-import com.decoutkhanqindev.dexreader.domain.usecase.history.ObserveHistoryUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.history.RemoveFromHistoryUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.user.history.ObserveHistoryUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.user.history.RemoveFromHistoryUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.ReadingHistoryUiMapper.toReadingHistoryUiModel
 import com.decoutkhanqindev.dexreader.presentation.model.ReadingHistoryUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState

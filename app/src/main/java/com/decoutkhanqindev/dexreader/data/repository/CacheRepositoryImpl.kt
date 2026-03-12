@@ -4,8 +4,8 @@ import com.decoutkhanqindev.dexreader.data.local.database.dao.ChapterCacheDao
 import com.decoutkhanqindev.dexreader.data.mapper.ChapterPagesMapper.toChapterCacheEntity
 import com.decoutkhanqindev.dexreader.data.mapper.ChapterPagesMapper.toChapterPages
 import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toCacheException
-import com.decoutkhanqindev.dexreader.domain.model.ChapterPages
-import com.decoutkhanqindev.dexreader.domain.repository.CacheRepository
+import com.decoutkhanqindev.dexreader.domain.model.manga.ChapterPages
+import com.decoutkhanqindev.dexreader.domain.repository.manga.CacheRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject

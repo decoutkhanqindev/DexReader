@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.domain.usecase.user
 
-import com.decoutkhanqindev.dexreader.domain.model.User
-import com.decoutkhanqindev.dexreader.domain.repository.UserRepository
+import com.decoutkhanqindev.dexreader.domain.model.user.User
+import com.decoutkhanqindev.dexreader.domain.repository.user.UserRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendResultCatching
 import javax.inject.Inject
 

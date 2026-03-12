@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.mapper
 
-import com.decoutkhanqindev.dexreader.domain.model.ThemeMode
+import com.decoutkhanqindev.dexreader.domain.model.settings.ThemeMode
 import com.decoutkhanqindev.dexreader.presentation.model.ThemeModeUiModel
 
 

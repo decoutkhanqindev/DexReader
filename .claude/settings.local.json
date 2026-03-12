@@ -9,7 +9,20 @@
       "Bash(./gradlew :app:compileDebugKotlin:*)",
       "Bash(grep:*)",
       "Read(//mnt/c/Users/ADMIN/.claude/**)",
-      "Read(//c/Users/ADMIN/.claude/plans//**)"
+      "Read(//c/Users/ADMIN/.claude/plans//**)",
+      "Bash(for f in \"C:/Android Development/dex_reader/DexReader/app/src/main/java/com/decoutkhanqindev/dexreader/domain/model/Category.kt\" \"C:/Android Development/dex_reader/DexReader/app/src/main/java/com/decoutkhanqindev/dexreader/domain/model/CategoryType.kt\" \"C:/Android Development/dex_reader/DexReader/app/src/main/java/com/decoutkhanqindev/dexreader/domain/model/Chapter.kt\" \"C:/Android Development/dex_reader/DexReader/app/src/main/java/com/decoutkhanqindev/dexreader/domain/model/ChapterPages.kt\" \"C:/Android Development/dex_reader/DexReader/app/src/main/java/com/decoutkhanqindev/dexreader/domain/model/FavoriteManga.kt\" \"C:/Android Development/dex_reader/DexReader/app/src/main/java/com/decoutkhanqindev/dexreader/domain/model/Manga.kt\" \"C:/Android Development/dex_reader/DexReader/app/src/main/java/com/decoutkhanqindev/dexreader/domain/model/MangaLanguage.kt\" \"C:/Android Development/dex_reader/DexReader/app/src/main/java/com/decoutkhanqindev/dexreader/domain/model/ReadingHistory.kt\" \"C:/Android Development/dex_reader/DexReader/app/src/main/java/com/decoutkhanqindev/dexreader/domain/model/ThemeMode.kt\" \"C:/Android Development/dex_reader/DexReader/app/src/main/java/com/decoutkhanqindev/dexreader/domain/model/User.kt\")",
+      "Bash(do echo \"=== $f ===\")",
+      "Read(//c/Android Development/dex_reader/DexReader/**)",
+      "Bash(done)",
+      "Bash(for f in \"C:/Android Development/dex_reader/DexReader/app/src/main/java/com/decoutkhanqindev/dexreader/domain/model/criteria/filter/MangaContentRatingFilter.kt\" \"C:/Android Development/dex_reader/DexReader/app/src/main/java/com/decoutkhanqindev/dexreader/domain/model/criteria/filter/MangaStatusFilter.kt\" \"C:/Android Development/dex_reader/DexReader/app/src/main/java/com/decoutkhanqindev/dexreader/domain/model/criteria/sort/MangaSortCriteria.kt\" \"C:/Android Development/dex_reader/DexReader/app/src/main/java/com/decoutkhanqindev/dexreader/domain/model/criteria/sort/MangaSortOrder.kt\")",
+      "Bash(for f in \"C:/Users/ADMIN/.claude/plans/compiled-noodling-harp.md\" \"C:/Users/ADMIN/.claude/plans/iterative-rolling-diffie.md\" \"C:/Users/ADMIN/.claude/plans/agile-baking-snail.md\" \"C:/Users/ADMIN/.claude/plans/polymorphic-greeting-hare.md\" \"C:/Users/ADMIN/.claude/plans/rustling-plotting-scott.md\" \"C:/Users/ADMIN/.claude/plans/toasty-tinkering-stream.md\" \"C:/Users/ADMIN/.claude/plans/crystalline-orbiting-iverson.md\" \"C:/Users/ADMIN/.claude/plans/prancy-popping-meadow.md\")",
+      "Bash(rm:*)",
+      "Bash(__NEW_LINE_13ac7de3225b9171__:*)",
+      "Bash(python:*)",
+      "Bash(for f in MangaRepository ChapterRepository CacheRepository CategoryRepository UserRepository FavoritesRepository HistoryRepository SettingsRepository)",
+      "Bash(do)",
+      "Bash(echo \"=== $f.kt ===\")",
+      "Read(//c/Android Development/dex_reader/DexReader/app/src/main/java/com/decoutkhanqindev/dexreader/domain/repository/**)"
     ]
   },
   "spinnerTipsEnabled": true

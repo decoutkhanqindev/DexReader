@@ -1,8 +1,8 @@
 package com.decoutkhanqindev.dexreader.domain.usecase.category
 
-import com.decoutkhanqindev.dexreader.domain.model.Category
-import com.decoutkhanqindev.dexreader.domain.model.CategoryType
-import com.decoutkhanqindev.dexreader.domain.repository.CategoryRepository
+import com.decoutkhanqindev.dexreader.domain.model.category.Category
+import com.decoutkhanqindev.dexreader.domain.model.category.CategoryType
+import com.decoutkhanqindev.dexreader.domain.repository.category.CategoryRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendResultCatching
 import javax.inject.Inject
 
