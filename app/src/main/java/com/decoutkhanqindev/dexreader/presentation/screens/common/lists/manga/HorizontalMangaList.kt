@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.model.MangaUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaUiModel
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable

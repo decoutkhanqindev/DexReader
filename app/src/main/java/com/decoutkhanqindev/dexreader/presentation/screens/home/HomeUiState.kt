@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.home
 
 
 import androidx.compose.runtime.Immutable
-import com.decoutkhanqindev.dexreader.presentation.model.MangaUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaUiModel
 import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureUiError
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf

@@ -16,7 +16,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.UserUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.user.UserUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.PersonPicture
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.ProfilePicture

@@ -12,7 +12,7 @@ import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toManga
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaStatusFilter
 import com.decoutkhanqindev.dexreader.presentation.mapper.UiErrorMapper.toFeatureUiError
 import com.decoutkhanqindev.dexreader.presentation.mapper.MangaUiMapper.toMangaUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.MangaUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaUiModel
 import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaContentRatingFilterUiModel
 import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaStatusFilterUiModel
 import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortCriteriaUiModel

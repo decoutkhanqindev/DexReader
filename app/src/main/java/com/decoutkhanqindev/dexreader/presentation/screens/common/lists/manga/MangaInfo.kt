@@ -15,7 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.MangaUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaUiModel
 
 @Composable
 fun MangaInfo(

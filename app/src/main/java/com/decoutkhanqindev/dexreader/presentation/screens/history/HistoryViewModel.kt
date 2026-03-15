@@ -7,7 +7,7 @@ import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.usecase.user.history.ObserveHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.history.RemoveFromHistoryUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.ReadingHistoryUiMapper.toReadingHistoryUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.ReadingHistoryUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel

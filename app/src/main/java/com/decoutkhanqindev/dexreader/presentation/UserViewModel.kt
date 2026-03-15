@@ -7,7 +7,7 @@ import com.decoutkhanqindev.dexreader.domain.model.user.User
 import com.decoutkhanqindev.dexreader.domain.usecase.user.profile.ObserveCurrentUserUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.profile.ObserveUserProfileUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.UserUiMapper.toUserUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.UserUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.user.UserUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow

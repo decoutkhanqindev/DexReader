@@ -10,7 +10,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import com.decoutkhanqindev.dexreader.presentation.model.UserUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.user.UserUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.menu.MenuDrawer
 import com.decoutkhanqindev.dexreader.presentation.screens.common.top_bars.MainTopBar
 import kotlinx.coroutines.launch

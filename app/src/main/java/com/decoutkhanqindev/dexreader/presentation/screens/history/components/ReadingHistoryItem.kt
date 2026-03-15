@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.model.ReadingHistoryUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
 
 @Composable

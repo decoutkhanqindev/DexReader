@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.presentation.mapper
 
 import com.decoutkhanqindev.dexreader.domain.model.user.ReadingHistory
-import com.decoutkhanqindev.dexreader.presentation.model.ReadingHistoryUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryUiModel
 import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
 
 object ReadingHistoryUiMapper {

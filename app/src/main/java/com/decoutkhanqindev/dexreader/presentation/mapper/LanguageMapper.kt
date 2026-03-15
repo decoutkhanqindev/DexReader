@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.presentation.mapper
 
 import com.decoutkhanqindev.dexreader.domain.model.manga.MangaLanguage
-import com.decoutkhanqindev.dexreader.presentation.model.MangaLanguageUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaLanguageUiModel
 
 object LanguageMapper {
   fun MangaLanguage.toMangaLanguageUiModel() =

@@ -19,8 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.ChapterUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.ReadingHistoryUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryUiModel
 
 @Composable
 fun MangaChapterItem(

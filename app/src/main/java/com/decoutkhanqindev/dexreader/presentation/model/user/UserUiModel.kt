@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.model
+package com.decoutkhanqindev.dexreader.presentation.model.user
 
 import androidx.compose.runtime.Immutable
 

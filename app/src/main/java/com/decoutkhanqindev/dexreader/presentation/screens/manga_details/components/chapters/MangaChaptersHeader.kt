@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.MangaLanguageUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaLanguageUiModel
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable

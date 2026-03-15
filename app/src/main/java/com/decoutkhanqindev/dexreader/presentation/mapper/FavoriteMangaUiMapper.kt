@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.presentation.mapper
 
 import com.decoutkhanqindev.dexreader.domain.model.manga.FavoriteManga
-import com.decoutkhanqindev.dexreader.presentation.model.MangaUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaUiModel
 import kotlinx.collections.immutable.persistentListOf
 
 object FavoriteMangaUiMapper {

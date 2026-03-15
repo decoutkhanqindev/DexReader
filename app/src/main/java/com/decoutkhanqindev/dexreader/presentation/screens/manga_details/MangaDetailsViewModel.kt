@@ -20,9 +20,9 @@ import com.decoutkhanqindev.dexreader.presentation.mapper.UiErrorMapper.toFeatur
 import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguage
 import com.decoutkhanqindev.dexreader.presentation.mapper.MangaUiMapper.toMangaUiModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ReadingHistoryUiMapper.toReadingHistoryUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.ChapterUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.MangaLanguageUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.ReadingHistoryUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaLanguageUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryUiModel
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState

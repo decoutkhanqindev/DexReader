@@ -24,7 +24,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.model.MangaUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.MoveToTopButton
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
