@@ -1,23 +1,40 @@
 ## Status
 
-`domain/` layer package reorganisation is complete. All three sub-layers (`model/`, `repository/`, `usecase/`) now share a consistent 4-group taxonomy: **manga**, **category**, **user**, **settings**. Project imports are fully updated. No stale references remain.
+Compose performance fixes complete. All 5 targeted recomposition/stability issues from the audit are resolved. Build is clean and committed to `main` (`642d0f3`). A full deep-dive audit with the `android-jetpack-compose-expert` skill confirmed zero remaining issues across all 7 stability categories.
+
+The project is structurally complete and performance-clean. Ready for manual smoke testing or new feature work.
 
 ## Completed This Session
 
-- **domain/model/** — moved 10 flat model files into 4 sub-packages (`manga/`, `category/`, `user/`, `settings/`); `criteria/` left untouched.
-- **domain/repository/** — moved 8 flat repository interfaces into matching sub-packages (`manga/`, `category/`, `user/`, `settings/`).
-- **domain/usecase/** — consolidated 8 groups → 4 top-level groups (`manga/`, `category/`, `user/`, `settings/`), merging `chapter/` + `cache/` → `manga/` and `favorites/` + `history/` → `user/`. User further sub-grouped: `manga/cache/`, `user/favorite/`, `user/history/`, `user/profile/`.
-- **1-file rule applied** — flattened any secondary sub-package that contained exactly 1 file back to its parent (e.g. `repository/manga/chapter/` → `repository/manga/`). Top-level domain groups kept even when 1 file.
-- Bulk import updates via Python script across ~130 consumer files (data layer, domain layer, presentation layer).
+- **Fix 1 — `VerticalGridMangaList.kt`:** Replaced `itemsIndexed` + `"${id}_$index"` key with `items` + `manga.id` key. Eliminates tail-recomposition on list insertions/removals.
+- **Fix 2 — `CategoriesUiState.kt`:** Changed `categoryMap` from `Map<…>` to `ImmutableMap<…>` with `persistentMapOf()` default. Compose stability checker now treats it as stable.
+- **Fix 3 — `CategoriesViewModel.kt`:** Added `.toImmutableMap()` call on `associateWith { … }` result to satisfy the new `ImmutableMap` type.
+- **Fix 4 — `ReaderScreen.kt`:** Wrapped `currentPage`/`totalPages` string derivation in `remember(chapterPagesUiState)`. Prevents string allocation on every recompose.
+- **Fix 5 — `MenuDrawer.kt`:** Extracted all 6 `stringResource(…)` calls, then wrapped `persistentListOf(…)` in `remember(…)` keyed on the resolved strings. List is no longer rebuilt on every recompose.
+- **Fix 6 — `MangaItem.kt`:** Memoized click lambda with `remember(manga.id)`. Prevents unnecessary Card recomposition from new lambda instances.
+- **Full deep-dive audit:** `android-jetpack-compose-expert` skill verified all 170+ presentation files — zero remaining stability, key, `rememberSaveable`, or annotation issues found.
+- All 6 fixes committed in a single commit: `perf: fix compose recomposition issues from audit` (`642d0f3`)
 
 ## Next Session - Start Here
 
-Run `./gradlew :app:compileDebugKotlin` to verify the build is clean after all package moves.
+Run `./gradlew :app:compileDebugKotlin` to confirm build is still clean (should be — last confirmed `BUILD SUCCESSFUL`).
 
 Then perform manual smoke testing of the three high-risk screens:
-1. **Reader** — open `ReaderViewModel.kt`, verify `ChapterPagesUiModel` page URL flow.
-2. **Manga list** — open `HomeViewModel.kt`, verify `ImmutableList<MangaUiModel>` recomposition.
-3. **Categories grid** — open `CategoriesViewModel.kt`, verify `Map<CategoryTypeUiModel, ImmutableList<CategoryUiModel>>`.
+1. **Reader** — open a chapter, swipe pages, verify page counter (`currentPage / totalPages`) updates correctly.
+2. **Manga list (Home)** — scroll the grid, verify no jank; confirm `MangaItem` tap navigates to details.
+3. **Categories grid** — open Categories, verify all `CategoryTypeUiModel` groups render with their `ImmutableList<CategoryUiModel>` members.
+
+If smoke testing passes, the next logical step is:
+- **New feature work** (the project is architecturally complete), or
+- **Compose recomposition metrics** — run Layout Inspector → Recomposition Counts in a debug build to quantify improvement.
+
+## Architectural Decision: `presentation/mapper/` Stays Flat
+
+**Decision (confirmed):** Do not reorganize `presentation/mapper/` by feature. Keep all 11 mapper files in the flat `presentation.mapper` package.
+
+**Why:** `UiErrorMapper` and `CriteriaMapper` are cross-feature infra adapters with no clean feature home. Count is below the ~15 threshold for splitting.
+
+**When to revisit:** If mapper count exceeds ~15, the only clean split is `entity/` vs `infra/`.
 
 ## Architectural Decision: `data/mapper/` Stays Flat
 
@@ -31,34 +48,26 @@ Then perform manual smoke testing of the three high-risk screens:
 
 ## Important Context
 
-- **Package taxonomy (final):** every `domain/` sub-layer uses `manga / category / user / settings` as top-level groups. `repository/` and `usecase/` mirror each other; `usecase/` adds a second level inside `manga/` and `user/` for sub-concerns with ≥2 files.
-- **1-file rule:** secondary sub-packages (2nd level within a group) are only created when they hold ≥2 files. Top-level domain groups (manga, category, user, settings) are kept regardless of file count — they are domain separators, not structural conveniences.
-- **criteria/ stays separate:** `domain/model/criteria/filter/` and `domain/model/criteria/sort/` were not merged into `manga/` — criteria models are shared by both `manga/` and `category/` operations, so a standalone `criteria/` package is correct.
-- **Import updates:** all import changes were applied via a Python regex script (`fix_imports.py`, deleted after each run) using `re.MULTILINE` exact-line matching to avoid partial-string collisions.
-- **User-applied sub-grouping:** the user independently moved use cases into `usecase/manga/cache/`, `usecase/user/favorite/`, `usecase/user/history/`, `usecase/user/profile/` via the IDE. These are intentional and correct.
+- **Package taxonomy (final — all layers):** `domain/`, `presentation/model/` both use `manga / category / user / settings` as top-level groups. Layers are structurally consistent end-to-end.
+- **`ReadingHistoryList.kt` and `SuggestionList.kt`:** Both use `"${id}_$index"` compound keys. This is acceptable — these lists are replaced wholesale (not mutated), so index drift does not occur. Not a bug.
+- **Audit verdict:** The deep-dive skill audit found zero remaining issues across: unstable collection types, missing `remember`/`derivedStateOf`, lambda stability, ViewModel injection anti-patterns, lazy list keys, `rememberSaveable` safety, and `@Stable`/`@Immutable` annotations.
+- **`presentation/model/` untouched sub-packages:** `criteria/sort/`, `criteria/filter/`, and `error/` were already grouped and are correct. Not changing.
+- **1-file rule:** Secondary sub-packages (2nd level within a group) only created when they hold ≥2 files. Top-level domain groups (manga, category, user, settings) kept regardless of file count.
+- **Import updates (prior session):** All import changes were applied via a Python regex script using `re.MULTILINE` exact-line matching to avoid partial-string collisions.
 
 ## Files Modified
 
-**domain/model/** (10 files moved, package declarations updated):
-- `manga/Manga.kt`, `manga/Chapter.kt`, `manga/ChapterPages.kt`, `manga/MangaLanguage.kt`, `manga/FavoriteManga.kt`
-- `category/Category.kt`, `category/CategoryType.kt`
-- `user/User.kt`, `user/ReadingHistory.kt`
-- `settings/ThemeMode.kt`
+**This session (Compose performance fixes):**
+- `presentation/screens/common/lists/manga/VerticalGridMangaList.kt` — `itemsIndexed` → `items` with stable key
+- `presentation/screens/categories/CategoriesUiState.kt` — `Map` → `ImmutableMap`, `emptyMap()` → `persistentMapOf()`
+- `presentation/screens/categories/CategoriesViewModel.kt` — added `.toImmutableMap()` + import
+- `presentation/screens/reader/ReaderScreen.kt` — `remember(chapterPagesUiState)` wrapper + `remember` import
+- `presentation/screens/common/menu/MenuDrawer.kt` — extracted `stringResource` calls + `remember(...)` wrapper
+- `presentation/screens/common/lists/manga/MangaItem.kt` — `remember(manga.id)` lambda memoization
 
-**domain/repository/** (8 files moved, package declarations updated):
-- `manga/MangaRepository.kt`, `manga/ChapterRepository.kt`, `manga/CacheRepository.kt`
-- `category/CategoryRepository.kt`
-- `user/UserRepository.kt`, `user/FavoritesRepository.kt`, `user/HistoryRepository.kt`
-- `settings/SettingsRepository.kt`
-
-**domain/usecase/** (14 files moved across consolidation + user sub-grouping):
-- `manga/`: GetChapterDetailsUseCase, GetChapterListUseCase, GetChapterPagesUseCase (from `chapter/`)
-- `manga/cache/`: AddChapterCacheUseCase, ClearExpiredCacheUseCase, DeleteChapterCacheUseCase, GetChapterCacheUseCase (from `cache/`)
-- `user/favorite/`: AddToFavoritesUseCase, ObserveFavoritesUseCase, ObserveIsFavoriteUseCase, RemoveFromFavoritesUseCase
-- `user/history/`: AddAndUpdateToHistoryUseCase, ObserveHistoryUseCase, RemoveFromHistoryUseCase
-
-**Consumer files updated (~130 files):**
-- All `data/mapper/`, `data/repository/` impls
-- `di/RepositoryModule.kt`
-- All `domain/repository/`, `domain/usecase/` files
-- All `presentation/mapper/`, `presentation/screens/*/ViewModel.kt` files
+**Prior session (model package reorganisation — ~70 files):**
+- `presentation/model/manga/` — `MangaUiModel.kt`, `ChapterUiModel.kt`, `ChapterPagesUiModel.kt`, `MangaLanguageUiModel.kt`
+- `presentation/model/category/` — `CategoryUiModel.kt`, `CategoryTypeUiModel.kt`
+- `presentation/model/user/` — `UserUiModel.kt`, `ReadingHistoryUiModel.kt`
+- `presentation/model/settings/` — `ThemeModeUiModel.kt`
+- All `presentation/mapper/`, `presentation/screens/*/ViewModel.kt`, `*UiState*.kt`, composable, and top-level presentation files updated for imports

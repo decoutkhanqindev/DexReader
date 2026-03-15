@@ -28,7 +28,10 @@ fun HorizontalMangaList(
       horizontalArrangement = Arrangement.spacedBy(2.dp),
       verticalAlignment = Alignment.CenterVertically,
     ) {
-      items(mangaList, key = { it.id }) { manga ->
+      items(
+        items = mangaList,
+        key = MangaUiModel::id
+      ) { manga ->
         MangaItem(
           manga = manga,
           onSelectedManga = onSelectedManga,

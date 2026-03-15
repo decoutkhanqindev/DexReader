@@ -54,7 +54,7 @@ fun VerticalGridMangaList(
     ) {
       items(
         items = mangaList,
-        key = { manga -> manga.id }
+        key = MangaUiModel::id
       ) { manga ->
         MangaItem(
           manga = manga,

@@ -25,7 +25,9 @@ fun MangaItem(
   onSelectedManga: (MangaUiModel) -> Unit,
   modifier: Modifier = Modifier,
 ) {
+  // Using remember to avoid unnecessary recompositions and re-creation of the onClick lambda when manga.id doesn't change
   val onClick = remember(manga.id) { { onSelectedManga(manga) } }
+
   Card(
     modifier = modifier,
     onClick = onClick,

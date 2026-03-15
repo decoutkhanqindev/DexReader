@@ -11,8 +11,8 @@ import com.decoutkhanqindev.dexreader.presentation.mapper.UiErrorMapper.toFeatur
 import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryTypeUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toImmutableMap
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
