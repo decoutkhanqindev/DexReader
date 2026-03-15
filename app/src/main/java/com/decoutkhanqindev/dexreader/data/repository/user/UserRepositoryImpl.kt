@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.data.repository
+package com.decoutkhanqindev.dexreader.data.repository.user
 
 import com.decoutkhanqindev.dexreader.data.mapper.UserMapper.toUser
 import com.decoutkhanqindev.dexreader.data.mapper.UserMapper.toUserProfileRequest

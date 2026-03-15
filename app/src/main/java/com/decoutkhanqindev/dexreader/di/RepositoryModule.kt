@@ -1,13 +1,13 @@
 package com.decoutkhanqindev.dexreader.di
 
-import com.decoutkhanqindev.dexreader.data.repository.CacheRepositoryImpl
-import com.decoutkhanqindev.dexreader.data.repository.CategoryRepositoryImpl
-import com.decoutkhanqindev.dexreader.data.repository.ChapterRepositoryImpl
-import com.decoutkhanqindev.dexreader.data.repository.FavoritesRepositoryImpl
-import com.decoutkhanqindev.dexreader.data.repository.HistoryRepositoryImpl
-import com.decoutkhanqindev.dexreader.data.repository.MangaRepositoryImpl
-import com.decoutkhanqindev.dexreader.data.repository.SettingsRepositoryImpl
-import com.decoutkhanqindev.dexreader.data.repository.UserRepositoryImpl
+import com.decoutkhanqindev.dexreader.data.repository.manga.CacheRepositoryImpl
+import com.decoutkhanqindev.dexreader.data.repository.category.CategoryRepositoryImpl
+import com.decoutkhanqindev.dexreader.data.repository.manga.ChapterRepositoryImpl
+import com.decoutkhanqindev.dexreader.data.repository.user.FavoritesRepositoryImpl
+import com.decoutkhanqindev.dexreader.data.repository.user.HistoryRepositoryImpl
+import com.decoutkhanqindev.dexreader.data.repository.manga.MangaRepositoryImpl
+import com.decoutkhanqindev.dexreader.data.repository.settings.SettingsRepositoryImpl
+import com.decoutkhanqindev.dexreader.data.repository.user.UserRepositoryImpl
 import com.decoutkhanqindev.dexreader.domain.repository.manga.CacheRepository
 import com.decoutkhanqindev.dexreader.domain.repository.category.CategoryRepository
 import com.decoutkhanqindev.dexreader.domain.repository.manga.ChapterRepository

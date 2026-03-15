@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.data.repository
+package com.decoutkhanqindev.dexreader.data.repository.category
 
 import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toApiParam
 import com.decoutkhanqindev.dexreader.data.mapper.CategoryMapper.toCategory

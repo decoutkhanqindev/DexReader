@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.data.repository
+package com.decoutkhanqindev.dexreader.data.repository.settings
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences

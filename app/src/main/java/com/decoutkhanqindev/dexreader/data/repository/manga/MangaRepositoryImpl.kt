@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.data.repository
+package com.decoutkhanqindev.dexreader.data.repository.manga
 
 import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toDomainException
 import com.decoutkhanqindev.dexreader.data.mapper.MangaMapper.toManga
