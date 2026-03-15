@@ -19,6 +19,16 @@ Then perform manual smoke testing of the three high-risk screens:
 2. **Manga list** — open `HomeViewModel.kt`, verify `ImmutableList<MangaUiModel>` recomposition.
 3. **Categories grid** — open `CategoriesViewModel.kt`, verify `Map<CategoryTypeUiModel, ImmutableList<CategoryUiModel>>`.
 
+## Architectural Decision: `data/mapper/` Stays Flat
+
+**Decision (confirmed):** Do not reorganize `data/mapper/` by source or by feature. Keep all 9 mapper files in the flat `data.mapper` package.
+
+**Why:** Both reorganization axes fail:
+- **By source** (`network/`, `firebase/`, `local/`) — `ChapterPagesMapper` spans Network + Room; `UserMapper` spans FirebaseAuth + Firestore. No clean home exists for either.
+- **By feature** (`manga/`, `category/`, `user/`, `settings/`) — `ApiParamMapper` and `ExceptionMapper` are cross-feature infra adapters with no clean home.
+
+**When to revisit:** If the mapper count grows above ~15, the only clean split is `entity/` vs `infra/` — separating the 7 domain-entity mappers from the 2 infrastructure adapters (`ApiParamMapper`, `ExceptionMapper`). Do not split by source or feature.
+
 ## Important Context
 
 - **Package taxonomy (final):** every `domain/` sub-layer uses `manga / category / user / settings` as top-level groups. `repository/` and `usecase/` mirror each other; `usecase/` adds a second level inside `manga/` and `user/` for sub-concerns with ≥2 files.
