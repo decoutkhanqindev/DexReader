@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -39,13 +40,14 @@ fun ReaderScreen(
   val chapterDetailsUiState by viewModel.chapterDetailsUiState.collectAsStateWithLifecycle()
   val chapterPagesUiState by viewModel.chapterPagesUiState.collectAsStateWithLifecycle()
   val chapterNavUiState by viewModel.chapterNavUiState.collectAsStateWithLifecycle()
-  val (currentPage, totalPages) = when (chapterPagesUiState) {
-    is ChapterPagesUiState.Success -> {
-      val successUiState = chapterPagesUiState as ChapterPagesUiState.Success
-      successUiState.currentChapterPage.toString() to successUiState.chapterPages.totalPages.toString()
+  val (currentPage, totalPages) = remember(chapterPagesUiState) {
+    when (chapterPagesUiState) {
+      is ChapterPagesUiState.Success -> {
+        val s = chapterPagesUiState as ChapterPagesUiState.Success
+        s.currentChapterPage.toString() to s.chapterPages.totalPages.toString()
+      }
+      else -> "0" to "0"
     }
-
-    else -> "0" to "0"
   }
   var isFullScreen by rememberSaveable { mutableStateOf(false) }
 

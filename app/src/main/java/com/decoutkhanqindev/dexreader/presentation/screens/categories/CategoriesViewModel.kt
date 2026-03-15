@@ -12,6 +12,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryTypeUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -42,6 +43,7 @@ class CategoriesViewModel @Inject constructor(
                 (grouped[CategoryType.valueOf(type.name)]
                   ?: persistentListOf()).map { it.toCategoryUiModel() }.toPersistentList()
               }
+              .toImmutableMap()
           _uiState.value = CategoriesUiState.Success(categoryMap = categoryMap)
         }
         .onFailure { throwable ->

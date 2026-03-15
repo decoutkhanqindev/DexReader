@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -37,38 +38,47 @@ fun MenuDrawer(
   content: @Composable () -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  val items = persistentListOf(
-    MenuItem(
-      id = NavDestination.HomeDestination.route,
-      title = stringResource(R.string.home_menu_item),
-      icon = Icons.Default.Home
-    ),
-    MenuItem(
-      id = NavDestination.CategoriesDestination.route,
-      title = stringResource(R.string.category_menu_item),
-      icon = Icons.Default.Category
-    ),
-    MenuItem(
-      id = NavDestination.FavoritesDestination.route,
-      title = stringResource(R.string.favorite_menu_item),
-      icon = Icons.Default.Favorite
-    ),
-    MenuItem(
-      id = NavDestination.HistoryDestination.route,
-      title = stringResource(R.string.history_menu_item),
-      icon = Icons.Default.History
-    ),
-    MenuItem(
-      id = NavDestination.ProfileDestination.route,
-      title = stringResource(R.string.profile_menu_item),
-      icon = Icons.Default.Person
-    ),
-    MenuItem(
-      id = NavDestination.SettingsDestination.route,
-      title = stringResource(R.string.settings_menu_item),
-      icon = Icons.Default.Settings
-    )
-  )
+  val homeTitle = stringResource(R.string.home_menu_item)
+  val categoryTitle = stringResource(R.string.category_menu_item)
+  val favoriteTitle = stringResource(R.string.favorite_menu_item)
+  val historyTitle = stringResource(R.string.history_menu_item)
+  val profileTitle = stringResource(R.string.profile_menu_item)
+  val settingsTitle = stringResource(R.string.settings_menu_item)
+  val items =
+    remember(homeTitle, categoryTitle, favoriteTitle, historyTitle, profileTitle, settingsTitle) {
+      persistentListOf(
+        MenuItem(
+          id = NavDestination.HomeDestination.route,
+          title = homeTitle,
+          icon = Icons.Default.Home
+        ),
+        MenuItem(
+          id = NavDestination.CategoriesDestination.route,
+          title = categoryTitle,
+          icon = Icons.Default.Category
+        ),
+        MenuItem(
+          id = NavDestination.FavoritesDestination.route,
+          title = favoriteTitle,
+          icon = Icons.Default.Favorite
+        ),
+        MenuItem(
+          id = NavDestination.HistoryDestination.route,
+          title = historyTitle,
+          icon = Icons.Default.History
+        ),
+        MenuItem(
+          id = NavDestination.ProfileDestination.route,
+          title = profileTitle,
+          icon = Icons.Default.Person
+        ),
+        MenuItem(
+          id = NavDestination.SettingsDestination.route,
+          title = settingsTitle,
+          icon = Icons.Default.Settings
+        ),
+      )
+    }
 
   ModalNavigationDrawer(
     drawerState = drawerState,
