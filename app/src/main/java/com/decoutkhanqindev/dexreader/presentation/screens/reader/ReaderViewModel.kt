@@ -20,7 +20,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.user.history.AddAndUpdateTo
 import com.decoutkhanqindev.dexreader.domain.usecase.user.history.ObserveHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaDetailsUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.ChapterPagesUiMapper.toChapterPagesUiModel
-import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureUiError
+import com.decoutkhanqindev.dexreader.presentation.mapper.UiErrorMapper.toFeatureUiError
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList

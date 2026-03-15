@@ -11,15 +11,15 @@ import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSort
 
 object CriteriaMapper {
 
-  fun MangaSortCriteriaUiModel.toMangaSortCriteria(): MangaSortCriteria =
+  fun MangaSortCriteriaUiModel.toMangaSortCriteria() =
     MangaSortCriteria.valueOf(this.name)
 
-  fun MangaSortOrderUiModel.toMangaSortOrder(): MangaSortOrder =
+  fun MangaSortOrderUiModel.toMangaSortOrder() =
     MangaSortOrder.valueOf(this.name)
 
-  fun MangaStatusFilterUiModel.toMangaStatusFilter(): MangaStatusFilter =
+  fun MangaStatusFilterUiModel.toMangaStatusFilter() =
     MangaStatusFilter.valueOf(this.name)
 
-  fun MangaContentRatingFilterUiModel.toMangaContentRatingFilter(): MangaContentRatingFilter =
+  fun MangaContentRatingFilterUiModel.toMangaContentRatingFilter() =
     MangaContentRatingFilter.valueOf(this.name)
 }

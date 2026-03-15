@@ -4,8 +4,5 @@ import com.decoutkhanqindev.dexreader.domain.model.category.Category
 import com.decoutkhanqindev.dexreader.presentation.model.CategoryUiModel
 
 object CategoryUiMapper {
-  fun Category.toCategoryUiModel(): CategoryUiModel = CategoryUiModel(
-    id = id,
-    title = title,
-  )
+  fun Category.toCategoryUiModel() = CategoryUiModel(id = id, title = title)
 }

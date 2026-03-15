@@ -7,7 +7,7 @@ import com.google.firebase.auth.FirebaseUser
 
 object UserMapper {
 
-  fun FirebaseUser.toUser(): User =
+  fun FirebaseUser.toUser() =
     User(
       id = uid,
       name = displayName ?: User.DEFAULT_NAME,
@@ -15,7 +15,7 @@ object UserMapper {
       avatarUrl = photoUrl?.toString()
     )
 
-  fun UserProfileResponse.toUser(): User =
+  fun UserProfileResponse.toUser() =
     User(
       id = id,
       name = name,
@@ -23,7 +23,7 @@ object UserMapper {
       avatarUrl = profilePictureUrl
     )
 
-  fun User.toUserProfileRequest(): UserProfileRequest =
+  fun User.toUserProfileRequest() =
     UserProfileRequest(
       id = id,
       name = name,

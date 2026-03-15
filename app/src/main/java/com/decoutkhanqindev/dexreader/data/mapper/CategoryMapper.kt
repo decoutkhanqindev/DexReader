@@ -7,11 +7,12 @@ import com.decoutkhanqindev.dexreader.domain.model.category.CategoryType
 
 object CategoryMapper {
 
-  private fun String.toCategoryType(): CategoryType =
-    CategoryType.entries.firstOrNull { it.name.equals(this, ignoreCase = true) }
-      ?: CategoryType.UNKNOWN
+  private fun String.toCategoryType() =
+    CategoryType.entries.firstOrNull {
+      it.name.equals(other = this, ignoreCase = true)
+    } ?: CategoryType.UNKNOWN
 
-  fun TagResponse.toCategory(): Category =
+  fun TagResponse.toCategory() =
     Category(
       id = id,
       title = attributes?.name?.get(MangaLanguageCodeParam.ENGLISH.value)

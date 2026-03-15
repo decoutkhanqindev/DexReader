@@ -6,8 +6,8 @@ import com.decoutkhanqindev.dexreader.domain.exception.ValidationException
 import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureUiError
 import com.decoutkhanqindev.dexreader.presentation.model.error.UserUiError
 
-object ErrorMapper {
-  fun Throwable.toFeatureUiError(): FeatureUiError =
+object UiErrorMapper {
+  fun Throwable.toFeatureUiError() =
     when (this) {
       is InfrastructureException.NetworkUnavailable -> FeatureUiError.NetworkUnavailable
       is InfrastructureException.ServerUnavailable -> FeatureUiError.ServerUnavailable
@@ -18,7 +18,7 @@ object ErrorMapper {
       else -> FeatureUiError.Generic
     }
 
-  fun Throwable.toUserUiError(): UserUiError? =
+  fun Throwable.toUserUiError() =
     when (this) {
       is ValidationException.Email.Empty -> UserUiError.Email.Required
       is ValidationException.Email.Invalid -> UserUiError.Email.Invalid

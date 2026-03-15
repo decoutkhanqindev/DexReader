@@ -4,9 +4,9 @@ import com.decoutkhanqindev.dexreader.domain.model.manga.MangaLanguage
 import com.decoutkhanqindev.dexreader.presentation.model.MangaLanguageUiModel
 
 object LanguageMapper {
-  fun MangaLanguage.toMangaLanguageUiModel(): MangaLanguageUiModel =
+  fun MangaLanguage.toMangaLanguageUiModel() =
     MangaLanguageUiModel.valueOf(this.name)
 
-  fun MangaLanguageUiModel.toMangaLanguage(): MangaLanguage =
+  fun MangaLanguageUiModel.toMangaLanguage() =
     MangaLanguage.valueOf(this.name)
 }

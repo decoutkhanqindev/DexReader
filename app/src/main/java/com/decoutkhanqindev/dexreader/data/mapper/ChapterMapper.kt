@@ -10,8 +10,9 @@ object ChapterMapper {
 
   fun ChapterResponse.toChapter(): Chapter {
     val mangaId =
-      relationships?.find { it?.type == MangaIncludesParam.MANGA.value }?.id
-        ?: Chapter.DEFAULT_MANGA_ID
+      relationships?.find {
+        it?.type == MangaIncludesParam.MANGA.value
+      }?.id ?: Chapter.DEFAULT_MANGA_ID
     val title = attributes?.title ?: Chapter.DEFAULT_TITLE
     val number = attributes?.chapter ?: Chapter.DEFAULT_CHAPTER_NUMBER
     val volume = attributes?.volume ?: Chapter.DEFAULT_VOLUME

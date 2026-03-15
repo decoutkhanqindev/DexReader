@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.data.repository
 
-import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toParam
+import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toApiParam
 import com.decoutkhanqindev.dexreader.data.mapper.CategoryMapper.toCategory
 import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toDomainException
 import com.decoutkhanqindev.dexreader.data.mapper.MangaMapper.toManga
@@ -43,7 +43,7 @@ constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        val orderValue = sortOrder.toParam()
+        val orderValue = sortOrder.toApiParam()
         apiService.getMangaListByTag(
           tagId = categoryId,
           offset = offset,
@@ -59,8 +59,8 @@ constructor(
           rating =
             if (sortCriteria == MangaSortCriteria.TOP_RATED) orderValue
             else null,
-          status = statusFilter.map { it.toParam() },
-          contentRating = contentRatingFilter.map { it.toParam() },
+          status = statusFilter.map { it.toApiParam() },
+          contentRating = contentRatingFilter.map { it.toApiParam() },
         )
           .data
           ?.map { it.toManga(uploadUrl) }

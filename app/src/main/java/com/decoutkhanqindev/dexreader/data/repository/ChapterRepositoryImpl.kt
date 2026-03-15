@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.data.repository
 
-import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toParam
+import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toApiParam
 import com.decoutkhanqindev.dexreader.data.mapper.ChapterMapper.toChapter
 import com.decoutkhanqindev.dexreader.data.mapper.ChapterPagesMapper.toChapterPages
 import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toDomainException
@@ -33,9 +33,9 @@ constructor(
           mangaId = mangaId,
           limit = limit,
           offset = offset,
-          translatedLanguages = language.toParam(),
-          volumeOrder = sortOrder.toParam(),
-          chapterOrder = sortOrder.toParam(),
+          translatedLanguages = language.toApiParam(),
+          volumeOrder = sortOrder.toApiParam(),
+          chapterOrder = sortOrder.toApiParam(),
         )
           .data
           ?.map { it.toChapter() }

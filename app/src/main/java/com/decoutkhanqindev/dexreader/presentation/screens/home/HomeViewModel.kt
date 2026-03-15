@@ -7,7 +7,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetLatestUpdateMangaL
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetNewReleaseMangaListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetTopRatedMangaListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetTrendingMangaListUseCase
-import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureUiError
+import com.decoutkhanqindev.dexreader.presentation.mapper.UiErrorMapper.toFeatureUiError
 import com.decoutkhanqindev.dexreader.presentation.mapper.MangaUiMapper.toMangaUiModel
 import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureUiError
 import dagger.hilt.android.lifecycle.HiltViewModel

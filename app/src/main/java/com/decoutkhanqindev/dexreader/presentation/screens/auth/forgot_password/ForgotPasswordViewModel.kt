@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.user.SendResetPasswordUseCase
-import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toUserUiError
+import com.decoutkhanqindev.dexreader.presentation.mapper.UiErrorMapper.toUserUiError
 import com.decoutkhanqindev.dexreader.presentation.model.error.UserUiError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -16,7 +16,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.RemoveFromFav
 import com.decoutkhanqindev.dexreader.domain.usecase.user.history.ObserveHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaDetailsUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.ChapterUiMapper.toChapterUiModel
-import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureUiError
+import com.decoutkhanqindev.dexreader.presentation.mapper.UiErrorMapper.toFeatureUiError
 import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguage
 import com.decoutkhanqindev.dexreader.presentation.mapper.MangaUiMapper.toMangaUiModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ReadingHistoryUiMapper.toReadingHistoryUiModel

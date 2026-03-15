@@ -5,14 +5,14 @@ import com.decoutkhanqindev.dexreader.presentation.model.ThemeModeUiModel
 
 
 object ThemeModeUiMapper {
-  fun ThemeMode.toThemeModeUiModel(): ThemeModeUiModel =
+  fun ThemeMode.toThemeModeUiModel() =
     when (this) {
       ThemeMode.SYSTEM -> ThemeModeUiModel.SYSTEM
       ThemeMode.DARK -> ThemeModeUiModel.DARK
       ThemeMode.LIGHT -> ThemeModeUiModel.LIGHT
     }
 
-  fun ThemeModeUiModel.toThemeMode(): ThemeMode =
+  fun ThemeModeUiModel.toThemeMode() =
     when (this) {
       ThemeModeUiModel.SYSTEM -> ThemeMode.SYSTEM
       ThemeModeUiModel.DARK -> ThemeMode.DARK
