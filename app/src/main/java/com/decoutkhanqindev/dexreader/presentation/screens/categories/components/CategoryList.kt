@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.model.CategoryUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryUiModel
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable

@@ -2,6 +2,7 @@ package com.decoutkhanqindev.dexreader.presentation.model
 
 
 import androidx.compose.runtime.Immutable
+import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryUiModel
 import kotlinx.collections.immutable.ImmutableList
 
 @Immutable

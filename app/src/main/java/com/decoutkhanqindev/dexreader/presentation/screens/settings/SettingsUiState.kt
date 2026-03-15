@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.settings
 
 
 import androidx.compose.runtime.Immutable
-import com.decoutkhanqindev.dexreader.presentation.model.ThemeModeUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.settings.ThemeModeUiModel
 
 @Immutable
 data class SettingsUiState(

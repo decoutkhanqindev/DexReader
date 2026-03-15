@@ -2,8 +2,8 @@ package com.decoutkhanqindev.dexreader.presentation.screens.categories
 
 
 import androidx.compose.runtime.Immutable
-import com.decoutkhanqindev.dexreader.presentation.model.CategoryTypeUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.CategoryUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryTypeUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryUiModel
 import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureUiError
 import kotlinx.collections.immutable.ImmutableList
 

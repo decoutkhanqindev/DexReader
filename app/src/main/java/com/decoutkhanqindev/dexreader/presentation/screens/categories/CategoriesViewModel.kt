@@ -8,7 +8,7 @@ import com.decoutkhanqindev.dexreader.domain.model.category.CategoryType
 import com.decoutkhanqindev.dexreader.domain.usecase.category.GetCategoryListUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.CategoryUiMapper.toCategoryUiModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.UiErrorMapper.toFeatureUiError
-import com.decoutkhanqindev.dexreader.presentation.model.CategoryTypeUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryTypeUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList

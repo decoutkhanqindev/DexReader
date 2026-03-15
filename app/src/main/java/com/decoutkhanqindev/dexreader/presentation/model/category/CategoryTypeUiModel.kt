@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.model
+package com.decoutkhanqindev.dexreader.presentation.model.category
 
 import androidx.annotation.StringRes
 import com.decoutkhanqindev.dexreader.R

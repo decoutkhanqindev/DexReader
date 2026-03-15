@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.model
+package com.decoutkhanqindev.dexreader.presentation.model.settings
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons

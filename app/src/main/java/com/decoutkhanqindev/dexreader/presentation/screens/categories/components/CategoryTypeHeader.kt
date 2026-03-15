@@ -24,7 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.CategoryTypeUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryTypeUiModel
 
 @Composable
 fun CategoryTypeHeader(
