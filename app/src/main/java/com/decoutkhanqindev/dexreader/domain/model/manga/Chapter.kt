@@ -18,11 +18,12 @@ data class Chapter(
   )
 
   companion object {
-    const val DEFAULT_MANGA_ID = "0"
     const val DEFAULT_TITLE = "Untitled"
     const val DEFAULT_CHAPTER_NUMBER = "0"
     const val DEFAULT_VOLUME = "0"
     val DEFAULT_LANGUAGE = MangaLanguage.ENGLISH
+
+    private const val PREFETCH_THRESHOLD = 5
 
     fun isPrefetchNextPage(currentIndex: Int, listSize: Int): Boolean =
       listSize > 0 && currentIndex >= (listSize - 1 - PREFETCH_THRESHOLD)
@@ -55,7 +56,5 @@ data class Chapter(
         canNavigateNext = !isLast || hasNextPage,
       )
     }
-
-    private const val PREFETCH_THRESHOLD = 5
   }
 }

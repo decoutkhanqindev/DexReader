@@ -20,9 +20,9 @@ object MangaMapper {
       ?: Manga.DEFAULT_TITLE
     val coverUrl = relationships?.find {
       it.type == REL_COVER_ART
-    }.let { coverArt ->
-      "$uploadUrl/$COVER_URL_SEGMENT/${id}/${coverArt?.attributes?.fileName}"
-    }
+    }?.attributes?.fileName?.let { fileName ->
+      "$uploadUrl/$COVER_URL_SEGMENT/$id/$fileName"
+    } ?: ""
     val description =
       attributes?.description?.get(LANG_EN)
         ?: attributes?.description?.values?.firstOrNull()

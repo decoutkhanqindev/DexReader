@@ -6,9 +6,4 @@ data class ChapterPages(
   val dataHash: String,
   val pages: List<String>,
   val totalPages: Int,
-) {
-  companion object {
-    const val DEFAULT_BASE_URL = ""
-    const val DEFAULT_HASH = ""
-  }
-}
+)

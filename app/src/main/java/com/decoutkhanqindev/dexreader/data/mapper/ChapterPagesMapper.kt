@@ -2,6 +2,7 @@ package com.decoutkhanqindev.dexreader.data.mapper
 
 import com.decoutkhanqindev.dexreader.data.local.database.entity.ChapterCacheEntity
 import com.decoutkhanqindev.dexreader.data.network.api.response.at_home.AtHomeServerResponse
+import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.model.manga.ChapterPages
 
 object ChapterPagesMapper {
@@ -9,18 +10,19 @@ object ChapterPagesMapper {
   private const val DATA_URL_SEGMENT = "data"
 
   fun AtHomeServerResponse.toChapterPages(chapterId: String): ChapterPages {
-    val hash = chapter?.hash
-    val data = chapter?.data
+    val resolvedBaseUrl = baseUrl ?: throw BusinessException.Resource.ChapterDataNotFound()
+    val hash = chapter?.hash ?: throw BusinessException.Resource.ChapterDataNotFound()
+    val data = chapter.data
 
     // {baseUrl}/data/{dataHash}/{pageHash}
     val pages = data?.map { pageHash ->
-      "$baseUrl/$DATA_URL_SEGMENT/$hash/$pageHash"
+      "$resolvedBaseUrl/$DATA_URL_SEGMENT/$hash/$pageHash"
     } ?: emptyList()
 
     return ChapterPages(
       chapterId = chapterId,
-      baseUrl = baseUrl ?: ChapterPages.DEFAULT_BASE_URL,
-      dataHash = hash ?: ChapterPages.DEFAULT_HASH,
+      baseUrl = resolvedBaseUrl,
+      dataHash = hash,
       pages = pages,
       totalPages = pages.size
     )
