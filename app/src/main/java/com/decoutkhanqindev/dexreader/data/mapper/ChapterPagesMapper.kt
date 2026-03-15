@@ -1,11 +1,12 @@
 package com.decoutkhanqindev.dexreader.data.mapper
 
 import com.decoutkhanqindev.dexreader.data.local.database.entity.ChapterCacheEntity
-import com.decoutkhanqindev.dexreader.data.network.api.constant.ApiEndpoints
 import com.decoutkhanqindev.dexreader.data.network.api.response.at_home.AtHomeServerResponse
 import com.decoutkhanqindev.dexreader.domain.model.manga.ChapterPages
 
 object ChapterPagesMapper {
+
+  private const val DATA_URL_SEGMENT = "data"
 
   fun AtHomeServerResponse.toChapterPages(chapterId: String): ChapterPages {
     val hash = chapter?.hash
@@ -13,7 +14,7 @@ object ChapterPagesMapper {
 
     // {baseUrl}/data/{dataHash}/{pageHash}
     val pages = data?.map { pageHash ->
-      "$baseUrl/${ApiEndpoints.DATA_PATH}/$hash/$pageHash"
+      "$baseUrl/$DATA_URL_SEGMENT/$hash/$pageHash"
     } ?: emptyList()
 
     return ChapterPages(
@@ -28,7 +29,7 @@ object ChapterPagesMapper {
   fun ChapterCacheEntity.toChapterPages(): ChapterPages {
     // {baseUrl}/data/{dataHash}/{pageHash}
     val pages = pageHashes.map { hash ->
-      "$baseUrl/${ApiEndpoints.DATA_PATH}/$dataHash/$hash"
+      "$baseUrl/$DATA_URL_SEGMENT/$dataHash/$hash"
     }
 
     return ChapterPages(

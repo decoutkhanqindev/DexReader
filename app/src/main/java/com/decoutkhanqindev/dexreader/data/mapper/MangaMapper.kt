@@ -2,32 +2,36 @@ package com.decoutkhanqindev.dexreader.data.mapper
 
 import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toMangaLanguage
 import com.decoutkhanqindev.dexreader.data.mapper.CategoryMapper.toCategory
-import com.decoutkhanqindev.dexreader.data.network.api.constant.ApiEndpoints
-import com.decoutkhanqindev.dexreader.data.network.api.param.MangaIncludesParam
-import com.decoutkhanqindev.dexreader.data.network.api.param.MangaLanguageCodeParam
 import com.decoutkhanqindev.dexreader.data.network.api.response.manga.MangaResponse
 import com.decoutkhanqindev.dexreader.domain.model.manga.Manga
 import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
 
 object MangaMapper {
 
+  private const val LANG_EN = "en"
+  private const val REL_COVER_ART = "cover_art"
+  private const val REL_AUTHOR = "author"
+  private const val REL_ARTIST = "artist"
+  private const val COVER_URL_SEGMENT = "covers"
+
   fun MangaResponse.toManga(uploadUrl: String): Manga {
-    val title = attributes?.title[MangaLanguageCodeParam.ENGLISH.value]
+    val title = attributes?.title?.get(LANG_EN)
       ?: attributes?.title?.values?.firstOrNull()
       ?: Manga.DEFAULT_TITLE
-    val coverUrl =
-      relationships?.find { it.type == MangaIncludesParam.COVER_ART.value }.let { coverArt ->
-        "$uploadUrl/${ApiEndpoints.COVER_PATH}/${id}/${coverArt?.attributes?.fileName}"
-      }
+    val coverUrl = relationships?.find {
+      it.type == REL_COVER_ART
+    }.let { coverArt ->
+      "$uploadUrl/$COVER_URL_SEGMENT/${id}/${coverArt?.attributes?.fileName}"
+    }
     val description =
-      attributes?.description?.get(MangaLanguageCodeParam.ENGLISH.value)
+      attributes?.description?.get(LANG_EN)
         ?: attributes?.description?.values?.firstOrNull()
         ?: Manga.DEFAULT_DESCRIPTION
     val authorId =
-      relationships?.find { it.type == MangaIncludesParam.AUTHOR.value }?.attributes?.name
+      relationships?.find { it.type == REL_AUTHOR }?.attributes?.name
         ?: Manga.DEFAULT_AUTHOR
     val artistId =
-      relationships?.find { it.type == MangaIncludesParam.ARTIST.value }?.attributes?.name
+      relationships?.find { it.type == REL_ARTIST }?.attributes?.name
         ?: Manga.DEFAULT_ARTIST
     val tags = attributes?.tags?.map { it.toCategory() } ?: emptyList()
     val status = attributes?.status ?: Manga.DEFAULT_STATUS
