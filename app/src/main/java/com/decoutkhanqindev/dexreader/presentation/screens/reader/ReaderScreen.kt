@@ -46,6 +46,7 @@ fun ReaderScreen(
         val s = chapterPagesUiState as ChapterPagesUiState.Success
         s.currentChapterPage.toString() to s.chapterPages.totalPages.toString()
       }
+
       else -> "0" to "0"
     }
   }

@@ -4,6 +4,7 @@ import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toMangaLanguage
 import com.decoutkhanqindev.dexreader.data.network.api.response.chapter.ChapterResponse
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.model.manga.Chapter
+
 object ChapterMapper {
 
   private const val REL_MANGA = "manga"
