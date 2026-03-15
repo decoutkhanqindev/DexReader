@@ -25,7 +25,9 @@
       "Read(//c/Android Development/dex_reader/DexReader/app/src/main/java/com/decoutkhanqindev/dexreader/domain/repository/**)",
       "Bash(base=\"C:/Android Development/dex_reader/DexReader/app/src/main/java/com/decoutkhanqindev/dexreader/data/repository\"\nrm \"$base/MangaRepositoryImpl.kt\" \"$base/ChapterRepositoryImpl.kt\" \"$base/CacheRepositoryImpl.kt\" \"$base/CategoryRepositoryImpl.kt\" \"$base/UserRepositoryImpl.kt\" \"$base/FavoritesRepositoryImpl.kt\" \"$base/HistoryRepositoryImpl.kt\" \"$base/SettingsRepositoryImpl.kt\")",
       "Bash(base=\"C:/Android Development/dex_reader/DexReader/app/src/main/java/com/decoutkhanqindev/dexreader/data/repository\")",
-      "Read(//c/Android Development/dex_reader/DexReader/$base/**)"
+      "Read(//c/Android Development/dex_reader/DexReader/$base/**)",
+      "Bash(cd:*)",
+      "Bash(find:*)"
     ]
   },
   "spinnerTipsEnabled": true

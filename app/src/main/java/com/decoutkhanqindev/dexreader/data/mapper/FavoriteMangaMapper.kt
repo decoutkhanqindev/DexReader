@@ -3,7 +3,6 @@ package com.decoutkhanqindev.dexreader.data.mapper
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.request.FavoriteMangaRequest
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.response.FavoriteMangaResponse
 import com.decoutkhanqindev.dexreader.domain.model.manga.FavoriteManga
-import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
 
 object FavoriteMangaMapper {
 
@@ -14,7 +13,7 @@ object FavoriteMangaMapper {
       coverUrl = coverUrl,
       author = author,
       status = status,
-      addedAt = createdAt?.time?.toTimeAgo() ?: FavoriteManga.DEFAULT_ADDED_AT
+      addedAt = createdAt?.time
     )
 
   fun FavoriteManga.toFavoriteMangaRequest() =

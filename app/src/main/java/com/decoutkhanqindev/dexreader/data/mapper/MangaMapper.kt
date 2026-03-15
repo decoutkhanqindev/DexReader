@@ -4,7 +4,6 @@ import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toMangaLanguage
 import com.decoutkhanqindev.dexreader.data.mapper.CategoryMapper.toCategory
 import com.decoutkhanqindev.dexreader.data.network.api.response.manga.MangaResponse
 import com.decoutkhanqindev.dexreader.domain.model.manga.Manga
-import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
 
 object MangaMapper {
 
@@ -41,7 +40,7 @@ object MangaMapper {
         ?.map { it.toMangaLanguage() }
         ?: emptyList()
     val latestChapter = attributes?.lastChapter ?: Manga.DEFAULT_LAST_CHAPTER
-    val updatedAt = attributes?.updatedAt.toTimeAgo()
+    val updatedAt = attributes?.updatedAt
 
     return Manga(
       id = id,

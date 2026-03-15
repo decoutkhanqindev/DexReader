@@ -2,6 +2,7 @@ package com.decoutkhanqindev.dexreader.presentation.mapper
 
 import com.decoutkhanqindev.dexreader.domain.model.user.ReadingHistory
 import com.decoutkhanqindev.dexreader.presentation.model.ReadingHistoryUiModel
+import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
 
 object ReadingHistoryUiMapper {
   fun ReadingHistory.toReadingHistoryUiModel() =
@@ -16,6 +17,6 @@ object ReadingHistoryUiMapper {
       chapterVolume = chapterVolume,
       lastReadPage = lastReadPage,
       pageCount = pageCount,
-      lastReadAt = lastReadAt,
+      lastReadAt = lastReadAt.toTimeAgo(),
     )
 }

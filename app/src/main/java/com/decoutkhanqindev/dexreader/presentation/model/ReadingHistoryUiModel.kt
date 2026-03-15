@@ -14,5 +14,5 @@ data class ReadingHistoryUiModel(
   val chapterVolume: String,
   val lastReadPage: Int,
   val pageCount: Int,
-  val lastReadAt: String?,
+  val lastReadAt: String,
 )

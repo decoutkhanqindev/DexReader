@@ -11,7 +11,7 @@ data class ReadingHistory(
   val chapterVolume: String,
   val lastReadPage: Int,
   val pageCount: Int,
-  val lastReadAt: String?,
+  val lastReadAt: Long?,
 ) {
   companion object {
     fun generateId(mangaId: String, chapterId: String): String = "${mangaId}_${chapterId}"

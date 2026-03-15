@@ -14,7 +14,7 @@ data class Manga(
   val year: String,
   val availableLanguages: List<MangaLanguage>,
   val latestChapter: String,
-  val updatedAt: String,
+  val updatedAt: Long?,
 ) {
   companion object {
     const val DEFAULT_TITLE = "Untitled"
@@ -24,6 +24,5 @@ data class Manga(
     const val DEFAULT_STATUS = "Unknown"
     const val DEFAULT_YEAR = "Unknown"
     const val DEFAULT_LAST_CHAPTER = "Unknown"
-    const val DEFAULT_LAST_UPDATED = ""
   }
 }

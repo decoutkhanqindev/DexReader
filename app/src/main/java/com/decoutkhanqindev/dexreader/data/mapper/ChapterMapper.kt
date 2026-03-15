@@ -4,8 +4,6 @@ import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toMangaLanguage
 import com.decoutkhanqindev.dexreader.data.network.api.response.chapter.ChapterResponse
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.model.manga.Chapter
-import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
-
 object ChapterMapper {
 
   private const val REL_MANGA = "manga"
@@ -17,7 +15,7 @@ object ChapterMapper {
     val title = attributes?.title ?: Chapter.DEFAULT_TITLE
     val number = attributes?.chapter ?: Chapter.DEFAULT_CHAPTER_NUMBER
     val volume = attributes?.volume ?: Chapter.DEFAULT_VOLUME
-    val publishedAt = attributes?.publishAt.toTimeAgo()
+    val publishedAt = attributes?.publishAt
     val language =
       attributes?.translatedLanguage?.toMangaLanguage() ?: Chapter.DEFAULT_LANGUAGE
 

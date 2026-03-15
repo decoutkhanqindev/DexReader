@@ -6,7 +6,7 @@ data class Chapter(
   val title: String,
   val number: String,
   val volume: String,
-  val publishedAt: String,
+  val publishedAt: Long?,
   val language: MangaLanguage,
 ) {
   data class NavPosition(

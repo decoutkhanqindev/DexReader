@@ -77,7 +77,7 @@ fun ReadingHistoryInfo(
     )
     Spacer(modifier = Modifier.weight(1f))
     Text(
-      text = readingHistory.lastReadAt.toString(),
+      text = readingHistory.lastReadAt,
       style = MaterialTheme.typography.bodyLarge,
       fontWeight = FontWeight.Bold,
       fontStyle = FontStyle.Italic,
