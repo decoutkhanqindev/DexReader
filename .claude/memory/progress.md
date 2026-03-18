@@ -2,27 +2,30 @@
 
 ## Completed This Session
 
-### Presentation Model Cleanup — Status & ContentRating UiModels
+### domain/model → domain/entity + domain/value migration
+1. Created target directories: `domain/entity/manga`, `domain/entity/category`, `domain/entity/user`,
+   `domain/value/manga`, `domain/value/category`, `domain/value/criteria`, `domain/value/settings`
+2. Ran 14 `git mv` commands to relocate all domain model files (git tracks the renames)
+3. Updated `package` declarations in all 14 moved files to reflect new paths
+4. Fixed intra-domain cross-package imports in `Manga.kt` and `Category.kt` (classes that previously
+   referenced same-package types that are now in `domain.value.*`)
+5. Bulk-replaced all `domain.model.*` import paths across ~64 .kt files in data, domain, and
+   presentation layers using `sed` with `-print0 | xargs -0` to handle the space in the project path
+6. Verified: 0 remaining `domain.model.*` references; 70 `domain.entity.*` refs; 49 `domain.value.*` refs
+7. Confirmed `domain/model/` directory is fully removed
 
-1. **Created** `presentation/model/manga/MangaStatusUiModel.kt` — new enum replacing `MangaStatusFilterUiModel`
-2. **Created** `presentation/model/manga/MangaContentRatingUiModel.kt` — new enum replacing `MangaContentRatingFilterUiModel`
-3. **Updated** `presentation/mapper/CriteriaMapper.kt` — removed 4 status/rating functions, kept only sort (2 functions remain)
-4. **Updated** `presentation/mapper/MangaUiMapper.kt` — absorbed 4 mapper functions (`toMangaStatusUiModel`, `toMangaStatus`, `toMangaContentRatingUiModel`, `toMangaContentRating`), removed old `CriteriaMapper` imports
-5. **Updated** `presentation/mapper/FavoriteMangaUiMapper.kt` — swapped `CriteriaMapper.toMangaStatusUiModel` → `MangaUiMapper.toMangaStatusUiModel`, replaced `MangaContentRatingFilterUiModel.UNKNOWN` → `MangaContentRatingUiModel.UNKNOWN`
-6. **Updated** `presentation/model/manga/MangaUiModel.kt` — removed `criteria.filter` imports, updated field types to `MangaStatusUiModel` / `MangaContentRatingUiModel`
-7. **Updated** `presentation/screens/category_details/CategoryDetailsCriteriaUiState.kt` — swapped all 4 type references
-8. **Updated** `presentation/screens/category_details/CategoryDetailsViewModel.kt` — swapped imports and call sites (`.toMangaStatusFilter()` → `.toMangaStatus()`, `.toMangaContentRatingFilter()` → `.toMangaContentRating()`), updated `updateFilteringCriteria` parameter types
-9. **Updated** `presentation/screens/category_details/components/CategoryDetailsContent.kt` — swapped imports and lambda parameter types
-10. **Updated** `presentation/screens/category_details/components/filter/FilterBottomSheet.kt` — swapped all 4 type references including `rememberSaveable` restore lambdas
-11. **Updated** `presentation/screens/category_details/components/filter/VerticalGridFilterCriteriaList.kt` — swapped all 4 type references including `.entries.filter { it != X.UNKNOWN }` calls
-12. **Deleted** `presentation/model/criteria/filter/MangaStatusFilterUiModel.kt`
-13. **Deleted** `presentation/model/criteria/filter/MangaContentRatingFilterUiModel.kt`
-14. **Deleted** now-empty `presentation/model/criteria/filter/` directory
-15. **Fixed** `presentation/screens/reader/ReaderViewModel.kt` — build error: added `?: ""` fallbacks for `chapter.volume`, `chapter.number`, `chapter.title` (nullable `String?` assigned to non-null `String` in `ReaderUiState`)
+### Previous sessions
+- Presentation Model Cleanup — Status & ContentRating UiModels (`MangaStatusFilterUiModel` →
+  `MangaStatusUiModel`, `MangaContentRatingFilterUiModel` → `MangaContentRatingUiModel`, moved to
+  `presentation/model/manga/`)
+- `UiModel → Model` rename in the presentation layer (renaming `*UiModel` suffix classes to `*Model`)
 
 ## Still To Do
-- Nothing remaining from this task — all changes are complete
-- Confirm clean build after `ReaderViewModel.kt` fix (build was failing at compile step)
+1. **Run `./gradlew assembleDebug`** to verify clean compile — this is the critical remaining step
+2. Commit the changes with an appropriate message:
+   `refactor: split domain/model into domain/entity and domain/value`
 
 ## Most Important Next Step
-Run a full debug build (`./gradlew assembleDebug`) to confirm zero compilation errors after the `ReaderViewModel.kt` nullable fix.
+Run `./gradlew assembleDebug` from the project root to confirm a clean build. If it fails, check for
+any missed import replacements or missing cross-package imports in files where value types from
+`domain.value.*` were previously same-package.

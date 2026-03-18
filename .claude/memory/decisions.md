@@ -40,3 +40,45 @@ These mappers exist to support `Manga.toMangaUiModel()` and `FavoriteManga.toMan
 
 **Alternatives considered:**
 - Make `ReaderUiState` fields nullable — rejected because it would require null-checks across the UI layer and the empty-string default is semantically correct (renders nothing when unknown).
+
+---
+
+## 2026-03-18 (session 2)
+
+### Decision: Split `domain/model/` into `domain/entity/` + `domain/value/`
+
+**What was decided:**
+All files in `domain/model/` were split into two new sub-packages:
+- `domain/entity/` — ID-bearing business objects with identity (`Manga`, `Chapter`, `ChapterPages`,
+  `FavoriteManga`, `Category`, `User`, `ReadingHistory`)
+- `domain/value/` — Immutable, identity-free enums/value types (`MangaStatus`, `MangaContentRating`,
+  `MangaLanguage`, `CategoryType`, `MangaSortCriteria`, `MangaSortOrder`, `ThemeMode`)
+
+No class names changed; only package paths changed.
+
+**Reasoning:**
+Strict Clean Architecture (Uncle Bob) separates the domain's innermost ring into:
+- **Entities**: objects with identity and lifecycle (carry an `id` field or are the central business object)
+- **Value objects**: describe or qualify entities, are immutable, have no identity of their own
+
+The previous `domain/model/` conflated both concepts in the same package, making it harder to reason
+about the domain ring's structure. This split makes the architectural intent explicit.
+
+**Classification rationale:**
+- `Manga`, `Chapter`, `ChapterPages`, `FavoriteManga` → entity (have IDs, represent business objects)
+- `Category` → entity (has `id: String`, referenced by `Manga`)
+- `User`, `ReadingHistory` → entity (have identity, track user state)
+- `MangaStatus`, `MangaContentRating`, `MangaLanguage` → value (enum descriptors of manga attributes)
+- `CategoryType` → value (enum qualifier for Category)
+- `MangaSortCriteria`, `MangaSortOrder` → value (query parameter descriptors, no identity)
+- `ThemeMode` → value (UI/settings enum, no identity)
+
+**Alternatives considered:**
+- Keep `domain/model/` as-is — rejected, it conflates entity and value concepts
+- Use `domain/entity/` only and put value types in `domain/model/` — rejected, inconsistent naming
+- Nest values as inner classes of their entity — rejected, overly tight coupling and harder to reuse
+
+**Implementation note:**
+`Manga.kt` and `Category.kt` required manual cross-package imports added after the split, since
+`MangaStatus`/`MangaContentRating`/`MangaLanguage` (used by `Manga`) and `CategoryType` (used by
+`Category`) moved to a sibling package (`domain.value.*`) rather than staying in the same package.
