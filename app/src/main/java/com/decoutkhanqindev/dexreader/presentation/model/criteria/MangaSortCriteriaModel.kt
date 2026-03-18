@@ -3,7 +3,7 @@ package com.decoutkhanqindev.dexreader.presentation.model.criteria
 import androidx.annotation.StringRes
 import com.decoutkhanqindev.dexreader.R
 
-enum class MangaSortCriteriaUiModel(@param:StringRes val nameRes: Int) {
+enum class MangaSortCriteriaModel(@param:StringRes val nameRes: Int) {
   LATEST_UPDATE(R.string.latest_update),
   TRENDING(R.string.trending),
   MOST_VIEWED(R.string.new_releases),

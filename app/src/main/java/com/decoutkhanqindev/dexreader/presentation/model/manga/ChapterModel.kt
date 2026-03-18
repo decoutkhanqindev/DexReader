@@ -3,7 +3,7 @@ package com.decoutkhanqindev.dexreader.presentation.model.manga
 import androidx.compose.runtime.Immutable
 
 @Immutable
-data class ChapterUiModel(
+data class ChapterModel(
   val id: String,
   val mangaId: String,
   val title: String,

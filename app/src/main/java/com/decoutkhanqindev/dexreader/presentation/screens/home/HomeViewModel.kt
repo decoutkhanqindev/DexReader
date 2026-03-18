@@ -7,9 +7,9 @@ import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetLatestUpdateMangaL
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetNewReleaseMangaListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetTopRatedMangaListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetTrendingMangaListUseCase
-import com.decoutkhanqindev.dexreader.presentation.mapper.MangaUiMapper.toMangaUiModel
-import com.decoutkhanqindev.dexreader.presentation.mapper.UiErrorMapper.toFeatureUiError
-import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureUiError
+import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaModel
+import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
+import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.async
@@ -52,13 +52,13 @@ class HomeViewModel @Inject constructor(
 
       if (results.all { it.isSuccess }) {
         val latestUpdatesMangaList =
-          results[0].getOrThrow().map { it.toMangaUiModel() }.toPersistentList()
+          results[0].getOrThrow().map { it.toMangaModel() }.toPersistentList()
         val trendingMangaList =
-          results[1].getOrThrow().map { it.toMangaUiModel() }.toPersistentList()
+          results[1].getOrThrow().map { it.toMangaModel() }.toPersistentList()
         val newReleaseMangaList =
-          results[2].getOrThrow().map { it.toMangaUiModel() }.toPersistentList()
+          results[2].getOrThrow().map { it.toMangaModel() }.toPersistentList()
         val topRatedMangaList =
-          results[3].getOrThrow().map { it.toMangaUiModel() }.toPersistentList()
+          results[3].getOrThrow().map { it.toMangaModel() }.toPersistentList()
 
         _uiState.value = HomeUiState.Success(
           latestUpdatesMangaList = latestUpdatesMangaList,
@@ -68,7 +68,7 @@ class HomeViewModel @Inject constructor(
         )
       } else {
         val throwable = results.firstOrNull { it.isFailure }?.exceptionOrNull()
-        _uiState.value = HomeUiState.Error(throwable?.toFeatureUiError() ?: FeatureUiError.Generic)
+        _uiState.value = HomeUiState.Error(throwable?.toFeatureError() ?: FeatureError.Generic)
         Log.e(TAG, "fetchMangaLists have error: ${throwable?.stackTraceToString()}")
       }
     }

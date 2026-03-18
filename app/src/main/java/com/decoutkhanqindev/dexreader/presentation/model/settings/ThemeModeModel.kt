@@ -8,7 +8,7 @@ import androidx.compose.material.icons.filled.PhoneAndroid
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.decoutkhanqindev.dexreader.R
 
-enum class ThemeModeUiModel(
+enum class ThemeModeModel(
   @param:StringRes val nameRes: Int,
   val icon: ImageVector,
 ) {

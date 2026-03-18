@@ -1,12 +1,12 @@
 package com.decoutkhanqindev.dexreader.presentation.mapper
 
 import com.decoutkhanqindev.dexreader.domain.model.user.ReadingHistory
-import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
 
-object ReadingHistoryUiMapper {
-  fun ReadingHistory.toReadingHistoryUiModel() =
-    ReadingHistoryUiModel(
+object ReadingHistoryMapper {
+  fun ReadingHistory.toReadingHistoryModel() =
+    ReadingHistoryModel(
       id = id,
       mangaId = mangaId,
       mangaTitle = mangaTitle,

@@ -9,12 +9,12 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.MangaSortCriteriaUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.MangaSortCriteriaModel
 
 @Composable
 fun VerticalGridSortCriteriaList(
-  selectedItem: MangaSortCriteriaUiModel,
-  onItemClick: (MangaSortCriteriaUiModel) -> Unit,
+  selectedItem: MangaSortCriteriaModel,
+  onItemClick: (MangaSortCriteriaModel) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   val lazyGridState = rememberLazyGridState()
@@ -24,7 +24,7 @@ fun VerticalGridSortCriteriaList(
     columns = GridCells.Fixed(2),
     modifier = modifier
   ) {
-    items(MangaSortCriteriaUiModel.entries, key = { it.name }) { criteria ->
+    items(MangaSortCriteriaModel.entries, key = { it.name }) { criteria ->
       SortCriteriaItem(
         isSelected = selectedItem == criteria,
         item = criteria,

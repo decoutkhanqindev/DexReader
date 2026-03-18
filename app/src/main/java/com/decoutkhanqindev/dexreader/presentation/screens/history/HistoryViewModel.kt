@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.usecase.user.history.ObserveHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.history.RemoveFromHistoryUseCase
-import com.decoutkhanqindev.dexreader.presentation.mapper.ReadingHistoryUiMapper.toReadingHistoryUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryUiModel
+import com.decoutkhanqindev.dexreader.presentation.mapper.ReadingHistoryMapper.toReadingHistoryModel
+import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,10 +30,10 @@ constructor(
   private val removeFromHistoryUseCase: RemoveFromHistoryUseCase,
 ) : ViewModel() {
   private val _historyUiState =
-    MutableStateFlow<BasePaginationUiState<ReadingHistoryUiModel>>(
+    MutableStateFlow<BasePaginationUiState<ReadingHistoryModel>>(
       BasePaginationUiState.FirstPageLoading
     )
-  val historyUiState: StateFlow<BasePaginationUiState<ReadingHistoryUiModel>> =
+  val historyUiState: StateFlow<BasePaginationUiState<ReadingHistoryModel>> =
     _historyUiState.asStateFlow()
 
   private val _removeFromHistoryUiState = MutableStateFlow(RemoveFromHistoryUiState())
@@ -71,7 +71,7 @@ constructor(
                   .onSuccess { readingHistoryList ->
                     _historyUiState.value =
                       BasePaginationUiState.Content(
-                        currentList = readingHistoryList.map { it.toReadingHistoryUiModel() }
+                        currentList = readingHistoryList.map { it.toReadingHistoryModel() }
                           .toPersistentList(),
                         currentPage = FIRST_PAGE,
                         nextPageState =
@@ -121,7 +121,7 @@ constructor(
   }
 
   private fun observeHistoryNextPageInternal(
-    currentUiState: BasePaginationUiState.Content<ReadingHistoryUiModel>,
+    currentUiState: BasePaginationUiState.Content<ReadingHistoryModel>,
   ) {
     observeHistoryJob =
       viewModelScope.launch {
@@ -148,7 +148,7 @@ constructor(
                 result
                   .onSuccess { readingHistoryList ->
                     val allReadingHistoryList =
-                      (currentReadingHistoryList + readingHistoryList.map { it.toReadingHistoryUiModel() }).toPersistentList()
+                      (currentReadingHistoryList + readingHistoryList.map { it.toReadingHistoryModel() }).toPersistentList()
                     _historyUiState.value =
                       currentUiState.copy(
                         currentList = allReadingHistoryList,
@@ -250,7 +250,7 @@ constructor(
 
   fun retryObserveHistoryNextPage() {
     val currentUiState = _historyUiState.value
-    if (currentUiState is BasePaginationUiState.Content<ReadingHistoryUiModel> &&
+    if (currentUiState is BasePaginationUiState.Content<ReadingHistoryModel> &&
       currentUiState.nextPageState == BaseNextPageState.ERROR
     )
       observeHistoryNextPageInternal(currentUiState)

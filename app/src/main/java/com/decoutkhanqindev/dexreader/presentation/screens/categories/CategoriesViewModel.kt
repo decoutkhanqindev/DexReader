@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.model.category.CategoryType
 import com.decoutkhanqindev.dexreader.domain.usecase.category.GetCategoryListUseCase
-import com.decoutkhanqindev.dexreader.presentation.mapper.CategoryUiMapper.toCategoryUiModel
-import com.decoutkhanqindev.dexreader.presentation.mapper.UiErrorMapper.toFeatureUiError
-import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryTypeUiModel
+import com.decoutkhanqindev.dexreader.presentation.mapper.CategoryMapper.toCategoryModel
+import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
+import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryTypeModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableMap
@@ -37,17 +37,17 @@ class CategoriesViewModel @Inject constructor(
       getCategoryListUseCase()
         .onSuccess { grouped ->
           val categoryMap =
-            CategoryTypeUiModel.entries
-              .filter { it != CategoryTypeUiModel.UNKNOWN }
+            CategoryTypeModel.entries
+              .filter { it != CategoryTypeModel.UNKNOWN }
               .associateWith { type ->
                 (grouped[CategoryType.valueOf(type.name)]
-                  ?: persistentListOf()).map { it.toCategoryUiModel() }.toPersistentList()
+                  ?: persistentListOf()).map { it.toCategoryModel() }.toPersistentList()
               }
               .toImmutableMap()
           _uiState.value = CategoriesUiState.Success(categoryMap = categoryMap)
         }
         .onFailure { throwable ->
-          _uiState.value = CategoriesUiState.Error(throwable.toFeatureUiError())
+          _uiState.value = CategoriesUiState.Error(throwable.toFeatureError())
           Log.e(TAG, "fetchTagList have error: ${throwable.stackTraceToString()}")
         }
     }

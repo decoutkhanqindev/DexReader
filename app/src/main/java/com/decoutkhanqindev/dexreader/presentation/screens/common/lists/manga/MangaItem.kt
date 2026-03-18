@@ -16,13 +16,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
 
 @Composable
 fun MangaItem(
-  manga: MangaUiModel,
-  onSelectedManga: (MangaUiModel) -> Unit,
+  manga: MangaModel,
+  onSelectedManga: (MangaModel) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   // Using remember to avoid unnecessary recompositions and re-creation of the onClick lambda when manga.id doesn't change

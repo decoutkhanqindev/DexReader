@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaSuggestionsUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.SearchMangaUseCase
-import com.decoutkhanqindev.dexreader.presentation.mapper.MangaUiMapper.toMangaUiModel
-import com.decoutkhanqindev.dexreader.presentation.mapper.UiErrorMapper.toFeatureUiError
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaUiModel
+import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaModel
+import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,8 +40,8 @@ constructor(
   val suggestionsUiState: StateFlow<SuggestionsUiState> = _suggestionsUiState.asStateFlow()
 
   private val _resultsUiState =
-    MutableStateFlow<BasePaginationUiState<MangaUiModel>>(BasePaginationUiState.FirstPageLoading)
-  val resultsUiState: StateFlow<BasePaginationUiState<MangaUiModel>> = _resultsUiState.asStateFlow()
+    MutableStateFlow<BasePaginationUiState<MangaModel>>(BasePaginationUiState.FirstPageLoading)
+  val resultsUiState: StateFlow<BasePaginationUiState<MangaModel>> = _resultsUiState.asStateFlow()
 
   private val _query = MutableStateFlow("")
   val query: StateFlow<String> = _query.asStateFlow()
@@ -63,7 +63,7 @@ constructor(
             }
             .onFailure { throwable ->
               _suggestionsUiState.value =
-                SuggestionsUiState.Error(throwable.toFeatureUiError())
+                SuggestionsUiState.Error(throwable.toFeatureError())
               emit(persistentListOf())
               Log.d(
                 TAG,
@@ -86,7 +86,7 @@ constructor(
         .onSuccess { mangaList ->
           _resultsUiState.value =
             BasePaginationUiState.Content(
-              currentList = mangaList.map { it.toMangaUiModel() }.toPersistentList(),
+              currentList = mangaList.map { it.toMangaModel() }.toPersistentList(),
               currentPage = FIRST_PAGE,
               nextPageState =
                 BaseNextPageState.fromPageSize(
@@ -97,7 +97,7 @@ constructor(
         }
         .onFailure { throwable ->
           _resultsUiState.value =
-            BasePaginationUiState.FirstPageError(throwable.toFeatureUiError())
+            BasePaginationUiState.FirstPageError(throwable.toFeatureError())
           Log.d(TAG, "fetchMangaListFirstPage have error: ${throwable.stackTraceToString()}")
         }
     }
@@ -117,7 +117,7 @@ constructor(
   }
 
   private fun fetchMangaListNextPageInternal(
-    currentResultsUiState: BasePaginationUiState.Content<MangaUiModel>,
+    currentResultsUiState: BasePaginationUiState.Content<MangaModel>,
   ) {
     viewModelScope.launch {
       _resultsUiState.value = currentResultsUiState.copy(nextPageState = BaseNextPageState.LOADING)
@@ -128,7 +128,7 @@ constructor(
       searchMangaUseCase(query = query.value, offset = currentMangaList.size)
         .onSuccess { nextMangaList ->
           val allMangaList =
-            (currentMangaList + nextMangaList.map { it.toMangaUiModel() }).toPersistentList()
+            (currentMangaList + nextMangaList.map { it.toMangaModel() }).toPersistentList()
           _resultsUiState.value =
             currentResultsUiState.copy(
               currentList = allMangaList,
@@ -159,7 +159,7 @@ constructor(
 
   fun retryFetchMangaListNextPage() {
     val currentResultsUiState = _resultsUiState.value
-    if (currentResultsUiState is BasePaginationUiState.Content<MangaUiModel> &&
+    if (currentResultsUiState is BasePaginationUiState.Content<MangaModel> &&
       currentResultsUiState.nextPageState == BaseNextPageState.ERROR
     )
       fetchMangaListNextPageInternal(currentResultsUiState)

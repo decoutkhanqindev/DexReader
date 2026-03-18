@@ -2,8 +2,8 @@ package com.decoutkhanqindev.dexreader.presentation.screens.reader
 
 
 import androidx.compose.runtime.Immutable
-import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureUiError
-import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterPagesUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureError
+import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterPagesModel
 
 @Immutable
 data class ChapterDetailsUiState(
@@ -14,12 +14,12 @@ data class ChapterDetailsUiState(
 
 sealed interface ChapterPagesUiState {
   data object Loading : ChapterPagesUiState
-  data class Error(val error: FeatureUiError = FeatureUiError.Generic) : ChapterPagesUiState
+  data class Error(val error: FeatureError = FeatureError.Generic) : ChapterPagesUiState
 
   @Immutable
   data class Success(
     val currentChapterPage: Int = 1,
-    val chapterPages: ChapterPagesUiModel,
+    val chapterPages: ChapterPagesModel,
   ) : ChapterPagesUiState
 }
 

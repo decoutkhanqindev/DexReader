@@ -1,12 +1,12 @@
 package com.decoutkhanqindev.dexreader.presentation.mapper
 
 import com.decoutkhanqindev.dexreader.domain.model.manga.ChapterPages
-import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterPagesUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterPagesModel
 import kotlinx.collections.immutable.toPersistentList
 
-object ChapterPagesUiMapper {
-  fun ChapterPages.toChapterPagesUiModel() =
-    ChapterPagesUiModel(
+object ChapterPagesMapper {
+  fun ChapterPages.toChapterPagesModel() =
+    ChapterPagesModel(
       chapterId = chapterId,
       pageImageUrls = pages.toPersistentList(),
       totalPages = totalPages,

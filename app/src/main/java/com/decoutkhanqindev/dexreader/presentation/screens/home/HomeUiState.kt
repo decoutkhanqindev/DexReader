@@ -2,20 +2,20 @@ package com.decoutkhanqindev.dexreader.presentation.screens.home
 
 
 import androidx.compose.runtime.Immutable
-import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureUiError
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureError
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 sealed interface HomeUiState {
   data object Loading : HomeUiState
-  data class Error(val error: FeatureUiError = FeatureUiError.Generic) : HomeUiState
+  data class Error(val error: FeatureError = FeatureError.Generic) : HomeUiState
 
   @Immutable
   data class Success(
-    val latestUpdatesMangaList: ImmutableList<MangaUiModel> = persistentListOf(),
-    val trendingMangaList: ImmutableList<MangaUiModel> = persistentListOf(),
-    val newReleaseMangaList: ImmutableList<MangaUiModel> = persistentListOf(),
-    val topRatedMangaList: ImmutableList<MangaUiModel> = persistentListOf(),
+    val latestUpdatesMangaList: ImmutableList<MangaModel> = persistentListOf(),
+    val trendingMangaList: ImmutableList<MangaModel> = persistentListOf(),
+    val newReleaseMangaList: ImmutableList<MangaModel> = persistentListOf(),
+    val topRatedMangaList: ImmutableList<MangaModel> = persistentListOf(),
   ) : HomeUiState
 }

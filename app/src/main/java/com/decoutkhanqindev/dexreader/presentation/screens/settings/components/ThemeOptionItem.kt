@@ -14,13 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.model.settings.ThemeModeUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.settings.ThemeModeModel
 
 @Composable
 fun ThemeOptionItem(
   isSelected: Boolean,
-  item: ThemeModeUiModel,
-  onClick: (ThemeModeUiModel) -> Unit,
+  item: ThemeModeModel,
+  onClick: (ThemeModeModel) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Row(

@@ -13,13 +13,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun HorizontalMangaList(
-  mangaList: ImmutableList<MangaUiModel>,
-  onSelectedManga: (MangaUiModel) -> Unit,
+  mangaList: ImmutableList<MangaModel>,
+  onSelectedManga: (MangaModel) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Box(modifier = modifier) {
@@ -30,7 +30,7 @@ fun HorizontalMangaList(
     ) {
       items(
         items = mangaList,
-        key = MangaUiModel::id
+        key = MangaModel::id
       ) { manga ->
         MangaItem(
           manga = manga,

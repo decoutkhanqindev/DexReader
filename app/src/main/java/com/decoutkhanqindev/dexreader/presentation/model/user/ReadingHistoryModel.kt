@@ -3,7 +3,7 @@ package com.decoutkhanqindev.dexreader.presentation.model.user
 import androidx.compose.runtime.Immutable
 
 @Immutable
-data class ReadingHistoryUiModel(
+data class ReadingHistoryModel(
   val id: String,
   val mangaId: String,
   val mangaTitle: String,

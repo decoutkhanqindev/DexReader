@@ -24,15 +24,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.MoveToTopButton
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 
 @Composable
 fun VerticalGridMangaList(
-  mangaList: ImmutableList<MangaUiModel>,
-  onSelectedManga: (MangaUiModel) -> Unit,
+  mangaList: ImmutableList<MangaModel>,
+  onSelectedManga: (MangaModel) -> Unit,
   loadMoreContent: @Composable () -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -54,7 +54,7 @@ fun VerticalGridMangaList(
     ) {
       items(
         items = mangaList,
-        key = MangaUiModel::id
+        key = MangaModel::id
       ) { manga ->
         MangaItem(
           manga = manga,

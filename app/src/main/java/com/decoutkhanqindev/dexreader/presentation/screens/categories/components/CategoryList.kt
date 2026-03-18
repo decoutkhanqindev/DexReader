@@ -7,12 +7,12 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun CategoryList(
-  items: ImmutableList<CategoryUiModel>,
+  items: ImmutableList<CategoryModel>,
   onItemClick: (String, String) -> Unit,
   modifier: Modifier = Modifier,
 ) {

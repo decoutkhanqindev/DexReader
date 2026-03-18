@@ -19,14 +19,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterModel
+import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 
 @Composable
 fun MangaChapterItem(
   latestChapter: String,
-  chapter: ChapterUiModel,
-  readingHistory: ReadingHistoryUiModel? = null,
+  chapter: ChapterModel,
+  readingHistory: ReadingHistoryModel? = null,
   onSelectedChapter: (
     chapterId: String,
     lastReadPage: Int,

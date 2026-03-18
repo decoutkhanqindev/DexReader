@@ -12,12 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun MangaCategoryList(
-  categoryList: ImmutableList<CategoryUiModel>,
+  categoryList: ImmutableList<CategoryModel>,
   onSelectedCategory: (
     categoryId: String,
     categoryTitle: String,

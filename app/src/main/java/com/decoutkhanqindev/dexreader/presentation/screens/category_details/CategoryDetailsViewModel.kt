@@ -8,15 +8,15 @@ import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.category.GetMangaListByCategoryUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortCriteria
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortOrder
-import com.decoutkhanqindev.dexreader.presentation.mapper.MangaUiMapper.toMangaContentRating
-import com.decoutkhanqindev.dexreader.presentation.mapper.MangaUiMapper.toMangaStatus
-import com.decoutkhanqindev.dexreader.presentation.mapper.MangaUiMapper.toMangaUiModel
-import com.decoutkhanqindev.dexreader.presentation.mapper.UiErrorMapper.toFeatureUiError
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.MangaSortCriteriaUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.MangaSortOrderUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaContentRatingUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaStatusUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaUiModel
+import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaContentRating
+import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaStatus
+import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaModel
+import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.MangaSortCriteriaModel
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.MangaSortOrderModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaContentRatingModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaStatusModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
@@ -41,8 +41,8 @@ class CategoryDetailsViewModel @Inject constructor(
     checkNotNull(savedStateHandle[NavDestination.CategoryDetailsDestination.CATEGORY_TITLE_ARG])
 
   private val _categoryDetailsUiState =
-    MutableStateFlow<BasePaginationUiState<MangaUiModel>>(BasePaginationUiState.FirstPageLoading)
-  val categoryDetailsUiState: StateFlow<BasePaginationUiState<MangaUiModel>> =
+    MutableStateFlow<BasePaginationUiState<MangaModel>>(BasePaginationUiState.FirstPageLoading)
+  val categoryDetailsUiState: StateFlow<BasePaginationUiState<MangaModel>> =
     _categoryDetailsUiState.asStateFlow()
 
   private val _categoryCriteriaUiState = MutableStateFlow(CategoryDetailsCriteriaUiState())
@@ -68,14 +68,14 @@ class CategoryDetailsViewModel @Inject constructor(
       )
         .onSuccess { mangaList ->
           _categoryDetailsUiState.value = BasePaginationUiState.Content(
-            currentList = mangaList.map { it.toMangaUiModel() }.toPersistentList(),
+            currentList = mangaList.map { it.toMangaModel() }.toPersistentList(),
             currentPage = FIRST_PAGE,
             nextPageState = BaseNextPageState.fromPageSize(mangaList.size, MANGA_LIST_PER_PAGE_SIZE)
           )
         }
         .onFailure { throwable ->
           _categoryDetailsUiState.value =
-            BasePaginationUiState.FirstPageError(throwable.toFeatureUiError())
+            BasePaginationUiState.FirstPageError(throwable.toFeatureError())
           Log.d(
             TAG,
             "fetchMangaListByCategoryFirstPage have error: ${throwable.stackTraceToString()}"
@@ -105,7 +105,7 @@ class CategoryDetailsViewModel @Inject constructor(
     }
   }
 
-  private fun fetchMangaListByCategoryNextPageInternal(currentCategoryDetailsUiState: BasePaginationUiState.Content<MangaUiModel>) {
+  private fun fetchMangaListByCategoryNextPageInternal(currentCategoryDetailsUiState: BasePaginationUiState.Content<MangaModel>) {
     viewModelScope.launch {
       _categoryDetailsUiState.value =
         currentCategoryDetailsUiState.copy(nextPageState = BaseNextPageState.LOADING)
@@ -124,7 +124,7 @@ class CategoryDetailsViewModel @Inject constructor(
       )
         .onSuccess { nextMangaList ->
           val allMangaList =
-            (currentMangaList + nextMangaList.map { it.toMangaUiModel() }).toPersistentList()
+            (currentMangaList + nextMangaList.map { it.toMangaModel() }).toPersistentList()
           _categoryDetailsUiState.value = currentCategoryDetailsUiState.copy(
             currentList = allMangaList,
             currentPage = nextPage,
@@ -146,8 +146,8 @@ class CategoryDetailsViewModel @Inject constructor(
   }
 
   fun updateSortingCriteria(
-    sortCriteria: MangaSortCriteriaUiModel,
-    sortOrder: MangaSortOrderUiModel,
+    sortCriteria: MangaSortCriteriaModel,
+    sortOrder: MangaSortOrderModel,
   ) {
     val current = _categoryCriteriaUiState.value
     if (current.sortCriteria == sortCriteria && current.sortOrder == sortOrder) return
@@ -159,8 +159,8 @@ class CategoryDetailsViewModel @Inject constructor(
   }
 
   fun updateFilteringCriteria(
-    statusFilter: ImmutableList<MangaStatusUiModel>,
-    contentRatingFilter: ImmutableList<MangaContentRatingUiModel>,
+    statusFilter: ImmutableList<MangaStatusModel>,
+    contentRatingFilter: ImmutableList<MangaContentRatingModel>,
   ) {
     val current = _categoryCriteriaUiState.value
     if (current.statusFilter == statusFilter && current.contentRatingFilter == contentRatingFilter) return
@@ -178,7 +178,7 @@ class CategoryDetailsViewModel @Inject constructor(
 
   fun retryFetchMangaListByCategoryNextPage() {
     val currentCategoryDetailsUiState = _categoryDetailsUiState.value
-    if (currentCategoryDetailsUiState is BasePaginationUiState.Content<MangaUiModel> &&
+    if (currentCategoryDetailsUiState is BasePaginationUiState.Content<MangaModel> &&
       currentCategoryDetailsUiState.nextPageState == BaseNextPageState.ERROR
     ) fetchMangaListByCategoryNextPageInternal(currentCategoryDetailsUiState)
   }

@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.user.RegisterUseCase
-import com.decoutkhanqindev.dexreader.presentation.mapper.UiErrorMapper.toUserUiError
-import com.decoutkhanqindev.dexreader.presentation.model.error.UserUiError
+import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toUserError
+import com.decoutkhanqindev.dexreader.presentation.model.error.UserError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -47,14 +47,14 @@ constructor(
         }
         .onFailure { throwable ->
           _uiState.update {
-            when (val error = throwable.toUserUiError()) {
-              is UserUiError.Email -> it.copy(isLoading = false, emailError = error)
-              is UserUiError.Password -> it.copy(isLoading = false, passwordError = error)
-              is UserUiError.ConfirmPassword ->
+            when (val error = throwable.toUserError()) {
+              is UserError.Email -> it.copy(isLoading = false, emailError = error)
+              is UserError.Password -> it.copy(isLoading = false, passwordError = error)
+              is UserError.ConfirmPassword ->
                 it.copy(isLoading = false, confirmPasswordError = error)
 
-              is UserUiError.Name -> it.copy(isLoading = false, nameError = error)
-              is UserUiError.RegistrationFailed ->
+              is UserError.Name -> it.copy(isLoading = false, nameError = error)
+              is UserError.RegistrationFailed ->
                 it.copy(isLoading = false, isSuccess = false, isError = true)
 
               else -> it.copy(isLoading = false, isSuccess = false, isError = true)

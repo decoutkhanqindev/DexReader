@@ -20,8 +20,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaContentRatingUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaStatusUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaContentRatingModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaStatusModel
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailsCriteriaUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
 import kotlinx.collections.immutable.ImmutableList
@@ -33,16 +33,16 @@ fun FilterBottomSheet(
   onDismiss: () -> Unit,
   criteriaState: CategoryDetailsCriteriaUiState,
   onApplyClick: (
-    statusFilter: ImmutableList<MangaStatusUiModel>,
-    contentRatingFilter: ImmutableList<MangaContentRatingUiModel>,
+    statusFilter: ImmutableList<MangaStatusModel>,
+    contentRatingFilter: ImmutableList<MangaContentRatingModel>,
   ) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-  var selectedStatusOptions: ImmutableList<MangaStatusUiModel> by rememberSaveable(
+  var selectedStatusOptions: ImmutableList<MangaStatusModel> by rememberSaveable(
     stateSaver = listSaver(
       save = { list -> list.map { it.name } },
-      restore = { names -> names.map { MangaStatusUiModel.valueOf(it) }.toPersistentList() }
+      restore = { names -> names.map { MangaStatusModel.valueOf(it) }.toPersistentList() }
     )
   ) {
     mutableStateOf(criteriaState.statusFilter)
@@ -51,7 +51,7 @@ fun FilterBottomSheet(
     stateSaver = listSaver(
       save = { list -> list.map { it.name } },
       restore = { names ->
-        names.map { MangaContentRatingUiModel.valueOf(it) }.toPersistentList()
+        names.map { MangaContentRatingModel.valueOf(it) }.toPersistentList()
       }
     )
   ) {

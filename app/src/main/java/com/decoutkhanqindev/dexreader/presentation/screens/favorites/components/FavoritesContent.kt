@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
@@ -26,7 +26,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPage
 
 @Composable
 fun FavoritesContent(
-  uiState: BasePaginationUiState<MangaUiModel>,
+  uiState: BasePaginationUiState<MangaModel>,
   onSelectedManga: (String) -> Unit,
   onObserveFavoriteMangaListNextPage: () -> Unit,
   onRetryObserveFavoriteMangaListNextPage: () -> Unit,
@@ -51,7 +51,7 @@ fun FavoritesContent(
       }
     }
 
-    is BasePaginationUiState.Content<MangaUiModel> -> {
+    is BasePaginationUiState.Content<MangaModel> -> {
       val favoriteMangaList = uiState.currentList
       val nextPageState = uiState.nextPageState
 

@@ -12,11 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.MangaSortCriteriaUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaContentRatingUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaStatusUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.MangaSortOrderUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.MangaSortCriteriaModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaContentRatingModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaStatusModel
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.MangaSortOrderModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailsCriteriaUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.filter.FilterBottomSheet
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.sort.SortBottomSheet
@@ -33,19 +33,19 @@ import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun CategoryDetailsContent(
-  detailsUiState: BasePaginationUiState<MangaUiModel>,
+  detailsUiState: BasePaginationUiState<MangaModel>,
   criteriaUiState: CategoryDetailsCriteriaUiState,
   isSortBottomSheetVisible: Boolean,
   onSortSheetDismiss: () -> Unit,
   onSortApplyClick: (
-    sortCriteria: MangaSortCriteriaUiModel,
-    sortOrder: MangaSortOrderUiModel,
+    sortCriteria: MangaSortCriteriaModel,
+    sortOrder: MangaSortOrderModel,
   ) -> Unit,
   isFilterBottomSheetVisible: Boolean,
   onFilterSheetDismiss: () -> Unit,
   onFilterApplyClick: (
-    statusFilter: ImmutableList<MangaStatusUiModel>,
-    contentRatingFilter: ImmutableList<MangaContentRatingUiModel>,
+    statusFilter: ImmutableList<MangaStatusModel>,
+    contentRatingFilter: ImmutableList<MangaContentRatingModel>,
   ) -> Unit,
   onMangaClick: (String) -> Unit,
   onFetchMangaListNextPage: () -> Unit,
@@ -93,7 +93,7 @@ fun CategoryDetailsContent(
       }
     }
 
-    is BasePaginationUiState.Content<MangaUiModel> -> {
+    is BasePaginationUiState.Content<MangaModel> -> {
       val mangaList = detailsUiState.currentList
       val nextPageState = detailsUiState.nextPageState
 

@@ -10,12 +10,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 import java.util.Locale
 
 @Composable
 fun MangaCategoryItem(
-  category: CategoryUiModel,
+  category: CategoryModel,
   onSelectedCategory: (
     categoryId: String,
     categoryTitle: String,

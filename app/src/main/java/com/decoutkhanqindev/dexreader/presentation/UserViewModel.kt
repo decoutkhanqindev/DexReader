@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.model.user.User
 import com.decoutkhanqindev.dexreader.domain.usecase.user.profile.ObserveCurrentUserUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.profile.ObserveUserProfileUseCase
-import com.decoutkhanqindev.dexreader.presentation.mapper.UserUiMapper.toUserUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.user.UserUiModel
+import com.decoutkhanqindev.dexreader.presentation.mapper.UserMapper.toUserModel
+import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,8 +28,8 @@ class UserViewModel @Inject constructor(
   val isUserLoggedIn: StateFlow<Boolean> = _isUserLoggedIn.asStateFlow()
 
   private val _domainUserProfile = MutableStateFlow<User?>(null)
-  val userProfile: StateFlow<UserUiModel?> = _domainUserProfile
-    .map { it?.toUserUiModel() }
+  val userProfile: StateFlow<UserModel?> = _domainUserProfile
+    .map { it?.toUserModel() }
     .stateIn(
       scope = viewModelScope,
       started = SharingStarted.Eagerly,

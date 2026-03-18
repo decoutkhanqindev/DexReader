@@ -12,14 +12,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
 
 @Composable
 fun ActionButtonsSection(
   startedChapterId: String? = null,
   mangaId: String = "",
-  continueChapter: ReadingHistoryUiModel? = null,
+  continueChapter: ReadingHistoryModel? = null,
   onReadingClick: (
     chapterId: String,
     lastReadPage: Int,

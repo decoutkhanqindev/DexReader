@@ -10,16 +10,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryTypeUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryTypeModel
+import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun CategoryTypeSection(
   isExpanded: Boolean,
   onExpandClick: () -> Unit,
-  type: CategoryTypeUiModel,
-  categoryList: ImmutableList<CategoryUiModel>,
+  type: CategoryTypeModel,
+  categoryList: ImmutableList<CategoryModel>,
   onCategoryClick: (String, String) -> Unit,
   modifier: Modifier = Modifier,
 ) {

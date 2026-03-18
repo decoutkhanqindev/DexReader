@@ -23,14 +23,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.user.UserUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun MenuDrawer(
   isUserLoggedIn: Boolean,
-  currentUser: UserUiModel?,
+  currentUser: UserModel?,
   onSignInClick: () -> Unit,
   drawerState: DrawerState,
   selectedItemId: String,

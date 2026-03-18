@@ -2,12 +2,12 @@ package com.decoutkhanqindev.dexreader.presentation.screens.profile
 
 
 import androidx.compose.runtime.Immutable
-import com.decoutkhanqindev.dexreader.presentation.model.user.UserUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 
 @Immutable
 data class ProfileUiState(
   val isLoading: Boolean = false,
-  val currentUser: UserUiModel? = null,
+  val currentUser: UserModel? = null,
   val newName: String? = null,
   val newAvatarUrl: String? = null,
   val isUpdateUserSuccess: Boolean = false,

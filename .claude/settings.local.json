@@ -27,7 +27,9 @@
       "Bash(base=\"C:/Android Development/dex_reader/DexReader/app/src/main/java/com/decoutkhanqindev/dexreader/data/repository\")",
       "Read(//c/Android Development/dex_reader/DexReader/$base/**)",
       "Bash(cd:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(xargs -0 sed -i -e 's/MangaSortCriteriaUiModel/MangaSortCriteriaModel/g' -e 's/MangaSortOrderUiModel/MangaSortOrderModel/g' -e 's/MangaContentRatingUiModel/MangaContentRatingModel/g' -e 's/MangaLanguageUiModel/MangaLanguageModel/g' -e 's/MangaStatusUiModel/MangaStatusModel/g' -e 's/ChapterPagesUiModel/ChapterPagesModel/g' -e 's/ReadingHistoryUiModel/ReadingHistoryModel/g' -e 's/CategoryTypeUiModel/CategoryTypeModel/g' -e 's/ThemeModeUiModel/ThemeModeModel/g' -e 's/ChapterUiModel/ChapterModel/g' -e 's/CategoryUiModel/CategoryModel/g' -e 's/MangaUiModel/MangaModel/g' -e 's/UserUiModel/UserModel/g' -e 's/FeatureUiError/FeatureError/g' -e 's/UserUiError/UserError/g' -e 's/ChapterPagesUiMapper/ChapterPagesMapper/g' -e 's/ReadingHistoryUiMapper/ReadingHistoryMapper/g' -e 's/FavoriteMangaUiMapper/FavoriteMangaMapper/g' -e 's/ThemeModeUiMapper/ThemeModeMapper/g' -e 's/CategoryUiMapper/CategoryMapper/g' -e 's/ChapterUiMapper/ChapterMapper/g' -e 's/MangaUiMapper/MangaMapper/g' -e 's/UiErrorMapper/ErrorMapper/g' -e 's/UserUiMapper/UserMapper/g' -e 's/toMangaContentRatingUiModel/toMangaContentRatingModel/g' -e 's/toMangaLanguageUiModel/toMangaLanguageModel/g' -e 's/toMangaStatusUiModel/toMangaStatusModel/g' -e 's/toChapterPagesUiModel/toChapterPagesModel/g' -e 's/toReadingHistoryUiModel/toReadingHistoryModel/g' -e 's/toThemeModeUiModel/toThemeModeModel/g' -e 's/toChapterUiModel/toChapterModel/g' -e 's/toCategoryUiModel/toCategoryModel/g' -e 's/toMangaUiModel/toMangaModel/g' -e 's/toUserUiModel/toUserModel/g' -e 's/toFeatureUiError/toFeatureError/g' -e 's/toUserUiError/toUserError/g' echo \"Phase 1 substitutions complete\")",
+      "Bash(echo \"EXIT: $?\")"
     ]
   },
   "spinnerTipsEnabled": true

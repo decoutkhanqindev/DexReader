@@ -14,8 +14,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterModel
+import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.NextPageLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.AllItemLoadedMessage
@@ -27,8 +27,8 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 fun MangaChapterList(
   latestChapter: String,
-  chapterList: ImmutableList<ChapterUiModel>,
-  readingHistoryList: ImmutableList<ReadingHistoryUiModel> = persistentListOf(),
+  chapterList: ImmutableList<ChapterModel>,
+  readingHistoryList: ImmutableList<ReadingHistoryModel> = persistentListOf(),
   onSelectedChapter: (
     chapterId: String,
     lastReadPage: Int,

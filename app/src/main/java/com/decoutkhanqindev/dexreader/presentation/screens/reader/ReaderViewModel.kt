@@ -19,8 +19,8 @@ import com.decoutkhanqindev.dexreader.domain.usecase.manga.cache.ClearExpiredCac
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.cache.GetChapterCacheUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.history.AddAndUpdateToHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.history.ObserveHistoryUseCase
-import com.decoutkhanqindev.dexreader.presentation.mapper.ChapterPagesUiMapper.toChapterPagesUiModel
-import com.decoutkhanqindev.dexreader.presentation.mapper.UiErrorMapper.toFeatureUiError
+import com.decoutkhanqindev.dexreader.presentation.mapper.ChapterPagesMapper.toChapterPagesModel
+import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
@@ -143,7 +143,7 @@ constructor(
           _chapterDetailsUiState.update { ChapterDetailsUiState() }
           _isFetchChapterDetailsDone.value = true
           if (throwable is BusinessException.Resource.ChapterNotFound) {
-            _chapterPagesUiState.value = ChapterPagesUiState.Error(throwable.toFeatureUiError())
+            _chapterPagesUiState.value = ChapterPagesUiState.Error(throwable.toFeatureError())
           }
           Log.e(TAG, "fetchChapterDetails have error: ${throwable.stackTraceToString()}")
         }
@@ -189,7 +189,7 @@ constructor(
               )
             _chapterPagesUiState.value =
               ChapterPagesUiState.Success(
-                chapterPages = chapterPages.toChapterPagesUiModel(),
+                chapterPages = chapterPages.toChapterPagesModel(),
                 currentChapterPage = initialChapterPage
               )
             prefetchNextChapterPages()
@@ -213,7 +213,7 @@ constructor(
               )
             _chapterPagesUiState.value =
               ChapterPagesUiState.Success(
-                chapterPages = chapterPages.toChapterPagesUiModel(),
+                chapterPages = chapterPages.toChapterPagesModel(),
                 currentChapterPage = initialChapterPage
               )
           }
@@ -231,7 +231,7 @@ constructor(
         }
         .onFailure { throwable ->
           if (!isPrefetch) {
-            _chapterPagesUiState.value = ChapterPagesUiState.Error(throwable.toFeatureUiError())
+            _chapterPagesUiState.value = ChapterPagesUiState.Error(throwable.toFeatureError())
           }
           Log.d(TAG, "getChapterPagesUseCase have error: ${throwable.stackTraceToString()}")
         }

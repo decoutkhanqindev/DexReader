@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.user.UserUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.top_bars.DetailsTopBar
 import com.decoutkhanqindev.dexreader.presentation.screens.reader.components.ReaderContent
 import com.decoutkhanqindev.dexreader.presentation.screens.reader.components.actions.NavigateChapterBottomBar
@@ -32,7 +32,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.reader.components.act
 @Composable
 fun ReaderScreen(
   isUserLoggedIn: Boolean,
-  currentUser: UserUiModel?,
+  currentUser: UserModel?,
   onNavigateBack: () -> Unit,
   viewModel: ReaderViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,

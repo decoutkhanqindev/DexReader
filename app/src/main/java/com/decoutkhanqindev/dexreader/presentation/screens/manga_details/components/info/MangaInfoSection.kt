@@ -7,12 +7,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
 
 @Composable
 fun MangaInfoSection(
-  manga: MangaUiModel,
+  manga: MangaModel,
   modifier: Modifier = Modifier,
 ) {
   Row(

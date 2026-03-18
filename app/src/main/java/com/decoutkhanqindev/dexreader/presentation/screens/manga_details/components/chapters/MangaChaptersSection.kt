@@ -10,9 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaLanguageUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaLanguageModel
+import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.ListLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPageErrorMessage
@@ -21,12 +21,12 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun MangaChaptersSection(
-  mangaChaptersUiState: BasePaginationUiState<ChapterUiModel>,
-  readingHistoryList: ImmutableList<ReadingHistoryUiModel> = persistentListOf(),
+  mangaChaptersUiState: BasePaginationUiState<ChapterModel>,
+  readingHistoryList: ImmutableList<ReadingHistoryModel> = persistentListOf(),
   latestChapter: String,
-  chapterLanguage: MangaLanguageUiModel,
-  chapterLanguageList: ImmutableList<MangaLanguageUiModel>,
-  onSelectedLanguage: (MangaLanguageUiModel) -> Unit,
+  chapterLanguage: MangaLanguageModel,
+  chapterLanguageList: ImmutableList<MangaLanguageModel>,
+  onSelectedLanguage: (MangaLanguageModel) -> Unit,
   onSelectedChapter: (
     chapterId: String,
     lastReadPage: Int,

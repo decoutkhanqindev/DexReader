@@ -26,9 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaLanguageUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaLanguageModel
+import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.MoveToTopButton
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
@@ -45,10 +45,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun MangaDetailsContent(
   mangaDetailsUiState: MangaDetailsUiState,
-  mangaChaptersUiState: BasePaginationUiState<ChapterUiModel>,
-  readingHistoryList: ImmutableList<ReadingHistoryUiModel> = persistentListOf(),
+  mangaChaptersUiState: BasePaginationUiState<ChapterModel>,
+  readingHistoryList: ImmutableList<ReadingHistoryModel> = persistentListOf(),
   startedChapterId: String? = null,
-  continueChapter: ReadingHistoryUiModel? = null,
+  continueChapter: ReadingHistoryModel? = null,
   onReadingClick: (
     chapterId: String,
     lastReadPage: Int,
@@ -56,9 +56,9 @@ fun MangaDetailsContent(
   ) -> Unit,
   isFavorite: Boolean,
   onFavoriteClick: () -> Unit,
-  chapterLanguage: MangaLanguageUiModel,
-  availableLanguages: ImmutableList<MangaLanguageUiModel>,
-  onSelectedLanguage: (MangaLanguageUiModel) -> Unit,
+  chapterLanguage: MangaLanguageModel,
+  availableLanguages: ImmutableList<MangaLanguageModel>,
+  onSelectedLanguage: (MangaLanguageModel) -> Unit,
   onSelectedCategory: (
     categoryId: String,
     categoryTitle: String,

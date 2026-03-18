@@ -17,14 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaLanguageUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaLanguageModel
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun MangaChaptersHeader(
-  selectedLanguage: MangaLanguageUiModel,
-  languageList: ImmutableList<MangaLanguageUiModel>,
-  onSelectedLanguage: (MangaLanguageUiModel) -> Unit,
+  selectedLanguage: MangaLanguageModel,
+  languageList: ImmutableList<MangaLanguageModel>,
+  onSelectedLanguage: (MangaLanguageModel) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   var isShowLanguageBottomSheet by rememberSaveable { mutableStateOf(false) }
