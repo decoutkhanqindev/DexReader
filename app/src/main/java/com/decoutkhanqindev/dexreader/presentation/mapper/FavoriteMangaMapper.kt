@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.mapper
 
-import com.decoutkhanqindev.dexreader.domain.model.manga.FavoriteManga
+import com.decoutkhanqindev.dexreader.domain.entity.manga.FavoriteManga
 import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaStatusModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaContentRatingModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel

@@ -1,6 +1,9 @@
-package com.decoutkhanqindev.dexreader.domain.model.manga
+package com.decoutkhanqindev.dexreader.domain.entity.manga
 
-import com.decoutkhanqindev.dexreader.domain.model.category.Category
+import com.decoutkhanqindev.dexreader.domain.entity.category.Category
+import com.decoutkhanqindev.dexreader.domain.value.manga.MangaContentRating
+import com.decoutkhanqindev.dexreader.domain.value.manga.MangaLanguage
+import com.decoutkhanqindev.dexreader.domain.value.manga.MangaStatus
 
 data class Manga(
   val id: String,

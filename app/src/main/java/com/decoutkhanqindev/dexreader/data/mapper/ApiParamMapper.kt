@@ -4,10 +4,10 @@ import com.decoutkhanqindev.dexreader.data.network.api.param.MangaContentRatingP
 import com.decoutkhanqindev.dexreader.data.network.api.param.MangaLanguageCodeParam
 import com.decoutkhanqindev.dexreader.data.network.api.param.MangaSortOrderParam
 import com.decoutkhanqindev.dexreader.data.network.api.param.MangaStatusParam
-import com.decoutkhanqindev.dexreader.domain.model.criteria.MangaSortOrder
-import com.decoutkhanqindev.dexreader.domain.model.manga.MangaContentRating
-import com.decoutkhanqindev.dexreader.domain.model.manga.MangaLanguage
-import com.decoutkhanqindev.dexreader.domain.model.manga.MangaStatus
+import com.decoutkhanqindev.dexreader.domain.value.criteria.MangaSortOrder
+import com.decoutkhanqindev.dexreader.domain.value.manga.MangaContentRating
+import com.decoutkhanqindev.dexreader.domain.value.manga.MangaLanguage
+import com.decoutkhanqindev.dexreader.domain.value.manga.MangaStatus
 
 object ApiParamMapper {
   fun MangaStatus.toApiParam() =

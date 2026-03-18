@@ -3,7 +3,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.profile
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.decoutkhanqindev.dexreader.domain.model.user.User
+import com.decoutkhanqindev.dexreader.domain.entity.user.User
 import com.decoutkhanqindev.dexreader.domain.usecase.user.LogoutUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.profile.UpdateUserProfileUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.UserMapper.toDomainUser

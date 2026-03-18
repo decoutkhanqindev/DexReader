@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.data.mapper
 
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.request.ReadingHistoryRequest
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.response.ReadingHistoryResponse
-import com.decoutkhanqindev.dexreader.domain.model.user.ReadingHistory
+import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingHistory
 
 object ReadingHistoryMapper {
 

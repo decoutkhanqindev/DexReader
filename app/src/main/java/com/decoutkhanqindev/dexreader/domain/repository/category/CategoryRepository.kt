@@ -1,11 +1,11 @@
 package com.decoutkhanqindev.dexreader.domain.repository.category
 
-import com.decoutkhanqindev.dexreader.domain.model.category.Category
-import com.decoutkhanqindev.dexreader.domain.model.manga.MangaContentRating
-import com.decoutkhanqindev.dexreader.domain.model.manga.MangaStatus
-import com.decoutkhanqindev.dexreader.domain.model.criteria.MangaSortCriteria
-import com.decoutkhanqindev.dexreader.domain.model.criteria.MangaSortOrder
-import com.decoutkhanqindev.dexreader.domain.model.manga.Manga
+import com.decoutkhanqindev.dexreader.domain.entity.category.Category
+import com.decoutkhanqindev.dexreader.domain.value.manga.MangaContentRating
+import com.decoutkhanqindev.dexreader.domain.value.manga.MangaStatus
+import com.decoutkhanqindev.dexreader.domain.value.criteria.MangaSortCriteria
+import com.decoutkhanqindev.dexreader.domain.value.criteria.MangaSortOrder
+import com.decoutkhanqindev.dexreader.domain.entity.manga.Manga
 
 interface CategoryRepository {
   suspend fun getCategoryList(): List<Category>

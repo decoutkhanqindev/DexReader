@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.domain.model.manga
+package com.decoutkhanqindev.dexreader.domain.entity.manga
 
 data class Chapter(
   val id: String,

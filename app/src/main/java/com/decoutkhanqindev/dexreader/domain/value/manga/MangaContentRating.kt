@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.domain.model.manga
+package com.decoutkhanqindev.dexreader.domain.value.manga
 
 enum class MangaContentRating {
   SAFE,

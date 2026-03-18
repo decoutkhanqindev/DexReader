@@ -1,8 +1,8 @@
 package com.decoutkhanqindev.dexreader.presentation.mapper
 
-import com.decoutkhanqindev.dexreader.domain.model.manga.Manga
-import com.decoutkhanqindev.dexreader.domain.model.manga.MangaContentRating
-import com.decoutkhanqindev.dexreader.domain.model.manga.MangaStatus
+import com.decoutkhanqindev.dexreader.domain.entity.manga.Manga
+import com.decoutkhanqindev.dexreader.domain.value.manga.MangaContentRating
+import com.decoutkhanqindev.dexreader.domain.value.manga.MangaStatus
 import com.decoutkhanqindev.dexreader.presentation.mapper.CategoryMapper.toCategoryModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguageModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaContentRatingModel

@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.domain.repository.manga
 
-import com.decoutkhanqindev.dexreader.domain.model.manga.ChapterPages
+import com.decoutkhanqindev.dexreader.domain.entity.manga.ChapterPages
 
 interface CacheRepository {
   suspend fun addChapterCache(mangaId: String, chapterPages: ChapterPages)

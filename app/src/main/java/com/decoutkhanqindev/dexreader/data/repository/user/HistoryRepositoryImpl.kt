@@ -5,7 +5,7 @@ import com.decoutkhanqindev.dexreader.data.mapper.ReadingHistoryMapper.toReading
 import com.decoutkhanqindev.dexreader.data.mapper.ReadingHistoryMapper.toReadingHistoryRequest
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
-import com.decoutkhanqindev.dexreader.domain.model.user.ReadingHistory
+import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.repository.user.HistoryRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
 import com.google.firebase.firestore.FirebaseFirestoreException

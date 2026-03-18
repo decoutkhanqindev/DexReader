@@ -6,9 +6,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
-import com.decoutkhanqindev.dexreader.domain.model.criteria.MangaSortOrder
-import com.decoutkhanqindev.dexreader.domain.model.manga.Manga
-import com.decoutkhanqindev.dexreader.domain.model.user.ReadingHistory
+import com.decoutkhanqindev.dexreader.domain.value.criteria.MangaSortOrder
+import com.decoutkhanqindev.dexreader.domain.entity.manga.Manga
+import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetChapterListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaDetailsUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.AddToFavoritesUseCase

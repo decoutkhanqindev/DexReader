@@ -1,10 +1,10 @@
 package com.decoutkhanqindev.dexreader.domain.usecase.category
 
-import com.decoutkhanqindev.dexreader.domain.model.manga.MangaContentRating
-import com.decoutkhanqindev.dexreader.domain.model.manga.MangaStatus
-import com.decoutkhanqindev.dexreader.domain.model.criteria.MangaSortCriteria
-import com.decoutkhanqindev.dexreader.domain.model.criteria.MangaSortOrder
-import com.decoutkhanqindev.dexreader.domain.model.manga.Manga
+import com.decoutkhanqindev.dexreader.domain.value.manga.MangaContentRating
+import com.decoutkhanqindev.dexreader.domain.value.manga.MangaStatus
+import com.decoutkhanqindev.dexreader.domain.value.criteria.MangaSortCriteria
+import com.decoutkhanqindev.dexreader.domain.value.criteria.MangaSortOrder
+import com.decoutkhanqindev.dexreader.domain.entity.manga.Manga
 import com.decoutkhanqindev.dexreader.domain.repository.category.CategoryRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendResultCatching
 import javax.inject.Inject

@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.mapper
 
-import com.decoutkhanqindev.dexreader.domain.model.user.User
+import com.decoutkhanqindev.dexreader.domain.entity.user.User
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 
 object UserMapper {

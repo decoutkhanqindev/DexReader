@@ -6,7 +6,7 @@ import com.decoutkhanqindev.dexreader.data.network.firebase.auth.FirebaseAuthSou
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.exception.InfrastructureException
-import com.decoutkhanqindev.dexreader.domain.model.user.User
+import com.decoutkhanqindev.dexreader.domain.entity.user.User
 import com.decoutkhanqindev.dexreader.domain.repository.user.UserRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException

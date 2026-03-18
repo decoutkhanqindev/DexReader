@@ -4,7 +4,7 @@ import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toApiValue
 import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toMangaStatus
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.request.FavoriteMangaRequest
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.response.FavoriteMangaResponse
-import com.decoutkhanqindev.dexreader.domain.model.manga.FavoriteManga
+import com.decoutkhanqindev.dexreader.domain.entity.manga.FavoriteManga
 
 object FavoriteMangaMapper {
 

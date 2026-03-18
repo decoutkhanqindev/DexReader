@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.domain.model.user
+package com.decoutkhanqindev.dexreader.domain.entity.user
 
 import com.decoutkhanqindev.dexreader.domain.exception.ValidationException
 

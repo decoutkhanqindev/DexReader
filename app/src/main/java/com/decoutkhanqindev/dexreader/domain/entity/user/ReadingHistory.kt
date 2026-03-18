@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.domain.model.user
+package com.decoutkhanqindev.dexreader.domain.entity.user
 
 data class ReadingHistory(
   val id: String,

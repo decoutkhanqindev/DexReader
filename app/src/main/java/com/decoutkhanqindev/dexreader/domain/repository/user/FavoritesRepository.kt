@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.domain.repository.user
 
-import com.decoutkhanqindev.dexreader.domain.model.manga.FavoriteManga
+import com.decoutkhanqindev.dexreader.domain.entity.manga.FavoriteManga
 import kotlinx.coroutines.flow.Flow
 
 interface FavoritesRepository {

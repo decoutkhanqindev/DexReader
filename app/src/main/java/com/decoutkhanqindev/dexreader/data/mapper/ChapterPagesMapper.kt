@@ -3,7 +3,7 @@ package com.decoutkhanqindev.dexreader.data.mapper
 import com.decoutkhanqindev.dexreader.data.local.database.entity.ChapterCacheEntity
 import com.decoutkhanqindev.dexreader.data.network.api.response.at_home.AtHomeServerResponse
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
-import com.decoutkhanqindev.dexreader.domain.model.manga.ChapterPages
+import com.decoutkhanqindev.dexreader.domain.entity.manga.ChapterPages
 
 object ChapterPagesMapper {
 

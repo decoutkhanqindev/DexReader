@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.domain.usecase.user.favorite
 
-import com.decoutkhanqindev.dexreader.domain.model.manga.FavoriteManga
+import com.decoutkhanqindev.dexreader.domain.entity.manga.FavoriteManga
 import com.decoutkhanqindev.dexreader.domain.repository.user.FavoritesRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.toFlowResult
 import kotlinx.coroutines.flow.Flow

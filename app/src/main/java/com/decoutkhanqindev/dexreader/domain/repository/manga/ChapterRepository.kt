@@ -1,9 +1,9 @@
 package com.decoutkhanqindev.dexreader.domain.repository.manga
 
-import com.decoutkhanqindev.dexreader.domain.model.criteria.MangaSortOrder
-import com.decoutkhanqindev.dexreader.domain.model.manga.Chapter
-import com.decoutkhanqindev.dexreader.domain.model.manga.ChapterPages
-import com.decoutkhanqindev.dexreader.domain.model.manga.MangaLanguage
+import com.decoutkhanqindev.dexreader.domain.value.criteria.MangaSortOrder
+import com.decoutkhanqindev.dexreader.domain.entity.manga.Chapter
+import com.decoutkhanqindev.dexreader.domain.entity.manga.ChapterPages
+import com.decoutkhanqindev.dexreader.domain.value.manga.MangaLanguage
 
 interface ChapterRepository {
   suspend fun getChapterList(

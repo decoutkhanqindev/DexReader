@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.domain.repository.user
 
-import com.decoutkhanqindev.dexreader.domain.model.user.ReadingHistory
+import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingHistory
 import kotlinx.coroutines.flow.Flow
 
 interface HistoryRepository {

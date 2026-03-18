@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.domain.repository.user
 
-import com.decoutkhanqindev.dexreader.domain.model.user.User
+import com.decoutkhanqindev.dexreader.domain.entity.user.User
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {

@@ -4,7 +4,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.categories
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.decoutkhanqindev.dexreader.domain.model.category.CategoryType
+import com.decoutkhanqindev.dexreader.domain.value.category.CategoryType
 import com.decoutkhanqindev.dexreader.domain.usecase.category.GetCategoryListUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.CategoryMapper.toCategoryModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError

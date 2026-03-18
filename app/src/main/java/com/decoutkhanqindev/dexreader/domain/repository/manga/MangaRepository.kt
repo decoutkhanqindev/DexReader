@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.domain.repository.manga
 
-import com.decoutkhanqindev.dexreader.domain.model.manga.Manga
+import com.decoutkhanqindev.dexreader.domain.entity.manga.Manga
 
 interface MangaRepository {
   suspend fun getLatestUpdateMangaList(): List<Manga>
