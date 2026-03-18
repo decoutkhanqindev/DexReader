@@ -82,3 +82,40 @@ about the domain ring's structure. This split makes the architectural intent exp
 `Manga.kt` and `Category.kt` required manual cross-package imports added after the split, since
 `MangaStatus`/`MangaContentRating`/`MangaLanguage` (used by `Manga`) and `CategoryType` (used by
 `Category`) moved to a sibling package (`domain.value.*`) rather than staying in the same package.
+
+---
+
+## 2026-03-18 (session 3)
+
+### Decision: `domain/repository/` and `domain/usecase/` do NOT need structural changes after entity/value split
+
+**What was decided:**
+No structural (package/folder) changes are needed for `domain/repository/` or `domain/usecase/`
+as a result of the `domain/model/` → `domain/entity/` + `domain/value/` split. Only import paths
+were updated (already done by the bulk sed migration).
+
+**Reasoning:**
+The `entity`/`value` split is a **type taxonomy** — it answers "is this an identity-bearing object
+or a pure descriptor?" Repositories and use cases are not types; they are operations and gateways.
+Their sub-package organization by feature area (`manga/`, `category/`, `user/`, `settings/`) answers
+a different and correct question: "what feature does this operation serve?"
+
+In Clean Architecture:
+- `domain/repository/` interfaces are gateways defined in the domain; their organization reflects
+  *what data they manage*, not *what kind of type the result is*
+- `domain/usecase/` classes are application-specific business rules; their organization reflects
+  *what operation they perform*, not *what type their return value is*
+
+Value objects appear in repositories only as *query parameters* (e.g., `statusFilter: List<MangaStatus>`)
+— they describe the query, not the stored thing. This confirms the feature-area packaging is correct.
+
+**Verified by reading:**
+- `MangaRepository.kt` — `import domain.entity.manga.Manga` ✓
+- `FavoritesRepository.kt` — `import domain.entity.manga.FavoriteManga` ✓
+- `GetMangaDetailsUseCase.kt` — `import domain.entity.manga.Manga` ✓
+- `GetMangaListByCategoryUseCase.kt` — all 5 imports updated correctly ✓
+
+**Alternatives considered:**
+- Mirror the entity/value split in repository sub-packages (e.g., `repository/entity/manga/`) —
+  rejected because repositories are operations/gateways, not type definitions; such nesting would
+  be needless complexity

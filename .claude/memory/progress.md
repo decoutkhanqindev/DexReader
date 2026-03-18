@@ -14,6 +14,17 @@
 6. Verified: 0 remaining `domain.model.*` references; 70 `domain.entity.*` refs; 49 `domain.value.*` refs
 7. Confirmed `domain/model/` directory is fully removed
 
+### Architectural Q&A (no code changes)
+- Confirmed `domain/repository/` and `domain/usecase/` do NOT need structural changes
+- Their import paths were already updated by the bulk sed migration
+- Their feature-area sub-package organization (manga/, category/, user/, settings/) is architecturally
+  correct and orthogonal to the entity/value taxonomy
+- Verified by reading:
+  - `domain/repository/manga/MangaRepository.kt` — already uses `domain.entity.manga.Manga`
+  - `domain/repository/user/FavoritesRepository.kt` — already uses `domain.entity.manga.FavoriteManga`
+  - `domain/usecase/manga/GetMangaDetailsUseCase.kt` — already uses `domain.entity.manga.Manga`
+  - `domain/usecase/category/GetMangaListByCategoryUseCase.kt` — already uses all correct paths
+
 ### Previous sessions
 - Presentation Model Cleanup — Status & ContentRating UiModels (`MangaStatusFilterUiModel` →
   `MangaStatusUiModel`, `MangaContentRatingFilterUiModel` → `MangaContentRatingUiModel`, moved to
@@ -28,4 +39,4 @@
 ## Most Important Next Step
 Run `./gradlew assembleDebug` from the project root to confirm a clean build. If it fails, check for
 any missed import replacements or missing cross-package imports in files where value types from
-`domain.value.*` were previously same-package.
+`domain.value.*` were previously in the same package as their consumer.

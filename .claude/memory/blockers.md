@@ -15,3 +15,4 @@ be confirmed before the work can be considered fully verified.
 ## No Other Blockers
 
 No unresolved architectural questions, no external dependencies, no team decisions pending.
+The repository/use case structure question was resolved — no further changes needed there.

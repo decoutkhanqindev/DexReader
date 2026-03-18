@@ -1,16 +1,11 @@
 # Current Task
 
-## Status: COMPLETED
+## Status: COMPLETED (pending build verification)
 
-The task was to split `domain/model` into `domain/entity` + `domain/value` following Clean Architecture
-(Uncle Bob) principles, separating ID-bearing business objects (entities) from immutable identity-free
-types (value objects).
+The primary task — splitting `domain/model` into `domain/entity` + `domain/value` — is fully
+implemented. This session also included an architectural Q&A (no code changes).
 
-## Task Description
-Rename/move all files from `domain/model/` into either `domain/entity/` or `domain/value/` without
-changing any class names — only package paths change.
-
-## Files Edited
+## What Was Done
 All 14 domain model files were moved and had their `package` declarations updated:
 
 ### Entities (→ domain/entity/)
@@ -40,3 +35,9 @@ All 14 domain model files were moved and had their `package` declarations update
   via bulk sed replacement
 - `domain/model/` directory no longer exists
 - **Build has NOT been run yet** — `./gradlew assembleDebug` is the pending verification step
+
+## Architectural Q&A This Session
+Confirmed via code inspection that `domain/repository/` and `domain/usecase/` do NOT need structural
+changes after the entity/value split. Their import paths were already updated by the bulk sed.
+Their sub-package organization (by feature area: manga/, category/, user/, settings/) is correct
+and answers a different question than the entity/value taxonomy.
