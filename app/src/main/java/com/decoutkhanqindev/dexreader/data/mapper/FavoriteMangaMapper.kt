@@ -1,5 +1,7 @@
 package com.decoutkhanqindev.dexreader.data.mapper
 
+import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toApiValue
+import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toMangaStatus
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.request.FavoriteMangaRequest
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.response.FavoriteMangaResponse
 import com.decoutkhanqindev.dexreader.domain.model.manga.FavoriteManga
@@ -12,7 +14,7 @@ object FavoriteMangaMapper {
       title = title,
       coverUrl = coverUrl,
       author = author,
-      status = status,
+      status = status.toMangaStatus(),
       addedAt = createdAt?.time
     )
 
@@ -22,6 +24,6 @@ object FavoriteMangaMapper {
       title = title,
       coverUrl = coverUrl,
       author = author,
-      status = status,
+      status = status.toApiValue(),
     )
 }

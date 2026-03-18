@@ -1,6 +1,5 @@
 package com.decoutkhanqindev.dexreader.presentation.model.manga
 
-
 import androidx.compose.runtime.Immutable
 import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryUiModel
 import kotlinx.collections.immutable.ImmutableList
@@ -14,7 +13,8 @@ data class MangaUiModel(
   val author: String,
   val artist: String,
   val categories: ImmutableList<CategoryUiModel>,
-  val status: String,
+  val status: MangaStatusUiModel,
+  val contentRating: MangaContentRatingUiModel,
   val year: String,
   val availableLanguages: ImmutableList<MangaLanguageUiModel>,
   val latestChapter: String,

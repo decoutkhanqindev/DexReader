@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.domain.usecase.manga
 
-import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortOrder
+import com.decoutkhanqindev.dexreader.domain.model.criteria.MangaSortOrder
 import com.decoutkhanqindev.dexreader.domain.model.manga.Chapter
 import com.decoutkhanqindev.dexreader.domain.model.manga.MangaLanguage
 import com.decoutkhanqindev.dexreader.domain.repository.manga.ChapterRepository

@@ -6,16 +6,16 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.category.GetMangaListByCategoryUseCase
-import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaContentRatingFilter
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortCriteria
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortOrder
-import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaStatusFilter
+import com.decoutkhanqindev.dexreader.presentation.mapper.MangaUiMapper.toMangaContentRating
+import com.decoutkhanqindev.dexreader.presentation.mapper.MangaUiMapper.toMangaStatus
 import com.decoutkhanqindev.dexreader.presentation.mapper.MangaUiMapper.toMangaUiModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.UiErrorMapper.toFeatureUiError
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaContentRatingFilterUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaStatusFilterUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortCriteriaUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortOrderUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.MangaSortCriteriaUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.MangaSortOrderUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaContentRatingUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaStatusUiModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaUiModel
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
@@ -63,8 +63,8 @@ class CategoryDetailsViewModel @Inject constructor(
         categoryId = categoryIdFromArg,
         sortCriteria = currentCriteriaUiState.sortCriteria.toMangaSortCriteria(),
         sortOrder = currentCriteriaUiState.sortOrder.toMangaSortOrder(),
-        statusFilter = currentCriteriaUiState.statusFilter.map { it.toMangaStatusFilter() },
-        contentRatingFilter = currentCriteriaUiState.contentRatingFilter.map { it.toMangaContentRatingFilter() },
+        statusFilter = currentCriteriaUiState.statusFilter.map { it.toMangaStatus() },
+        contentRatingFilter = currentCriteriaUiState.contentRatingFilter.map { it.toMangaContentRating() },
       )
         .onSuccess { mangaList ->
           _categoryDetailsUiState.value = BasePaginationUiState.Content(
@@ -119,8 +119,8 @@ class CategoryDetailsViewModel @Inject constructor(
         offset = currentMangaList.size,
         sortCriteria = currentCriteriaUiState.sortCriteria.toMangaSortCriteria(),
         sortOrder = currentCriteriaUiState.sortOrder.toMangaSortOrder(),
-        statusFilter = currentCriteriaUiState.statusFilter.map { it.toMangaStatusFilter() },
-        contentRatingFilter = currentCriteriaUiState.contentRatingFilter.map { it.toMangaContentRatingFilter() },
+        statusFilter = currentCriteriaUiState.statusFilter.map { it.toMangaStatus() },
+        contentRatingFilter = currentCriteriaUiState.contentRatingFilter.map { it.toMangaContentRating() },
       )
         .onSuccess { nextMangaList ->
           val allMangaList =
@@ -159,8 +159,8 @@ class CategoryDetailsViewModel @Inject constructor(
   }
 
   fun updateFilteringCriteria(
-    statusFilter: ImmutableList<MangaStatusFilterUiModel>,
-    contentRatingFilter: ImmutableList<MangaContentRatingFilterUiModel>,
+    statusFilter: ImmutableList<MangaStatusUiModel>,
+    contentRatingFilter: ImmutableList<MangaContentRatingUiModel>,
   ) {
     val current = _categoryCriteriaUiState.value
     if (current.statusFilter == statusFilter && current.contentRatingFilter == contentRatingFilter) return

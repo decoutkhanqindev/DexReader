@@ -5,7 +5,7 @@ import com.decoutkhanqindev.dexreader.data.mapper.ChapterMapper.toChapter
 import com.decoutkhanqindev.dexreader.data.mapper.ChapterPagesMapper.toChapterPages
 import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toDomainException
 import com.decoutkhanqindev.dexreader.data.network.api.ApiService
-import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortOrder
+import com.decoutkhanqindev.dexreader.domain.model.criteria.MangaSortOrder
 import com.decoutkhanqindev.dexreader.domain.model.manga.Chapter
 import com.decoutkhanqindev.dexreader.domain.model.manga.ChapterPages
 import com.decoutkhanqindev.dexreader.domain.model.manga.MangaLanguage

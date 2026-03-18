@@ -3,9 +3,9 @@ package com.decoutkhanqindev.dexreader.domain.model.manga
 data class Chapter(
   val id: String,
   val mangaId: String,
-  val title: String,
-  val number: String,
-  val volume: String,
+  val title: String?,
+  val number: String?,
+  val volume: String?,
   val publishedAt: Long?,
   val language: MangaLanguage,
 ) {

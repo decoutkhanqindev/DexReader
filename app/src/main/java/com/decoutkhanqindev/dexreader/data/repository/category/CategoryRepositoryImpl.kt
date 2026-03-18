@@ -7,10 +7,10 @@ import com.decoutkhanqindev.dexreader.data.mapper.MangaMapper.toManga
 import com.decoutkhanqindev.dexreader.data.network.api.ApiService
 import com.decoutkhanqindev.dexreader.di.UploadUrlQualifier
 import com.decoutkhanqindev.dexreader.domain.model.category.Category
-import com.decoutkhanqindev.dexreader.domain.model.criteria.filter.MangaContentRatingFilter
-import com.decoutkhanqindev.dexreader.domain.model.criteria.filter.MangaStatusFilter
-import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortCriteria
-import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortOrder
+import com.decoutkhanqindev.dexreader.domain.model.manga.MangaContentRating
+import com.decoutkhanqindev.dexreader.domain.model.manga.MangaStatus
+import com.decoutkhanqindev.dexreader.domain.model.criteria.MangaSortCriteria
+import com.decoutkhanqindev.dexreader.domain.model.criteria.MangaSortOrder
 import com.decoutkhanqindev.dexreader.domain.model.manga.Manga
 import com.decoutkhanqindev.dexreader.domain.repository.category.CategoryRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
@@ -37,8 +37,8 @@ constructor(
     offset: Int,
     sortCriteria: MangaSortCriteria,
     sortOrder: MangaSortOrder,
-    statusFilter: List<MangaStatusFilter>,
-    contentRatingFilter: List<MangaContentRatingFilter>,
+    statusFilter: List<MangaStatus>,
+    contentRatingFilter: List<MangaContentRating>,
   ): List<Manga> =
     runSuspendCatching(
       context = Dispatchers.IO,

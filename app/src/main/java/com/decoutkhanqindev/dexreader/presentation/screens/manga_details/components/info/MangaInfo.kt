@@ -55,7 +55,14 @@ fun MangaInfo(
       modifier = Modifier.padding(bottom = 4.dp)
     )
     Text(
-      text = stringResource(R.string.status, manga.status),
+      text = stringResource(R.string.status, stringResource(manga.status.nameRes)),
+      fontWeight = FontWeight.Bold,
+      fontStyle = FontStyle.Italic,
+      style = MaterialTheme.typography.bodyLarge,
+      modifier = Modifier.padding(bottom = 4.dp)
+    )
+    Text(
+      text = stringResource(R.string.content_rating, stringResource(manga.contentRating.nameRes)),
       fontWeight = FontWeight.Bold,
       fontStyle = FontStyle.Italic,
       style = MaterialTheme.typography.bodyLarge,

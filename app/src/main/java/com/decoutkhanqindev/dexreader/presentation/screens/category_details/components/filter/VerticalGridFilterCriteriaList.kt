@@ -10,17 +10,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaContentRatingFilterUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaStatusFilterUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaContentRatingUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaStatusUiModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun VerticalGridFilterCriteriaList(
-  selectedStatusOptions: ImmutableList<MangaStatusFilterUiModel>,
-  onStatusOptionsSelect: (ImmutableList<MangaStatusFilterUiModel>) -> Unit,
-  selectedContentRatingOptions: ImmutableList<MangaContentRatingFilterUiModel>,
-  onContentRatingOptionsSelect: (ImmutableList<MangaContentRatingFilterUiModel>) -> Unit,
+  selectedStatusOptions: ImmutableList<MangaStatusUiModel>,
+  onStatusOptionsSelect: (ImmutableList<MangaStatusUiModel>) -> Unit,
+  selectedContentRatingOptions: ImmutableList<MangaContentRatingUiModel>,
+  onContentRatingOptionsSelect: (ImmutableList<MangaContentRatingUiModel>) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   LazyVerticalGrid(
@@ -30,7 +30,9 @@ fun VerticalGridFilterCriteriaList(
     item {
       FilterCriteriaItem(
         title = stringResource(R.string.filter_status),
-        items = MangaStatusFilterUiModel.entries.toPersistentList(),
+        items = MangaStatusUiModel.entries.filter {
+          it != MangaStatusUiModel.UNKNOWN
+        }.toPersistentList(),
         selectedItems = selectedStatusOptions,
         nameResOf = { it.nameRes },
         onItemsSelect = onStatusOptionsSelect,
@@ -42,7 +44,9 @@ fun VerticalGridFilterCriteriaList(
     item {
       FilterCriteriaItem(
         title = stringResource(R.string.filter_content_rating),
-        items = MangaContentRatingFilterUiModel.entries.toPersistentList(),
+        items = MangaContentRatingUiModel.entries.filter {
+          it != MangaContentRatingUiModel.UNKNOWN
+        }.toPersistentList(),
         selectedItems = selectedContentRatingOptions,
         nameResOf = { it.nameRes },
         onItemsSelect = onContentRatingOptionsSelect,

@@ -12,10 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaContentRatingFilterUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.filter.MangaStatusFilterUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortCriteriaUiModel
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortOrderUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.MangaSortCriteriaUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaContentRatingUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaStatusUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.MangaSortOrderUiModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaUiModel
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailsCriteriaUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.filter.FilterBottomSheet
@@ -44,8 +44,8 @@ fun CategoryDetailsContent(
   isFilterBottomSheetVisible: Boolean,
   onFilterSheetDismiss: () -> Unit,
   onFilterApplyClick: (
-    statusFilter: ImmutableList<MangaStatusFilterUiModel>,
-    contentRatingFilter: ImmutableList<MangaContentRatingFilterUiModel>,
+    statusFilter: ImmutableList<MangaStatusUiModel>,
+    contentRatingFilter: ImmutableList<MangaContentRatingUiModel>,
   ) -> Unit,
   onMangaClick: (String) -> Unit,
   onFetchMangaListNextPage: () -> Unit,

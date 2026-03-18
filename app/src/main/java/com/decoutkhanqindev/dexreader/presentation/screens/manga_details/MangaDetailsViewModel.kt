@@ -6,7 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
-import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortOrder
+import com.decoutkhanqindev.dexreader.domain.model.criteria.MangaSortOrder
 import com.decoutkhanqindev.dexreader.domain.model.manga.Manga
 import com.decoutkhanqindev.dexreader.domain.model.user.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetChapterListUseCase

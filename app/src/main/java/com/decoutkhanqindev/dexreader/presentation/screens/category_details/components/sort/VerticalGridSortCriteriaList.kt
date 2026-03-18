@@ -9,7 +9,7 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortCriteriaUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.MangaSortCriteriaUiModel
 
 @Composable
 fun VerticalGridSortCriteriaList(

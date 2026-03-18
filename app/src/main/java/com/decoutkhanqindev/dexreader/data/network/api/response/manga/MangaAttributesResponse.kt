@@ -9,6 +9,7 @@ data class MangaAttributesResponse(
   @field:Json(name = "title") val title: Map<String, String>, // Tên truyện theo ngôn ngữ
   @field:Json(name = "description") val description: Map<String, String>? = null, // Mô tả
   @field:Json(name = "status") val status: String? = null, // Trạng thái
+  @field:Json(name = "contentRating") val contentRating: String? = null, // Phân loại nội dung
   @field:Json(name = "tags") val tags: List<TagResponse>? = null, // Thể loại
   @field:Json(name = "year") val year: String? = null,
   @field:Json(name = "availableTranslatedLanguages")

@@ -9,9 +9,9 @@ object ChapterUiMapper {
     ChapterUiModel(
       id = id,
       mangaId = mangaId,
-      title = title,
-      number = number,
-      volume = volume,
+      title = title ?: Chapter.DEFAULT_TITLE,
+      number = number ?: Chapter.DEFAULT_CHAPTER_NUMBER,
+      volume = volume ?: Chapter.DEFAULT_VOLUME,
       publishedAt = publishedAt.toTimeAgo(),
     )
 }

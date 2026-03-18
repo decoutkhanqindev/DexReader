@@ -6,14 +6,15 @@ data class Manga(
   val id: String,
   val title: String,
   val coverUrl: String,
-  val description: String,
-  val author: String,
-  val artist: String,
+  val description: String?,
+  val author: String?,
+  val artist: String?,
   val categories: List<Category>,
-  val status: String,
-  val year: String,
+  val status: MangaStatus,
+  val contentRating: MangaContentRating,
+  val year: String?,
   val availableLanguages: List<MangaLanguage>,
-  val latestChapter: String,
+  val latestChapter: String?,
   val updatedAt: Long?,
 ) {
   companion object {
@@ -21,7 +22,6 @@ data class Manga(
     const val DEFAULT_DESCRIPTION = "No description"
     const val DEFAULT_AUTHOR = "Unknown"
     const val DEFAULT_ARTIST = "Unknown"
-    const val DEFAULT_STATUS = "Unknown"
     const val DEFAULT_YEAR = "Unknown"
     const val DEFAULT_LAST_CHAPTER = "Unknown"
   }

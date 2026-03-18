@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.domain.model.criteria.sort
+package com.decoutkhanqindev.dexreader.domain.model.criteria
 
 enum class MangaSortCriteria {
   LATEST_UPDATE,

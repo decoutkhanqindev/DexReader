@@ -1,6 +1,8 @@
 package com.decoutkhanqindev.dexreader.data.mapper
 
+import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toMangaContentRating
 import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toMangaLanguage
+import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toMangaStatus
 import com.decoutkhanqindev.dexreader.data.mapper.CategoryMapper.toCategory
 import com.decoutkhanqindev.dexreader.data.network.api.response.manga.MangaResponse
 import com.decoutkhanqindev.dexreader.domain.model.manga.Manga
@@ -25,21 +27,19 @@ object MangaMapper {
     val description =
       attributes?.description?.get(LANG_EN)
         ?: attributes?.description?.values?.firstOrNull()
-        ?: Manga.DEFAULT_DESCRIPTION
-    val authorId =
+    val author =
       relationships?.find { it.type == REL_AUTHOR }?.attributes?.name
-        ?: Manga.DEFAULT_AUTHOR
-    val artistId =
+    val artist =
       relationships?.find { it.type == REL_ARTIST }?.attributes?.name
-        ?: Manga.DEFAULT_ARTIST
     val tags = attributes?.tags?.map { it.toCategory() } ?: emptyList()
-    val status = attributes?.status ?: Manga.DEFAULT_STATUS
-    val year = attributes?.year ?: Manga.DEFAULT_YEAR
+    val status = attributes?.status.toMangaStatus()
+    val contentRating = attributes?.contentRating.toMangaContentRating()
+    val year = attributes?.year
     val availableLanguages =
       attributes?.availableTranslatedLanguages
         ?.map { it.toMangaLanguage() }
         ?: emptyList()
-    val latestChapter = attributes?.lastChapter ?: Manga.DEFAULT_LAST_CHAPTER
+    val latestChapter = attributes?.lastChapter
     val updatedAt = attributes?.updatedAt
 
     return Manga(
@@ -47,10 +47,11 @@ object MangaMapper {
       title = title,
       coverUrl = coverUrl,
       description = description,
-      author = authorId,
-      artist = artistId,
+      author = author,
+      artist = artist,
       categories = tags,
       status = status,
+      contentRating = contentRating,
       year = year,
       availableLanguages = availableLanguages,
       latestChapter = latestChapter,

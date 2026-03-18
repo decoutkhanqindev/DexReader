@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.model.criteria.sort
+package com.decoutkhanqindev.dexreader.presentation.model.criteria
 
 import androidx.annotation.StringRes
 import com.decoutkhanqindev.dexreader.R

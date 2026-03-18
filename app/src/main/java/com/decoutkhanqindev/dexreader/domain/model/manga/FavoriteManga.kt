@@ -5,6 +5,6 @@ data class FavoriteManga(
   val title: String,
   val coverUrl: String,
   val author: String,
-  val status: String,
+  val status: MangaStatus,
   val addedAt: Long?,
 )

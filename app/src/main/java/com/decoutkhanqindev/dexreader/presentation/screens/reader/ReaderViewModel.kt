@@ -6,7 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
-import com.decoutkhanqindev.dexreader.domain.model.criteria.sort.MangaSortOrder
+import com.decoutkhanqindev.dexreader.domain.model.criteria.MangaSortOrder
 import com.decoutkhanqindev.dexreader.domain.model.manga.Chapter
 import com.decoutkhanqindev.dexreader.domain.model.manga.MangaLanguage
 import com.decoutkhanqindev.dexreader.domain.model.user.ReadingHistory
@@ -124,9 +124,9 @@ constructor(
         .onSuccess { chapter ->
           _chapterDetailsUiState.update {
             it.copy(
-              volume = chapter.volume,
-              chapterNumber = chapter.number,
-              title = chapter.title
+              volume = chapter.volume ?: "",
+              chapterNumber = chapter.number ?: "",
+              title = chapter.title ?: ""
             )
           }
 
@@ -168,7 +168,8 @@ constructor(
 
   private fun fetchChapterPages(isPrefetch: Boolean = false) {
     val chapterIdToFetch =
-      if (isPrefetch) _chapterNavUiState.value.nextChapterId ?: return else currentChapterId
+      if (isPrefetch) _chapterNavUiState.value.nextChapterId ?: return
+      else currentChapterId
 
     if (chapterIdToFetch.isBlank()) return
 

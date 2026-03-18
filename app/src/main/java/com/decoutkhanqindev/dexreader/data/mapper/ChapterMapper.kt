@@ -13,9 +13,9 @@ object ChapterMapper {
     val mangaId = relationships?.find {
       it?.type == REL_MANGA
     }?.id ?: throw BusinessException.Resource.ChapterNotFound()
-    val title = attributes?.title ?: Chapter.DEFAULT_TITLE
-    val number = attributes?.chapter ?: Chapter.DEFAULT_CHAPTER_NUMBER
-    val volume = attributes?.volume ?: Chapter.DEFAULT_VOLUME
+    val title = attributes?.title
+    val number = attributes?.chapter
+    val volume = attributes?.volume
     val publishedAt = attributes?.publishAt
     val language =
       attributes?.translatedLanguage?.toMangaLanguage() ?: Chapter.DEFAULT_LANGUAGE

@@ -13,7 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.sort.MangaSortOrderUiModel
+import com.decoutkhanqindev.dexreader.presentation.model.criteria.MangaSortOrderUiModel
 
 @Composable
 fun SortOrderOptions(

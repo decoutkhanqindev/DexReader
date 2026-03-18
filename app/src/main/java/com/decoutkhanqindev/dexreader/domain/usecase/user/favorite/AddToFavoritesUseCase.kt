@@ -15,7 +15,7 @@ class AddToFavoritesUseCase @Inject constructor(
         id = manga.id,
         title = manga.title,
         coverUrl = manga.coverUrl,
-        author = manga.author,
+        author = manga.author ?: Manga.DEFAULT_AUTHOR,
         status = manga.status,
         addedAt = null
       )
