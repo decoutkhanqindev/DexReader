@@ -1,5 +1,7 @@
 package com.decoutkhanqindev.dexreader.domain.entity.manga
 
+import com.decoutkhanqindev.dexreader.domain.value.manga.MangaLanguage
+
 data class Chapter(
   val id: String,
   val mangaId: String,
