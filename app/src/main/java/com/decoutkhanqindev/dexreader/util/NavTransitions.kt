@@ -107,7 +107,7 @@ object NavTransitions {
   )
 
   // Extension functions for NavHostController
-  fun NavHostController.navigatePreserveState(route: String) {
+  fun NavHostController.navigatePreserveState(route: Any) {
     this.navigate(route) {
       popUpTo(graph.startDestinationId) {
         saveState = true     // Saves state
@@ -117,13 +117,10 @@ object NavTransitions {
     }
   }
 
-  fun NavHostController.navigateClearStack(
-    currentRoute: String,
-    destination: String,
-  ) {
-    this.navigate(destination) {
-      popUpTo(currentRoute) {
-        inclusive = true     // Removes destination from stack
+  inline fun <reified T : Any> NavHostController.navigateClearStack(route: Any) {
+    this.navigate(route) {
+      popUpTo<T> {
+        inclusive = true     // Removes current screen from stack
       }
       launchSingleTop = true // Prevents duplicates
     }

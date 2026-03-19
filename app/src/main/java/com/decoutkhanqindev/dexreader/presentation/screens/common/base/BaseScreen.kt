@@ -10,9 +10,11 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.menu.MenuDrawer
 import com.decoutkhanqindev.dexreader.presentation.screens.common.top_bars.MainTopBar
+import com.decoutkhanqindev.dexreader.presentation.value.menu.MenuItemValue
 import kotlinx.coroutines.launch
 
 @Composable
@@ -20,9 +22,8 @@ fun BaseScreen(
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
   onSignInClick: () -> Unit,
-  title: String,
-  route: String,
-  onMenuItemClick: (String) -> Unit,
+  selectedMenuItem: MenuItemValue,
+  onMenuItemClick: (MenuItemValue) -> Unit,
   isSearchEnabled: Boolean = true,
   onSearchClick: () -> Unit = {},
   bottomBar: @Composable () -> Unit = {},
@@ -37,18 +38,18 @@ fun BaseScreen(
     currentUser = currentUser,
     onSignInClick = onSignInClick,
     drawerState = drawerState,
-    selectedItemId = route,
-    onItemClick = { route ->
+    selectedItem = selectedMenuItem,
+    onItemClick = {
       coroutineScope.launch {
         drawerState.close()
-        onMenuItemClick(route)
+        onMenuItemClick(it)
       }
     },
     content = {
       Scaffold(
         topBar = {
           MainTopBar(
-            title = title,
+            title = stringResource(selectedMenuItem.nameRes),
             onMenuClick = {
               coroutineScope.launch {
                 drawerState.open()

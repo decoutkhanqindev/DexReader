@@ -1,43 +1,52 @@
 # Current Task
 
-## Status: COMPLETED (pending build verification)
+## Task
 
-The primary task — splitting `domain/model` into `domain/entity` + `domain/value` — is fully
-implemented. This session also included an architectural Q&A (no code changes).
+`MenuItem → MenuItemValue` enum refactor — **MOSTLY DONE**, one follow-up needed.
 
-## What Was Done
-All 14 domain model files were moved and had their `package` declarations updated:
+## Status: PENDING — `MenuDrawer.kt` needs to be updated to match `MenuBody.kt`'s new signature
 
-### Entities (→ domain/entity/)
-- `domain/entity/manga/Manga.kt`
-- `domain/entity/manga/Chapter.kt`
-- `domain/entity/manga/ChapterPages.kt`
-- `domain/entity/manga/FavoriteManga.kt`
-- `domain/entity/category/Category.kt`
-- `domain/entity/user/User.kt`
-- `domain/entity/user/ReadingHistory.kt`
+### What was done this session
 
-### Value Objects (→ domain/value/)
-- `domain/value/manga/MangaStatus.kt`
-- `domain/value/manga/MangaContentRating.kt`
-- `domain/value/manga/MangaLanguage.kt`
-- `domain/value/category/CategoryType.kt`
-- `domain/value/criteria/MangaSortCriteria.kt`
-- `domain/value/criteria/MangaSortOrder.kt`
-- `domain/value/settings/ThemeMode.kt`
+All 5 planned file changes from the `MenuItem → MenuItemValue` plan were applied:
 
-## Important Context
-- Two extra intra-domain cross-package imports were added manually:
-  - `Manga.kt` needed explicit imports for `MangaStatus`, `MangaContentRating`, `MangaLanguage`
-    (previously same-package, now in `domain.value.manga`)
-  - `Category.kt` needed explicit import for `CategoryType` (now in `domain.value.category`)
-- ~64 consuming files across data, domain, and presentation layers had their import statements updated
-  via bulk sed replacement
-- `domain/model/` directory no longer exists
-- **Build has NOT been run yet** — `./gradlew assembleDebug` is the pending verification step
+1. **Created** `presentation/value/menu/MenuItemValue.kt` — enum with `titleRes: Int`,
+   `icon: ImageVector`, computed `val id = name.lowercase()`
+2. **Deleted** `presentation/screens/common/menu/MenuItem.kt`
+3. **Updated** `MenuDrawer.kt` — replaced 6 `stringResource` calls + verbose `remember` block with
+   `remember { MenuItemValue.entries.toPersistentList() }`
+4. **Updated** `MenuBody.kt` — `ImmutableList<MenuItem>` → `ImmutableList<MenuItemValue>`
+5. **Updated** `MenuItemRow.kt` — `item: MenuItem` → `item: MenuItemValue`; resolves title via
+   `stringResource(item.titleRes)`
 
-## Architectural Q&A This Session
-Confirmed via code inspection that `domain/repository/` and `domain/usecase/` do NOT need structural
-changes after the entity/value split. Their import paths were already updated by the bulk sed.
-Their sub-package organization (by feature area: manga/, category/, user/, settings/) is correct
-and answers a different question than the entity/value taxonomy.
+### Post-edit external change
+
+After the refactor, a linter (or external edit) modified `MenuBody.kt` further:
+
+- Changed parameter `selectedItemId: String` → `selectedItem: MenuItemValue`
+- Changed comparison `item.id == selectedItemId` → `item == selectedItem`
+- Changed `key = { it.id }` → `key = { it }` (enum instances are stable keys)
+
+### Current broken state
+
+`MenuDrawer.kt` still calls `MenuBody(selectedItemId = selectedItemId, ...)` using the old `String`
+signature.
+`MenuBody` now expects `selectedItem: MenuItemValue`. **This is a compile error.**
+
+### Required follow-up
+
+In `MenuDrawer.kt`:
+
+1. Convert `selectedItemId: String` → find matching `MenuItemValue` entry:
+   ```kotlin
+   val selectedItem = MenuItemValue.entries.find { it.id == selectedItemId } ?: MenuItemValue.HOME
+   ```
+2. Pass `selectedItem = selectedItem` to `MenuBody(...)` instead of
+   `selectedItemId = selectedItemId`
+3. Keep `MenuDrawer`'s own public signature as `selectedItemId: String` (all callers in
+   `BaseScreen.kt` / `*Screen.kt` files still use strings — do NOT change them)
+
+### File currently needing edit
+
+`app/src/main/java/com/decoutkhanqindev/dexreader/presentation/screens/common/menu/MenuDrawer.kt`
+— specifically the `val items = ...` block and the `MenuBody(...)` call site

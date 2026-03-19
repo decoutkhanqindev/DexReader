@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaSuggestionsUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.SearchMangaUseCase
-import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
+import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState

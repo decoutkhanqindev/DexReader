@@ -4,11 +4,9 @@ package com.decoutkhanqindev.dexreader.presentation.navigation
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.forgot_password.ForgotPasswordScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.login.LoginScreen
@@ -23,6 +21,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.profile.ProfileScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.reader.ReaderScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.search.SearchScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.settings.SettingsScreen
+import com.decoutkhanqindev.dexreader.presentation.value.menu.MenuItemValue.Companion.toNavRoute
 import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateClearStack
 import com.decoutkhanqindev.dexreader.util.NavTransitions.navigatePreserveState
 import com.decoutkhanqindev.dexreader.util.NavTransitions.slideEnterOnlyTransitions
@@ -35,17 +34,16 @@ fun NavGraph(
   currentUser: UserModel?,
   modifier: Modifier = Modifier,
 ) {
-  val navHostController = rememberNavController()
+  val navController = rememberNavController()
 
   NavHost(
-    navController = navHostController,
-    startDestination = NavDestination.HomeDestination.route,
+    navController = navController,
+    startDestination = NavRoute.Home,
     modifier = modifier
   ) {
     // Home Screen - slides from LEFT
     slideFromLeftTransitions().let { transitions ->
-      composable(
-        route = NavDestination.HomeDestination.route,
+      composable<NavRoute.Home>(
         enterTransition = transitions.enter,
         exitTransition = transitions.exit,
         popEnterTransition = transitions.popEnter,
@@ -55,23 +53,16 @@ fun NavGraph(
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
           onSignInClick = {
-            navHostController.navigateClearStack(
-              currentRoute = NavDestination.HomeDestination.route,
-              destination = NavDestination.LoginDestination.route
-            )
+            navController.navigateClearStack<NavRoute.Home>(NavRoute.Login)
           },
-          onMenuItemClick = { itemId ->
-            if (itemId != NavDestination.HomeDestination.route) {
-              navHostController.navigatePreserveState(itemId)
-            }
+          onMenuItemClick = { item ->
+            navController.navigatePreserveState(item.toNavRoute())
           },
           onSearchClick = {
-            navHostController.navigate(route = NavDestination.SearchDestination.route)
+            navController.navigate(NavRoute.Search)
           },
           onSelectedManga = { mangaId ->
-            navHostController.navigate(
-              route = "${NavDestination.MangaDetailsDestination.route}/$mangaId"
-            )
+            navController.navigate(NavRoute.MangaDetails(mangaId))
           },
           modifier = Modifier.fillMaxSize()
         )
@@ -80,8 +71,7 @@ fun NavGraph(
 
     // Categories Screen - slides from RIGHT
     slideFromRightTransitions().let { transitions ->
-      composable(
-        route = NavDestination.CategoriesDestination.route,
+      composable<NavRoute.Categories>(
         enterTransition = transitions.enter,
         exitTransition = transitions.exit,
         popEnterTransition = transitions.popEnter,
@@ -91,23 +81,16 @@ fun NavGraph(
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
           onSignInClick = {
-            navHostController.navigateClearStack(
-              currentRoute = NavDestination.CategoriesDestination.route,
-              destination = NavDestination.LoginDestination.route
-            )
+            navController.navigateClearStack<NavRoute.Categories>(NavRoute.Login)
           },
-          onMenuItemClick = { itemId ->
-            if (itemId != NavDestination.CategoriesDestination.route) {
-              navHostController.navigatePreserveState(itemId)
-            }
+          onMenuItemClick = { item ->
+            navController.navigatePreserveState(item.toNavRoute())
           },
           onSearchClick = {
-            navHostController.navigate(route = NavDestination.SearchDestination.route)
+            navController.navigate(NavRoute.Search)
           },
           onCategoryClick = { categoryId, categoryTitle ->
-            navHostController.navigate(
-              route = "${NavDestination.CategoryDetailsDestination.route}/$categoryId/$categoryTitle"
-            )
+            navController.navigate(NavRoute.CategoryDetails(categoryId, categoryTitle))
           },
           modifier = Modifier.fillMaxSize()
         )
@@ -116,30 +99,19 @@ fun NavGraph(
 
     // Category Details Screen - slides from RIGHT
     slideFromRightTransitions().let { transitions ->
-      composable(
-        route = NavDestination.CategoryDetailsDestination.routeWithArgs,
-        arguments = listOf(
-          navArgument(NavDestination.CategoryDetailsDestination.CATEGORY_ID_ARG) {
-            type = NavType.StringType
-          },
-          navArgument(NavDestination.CategoryDetailsDestination.CATEGORY_TITLE_ARG) {
-            type = NavType.StringType
-          },
-        ),
+      composable<NavRoute.CategoryDetails>(
         enterTransition = transitions.enter,
         exitTransition = transitions.exit,
         popEnterTransition = transitions.popEnter,
         popExitTransition = transitions.popExit
       ) {
         CategoryDetailsScreen(
-          onNavigateBack = navHostController::navigateUp,
+          onNavigateBack = navController::navigateUp,
           onSearchClick = {
-            navHostController.navigate(route = NavDestination.SearchDestination.route)
+            navController.navigate(NavRoute.Search)
           },
           onMangaClick = { mangaId ->
-            navHostController.navigate(
-              route = "${NavDestination.MangaDetailsDestination.route}/$mangaId"
-            )
+            navController.navigate(NavRoute.MangaDetails(mangaId))
           },
           modifier = Modifier.fillMaxSize(),
         )
@@ -148,8 +120,7 @@ fun NavGraph(
 
     // Favorites Screen - slides from RIGHT
     slideFromRightTransitions().let { transitions ->
-      composable(
-        route = NavDestination.FavoritesDestination.route,
+      composable<NavRoute.Favorites>(
         enterTransition = transitions.enter,
         exitTransition = transitions.exit,
         popEnterTransition = transitions.popEnter,
@@ -159,23 +130,16 @@ fun NavGraph(
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
           onSignInClick = {
-            navHostController.navigateClearStack(
-              currentRoute = NavDestination.FavoritesDestination.route,
-              destination = NavDestination.LoginDestination.route
-            )
+            navController.navigateClearStack<NavRoute.Favorites>(NavRoute.Login)
           },
-          onMenuItemClick = { itemId ->
-            if (itemId != NavDestination.FavoritesDestination.route) {
-              navHostController.navigatePreserveState(itemId)
-            }
+          onMenuItemClick = { item ->
+            navController.navigatePreserveState(item.toNavRoute())
           },
           onSearchClick = {
-            navHostController.navigate(route = NavDestination.SearchDestination.route)
+            navController.navigate(NavRoute.Search)
           },
           onSelectedManga = { mangaId ->
-            navHostController.navigate(
-              route = "${NavDestination.MangaDetailsDestination.route}/$mangaId"
-            )
+            navController.navigate(NavRoute.MangaDetails(mangaId))
           },
           modifier = Modifier.fillMaxSize()
         )
@@ -184,8 +148,7 @@ fun NavGraph(
 
     // History Screen - slides from RIGHT
     slideFromRightTransitions().let { transitions ->
-      composable(
-        route = NavDestination.HistoryDestination.route,
+      composable<NavRoute.History>(
         enterTransition = transitions.enter,
         exitTransition = transitions.exit,
         popEnterTransition = transitions.popEnter,
@@ -195,28 +158,19 @@ fun NavGraph(
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
           onSignInClick = {
-            navHostController.navigateClearStack(
-              currentRoute = NavDestination.HistoryDestination.route,
-              destination = NavDestination.LoginDestination.route
-            )
+            navController.navigateClearStack<NavRoute.History>(NavRoute.Login)
           },
-          onMenuItemClick = { itemId ->
-            if (itemId != NavDestination.HistoryDestination.route) {
-              navHostController.navigatePreserveState(itemId)
-            }
+          onMenuItemClick = { item ->
+            navController.navigatePreserveState(item.toNavRoute())
           },
           onSearchClick = {
-            navHostController.navigate(route = NavDestination.SearchDestination.route)
+            navController.navigate(NavRoute.Search)
           },
           onContinueReadingClick = { chapterId, lastReadPage, mangaId ->
-            navHostController.navigate(
-              route = "${NavDestination.ReaderDestination.route}/$chapterId/$lastReadPage/$mangaId"
-            )
+            navController.navigate(NavRoute.Reader(chapterId, lastReadPage, mangaId))
           },
           onMangaDetailsClick = { mangaId ->
-            navHostController.navigate(
-              route = "${NavDestination.MangaDetailsDestination.route}/$mangaId"
-            )
+            navController.navigate(NavRoute.MangaDetails(mangaId))
           },
           modifier = Modifier.fillMaxSize()
         )
@@ -225,8 +179,7 @@ fun NavGraph(
 
     // Profile Screen - slides from RIGHT
     slideFromRightTransitions().let { transitions ->
-      composable(
-        route = NavDestination.ProfileDestination.route,
+      composable<NavRoute.Profile>(
         enterTransition = transitions.enter,
         exitTransition = transitions.exit,
         popEnterTransition = transitions.popEnter,
@@ -236,21 +189,13 @@ fun NavGraph(
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
           onSignInClick = {
-            navHostController.navigateClearStack(
-              currentRoute = NavDestination.ProfileDestination.route,
-              destination = NavDestination.LoginDestination.route
-            )
+            navController.navigateClearStack<NavRoute.Profile>(NavRoute.Login)
           },
-          onMenuItemClick = { itemId ->
-            if (itemId != NavDestination.ProfileDestination.route) {
-              navHostController.navigatePreserveState(itemId)
-            }
+          onMenuItemClick = { item ->
+            navController.navigatePreserveState(item.toNavRoute())
           },
           onLogoutSuccess = {
-            navHostController.navigateClearStack(
-              currentRoute = NavDestination.ProfileDestination.route,
-              destination = NavDestination.HomeDestination.route,
-            )
+            navController.navigateClearStack<NavRoute.Profile>(NavRoute.Home)
           },
           modifier = Modifier.fillMaxSize()
         )
@@ -259,8 +204,7 @@ fun NavGraph(
 
     // Settings Screen - slides from RIGHT
     slideFromRightTransitions().let { transitions ->
-      composable(
-        route = NavDestination.SettingsDestination.route,
+      composable<NavRoute.Settings>(
         enterTransition = transitions.enter,
         exitTransition = transitions.exit,
         popEnterTransition = transitions.popEnter,
@@ -270,15 +214,10 @@ fun NavGraph(
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
           onSignInClick = {
-            navHostController.navigateClearStack(
-              currentRoute = NavDestination.SettingsDestination.route,
-              destination = NavDestination.LoginDestination.route
-            )
+            navController.navigateClearStack<NavRoute.Settings>(NavRoute.Login)
           },
-          onMenuItemClick = { itemId ->
-            if (itemId != NavDestination.SettingsDestination.route) {
-              navHostController.navigatePreserveState(itemId)
-            }
+          onMenuItemClick = { item ->
+            navController.navigatePreserveState(item.toNavRoute())
           },
           modifier = Modifier.fillMaxSize()
         )
@@ -287,19 +226,16 @@ fun NavGraph(
 
     // Search Screen - slides from RIGHT
     slideFromRightTransitions().let { transitions ->
-      composable(
-        route = NavDestination.SearchDestination.route,
+      composable<NavRoute.Search>(
         enterTransition = transitions.enter,
         exitTransition = transitions.exit,
         popEnterTransition = transitions.popEnter,
         popExitTransition = transitions.popExit
       ) {
         SearchScreen(
-          onNavigateBack = navHostController::navigateUp,
+          onNavigateBack = navController::navigateUp,
           onSelectedManga = { mangaId ->
-            navHostController.navigate(
-              route = "${NavDestination.MangaDetailsDestination.route}/$mangaId"
-            )
+            navController.navigate(NavRoute.MangaDetails(mangaId))
           },
           modifier = Modifier.fillMaxSize()
         )
@@ -308,13 +244,7 @@ fun NavGraph(
 
     // Manga Details Screen - slides from RIGHT
     slideFromRightTransitions().let { transitions ->
-      composable(
-        route = NavDestination.MangaDetailsDestination.routeWithArgs,
-        arguments = listOf(
-          navArgument(NavDestination.MangaDetailsDestination.MANGA_ID_ARG) {
-            type = NavType.StringType
-          }
-        ),
+      composable<NavRoute.MangaDetails>(
         enterTransition = transitions.enter,
         exitTransition = transitions.exit,
         popEnterTransition = transitions.popEnter,
@@ -323,30 +253,21 @@ fun NavGraph(
         MangaDetailsScreen(
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
-          onNavigateBack = navHostController::navigateUp,
+          onNavigateBack = navController::navigateUp,
           onSearchClick = {
-            navHostController.navigate(route = NavDestination.SearchDestination.route)
+            navController.navigate(NavRoute.Search)
           },
           onSignInClick = {
-            navHostController.navigateClearStack(
-              currentRoute = NavDestination.MangaDetailsDestination.route,
-              destination = NavDestination.LoginDestination.route
-            )
+            navController.navigateClearStack<NavRoute.MangaDetails>(NavRoute.Login)
           },
           onReadingClick = { chapterId, lastReadPage, mangaId ->
-            navHostController.navigate(
-              route = "${NavDestination.ReaderDestination.route}/$chapterId/${lastReadPage}/${mangaId}"
-            )
+            navController.navigate(NavRoute.Reader(chapterId, lastReadPage, mangaId))
           },
           onSelectedCategory = { categoryId, categoryTitle ->
-            navHostController.navigate(
-              route = "${NavDestination.CategoryDetailsDestination.route}/$categoryId/$categoryTitle"
-            )
+            navController.navigate(NavRoute.CategoryDetails(categoryId, categoryTitle))
           },
           onSelectedChapter = { chapterId, lastReadPage, mangaId ->
-            navHostController.navigate(
-              route = "${NavDestination.ReaderDestination.route}/$chapterId/${lastReadPage}/${mangaId}"
-            )
+            navController.navigate(NavRoute.Reader(chapterId, lastReadPage, mangaId))
           },
           modifier = Modifier.fillMaxSize()
         )
@@ -355,28 +276,14 @@ fun NavGraph(
 
     // Reader Screen - ENTER ONLY transition
     slideEnterOnlyTransitions().let { transitions ->
-      composable(
-        route = NavDestination.ReaderDestination.routeWithArgs,
-        arguments = listOf(
-          navArgument(NavDestination.ReaderDestination.CHAPTER_ID_ARG) {
-            type = NavType.StringType
-          },
-          navArgument(NavDestination.ReaderDestination.LAST_READ_PAGE_ARG) {
-            type = NavType.IntType
-            defaultValue = 0
-            nullable = false
-          },
-          navArgument(NavDestination.ReaderDestination.MANGA_ID_ARG) {
-            type = NavType.StringType
-          },
-        ),
+      composable<NavRoute.Reader>(
         enterTransition = transitions.enter,
         popExitTransition = transitions.popExit
       ) {
         ReaderScreen(
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
-          onNavigateBack = navHostController::navigateUp,
+          onNavigateBack = navController::navigateUp,
           modifier = Modifier.fillMaxSize()
         )
       }
@@ -384,8 +291,7 @@ fun NavGraph(
 
     // Login Screen - slides from RIGHT
     slideFromRightTransitions().let { transitions ->
-      composable(
-        route = NavDestination.LoginDestination.route,
+      composable<NavRoute.Login>(
         enterTransition = transitions.enter,
         exitTransition = transitions.exit,
         popEnterTransition = transitions.popEnter,
@@ -393,16 +299,13 @@ fun NavGraph(
       ) {
         LoginScreen(
           onLoginSuccess = {
-            navHostController.navigateClearStack(
-              currentRoute = NavDestination.LoginDestination.route,
-              destination = NavDestination.HomeDestination.route
-            )
+            navController.navigateClearStack<NavRoute.Login>(NavRoute.Home)
           },
           onRegisterClick = {
-            navHostController.navigate(route = NavDestination.RegisterDestination.route)
+            navController.navigate(NavRoute.Register)
           },
           onForgotPasswordClick = {
-            navHostController.navigate(route = NavDestination.ForgotPasswordDestination.route)
+            navController.navigate(NavRoute.ForgotPassword)
           },
           modifier = Modifier.fillMaxSize(),
         )
@@ -411,18 +314,14 @@ fun NavGraph(
 
     // Register Screen - ENTER ONLY transition
     slideEnterOnlyTransitions().let { transitions ->
-      composable(
-        route = NavDestination.RegisterDestination.route,
+      composable<NavRoute.Register>(
         enterTransition = transitions.enter,
         popExitTransition = transitions.popExit
       ) {
         RegisterScreen(
-          onNavigateBack = navHostController::navigateUp,
+          onNavigateBack = navController::navigateUp,
           onRegisterSuccess = {
-            navHostController.navigateClearStack(
-              currentRoute = NavDestination.RegisterDestination.route,
-              destination = NavDestination.LoginDestination.route
-            )
+            navController.navigateClearStack<NavRoute.Register>(NavRoute.Login)
           },
           modifier = Modifier.fillMaxSize()
         )
@@ -431,18 +330,14 @@ fun NavGraph(
 
     // Forgot Password Screen - ENTER ONLY transition
     slideEnterOnlyTransitions().let { transitions ->
-      composable(
-        route = NavDestination.ForgotPasswordDestination.route,
+      composable<NavRoute.ForgotPassword>(
         enterTransition = transitions.enter,
         popExitTransition = transitions.popExit
       ) {
         ForgotPasswordScreen(
-          onNavigateBack = navHostController::navigateUp,
+          onNavigateBack = navController::navigateUp,
           onSubmitSuccess = {
-            navHostController.navigateClearStack(
-              currentRoute = NavDestination.ForgotPasswordDestination.route,
-              destination = NavDestination.LoginDestination.route,
-            )
+            navController.navigateClearStack<NavRoute.ForgotPassword>(NavRoute.Login)
           },
           modifier = Modifier.fillMaxSize()
         )

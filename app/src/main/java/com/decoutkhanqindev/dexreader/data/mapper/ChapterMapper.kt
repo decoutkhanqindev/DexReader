@@ -2,8 +2,8 @@ package com.decoutkhanqindev.dexreader.data.mapper
 
 import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toMangaLanguage
 import com.decoutkhanqindev.dexreader.data.network.api.response.chapter.ChapterResponse
-import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.entity.manga.Chapter
+import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 
 object ChapterMapper {
 

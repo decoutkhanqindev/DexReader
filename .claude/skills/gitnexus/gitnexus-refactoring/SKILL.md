@@ -97,7 +97,7 @@ RETURN caller.name, caller.filePath ORDER BY caller.filePath
 ## Risk Rules
 
 | Risk Factor         | Mitigation                                |
-| ------------------- | ----------------------------------------- |
+|---------------------|-------------------------------------------|
 | Many callers (>5)   | Use gitnexus_rename for automated updates |
 | Cross-area refs     | Use detect_changes after to verify scope  |
 | String/dynamic refs | gitnexus_query to find them               |

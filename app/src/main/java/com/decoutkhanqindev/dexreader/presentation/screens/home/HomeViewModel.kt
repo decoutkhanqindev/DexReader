@@ -7,9 +7,9 @@ import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetLatestUpdateMangaL
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetNewReleaseMangaListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetTopRatedMangaListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetTrendingMangaListUseCase
-import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaModel
-import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
+import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
+import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.async

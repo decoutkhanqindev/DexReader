@@ -1,10 +1,10 @@
 package com.decoutkhanqindev.dexreader.presentation.model.manga
 
 import androidx.compose.runtime.Immutable
+import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaContentRatingValue
 import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaLanguageValue
 import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaStatusValue
-import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 import kotlinx.collections.immutable.ImmutableList
 
 @Immutable

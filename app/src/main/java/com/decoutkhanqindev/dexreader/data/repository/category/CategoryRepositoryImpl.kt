@@ -7,12 +7,12 @@ import com.decoutkhanqindev.dexreader.data.mapper.MangaMapper.toManga
 import com.decoutkhanqindev.dexreader.data.network.api.ApiService
 import com.decoutkhanqindev.dexreader.di.UploadUrlQualifier
 import com.decoutkhanqindev.dexreader.domain.entity.category.Category
-import com.decoutkhanqindev.dexreader.domain.value.manga.MangaContentRating
-import com.decoutkhanqindev.dexreader.domain.value.manga.MangaStatus
-import com.decoutkhanqindev.dexreader.domain.value.criteria.MangaSortCriteria
-import com.decoutkhanqindev.dexreader.domain.value.criteria.MangaSortOrder
 import com.decoutkhanqindev.dexreader.domain.entity.manga.Manga
 import com.decoutkhanqindev.dexreader.domain.repository.category.CategoryRepository
+import com.decoutkhanqindev.dexreader.domain.value.criteria.MangaSortCriteria
+import com.decoutkhanqindev.dexreader.domain.value.criteria.MangaSortOrder
+import com.decoutkhanqindev.dexreader.domain.value.manga.MangaContentRating
+import com.decoutkhanqindev.dexreader.domain.value.manga.MangaStatus
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject

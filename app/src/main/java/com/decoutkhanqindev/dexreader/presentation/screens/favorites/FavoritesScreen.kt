@@ -10,24 +10,23 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
-import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.favorites.components.FavoritesContent
+import com.decoutkhanqindev.dexreader.presentation.value.menu.MenuItemValue
 
 @Composable
 fun FavoritesScreen(
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
   onSignInClick: () -> Unit,
-  onMenuItemClick: (String) -> Unit,
+  onMenuItemClick: (MenuItemValue) -> Unit,
   onSearchClick: () -> Unit,
   onSelectedManga: (String) -> Unit,
   viewModel: FavoritesViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-  val route = NavDestination.FavoritesDestination.route
 
   LaunchedEffect(isUserLoggedIn, currentUser?.id) {
     if (isUserLoggedIn && currentUser != null) viewModel.updateUserId(userId = currentUser.id)
@@ -38,8 +37,7 @@ fun FavoritesScreen(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
     onSignInClick = onSignInClick,
-    title = stringResource(R.string.favorite_menu_item),
-    route = route,
+    selectedMenuItem = MenuItemValue.FAVORITES,
     onMenuItemClick = onMenuItemClick,
     onSearchClick = onSearchClick,
     content = {

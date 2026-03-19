@@ -5,21 +5,22 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.decoutkhanqindev.dexreader.domain.usecase.category.GetMangaListByCategoryUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortCriteria
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortOrder
-import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaContentRating
-import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaStatus
-import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
+import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaContentRating
+import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaModel
+import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaStatus
+import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.value.criteria.MangaSortCriteriaValue
 import com.decoutkhanqindev.dexreader.presentation.value.criteria.MangaSortOrderValue
 import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaContentRatingValue
 import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaStatusValue
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
-import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
-import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
-import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
@@ -35,10 +36,9 @@ class CategoryDetailsViewModel @Inject constructor(
   savedStateHandle: SavedStateHandle,
   private val getMangaListByCategoryUseCase: GetMangaListByCategoryUseCase,
 ) : ViewModel() {
-  private val categoryIdFromArg: String =
-    checkNotNull(savedStateHandle[NavDestination.CategoryDetailsDestination.CATEGORY_ID_ARG])
-  val categoryTitleFromArg: String =
-    checkNotNull(savedStateHandle[NavDestination.CategoryDetailsDestination.CATEGORY_TITLE_ARG])
+  private val route: NavRoute.CategoryDetails = savedStateHandle.toRoute()
+  private val categoryIdFromArg: String = route.categoryId
+  val categoryTitleFromArg: String = route.categoryTitle
 
   private val _categoryDetailsUiState =
     MutableStateFlow<BasePaginationUiState<MangaModel>>(BasePaginationUiState.FirstPageLoading)

@@ -5,27 +5,28 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
-import com.decoutkhanqindev.dexreader.domain.value.criteria.MangaSortOrder
+import androidx.navigation.toRoute
 import com.decoutkhanqindev.dexreader.domain.entity.manga.Manga
 import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingHistory
+import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetChapterListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaDetailsUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.AddToFavoritesUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.ObserveIsFavoriteUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.RemoveFromFavoritesUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.history.ObserveHistoryUseCase
+import com.decoutkhanqindev.dexreader.domain.value.criteria.MangaSortOrder
 import com.decoutkhanqindev.dexreader.presentation.mapper.ChapterMapper.toChapterModel
+import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguage
 import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ReadingHistoryMapper.toReadingHistoryModel
-import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterModel
-import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaLanguageValue
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
-import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
+import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaLanguageValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -55,7 +56,7 @@ constructor(
   private val observeHistoryUseCase: ObserveHistoryUseCase,
 ) : ViewModel() {
   private val mangaIdFromArg: String =
-    checkNotNull(savedStateHandle[NavDestination.MangaDetailsDestination.MANGA_ID_ARG])
+    savedStateHandle.toRoute<NavRoute.MangaDetails>().mangaId
 
   private val _mangaDetailsUiState =
     MutableStateFlow<MangaDetailsUiState>(MangaDetailsUiState.Loading)

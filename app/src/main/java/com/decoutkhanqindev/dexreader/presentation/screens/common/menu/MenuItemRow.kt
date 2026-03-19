@@ -7,23 +7,27 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.decoutkhanqindev.dexreader.presentation.value.menu.MenuItemValue
 
 @Composable
 fun MenuItemRow(
   isSelected: Boolean,
-  item: MenuItem,
-  onItemClick: (String) -> Unit,
+  item: MenuItemValue,
+  onItemClick: (MenuItemValue) -> Unit,
   modifier: Modifier = Modifier,
 ) {
+  val title = stringResource(item.nameRes)
+
   NavigationDrawerItem(
     selected = isSelected,
-    onClick = { onItemClick(item.id) },
+    onClick = { onItemClick(item) },
     label = {
       Text(
-        text = item.title,
+        text = title,
         style = MaterialTheme.typography.bodyLarge,
         fontWeight = FontWeight.Bold,
         textAlign = TextAlign.Center,
@@ -32,7 +36,7 @@ fun MenuItemRow(
     icon = {
       Icon(
         imageVector = item.icon,
-        contentDescription = item.title,
+        contentDescription = title,
         tint = MaterialTheme.colorScheme.onPrimaryContainer
       )
     },

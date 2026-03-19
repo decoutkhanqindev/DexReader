@@ -14,24 +14,23 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
-import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.components.ProfileContent
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.components.actions.UpdateAndLogoutUserBottomBar
+import com.decoutkhanqindev.dexreader.presentation.value.menu.MenuItemValue
 
 @Composable
 fun ProfileScreen(
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
   onSignInClick: () -> Unit,
-  onMenuItemClick: (String) -> Unit,
+  onMenuItemClick: (MenuItemValue) -> Unit,
   onLogoutSuccess: () -> Unit,
   viewModel: ProfileViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-  val route = NavDestination.ProfileDestination.route
   val isShowUpdateButton by remember(uiState) {
     derivedStateOf {
       val nameChanged = uiState.newName != null
@@ -51,8 +50,7 @@ fun ProfileScreen(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
     onSignInClick = onSignInClick,
-    title = stringResource(R.string.profile_menu_item),
-    route = route,
+    selectedMenuItem = MenuItemValue.PROFILE,
     onMenuItemClick = onMenuItemClick,
     isSearchEnabled = false,
     bottomBar = {

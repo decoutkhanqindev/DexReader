@@ -5,11 +5,10 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
-import com.decoutkhanqindev.dexreader.domain.value.criteria.MangaSortOrder
+import androidx.navigation.toRoute
 import com.decoutkhanqindev.dexreader.domain.entity.manga.Chapter
-import com.decoutkhanqindev.dexreader.domain.value.manga.MangaLanguage
 import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingHistory
+import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetChapterDetailsUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetChapterListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetChapterPagesUseCase
@@ -19,9 +18,11 @@ import com.decoutkhanqindev.dexreader.domain.usecase.manga.cache.ClearExpiredCac
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.cache.GetChapterCacheUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.history.AddAndUpdateToHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.history.ObserveHistoryUseCase
+import com.decoutkhanqindev.dexreader.domain.value.criteria.MangaSortOrder
+import com.decoutkhanqindev.dexreader.domain.value.manga.MangaLanguage
 import com.decoutkhanqindev.dexreader.presentation.mapper.ChapterPagesMapper.toChapterPagesModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
-import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -53,12 +54,10 @@ constructor(
   private val observeHistoryUseCase: ObserveHistoryUseCase,
   private val addAndUpdateToHistoryUseCase: AddAndUpdateToHistoryUseCase,
 ) : ViewModel() {
-  private val chapterIdFromArg: String =
-    checkNotNull(savedStateHandle[NavDestination.ReaderDestination.CHAPTER_ID_ARG])
-  private val lastReadPageFromArg: Int =
-    savedStateHandle[NavDestination.ReaderDestination.LAST_READ_PAGE_ARG] ?: 0
-  private val mangaIdFromArg: String =
-    checkNotNull(savedStateHandle[NavDestination.ReaderDestination.MANGA_ID_ARG])
+  private val route: NavRoute.Reader = savedStateHandle.toRoute()
+  private val chapterIdFromArg: String = route.chapterId
+  private val lastReadPageFromArg: Int = route.lastReadPage
+  private val mangaIdFromArg: String = route.mangaId
 
   private var currentChapterId: String = chapterIdFromArg
 

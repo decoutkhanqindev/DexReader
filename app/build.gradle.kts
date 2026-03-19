@@ -3,6 +3,7 @@ import java.util.Properties
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.compose)
+  alias(libs.plugins.kotlin.serialization)
   id("com.google.devtools.ksp")
   id("com.google.dagger.hilt.android")
   id("com.google.gms.google-services")

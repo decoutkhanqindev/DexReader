@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.decoutkhanqindev.dexreader.presentation.value.category.CategoryTypeValue
 import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
+import com.decoutkhanqindev.dexreader.presentation.value.category.CategoryTypeValue
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable

@@ -4,35 +4,31 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
-import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.home.components.HomeContent
+import com.decoutkhanqindev.dexreader.presentation.value.menu.MenuItemValue
 
 @Composable
 fun HomeScreen(
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
   onSignInClick: () -> Unit,
-  onMenuItemClick: (String) -> Unit,
+  onMenuItemClick: (MenuItemValue) -> Unit,
   onSearchClick: () -> Unit,
   onSelectedManga: (String) -> Unit,
   viewModel: HomeViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-  val route = NavDestination.HomeDestination.route
 
   BaseScreen(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
     onSignInClick = onSignInClick,
-    title = stringResource(R.string.app_name),
-    route = route,
+    selectedMenuItem = MenuItemValue.HOME,
     onMenuItemClick = onMenuItemClick,
     onSearchClick = onSearchClick,
     content = {

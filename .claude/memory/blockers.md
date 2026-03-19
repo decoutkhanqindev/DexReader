@@ -1,18 +1,37 @@
 # Blockers
 
-## Pending Verification
+## ACTIVE — Codebase is non-compiling (naming convention mismatch)
 
-**Build not yet run:**
-The `./gradlew assembleDebug` build has not been executed to confirm the migration compiles cleanly.
-This is a soft blocker — the code changes are complete and logically correct, but compilation must
-be confirmed before the work can be considered fully verified.
+**Problem:**
+`MangaModel.kt` was modified (externally/intentionally) to reference types that do not exist:
 
-- **What to do:** Run `./gradlew assembleDebug` from the project root
-- **If it fails:** Look for remaining `domain.model.*` import references or missing cross-package
-  imports (especially in files where value types from `domain.value.*` are used without an explicit
-  import because they were previously in the same `domain.model.*` package)
+```kotlin
+import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaContentRatingValue
+import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaLanguageValue
+import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaStatusValue
+```
 
-## No Other Blockers
+These types don't exist — `presentation/value/` directory has not been created yet.
 
-No unresolved architectural questions, no external dependencies, no team decisions pending.
-The repository/use case structure question was resolved — no further changes needed there.
+**Root cause:**
+This session's migration used `presentation/enum/` + `*Enum` naming.
+After migration completed, `MangaModel.kt` was externally updated to use `presentation/value/` +
+`*Value`.
+This created a split state:
+
+- `MangaModel.kt` → `*Value` references (types do NOT exist)
+- All other ~30+ consumer files → `*Enum` references (types DO exist in `presentation/enum/`)
+
+**Required to unblock:**
+Apply the `value/` + `*Value` naming consistently:
+
+1. Create `presentation/value/` directory with 4 subdirs
+2. Create 7 `*Value` files (copy content from `*Enum` files, rename package + class)
+3. Bulk sed: replace `*Enum` → `*Value` and `presentation.enum` → `presentation.value` in all .kt
+   files
+4. Delete `presentation/enum/` directory
+5. Verify MangaModel.kt is correct after sed (it starts in the right state already)
+6. Run `./gradlew assembleDebug`
+
+**Note:** The external edit to MangaModel.kt is intentional — do not revert it. It defines the
+target state.

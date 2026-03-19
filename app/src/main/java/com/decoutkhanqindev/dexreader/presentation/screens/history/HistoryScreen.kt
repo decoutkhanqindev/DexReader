@@ -10,17 +10,17 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
-import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.history.components.HistoryContent
+import com.decoutkhanqindev.dexreader.presentation.value.menu.MenuItemValue
 
 @Composable
 fun HistoryScreen(
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
   onSignInClick: () -> Unit,
-  onMenuItemClick: (String) -> Unit,
+  onMenuItemClick: (MenuItemValue) -> Unit,
   onSearchClick: () -> Unit,
   onContinueReadingClick: (
     chapterId: String,
@@ -33,7 +33,6 @@ fun HistoryScreen(
 ) {
   val historyUiState by viewModel.historyUiState.collectAsStateWithLifecycle()
   val removeFromHistoryUiState by viewModel.removeFromHistoryUiState.collectAsStateWithLifecycle()
-  val route = NavDestination.HistoryDestination.route
 
   LaunchedEffect(isUserLoggedIn, currentUser?.id) {
     if (isUserLoggedIn && currentUser != null) viewModel.updateUserId(userId = currentUser.id)
@@ -44,8 +43,7 @@ fun HistoryScreen(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
     onSignInClick = onSignInClick,
-    title = stringResource(R.string.history_menu_item),
-    route = route,
+    selectedMenuItem = MenuItemValue.HISTORY,
     onMenuItemClick = onMenuItemClick,
     onSearchClick = onSearchClick,
     content = {
