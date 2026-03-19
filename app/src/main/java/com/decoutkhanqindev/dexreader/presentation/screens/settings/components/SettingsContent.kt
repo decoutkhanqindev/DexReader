@@ -17,7 +17,7 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.settings.ThemeModeModel
+import com.decoutkhanqindev.dexreader.presentation.value.settings.ThemeModeValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.settings.SettingsUiState
@@ -25,7 +25,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.settings.SettingsUiSt
 @Composable
 fun SettingsContent(
   uiState: SettingsUiState,
-  onThemeOptionClick: (ThemeModeModel) -> Unit,
+  onThemeOptionClick: (ThemeModeValue) -> Unit,
   onSaveThemeOption: () -> Unit,
   onRetry: () -> Unit,
   modifier: Modifier = Modifier,

@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.auth.register
 
 
 import androidx.compose.runtime.Immutable
-import com.decoutkhanqindev.dexreader.presentation.model.error.UserError
+import com.decoutkhanqindev.dexreader.presentation.error.UserError
 
 @Immutable
 data class RegisterUiState(

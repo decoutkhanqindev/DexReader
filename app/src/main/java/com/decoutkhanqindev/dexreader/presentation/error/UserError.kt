@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.model.error
+package com.decoutkhanqindev.dexreader.presentation.error
 
 import androidx.annotation.StringRes
 import com.decoutkhanqindev.dexreader.R

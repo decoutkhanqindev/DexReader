@@ -19,8 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.MangaSortCriteriaModel
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.MangaSortOrderModel
+import com.decoutkhanqindev.dexreader.presentation.value.criteria.MangaSortCriteriaValue
+import com.decoutkhanqindev.dexreader.presentation.value.criteria.MangaSortOrderValue
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailsCriteriaUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
 
@@ -30,8 +30,8 @@ fun SortBottomSheet(
   onDismiss: () -> Unit,
   criteriaState: CategoryDetailsCriteriaUiState,
   onApplyClick: (
-    sortCriteria: MangaSortCriteriaModel,
-    sortOrder: MangaSortOrderModel,
+    sortCriteria: MangaSortCriteriaValue,
+    sortOrder: MangaSortOrderValue,
   ) -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -39,7 +39,7 @@ fun SortBottomSheet(
   var selectedCriteria by rememberSaveable(
     stateSaver = Saver(
       save = { it.name },
-      restore = { MangaSortCriteriaModel.valueOf(it) }
+      restore = { MangaSortCriteriaValue.valueOf(it) }
     )
   ) {
     mutableStateOf(criteriaState.sortCriteria)
@@ -47,7 +47,7 @@ fun SortBottomSheet(
   var selectedOrder by rememberSaveable(
     stateSaver = Saver(
       save = { it.name },
-      restore = { MangaSortOrderModel.valueOf(it) }
+      restore = { MangaSortOrderValue.valueOf(it) }
     )
   ) {
     mutableStateOf(criteriaState.sortOrder)

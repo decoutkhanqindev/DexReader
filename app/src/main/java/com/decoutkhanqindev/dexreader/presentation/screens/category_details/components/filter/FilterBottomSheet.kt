@@ -20,8 +20,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaContentRatingModel
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaStatusModel
+import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaContentRatingValue
+import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaStatusValue
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailsCriteriaUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
 import kotlinx.collections.immutable.ImmutableList
@@ -33,16 +33,16 @@ fun FilterBottomSheet(
   onDismiss: () -> Unit,
   criteriaState: CategoryDetailsCriteriaUiState,
   onApplyClick: (
-    statusFilter: ImmutableList<MangaStatusModel>,
-    contentRatingFilter: ImmutableList<MangaContentRatingModel>,
+    statusFilter: ImmutableList<MangaStatusValue>,
+    contentRatingFilter: ImmutableList<MangaContentRatingValue>,
   ) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-  var selectedStatusOptions: ImmutableList<MangaStatusModel> by rememberSaveable(
+  var selectedStatusOptions: ImmutableList<MangaStatusValue> by rememberSaveable(
     stateSaver = listSaver(
       save = { list -> list.map { it.name } },
-      restore = { names -> names.map { MangaStatusModel.valueOf(it) }.toPersistentList() }
+      restore = { names -> names.map { MangaStatusValue.valueOf(it) }.toPersistentList() }
     )
   ) {
     mutableStateOf(criteriaState.statusFilter)
@@ -51,7 +51,7 @@ fun FilterBottomSheet(
     stateSaver = listSaver(
       save = { list -> list.map { it.name } },
       restore = { names ->
-        names.map { MangaContentRatingModel.valueOf(it) }.toPersistentList()
+        names.map { MangaContentRatingValue.valueOf(it) }.toPersistentList()
       }
     )
   ) {

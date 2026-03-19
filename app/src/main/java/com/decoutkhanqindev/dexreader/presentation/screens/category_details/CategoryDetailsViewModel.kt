@@ -12,10 +12,10 @@ import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaCon
 import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaStatus
 import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.MangaSortCriteriaModel
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.MangaSortOrderModel
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaContentRatingModel
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaStatusModel
+import com.decoutkhanqindev.dexreader.presentation.value.criteria.MangaSortCriteriaValue
+import com.decoutkhanqindev.dexreader.presentation.value.criteria.MangaSortOrderValue
+import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaContentRatingValue
+import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaStatusValue
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
@@ -146,8 +146,8 @@ class CategoryDetailsViewModel @Inject constructor(
   }
 
   fun updateSortingCriteria(
-    sortCriteria: MangaSortCriteriaModel,
-    sortOrder: MangaSortOrderModel,
+    sortCriteria: MangaSortCriteriaValue,
+    sortOrder: MangaSortOrderValue,
   ) {
     val current = _categoryCriteriaUiState.value
     if (current.sortCriteria == sortCriteria && current.sortOrder == sortOrder) return
@@ -159,8 +159,8 @@ class CategoryDetailsViewModel @Inject constructor(
   }
 
   fun updateFilteringCriteria(
-    statusFilter: ImmutableList<MangaStatusModel>,
-    contentRatingFilter: ImmutableList<MangaContentRatingModel>,
+    statusFilter: ImmutableList<MangaStatusValue>,
+    contentRatingFilter: ImmutableList<MangaContentRatingValue>,
   ) {
     val current = _categoryCriteriaUiState.value
     if (current.statusFilter == statusFilter && current.contentRatingFilter == contentRatingFilter) return

@@ -15,12 +15,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.MangaSortCriteriaModel
+import com.decoutkhanqindev.dexreader.presentation.value.criteria.MangaSortCriteriaValue
 
 @Composable
 fun SortCriteriaItem(
   isSelected: Boolean,
-  item: MangaSortCriteriaModel,
+  item: MangaSortCriteriaValue,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {

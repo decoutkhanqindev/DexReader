@@ -14,7 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryTypeModel
+import com.decoutkhanqindev.dexreader.presentation.value.category.CategoryTypeValue
 import com.decoutkhanqindev.dexreader.presentation.screens.categories.CategoriesUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
@@ -50,9 +50,9 @@ fun CategoriesContent(
       var expandedType by rememberSaveable(
         stateSaver = Saver(
           save = { it?.name },
-          restore = { CategoryTypeModel.valueOf(it) }
+          restore = { CategoryTypeValue.valueOf(it) }
         )
-      ) { mutableStateOf<CategoryTypeModel?>(null) }
+      ) { mutableStateOf<CategoryTypeValue?>(null) }
 
       LazyColumn(
         modifier = modifier

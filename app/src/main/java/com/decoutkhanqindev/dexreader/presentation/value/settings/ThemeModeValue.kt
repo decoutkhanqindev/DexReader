@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.model.settings
+package com.decoutkhanqindev.dexreader.presentation.value.settings
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
@@ -8,7 +8,7 @@ import androidx.compose.material.icons.filled.PhoneAndroid
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.decoutkhanqindev.dexreader.R
 
-enum class ThemeModeModel(
+enum class ThemeModeValue(
   @param:StringRes val nameRes: Int,
   val icon: ImageVector,
 ) {

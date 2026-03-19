@@ -1,21 +1,21 @@
 package com.decoutkhanqindev.dexreader.presentation.mapper
 
 import com.decoutkhanqindev.dexreader.domain.value.settings.ThemeMode
-import com.decoutkhanqindev.dexreader.presentation.model.settings.ThemeModeModel
+import com.decoutkhanqindev.dexreader.presentation.value.settings.ThemeModeValue
 
 
 object ThemeModeMapper {
-  fun ThemeMode.toThemeModeModel() =
+  fun ThemeMode.toThemeModeEnum() =
     when (this) {
-      ThemeMode.SYSTEM -> ThemeModeModel.SYSTEM
-      ThemeMode.DARK -> ThemeModeModel.DARK
-      ThemeMode.LIGHT -> ThemeModeModel.LIGHT
+      ThemeMode.SYSTEM -> ThemeModeValue.SYSTEM
+      ThemeMode.DARK -> ThemeModeValue.DARK
+      ThemeMode.LIGHT -> ThemeModeValue.LIGHT
     }
 
-  fun ThemeModeModel.toThemeMode() =
+  fun ThemeModeValue.toThemeMode() =
     when (this) {
-      ThemeModeModel.SYSTEM -> ThemeMode.SYSTEM
-      ThemeModeModel.DARK -> ThemeMode.DARK
-      ThemeModeModel.LIGHT -> ThemeMode.LIGHT
+      ThemeModeValue.SYSTEM -> ThemeMode.SYSTEM
+      ThemeModeValue.DARK -> ThemeMode.DARK
+      ThemeModeValue.LIGHT -> ThemeMode.LIGHT
     }
 }

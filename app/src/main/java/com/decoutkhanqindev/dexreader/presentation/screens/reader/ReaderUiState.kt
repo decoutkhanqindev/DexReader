@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.reader
 
 
 import androidx.compose.runtime.Immutable
-import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureError
+import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterPagesModel
 
 @Immutable

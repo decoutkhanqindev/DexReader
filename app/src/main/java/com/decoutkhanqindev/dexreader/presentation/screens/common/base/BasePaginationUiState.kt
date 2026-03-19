@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.common.base
 
 
 import androidx.compose.runtime.Immutable
-import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureError
+import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 

@@ -2,9 +2,9 @@ package com.decoutkhanqindev.dexreader.presentation.screens.categories
 
 
 import androidx.compose.runtime.Immutable
-import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryTypeModel
+import com.decoutkhanqindev.dexreader.presentation.value.category.CategoryTypeValue
 import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
-import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureError
+import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
@@ -15,6 +15,6 @@ sealed interface CategoriesUiState {
 
   @Immutable
   data class Success(
-    val categoryMap: ImmutableMap<CategoryTypeModel, ImmutableList<CategoryModel>> = persistentMapOf(),
+    val categoryMap: ImmutableMap<CategoryTypeValue, ImmutableList<CategoryModel>> = persistentMapOf(),
   ) : CategoriesUiState
 }

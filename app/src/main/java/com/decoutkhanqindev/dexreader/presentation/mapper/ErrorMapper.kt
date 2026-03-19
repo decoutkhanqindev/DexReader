@@ -3,8 +3,8 @@ package com.decoutkhanqindev.dexreader.presentation.mapper
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.exception.InfrastructureException
 import com.decoutkhanqindev.dexreader.domain.exception.ValidationException
-import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureError
-import com.decoutkhanqindev.dexreader.presentation.model.error.UserError
+import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
+import com.decoutkhanqindev.dexreader.presentation.error.UserError
 
 object ErrorMapper {
   fun Throwable.toFeatureError() =

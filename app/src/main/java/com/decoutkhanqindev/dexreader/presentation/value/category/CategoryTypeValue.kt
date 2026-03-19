@@ -1,9 +1,9 @@
-package com.decoutkhanqindev.dexreader.presentation.model.category
+package com.decoutkhanqindev.dexreader.presentation.value.category
 
 import androidx.annotation.StringRes
 import com.decoutkhanqindev.dexreader.R
 
-enum class CategoryTypeModel(@param:StringRes val nameRes: Int) {
+enum class CategoryTypeValue(@param:StringRes val nameRes: Int) {
   GENRE(R.string.category_type_genre),
   THEME(R.string.category_type_theme),
   FORMAT(R.string.category_type_format),

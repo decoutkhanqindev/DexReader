@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.search
 
-import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureError
+import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 
 sealed interface SuggestionsUiState {
   data object Loading : SuggestionsUiState

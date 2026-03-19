@@ -13,12 +13,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.model.criteria.MangaSortOrderModel
+import com.decoutkhanqindev.dexreader.presentation.value.criteria.MangaSortOrderValue
 
 @Composable
 fun SortOrderOptions(
-  selectedItem: MangaSortOrderModel,
-  onItemClick: (MangaSortOrderModel) -> Unit,
+  selectedItem: MangaSortOrderValue,
+  onItemClick: (MangaSortOrderValue) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Row(
@@ -26,7 +26,7 @@ fun SortOrderOptions(
     horizontalArrangement = Arrangement.Center,
     verticalAlignment = Alignment.CenterVertically
   ) {
-    MangaSortOrderModel.entries.forEach { option ->
+    MangaSortOrderValue.entries.forEach { option ->
       Row(
         modifier = Modifier
           .weight(1f)

@@ -8,7 +8,7 @@ import com.decoutkhanqindev.dexreader.domain.value.category.CategoryType
 import com.decoutkhanqindev.dexreader.domain.usecase.category.GetCategoryListUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.CategoryMapper.toCategoryModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
-import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryTypeModel
+import com.decoutkhanqindev.dexreader.presentation.value.category.CategoryTypeValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableMap
@@ -37,8 +37,8 @@ class CategoriesViewModel @Inject constructor(
       getCategoryListUseCase()
         .onSuccess { grouped ->
           val categoryMap =
-            CategoryTypeModel.entries
-              .filter { it != CategoryTypeModel.UNKNOWN }
+            CategoryTypeValue.entries
+              .filter { it != CategoryTypeValue.UNKNOWN }
               .associateWith { type ->
                 (grouped[CategoryType.valueOf(type.name)]
                   ?: persistentListOf()).map { it.toCategoryModel() }.toPersistentList()

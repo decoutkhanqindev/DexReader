@@ -9,7 +9,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetTopRatedMangaListU
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetTrendingMangaListUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
-import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureError
+import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.async

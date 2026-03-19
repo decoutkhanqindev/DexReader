@@ -20,15 +20,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaLanguageModel
+import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaLanguageValue
 import kotlinx.collections.immutable.ImmutableList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChapterLanguageBottomSheet(
-  languageList: ImmutableList<MangaLanguageModel>,
-  selectedLanguage: MangaLanguageModel,
-  onSelectedLanguage: (MangaLanguageModel) -> Unit,
+  languageList: ImmutableList<MangaLanguageValue>,
+  selectedLanguage: MangaLanguageValue,
+  onSelectedLanguage: (MangaLanguageValue) -> Unit,
   onDismiss: () -> Unit,
   modifier: Modifier = Modifier,
 ) {

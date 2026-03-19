@@ -21,7 +21,7 @@ import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaMod
 import com.decoutkhanqindev.dexreader.presentation.mapper.ReadingHistoryMapper.toReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterModel
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaLanguageModel
+import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaLanguageValue
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
@@ -66,10 +66,10 @@ constructor(
   val mangaChaptersUiState: StateFlow<BasePaginationUiState<ChapterModel>> =
     _mangaChaptersUiState.asStateFlow()
 
-  private val _chapterLanguage = MutableStateFlow(MangaLanguageModel.ENGLISH)
-  val chapterLanguage: StateFlow<MangaLanguageModel> = _chapterLanguage.asStateFlow()
+  private val _chapterLanguage = MutableStateFlow(MangaLanguageValue.ENGLISH)
+  val chapterLanguage: StateFlow<MangaLanguageValue> = _chapterLanguage.asStateFlow()
 
-  val availableLanguages: StateFlow<ImmutableList<MangaLanguageModel>> =
+  val availableLanguages: StateFlow<ImmutableList<MangaLanguageValue>> =
     _mangaDetailsUiState
       .map { state ->
         if (state is MangaDetailsUiState.Success)
@@ -429,7 +429,7 @@ constructor(
     _userId.value = id
   }
 
-  fun updateChapterLanguage(language: MangaLanguageModel) {
+  fun updateChapterLanguage(language: MangaLanguageValue) {
     if (_chapterLanguage.value == language) return
     _chapterLanguage.value = language
     fetchFirstChapter()

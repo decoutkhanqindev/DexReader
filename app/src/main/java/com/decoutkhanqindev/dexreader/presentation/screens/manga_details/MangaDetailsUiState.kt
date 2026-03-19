@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.manga_details
 
 import androidx.compose.runtime.Immutable
-import com.decoutkhanqindev.dexreader.presentation.model.error.FeatureError
+import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 
 sealed interface MangaDetailsUiState {

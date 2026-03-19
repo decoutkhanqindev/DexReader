@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.user.RegisterUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toUserError
-import com.decoutkhanqindev.dexreader.presentation.model.error.UserError
+import com.decoutkhanqindev.dexreader.presentation.error.UserError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

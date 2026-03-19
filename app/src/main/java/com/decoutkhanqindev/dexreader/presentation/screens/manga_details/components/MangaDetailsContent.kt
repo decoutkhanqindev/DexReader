@@ -27,7 +27,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterModel
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaLanguageModel
+import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaLanguageValue
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.MoveToTopButton
@@ -56,9 +56,9 @@ fun MangaDetailsContent(
   ) -> Unit,
   isFavorite: Boolean,
   onFavoriteClick: () -> Unit,
-  chapterLanguage: MangaLanguageModel,
-  availableLanguages: ImmutableList<MangaLanguageModel>,
-  onSelectedLanguage: (MangaLanguageModel) -> Unit,
+  chapterLanguage: MangaLanguageValue,
+  availableLanguages: ImmutableList<MangaLanguageValue>,
+  onSelectedLanguage: (MangaLanguageValue) -> Unit,
   onSelectedCategory: (
     categoryId: String,
     categoryTitle: String,

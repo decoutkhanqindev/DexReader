@@ -1,8 +1,8 @@
 package com.decoutkhanqindev.dexreader.presentation.mapper
 
 import com.decoutkhanqindev.dexreader.domain.entity.manga.FavoriteManga
-import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaStatusModel
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaContentRatingModel
+import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaStatusEnum
+import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaContentRatingValue
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import kotlinx.collections.immutable.persistentListOf
 
@@ -16,8 +16,8 @@ object FavoriteMangaMapper {
       author = author,
       artist = "",
       categories = persistentListOf(),
-      status = status.toMangaStatusModel(),
-      contentRating = MangaContentRatingModel.UNKNOWN,
+      status = status.toMangaStatusEnum(),
+      contentRating = MangaContentRatingValue.UNKNOWN,
       year = "",
       availableLanguages = persistentListOf(),
       latestChapter = "",
