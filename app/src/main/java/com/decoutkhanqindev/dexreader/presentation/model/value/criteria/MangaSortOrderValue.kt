@@ -4,6 +4,6 @@ import androidx.annotation.StringRes
 import com.decoutkhanqindev.dexreader.R
 
 enum class MangaSortOrderValue(@param:StringRes val nameRes: Int) {
-  DESC(R.string.sort_order_descending),
-  ASC(R.string.sort_order_ascending)
+  ASC(R.string.sort_order_ascending),
+  DESC(R.string.sort_order_descending)
 }

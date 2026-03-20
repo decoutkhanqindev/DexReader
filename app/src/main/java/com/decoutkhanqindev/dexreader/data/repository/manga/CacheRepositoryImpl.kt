@@ -5,6 +5,7 @@ import com.decoutkhanqindev.dexreader.data.mapper.ChapterPagesMapper.toChapterCa
 import com.decoutkhanqindev.dexreader.data.mapper.ChapterPagesMapper.toChapterPages
 import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toCacheException
 import com.decoutkhanqindev.dexreader.domain.entity.manga.ChapterPages
+import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.repository.manga.CacheRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
@@ -34,8 +35,7 @@ constructor(
       context = Dispatchers.IO,
       onExecute = {
         chapterCacheDao.getChapterCache(chapterId)?.toChapterPages()
-          ?: throw com.decoutkhanqindev.dexreader.domain.exception
-            .BusinessException.Resource.ChapterDataNotFound()
+          ?: throw BusinessException.Resource.ChapterDataNotFound()
       },
       onCatch = { it.toCacheException() }
     )

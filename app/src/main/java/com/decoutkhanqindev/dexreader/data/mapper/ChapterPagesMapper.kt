@@ -22,7 +22,6 @@ object ChapterPagesMapper {
       baseUrl = resolvedBaseUrl,
       dataHash = hash,
       pages = pages,
-      totalPages = pages.size
     )
   }
 
@@ -37,7 +36,6 @@ object ChapterPagesMapper {
       baseUrl = baseUrl,
       dataHash = dataHash,
       pages = pages,
-      totalPages = pages.size
     )
   }
 
@@ -52,7 +50,7 @@ object ChapterPagesMapper {
       baseUrl = baseUrl,
       dataHash = dataHash,
       pageHashes = pageHashes,
-      totalPages = pages.size,
+      totalPages = pageHashes.size,
       cachedAt = System.currentTimeMillis()
     )
   }

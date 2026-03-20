@@ -27,5 +27,6 @@ data class Manga(
     const val DEFAULT_ARTIST = "Unknown"
     const val DEFAULT_YEAR = "Unknown"
     const val DEFAULT_LAST_CHAPTER = "Unknown"
+    val DEFAULT_STATUS = MangaStatus.UNKNOWN
   }
 }

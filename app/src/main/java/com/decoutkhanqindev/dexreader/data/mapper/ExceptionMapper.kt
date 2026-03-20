@@ -12,9 +12,9 @@ object ExceptionMapper {
   fun Exception.toDomainException(): Nothing =
     when (this) {
       is DomainException -> throw this
-      is HttpException -> throw InfrastructureException.ServerUnavailable(cause = this)
-      is IOException -> throw InfrastructureException.NetworkUnavailable(cause = this)
-      else -> throw InfrastructureException.Unexpected(cause = this)
+      is HttpException -> throw InfrastructureException.ServerUnavailable(rootCause = this)
+      is IOException -> throw InfrastructureException.NetworkUnavailable(rootCause = this)
+      else -> throw InfrastructureException.Unexpected(rootCause = this)
     }
 
   fun Exception.toFirestoreException(): Nothing =
@@ -22,15 +22,15 @@ object ExceptionMapper {
       is DomainException -> throw this
       is FirebaseFirestoreException ->
         if (code == FirebaseFirestoreException.Code.PERMISSION_DENIED)
-          throw BusinessException.Resource.AccessDenied(cause = this)
-        else throw InfrastructureException.Unexpected(cause = this)
+          throw BusinessException.Resource.AccessDenied(rootCause = this)
+        else throw InfrastructureException.Unexpected(rootCause = this)
 
-      else -> throw InfrastructureException.Unexpected(cause = this)
+      else -> throw InfrastructureException.Unexpected(rootCause = this)
     }
 
   fun Exception.toCacheException(): Nothing =
     when (this) {
       is DomainException -> throw this
-      else -> throw InfrastructureException.Unexpected(cause = this)
+      else -> throw InfrastructureException.Unexpected(rootCause = this)
     }
 }

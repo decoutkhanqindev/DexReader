@@ -50,8 +50,7 @@ constructor(
       context = Dispatchers.IO,
       onExecute = {
         apiService.getChapterDetails(chapterId).data?.toChapter()
-          ?: throw com.decoutkhanqindev.dexreader.domain.exception
-            .BusinessException.Resource.ChapterNotFound()
+          ?: throw BusinessException.Resource.ChapterNotFound()
       },
       onCatch = { it.toDomainException() }
     )

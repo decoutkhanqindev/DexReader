@@ -14,10 +14,13 @@ data class ReadingHistory(
   val lastReadAt: Long?,
 ) {
   companion object {
+    val DEFAULT_LAST_READ_AT: Long? = null
+    private const val FIRST_PAGE = 1
+
     fun generateId(mangaId: String, chapterId: String): String = "${mangaId}_${chapterId}"
 
     fun findContinueTarget(historyList: List<ReadingHistory>): ReadingHistory? =
-      historyList.firstOrNull { it.lastReadPage < it.pageCount - 1 }
+      historyList.firstOrNull { it.pageCount > 0 && it.lastReadPage < it.pageCount - 1 }
         ?: historyList.firstOrNull()
 
     fun findInitialPage(
@@ -27,7 +30,7 @@ data class ReadingHistory(
       historyList: List<ReadingHistory>,
     ): Int {
       if (chapterId == navChapterId && navPage > 0) return navPage
-      return historyList.find { it.chapterId == chapterId }?.lastReadPage ?: 1
+      return historyList.find { it.chapterId == chapterId }?.lastReadPage ?: FIRST_PAGE
     }
   }
 }

@@ -5,6 +5,7 @@ import com.decoutkhanqindev.dexreader.data.mapper.MangaMapper.toManga
 import com.decoutkhanqindev.dexreader.data.network.api.ApiService
 import com.decoutkhanqindev.dexreader.di.UploadUrlQualifier
 import com.decoutkhanqindev.dexreader.domain.entity.manga.Manga
+import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.repository.manga.MangaRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
 import jakarta.inject.Inject
@@ -61,8 +62,7 @@ constructor(
       context = Dispatchers.IO,
       onExecute = {
         apiService.getMangaDetails(mangaId).data?.toManga(uploadUrl)
-          ?: throw com.decoutkhanqindev.dexreader.domain.exception
-            .BusinessException.Resource.MangaNotFound()
+          ?: throw BusinessException.Resource.MangaNotFound()
       },
       onCatch = { it.toDomainException() }
     )

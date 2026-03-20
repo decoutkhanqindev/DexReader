@@ -31,7 +31,7 @@ class AddAndUpdateToHistoryUseCase @Inject constructor(
       chapterVolume = chapterVolume,
       lastReadPage = lastReadPage,
       pageCount = pageCount,
-      lastReadAt = null
+      lastReadAt = ReadingHistory.DEFAULT_LAST_READ_AT
     )
     repository.addAndUpdateToHistory(userId, readingHistory)
   }

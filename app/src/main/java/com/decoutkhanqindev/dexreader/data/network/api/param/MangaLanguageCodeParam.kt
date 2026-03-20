@@ -57,7 +57,7 @@ enum class MangaLanguageCodeParam(val value: String) {
   TAMIL("ta"),
   TELUGU("te"),
   THAI("th"),
-  THAILAND("tl"),
+  TAGALOG("tl"),
   TURKISH("tr"),
   UKRAINIAN("uk"),
   URDU("ur"),

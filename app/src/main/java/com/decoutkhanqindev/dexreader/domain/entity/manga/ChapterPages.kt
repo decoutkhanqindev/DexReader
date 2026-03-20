@@ -5,5 +5,6 @@ data class ChapterPages(
   val baseUrl: String,
   val dataHash: String,
   val pages: List<String>,
-  val totalPages: Int,
-)
+) {
+  val totalPages: Int get() = pages.size
+}

@@ -60,7 +60,7 @@ enum class MangaLanguageValue(@param:StringRes val value: Int) {
   TAMIL(R.string.lang_tamil),
   TELUGU(R.string.lang_telugu),
   THAI(R.string.lang_thai),
-  THAILAND(R.string.lang_thailand),
+  TAGALOG(R.string.lang_tagalog),
   TURKISH(R.string.lang_turkish),
   UKRAINIAN(R.string.lang_ukrainian),
   URDU(R.string.lang_urdu),

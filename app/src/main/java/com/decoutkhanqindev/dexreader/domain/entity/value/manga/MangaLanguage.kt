@@ -57,7 +57,7 @@ enum class MangaLanguage {
   TAMIL,
   TELUGU,
   THAI,
-  THAILAND,
+  TAGALOG,
   TURKISH,
   UKRAINIAN,
   URDU,

@@ -47,9 +47,9 @@ constructor(
       onCatch = { e ->
         when (e) {
           is FirebaseAuthUserCollisionException ->
-            throw BusinessException.Auth.UserAlreadyExists(cause = e)
+            throw BusinessException.Auth.UserAlreadyExists(rootCause = e)
 
-          else -> throw InfrastructureException.Unexpected(cause = e)
+          else -> throw InfrastructureException.Unexpected(rootCause = e)
         }
       }
     )
@@ -64,12 +64,12 @@ constructor(
       onCatch = { e ->
         when (e) {
           is FirebaseAuthInvalidUserException ->
-            throw BusinessException.Auth.UserNotFound(cause = e)
+            throw BusinessException.Auth.UserNotFound(rootCause = e)
 
           is FirebaseAuthInvalidCredentialsException ->
-            throw BusinessException.Auth.InvalidCredentials(cause = e)
+            throw BusinessException.Auth.InvalidCredentials(rootCause = e)
 
-          else -> throw InfrastructureException.Unexpected(cause = e)
+          else -> throw InfrastructureException.Unexpected(rootCause = e)
         }
       }
     )
@@ -84,9 +84,9 @@ constructor(
         when (e) {
           is BusinessException.Auth -> throw e
           is FirebaseAuthInvalidUserException ->
-            throw BusinessException.Auth.UserNotFound(cause = e)
+            throw BusinessException.Auth.UserNotFound(rootCause = e)
 
-          else -> throw InfrastructureException.Unexpected(cause = e)
+          else -> throw InfrastructureException.Unexpected(rootCause = e)
         }
       }
     )
@@ -109,7 +109,7 @@ constructor(
       onCatch = { e ->
         when (e) {
           is BusinessException.Auth -> throw e
-          else -> throw InfrastructureException.Unexpected(cause = e)
+          else -> throw InfrastructureException.Unexpected(rootCause = e)
         }
       }
     )

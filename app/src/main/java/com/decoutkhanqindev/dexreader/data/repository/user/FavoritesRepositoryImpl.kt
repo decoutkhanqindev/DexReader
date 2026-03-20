@@ -40,7 +40,7 @@ constructor(
         if (e is FirebaseFirestoreException &&
           e.code == FirebaseFirestoreException.Code.PERMISSION_DENIED
         )
-          throw BusinessException.Resource.AccessDenied(cause = e)
+          throw BusinessException.Resource.AccessDenied(rootCause = e)
         else throw e
       }
       .flowOn(Dispatchers.IO)
@@ -78,7 +78,7 @@ constructor(
         if (e is FirebaseFirestoreException &&
           e.code == FirebaseFirestoreException.Code.PERMISSION_DENIED
         )
-          throw BusinessException.Resource.AccessDenied(cause = e)
+          throw BusinessException.Resource.AccessDenied(rootCause = e)
         else throw e
       }
       .flowOn(Dispatchers.IO)
