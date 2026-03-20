@@ -20,8 +20,9 @@ data class ReadingHistory(
     fun generateId(mangaId: String, chapterId: String): String = "${mangaId}_${chapterId}"
 
     fun findContinueTarget(historyList: List<ReadingHistory>): ReadingHistory? =
-      historyList.firstOrNull { it.pageCount > 0 && it.lastReadPage < it.pageCount - 1 }
-        ?: historyList.firstOrNull()
+      historyList.firstOrNull {
+        it.pageCount > 0 && it.lastReadPage < it.pageCount - 1
+      } ?: historyList.firstOrNull()
 
     fun findInitialPage(
       chapterId: String,
