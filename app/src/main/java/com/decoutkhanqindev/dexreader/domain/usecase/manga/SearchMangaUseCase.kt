@@ -8,6 +8,6 @@ import javax.inject.Inject
 class SearchMangaUseCase @Inject constructor(
   private val repository: MangaRepository,
 ) {
-  suspend operator fun invoke(query: String, offset: Int = 0): Result<List<Manga>> =
-    runSuspendResultCatching { repository.searchManga(query = query, offset = offset) }
+  suspend operator fun invoke(query: String, offset: Int = 0, limit: Int = 20): Result<List<Manga>> =
+    runSuspendResultCatching { repository.searchManga(query = query, offset = offset, limit = limit) }
 }

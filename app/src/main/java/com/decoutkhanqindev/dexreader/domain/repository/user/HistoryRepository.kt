@@ -11,6 +11,6 @@ interface HistoryRepository {
     lastReadingHistoryId: String? = null,
   ): Flow<List<ReadingHistory>>
 
-  suspend fun addAndUpdateToHistory(userId: String, readingHistory: ReadingHistory)
+  suspend fun upsertHistory(userId: String, readingHistory: ReadingHistory)
   suspend fun removeFromHistory(userId: String, readingHistoryId: String)
 }

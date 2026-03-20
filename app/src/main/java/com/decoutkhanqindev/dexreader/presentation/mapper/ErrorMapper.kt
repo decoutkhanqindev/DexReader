@@ -31,6 +31,7 @@ object ErrorMapper {
       is BusinessException.Auth.UserAlreadyExists -> UserError.Email.AlreadyInUse
       is BusinessException.Auth.InvalidCredentials -> UserError.Password.Incorrect
       is BusinessException.Auth.RegistrationFailed -> UserError.RegistrationFailed
+      is InfrastructureException.NetworkUnavailable -> UserError.NetworkUnavailable
       else -> UserError.Unexpected
     }
 }

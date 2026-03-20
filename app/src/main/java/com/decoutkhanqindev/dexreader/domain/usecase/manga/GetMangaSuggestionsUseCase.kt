@@ -9,8 +9,7 @@ class GetMangaSuggestionsUseCase @Inject constructor(
 ) {
   suspend operator fun invoke(query: String): Result<List<String>> =
     runSuspendResultCatching {
-      repository.searchManga(query = query, offset = 0)
-        .take(SUGGESTION_LIMIT)
+      repository.searchManga(query = query, offset = 0, limit = SUGGESTION_LIMIT)
         .map { it.title }
     }
 

@@ -5,7 +5,7 @@ import com.decoutkhanqindev.dexreader.domain.repository.user.HistoryRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendResultCatching
 import javax.inject.Inject
 
-class AddAndUpdateToHistoryUseCase @Inject constructor(
+class UpsertHistoryUseCase @Inject constructor(
   private val repository: HistoryRepository,
 ) {
   suspend operator fun invoke(
@@ -33,6 +33,6 @@ class AddAndUpdateToHistoryUseCase @Inject constructor(
       pageCount = pageCount,
       lastReadAt = ReadingHistory.DEFAULT_LAST_READ_AT
     )
-    repository.addAndUpdateToHistory(userId, readingHistory)
+    repository.upsertHistory(userId, readingHistory)
   }
 }

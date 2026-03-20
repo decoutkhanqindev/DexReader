@@ -16,7 +16,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaDetailsUseCas
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.cache.AddChapterCacheUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.cache.ClearExpiredCacheUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.cache.GetChapterCacheUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.user.history.AddAndUpdateToHistoryUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.user.history.UpsertHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.history.ObserveHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.entity.value.criteria.MangaSortOrder
 import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaLanguage
@@ -52,7 +52,7 @@ constructor(
   private val clearExpiredCacheUseCase: ClearExpiredCacheUseCase,
   private val getMangaDetailsUseCase: GetMangaDetailsUseCase,
   private val observeHistoryUseCase: ObserveHistoryUseCase,
-  private val addAndUpdateToHistoryUseCase: AddAndUpdateToHistoryUseCase,
+  private val upsertHistoryUseCase: UpsertHistoryUseCase,
 ) : ViewModel() {
   private val route: NavRoute.Reader = savedStateHandle.toRoute()
   private val chapterIdFromArg: String = route.chapterId
@@ -387,7 +387,7 @@ constructor(
 
     viewModelScope.launch {
       _userId.value?.let { userId ->
-        addAndUpdateToHistoryUseCase(
+        upsertHistoryUseCase(
           userId = userId,
           mangaId = mangaIdFromArg,
           mangaTitle = mangaTitle!!,

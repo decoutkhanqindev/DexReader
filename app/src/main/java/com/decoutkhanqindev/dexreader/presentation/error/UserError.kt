@@ -26,6 +26,7 @@ sealed class UserError(@param:StringRes val messageRes: Int) {
   }
 
   data object NotFound : UserError(R.string.error_user_not_found)
+  data object NetworkUnavailable : UserError(R.string.no_internet_connection)
   data object RegistrationFailed : UserError(R.string.oops_something_went_wrong_please_try_again)
   data object Unexpected : UserError(R.string.oops_something_went_wrong_please_try_again)
 }

@@ -70,11 +70,12 @@ constructor(
   override suspend fun searchManga(
     query: String,
     offset: Int,
+    limit: Int,
   ): List<Manga> =
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        apiService.searchManga(query = query, offset = offset).data?.map {
+        apiService.searchManga(query = query, offset = offset, limit = limit).data?.map {
           it.toManga(uploadUrl)
         }
           ?: emptyList()

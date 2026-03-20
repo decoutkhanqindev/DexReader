@@ -48,7 +48,7 @@ constructor(
       .flowOn(Dispatchers.IO)
       .distinctUntilChanged()
 
-  override suspend fun addAndUpdateToHistory(
+  override suspend fun upsertHistory(
     userId: String,
     readingHistory: ReadingHistory,
   ) =
