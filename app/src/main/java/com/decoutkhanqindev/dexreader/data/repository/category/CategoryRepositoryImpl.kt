@@ -59,8 +59,8 @@ constructor(
           rating =
             if (sortCriteria == MangaSortCriteria.TOP_RATED) orderValue
             else null,
-          status = statusFilter.map { it.toApiParam() },
-          contentRating = contentRatingFilter.map { it.toApiParam() },
+          status = statusFilter.mapNotNull { it.toApiParam() },
+          contentRating = contentRatingFilter.mapNotNull { it.toApiParam() },
         )
           .data
           ?.map { it.toManga(uploadUrl) }

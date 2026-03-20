@@ -10,11 +10,11 @@ import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaLanguage
 import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaStatus
 
 object ApiParamMapper {
-  fun MangaStatus.toApiParam() =
-    MangaStatusParam.valueOf(this.name).value
+  fun MangaStatus.toApiParam(): String? =
+    MangaStatusParam.entries.find { it.name == this.name }?.value
 
-  fun MangaContentRating.toApiParam() =
-    MangaContentRatingParam.valueOf(this.name).value
+  fun MangaContentRating.toApiParam(): String? =
+    MangaContentRatingParam.entries.find { it.name == this.name }?.value
 
   fun MangaSortOrder.toApiParam() =
     MangaSortOrderParam.valueOf(this.name).value
