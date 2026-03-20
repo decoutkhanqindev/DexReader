@@ -7,6 +7,7 @@ import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toDomainExcept
 import com.decoutkhanqindev.dexreader.data.network.api.ApiService
 import com.decoutkhanqindev.dexreader.domain.entity.manga.Chapter
 import com.decoutkhanqindev.dexreader.domain.entity.manga.ChapterPages
+import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.repository.manga.ChapterRepository
 import com.decoutkhanqindev.dexreader.domain.value.criteria.MangaSortOrder
 import com.decoutkhanqindev.dexreader.domain.value.manga.MangaLanguage
@@ -38,7 +39,7 @@ constructor(
           chapterOrder = sortOrder.toApiParam(),
         )
           .data
-          ?.map { it.toChapter() }
+          ?.mapNotNull { it.toChapter() }
           ?: emptyList()
       },
       onCatch = { it.toDomainException() }
@@ -58,7 +59,10 @@ constructor(
   override suspend fun getChapterPages(chapterId: String): ChapterPages =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = { apiService.getChapterPages(chapterId).toChapterPages(chapterId) },
+      onExecute = {
+        apiService.getChapterPages(chapterId).toChapterPages(chapterId)
+          ?: throw BusinessException.Resource.ChapterDataNotFound()
+      },
       onCatch = { it.toDomainException() }
     )
 }

@@ -1,52 +1,44 @@
 # Current Task
 
 ## Task
+No active task. Previous task (5 mapper code fixes) completed and verified with a successful build.
 
-`MenuItem → MenuItemValue` enum refactor — **MOSTLY DONE**, one follow-up needed.
+## Status: CLEAN — `./gradlew assembleDebug --rerun-tasks` → BUILD SUCCESSFUL
 
-## Status: PENDING — `MenuDrawer.kt` needs to be updated to match `MenuBody.kt`'s new signature
+---
 
-### What was done this session
+### What was completed this session
 
-All 5 planned file changes from the `MenuItem → MenuItemValue` plan were applied:
+**Plan: Fix 5 Mapper Code Issues** (strict-kotlin-reviewer audit of `data/mapper/` and
+`presentation/mapper/`)
 
-1. **Created** `presentation/value/menu/MenuItemValue.kt` — enum with `titleRes: Int`,
-   `icon: ImageVector`, computed `val id = name.lowercase()`
-2. **Deleted** `presentation/screens/common/menu/MenuItem.kt`
-3. **Updated** `MenuDrawer.kt` — replaced 6 `stringResource` calls + verbose `remember` block with
-   `remember { MenuItemValue.entries.toPersistentList() }`
-4. **Updated** `MenuBody.kt` — `ImmutableList<MenuItem>` → `ImmutableList<MenuItemValue>`
-5. **Updated** `MenuItemRow.kt` — `item: MenuItem` → `item: MenuItemValue`; resolves title via
-   `stringResource(item.titleRes)`
+All 5 issues implemented in full. Build passes with 0 errors.
 
-### Post-edit external change
+---
 
-After the refactor, a linter (or external edit) modified `MenuBody.kt` further:
+### Files changed
 
-- Changed parameter `selectedItemId: String` → `selectedItem: MenuItemValue`
-- Changed comparison `item.id == selectedItemId` → `item == selectedItem`
-- Changed `key = { it.id }` → `key = { it }` (enum instances are stable keys)
+| File | Change |
+|------|--------|
+| `data/mapper/ApiParamMapper.kt` | Deleted `toApiValue()` (Issue 1); `String?.toMangaLanguage()` nullable receiver (Issue 5) |
+| `data/mapper/FavoriteMangaMapper.kt` | `toApiValue()` → `toApiParam()` (Issue 1) |
+| `data/mapper/ChapterMapper.kt` | Return type `Chapter?`, `throw` → `return null`, `?: Chapter.DEFAULT_LANGUAGE` removed (Issues 2 + 5) |
+| `data/mapper/ChapterPagesMapper.kt` | Return type `ChapterPages?`, both `throw` → `return null` (Issue 2) |
+| `data/repository/manga/ChapterRepositoryImpl.kt` | `map` → `mapNotNull` for list; pages null-check with `ChapterDataNotFound` throw (Issue 2) |
+| `presentation/error/UserError.kt` | Added `data object Unexpected` (Issue 4) |
+| `presentation/mapper/ErrorMapper.kt` | `else -> null` → `else -> UserError.Unexpected` (Issue 4) |
+| `presentation/model/manga/FavoriteMangaModel.kt` | NEW — 5-field model (id, title, coverUrl, author, status) (Issue 3) |
+| `presentation/screens/favorites/components/FavoriteMangaItem.kt` | NEW — composable mirroring MangaItem but typed on FavoriteMangaModel (Issue 3) |
+| `presentation/mapper/FavoriteMangaMapper.kt` | `toMangaModel()` → `toFavoriteMangaModel()` returning `FavoriteMangaModel` (Issue 3) |
+| `presentation/screens/favorites/FavoritesViewModel.kt` | `MangaModel` → `FavoriteMangaModel` throughout (Issue 3) |
+| `presentation/screens/favorites/components/FavoritesContent.kt` | `MangaModel` → `FavoriteMangaModel`; inlined `LazyVerticalGrid` + `FavoriteMangaItem` (Issue 3) |
 
-### Current broken state
+---
 
-`MenuDrawer.kt` still calls `MenuBody(selectedItemId = selectedItemId, ...)` using the old `String`
-signature.
-`MenuBody` now expects `selectedItem: MenuItemValue`. **This is a compile error.**
-
-### Required follow-up
-
-In `MenuDrawer.kt`:
-
-1. Convert `selectedItemId: String` → find matching `MenuItemValue` entry:
-   ```kotlin
-   val selectedItem = MenuItemValue.entries.find { it.id == selectedItemId } ?: MenuItemValue.HOME
-   ```
-2. Pass `selectedItem = selectedItem` to `MenuBody(...)` instead of
-   `selectedItemId = selectedItemId`
-3. Keep `MenuDrawer`'s own public signature as `selectedItemId: String` (all callers in
-   `BaseScreen.kt` / `*Screen.kt` files still use strings — do NOT change them)
-
-### File currently needing edit
-
-`app/src/main/java/com/decoutkhanqindev/dexreader/presentation/screens/common/menu/MenuDrawer.kt`
-— specifically the `val items = ...` block and the `MenuBody(...)` call site
+### Next session
+No specific pending task. Codebase is clean. Possible areas for future work:
+- Auth VM `else ->` handling now receives `UserError.Unexpected` instead of null — verify UX
+- `ChapterRepositoryImpl.getChapterDetails()` line 51: `data?.toChapter()` — toChapter() now returns
+  nullable, so `?.toChapter()` is a `Chapter??` (double nullable) which Kotlin flattens to `Chapter?`.
+  This still compiles and functions correctly; the `?: throw ChapterNotFound()` handles both null data
+  AND null mapper return.

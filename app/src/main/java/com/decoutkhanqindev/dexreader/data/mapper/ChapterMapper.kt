@@ -3,22 +3,19 @@ package com.decoutkhanqindev.dexreader.data.mapper
 import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toMangaLanguage
 import com.decoutkhanqindev.dexreader.data.network.api.response.chapter.ChapterResponse
 import com.decoutkhanqindev.dexreader.domain.entity.manga.Chapter
-import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
-
 object ChapterMapper {
 
   private const val REL_MANGA = "manga"
 
-  fun ChapterResponse.toChapter(): Chapter {
+  fun ChapterResponse.toChapter(): Chapter? {
     val mangaId = relationships?.find {
       it?.type == REL_MANGA
-    }?.id ?: throw BusinessException.Resource.ChapterNotFound()
+    }?.id ?: return null
     val title = attributes?.title
     val number = attributes?.chapter
     val volume = attributes?.volume
     val publishedAt = attributes?.publishAt
-    val language =
-      attributes?.translatedLanguage?.toMangaLanguage() ?: Chapter.DEFAULT_LANGUAGE
+    val language = attributes?.translatedLanguage.toMangaLanguage()
 
     return Chapter(
       id = id,

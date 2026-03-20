@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.ObserveFavoritesUseCase
-import com.decoutkhanqindev.dexreader.presentation.mapper.FavoriteMangaMapper.toMangaModel
-import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
+import com.decoutkhanqindev.dexreader.presentation.mapper.FavoriteMangaMapper.toFavoriteMangaModel
+import com.decoutkhanqindev.dexreader.presentation.model.manga.FavoriteMangaModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,10 +27,10 @@ constructor(
   private val observeFavoritesUseCase: ObserveFavoritesUseCase,
 ) : ViewModel() {
   private val _uiState =
-    MutableStateFlow<BasePaginationUiState<MangaModel>>(
+    MutableStateFlow<BasePaginationUiState<FavoriteMangaModel>>(
       BasePaginationUiState.FirstPageLoading
     )
-  val uiState: StateFlow<BasePaginationUiState<MangaModel>> = _uiState.asStateFlow()
+  val uiState: StateFlow<BasePaginationUiState<FavoriteMangaModel>> = _uiState.asStateFlow()
 
   private val _userId = MutableStateFlow<String?>(null)
 
@@ -64,7 +64,7 @@ constructor(
                   .onSuccess { favoriteMangaList ->
                     _uiState.value =
                       BasePaginationUiState.Content(
-                        currentList = favoriteMangaList.map { it.toMangaModel() }
+                        currentList = favoriteMangaList.map { it.toFavoriteMangaModel() }
                           .toPersistentList(),
                         currentPage = FIRST_PAGE,
                         nextPageState =
@@ -113,7 +113,7 @@ constructor(
   }
 
   private fun observeFavoritesNextPageInternal(
-    currentUiState: BasePaginationUiState.Content<MangaModel>,
+    currentUiState: BasePaginationUiState.Content<FavoriteMangaModel>,
   ) {
     observeFavoritesJob =
       viewModelScope.launch {
@@ -140,7 +140,7 @@ constructor(
                 result
                   .onSuccess { nextPageFavoriteMangaList ->
                     val allFavoriteMangaList =
-                      (favoriteMangaList + nextPageFavoriteMangaList.map { it.toMangaModel() }).toPersistentList()
+                      (favoriteMangaList + nextPageFavoriteMangaList.map { it.toFavoriteMangaModel() }).toPersistentList()
                     _uiState.value =
                       currentUiState.copy(
                         currentList = allFavoriteMangaList,
@@ -194,7 +194,7 @@ constructor(
 
   fun retryObserveFavoritesNextPage() {
     val currentUiState = _uiState.value
-    if (currentUiState is BasePaginationUiState.Content<MangaModel> &&
+    if (currentUiState is BasePaginationUiState.Content<FavoriteMangaModel> &&
       currentUiState.nextPageState == BaseNextPageState.ERROR
     )
       observeFavoritesNextPageInternal(currentUiState)

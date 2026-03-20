@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.data.mapper
 
-import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toApiValue
+import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toApiParam
 import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toMangaStatus
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.request.FavoriteMangaRequest
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.response.FavoriteMangaResponse
@@ -24,6 +24,6 @@ object FavoriteMangaMapper {
       title = title,
       coverUrl = coverUrl,
       author = author,
-      status = status.toApiValue(),
+      status = status.toApiParam(),
     )
 }

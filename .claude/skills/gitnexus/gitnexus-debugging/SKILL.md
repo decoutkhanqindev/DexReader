@@ -39,7 +39,7 @@ description: "Use when the user is debugging a bug, tracing an error, or asking 
 ## Debugging Patterns
 
 | Symptom              | GitNexus Approach                                          |
-|----------------------|------------------------------------------------------------|
+| -------------------- | ---------------------------------------------------------- |
 | Error message        | `gitnexus_query` for error text → `context` on throw sites |
 | Wrong return value   | `context` on the function → trace callees for data flow    |
 | Intermittent failure | `context` → look for external calls, async deps            |

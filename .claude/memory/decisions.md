@@ -198,3 +198,140 @@ created.
 - `presentation/model/value/` — rejected (redundant nesting of `model/` in path)
 - No suffix — rejected (name collision in mapper files between `MangaStatus` domain type and
   presentation type)
+
+**Status (updated 2026-03-20):** Migration fully completed — all 7 `*Value` files exist in
+`presentation/value/`. Previous blocker is resolved.
+
+---
+
+## 2026-03-20
+
+### Decision: `MenuItem` data class → `MenuItemValue` enum in `presentation/value/menu/`
+
+**What was decided:**
+The `MenuItem` data class (3 mutable constructor params: `id`, `title`, `icon`) was replaced with a
+`MenuItemValue` enum in `presentation/value/menu/`. The six fixed menu entries are now enum constants
+with their display properties defined at declaration time.
+
+**Final shape of `MenuItemValue` (after external edits this session):**
+```kotlin
+enum class MenuItemValue(@param:StringRes val nameRes: Int, val icon: ImageVector) {
+  HOME, CATEGORIES, FAVORITES, HISTORY, PROFILE, SETTINGS;
+  companion object {
+    fun MenuItemValue.toNavRoute() = when(this) { HOME -> NavRoute.Home, ... }
+  }
+}
+```
+Note: original implementation had `titleRes` + computed `val id = name.lowercase()`. External edits
+renamed `titleRes` → `nameRes`, removed `id`, and added `toNavRoute()` companion.
+
+**Reasoning:**
+- Six entries are fixed — a data class with runtime-constructed instances adds verbosity
+- Matches the existing `ThemeModeValue` pattern for fixed-option UI enums
+- `MenuDrawer` previously required 6 `stringResource()` calls + a 6-key `remember` — the enum
+  collapses this to `remember { MenuItemValue.entries.toPersistentList() }`
+- `toNavRoute()` companion makes navigation type-safe (no more `when (itemId)` string switches)
+
+**Alternatives considered:**
+- Keep `MenuItem` data class but extract constants — rejected, still requires runtime construction
+- Place in `presentation/screens/common/menu/` package — rejected, value types belong in `value/`
+  per established project convention
+
+**Open question (still unresolved as of 2026-03-20 session 2):**
+`MenuDrawer.kt` public signature uses `selectedItemId: String` but `MenuBody` now requires
+`selectedItem: MenuItemValue`. Two paths forward:
+- (a) Bridge internally with `entries.find { it.name.lowercase() == selectedItemId }`
+- (b) Propagate `MenuItemValue` through `BaseScreen` and all callers for full type safety
+No decision made — needs to be resolved at next session start.
+
+**Status (updated 2026-03-20 session 3):** Resolved via type-safe navigation migration commit
+`267105d`. `NavGraph.kt` and all callers updated; `MenuItemValue.toNavRoute()` companion used.
+
+---
+
+## 2026-03-20 (session 3)
+
+### Decision: Mapper functions return nullable instead of throwing domain exceptions
+
+**What was decided:**
+`ChapterMapper.toChapter()` returns `Chapter?` (was `Chapter`, threw `ChapterNotFound`).
+`ChapterPagesMapper.toChapterPages()` returns `ChapterPages?` (was `ChapterPages`, threw
+`ChapterDataNotFound` twice). Domain exception throws moved to the calling repository.
+
+**Reasoning:**
+Mappers are pure data-transformation functions. Deciding that "null mangaId = ChapterNotFound" is a
+**business rule** — that decision belongs in the repository (which understands the use-case context),
+not in a mapper (which only knows how to transform shapes). This follows Clean Architecture's
+Dependency Rule: mappers should not import domain exceptions.
+
+For the chapter list use case specifically, one malformed API response item (missing `mangaId`)
+should not abort the entire page. `mapNotNull` correctly skips it while preserving the rest.
+
+**Alternatives considered:**
+- Keep throws in mappers — rejected (architectural boundary violation: mapper imports domain exception)
+- Throw in mapper, catch in repo — rejected (still couples mapper to domain exception hierarchy)
+
+---
+
+### Decision: `FavoriteMangaModel` (5 fields) instead of `MangaModel` (13 fields) for Favorites
+
+**What was decided:**
+Created `presentation/model/manga/FavoriteMangaModel.kt` with only the 5 fields `FavoriteManga`
+actually carries: `id`, `title`, `coverUrl`, `author`, `status`. `FavoritesContent` uses a new
+`FavoriteMangaItem` composable instead of the shared `MangaItem`/`VerticalGridMangaList`.
+
+**Reasoning:**
+The old `FavoriteManga.toMangaModel()` produced a `MangaModel` with 7 hollow `""` / `persistentListOf()`
+values (`description`, `artist`, `categories`, `contentRating`, `year`, `availableLanguages`,
+`latestChapter`, `updatedAt`). These hollows are never rendered in `FavoritesContent` — `MangaItem`
+only shows `id`, `title`, `coverUrl`, `author`, `status`. Using a 13-field model for a 5-field use
+case is a type-partitioning mistake: it implies the missing fields exist but are empty, rather than
+clearly communicating "this model only has these 5 fields."
+
+**Alternatives considered:**
+- Keep `MangaModel` with hollow fields — rejected (misleading contract, wastes allocation)
+- Add `FavoriteManga.author/status` to a lighter wrapper of `MangaModel` — rejected (unnecessary
+  indirection; a dedicated model is clearer)
+- Reuse `MangaItem` via a conversion — rejected (would require fake hollow fields to construct `MangaModel`)
+
+---
+
+### Decision: `UserError.Unexpected` replaces `null` return from `toUserError()`
+
+**What was decided:**
+Added `data object Unexpected : UserError(R.string.oops_something_went_wrong_please_try_again)` to
+`UserError`. `ErrorMapper.toUserError()` now returns `UserError` (non-nullable); `else -> null`
+replaced with `else -> UserError.Unexpected`.
+
+**Reasoning:**
+A nullable return type on `toUserError()` leaks a null contract that all 3 auth VMs must silently
+accommodate via `else ->` (i.e., the null case is handled implicitly by doing nothing). Making the
+return non-nullable with an explicit `Unexpected` sentinel:
+1. Makes the unrecognized-exception case explicit and visible in the type system
+2. Allows auth VMs to show a generic error instead of silently ignoring unexpected exceptions
+3. Is consistent with how `toFeatureError()` already works (always returns `FeatureError`, never null)
+
+**Alternatives considered:**
+- Keep nullable — rejected (implicit null handling is a hidden contract)
+- Throw in `else` branch — rejected (would change caller behavior significantly; `Unexpected` is safer)
+
+---
+
+### Decision: `String?.toMangaLanguage()` uses nullable receiver (consistency fix)
+
+**What was decided:**
+`ApiParamMapper.toMangaLanguage()` receiver changed from `String` to `String?`. Returns
+`MangaLanguage.UNKNOWN` for null input (handled by `?: MangaLanguage.UNKNOWN` fallback when no param
+entry matches null).
+
+**Reasoning:**
+`toMangaStatus()` and `toMangaContentRating()` already use `String?` receivers and handle null
+gracefully. `toMangaLanguage()` using a non-nullable receiver was inconsistent — callers had to add
+`?.` or `!!` before calling on nullable strings. `attributes?.translatedLanguage.toMangaLanguage()`
+is cleaner than `attributes?.translatedLanguage?.toMangaLanguage() ?: Chapter.DEFAULT_LANGUAGE`.
+
+`MangaLanguage.UNKNOWN == Chapter.DEFAULT_LANGUAGE` (by value), so the behavioral outcome is
+identical — this is purely a type-consistency improvement.
+
+**Alternatives considered:**
+- Keep non-nullable, require callers to use `?.` — rejected (inconsistent with sibling functions)

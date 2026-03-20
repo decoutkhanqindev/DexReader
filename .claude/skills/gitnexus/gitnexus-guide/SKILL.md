@@ -19,8 +19,8 @@ For any task involving code understanding, debugging, impact analysis, or refact
 
 ## Skills
 
-| Task                                         | Skill to read                |
-|----------------------------------------------|------------------------------|
+| Task                                         | Skill to read       |
+| -------------------------------------------- | ------------------- |
 | Understand architecture / "How does X work?" | `gitnexus-exploring`         |
 | Blast radius / "What breaks if I change X?"  | `gitnexus-impact-analysis`   |
 | Trace bugs / "Why is X failing?"             | `gitnexus-debugging`         |
@@ -31,7 +31,7 @@ For any task involving code understanding, debugging, impact analysis, or refact
 ## Tools Reference
 
 | Tool             | What it gives you                                                        |
-|------------------|--------------------------------------------------------------------------|
+| ---------------- | ------------------------------------------------------------------------ |
 | `query`          | Process-grouped code intelligence — execution flows related to a concept |
 | `context`        | 360-degree symbol view — categorized refs, processes it participates in  |
 | `impact`         | Symbol blast radius — what breaks at depth 1/2/3 with confidence         |
@@ -45,7 +45,7 @@ For any task involving code understanding, debugging, impact analysis, or refact
 Lightweight reads (~100-500 tokens) for navigation:
 
 | Resource                                       | Content                                   |
-|------------------------------------------------|-------------------------------------------|
+| ---------------------------------------------- | ----------------------------------------- |
 | `gitnexus://repo/{name}/context`               | Stats, staleness check                    |
 | `gitnexus://repo/{name}/clusters`              | All functional areas with cohesion scores |
 | `gitnexus://repo/{name}/cluster/{clusterName}` | Area members                              |
@@ -56,8 +56,7 @@ Lightweight reads (~100-500 tokens) for navigation:
 ## Graph Schema
 
 **Nodes:** File, Function, Class, Interface, Method, Community, Process
-**Edges (via CodeRelation.type):** CALLS, IMPORTS, EXTENDS, IMPLEMENTS, DEFINES, MEMBER_OF,
-STEP_IN_PROCESS
+**Edges (via CodeRelation.type):** CALLS, IMPORTS, EXTENDS, IMPLEMENTS, DEFINES, MEMBER_OF, STEP_IN_PROCESS
 
 ```cypher
 MATCH (caller)-[:CodeRelation {type: 'CALLS'}]->(f:Function {name: "myFunc"})

@@ -39,7 +39,7 @@ description: "Use when the user asks how code works, wants to understand archite
 ## Resources
 
 | Resource                                | What you get                                            |
-|-----------------------------------------|---------------------------------------------------------|
+| --------------------------------------- | ------------------------------------------------------- |
 | `gitnexus://repo/{name}/context`        | Stats, staleness warning (~150 tokens)                  |
 | `gitnexus://repo/{name}/clusters`       | All functional areas with cohesion scores (~300 tokens) |
 | `gitnexus://repo/{name}/cluster/{name}` | Area members with file paths (~500 tokens)              |

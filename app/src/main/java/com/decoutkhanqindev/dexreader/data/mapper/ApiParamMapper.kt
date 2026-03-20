@@ -13,9 +13,6 @@ object ApiParamMapper {
   fun MangaStatus.toApiParam() =
     MangaStatusParam.valueOf(this.name).value
 
-  fun MangaStatus.toApiValue(): String =
-    MangaStatusParam.entries.find { it.name == this.name }?.value ?: ""
-
   fun MangaContentRating.toApiParam() =
     MangaContentRatingParam.valueOf(this.name).value
 
@@ -35,7 +32,7 @@ object ApiParamMapper {
       ?.let { MangaContentRating.valueOf(it.name) }
       ?: MangaContentRating.UNKNOWN
 
-  fun String.toMangaLanguage() =
+  fun String?.toMangaLanguage() =
     MangaLanguageCodeParam.entries.find { it.value == this }
       ?.let { MangaLanguage.valueOf(it.name) }
       ?: MangaLanguage.UNKNOWN

@@ -22,15 +22,4 @@ enum class MenuItemValue(
   HISTORY(nameRes = R.string.history_menu_item, icon = Icons.Default.History),
   PROFILE(nameRes = R.string.profile_menu_item, icon = Icons.Default.Person),
   SETTINGS(nameRes = R.string.settings_menu_item, icon = Icons.Default.Settings);
-
-  companion object {
-    fun MenuItemValue.toNavRoute() = when (this) {
-      HOME -> NavRoute.Home
-      CATEGORIES -> NavRoute.Categories
-      FAVORITES -> NavRoute.Favorites
-      HISTORY -> NavRoute.History
-      PROFILE -> NavRoute.Profile
-      SETTINGS -> NavRoute.Settings
-    }
-  }
 }

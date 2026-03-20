@@ -44,7 +44,12 @@
       "Bash(rm \"$BASE/manga/MangaStatusModel.kt\" \"$BASE/manga/MangaLanguageModel.kt\" \"$BASE/manga/MangaContentRatingModel.kt\" \"$BASE/category/CategoryTypeModel.kt\" \"$BASE/criteria/MangaSortCriteriaModel.kt\" \"$BASE/criteria/MangaSortOrderModel.kt\" \"$BASE/settings/ThemeModeModel.kt\")",
       "Bash(rmdir \"$BASE/criteria\" \"$BASE/settings\")",
       "Read(//mnt/c/Android Development/dex_reader/DexReader/**)",
-      "Bash(echo '=== Old names \\(should be 0\\) ===' grep -rn \"MangaStatusModel\\\\|MangaLanguageModel\\\\|MangaContentRatingModel\\\\|CategoryTypeModel\\\\|MangaSortCriteriaModel\\\\|MangaSortOrderModel\\\\|ThemeModeModel\" --include=*.kt '/mnt/c/Android Development/dex_reader/DexReader/app/src/')"
+      "Bash(echo '=== Old names \\(should be 0\\) ===' grep -rn \"MangaStatusModel\\\\|MangaLanguageModel\\\\|MangaContentRatingModel\\\\|CategoryTypeModel\\\\|MangaSortCriteriaModel\\\\|MangaSortOrderModel\\\\|ThemeModeModel\" --include=*.kt '/mnt/c/Android Development/dex_reader/DexReader/app/src/')",
+      "Bash(./gradlew assembleDebug)",
+      "Bash(./gradlew assembleDebug --info)",
+      "Bash(./gradlew assembleDebug --stacktrace)",
+      "Bash(./gradlew kspDebugKotlin)",
+      "Bash(./gradlew assembleDebug --rerun-tasks)"
     ]
   },
   "spinnerTipsEnabled": true
