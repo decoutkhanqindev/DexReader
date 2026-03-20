@@ -15,7 +15,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.AddToFavorite
 import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.ObserveIsFavoriteUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.RemoveFromFavoritesUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.history.ObserveHistoryUseCase
-import com.decoutkhanqindev.dexreader.domain.value.criteria.MangaSortOrder
+import com.decoutkhanqindev.dexreader.domain.entity.value.criteria.MangaSortOrder
 import com.decoutkhanqindev.dexreader.presentation.mapper.ChapterMapper.toChapterModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguage
@@ -26,7 +26,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryMode
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
-import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaLanguageValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf

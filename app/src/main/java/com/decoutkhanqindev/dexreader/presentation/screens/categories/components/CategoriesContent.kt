@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.screens.categories.CategoriesUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
-import com.decoutkhanqindev.dexreader.presentation.value.category.CategoryTypeValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.category.CategoryTypeValue
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 

@@ -13,7 +13,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.favorites.components.FavoritesContent
-import com.decoutkhanqindev.dexreader.presentation.value.menu.MenuItemValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuItemValue
 
 @Composable
 fun FavoritesScreen(

@@ -20,7 +20,7 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.settings.SettingsUiState
-import com.decoutkhanqindev.dexreader.presentation.value.settings.ThemeModeValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.settings.ThemeModeValue
 
 @Composable
 fun SettingsContent(

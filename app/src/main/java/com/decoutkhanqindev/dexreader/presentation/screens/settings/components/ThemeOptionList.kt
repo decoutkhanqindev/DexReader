@@ -18,7 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.value.settings.ThemeModeValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.settings.ThemeModeValue
 
 @Composable
 fun ThemeOptionList(

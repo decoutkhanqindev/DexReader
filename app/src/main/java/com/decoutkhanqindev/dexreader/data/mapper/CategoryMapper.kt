@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.data.mapper
 
 import com.decoutkhanqindev.dexreader.data.network.api.response.tag.TagResponse
 import com.decoutkhanqindev.dexreader.domain.entity.category.Category
-import com.decoutkhanqindev.dexreader.domain.value.category.CategoryType
+import com.decoutkhanqindev.dexreader.domain.entity.value.category.CategoryType
 
 object CategoryMapper {
 

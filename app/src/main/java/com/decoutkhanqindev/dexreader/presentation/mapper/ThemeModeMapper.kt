@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.presentation.mapper
 
-import com.decoutkhanqindev.dexreader.domain.value.settings.ThemeMode
-import com.decoutkhanqindev.dexreader.presentation.value.settings.ThemeModeValue
+import com.decoutkhanqindev.dexreader.domain.entity.value.settings.ThemeMode
+import com.decoutkhanqindev.dexreader.presentation.model.value.settings.ThemeModeValue
 
 
 object ThemeModeMapper {

@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.domain.value.manga
+package com.decoutkhanqindev.dexreader.domain.entity.value.manga
 
 enum class MangaStatus {
   ON_GOING,

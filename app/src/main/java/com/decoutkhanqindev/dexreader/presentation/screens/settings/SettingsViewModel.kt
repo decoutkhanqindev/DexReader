@@ -7,7 +7,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.settings.ObserveThemeModeUs
 import com.decoutkhanqindev.dexreader.domain.usecase.settings.SaveThemeModeUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.ThemeModeMapper.toThemeMode
 import com.decoutkhanqindev.dexreader.presentation.mapper.ThemeModeMapper.toThemeModeEnum
-import com.decoutkhanqindev.dexreader.presentation.value.settings.ThemeModeValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.settings.ThemeModeValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

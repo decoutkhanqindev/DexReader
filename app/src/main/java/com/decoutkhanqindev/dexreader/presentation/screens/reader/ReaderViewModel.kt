@@ -18,8 +18,8 @@ import com.decoutkhanqindev.dexreader.domain.usecase.manga.cache.ClearExpiredCac
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.cache.GetChapterCacheUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.history.AddAndUpdateToHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.history.ObserveHistoryUseCase
-import com.decoutkhanqindev.dexreader.domain.value.criteria.MangaSortOrder
-import com.decoutkhanqindev.dexreader.domain.value.manga.MangaLanguage
+import com.decoutkhanqindev.dexreader.domain.entity.value.criteria.MangaSortOrder
+import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaLanguage
 import com.decoutkhanqindev.dexreader.presentation.mapper.ChapterPagesMapper.toChapterPagesModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute

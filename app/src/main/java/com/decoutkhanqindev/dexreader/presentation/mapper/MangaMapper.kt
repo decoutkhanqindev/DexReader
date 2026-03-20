@@ -1,13 +1,13 @@
 package com.decoutkhanqindev.dexreader.presentation.mapper
 
 import com.decoutkhanqindev.dexreader.domain.entity.manga.Manga
-import com.decoutkhanqindev.dexreader.domain.value.manga.MangaContentRating
-import com.decoutkhanqindev.dexreader.domain.value.manga.MangaStatus
+import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaContentRating
+import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaStatus
 import com.decoutkhanqindev.dexreader.presentation.mapper.CategoryMapper.toCategoryModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguageEnum
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
-import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaContentRatingValue
-import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaStatusValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
 import kotlinx.collections.immutable.toPersistentList
 

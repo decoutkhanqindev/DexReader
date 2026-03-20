@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.value.criteria
+package com.decoutkhanqindev.dexreader.presentation.model.value.criteria
 
 import androidx.annotation.StringRes
 import com.decoutkhanqindev.dexreader.R

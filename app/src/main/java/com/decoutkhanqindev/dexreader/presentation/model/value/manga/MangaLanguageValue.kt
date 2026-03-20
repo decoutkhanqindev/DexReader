@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.value.manga
+package com.decoutkhanqindev.dexreader.presentation.model.value.manga
 
 import androidx.annotation.StringRes
 import com.decoutkhanqindev.dexreader.R

@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.domain.usecase.category
 
 import com.decoutkhanqindev.dexreader.domain.entity.category.Category
 import com.decoutkhanqindev.dexreader.domain.repository.category.CategoryRepository
-import com.decoutkhanqindev.dexreader.domain.value.category.CategoryType
+import com.decoutkhanqindev.dexreader.domain.entity.value.category.CategoryType
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendResultCatching
 import javax.inject.Inject
 

@@ -18,7 +18,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseScree
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.components.ProfileContent
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.components.actions.UpdateAndLogoutUserBottomBar
-import com.decoutkhanqindev.dexreader.presentation.value.menu.MenuItemValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuItemValue
 
 @Composable
 fun ProfileScreen(

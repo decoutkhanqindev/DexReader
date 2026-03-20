@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.value.criteria.MangaSortCriteriaValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortCriteriaValue
 
 @Composable
 fun SortCriteriaItem(

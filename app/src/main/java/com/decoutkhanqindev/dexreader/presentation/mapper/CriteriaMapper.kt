@@ -1,9 +1,9 @@
 package com.decoutkhanqindev.dexreader.presentation.mapper
 
-import com.decoutkhanqindev.dexreader.domain.value.criteria.MangaSortCriteria
-import com.decoutkhanqindev.dexreader.domain.value.criteria.MangaSortOrder
-import com.decoutkhanqindev.dexreader.presentation.value.criteria.MangaSortCriteriaValue
-import com.decoutkhanqindev.dexreader.presentation.value.criteria.MangaSortOrderValue
+import com.decoutkhanqindev.dexreader.domain.entity.value.criteria.MangaSortCriteria
+import com.decoutkhanqindev.dexreader.domain.entity.value.criteria.MangaSortOrder
+import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortCriteriaValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortOrderValue
 
 object CriteriaMapper {
 

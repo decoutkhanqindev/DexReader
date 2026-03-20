@@ -15,7 +15,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryMode
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.ListLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPageErrorMessage
-import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaLanguageValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 

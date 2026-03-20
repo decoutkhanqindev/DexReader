@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.domain.entity.category
 
-import com.decoutkhanqindev.dexreader.domain.value.category.CategoryType
+import com.decoutkhanqindev.dexreader.domain.entity.value.category.CategoryType
 
 data class Category(
   val id: String,

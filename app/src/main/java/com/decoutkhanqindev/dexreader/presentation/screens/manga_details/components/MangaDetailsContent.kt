@@ -37,7 +37,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.compone
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.chapters.MangaChaptersSection
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.info.MangaInfoSection
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.summary.MangaSummarySection
-import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaLanguageValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch

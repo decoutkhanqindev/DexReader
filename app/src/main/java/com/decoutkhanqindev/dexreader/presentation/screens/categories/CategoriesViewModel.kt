@@ -5,10 +5,10 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.category.GetCategoryListUseCase
-import com.decoutkhanqindev.dexreader.domain.value.category.CategoryType
+import com.decoutkhanqindev.dexreader.domain.entity.value.category.CategoryType
 import com.decoutkhanqindev.dexreader.presentation.mapper.CategoryMapper.toCategoryModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
-import com.decoutkhanqindev.dexreader.presentation.value.category.CategoryTypeValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.category.CategoryTypeValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableMap

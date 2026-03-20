@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.domain.entity.manga
 
-import com.decoutkhanqindev.dexreader.domain.value.manga.MangaStatus
+import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaStatus
 
 data class FavoriteManga(
   val id: String,

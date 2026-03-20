@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.presentation.model.manga
 
 import androidx.compose.runtime.Immutable
-import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaStatusValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 
 @Immutable
 data class FavoriteMangaModel(

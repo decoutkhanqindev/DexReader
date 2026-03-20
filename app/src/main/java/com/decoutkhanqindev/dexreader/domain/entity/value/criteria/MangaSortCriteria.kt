@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.domain.value.criteria
+package com.decoutkhanqindev.dexreader.domain.entity.value.criteria
 
 enum class MangaSortCriteria {
   LATEST_UPDATE,

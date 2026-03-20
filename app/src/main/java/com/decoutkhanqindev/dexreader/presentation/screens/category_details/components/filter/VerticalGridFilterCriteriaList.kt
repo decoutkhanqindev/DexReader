@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaContentRatingValue
-import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaStatusValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 

@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.value.menu
+package com.decoutkhanqindev.dexreader.presentation.model.value.menu
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons

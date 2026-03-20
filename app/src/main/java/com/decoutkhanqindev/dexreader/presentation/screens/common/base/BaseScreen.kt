@@ -14,7 +14,7 @@ import androidx.compose.ui.res.stringResource
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.menu.MenuDrawer
 import com.decoutkhanqindev.dexreader.presentation.screens.common.top_bars.MainTopBar
-import com.decoutkhanqindev.dexreader.presentation.value.menu.MenuItemValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuItemValue
 import kotlinx.coroutines.launch
 
 @Composable

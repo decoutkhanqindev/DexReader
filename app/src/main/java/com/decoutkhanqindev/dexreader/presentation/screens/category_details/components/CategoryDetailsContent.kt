@@ -25,10 +25,10 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.states.Loading
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.AllItemLoadedMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadMoreMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPageErrorMessage
-import com.decoutkhanqindev.dexreader.presentation.value.criteria.MangaSortCriteriaValue
-import com.decoutkhanqindev.dexreader.presentation.value.criteria.MangaSortOrderValue
-import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaContentRatingValue
-import com.decoutkhanqindev.dexreader.presentation.value.manga.MangaStatusValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortCriteriaValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortOrderValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable

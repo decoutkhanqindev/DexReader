@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailsCriteriaUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
-import com.decoutkhanqindev.dexreader.presentation.value.criteria.MangaSortCriteriaValue
-import com.decoutkhanqindev.dexreader.presentation.value.criteria.MangaSortOrderValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortCriteriaValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortOrderValue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
