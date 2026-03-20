@@ -1,74 +1,68 @@
 # Session Progress
 
-## Completed This Session (2026-03-20, session 3)
+## Completed This Session (2026-03-20, session 5 — domain layer Pass 3)
 
-### 5 Mapper Code Fixes (strict-kotlin-reviewer audit)
+### Domain Layer Pass 3 — strict-kotlin-reviewer (5 parallel agents across all 57 files)
 
-**Issue 1 — Delete `toApiValue()`, replace with `toApiParam()`**
-- `ApiParamMapper.kt` — deleted `fun MangaStatus.toApiValue()`
-- `data/mapper/FavoriteMangaMapper.kt` — import `toApiValue` → `toApiParam`; call site updated
+#### Agents launched and their findings
 
-**Issue 2 — Move domain exception throws from mappers to repositories**
-- `ChapterMapper.kt` — `toChapter()` returns `Chapter?`; `throw BusinessException` → `return null`;
-  `import BusinessException` removed
-- `ChapterPagesMapper.kt` — `toChapterPages()` returns `ChapterPages?`; both `throw` → `return null`;
-  `import BusinessException` removed
-- `ChapterRepositoryImpl.kt` — `.map { it.toChapter() }` → `.mapNotNull { it.toChapter() }` for list;
-  pages call site: `?: throw ChapterDataNotFound()` added
+**Unit 1 (Entities):**
+- Agents added `DEFAULT_MANGA_ID`, `DEFAULT_BASE_URL`, `DEFAULT_HASH`, `DEFAULT_STATUS`,
+  `DEFAULT_LAST_UPDATED` to companion objects
+- User caught that none of these are actually used anywhere in the codebase
+- All 3 entity files reverted via `git checkout HEAD`
+- Key insight: mappers use early-exit (`?: return null`) for mandatory fields, not fallbacks.
+  Constants only belong if they're referenced at a real call site.
 
-**Issue 3 — New `FavoriteMangaModel` with only fields `FavoriteManga` carries**
-- NEW: `presentation/model/manga/FavoriteMangaModel.kt` — 5-field `@Immutable data class`
-- NEW: `presentation/screens/favorites/components/FavoriteMangaItem.kt` — composable for the new model
-- `presentation/mapper/FavoriteMangaMapper.kt` — rewritten; `toFavoriteMangaModel()` returning
-  `FavoriteMangaModel` (was `toMangaModel()` returning 13-field `MangaModel` with 7 hollow values)
-- `FavoritesViewModel.kt` — all `MangaModel` refs → `FavoriteMangaModel`; import updated
-- `FavoritesContent.kt` — full rewrite; `MangaModel` → `FavoriteMangaModel`; replaced
-  `VerticalGridMangaList` with inline `LazyVerticalGrid` using `FavoriteMangaItem`
+**Unit 2 (Value types + Exceptions):**
+- No issues. All exception subtypes confirmed live with real throw sites.
+- Identified latent data-layer crash: `ApiParamMapper` would throw `IllegalArgumentException` if
+  `MangaStatus.UNKNOWN` or `MangaContentRating.UNKNOWN` is used as an API param (no `UNKNOWN`
+  entry in those param enums). Noted, not fixed.
 
-**Issue 4 — Make `toUserError()` non-nullable via `UserError.Unexpected`**
-- `UserError.kt` — added `data object Unexpected : UserError(R.string.oops_something_went_wrong_please_try_again)`
-- `ErrorMapper.kt` — `else -> null` → `else -> UserError.Unexpected` (return type now non-nullable)
+**Unit 3 (Repository interfaces):**
+- `MangaRepository.searchManga`: added `offset: Int = 0` default — STAGED ✓
+- `CacheRepository.clearExpiredCache`: renamed `expiryTimestamp` → `olderThan` — STAGED ✓
+- `CacheRepositoryImpl`: updated override — STAGED ✓
+- Found `getMangaListByCategory` has 4 filter/sort params that could be a `MangaSearchCriteria`
+  value object — noted as future refactor, not applied
 
-**Issue 5 — `String?.toMangaLanguage()` nullable receiver**
-- `ApiParamMapper.kt` — `fun String.toMangaLanguage()` → `fun String?.toMangaLanguage()`
-- `ChapterMapper.kt` — `attributes?.translatedLanguage?.toMangaLanguage() ?: Chapter.DEFAULT_LANGUAGE`
-  → `attributes?.translatedLanguage.toMangaLanguage()` (null handled by nullable receiver)
+**Unit 4 (Manga/category use cases):**
+- `GetMangaSuggestionsUseCase`: removed `private` from `companion object` — STAGED ✓
+- All 14 use cases confirmed: correct `runSuspendResultCatching`, no CancellationException swallowing
 
-**Build verification:** `./gradlew assembleDebug --rerun-tasks` → BUILD SUCCESSFUL
+**Unit 5 (User/settings use cases):**
+- All 16 use cases clean — no changes needed
+- `UpsertHistoryUseCase` 10-parameter design confirmed intentional and correct
+
+#### Net result
+- 4 files staged (build verified green)
+- 5 dead constants reverted before they could be committed
+- Domain layer confirmed clean across all 57 files
 
 ---
 
 ## Completed in Previous Sessions
 
-### MenuItem → MenuItemValue enum refactor (resolved before this session)
-- Type-safe navigation migration committed in `267105d`
-- `MenuItemValue.kt` with `toNavRoute()` companion
-- `MenuDrawer.kt`, `MenuBody.kt`, `MenuItemRow.kt`, `NavGraph.kt` updated
-- Previously noted compile blockers (`titleRes` / `selectedItemId` mismatches) all resolved
+### 2026-03-20 (session 4) — Domain Layer Full Audit, Passes 1–3 (double-check)
+See previous entries. All commits landed: `70964ec`, `c88fed5`, `6489123`, `bd17fb6`, `107ec85`.
 
-### Earlier sessions
-- Full `presentation/value/` directory with 7 `*Value` enum files
-- `domain/model/` → `domain/entity/` + `domain/value/` split
-- Presentation `UiModel → Model` rename
-- Status/ContentRating UiModels moved from `criteria/filter/` to `manga/`
-- `presentation/error/` package established
+### 2026-03-20 (session 3) — 5 mapper code fixes (strict-kotlin-reviewer audit)
+### 2026-03-20 (session 2) — MenuItem → MenuItemValue; type-safe navigation (`267105d`)
+### Earlier sessions — full presentation layer domain model isolation, entity/value split, etc.
+See MEMORY.md for full history.
 
 ---
 
 ## Still To Do
 
-No known pending tasks. Codebase is in a clean, compilable state.
+### Immediate (next session start)
+1. Commit the 4 staged files (see `current-task.md` for exact message)
 
-**Possible future work (not urgent):**
-- Verify UX for auth VMs now that `toUserError()` returns `UserError.Unexpected` instead of null for
-  unrecognized exceptions (no code change needed; `else ->` branches already handle it)
-- Run spot-check tests listed in the plan:
-  - Save a favorite → verify valid status in Firestore (Issue 1)
-  - Favorites grid shows no hollow fields (Issue 3)
-  - Wrong password → `UserError.Password.Incorrect` fires (Issue 4)
-  - Chapter list with one malformed item → list still renders (Issue 2)
+### Potential future work (not scheduled)
+- Fix latent `ApiParamMapper` crash for `MangaStatus.UNKNOWN`/`MangaContentRating.UNKNOWN` in data layer
+- Refactor `getMangaListByCategory` 4 filter params into a `MangaSearchCriteria` value object
 
 ## Single Most Important Next Step
 
-No immediate action required. Codebase compiles cleanly. Next task should be driven by user's
-feature or refactor goals.
+Commit the 4 staged files at the start of the next session. Build already passes.

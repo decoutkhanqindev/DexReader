@@ -13,7 +13,7 @@ class GetMangaSuggestionsUseCase @Inject constructor(
         .map { it.title }
     }
 
-  private companion object {
+  companion object {
     private const val SUGGESTION_LIMIT = 10
   }
 }

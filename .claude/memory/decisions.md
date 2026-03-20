@@ -335,3 +335,191 @@ identical — this is purely a type-consistency improvement.
 
 **Alternatives considered:**
 - Keep non-nullable, require callers to use `?.` — rejected (inconsistent with sibling functions)
+
+---
+
+## 2026-03-20 (session 4 — domain layer audit)
+
+### Decision: `BusinessException`/`InfrastructureException` subtypes → `data class` with `rootCause`
+
+**What was decided:**
+All concrete exception subtype classes (`class`) converted to `data class` with a `val rootCause: Throwable? = null` constructor parameter that is forwarded as the positional `cause` argument to the parent.
+
+**Reasoning:**
+`data class` provides structural equality (two `InvalidCredentials(rootCause = null)` are equal), which makes exceptions predictable in `when` branches and tests. The renamed parameter `rootCause` avoids shadowing `Throwable.cause` (a JVM property) and makes the extra field explicit in `toString()` output.
+
+**Alternatives considered:**
+- Keep `class` — rejected (no structural equality, no `toString` with cause)
+- `data class` with `cause` name — rejected (`cause` shadows the inherited `Throwable.cause` property)
+
+---
+
+### Decision: `ValidationException` subtypes → `data object`
+
+**What was decided:**
+All 9 leaf subtypes (`Email.Empty`, `Email.Invalid`, `Password.Empty`, `Password.TooWeak`, `ConfirmPassword.Empty`, `ConfirmPassword.Mismatch`, `Name.Empty`) converted from `class` to `data object`. Base class `cause: Throwable? = null` parameter removed; `cause = null` hardcoded.
+
+**Reasoning:**
+Validation exceptions are thrown from domain model validation (`User.validate*()`), never from catching external exceptions. They carry no extra data — just the message. `data object` is the correct Kotlin type for a stateless singleton signal. Removing the `cause` parameter from the base class makes the contract explicit: validation exceptions have no cause.
+
+**Alternatives considered:**
+- Keep `class` — rejected (unnecessary instantiation of identical objects; misleading `cause` parameter)
+- Keep base `cause` param but unused — rejected (dead parameter invites misuse)
+
+---
+
+### Decision: `MangaLanguage.THAILAND` → `TAGALOG`
+
+**What was decided:**
+Renamed `THAILAND` to `TAGALOG` across all three layers: `MangaLanguage` (domain), `MangaLanguageCodeParam` (data), `MangaLanguageValue` (presentation), and `strings_lang_generated.xml`.
+
+**Reasoning:**
+ISO 639-1 code `"tl"` is Tagalog (a Philippine language), not Thai. Thai is ISO `"th"`, already correctly represented as `THAI`. The entry was semantically wrong and would show "Thailand" (a country name, not a language) in the language selection UI.
+
+**Alternatives considered:**
+- None — this was a factual error, not a design tradeoff.
+
+---
+
+### Decision: `ClearExpiredCacheUseCase.clock` as `internal var`
+
+**What was decided:**
+`System.currentTimeMillis()` replaced with `internal var clock: () -> Long = System::currentTimeMillis`. Tests can override `clock` without touching the Hilt DI graph.
+
+**Reasoning:**
+Hilt cannot inject `() -> Long` (a function type) without a dedicated `@Provides` binding. A constructor parameter would require adding a Hilt module for a single test-only concern. `internal var` achieves testability within the module with minimal boilerplate. Using `System::currentTimeMillis` (method reference) is idiomatic Kotlin vs `{ System.currentTimeMillis() }`.
+
+**Trade-off acknowledged:**
+`internal var` is mutable from anywhere in the module — tests must reset the value after each test case to avoid cross-test contamination. This is a testing discipline constraint, not a runtime risk.
+
+**Alternatives considered:**
+- Constructor injection + Hilt `@Provides` — rejected (adds a module for one test-only use)
+- `@VisibleForTesting` annotation — considered acceptable addition but not strictly needed given `internal`
+
+---
+
+### Decision: `HistoryRepository.addAndUpdateToHistory` → `upsertHistory`
+
+**What was decided:**
+Repository interface method and impl override renamed from `addAndUpdateToHistory` to `upsertHistory`.
+
+**Reasoning:**
+The Firestore source already called `upsertHistory` internally. The mismatch between domain interface name and implementation was a naming inconsistency. "Upsert" is the technically precise term for insert-or-update semantics. `AddAndUpdateToHistoryUseCase` class was also renamed to `UpsertHistoryUseCase` for consistency.
+
+**Alternatives considered:**
+- Keep `addAndUpdateToHistory` — rejected (verbose, technically imprecise, inconsistent with impl)
+
+---
+
+### Decision: `ChapterPages.mangaId` — add field, remove from `CacheRepository` interface
+
+**What was decided:**
+`val mangaId: String` added to `ChapterPages` domain entity. `CacheRepository.addChapterCache(mangaId, chapterPages)` changed to `addChapterCache(chapterPages)` — the impl reads `chapterPages.mangaId`. `ChapterRepository.getChapterPages(chapterId)` changed to `getChapterPages(chapterId, mangaId)` so callers supply `mangaId` when constructing `ChapterPages` from the network response.
+
+**Reasoning:**
+`mangaId` was a storage indexing concern (`ChapterCacheEntity` denormalizes it for group-delete queries). A chapter's pages unambiguously belong to one manga — `mangaId` is a legitimate domain fact, not a storage detail. Carrying it on the domain type means `CacheRepository` no longer needs it as a separate parameter, fully removing the leakage.
+
+**Chain of changes:**
+- `ChapterPagesMapper.toChapterPages(chapterId, mangaId)` — added `mangaId` param
+- `ChapterPagesMapper.toChapterCacheEntity()` — removed `mangaId` param; uses `chapterPages.mangaId`
+- `ChapterCacheEntity.toChapterPages()` — populates `mangaId` from entity field
+- `GetChapterPagesUseCase.invoke(chapterId, mangaId)` — added `mangaId`
+- `AddChapterCacheUseCase.invoke(chapterPages)` — removed `mangaId`
+- `ReaderViewModel`: `getChapterPagesUseCase(chapterId, mangaId)`, `addChapterCacheUseCase(chapterPages)`
+
+**Alternatives considered:**
+- Keep `mangaId` in `CacheRepository` interface — rejected (storage concern leaking into domain)
+- Look up `mangaId` inside repo via `getChapterDetails` — rejected (extra network call, unacceptable overhead)
+- Add `mangaId` to `ChapterPages` but keep interface unchanged — rejected (defeats the purpose)
+
+---
+
+### Decision: `ReadingHistory.findContinueTarget` — fix off-by-one (`pageCount - 1` → `pageCount`)
+
+**What was decided:**
+Condition changed from `it.lastReadPage < it.pageCount - 1` to `it.lastReadPage < it.pageCount`.
+
+**Reasoning:**
+Pages in this app are 1-indexed (`FIRST_PAGE = 1`). For a chapter with `pageCount = N`, the last page index is `N`. The old condition `lastReadPage < pageCount - 1` would exclude a reader stopped at page `N - 1` (penultimate page) — treating an in-progress chapter as complete and not offering it as a continue target.
+
+**Alternatives considered:**
+- None — this was a factual bug given the established 1-indexed page convention.
+
+---
+
+### Decision: `ValidationException` base class — remove dead `cause` parameter
+
+**What was decided:**
+`ValidationException(message: String?, cause: Throwable? = null)` changed to `ValidationException(message: String)` with `cause = null` hardcoded in the `DomainException(message, cause = null)` delegation.
+
+**Reasoning:**
+`ValidationException` subtypes are thrown from domain validation logic, never from catching external exceptions. Exposing a `cause` parameter implies a caller could (and might) pass a `Throwable`, contradicting the invariant. The base class parameter was dead code — no subtype used it, and no call site passed a cause.
+
+**Alternatives considered:**
+- Keep dead parameter — rejected (misleading contract; invites misuse)
+
+---
+
+## 2026-03-20 (session 5 — domain layer pass 3)
+
+### Decision: Do NOT add companion constants to domain entities unless there is an actual call site
+
+**What was decided:**
+`Chapter.DEFAULT_MANGA_ID`, `ChapterPages.DEFAULT_BASE_URL`, `ChapterPages.DEFAULT_HASH`,
+`Manga.DEFAULT_STATUS`, and `Manga.DEFAULT_LAST_UPDATED` were staged by Pass 3 review agents and
+then reverted after the user verified they had zero usage in the codebase.
+
+**Reasoning:**
+The rule "entities own their fallback values as companion object constants" only applies when
+a fallback is actually needed. In this codebase, mappers for `Chapter`, `ChapterPages`, and `Manga`
+use the **early-exit pattern** (`?: return null`) for mandatory fields rather than defaulting to
+empty values. There is no scenario where a `Chapter` without a `mangaId` is constructed with a
+default — the mapper simply discards that response item. Similarly, `MangaStatus.UNKNOWN` is handled
+internally by `ApiParamMapper.toMangaStatus()` and is never referenced via a companion constant.
+Adding unused constants is dead code — it implies a fallback path that doesn't exist and misleads
+future readers.
+
+**The existing constants that ARE used and correct:**
+`Manga.DEFAULT_TITLE`, `Manga.DEFAULT_DESCRIPTION`, `Manga.DEFAULT_AUTHOR`, `Manga.DEFAULT_ARTIST`,
+`Manga.DEFAULT_YEAR`, `Manga.DEFAULT_LAST_CHAPTER` (all used in `MangaMapper`/`presentation/mapper/MangaMapper`),
+`Chapter.DEFAULT_TITLE`, `Chapter.DEFAULT_CHAPTER_NUMBER`, `Chapter.DEFAULT_VOLUME` (used in `presentation/mapper/ChapterMapper`),
+`FavoriteManga.DEFAULT_ADDED_AT`, `ReadingHistory.DEFAULT_LAST_READ_AT` (used in use cases),
+`User.DEFAULT_NAME`, `User.DEFAULT_EMAIL` (used in `UserMapper`),
+`Category.DEFAULT_TITLE`, `Category.DEFAULT_TYPE` (used in `CategoryMapper`).
+
+**How to apply:**
+Before adding a companion constant to a domain entity, grep for the constant name across the
+codebase to confirm there is at least one actual call site. If grep returns nothing, do not add it.
+
+**Alternatives considered:**
+- Keep the constants "for future use" — rejected. Dead code is a maintenance burden and a false
+  signal about the codebase's fallback behavior.
+
+---
+
+### Decision: `CacheRepository.clearExpiredCache(expiryTimestamp)` → `clearExpiredCache(olderThan)`
+
+**What was decided:**
+Parameter renamed from `expiryTimestamp` to `olderThan` in the domain interface and data layer implementation.
+
+**Reasoning:**
+`expiryTimestamp` leaks the arithmetic detail ("this is a computed timestamp representing expiry time") into the domain contract. The domain concept is "clear cache entries older than this point in time." `olderThan` communicates the intent at the call site without requiring the reader to mentally model the timestamp computation. Small naming improvement with no behavioral change.
+
+**Alternatives considered:**
+- Keep `expiryTimestamp` — rejected (describes the computed value, not the intent)
+
+---
+
+### Decision: `MangaRepository.searchManga` — add `offset: Int = 0` default
+
+**What was decided:**
+`searchManga(query: String, offset: Int, limit: Int = 20)` → `searchManga(query: String, offset: Int = 0, limit: Int = 20)`.
+
+**Reasoning:**
+`limit` already had a default value of 20. `offset` having no default was an inconsistency: callers
+that want the first page had to explicitly pass `0` while callers that want the default page size
+could omit `limit`. Adding `offset: Int = 0` makes the interface consistent — both pagination
+parameters are optional when the caller wants the first page with the default page size.
+
+**Alternatives considered:**
+- Keep offset required — rejected (inconsistent with limit's default; callers always pass 0 for the first page)

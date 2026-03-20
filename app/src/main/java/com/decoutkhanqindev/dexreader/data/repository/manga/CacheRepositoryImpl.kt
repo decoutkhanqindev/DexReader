@@ -44,10 +44,10 @@ constructor(
       onCatch = { it.toCacheException() }
     )
 
-  override suspend fun clearExpiredCache(expiryTimestamp: Long) =
+  override suspend fun clearExpiredCache(olderThan: Long) =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = { chapterCacheDao.clearExpiredCache(expiryTimestamp) },
+      onExecute = { chapterCacheDao.clearExpiredCache(olderThan) },
       onCatch = { it.toCacheException() }
     )
 }

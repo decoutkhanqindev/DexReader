@@ -23,7 +23,6 @@ data class Chapter(
     const val DEFAULT_TITLE = "Untitled"
     const val DEFAULT_CHAPTER_NUMBER = "0"
     const val DEFAULT_VOLUME = "0"
-    val DEFAULT_LANGUAGE = MangaLanguage.ENGLISH
 
     private const val PREFETCH_THRESHOLD = 5
 
