@@ -1,9 +1,8 @@
 package com.decoutkhanqindev.dexreader.domain.exception
 
 sealed class ValidationException(
-  message: String? = null,
-  cause: Throwable? = null,
-) : DomainException(message, cause) {
+  message: String,
+) : DomainException(message, cause = null) {
 
   sealed class Email(message: String) : ValidationException(message) {
     data object Empty : Email("Email must not be empty")

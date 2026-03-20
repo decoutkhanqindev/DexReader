@@ -21,7 +21,7 @@ data class ReadingHistory(
 
     fun findContinueTarget(historyList: List<ReadingHistory>): ReadingHistory? =
       historyList.firstOrNull {
-        it.pageCount > 0 && it.lastReadPage < it.pageCount - 1
+        it.pageCount > 0 && it.lastReadPage < it.pageCount
       } ?: historyList.firstOrNull()
 
     fun findInitialPage(
