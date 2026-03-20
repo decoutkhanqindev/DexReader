@@ -523,3 +523,39 @@ parameters are optional when the caller wants the first page with the default pa
 
 **Alternatives considered:**
 - Keep offset required — rejected (inconsistent with limit's default; callers always pass 0 for the first page)
+
+---
+
+## 2026-03-20 (session 6 — data layer crash fix)
+
+### Decision: `toApiParam()` for `MangaStatus`/`MangaContentRating` returns `String?` via `entries.find`
+
+**What was decided:**
+`MangaStatus.toApiParam()` and `MangaContentRating.toApiParam()` changed from `valueOf(this.name).value`
+(crashes on `UNKNOWN`) to `entries.find { it.name == this.name }?.value` (returns `null` for `UNKNOWN`).
+Return type changed from `String` to `String?`.
+
+Call sites updated:
+- `FavoriteMangaMapper.toFavoriteMangaRequest()`: `status.toApiParam() ?: ""` — `FavoriteMangaRequest.status`
+  is `String`; empty string round-trips correctly (`"".toMangaStatus()` → `MangaStatus.UNKNOWN`)
+- `CategoryRepositoryImpl.getMangaListByCategory()`: `statusFilter.mapNotNull { it.toApiParam() }` and
+  `contentRatingFilter.mapNotNull { it.toApiParam() }` — silently drops `UNKNOWN` entries from API filter lists
+
+**Reasoning:**
+`UNKNOWN` is a domain sentinel meaning "we received a value from the API we couldn't parse." It should
+never be sent *to* the API — it is an inbound-only value. `valueOf(name)` throws `IllegalArgumentException`
+because `MangaStatusParam` and `MangaContentRatingParam` deliberately have no `UNKNOWN` entry (there is no
+API value for "unknown status"). Making the return nullable and using `entries.find` is the minimal safe fix:
+it returns `null` for any domain value that has no corresponding API param, letting each call site decide how
+to handle the null case contextually.
+
+**Why not add `UNKNOWN` entries to the param enums?**
+Rejected — `MangaStatusParam` and `MangaContentRatingParam` represent valid API query values. Adding an
+`UNKNOWN` entry with an arbitrary string value would mean potentially sending invalid filter values to the
+MangaDex API. The param enums should only contain values the API actually accepts.
+
+**Why `?: ""` for FavoriteMangaRequest instead of `String?` field?**
+`FavoriteMangaRequest.status` is a Firebase DTO field annotated with `@get:PropertyName("status")`. Changing
+it to nullable would require verifying Firestore serialization behavior for null fields (Firestore omits null
+fields by default, which could break existing documents). Using `?: ""` is the safer minimal change: an empty
+string in Firestore round-trips to `MangaStatus.UNKNOWN` on read-back, preserving the semantic correctly.
