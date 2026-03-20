@@ -200,7 +200,7 @@ constructor(
         }
 
       // from network
-      getChapterPagesUseCase(chapterId = chapterIdToFetch)
+      getChapterPagesUseCase(chapterId = chapterIdToFetch, mangaId = mangaIdFromArg)
         .onSuccess { chapterPages ->
           if (!isPrefetch) {
             val initialChapterPage =
@@ -217,7 +217,7 @@ constructor(
               )
           }
 
-          addChapterCacheUseCase(mangaId = mangaIdFromArg, chapterPages = chapterPages)
+          addChapterCacheUseCase(chapterPages = chapterPages)
             .onSuccess { Log.d(TAG, "addChapterCacheUseCase success") }
             .onFailure {
               Log.d(

@@ -7,7 +7,7 @@ object ChapterPagesMapper {
 
   private const val DATA_URL_SEGMENT = "data"
 
-  fun AtHomeServerResponse.toChapterPages(chapterId: String): ChapterPages? {
+  fun AtHomeServerResponse.toChapterPages(chapterId: String, mangaId: String): ChapterPages? {
     val resolvedBaseUrl = baseUrl ?: return null
     val hash = chapter?.hash ?: return null
     val data = chapter.data
@@ -19,6 +19,7 @@ object ChapterPagesMapper {
 
     return ChapterPages(
       chapterId = chapterId,
+      mangaId = mangaId,
       baseUrl = resolvedBaseUrl,
       dataHash = hash,
       pages = pages,
@@ -33,13 +34,14 @@ object ChapterPagesMapper {
 
     return ChapterPages(
       chapterId = chapterId,
+      mangaId = mangaId,
       baseUrl = baseUrl,
       dataHash = dataHash,
       pages = pages,
     )
   }
 
-  fun ChapterPages.toChapterCacheEntity(mangaId: String): ChapterCacheEntity {
+  fun ChapterPages.toChapterCacheEntity(): ChapterCacheEntity {
     val pageHashes = pages.map { url ->
       url.substringAfterLast("/")
     }

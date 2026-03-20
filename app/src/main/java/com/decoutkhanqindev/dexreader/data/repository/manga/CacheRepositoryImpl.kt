@@ -16,15 +16,12 @@ class CacheRepositoryImpl
 constructor(
   private val chapterCacheDao: ChapterCacheDao,
 ) : CacheRepository {
-  override suspend fun addChapterCache(
-    mangaId: String,
-    chapterPages: ChapterPages,
-  ) =
+  override suspend fun addChapterCache(chapterPages: ChapterPages) =
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
         chapterCacheDao.addChapterCache(
-          chapterCacheEntity = chapterPages.toChapterCacheEntity(mangaId)
+          chapterCacheEntity = chapterPages.toChapterCacheEntity()
         )
       },
       onCatch = { it.toCacheException() }

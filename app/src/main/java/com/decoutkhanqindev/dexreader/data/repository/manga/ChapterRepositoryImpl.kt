@@ -55,11 +55,11 @@ constructor(
       onCatch = { it.toDomainException() }
     )
 
-  override suspend fun getChapterPages(chapterId: String): ChapterPages =
+  override suspend fun getChapterPages(chapterId: String, mangaId: String): ChapterPages =
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        apiService.getChapterPages(chapterId).toChapterPages(chapterId)
+        apiService.getChapterPages(chapterId).toChapterPages(chapterId, mangaId)
           ?: throw BusinessException.Resource.ChapterDataNotFound()
       },
       onCatch = { it.toDomainException() }

@@ -8,13 +8,6 @@ import javax.inject.Inject
 class AddChapterCacheUseCase @Inject constructor(
   private val repository: CacheRepository,
 ) {
-  suspend operator fun invoke(
-    mangaId: String,
-    chapterPages: ChapterPages,
-  ): Result<Unit> = runSuspendResultCatching {
-    repository.addChapterCache(
-      mangaId = mangaId,
-      chapterPages = chapterPages
-    )
-  }
+  suspend operator fun invoke(chapterPages: ChapterPages): Result<Unit> =
+    runSuspendResultCatching { repository.addChapterCache(chapterPages) }
 }

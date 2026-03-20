@@ -8,6 +8,6 @@ import javax.inject.Inject
 class GetChapterPagesUseCase @Inject constructor(
   private val repository: ChapterRepository,
 ) {
-  suspend operator fun invoke(chapterId: String): Result<ChapterPages> =
-    runSuspendResultCatching { repository.getChapterPages(chapterId) }
+  suspend operator fun invoke(chapterId: String, mangaId: String): Result<ChapterPages> =
+    runSuspendResultCatching { repository.getChapterPages(chapterId, mangaId) }
 }

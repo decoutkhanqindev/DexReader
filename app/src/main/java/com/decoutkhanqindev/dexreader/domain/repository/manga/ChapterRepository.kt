@@ -15,5 +15,5 @@ interface ChapterRepository {
   ): List<Chapter>
 
   suspend fun getChapterDetails(chapterId: String): Chapter
-  suspend fun getChapterPages(chapterId: String): ChapterPages
+  suspend fun getChapterPages(chapterId: String, mangaId: String): ChapterPages
 }
