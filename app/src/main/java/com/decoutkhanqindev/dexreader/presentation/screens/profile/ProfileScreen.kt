@@ -49,9 +49,9 @@ fun ProfileScreen(
   BaseScreen(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
-    onSignInClick = onSignInClick,
+    onNavigateToSignInScreen = onSignInClick,
     selectedMenuItem = MenuItemValue.PROFILE,
-    onMenuItemClick = onMenuItemClick,
+    onNavigateToMenuItemScreen = onMenuItemClick,
     isSearchEnabled = false,
     bottomBar = {
       if (isUserLoggedIn) {

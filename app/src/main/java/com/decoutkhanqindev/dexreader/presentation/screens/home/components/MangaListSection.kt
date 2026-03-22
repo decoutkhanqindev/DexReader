@@ -34,8 +34,8 @@ fun MangaListSection(
       )
     )
     HorizontalMangaList(
-      mangaList = mangaList,
-      onSelectedManga = onSelectedManga,
+      items = mangaList,
+      onItemClick = onSelectedManga,
       modifier = Modifier.fillMaxWidth()
     )
   }

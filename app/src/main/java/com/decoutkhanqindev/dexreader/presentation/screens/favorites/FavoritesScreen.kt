@@ -36,10 +36,10 @@ fun FavoritesScreen(
   BaseScreen(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
-    onSignInClick = onSignInClick,
+    onNavigateToSignInScreen = onSignInClick,
     selectedMenuItem = MenuItemValue.FAVORITES,
-    onMenuItemClick = onMenuItemClick,
-    onSearchClick = onSearchClick,
+    onNavigateToMenuItemScreen = onMenuItemClick,
+    onNavigateToSearchScreen = onSearchClick,
     content = {
       if (isUserLoggedIn) {
         FavoritesContent(

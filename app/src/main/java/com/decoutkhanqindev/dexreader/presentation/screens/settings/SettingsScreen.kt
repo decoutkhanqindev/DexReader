@@ -26,9 +26,9 @@ fun SettingsScreen(
   BaseScreen(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
-    onSignInClick = onSignInClick,
+    onNavigateToSignInScreen = onSignInClick,
     selectedMenuItem = MenuItemValue.SETTINGS,
-    onMenuItemClick = onMenuItemClick,
+    onNavigateToMenuItemScreen = onMenuItemClick,
     isSearchEnabled = false,
     content = {
       SettingsContent(

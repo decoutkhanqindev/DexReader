@@ -71,7 +71,7 @@ fun MangaDetailsScreen(
   BaseDetailsScreen(
     title = stringResource(R.string.manga_details),
     onNavigateBack = onNavigateBack,
-    onSearchClick = onSearchClick,
+    onNavigateToSearchScreen = onSearchClick,
     content = {
       MangaDetailsContent(
         mangaDetailsUiState = mangaDetailsUiState,

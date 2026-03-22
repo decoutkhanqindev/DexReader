@@ -70,7 +70,7 @@ fun MenuHeader(
   } else {
     SubmitButton(
       title = stringResource(R.string.sign_in),
-      onSubmitClick = onSignInClick,
+      onClick = onSignInClick,
       modifier = modifier.wrapContentSize()
     )
   }

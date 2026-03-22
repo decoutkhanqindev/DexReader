@@ -31,7 +31,7 @@ fun CategoryDetailsScreen(
   BaseDetailsScreen(
     title = categoryTitle,
     onNavigateBack = onNavigateBack,
-    onSearchClick = onSearchClick,
+    onNavigateToSearchScreen = onSearchClick,
     bottomBar = {
       SortAndFilterBottomBar(
         onSortClick = { isShowSortBottomSheet = true },

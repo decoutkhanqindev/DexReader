@@ -57,8 +57,8 @@ fun VerticalGridMangaList(
         key = MangaModel::id
       ) { manga ->
         MangaItem(
-          manga = manga,
-          onSelectedManga = onSelectedManga,
+          item = manga,
+          onClick = onSelectedManga,
           modifier = Modifier
             .padding(4.dp)
             .fillMaxWidth()

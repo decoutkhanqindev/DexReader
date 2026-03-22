@@ -13,7 +13,7 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterModel
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
-import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.ListLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPageErrorMessage
 import kotlinx.collections.immutable.ImmutableList
@@ -53,7 +53,7 @@ fun MangaChaptersSection(
 
       is BasePaginationUiState.FirstPageError -> LoadPageErrorMessage(
         message = stringResource(R.string.something_went_wrong_while_loading_chapters_please_try_again),
-        onRetry = onRetry,
+        onRetryClick = onRetry,
         modifier = Modifier
           .fillMaxSize()
           .padding(horizontal = 4.dp)

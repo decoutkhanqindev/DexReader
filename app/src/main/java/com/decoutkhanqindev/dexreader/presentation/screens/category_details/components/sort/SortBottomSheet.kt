@@ -86,7 +86,7 @@ fun SortBottomSheet(
 
     SubmitButton(
       title = stringResource(R.string.apply),
-      onSubmitClick = {
+      onClick = {
         onApplyClick(selectedCriteria, selectedOrder)
         onDismiss()
       },

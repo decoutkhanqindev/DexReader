@@ -27,10 +27,10 @@ fun CategoriesScreen(
   BaseScreen(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
-    onSignInClick = onSignInClick,
+    onNavigateToSignInScreen = onSignInClick,
     selectedMenuItem = MenuItemValue.CATEGORIES,
-    onMenuItemClick = onMenuItemClick,
-    onSearchClick = onSearchClick,
+    onNavigateToMenuItemScreen = onMenuItemClick,
+    onNavigateToSearchScreen = onSearchClick,
     content = {
       CategoriesContent(
         uiState = uiState,

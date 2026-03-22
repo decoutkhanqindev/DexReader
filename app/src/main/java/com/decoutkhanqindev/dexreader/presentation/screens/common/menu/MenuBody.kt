@@ -29,7 +29,7 @@ fun MenuBody(
       MenuItemRow(
         isSelected = item == selectedItem,
         item = item,
-        onItemClick = onItemClick,
+        onClick = onItemClick,
         modifier = Modifier.fillMaxWidth()
       )
     }

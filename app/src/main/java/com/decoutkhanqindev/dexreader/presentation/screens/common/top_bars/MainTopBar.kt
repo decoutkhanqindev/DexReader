@@ -21,9 +21,9 @@ import com.decoutkhanqindev.dexreader.R
 @OptIn(ExperimentalMaterial3Api::class)
 fun MainTopBar(
   title: String,
-  onMenuClick: () -> Unit,
+  onNavigateToMenuItemScreen: () -> Unit,
   isSearchEnabled: Boolean = true,
-  onSearchClick: () -> Unit = {},
+  onNavigateToSignInScreen: () -> Unit = {},
   modifier: Modifier = Modifier,
 ) {
   CenterAlignedTopAppBar(
@@ -35,7 +35,7 @@ fun MainTopBar(
       )
     },
     navigationIcon = {
-      IconButton(onClick = onMenuClick) {
+      IconButton(onClick = onNavigateToMenuItemScreen) {
         Icon(
           imageVector = Icons.Default.Menu,
           contentDescription = stringResource(R.string.menu)
@@ -44,7 +44,7 @@ fun MainTopBar(
     },
     actions = {
       if (isSearchEnabled) {
-        IconButton(onClick = onSearchClick) {
+        IconButton(onClick = onNavigateToSignInScreen) {
           Icon(
             imageVector = Icons.Default.Search,
             contentDescription = stringResource(R.string.search)

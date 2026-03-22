@@ -38,7 +38,7 @@ fun ActionButtonsSection(
     horizontalArrangement = Arrangement.spacedBy(8.dp)
   ) {
     ActionButton(
-      enabled = canRead,
+      isEnabled = canRead,
       onClick = {
         if (isContinueReading) {
           onReadingClick(

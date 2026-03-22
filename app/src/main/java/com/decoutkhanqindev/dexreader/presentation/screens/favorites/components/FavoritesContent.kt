@@ -29,8 +29,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.manga.FavoriteMangaModel
-import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
-import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.MoveToTopButton
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.NextPageLoadingIndicator
@@ -122,14 +122,14 @@ fun FavoritesContent(
 
                   BaseNextPageState.ERROR -> LoadPageErrorMessage(
                     message = stringResource(R.string.can_t_load_next_manga_page_please_try_again),
-                    onRetry = onRetryObserveFavoriteMangaListNextPage,
+                    onRetryClick = onRetryObserveFavoriteMangaListNextPage,
                     modifier = Modifier
                       .fillMaxWidth()
                       .padding(top = 8.dp)
                   )
 
                   BaseNextPageState.IDLE -> LoadMoreMessage(
-                    onLoadMore = onObserveFavoriteMangaListNextPage,
+                    onClick = onObserveFavoriteMangaListNextPage,
                     modifier = Modifier
                       .fillMaxWidth()
                       .padding(horizontal = 8.dp)

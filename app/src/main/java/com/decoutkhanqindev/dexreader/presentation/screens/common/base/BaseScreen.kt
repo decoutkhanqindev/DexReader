@@ -21,11 +21,11 @@ import kotlinx.coroutines.launch
 fun BaseScreen(
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
-  onSignInClick: () -> Unit,
+  onNavigateToSignInScreen: () -> Unit,
   selectedMenuItem: MenuItemValue,
-  onMenuItemClick: (MenuItemValue) -> Unit,
+  onNavigateToMenuItemScreen: (MenuItemValue) -> Unit,
   isSearchEnabled: Boolean = true,
-  onSearchClick: () -> Unit = {},
+  onNavigateToSearchScreen: () -> Unit = {},
   bottomBar: @Composable () -> Unit = {},
   content: @Composable () -> Unit,
   modifier: Modifier = Modifier,
@@ -36,13 +36,13 @@ fun BaseScreen(
   MenuDrawer(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
-    onSignInClick = onSignInClick,
+    onSignInClick = onNavigateToSignInScreen,
     drawerState = drawerState,
     selectedItem = selectedMenuItem,
     onItemClick = {
       coroutineScope.launch {
         drawerState.close()
-        onMenuItemClick(it)
+        onNavigateToMenuItemScreen(it)
       }
     },
     content = {
@@ -50,13 +50,13 @@ fun BaseScreen(
         topBar = {
           MainTopBar(
             title = stringResource(selectedMenuItem.nameRes),
-            onMenuClick = {
+            onNavigateToMenuItemScreen = {
               coroutineScope.launch {
                 drawerState.open()
               }
             },
             isSearchEnabled = isSearchEnabled,
-            onSearchClick = onSearchClick,
+            onNavigateToSignInScreen = onNavigateToSearchScreen,
             modifier = Modifier.fillMaxWidth()
           )
         },

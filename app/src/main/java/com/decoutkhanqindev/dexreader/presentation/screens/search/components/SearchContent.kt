@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
-import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.search.SuggestionsUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.search.components.results.ResultsSection

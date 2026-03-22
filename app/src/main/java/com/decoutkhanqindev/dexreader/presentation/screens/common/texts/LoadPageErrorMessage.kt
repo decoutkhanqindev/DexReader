@@ -21,7 +21,7 @@ import com.decoutkhanqindev.dexreader.R
 @Composable
 fun LoadPageErrorMessage(
   message: String,
-  onRetry: () -> Unit,
+  onRetryClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Row(
@@ -36,7 +36,7 @@ fun LoadPageErrorMessage(
       fontStyle = FontStyle.Italic,
       textAlign = TextAlign.Center,
     )
-    IconButton(onClick = onRetry) {
+    IconButton(onClick = onRetryClick) {
       Icon(
         imageVector = Icons.Default.Refresh,
         contentDescription = stringResource(R.string.retry),

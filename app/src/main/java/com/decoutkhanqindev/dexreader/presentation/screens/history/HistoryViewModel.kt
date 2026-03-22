@@ -8,8 +8,8 @@ import com.decoutkhanqindev.dexreader.domain.usecase.user.history.ObserveHistory
 import com.decoutkhanqindev.dexreader.domain.usecase.user.history.RemoveFromHistoryUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.ReadingHistoryMapper.toReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
-import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
-import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Job

@@ -85,7 +85,7 @@ fun FilterBottomSheet(
 
     SubmitButton(
       title = stringResource(R.string.apply),
-      onSubmitClick = {
+      onClick = {
         onApplyClick(selectedStatusOptions, selectedContentRatingOptions)
         onDismiss()
       },

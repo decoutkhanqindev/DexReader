@@ -17,11 +17,11 @@ import com.decoutkhanqindev.dexreader.R
 
 @Composable
 fun LoadMoreMessage(
-  onLoadMore: () -> Unit,
+  onClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Row(
-    modifier = modifier.clickable { onLoadMore() },
+    modifier = modifier.clickable { onClick() },
     horizontalArrangement = Arrangement.Center,
     verticalAlignment = Alignment.CenterVertically
   ) {

@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterModel
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
-import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.NextPageLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.AllItemLoadedMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadMoreMessage
@@ -74,14 +74,14 @@ fun MangaChapterList(
 
         BaseNextPageState.ERROR -> LoadPageErrorMessage(
           message = stringResource(R.string.can_t_load_next_chapter_page_please_try_again),
-          onRetry = onRetryFetchChapterListNextPage,
+          onRetryClick = onRetryFetchChapterListNextPage,
           modifier = Modifier
             .fillMaxWidth()
             .padding(top = 8.dp)
         )
 
         BaseNextPageState.IDLE -> LoadMoreMessage(
-          onLoadMore = onFetchChapterListNextPage,
+          onClick = onFetchChapterListNextPage,
           modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp)

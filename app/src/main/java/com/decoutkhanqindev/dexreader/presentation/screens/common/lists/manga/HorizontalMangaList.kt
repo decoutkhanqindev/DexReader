@@ -18,8 +18,8 @@ import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun HorizontalMangaList(
-  mangaList: ImmutableList<MangaModel>,
-  onSelectedManga: (MangaModel) -> Unit,
+  items: ImmutableList<MangaModel>,
+  onItemClick: (MangaModel) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Box(modifier = modifier) {
@@ -29,12 +29,12 @@ fun HorizontalMangaList(
       verticalAlignment = Alignment.CenterVertically,
     ) {
       items(
-        items = mangaList,
+        items = items,
         key = MangaModel::id
       ) { manga ->
         MangaItem(
-          manga = manga,
-          onSelectedManga = onSelectedManga,
+          item = manga,
+          onClick = onItemClick,
           modifier = Modifier
             .padding(4.dp)
             .width(194.dp)

@@ -21,12 +21,12 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCov
 
 @Composable
 fun MangaItem(
-  manga: MangaModel,
-  onSelectedManga: (MangaModel) -> Unit,
+  item: MangaModel,
+  onClick: (MangaModel) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   // Using remember to avoid unnecessary recompositions and re-creation of the onClick lambda when manga.id doesn't change
-  val onClick = remember(manga.id) { { onSelectedManga(manga) } }
+  val onClick = remember(item.id) { { onClick(item) } }
 
   Card(
     modifier = modifier,
@@ -36,8 +36,8 @@ fun MangaItem(
   ) {
     Box(modifier = Modifier.fillMaxWidth()) {
       MangaCoverArt(
-        url = manga.coverUrl,
-        title = manga.title,
+        url = item.coverUrl,
+        title = item.title,
         modifier = Modifier.fillMaxSize()
       )
       Column(
@@ -46,7 +46,7 @@ fun MangaItem(
         horizontalAlignment = Alignment.CenterHorizontally,
       ) {
         MangaInfo(
-          manga = manga,
+          manga = item,
           modifier = Modifier
             .fillMaxWidth()
             .height(85.dp)

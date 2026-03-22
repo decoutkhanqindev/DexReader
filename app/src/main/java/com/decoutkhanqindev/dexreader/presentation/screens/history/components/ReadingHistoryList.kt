@@ -22,7 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
-import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.MoveToTopButton
 import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.NextPageLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.AllItemLoadedMessage
@@ -82,14 +82,14 @@ fun ReadingHistoryList(
 
           BaseNextPageState.ERROR -> LoadPageErrorMessage(
             message = stringResource(R.string.can_t_load_next_reading_history_page_please_try_again),
-            onRetry = onRetryObserveHistoryNextPage,
+            onRetryClick = onRetryObserveHistoryNextPage,
             modifier = Modifier
               .fillMaxWidth()
               .padding(top = 8.dp)
           )
 
           BaseNextPageState.IDLE -> LoadMoreMessage(
-            onLoadMore = onObserveHistoryNextPage,
+            onClick = onObserveHistoryNextPage,
             modifier = Modifier
               .fillMaxWidth()
               .padding(horizontal = 8.dp)

@@ -101,7 +101,7 @@ fun LoginForm(
 
       SubmitButton(
         title = stringResource(R.string.sign_in),
-        onSubmitClick = { onSubmitClick() },
+        onClick = { onSubmitClick() },
         modifier = Modifier
           .fillMaxWidth()
           .padding(bottom = 8.dp)

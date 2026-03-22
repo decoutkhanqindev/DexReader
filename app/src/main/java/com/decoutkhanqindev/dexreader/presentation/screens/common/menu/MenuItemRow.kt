@@ -17,14 +17,14 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuItemValu
 fun MenuItemRow(
   isSelected: Boolean,
   item: MenuItemValue,
-  onItemClick: (MenuItemValue) -> Unit,
+  onClick: (MenuItemValue) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   val title = stringResource(item.nameRes)
 
   NavigationDrawerItem(
     selected = isSelected,
-    onClick = { onItemClick(item) },
+    onClick = { onClick(item) },
     label = {
       Text(
         text = title,

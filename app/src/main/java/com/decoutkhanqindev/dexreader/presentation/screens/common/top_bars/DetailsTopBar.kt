@@ -24,7 +24,7 @@ fun DetailsTopBar(
   title: String,
   onNavigateBack: () -> Unit,
   isSearchEnabled: Boolean = true,
-  onSearchClick: () -> Unit = {},
+  onNavigateToSearchScreen: () -> Unit = {},
   modifier: Modifier = Modifier,
 ) {
   CenterAlignedTopAppBar(
@@ -45,7 +45,7 @@ fun DetailsTopBar(
     },
     actions = {
       if (isSearchEnabled) {
-        IconButton(onClick = onSearchClick) {
+        IconButton(onClick = onNavigateToSearchScreen) {
           Icon(
             imageVector = Icons.Default.Search,
             contentDescription = stringResource(R.string.search)

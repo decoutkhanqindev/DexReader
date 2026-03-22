@@ -10,14 +10,14 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ActionButton(
-  enabled: Boolean = true,
+  isEnabled: Boolean = true,
   onClick: () -> Unit,
   content: @Composable () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Button(
     onClick = onClick,
-    enabled = enabled,
+    enabled = isEnabled,
     shape = MaterialTheme.shapes.medium,
     colors = ButtonDefaults.outlinedButtonColors(
       containerColor = MaterialTheme.colorScheme.surface.copy(0.2f)

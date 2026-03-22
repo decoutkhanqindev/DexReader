@@ -62,7 +62,7 @@ fun UpdateAndLogoutUserBottomBar(
       ) {
         SubmitButton(
           title = stringResource(R.string.update_profile),
-          onSubmitClick = { isShowUpdateUserDialog = true },
+          onClick = { isShowUpdateUserDialog = true },
           modifier = Modifier
             .fillMaxWidth()
             .padding(start = 8.dp)

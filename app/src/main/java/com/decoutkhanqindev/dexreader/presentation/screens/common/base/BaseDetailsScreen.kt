@@ -14,7 +14,7 @@ fun BaseDetailsScreen(
   title: String,
   onNavigateBack: () -> Unit,
   isSearchEnabled: Boolean = true,
-  onSearchClick: () -> Unit = {},
+  onNavigateToSearchScreen: () -> Unit = {},
   bottomBar: @Composable () -> Unit = {},
   content: @Composable () -> Unit,
   modifier: Modifier = Modifier,
@@ -25,7 +25,7 @@ fun BaseDetailsScreen(
         title = title,
         onNavigateBack = onNavigateBack,
         isSearchEnabled = isSearchEnabled,
-        onSearchClick = onSearchClick,
+        onNavigateToSearchScreen = onNavigateToSearchScreen,
         modifier = Modifier.fillMaxWidth()
       )
     },
