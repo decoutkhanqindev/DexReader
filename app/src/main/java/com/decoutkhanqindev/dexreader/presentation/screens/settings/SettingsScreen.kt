@@ -16,8 +16,8 @@ import com.decoutkhanqindev.dexreader.presentation.screens.settings.components.S
 fun SettingsScreen(
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
-  onSignInClick: () -> Unit,
-  onMenuItemClick: (MenuItemValue) -> Unit,
+  onNavigateToLoginScreen: () -> Unit,
+  onNavigateToMenuItemScreen: (MenuItemValue) -> Unit,
   viewModel: SettingsViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
 ) {
@@ -26,9 +26,9 @@ fun SettingsScreen(
   BaseScreen(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
-    onNavigateToSignInScreen = onSignInClick,
+    onNavigateToSignInScreen = onNavigateToLoginScreen,
     selectedMenuItem = MenuItemValue.SETTINGS,
-    onNavigateToMenuItemScreen = onMenuItemClick,
+    onNavigateToMenuItemScreen = onNavigateToMenuItemScreen,
     isSearchEnabled = false,
     content = {
       SettingsContent(

@@ -24,9 +24,9 @@ import com.decoutkhanqindev.dexreader.presentation.screens.profile.components.ac
 fun ProfileScreen(
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
-  onSignInClick: () -> Unit,
-  onMenuItemClick: (MenuItemValue) -> Unit,
-  onLogoutSuccess: () -> Unit,
+  onNavigateToLoginScreen: () -> Unit,
+  onNavigateToMenuItemScreen: (MenuItemValue) -> Unit,
+  onNavigateToHomeScreen: () -> Unit,
   viewModel: ProfileViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
 ) {
@@ -49,9 +49,9 @@ fun ProfileScreen(
   BaseScreen(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
-    onNavigateToSignInScreen = onSignInClick,
+    onNavigateToSignInScreen = onNavigateToLoginScreen,
     selectedMenuItem = MenuItemValue.PROFILE,
-    onNavigateToMenuItemScreen = onMenuItemClick,
+    onNavigateToMenuItemScreen = onNavigateToMenuItemScreen,
     isSearchEnabled = false,
     bottomBar = {
       if (isUserLoggedIn) {
@@ -69,7 +69,7 @@ fun ProfileScreen(
           uiState = uiState,
           onUpdateNameChange = viewModel::updateUserName,
           onUpdatePicUrlChange = viewModel::updateUserPicUrl,
-          onLogoutSuccess = onLogoutSuccess,
+          onLogoutSuccess = onNavigateToHomeScreen,
           onRetryUpdate = viewModel::retryUpdateUserProfile,
           onRetryLogout = viewModel::retryLogoutUser,
           modifier = Modifier.fillMaxSize()

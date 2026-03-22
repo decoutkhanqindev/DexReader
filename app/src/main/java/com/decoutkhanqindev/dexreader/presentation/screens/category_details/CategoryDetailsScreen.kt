@@ -15,10 +15,10 @@ import com.decoutkhanqindev.dexreader.presentation.screens.category_details.comp
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseDetailsScreen
 
 @Composable
-fun CategoryDetailsScreen(
+fun CategoryDetailScreen(
   onNavigateBack: () -> Unit,
-  onSearchClick: () -> Unit,
-  onMangaClick: (String) -> Unit,
+  onNavigateToSearchScreen: () -> Unit,
+  onNavigateToMangaDetailScreen: (String) -> Unit,
   viewModel: CategoryDetailsViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
 ) {
@@ -31,7 +31,7 @@ fun CategoryDetailsScreen(
   BaseDetailsScreen(
     title = categoryTitle,
     onNavigateBack = onNavigateBack,
-    onNavigateToSearchScreen = onSearchClick,
+    onNavigateToSearchScreen = onNavigateToSearchScreen,
     bottomBar = {
       SortAndFilterBottomBar(
         onSortClick = { isShowSortBottomSheet = true },
@@ -55,7 +55,7 @@ fun CategoryDetailsScreen(
           viewModel.updateFilteringCriteria(statusFilter, contentRatingFilter)
           isShowFilterBottomSheet = false
         },
-        onMangaClick = onMangaClick,
+        onMangaClick = onNavigateToMangaDetailScreen,
         onFetchMangaListNextPage = viewModel::fetchMangaListByCategoryNextPage,
         onRetryFetchMangaListNextPage = viewModel::retryFetchMangaListByCategoryNextPage,
         onRetry = viewModel::retry,

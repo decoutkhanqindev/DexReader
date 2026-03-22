@@ -15,10 +15,10 @@ import com.decoutkhanqindev.dexreader.presentation.screens.home.components.HomeC
 fun HomeScreen(
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
-  onSignInClick: () -> Unit,
-  onMenuItemClick: (MenuItemValue) -> Unit,
-  onSearchClick: () -> Unit,
-  onSelectedManga: (String) -> Unit,
+  onNavigateToLoginScreen: () -> Unit,
+  onNavigateToMenuItemScreen: (MenuItemValue) -> Unit,
+  onNavigateToSearchScreen: () -> Unit,
+  onNavigateToMangaDetailScreen: (String) -> Unit,
   viewModel: HomeViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
 ) {
@@ -27,14 +27,14 @@ fun HomeScreen(
   BaseScreen(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
-    onNavigateToSignInScreen = onSignInClick,
+    onNavigateToSignInScreen = onNavigateToLoginScreen,
     selectedMenuItem = MenuItemValue.HOME,
-    onNavigateToMenuItemScreen = onMenuItemClick,
-    onNavigateToSearchScreen = onSearchClick,
+    onNavigateToMenuItemScreen = onNavigateToMenuItemScreen,
+    onNavigateToSearchScreen = onNavigateToSearchScreen,
     content = {
       HomeContent(
         uiState = uiState,
-        onSelectedManga = onSelectedManga,
+        onSelectedManga = onNavigateToMangaDetailScreen,
         onRetry = viewModel::retry,
         modifier = Modifier.fillMaxSize(),
       )

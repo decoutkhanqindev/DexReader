@@ -9,9 +9,9 @@ import com.decoutkhanqindev.dexreader.presentation.screens.auth.login.components
 
 @Composable
 fun LoginScreen(
-  onLoginSuccess: () -> Unit,
-  onRegisterClick: () -> Unit,
-  onForgotPasswordClick: () -> Unit,
+  onNavigateToHomeScreen: () -> Unit,
+  onNavigateToRegisterScreen: () -> Unit,
+  onNavigateToForgotPasswordScreen: () -> Unit,
   viewModel: LoginViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
 ) {
@@ -22,9 +22,9 @@ fun LoginScreen(
     onEmailChange = viewModel::updateEmail,
     onPasswordChange = viewModel::updatePassword,
     onSubmitClick = viewModel::submit,
-    onLoginSuccess = onLoginSuccess,
-    onRegisterClick = onRegisterClick,
-    onForgotPasswordClick = onForgotPasswordClick,
+    onLoginSuccess = onNavigateToHomeScreen,
+    onRegisterClick = onNavigateToRegisterScreen,
+    onForgotPasswordClick = onNavigateToForgotPasswordScreen,
     onRetry = viewModel::retry,
     modifier = modifier
   )

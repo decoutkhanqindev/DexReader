@@ -10,7 +10,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.auth.register.compone
 @Composable
 fun RegisterScreen(
   onNavigateBack: () -> Unit,
-  onRegisterSuccess: () -> Unit,
+  onNavigateToLoginScreen: () -> Unit,
   viewModel: RegisterViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
 ) {
@@ -23,7 +23,7 @@ fun RegisterScreen(
     onConfirmPasswordChange = viewModel::updateConfirmPassword,
     onNameChange = viewModel::updateName,
     onSubmitClick = viewModel::submit,
-    onRegisterSuccess = onRegisterSuccess,
+    onRegisterSuccess = onNavigateToLoginScreen,
     onNavigateBack = onNavigateBack,
     onRetry = viewModel::retry,
     modifier = modifier

@@ -10,7 +10,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.auth.forgot_password.
 @Composable
 fun ForgotPasswordScreen(
   onNavigateBack: () -> Unit,
-  onSubmitSuccess: () -> Unit,
+  onNavigateToLoginScreen: () -> Unit,
   viewModel: ForgotPasswordViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
 ) {
@@ -20,7 +20,7 @@ fun ForgotPasswordScreen(
     uiState = uiState,
     onEmailChange = viewModel::updateEmail,
     onSubmitClick = viewModel::submit,
-    onSubmitSuccess = onSubmitSuccess,
+    onSubmitSuccess = onNavigateToLoginScreen,
     onNavigateBack = onNavigateBack,
     onRetry = viewModel::retry,
     modifier = modifier

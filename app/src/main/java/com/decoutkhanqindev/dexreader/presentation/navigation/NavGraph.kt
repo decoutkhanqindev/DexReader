@@ -13,7 +13,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.auth.forgot_password.
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.login.LoginScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.register.RegisterScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.categories.CategoriesScreen
-import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailsScreen
+import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.favorites.FavoritesScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.history.HistoryScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.home.HomeScreen
@@ -52,16 +52,16 @@ fun NavGraph(
         HomeScreen(
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
-          onSignInClick = {
+          onNavigateToLoginScreen = {
             navController.navigateClearStack<NavRoute.Home>(NavRoute.Login)
           },
-          onMenuItemClick = { item ->
+          onNavigateToMenuItemScreen = { item ->
             navController.navigatePreserveState(item.toNavRoute())
           },
-          onSearchClick = {
+          onNavigateToSearchScreen = {
             navController.navigate(NavRoute.Search)
           },
-          onSelectedManga = { mangaId ->
+          onNavigateToMangaDetailScreen = { mangaId ->
             navController.navigate(NavRoute.MangaDetails(mangaId))
           },
           modifier = Modifier.fillMaxSize()
@@ -80,16 +80,16 @@ fun NavGraph(
         CategoriesScreen(
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
-          onSignInClick = {
+          onNavigateToLoginScreen = {
             navController.navigateClearStack<NavRoute.Categories>(NavRoute.Login)
           },
-          onMenuItemClick = { item ->
+          onNavigateToMenuItemScreen = { item ->
             navController.navigatePreserveState(item.toNavRoute())
           },
-          onSearchClick = {
+          onNavigateToSearchScreen = {
             navController.navigate(NavRoute.Search)
           },
-          onCategoryClick = { categoryId, categoryTitle ->
+          onNavigateCategoryDetailScreen = { categoryId, categoryTitle ->
             navController.navigate(NavRoute.CategoryDetails(categoryId, categoryTitle))
           },
           modifier = Modifier.fillMaxSize()
@@ -105,12 +105,12 @@ fun NavGraph(
         popEnterTransition = transitions.popEnter,
         popExitTransition = transitions.popExit
       ) {
-        CategoryDetailsScreen(
+        CategoryDetailScreen(
           onNavigateBack = navController::navigateUp,
-          onSearchClick = {
+          onNavigateToSearchScreen = {
             navController.navigate(NavRoute.Search)
           },
-          onMangaClick = { mangaId ->
+          onNavigateToMangaDetailScreen = { mangaId ->
             navController.navigate(NavRoute.MangaDetails(mangaId))
           },
           modifier = Modifier.fillMaxSize(),
@@ -129,16 +129,16 @@ fun NavGraph(
         FavoritesScreen(
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
-          onSignInClick = {
+          onNavigateToLoginScreen = {
             navController.navigateClearStack<NavRoute.Favorites>(NavRoute.Login)
           },
-          onMenuItemClick = { item ->
+          onNavigateToMenuItemScreen = { item ->
             navController.navigatePreserveState(item.toNavRoute())
           },
-          onSearchClick = {
+          onNavigateToSearchScreen = {
             navController.navigate(NavRoute.Search)
           },
-          onSelectedManga = { mangaId ->
+          onNavigateToMangaDetailScreen = { mangaId ->
             navController.navigate(NavRoute.MangaDetails(mangaId))
           },
           modifier = Modifier.fillMaxSize()
@@ -157,19 +157,19 @@ fun NavGraph(
         HistoryScreen(
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
-          onSignInClick = {
+          onNavigateToLoginScreen = {
             navController.navigateClearStack<NavRoute.History>(NavRoute.Login)
           },
-          onMenuItemClick = { item ->
+          onNavigateToMenuItemScreen = { item ->
             navController.navigatePreserveState(item.toNavRoute())
           },
-          onSearchClick = {
+          onNavigateToSearchScreen = {
             navController.navigate(NavRoute.Search)
           },
-          onContinueReadingClick = { chapterId, lastReadPage, mangaId ->
+          onNavigateToReaderScreen = { chapterId, lastReadPage, mangaId ->
             navController.navigate(NavRoute.Reader(chapterId, lastReadPage, mangaId))
           },
-          onMangaDetailsClick = { mangaId ->
+          onNavigateToMangaDetailScreen = { mangaId ->
             navController.navigate(NavRoute.MangaDetails(mangaId))
           },
           modifier = Modifier.fillMaxSize()
@@ -188,13 +188,13 @@ fun NavGraph(
         ProfileScreen(
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
-          onSignInClick = {
+          onNavigateToLoginScreen = {
             navController.navigateClearStack<NavRoute.Profile>(NavRoute.Login)
           },
-          onMenuItemClick = { item ->
+          onNavigateToMenuItemScreen = { item ->
             navController.navigatePreserveState(item.toNavRoute())
           },
-          onLogoutSuccess = {
+          onNavigateToHomeScreen = {
             navController.navigateClearStack<NavRoute.Profile>(NavRoute.Home)
           },
           modifier = Modifier.fillMaxSize()
@@ -213,10 +213,10 @@ fun NavGraph(
         SettingsScreen(
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
-          onSignInClick = {
+          onNavigateToLoginScreen = {
             navController.navigateClearStack<NavRoute.Settings>(NavRoute.Login)
           },
-          onMenuItemClick = { item ->
+          onNavigateToMenuItemScreen = { item ->
             navController.navigatePreserveState(item.toNavRoute())
           },
           modifier = Modifier.fillMaxSize()
@@ -234,7 +234,7 @@ fun NavGraph(
       ) {
         SearchScreen(
           onNavigateBack = navController::navigateUp,
-          onSelectedManga = { mangaId ->
+          onNavigateToManDetailScreen = { mangaId ->
             navController.navigate(NavRoute.MangaDetails(mangaId))
           },
           modifier = Modifier.fillMaxSize()
@@ -254,19 +254,19 @@ fun NavGraph(
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
           onNavigateBack = navController::navigateUp,
-          onSearchClick = {
+          onNavigateToSearchScreen = {
             navController.navigate(NavRoute.Search)
           },
-          onSignInClick = {
+          onNavigateToLoginScreen = {
             navController.navigateClearStack<NavRoute.MangaDetails>(NavRoute.Login)
           },
           onReadingClick = { chapterId, lastReadPage, mangaId ->
             navController.navigate(NavRoute.Reader(chapterId, lastReadPage, mangaId))
           },
-          onSelectedCategory = { categoryId, categoryTitle ->
+          onNavigateCategoryScreen = { categoryId, categoryTitle ->
             navController.navigate(NavRoute.CategoryDetails(categoryId, categoryTitle))
           },
-          onSelectedChapter = { chapterId, lastReadPage, mangaId ->
+          onNavigateToReaderScreen = { chapterId, lastReadPage, mangaId ->
             navController.navigate(NavRoute.Reader(chapterId, lastReadPage, mangaId))
           },
           modifier = Modifier.fillMaxSize()
@@ -298,13 +298,13 @@ fun NavGraph(
         popExitTransition = transitions.popExit
       ) {
         LoginScreen(
-          onLoginSuccess = {
+          onNavigateToHomeScreen = {
             navController.navigateClearStack<NavRoute.Login>(NavRoute.Home)
           },
-          onRegisterClick = {
+          onNavigateToRegisterScreen = {
             navController.navigate(NavRoute.Register)
           },
-          onForgotPasswordClick = {
+          onNavigateToForgotPasswordScreen = {
             navController.navigate(NavRoute.ForgotPassword)
           },
           modifier = Modifier.fillMaxSize(),
@@ -320,7 +320,7 @@ fun NavGraph(
       ) {
         RegisterScreen(
           onNavigateBack = navController::navigateUp,
-          onRegisterSuccess = {
+          onNavigateToLoginScreen = {
             navController.navigateClearStack<NavRoute.Register>(NavRoute.Login)
           },
           modifier = Modifier.fillMaxSize()
@@ -336,7 +336,7 @@ fun NavGraph(
       ) {
         ForgotPasswordScreen(
           onNavigateBack = navController::navigateUp,
-          onSubmitSuccess = {
+          onNavigateToLoginScreen = {
             navController.navigateClearStack<NavRoute.ForgotPassword>(NavRoute.Login)
           },
           modifier = Modifier.fillMaxSize()

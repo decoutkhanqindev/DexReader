@@ -15,10 +15,10 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseScree
 fun CategoriesScreen(
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
-  onSignInClick: () -> Unit,
-  onMenuItemClick: (MenuItemValue) -> Unit,
-  onSearchClick: () -> Unit,
-  onCategoryClick: (String, String) -> Unit,
+  onNavigateToLoginScreen: () -> Unit,
+  onNavigateToMenuItemScreen: (MenuItemValue) -> Unit,
+  onNavigateToSearchScreen: () -> Unit,
+  onNavigateCategoryDetailScreen: (String, String) -> Unit,
   viewModel: CategoriesViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
 ) {
@@ -27,14 +27,14 @@ fun CategoriesScreen(
   BaseScreen(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
-    onNavigateToSignInScreen = onSignInClick,
+    onNavigateToSignInScreen = onNavigateToLoginScreen,
     selectedMenuItem = MenuItemValue.CATEGORIES,
-    onNavigateToMenuItemScreen = onMenuItemClick,
-    onNavigateToSearchScreen = onSearchClick,
+    onNavigateToMenuItemScreen = onNavigateToMenuItemScreen,
+    onNavigateToSearchScreen = onNavigateToSearchScreen,
     content = {
       CategoriesContent(
         uiState = uiState,
-        onCategoryClick = onCategoryClick,
+        onCategoryClick = onNavigateCategoryDetailScreen,
         onRetry = viewModel::retry,
         modifier = Modifier.fillMaxSize()
       )

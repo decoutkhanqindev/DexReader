@@ -22,18 +22,18 @@ fun MangaDetailsScreen(
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
   onNavigateBack: () -> Unit,
-  onSearchClick: () -> Unit,
-  onSignInClick: () -> Unit,
+  onNavigateToSearchScreen: () -> Unit,
+  onNavigateToLoginScreen: () -> Unit,
   onReadingClick: (
     chapterId: String,
     lastReadPage: Int,
     mangaId: String,
   ) -> Unit,
-  onSelectedCategory: (
+  onNavigateCategoryScreen: (
     categoryId: String,
     categoryTitle: String,
   ) -> Unit,
-  onSelectedChapter: (
+  onNavigateToReaderScreen: (
     chapterId: String,
     lastReadPage: Int,
     mangaId: String,
@@ -63,7 +63,7 @@ fun MangaDetailsScreen(
       confirm = stringResource(R.string.sign_in),
       onConfirmClick = {
         isShowFavoritesDialog = false
-        onSignInClick()
+        onNavigateToLoginScreen()
       },
     )
   }
@@ -71,7 +71,7 @@ fun MangaDetailsScreen(
   BaseDetailsScreen(
     title = stringResource(R.string.manga_details),
     onNavigateBack = onNavigateBack,
-    onNavigateToSearchScreen = onSearchClick,
+    onNavigateToSearchScreen = onNavigateToSearchScreen,
     content = {
       MangaDetailsContent(
         mangaDetailsUiState = mangaDetailsUiState,
@@ -90,8 +90,8 @@ fun MangaDetailsScreen(
         chapterLanguage = chapterLanguage,
         availableLanguages = availableLanguages,
         onSelectedLanguage = { viewModel.updateChapterLanguage(it) },
-        onSelectedCategory = onSelectedCategory,
-        onSelectedChapter = onSelectedChapter,
+        onSelectedCategory = onNavigateCategoryScreen,
+        onSelectedChapter = onNavigateToReaderScreen,
         onFetchChapterListNextPage = viewModel::fetchChapterListNextPage,
         onRetryFetchChapterListNextPage = viewModel::retryFetchChapterListNextPage,
         onRetryFetchChapterListFirstPage = viewModel::retryFetchChapterListFirstPage,

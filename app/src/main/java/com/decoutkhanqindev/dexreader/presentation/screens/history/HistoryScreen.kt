@@ -19,15 +19,15 @@ import com.decoutkhanqindev.dexreader.presentation.screens.history.components.Hi
 fun HistoryScreen(
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
-  onSignInClick: () -> Unit,
-  onMenuItemClick: (MenuItemValue) -> Unit,
-  onSearchClick: () -> Unit,
-  onContinueReadingClick: (
+  onNavigateToLoginScreen: () -> Unit,
+  onNavigateToMenuItemScreen: (MenuItemValue) -> Unit,
+  onNavigateToSearchScreen: () -> Unit,
+  onNavigateToReaderScreen: (
     chapterId: String,
     lastReadPage: Int,
     mangaId: String,
   ) -> Unit,
-  onMangaDetailsClick: (String) -> Unit,
+  onNavigateToMangaDetailScreen: (String) -> Unit,
   viewModel: HistoryViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
 ) {
@@ -42,17 +42,17 @@ fun HistoryScreen(
   BaseScreen(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
-    onNavigateToSignInScreen = onSignInClick,
+    onNavigateToSignInScreen = onNavigateToLoginScreen,
     selectedMenuItem = MenuItemValue.HISTORY,
-    onNavigateToMenuItemScreen = onMenuItemClick,
-    onNavigateToSearchScreen = onSearchClick,
+    onNavigateToMenuItemScreen = onNavigateToMenuItemScreen,
+    onNavigateToSearchScreen = onNavigateToSearchScreen,
     content = {
       if (isUserLoggedIn) {
         HistoryContent(
           historyUiState = historyUiState,
           removeFromHistoryUiState = removeFromHistoryUiState,
-          onContinueReadingClick = onContinueReadingClick,
-          onMangaDetailsClick = onMangaDetailsClick,
+          onContinueReadingClick = onNavigateToReaderScreen,
+          onMangaDetailsClick = onNavigateToMangaDetailScreen,
           onUpdateRemoveReadingHistoryId = viewModel::updateRemoveReadingHistoryId,
           onRemoveFromHistory = viewModel::removeFromHistory,
           onRetryRemoveFromHistory = viewModel::retryRemoveFromHistory,

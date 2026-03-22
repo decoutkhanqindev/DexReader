@@ -19,10 +19,10 @@ import com.decoutkhanqindev.dexreader.presentation.screens.favorites.components.
 fun FavoritesScreen(
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
-  onSignInClick: () -> Unit,
-  onMenuItemClick: (MenuItemValue) -> Unit,
-  onSearchClick: () -> Unit,
-  onSelectedManga: (String) -> Unit,
+  onNavigateToLoginScreen: () -> Unit,
+  onNavigateToMenuItemScreen: (MenuItemValue) -> Unit,
+  onNavigateToSearchScreen: () -> Unit,
+  onNavigateToMangaDetailScreen: (String) -> Unit,
   viewModel: FavoritesViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
 ) {
@@ -36,15 +36,15 @@ fun FavoritesScreen(
   BaseScreen(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
-    onNavigateToSignInScreen = onSignInClick,
+    onNavigateToSignInScreen = onNavigateToLoginScreen,
     selectedMenuItem = MenuItemValue.FAVORITES,
-    onNavigateToMenuItemScreen = onMenuItemClick,
-    onNavigateToSearchScreen = onSearchClick,
+    onNavigateToMenuItemScreen = onNavigateToMenuItemScreen,
+    onNavigateToSearchScreen = onNavigateToSearchScreen,
     content = {
       if (isUserLoggedIn) {
         FavoritesContent(
           uiState = uiState,
-          onSelectedManga = onSelectedManga,
+          onSelectedManga = onNavigateToMangaDetailScreen,
           onObserveFavoriteMangaListNextPage = viewModel::observeFavoritesNextPage,
           onRetryObserveFavoriteMangaListNextPage = viewModel::retryObserveFavoritesNextPage,
           onRetry = viewModel::retry,

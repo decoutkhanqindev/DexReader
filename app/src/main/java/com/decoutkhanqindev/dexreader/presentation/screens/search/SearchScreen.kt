@@ -18,7 +18,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.search.components.act
 
 @Composable
 fun SearchScreen(
-  onSelectedManga: (String) -> Unit,
+  onNavigateToManDetailScreen: (String) -> Unit,
   onNavigateBack: () -> Unit,
   viewModel: SearchViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
@@ -58,7 +58,7 @@ fun SearchScreen(
           viewModel.fetchMangaListFirstPage()
           isExpanded = false
         },
-        onSelectedManga = onSelectedManga,
+        onSelectedManga = onNavigateToManDetailScreen,
         onFetchMangaListNextPage = viewModel::fetchMangaListNextPage,
         onRetryFetchMangaListNextPage = viewModel::retryFetchMangaListNextPage,
         onRetry = viewModel::retry,
