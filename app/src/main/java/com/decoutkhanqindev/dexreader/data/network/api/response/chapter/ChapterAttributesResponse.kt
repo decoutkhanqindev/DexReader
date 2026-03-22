@@ -5,9 +5,9 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class ChapterAttributesResponse(
-  @field:Json(name = "title") val title: String? = null, // Tên chương
-  @field:Json(name = "chapter") val chapter: String? = null, // Số chương
-  @field:Json(name = "volume") val volume: String? = null, // Tập
-  @field:Json(name = "publishAt") val publishAt: Long? = null, // Ngày xuất bản
-  @field:Json(name = "translatedLanguage") val translatedLanguage: String? = null, // Ngôn ngữ
+  @field:Json(name = "title") val title: String? = null,
+  @field:Json(name = "chapter") val chapter: String? = null,
+  @field:Json(name = "volume") val volume: String? = null,
+  @field:Json(name = "publishAt") val publishAt: String? = null,
+  @field:Json(name = "translatedLanguage") val translatedLanguage: String? = null,
 )

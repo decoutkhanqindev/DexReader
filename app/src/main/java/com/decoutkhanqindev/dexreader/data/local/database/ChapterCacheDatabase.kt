@@ -1,8 +1,6 @@
 package com.decoutkhanqindev.dexreader.data.local.database
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.decoutkhanqindev.dexreader.data.local.database.dao.ChapterCacheDao
@@ -16,26 +14,4 @@ import com.decoutkhanqindev.dexreader.data.local.database.entity.ChapterCacheEnt
 @TypeConverters(StringListTypeConverter::class)
 abstract class ChapterCacheDatabase : RoomDatabase() {
   abstract fun chapterCacheDao(): ChapterCacheDao
-
-  companion object {
-    private const val DATABASE_NAME = "chapter_cache.db"
-
-    @Volatile
-    private var Instance: ChapterCacheDatabase? = null
-
-    fun getInstance(context: Context): ChapterCacheDatabase =
-      // Double-checked locking
-      Instance ?: synchronized(this) {
-        Instance ?: buildDatabase(context).also { Instance = it }
-      }
-
-    private fun buildDatabase(context: Context): ChapterCacheDatabase =
-      Room.databaseBuilder(
-        context = context.applicationContext,
-        klass = ChapterCacheDatabase::class.java,
-        name = DATABASE_NAME
-      )
-        .fallbackToDestructiveMigration(true)
-        .build()
-  }
 }

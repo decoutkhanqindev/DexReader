@@ -11,12 +11,12 @@ object ChapterPagesMapper {
   fun AtHomeServerResponse.toChapterPages(chapterId: String, mangaId: String): ChapterPages? {
     val resolvedBaseUrl = baseUrl ?: return null
     val hash = chapter?.hash ?: return null
-    val data = chapter.data
+    val data = chapter.data ?: return null
 
     // {baseUrl}/data/{dataHash}/{pageHash}
-    val pages = data?.map { pageHash ->
+    val pages = data.map { pageHash ->
       "$resolvedBaseUrl/$DATA_URL_SEGMENT/$hash/$pageHash"
-    } ?: emptyList()
+    }
 
     return ChapterPages(
       chapterId = chapterId,

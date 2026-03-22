@@ -12,9 +12,9 @@ import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
 import kotlinx.collections.immutable.toPersistentList
 
 object MangaMapper {
-  fun MangaStatus.toMangaStatusEnum() = MangaStatusValue.valueOf(this.name)
+  fun MangaStatus.toMangaStatusValue() = MangaStatusValue.valueOf(this.name)
   fun MangaStatusValue.toMangaStatus() = MangaStatus.valueOf(this.name)
-  fun MangaContentRating.toMangaContentRatingEnum() = MangaContentRatingValue.valueOf(this.name)
+  fun MangaContentRating.toMangaContentRatingValue() = MangaContentRatingValue.valueOf(this.name)
   fun MangaContentRatingValue.toMangaContentRating() = MangaContentRating.valueOf(this.name)
 
   fun Manga.toMangaModel() =
@@ -26,8 +26,8 @@ object MangaMapper {
       author = author ?: Manga.DEFAULT_AUTHOR,
       artist = artist ?: Manga.DEFAULT_ARTIST,
       categories = categories.map { it.toCategoryModel() }.toPersistentList(),
-      status = status.toMangaStatusEnum(),
-      contentRating = contentRating.toMangaContentRatingEnum(),
+      status = status.toMangaStatusValue(),
+      contentRating = contentRating.toMangaContentRatingValue(),
       year = year ?: Manga.DEFAULT_YEAR,
       availableLanguages = availableLanguages.map { it.toMangaLanguageEnum() }
         .toPersistentList(),

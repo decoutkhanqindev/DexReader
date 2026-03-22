@@ -3,6 +3,7 @@ package com.decoutkhanqindev.dexreader.data.mapper
 import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toMangaLanguage
 import com.decoutkhanqindev.dexreader.data.network.api.response.chapter.ChapterResponse
 import com.decoutkhanqindev.dexreader.domain.entity.manga.Chapter
+import com.decoutkhanqindev.dexreader.util.TimeAgo.parseIso8601ToEpoch
 
 object ChapterMapper {
 
@@ -13,7 +14,7 @@ object ChapterMapper {
     val title = attributes?.title
     val number = attributes?.chapter
     val volume = attributes?.volume
-    val publishedAt = attributes?.publishAt
+    val publishedAt = attributes?.publishAt.parseIso8601ToEpoch()
     val language = attributes?.translatedLanguage.toMangaLanguage()
 
     return Chapter(

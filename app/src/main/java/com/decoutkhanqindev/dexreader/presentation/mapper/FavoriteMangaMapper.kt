@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.presentation.mapper
 
 import com.decoutkhanqindev.dexreader.domain.entity.manga.FavoriteManga
-import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaStatusEnum
+import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaStatusValue
 import com.decoutkhanqindev.dexreader.presentation.model.manga.FavoriteMangaModel
 
 object FavoriteMangaMapper {
@@ -11,6 +11,6 @@ object FavoriteMangaMapper {
       title = title,
       coverUrl = coverUrl,
       author = author,
-      status = status.toMangaStatusEnum(),
+      status = status.toMangaStatusValue(),
     )
 }

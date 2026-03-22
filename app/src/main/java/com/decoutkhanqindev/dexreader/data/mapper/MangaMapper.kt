@@ -6,6 +6,7 @@ import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toMangaStatus
 import com.decoutkhanqindev.dexreader.data.mapper.CategoryMapper.toCategory
 import com.decoutkhanqindev.dexreader.data.network.api.response.manga.MangaResponse
 import com.decoutkhanqindev.dexreader.domain.entity.manga.Manga
+import com.decoutkhanqindev.dexreader.util.TimeAgo.parseIso8601ToEpoch
 
 object MangaMapper {
 
@@ -34,13 +35,13 @@ object MangaMapper {
     val tags = attributes?.tags?.map { it.toCategory() } ?: emptyList()
     val status = attributes?.status.toMangaStatus()
     val contentRating = attributes?.contentRating.toMangaContentRating()
-    val year = attributes?.year
+    val year = attributes?.year?.toString()
     val availableLanguages =
       attributes?.availableTranslatedLanguages
         ?.map { it.toMangaLanguage() }
         ?: emptyList()
     val latestChapter = attributes?.lastChapter
-    val updatedAt = attributes?.updatedAt
+    val updatedAt = attributes?.updatedAt.parseIso8601ToEpoch()
 
     return Manga(
       id = id,

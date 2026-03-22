@@ -6,17 +6,19 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "chapter_cache")
 data class ChapterCacheEntity(
-  @PrimaryKey val chapterId: String, // UUID từ MangaDex
+  @PrimaryKey
+  @ColumnInfo(name = "chapterId")
+  val chapterId: String,
   @ColumnInfo(name = "mangaId")
-  val mangaId: String, // UUID của truyện
+  val mangaId: String,
   @ColumnInfo(name = "baseUrl")
-  val baseUrl: String, // Base URL từ /at-home/server/{chapter_id}
-  @ColumnInfo(name = "chapterDataHash")
-  val dataHash: String,  //  Hash của dữ liệu chương dùng để tạo URL ảnh
+  val baseUrl: String,
+  @ColumnInfo(name = "chapterDataHash") // column name preserved for DB compatibility; Kotlin property is dataHash
+  val dataHash: String,
   @ColumnInfo(name = "pageHashes")
-  val pageHashes: List<String>, // Danh sách tên file ảnh (hash) của các trang
+  val pageHashes: List<String>,
   @ColumnInfo(name = "totalPages")
-  val totalPages: Int, // Tổng số trang
+  val totalPages: Int,
   @ColumnInfo(name = "cachedAt")
-  val cachedAt: Long, // Timestamp khi cache
+  val cachedAt: Long,
 )

@@ -10,7 +10,7 @@ data class RelationshipAttributesResponse(
   val biography: Map<String, String>? = null, // For author, artist
   @field:Json(name = "fileName") val fileName: String? = null, // For cover_art
   @field:Json(name = "createdAt")
-  val createdAt: Long? = null, // For author, artist, scanlation_group
+  val createdAt: String? = null, // For author, artist, scanlation_group
   @field:Json(name = "updatedAt")
-  val updatedAt: Long? = null, // For author, artist, scanlation_group
+  val updatedAt: String? = null, // For author, artist, scanlation_group
 )

@@ -6,5 +6,5 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class ChapterDataResponse(
   @field:Json(name = "hash") val hash: String? = null,
-  @field:Json(name = "data") val data: List<String>? = null, // Ảnh chất lượng cao
+  @field:Json(name = "data") val data: List<String>? = null,
 )
