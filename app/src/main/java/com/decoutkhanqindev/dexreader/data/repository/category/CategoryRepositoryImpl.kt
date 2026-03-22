@@ -17,9 +17,7 @@ import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
-class CategoryRepositoryImpl
-@Inject
-constructor(
+class CategoryRepositoryImpl @Inject constructor(
   private val apiService: ApiService,
   @param:UploadUrlQualifier private val uploadUrl: String,
 ) : CategoryRepository {

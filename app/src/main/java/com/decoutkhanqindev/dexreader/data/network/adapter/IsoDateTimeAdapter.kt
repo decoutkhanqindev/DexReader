@@ -7,7 +7,7 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
-object IsoDateTimeMoshiAdapter {
+object IsoDateTimeAdapter {
 
   // SimpleDateFormat is not thread-safe; create a fresh instance per call.
   // "XXX" timezone offset pattern requires API 24+, which matches minSdk.

@@ -11,9 +11,7 @@ import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
-class MangaRepositoryImpl
-@Inject
-constructor(
+class MangaRepositoryImpl @Inject constructor(
   private val apiService: ApiService,
   @param:UploadUrlQualifier private val uploadUrl: String,
 ) : MangaRepository {

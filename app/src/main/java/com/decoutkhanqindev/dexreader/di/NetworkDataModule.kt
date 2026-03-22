@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.di
 
 import com.decoutkhanqindev.dexreader.BuildConfig
-import com.decoutkhanqindev.dexreader.data.network.adapter.IsoDateTimeMoshiAdapter
+import com.decoutkhanqindev.dexreader.data.network.adapter.IsoDateTimeAdapter
 import com.decoutkhanqindev.dexreader.data.network.api.ApiService
 import com.decoutkhanqindev.dexreader.data.network.firebase.auth.FirebaseAuthSource
 import com.decoutkhanqindev.dexreader.data.network.firebase.auth.FirebaseAuthSourceImpl
@@ -49,7 +49,7 @@ object NetworkDataModule {
 
   @Provides
   fun provideMoshi(): Moshi = Moshi.Builder()
-    .add(IsoDateTimeMoshiAdapter)
+    .add(IsoDateTimeAdapter)
     .addLast(KotlinJsonAdapterFactory())
     .build()
 

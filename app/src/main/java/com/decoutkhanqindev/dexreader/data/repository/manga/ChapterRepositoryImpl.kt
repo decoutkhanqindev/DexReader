@@ -15,9 +15,7 @@ import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
-class ChapterRepositoryImpl
-@Inject
-constructor(
+class ChapterRepositoryImpl @Inject constructor(
   private val apiService: ApiService,
 ) : ChapterRepository {
   override suspend fun getChapterList(

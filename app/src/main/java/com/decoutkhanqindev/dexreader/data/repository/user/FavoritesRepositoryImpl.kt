@@ -16,17 +16,15 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class FavoritesRepositoryImpl
-@Inject
-constructor(
-  private val firebaseFirestoreSource: FirebaseFirestoreSource,
+class FavoritesRepositoryImpl @Inject constructor(
+  private val firestoreSource: FirebaseFirestoreSource,
 ) : FavoritesRepository {
   override fun observeFavorites(
     userId: String,
     limit: Int,
     lastFavoriteMangaId: String?,
   ): Flow<List<FavoriteManga>> =
-    firebaseFirestoreSource
+    firestoreSource
       .observeFavorites(
         userId = userId,
         limit = limit.toLong(),
@@ -46,7 +44,7 @@ constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        firebaseFirestoreSource.addToFavorites(userId, manga.toFavoriteMangaRequest())
+        firestoreSource.addToFavorites(userId, manga.toFavoriteMangaRequest())
       },
       onCatch = { it.toFirestoreException() }
     )
@@ -57,7 +55,7 @@ constructor(
   ) =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = { firebaseFirestoreSource.removeFromFavorites(userId, mangaId) },
+      onExecute = { firestoreSource.removeFromFavorites(userId, mangaId) },
       onCatch = { it.toFirestoreException() }
     )
 
@@ -65,7 +63,7 @@ constructor(
     userId: String,
     mangaId: String,
   ): Flow<Boolean> =
-    firebaseFirestoreSource
+    firestoreSource
       .observeIsFavorite(userId, mangaId)
       .flowOn(Dispatchers.IO)
       .catch { e -> e.toFirestoreFlowException() }

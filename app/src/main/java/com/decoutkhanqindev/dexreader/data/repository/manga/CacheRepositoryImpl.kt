@@ -11,16 +11,14 @@ import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
-class CacheRepositoryImpl
-@Inject
-constructor(
-  private val chapterCacheDao: ChapterCacheDao,
+class CacheRepositoryImpl @Inject constructor(
+  private val cacheDao: ChapterCacheDao,
 ) : CacheRepository {
   override suspend fun addChapterCache(chapterPages: ChapterPages) =
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        chapterCacheDao.addChapterCache(
+        cacheDao.addChapterCache(
           chapterCacheEntity = chapterPages.toChapterCacheEntity()
         )
       },
@@ -31,7 +29,7 @@ constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        chapterCacheDao.getChapterCache(chapterId)?.toChapterPages()
+        cacheDao.getChapterCache(chapterId)?.toChapterPages()
           ?: throw BusinessException.Resource.ChapterDataNotFound()
       },
       onCatch = { it.toCacheException() }
@@ -40,14 +38,14 @@ constructor(
   override suspend fun deleteChapterCache(chapterId: String) =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = { chapterCacheDao.deleteChapterCache(chapterId) },
+      onExecute = { cacheDao.deleteChapterCache(chapterId) },
       onCatch = { it.toCacheException() }
     )
 
   override suspend fun clearExpiredCache(olderThan: Long) =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = { chapterCacheDao.clearExpiredCache(olderThan) },
+      onExecute = { cacheDao.clearExpiredCache(olderThan) },
       onCatch = { it.toCacheException() }
     )
 }

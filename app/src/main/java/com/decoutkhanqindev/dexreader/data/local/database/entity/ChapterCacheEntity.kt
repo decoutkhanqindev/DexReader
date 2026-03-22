@@ -13,7 +13,7 @@ data class ChapterCacheEntity(
   val mangaId: String,
   @ColumnInfo(name = "baseUrl")
   val baseUrl: String,
-  @ColumnInfo(name = "chapterDataHash") // column name preserved for DB compatibility; Kotlin property is dataHash
+  @ColumnInfo(name = "chapterDataHash")
   val dataHash: String,
   @ColumnInfo(name = "pageHashes")
   val pageHashes: List<String>,

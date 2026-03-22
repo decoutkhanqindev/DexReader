@@ -15,8 +15,6 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
-private const val CHAPTER_CACHE_DB_NAME = "chapter_cache.db"
-
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
 annotation class ThemeModeKeyQualifier
@@ -24,6 +22,9 @@ annotation class ThemeModeKeyQualifier
 @Module
 @InstallIn(SingletonComponent::class)
 object LocalDataModule {
+
+  private const val CHAPTER_CACHE_DB_NAME = "chapter_cache.db"
+
   @Provides
   @Singleton
   fun provideChapterCacheDB(@ApplicationContext context: Context): ChapterCacheDatabase =

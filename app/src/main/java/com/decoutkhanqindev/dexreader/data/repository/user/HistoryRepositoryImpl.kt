@@ -16,10 +16,8 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class HistoryRepositoryImpl
-@Inject
-constructor(
-  private val firebaseFirestoreSource: FirebaseFirestoreSource,
+class HistoryRepositoryImpl @Inject constructor(
+  private val firestoreSource: FirebaseFirestoreSource,
 ) : HistoryRepository {
   override fun observeHistory(
     userId: String,
@@ -27,7 +25,7 @@ constructor(
     mangaId: String?,
     lastReadingHistoryId: String?,
   ): Flow<List<ReadingHistory>> =
-    firebaseFirestoreSource
+    firestoreSource
       .observeHistory(
         userId = userId,
         limit = limit.toLong(),
@@ -48,7 +46,7 @@ constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        firebaseFirestoreSource.upsertHistory(
+        firestoreSource.upsertHistory(
           userId = userId,
           readingHistory = readingHistory.toReadingHistoryRequest()
         )
@@ -63,7 +61,7 @@ constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        firebaseFirestoreSource.removeFromHistory(
+        firestoreSource.removeFromHistory(
           userId = userId,
           readingHistoryId = readingHistoryId
         )

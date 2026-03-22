@@ -12,18 +12,18 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class SettingsRepositoryImpl @Inject constructor(
-  private val themePrefsManager: DataStore<Preferences>,
+  private val prefsManager: DataStore<Preferences>,
   @param:ThemeModeKeyQualifier private val themeModeKey: String,
 ) : SettingsRepository {
   private val themeModePrefsKey = intPreferencesKey(themeModeKey)
 
   override fun observeThemeMode(): Flow<ThemeMode> =
-    themePrefsManager.data.map { prefs ->
+    prefsManager.data.map { prefs ->
       ThemeMode.entries.getOrElse(prefs[themeModePrefsKey] ?: 0) { ThemeMode.SYSTEM }
     }
 
   override suspend fun saveThemeMode(value: ThemeMode) {
-    themePrefsManager.edit { prefs ->
+    prefsManager.edit { prefs ->
       prefs[themeModePrefsKey] = value.ordinal
     }
   }

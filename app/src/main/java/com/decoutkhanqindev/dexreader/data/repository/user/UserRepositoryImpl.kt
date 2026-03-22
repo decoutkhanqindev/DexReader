@@ -22,11 +22,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class UserRepositoryImpl
-@Inject
-constructor(
-  private val firebaseAuthSource: FirebaseAuthSource,
-  private val firebaseFirestoreSource: FirebaseFirestoreSource,
+class UserRepositoryImpl @Inject constructor(
+  private val authSource: FirebaseAuthSource,
+  private val firestoreSource: FirebaseFirestoreSource,
 ) : UserRepository {
   override suspend fun register(
     email: String,
@@ -37,19 +35,19 @@ constructor(
       context = Dispatchers.IO,
       onExecute = {
         val registeredUser =
-          firebaseAuthSource
+          authSource
             .register(email, password)
             ?.toUser()
             ?.copy(name = name)
             ?: throw BusinessException.Auth.RegistrationFailed()
         try {
-          firebaseFirestoreSource.upsertUserProfile(
+          firestoreSource.upsertUserProfile(
             userProfile = registeredUser.toUserProfileRequest()
           )
         } catch (e: Exception) {
           // Swallow logout failure — the original Firestore write failure is the one to surface.
           try {
-            firebaseAuthSource.logout()
+            authSource.logout()
           } catch (_: Exception) {
           }
 
@@ -75,7 +73,7 @@ constructor(
   ) =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = { firebaseAuthSource.login(email, password) },
+      onExecute = { authSource.login(email, password) },
       onCatch = { e ->
         when (e) {
           is FirebaseAuthInvalidUserException ->
@@ -89,12 +87,12 @@ constructor(
       }
     )
 
-  override suspend fun logout() = withContext(Dispatchers.IO) { firebaseAuthSource.logout() }
+  override suspend fun logout() = withContext(Dispatchers.IO) { authSource.logout() }
 
   override suspend fun sendResetPassword(email: String) =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = { firebaseAuthSource.sendResetPassword(email) },
+      onExecute = { authSource.sendResetPassword(email) },
       onCatch = { e ->
         when (e) {
           is FirebaseAuthInvalidUserException ->
@@ -106,7 +104,7 @@ constructor(
     )
 
   override fun observeCurrentUser(): Flow<User?> =
-    firebaseAuthSource
+    authSource
       .observeCurrentUser()
       .map { it?.toUser() }
       .flowOn(Dispatchers.IO)
@@ -116,7 +114,7 @@ constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        firebaseFirestoreSource.upsertUserProfile(
+        firestoreSource.upsertUserProfile(
           userProfile = user.toUserProfileRequest()
         )
       },
@@ -124,7 +122,7 @@ constructor(
     )
 
   override fun observeUserProfile(userId: String): Flow<User?> =
-    firebaseFirestoreSource
+    firestoreSource
       .observeUserProfile(userId)
       .map { it?.toUser() }
       .flowOn(Dispatchers.IO)
