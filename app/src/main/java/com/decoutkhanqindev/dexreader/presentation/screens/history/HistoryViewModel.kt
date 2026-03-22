@@ -30,9 +30,7 @@ constructor(
   private val removeFromHistoryUseCase: RemoveFromHistoryUseCase,
 ) : ViewModel() {
   private val _historyUiState =
-    MutableStateFlow<BasePaginationUiState<ReadingHistoryModel>>(
-      BasePaginationUiState.FirstPageLoading
-    )
+    MutableStateFlow<BasePaginationUiState<ReadingHistoryModel>>(BasePaginationUiState.FirstPageLoading)
   val historyUiState: StateFlow<BasePaginationUiState<ReadingHistoryModel>> =
     _historyUiState.asStateFlow()
 

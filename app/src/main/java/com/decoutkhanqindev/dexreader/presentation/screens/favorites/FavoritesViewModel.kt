@@ -154,10 +154,7 @@ constructor(
                       )
                   }
                   .onFailure { throwable ->
-                    if (throwable is
-                          com.decoutkhanqindev.dexreader.domain.exception.BusinessException.Resource.AccessDenied &&
-                      _userId.value == null
-                    )
+                    if (throwable is BusinessException.Resource.AccessDenied && _userId.value == null)
                       return@onFailure
 
                     _uiState.value =
