@@ -639,3 +639,192 @@ Without rollback, a user is left in a state where Firebase Auth has an account f
 
 **Alternatives considered:**
 - Keep as-is — rejected; incorrect types produce defensive code throughout the mapper layer and hide real null safety at field boundaries
+
+---
+
+## 2026-03-22 (session 2 — data layer double-check)
+
+### Decision: `toFirestoreFlowException()` must map ALL Firestore exceptions, not just PERMISSION_DENIED
+
+**What was decided:**
+`ExceptionMapper.toFirestoreFlowException()` was extended with an `else` branch that maps non-`PERMISSION_DENIED` `FirebaseFirestoreException` subtypes to `InfrastructureException.Unexpected`. The function now mirrors `toFirestoreException()` exactly, just with a `Throwable` receiver instead of `Exception`.
+
+**Reasoning:**
+The previous implementation only handled `PERMISSION_DENIED` and rethrew everything else as-is. Other Firestore errors (UNAVAILABLE, INTERNAL, CANCELLED, DEADLINE_EXCEEDED, etc.) would escape the domain boundary as raw `FirebaseFirestoreException` in all Flow-based Firestore observations (`observeUserProfile`, `observeFavorites`, `observeHistory`, `observeIsFavorite`). Presentation-layer error handlers that expect only `DomainException` subtypes would not match these raw exceptions, causing silent failures or unhandled exception crashes.
+
+**Refactor also applied:**
+The nested `if/else` inside `toFirestoreFlowException` was replaced with a `when` expression to match the style of `toFirestoreException` and `toDomainException` in the same file.
+
+**Alternatives considered:**
+- Keep only PERMISSION_DENIED handling — rejected; all other Firestore errors silently escape the domain boundary
+- Single function for both suspend and Flow contexts — rejected; `runSuspendCatching.onCatch` receives `Exception`, Flow `.catch` receives `Throwable`; a single function cannot serve both without an unsafe cast
+
+---
+
+### Decision: `ChapterPagesMapper.toChapterPages()` — null `chapter.data` returns null (not empty pages)
+
+**What was decided:**
+`val data = chapter.data ?: return null` added. Previously, null `data` produced `pages = emptyList()` and the function returned a non-null `ChapterPages` with zero pages.
+
+**Reasoning:**
+A zero-page `ChapterPages` is indistinguishable from a valid API response where the chapter happens to have no pages. The calling repository uses `toChapterPages()` to decide whether to proceed; returning `null` on null `data` (absent/missing pages array) correctly signals "this response is malformed, skip it." This is consistent with the early-exit pattern already used for `baseUrl` and `hash` in the same function.
+
+**Alternatives considered:**
+- Return empty `ChapterPages` with `emptyList()` — rejected; ambiguous: cannot distinguish missing-data from valid empty
+
+---
+
+### Decision: `ChapterCacheDatabase` hand-rolled singleton removed
+
+**What was decided:**
+The `@Volatile Instance`, `getInstance(context)`, and `buildDatabase(context)` companion object members were removed from `ChapterCacheDatabase`. The `Room.databaseBuilder` call was inlined directly into `LocalDataModule.provideChapterCacheDB`.
+
+**Reasoning:**
+Hilt's `@Singleton` annotation on the `@Provides` function already guarantees one instance per process. The hand-rolled double-checked locking pattern was redundant boilerplate that duplicated Hilt's own guarantee, added a second initialization code path, and obscured the fact that Hilt owns the lifecycle.
+
+**Alternatives considered:**
+- Keep the companion singleton alongside Hilt — rejected; two singleton mechanisms for one object is confusing and redundant
+
+---
+
+### Decision: `SimpleDateFormat` → `ThreadLocal.withInitial { }` in `TimeAgo`
+
+**What was decided:**
+The shared `val ISO_8601_FORMAT = SimpleDateFormat(...)` and the display formatter in `TimeAgo` were replaced with `ThreadLocal.withInitial { SimpleDateFormat(...) }` instances.
+
+**Reasoning:**
+`SimpleDateFormat` is not thread-safe. When held as a `val` on a singleton `object` and called from coroutines running on the shared IO dispatcher thread pool, concurrent calls corrupt each other's internal state, producing incorrect dates or exceptions. `ThreadLocal.withInitial` gives each thread its own instance with no lock contention.
+
+**Alternatives considered:**
+- `@Synchronized` — rejected; adds lock contention on every date parse/format call; `ThreadLocal` is allocation-free after first access per thread
+- Use `java.time.ZonedDateTime` — rejected; requires API 26; minSdk is 24
+
+---
+
+### Decision: Duplicate `parseIso8601ToEpoch()` consolidated into `TimeAgo`
+
+**What was decided:**
+`parseIso8601ToEpoch()` + `ISO_8601_FORMAT` existed independently in both `MangaMapper` and `ChapterMapper`. Both private copies removed; the single canonical implementation now lives in `TimeAgo`. Both mappers import it via `TimeAgo.parseIso8601ToEpoch`.
+
+**Reasoning:**
+`TimeAgo` is the project's existing time-handling utility. ISO epoch parsing is a time utility — co-location is semantically correct. Duplication meant two places to update if the format string or error handling ever changes.
+
+**Alternatives considered:**
+- Keep private copies per mapper — rejected; divergence risk; violates DRY
+- New dedicated `DateTimeUtils` object — rejected; `TimeAgo` already exists and is the right home
+
+---
+
+### Decision: `runCatching { }.getOrNull()` → `try/catch` in `parseIso8601ToEpoch`
+
+**What was decided:**
+`runCatching { SimpleDateFormat.parse(...) }.getOrNull()` replaced with a plain `try { ... } catch (_: Exception) { null }`.
+
+**Reasoning:**
+`runCatching` allocates a `Result` wrapper on every call. `parseIso8601ToEpoch` is called once per chapter when parsing manga/chapter list responses — it is on the hot path for list rendering. `try/catch` is allocation-free and semantically equivalent.
+
+**Alternatives considered:**
+- Keep `runCatching` — rejected; unnecessary `Result` allocation on every chapter in a list
+
+---
+
+### Decision: `Json.Default` instead of `Json { ignoreUnknownKeys = true }` in `StringListTypeConverter`
+
+**What was decided:**
+The custom `Json { ignoreUnknownKeys = true }` instance replaced with `Json.Default`.
+
+**Reasoning:**
+`ignoreUnknownKeys` only applies when deserializing JSON objects (key-value maps). `StringListTypeConverter` deserializes `List<String>` — a JSON array. The flag has no effect on array deserialization. Using `Json.Default` eliminates an unnecessary private instance and uses the canonical shared singleton.
+
+**Alternatives considered:**
+- Keep custom `Json` instance — rejected; the configuration flag is dead for this use case; unnecessary allocation
+
+---
+
+## 2026-03-22 (domain layer review session)
+
+### Decision: `data class` → `class` for all `BusinessException` and `InfrastructureException` subtypes
+
+**What was decided:**
+All exception subtypes in `BusinessException.kt` and `InfrastructureException.kt` were changed from `data class` to plain `class`. The redundant `val rootCause: Throwable?` field was removed; the constructor parameter was renamed to `cause` (matching `Throwable`'s standard API). All call sites updated: `rootCause = this` → `cause = this`.
+
+**Reasoning:**
+`data class` on exceptions is semantically incorrect:
+- Auto-generated `equals`/`hashCode` based on the cause field means two separate exceptions with the same cause would be considered equal — never the intended semantics for exceptions.
+- `copy()` on exceptions creates a shallow copy that shares mutable Throwable state — dangerous.
+- `componentN()` destructuring on exceptions is never used and adds noise.
+The `val rootCause` field was a direct alias for `Throwable.cause` (it was always passed to the superclass constructor). Accessing `e.cause` is the standard Kotlin/Java idiom; the duplicate field added confusion and name collision risk with `cause`.
+
+**Alternatives considered:**
+- Keep `data class` — rejected; auto-generated methods are semantically wrong for exception types
+- Keep `data class` but override `equals`/`hashCode` to use reference equality — rejected; over-engineering; just use `class`
+- Keep `rootCause` field alongside standard `cause` — rejected; they hold the same object, pure redundancy
+
+**Impact:**
+No `.rootCause` usages existed anywhere in the codebase (verified with grep). `ExceptionMapper.kt` and `UserRepositoryImpl.kt` were the only call sites creating these exceptions; both updated.
+
+---
+
+### Decision: Domain model companion constants — what to add vs. what to omit
+
+**What was decided:**
+The simplify pass after the review pruned two constants that were added by the review agent:
+- `DEFAULT_LAST_UPDATED: Long? = null` removed from `Manga` — a nullable constant whose only value is `null` is semantically redundant; callers express absence directly through the nullable type.
+- `DEFAULT_MANGA_ID = ""` removed from `Chapter` — dead constant with no active call site; `ChapterMapper` uses an early `null` return rather than an empty-string sentinel.
+
+Constants kept:
+- `Chapter.DEFAULT_LANGUAGE = MangaLanguage.UNKNOWN` — used by mapper as fallback when ISO code is unrecognized
+- `Manga.DEFAULT_STATUS = MangaStatus.UNKNOWN`, `Manga.DEFAULT_CONTENT_RATING = MangaContentRating.UNKNOWN` — used by `MangaMapper` as fallback for null/unrecognized API values
+- `ChapterPages.DEFAULT_BASE_URL = ""`, `ChapterPages.DEFAULT_HASH = ""` — used by `ChapterPagesMapper`
+
+**Reasoning:**
+A constant is justified only if it (a) has an active call site that references it, or (b) is semantically non-obvious (e.g. a threshold, limit, or enum sentinel). A nullable `null` constant is a tautology; an empty-string sentinel for a field that is actually handled with a null-return is misleading.
+
+---
+
+### Decision: `CategoryRepository` default list parameters extracted to companion constants
+
+**What was decided:**
+`listOf(MangaStatus.ON_GOING)` and `listOf(MangaContentRating.SAFE)` in `CategoryRepository.getMangaListByCategory()` default parameters were extracted to:
+```kotlin
+companion object {
+  val DEFAULT_STATUS_FILTER: List<MangaStatus> = listOf(MangaStatus.ON_GOING)
+  val DEFAULT_CONTENT_RATING_FILTER: List<MangaContentRating> = listOf(MangaContentRating.SAFE)
+}
+```
+`GetMangaListByCategoryUseCase` updated to reference the same constants.
+
+**Reasoning:**
+`listOf(...)` in a default parameter expression is evaluated on every call where the default is used, allocating a new list object each time. A companion constant is initialized once at class load time and reused.
+
+**Alternatives considered:**
+- Change defaults to `emptyList()` with callers always providing filters — rejected; breaks call sites that expect sensible defaults and would require updating all callers
+
+---
+
+### Decision: `ClearExpiredCacheUseCase.clock` moved to constructor parameter
+
+**What was decided:**
+`internal var clock: () -> Long = System::currentTimeMillis` (a mutable field) was replaced with `private val clock: () -> Long = System::currentTimeMillis` (a constructor parameter with default).
+
+**Reasoning:**
+A mutable `var` on a use case breaks the immutability contract. Hilt-injected use cases should be stateless after construction. Constructor injection is the idiomatic pattern: tests call `ClearExpiredCacheUseCase(repository, clock = { fixedTimestamp })` without needing to mutate a field after injection.
+
+**Alternatives considered:**
+- Keep `internal var` for test convenience — rejected; mutable state on an injected singleton is a latent source of test pollution (one test's mutation leaks to another if tests run in-process)
+
+---
+
+### Decision: `UpdateUserProfileUseCase` avatar null-means-unchanged semantics enforced
+
+**What was decided:**
+The line `avatarUrl = newAvatarUrl` in `UpdateUserProfileUseCase` was a bug — when `newAvatarUrl = null` (caller intent: "don't change the avatar"), the existing avatar was silently wiped. Fixed to:
+```kotlin
+val avatarToUpdate = newAvatarUrl ?: currentUser.avatarUrl
+```
+Consistent with how `newName` is already handled one line above (`newName?.trim() ?: currentUser.name`).
+
+**Reasoning:**
+The use case parameter contract states `null` means "no change". The `hasAvatarChanged` guard depended on comparing `currentUser.avatarUrl != newAvatarUrl`, which correctly detected the no-change case and skipped the update. But when the update did proceed, it used the raw `null` — defeating the guard's logic. The fix aligns the update path with the detection path.
+
+**Classification:** Correctness bug (data loss — user's avatar URL deleted on any profile update where avatar is not re-supplied).

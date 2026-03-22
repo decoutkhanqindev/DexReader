@@ -1,12 +1,23 @@
 # Blockers
 
-No blockers.
+## Pending: 3 worktrees awaiting commit approval
 
-Data layer strict Kotlin review is fully complete. All fixes applied. Build passes. User commits manually.
+All domain layer review fixes are staged but not committed. User needs to approve commits for:
+
+- `agent-a2c8552b` (branch `worktree-agent-a2c8552b`) — entity/exception + ExceptionMapper + UserRepositoryImpl (7 files)
+- `agent-abc83fb6` (branch `worktree-agent-abc83fb6`) — CategoryRepository + GetMangaListByCategoryUseCase (2 files)
+- `agent-aeba0533` (branch `worktree-agent-aeba0533`) — ClearExpiredCacheUseCase + UpdateUserProfileUseCase (2 files)
+
+Once user approves, commit each worktree and merge into main branch.
 
 ---
 
 ## Previously resolved blockers (archived)
+
+### RESOLVED (2026-03-22, session 2) — Data layer double-check review
+All 6 review units completed. Key fixes: `toFirestoreFlowException()` domain boundary escape,
+`ChapterPagesMapper` silent empty-pages return, `SimpleDateFormat` thread safety, duplicate
+`parseIso8601ToEpoch` consolidation, `ChapterCacheDatabase` redundant singleton. All committed.
 
 ### RESOLVED (2026-03-22) — Data layer runtime bugs from strict review
 All 9 review units completed. Critical fixes: `java.time` API 26 crash, `jakarta.inject` Hilt crash (×2), `valueOf` crash risk in ApiParamMapper, `register()` compile bug. Build passes.

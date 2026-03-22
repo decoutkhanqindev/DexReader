@@ -1,56 +1,35 @@
 # Current Task
 
 ## Task
-Strict Kotlin review of the entire data layer — 9 parallel review agents ran, all fixes applied to main repo. User chose to commit manually.
+Domain layer strict Kotlin double-check review — 3 parallel review agents ran across entity/exception, repository interfaces, and use cases. All fixes applied to isolated git worktrees.
 
-## Status: CHANGES UNCOMMITTED — build is green, all fixes are in the working tree
-
-All changes are staged/modified in the working directory. The user will commit them manually.
+## Status: COMPLETE — awaiting user approval to commit
 
 ---
 
 ### What was completed this session
 
-**Round 1 review (9 agents)** — all fixes applied to main repo:
+**Unit 1 — `domain/entity/` + `domain/exception/` + affected data layer files:**
+- `ChapterPages.kt`: added `companion object { DEFAULT_BASE_URL = "", DEFAULT_HASH = "" }`
+- `Chapter.kt`: added `DEFAULT_LANGUAGE = MangaLanguage.UNKNOWN`
+- `Manga.kt`: added `DEFAULT_STATUS = MangaStatus.UNKNOWN`, `DEFAULT_CONTENT_RATING = MangaContentRating.UNKNOWN`
+- `BusinessException.kt`: `data class` → `class` for all subtypes; removed redundant `val rootCause` field; parameter renamed to `cause` (standard `Throwable` idiom)
+- `InfrastructureException.kt`: same `data class` → `class` + `rootCause` removal
+- `ExceptionMapper.kt`: all `rootCause = this` → `cause = this`
+- `UserRepositoryImpl.kt`: all `rootCause = e` → `cause = e`
+- Simplify pass removed: `DEFAULT_LAST_UPDATED: Long? = null` (nullable null constant is redundant) and `DEFAULT_MANGA_ID = ""` (dead constant, no call site)
 
-#### Local layer
-- `ChapterCacheDatabase.kt`: `context` → `context.applicationContext`; `fallbackToDestructiveMigration(false)` → `(true)`
-- `StringListTypeConverter.kt`: private `Json` instance with `ignoreUnknownKeys = true`; `decodeFromString` wrapped in `try/catch(SerializationException)` — corrupt cache returns `emptyList()` instead of crashing
-- `ThemePrefsManager.kt`: `val Context.dataStore` → `internal val`
+**Unit 2 — `domain/repository/`:**
+- `CategoryRepository.kt`: `listOf(MangaStatus.ON_GOING)` and `listOf(MangaContentRating.SAFE)` extracted to `companion object` constants `DEFAULT_STATUS_FILTER` / `DEFAULT_CONTENT_RATING_FILTER`
+- `GetMangaListByCategoryUseCase.kt`: updated to reference same constants
 
-#### Mapper layer
-- `ApiParamMapper.kt`: `MangaSortOrder.toApiParam()` and `MangaLanguage.toApiParam()` changed from unsafe `valueOf(name).value` to safe `entries.find { it.name == this.name }?.value ?: fallback`; `toMangaStatus`, `toMangaContentRating`, `toMangaLanguage` all changed from `valueOf(it.name)` to `entries.find { it.name == param.name }`; `toMangaLanguage` receiver now uses `.lowercase()`
-- `ChapterPagesMapper.kt`: `substringAfterLast("/")` → `substringAfterLast("/", missingDelimiterValue = "")` (prevents silent data corruption when URL has no `/`)
-- `ChapterMapper.kt`: `it?.type` → `it.type` (unnecessary safe call removed after `ChapterResponse.relationships` type fix)
-- `MangaMapper.kt`: `?: ""` → `?: Manga.DEFAULT_COVER_URL`
-- `ExceptionMapper.kt`: added `toFirestoreFlowException(): Nothing` (Throwable extension for Flow `.catch` blocks) and `toFirestoreException(): Nothing` (Exception extension for `onCatch` blocks)
-
-#### Domain entity
-- `Manga.kt`: added `const val DEFAULT_COVER_URL = ""`
-
-#### Network layer
-- `NetworkInterceptor.kt`: `jakarta.inject.Inject` → `javax.inject.Inject` (was causing runtime Hilt DI crash); builder chain simplified to `chain.proceed(chain.request())`
-- `ApiEndpoints.kt`: removed leading `/` from `MANGA` and `CHAPTER_ID` constants
-- `ApiQueries.kt`: `ORDER_RATING = "order[rating]=desc"` → `"order[rating]"` (embedded `=desc` in key name produced garbage query params)
-- `ApiService.kt`: `translatedLanguages: String` → `List<String>` (Retrofit needs a list for repeated query params)
-- `IsoDateTimeMoshiAdapter.kt`: complete rewrite — replaced `java.time.ZonedDateTime` (API 26) with `SimpleDateFormat` (API 24 safe, matches minSdk); was causing `NoClassDefFoundError` on API 24/25
-- `MangaAttributesResponse.kt`: `title: Map<String, String>` → `title: Map<String, String>? = null` (non-nullable would crash entire parse if field absent)
-- `TagAttributesResponse.kt`: `Map<String, String?>?` → `Map<String, String>?` (nullable map values were incorrect)
-- `RelationshipAttributesResponse.kt`: same nullable map value fix
-- `ChapterResponse.kt`: `List<RelationshipResponse?>?` → `List<RelationshipResponse>?` (nullable list elements were incorrect)
-- `UserProfileResponse.kt`: removed duplicate `@ServerTimestamp var createdAt` field
-
-#### Repository layer
-- `MangaRepositoryImpl.kt`: `jakarta.inject.Inject` → `javax.inject.Inject` (runtime DI crash fix)
-- `ChapterRepositoryImpl.kt`: `translatedLanguages = language.toApiParam()` → `listOf(language.toApiParam())`
-- `CategoryRepositoryImpl.kt`: chained `if/else` → exhaustive `when(sortCriteria)` block
-- `SettingsRepositoryImpl.kt`: `ThemeMode.entries[index]` → `getOrElse { ThemeMode.SYSTEM }`
-- `FavoritesRepositoryImpl.kt`: `flowOn` moved before `.catch`; `.catch { e -> e.toFirestoreFlowException() }`; `onCatch = { it.toFirestoreException() }` for suspend ops
-- `HistoryRepositoryImpl.kt`: same flowOn + toFirestoreFlowException/toFirestoreException pattern
-- `UserRepositoryImpl.kt`: rollback Auth account on Firestore write failure during `register()` with correct `try { logout() } catch (_: Exception) { }` pattern; added missing `FirebaseAuthInvalidCredentialsException` mapping; `observeUserProfile` gets `.catch { e -> e.toFirestoreFlowException() }`; dead `is BusinessException.Auth -> throw e` guards removed
+**Unit 3 — `domain/usecase/`:**
+- `ClearExpiredCacheUseCase.kt`: `internal var clock: () -> Long` → constructor parameter `private val clock: () -> Long = System::currentTimeMillis`
+- `UpdateUserProfileUseCase.kt`: **bug fix** — `avatarUrl = newAvatarUrl` was silently wiping the avatar when `newAvatarUrl = null` meant "unchanged"; fixed to `val avatarToUpdate = newAvatarUrl ?: currentUser.avatarUrl`
 
 ---
 
-### No pending work
-
-User will commit manually. Next session should start fresh on whatever the user wants to work on next.
+### Pending
+- User has not yet approved commits for any of the 3 worktrees
+- Worktrees: `agent-a2c8552b`, `agent-abc83fb6`, `agent-aeba0533`
+- Once user approves, commit each worktree and merge/cherry-pick changes into main branch

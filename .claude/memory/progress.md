@@ -1,46 +1,38 @@
 # Session Progress
 
-## Completed This Session (2026-03-22)
+## Completed This Session (2026-03-22, domain layer review)
 
-### Data Layer Strict Kotlin Review — 9 parallel agents, all fixes applied
+### Domain Layer Strict Kotlin Review — 3 parallel agents, all fixes staged in worktrees
 
-#### Critical bug fixes (would crash at runtime)
-- `IsoDateTimeMoshiAdapter.kt` — `java.time.ZonedDateTime` requires API 26; minSdk is 24. Fixed to `SimpleDateFormat` (API 21+). Was a silent `NoClassDefFoundError` on API 24/25.
-- `NetworkInterceptor.kt` — `jakarta.inject.Inject` instead of `javax.inject.Inject`. Hilt targets `javax.inject`; `jakarta` import causes Hilt to not generate the factory → runtime DI crash.
-- `MangaRepositoryImpl.kt` — same `jakarta.inject.Inject` bug → runtime DI crash.
-- `ApiQueries.kt` — `ORDER_RATING = "order[rating]=desc"` embedded the value in the key name → garbage query param (`?order[rating]=desc=desc`). Top-rated sort was silently broken.
-- `UserRepositoryImpl.register()` — `runCatching { firebaseAuthSource.logout() }` called a suspend function from a non-suspend stdlib lambda → compile error (depending on Kotlin version) or wrong behavior.
+#### Critical bug fix
+- `UpdateUserProfileUseCase.toFirestoreFlowException()` — `avatarUrl = newAvatarUrl` silently wiped the existing avatar when `newAvatarUrl` was `null` (caller intent: "no change"). Fixed: `val avatarToUpdate = newAvatarUrl ?: currentUser.avatarUrl`.
 
-#### Data integrity fixes
-- `ApiParamMapper.kt` — `MangaSortOrder.toApiParam()` and `MangaLanguage.toApiParam()` used `valueOf(name)` which throws `IllegalArgumentException` if enum names ever diverge between domain and param enums.
-- `ApiParamMapper.toMangaStatus/ContentRating/Language()` — same `valueOf` crash risk on reverse mapping.
-- `ChapterPagesMapper.toChapterCacheEntity()` — `substringAfterLast("/")` returns full string when no `/` present → corrupted page hashes in cache.
-- `MangaAttributesResponse.title` — non-nullable with no default → `JsonDataException` crash if `title` field is ever absent from API response.
-- `ChapterResponse.relationships` — `List<RelationshipResponse?>?` had nullable list elements the API never produces → defensive safe calls throughout mapper.
+#### Design correctness fix (exception types)
+- `BusinessException` and `InfrastructureException` subtypes were `data class` which generated semantically invalid `equals`/`hashCode`/`copy`/`componentN` for exception types. Changed to plain `class`. The redundant `val rootCause` field (an alias for `Throwable.cause`) was removed; parameter renamed to `cause`. All call sites in `ExceptionMapper` and `UserRepositoryImpl` updated.
 
-#### Correctness improvements
-- `CategoryRepositoryImpl` — chained `if/else` for `sortCriteria` → exhaustive `when` block (compile-time coverage check)
-- `SettingsRepositoryImpl` — `entries[index]` → `getOrElse { SYSTEM }` (prevents `IndexOutOfBoundsException` on corrupt preference)
-- `FavoritesRepositoryImpl/HistoryRepositoryImpl` — `flowOn` was after `.catch`; moved before so upstream IO errors are caught correctly
-- `UserRepositoryImpl.register()` — no rollback when Firestore write fails after Auth registration; fixed with Auth account deletion on failure
-- `ApiService.translatedLanguages` — `String` → `List<String>` (Retrofit serializes list as repeated params, not a single string)
-- `TagAttributesResponse/RelationshipAttributesResponse.biography` — `Map<String, String?>` → `Map<String, String>` (nullable map values were incorrect)
+#### Architecture fix (testability)
+- `ClearExpiredCacheUseCase.clock` was `internal var` — mutable field on immutable use case. Moved to constructor parameter with default `System::currentTimeMillis`.
 
-#### Design/architecture improvements
-- `ExceptionMapper` — added `toFirestoreFlowException()` (Throwable for Flow `.catch`) and `toFirestoreException()` (Exception for `onCatch`) to centralize PERMISSION_DENIED mapping
-- `ChapterCacheDatabase` — `context.applicationContext` + `fallbackToDestructiveMigration(true)`
-- `StringListTypeConverter` — private Json instance; SerializationException caught → cache miss instead of crash
-- `ThemePrefsManager.dataStore` — made `internal`
-- `ApiEndpoints.MANGA/CHAPTER_ID` — removed leading slashes (Retrofit convention)
-- `UserProfileResponse` — removed duplicate `@ServerTimestamp createdAt` field
-- `Manga.DEFAULT_COVER_URL` — added companion constant; `MangaMapper` updated to use it
+#### Allocation fix
+- `CategoryRepository.getMangaListByCategory()` default parameters `listOf(MangaStatus.ON_GOING)` and `listOf(MangaContentRating.SAFE)` created a new list on every defaulted call. Extracted to companion constants. `GetMangaListByCategoryUseCase` updated to reference the same constants.
+
+#### Domain constant completions
+- `ChapterPages`: added `companion object { DEFAULT_BASE_URL = "", DEFAULT_HASH = "" }`
+- `Chapter`: added `DEFAULT_LANGUAGE = MangaLanguage.UNKNOWN`
+- `Manga`: added `DEFAULT_STATUS = MangaStatus.UNKNOWN`, `DEFAULT_CONTENT_RATING = MangaContentRating.UNKNOWN`
+- Simplify pass correctly pruned: `DEFAULT_LAST_UPDATED: Long? = null` (redundant) and `DEFAULT_MANGA_ID = ""` (dead constant)
 
 ---
 
 ## Still To Do
 
-No known outstanding issues in the data layer. Changes are uncommitted (user commits manually).
+Awaiting user approval to commit the 3 worktrees:
+- `agent-a2c8552b` — entity/exception changes (7 files)
+- `agent-abc83fb6` — repository interface changes (2 files)
+- `agent-aeba0533` — use case changes (2 files)
+
+No known outstanding issues in the domain layer after these commits land.
 
 ## Single Most Important Next Step
 
-Ask the user what to work on next — data layer strict review is fully complete.
+Get user go-ahead to commit all 3 worktrees, then merge changes to main branch. After that, domain layer review is complete.
