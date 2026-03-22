@@ -559,3 +559,83 @@ MangaDex API. The param enums should only contain values the API actually accept
 it to nullable would require verifying Firestore serialization behavior for null fields (Firestore omits null
 fields by default, which could break existing documents). Using `?: ""` is the safer minimal change: an empty
 string in Firestore round-trips to `MangaStatus.UNKNOWN` on read-back, preserving the semantic correctly.
+
+---
+
+## 2026-03-22
+
+### Decision: `IsoDateTimeMoshiAdapter` — `java.time` → `SimpleDateFormat`
+
+**What was decided:**
+`ZonedDateTime.parse` / `java.time.Instant` (API 26) replaced with `SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.US)` (API 24+).
+
+**Reasoning:**
+`java.time.*` requires API 26. minSdk is 24 and the project does not use core library desugaring.
+The adapter was annotated `@RequiresApi(Build.VERSION_CODES.O)`, meaning on API 24/25 Moshi would hit a `NoClassDefFoundError` at runtime whenever a manga's `updatedAt` field was deserialized. `SimpleDateFormat` with `"XXX"` offset pattern is available from API 24, which matches minSdk exactly.
+
+**Alternatives considered:**
+- Add core library desugaring — rejected (build config change, overkill for one adapter)
+- Keep `java.time` with API-level branching — rejected (unnecessary complexity)
+
+---
+
+### Decision: `ApiParamMapper` — `valueOf(name)` → `entries.find { it.name == this.name }`
+
+**What was decided:**
+`MangaSortOrder.toApiParam()`, `MangaLanguage.toApiParam()`, `toMangaStatus()`, `toMangaContentRating()`, `toMangaLanguage()` all replaced `valueOf(name)` with `entries.find { it.name == param.name }`.
+
+**Reasoning:**
+`valueOf(name)` throws `IllegalArgumentException` if the domain enum name doesn't exactly match the param enum name. While currently all names are kept in sync, `valueOf` is a time-bomb — adding an enum entry on one side without the other would cause a runtime crash on every affected API call. `entries.find` returns `null` gracefully and falls back to the `UNKNOWN` or `DESC` default.
+
+**Alternatives considered:**
+- Keep `valueOf` and maintain strict naming discipline — rejected (runtime crash vs null is not an acceptable tradeoff for a mapper)
+
+---
+
+### Decision: `ExceptionMapper` — two separate extension functions for suspend vs Flow error handling
+
+**What was decided:**
+- `Exception.toFirestoreException(): Nothing` — for use in `runSuspendCatching` `onCatch` lambdas (receiver is `Exception`)
+- `Throwable.toFirestoreFlowException(): Nothing` — for use in Flow `.catch { }` lambdas (receiver is `Throwable`)
+
+**Reasoning:**
+`runSuspendCatching.onCatch` receives `Exception`; Flow `.catch` receives `Throwable`. These are different types in the Kotlin/JVM type hierarchy. A single function can't serve both without an unsafe cast. Keeping two functions with clear names makes the usage site self-documenting.
+
+**Alternatives considered:**
+- Single `Throwable` extension for both — rejected (`runSuspendCatching.onCatch` is typed as `Exception`; a `Throwable` extension would not be picked up without an explicit cast)
+- Inline the logic at each call site — rejected (was already duplicated 4 times; centralization prevents drift)
+
+---
+
+### Decision: `UserRepositoryImpl.register()` — rollback Auth on Firestore write failure
+
+**What was decided:**
+If `upsertUserProfile()` throws after `register()` succeeds, a `try { firebaseAuthSource.logout() } catch (_: Exception) { }` is called to delete the Auth account before rethrowing the original exception.
+
+**Reasoning:**
+Without rollback, a user is left in a state where Firebase Auth has an account for them but Firestore has no profile document. On next login, `observeUserProfile` would return null and the app would show a blank/broken profile. The rollback is best-effort (logout failure is swallowed) because the original Firestore write failure is the actionable error to surface to the user.
+
+**Note on `runCatching { logout() }` vs `try/catch`:**
+`runCatching` calls a non-inline lambda, which cannot call `suspend` functions. `firebaseAuthSource.logout()` is `suspend`. The correct pattern is `try { logout() } catch (_: Exception) { }` inside the `suspend` `onExecute` block.
+
+**Alternatives considered:**
+- No rollback, accept partial state — rejected (user could be permanently stuck with a broken account)
+- Firestore transaction — not applicable; Firebase Auth and Firestore are separate systems with no cross-transaction support
+
+---
+
+### Decision: Response DTO nullability corrections
+
+**What was decided:**
+- `MangaAttributesResponse.title` changed from `Map<String, String>` (non-nullable) to `Map<String, String>? = null`
+- `TagAttributesResponse.name` changed from `Map<String, String?>?` to `Map<String, String>?`
+- `RelationshipAttributesResponse.biography` changed from `Map<String, String?>?` to `Map<String, String>?`
+- `ChapterResponse.relationships` changed from `List<RelationshipResponse?>?` to `List<RelationshipResponse>?`
+
+**Reasoning:**
+- `title` non-nullable: Moshi throws `JsonDataException` if the field is absent from the response (no default value). MangaDex occasionally omits optional fields. Making it nullable prevents a full response-parse crash from a single missing field.
+- Map value nullability: The API never sends `null` as a map value for multilingual strings. `Map<String, String?>` implies nullable values, which forces callers to use `?.` even on values that exist. `Map<String, String>` is the correct type; the outer `?` handles the absent-field case.
+- List element nullability: Relationship items in API responses are never null elements. `List<RelationshipResponse?>` forced defensive safe calls (`it?.type`) in mappers. `List<RelationshipResponse>` removes the false nullable contract.
+
+**Alternatives considered:**
+- Keep as-is — rejected; incorrect types produce defensive code throughout the mapper layer and hide real null safety at field boundaries

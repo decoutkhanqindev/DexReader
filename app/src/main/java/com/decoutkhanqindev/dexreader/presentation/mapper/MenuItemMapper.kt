@@ -1,6 +1,5 @@
 package com.decoutkhanqindev.dexreader.presentation.mapper
 
-import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuItemValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuItemValue.CATEGORIES
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuItemValue.FAVORITES
@@ -8,14 +7,16 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuItemValu
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuItemValue.HOME
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuItemValue.PROFILE
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuItemValue.SETTINGS
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 
 object MenuItemMapper {
-  fun MenuItemValue.toNavRoute() = when (this) {
-    HOME -> NavRoute.Home
-    CATEGORIES -> NavRoute.Categories
-    FAVORITES -> NavRoute.Favorites
-    HISTORY -> NavRoute.History
-    PROFILE -> NavRoute.Profile
-    SETTINGS -> NavRoute.Settings
-  }
+  fun MenuItemValue.toNavRoute() =
+    when (this) {
+      HOME -> NavRoute.Home
+      CATEGORIES -> NavRoute.Categories
+      FAVORITES -> NavRoute.Favorites
+      HISTORY -> NavRoute.History
+      PROFILE -> NavRoute.Profile
+      SETTINGS -> NavRoute.Settings
+    }
 }

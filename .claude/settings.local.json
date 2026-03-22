@@ -49,7 +49,11 @@
       "Bash(./gradlew assembleDebug --info)",
       "Bash(./gradlew assembleDebug --stacktrace)",
       "Bash(./gradlew kspDebugKotlin)",
-      "Bash(./gradlew assembleDebug --rerun-tasks)"
+      "Bash(./gradlew assembleDebug --rerun-tasks)",
+      "Bash(for dir:*)",
+      "Bash(do echo:*)",
+      "Read(//c/Android Development/dex_reader/DexReader/app/src/main/java/com/decoutkhanqindev/dexreader/data/**)",
+      "Bash(wc:*)"
     ]
   },
   "spinnerTipsEnabled": true

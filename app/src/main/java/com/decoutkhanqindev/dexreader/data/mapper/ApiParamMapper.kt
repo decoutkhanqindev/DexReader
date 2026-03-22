@@ -16,24 +16,26 @@ object ApiParamMapper {
   fun MangaContentRating.toApiParam(): String? =
     MangaContentRatingParam.entries.find { it.name == this.name }?.value
 
-  fun MangaSortOrder.toApiParam() =
-    MangaSortOrderParam.valueOf(this.name).value
+  fun MangaSortOrder.toApiParam(): String =
+    MangaSortOrderParam.entries.find { it.name == this.name }?.value
+      ?: MangaSortOrderParam.DESC.value
 
-  fun MangaLanguage.toApiParam() =
-    MangaLanguageCodeParam.valueOf(this.name).value
+  fun MangaLanguage.toApiParam(): String =
+    MangaLanguageCodeParam.entries.find { it.name == this.name }?.value
+      ?: MangaLanguageCodeParam.UNKNOWN.value
 
   fun String?.toMangaStatus() =
     MangaStatusParam.entries.find { it.value == this?.lowercase() }
-      ?.let { MangaStatus.valueOf(it.name) }
+      ?.let { param -> MangaStatus.entries.find { it.name == param.name } }
       ?: MangaStatus.UNKNOWN
 
   fun String?.toMangaContentRating() =
     MangaContentRatingParam.entries.find { it.value == this?.lowercase() }
-      ?.let { MangaContentRating.valueOf(it.name) }
+      ?.let { param -> MangaContentRating.entries.find { it.name == param.name } }
       ?: MangaContentRating.UNKNOWN
 
   fun String?.toMangaLanguage() =
-    MangaLanguageCodeParam.entries.find { it.value == this }
-      ?.let { MangaLanguage.valueOf(it.name) }
+    MangaLanguageCodeParam.entries.find { it.value == this?.lowercase() }
+      ?.let { param -> MangaLanguage.entries.find { it.name == param.name } }
       ?: MangaLanguage.UNKNOWN
 }

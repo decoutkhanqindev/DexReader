@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.data.repository.user
 
+import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirestoreFlowException
 import com.decoutkhanqindev.dexreader.data.mapper.UserMapper.toUser
 import com.decoutkhanqindev.dexreader.data.mapper.UserMapper.toUserProfileRequest
 import com.decoutkhanqindev.dexreader.data.network.firebase.auth.FirebaseAuthSource
@@ -14,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -40,14 +42,27 @@ constructor(
             ?.toUser()
             ?.copy(name = name)
             ?: throw BusinessException.Auth.RegistrationFailed()
-        firebaseFirestoreSource.upsertUserProfile(
-          userProfile = registeredUser.toUserProfileRequest()
-        )
+        try {
+          firebaseFirestoreSource.upsertUserProfile(
+            userProfile = registeredUser.toUserProfileRequest()
+          )
+        } catch (e: Exception) {
+          // Swallow logout failure — the original Firestore write failure is the one to surface.
+          try {
+            firebaseAuthSource.logout()
+          } catch (_: Exception) {
+          }
+
+          throw InfrastructureException.Unexpected(rootCause = e)
+        }
       },
       onCatch = { e ->
         when (e) {
           is FirebaseAuthUserCollisionException ->
             throw BusinessException.Auth.UserAlreadyExists(rootCause = e)
+
+          is FirebaseAuthInvalidCredentialsException ->
+            throw BusinessException.Auth.InvalidCredentials(rootCause = e)
 
           else -> throw InfrastructureException.Unexpected(rootCause = e)
         }
@@ -82,7 +97,6 @@ constructor(
       onExecute = { firebaseAuthSource.sendResetPassword(email) },
       onCatch = { e ->
         when (e) {
-          is BusinessException.Auth -> throw e
           is FirebaseAuthInvalidUserException ->
             throw BusinessException.Auth.UserNotFound(rootCause = e)
 
@@ -106,12 +120,7 @@ constructor(
           userProfile = user.toUserProfileRequest()
         )
       },
-      onCatch = { e ->
-        when (e) {
-          is BusinessException.Auth -> throw e
-          else -> throw InfrastructureException.Unexpected(rootCause = e)
-        }
-      }
+      onCatch = { e -> throw InfrastructureException.Unexpected(rootCause = e) }
     )
 
   override fun observeUserProfile(userId: String): Flow<User?> =
@@ -119,5 +128,6 @@ constructor(
       .observeUserProfile(userId)
       .map { it?.toUser() }
       .flowOn(Dispatchers.IO)
+      .catch { e -> e.toFirestoreFlowException() }
       .distinctUntilChanged()
 }

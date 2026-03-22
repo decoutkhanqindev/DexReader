@@ -31,11 +31,11 @@ abstract class ChapterCacheDatabase : RoomDatabase() {
 
     private fun buildDatabase(context: Context): ChapterCacheDatabase =
       Room.databaseBuilder(
-        context = context,
+        context = context.applicationContext,
         klass = ChapterCacheDatabase::class.java,
         name = DATABASE_NAME
       )
-        .fallbackToDestructiveMigration(false)
+        .fallbackToDestructiveMigration(true)
         .build()
   }
 }

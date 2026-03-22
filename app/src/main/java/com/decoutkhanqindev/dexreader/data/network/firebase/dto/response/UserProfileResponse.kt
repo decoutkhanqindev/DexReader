@@ -22,7 +22,5 @@ data class UserProfileResponse(
   var profilePictureUrl: String? = null,
 
   @ServerTimestamp
-  var createdAt: Date? = null,
-  @ServerTimestamp
   var updatedAt: Date? = null,
 )

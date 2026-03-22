@@ -17,8 +17,8 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.decoutkhanqindev.dexreader.presentation.screens.settings.SettingsViewModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.settings.ThemeModeValue
+import com.decoutkhanqindev.dexreader.presentation.screens.settings.SettingsViewModel
 
 private val lightScheme =
   lightColorScheme(

@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.domain.usecase.settings
 
-import com.decoutkhanqindev.dexreader.domain.repository.settings.SettingsRepository
 import com.decoutkhanqindev.dexreader.domain.entity.value.settings.ThemeMode
+import com.decoutkhanqindev.dexreader.domain.repository.settings.SettingsRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendResultCatching
 import javax.inject.Inject
 

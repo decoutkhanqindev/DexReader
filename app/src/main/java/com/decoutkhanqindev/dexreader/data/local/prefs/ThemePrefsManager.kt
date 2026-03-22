@@ -5,5 +5,5 @@ import androidx.datastore.preferences.preferencesDataStore
 
 object ThemePrefsManager {
   private const val DATA_STORE_NAME = "theme_prefs_manager"
-  val Context.dataStore by preferencesDataStore(name = DATA_STORE_NAME)
+  internal val Context.dataStore by preferencesDataStore(name = DATA_STORE_NAME)
 }

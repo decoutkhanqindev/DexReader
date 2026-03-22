@@ -105,7 +105,7 @@ interface ApiService {
     @Query(ApiQueries.LIMIT) limit: Int = 20,
     @Query(ApiQueries.OFFSET) offset: Int = 0,
     @Query(ApiQueries.TRANSLATED_LANGUAGE)
-    translatedLanguages: String = MangaLanguageCodeParam.ENGLISH.value,
+    translatedLanguages: List<String> = listOf(MangaLanguageCodeParam.ENGLISH.value),
     @Query(ApiQueries.ORDER_VOLUME) volumeOrder: String = MangaSortOrderParam.DESC.value,
     @Query(ApiQueries.ORDER_CHAPTER) chapterOrder: String = MangaSortOrderParam.DESC.value,
     @Query(ApiQueries.INCLUDES)

@@ -2,11 +2,14 @@
 
 No blockers.
 
-Domain layer and data layer audits are fully complete and committed. No known open issues.
+Data layer strict Kotlin review is fully complete. All fixes applied. Build passes. User commits manually.
 
 ---
 
 ## Previously resolved blockers (archived)
+
+### RESOLVED (2026-03-22) — Data layer runtime bugs from strict review
+All 9 review units completed. Critical fixes: `java.time` API 26 crash, `jakarta.inject` Hilt crash (×2), `valueOf` crash risk in ApiParamMapper, `register()` compile bug. Build passes.
 
 ### RESOLVED (2026-03-20, session 6) — Latent crash in `ApiParamMapper` for `UNKNOWN` enum values
 `MangaStatus.toApiParam()` and `MangaContentRating.toApiParam()` used `valueOf(name)` which threw

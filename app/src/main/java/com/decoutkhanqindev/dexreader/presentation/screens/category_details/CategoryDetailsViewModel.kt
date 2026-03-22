@@ -14,13 +14,13 @@ import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaCon
 import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaStatus
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
-import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
-import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
-import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortCriteriaValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortOrderValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseNextPageState
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BasePaginationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList

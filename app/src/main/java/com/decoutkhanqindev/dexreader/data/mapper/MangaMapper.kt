@@ -23,7 +23,7 @@ object MangaMapper {
       it.type == REL_COVER_ART
     }?.attributes?.fileName?.let { fileName ->
       "$uploadUrl/$COVER_URL_SEGMENT/$id/$fileName"
-    } ?: ""
+    } ?: Manga.DEFAULT_COVER_URL
     val description =
       attributes?.description?.get(LANG_EN)
         ?: attributes?.description?.values?.firstOrNull()

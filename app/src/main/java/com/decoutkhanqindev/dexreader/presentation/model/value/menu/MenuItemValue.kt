@@ -10,7 +10,6 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 
 enum class MenuItemValue(
   @param:StringRes val nameRes: Int,

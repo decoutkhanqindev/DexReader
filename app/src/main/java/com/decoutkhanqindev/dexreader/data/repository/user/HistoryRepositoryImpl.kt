@@ -1,14 +1,13 @@
 package com.decoutkhanqindev.dexreader.data.repository.user
 
 import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirestoreException
+import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirestoreFlowException
 import com.decoutkhanqindev.dexreader.data.mapper.ReadingHistoryMapper.toReadingHistory
 import com.decoutkhanqindev.dexreader.data.mapper.ReadingHistoryMapper.toReadingHistoryRequest
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
 import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingHistory
-import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.repository.user.HistoryRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
-import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -38,14 +37,8 @@ constructor(
       .map { readingHistoryResponseList ->
         readingHistoryResponseList.map { it.toReadingHistory() }
       }
-      .catch { e ->
-        if (e is FirebaseFirestoreException &&
-          e.code == FirebaseFirestoreException.Code.PERMISSION_DENIED
-        )
-          throw BusinessException.Resource.AccessDenied(rootCause = e)
-        else throw e
-      }
       .flowOn(Dispatchers.IO)
+      .catch { e -> e.toFirestoreFlowException() }
       .distinctUntilChanged()
 
   override suspend fun upsertHistory(

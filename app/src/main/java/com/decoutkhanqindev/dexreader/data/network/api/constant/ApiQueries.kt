@@ -14,7 +14,7 @@ object ApiQueries {
   const val ORDER_UPDATED_AT = "order[updatedAt]"
   const val ORDER_FOLLOWED_COUNT = "order[followedCount]"
   const val ORDER_CREATED_AT = "order[createdAt]"
-  const val ORDER_RATING = "order[rating]=desc"
+  const val ORDER_RATING = "order[rating]"
   const val ORDER_RELEVANCE = "order[relevance]"
   const val ORDER_VOLUME = "order[volume]"
   const val ORDER_CHAPTER = "order[chapter]"

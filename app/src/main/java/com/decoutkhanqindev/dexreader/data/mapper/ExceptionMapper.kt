@@ -33,4 +33,15 @@ object ExceptionMapper {
       is DomainException -> throw this
       else -> throw InfrastructureException.Unexpected(rootCause = this)
     }
+
+  /**
+   * For use inside Flow `.catch { }` blocks, whose lambda receives [Throwable] not [Exception].
+   * Maps Firestore PERMISSION_DENIED to [BusinessException.Resource.AccessDenied]; rethrows all others.
+   */
+  fun Throwable.toFirestoreFlowException(): Nothing {
+    if (this is FirebaseFirestoreException &&
+      code == FirebaseFirestoreException.Code.PERMISSION_DENIED
+    ) throw BusinessException.Resource.AccessDenied(rootCause = this)
+    throw this
+  }
 }

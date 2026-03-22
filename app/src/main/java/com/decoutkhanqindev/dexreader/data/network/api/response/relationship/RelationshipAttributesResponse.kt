@@ -7,7 +7,7 @@ import com.squareup.moshi.JsonClass
 data class RelationshipAttributesResponse(
   @field:Json(name = "name") val name: String? = null, // For author, artist, scanlation_group
   @field:Json(name = "biography")
-  val biography: Map<String, String?>? = null, // For author, artist
+  val biography: Map<String, String>? = null, // For author, artist
   @field:Json(name = "fileName") val fileName: String? = null, // For cover_art
   @field:Json(name = "createdAt")
   val createdAt: Long? = null, // For author, artist, scanlation_group

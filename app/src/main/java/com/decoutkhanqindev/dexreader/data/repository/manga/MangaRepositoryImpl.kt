@@ -8,8 +8,8 @@ import com.decoutkhanqindev.dexreader.domain.entity.manga.Manga
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.repository.manga.MangaRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
-import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
+import javax.inject.Inject
 
 class MangaRepositoryImpl
 @Inject

@@ -9,5 +9,5 @@ data class ChapterResponse(
   @field:Json(name = "id") val id: String, // UUID của chương
   @field:Json(name = "type") val type: String? = null, // "chapter"
   @field:Json(name = "attributes") val attributes: ChapterAttributesResponse? = null,
-  @field:Json(name = "relationships") val relationships: List<RelationshipResponse?>? = null,
+  @field:Json(name = "relationships") val relationships: List<RelationshipResponse>? = null,
 )

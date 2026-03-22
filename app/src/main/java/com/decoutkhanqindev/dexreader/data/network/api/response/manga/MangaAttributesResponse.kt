@@ -6,7 +6,7 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class MangaAttributesResponse(
-  @field:Json(name = "title") val title: Map<String, String>, // Tên truyện theo ngôn ngữ
+  @field:Json(name = "title") val title: Map<String, String>? = null, // Tên truyện theo ngôn ngữ
   @field:Json(name = "description") val description: Map<String, String>? = null, // Mô tả
   @field:Json(name = "status") val status: String? = null, // Trạng thái
   @field:Json(name = "contentRating") val contentRating: String? = null, // Phân loại nội dung

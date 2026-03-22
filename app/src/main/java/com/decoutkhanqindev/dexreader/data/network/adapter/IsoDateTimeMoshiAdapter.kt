@@ -1,36 +1,36 @@
 package com.decoutkhanqindev.dexreader.data.network.adapter
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 object IsoDateTimeMoshiAdapter {
-  @RequiresApi(Build.VERSION_CODES.O)
+
+  // SimpleDateFormat is not thread-safe; create a fresh instance per call.
+  // "XXX" timezone offset pattern requires API 24+, which matches minSdk.
+  private val formatter: SimpleDateFormat
+    get() = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.US).also {
+      it.timeZone = TimeZone.getTimeZone("UTC")
+    }
+
   @FromJson
   fun fromJson(json: String?): Long? {
     if (json == null) return null
     return try {
-      ZonedDateTime
-        .parse(json, DateTimeFormatter.ISO_DATE_TIME)
-        .toInstant()
-        .toEpochMilli()
+      formatter.parse(json)?.time
     } catch (e: Exception) {
       null
     }
   }
 
-  @RequiresApi(Build.VERSION_CODES.O)
   @ToJson
   fun toJson(value: Long?): String? {
     if (value == null) return null
     return try {
-      ZonedDateTime
-        .ofInstant(java.time.Instant.ofEpochMilli(value), java.time.ZoneOffset.UTC)
-        .format(DateTimeFormatter.ISO_DATE_TIME)
+      formatter.format(Date(value))
     } catch (e: Exception) {
       null
     }
