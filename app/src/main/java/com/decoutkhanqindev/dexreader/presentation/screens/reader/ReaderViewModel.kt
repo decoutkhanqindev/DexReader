@@ -109,10 +109,7 @@ constructor(
         isChapterDetailsDone && isMangaDetailsDone && isHistoryDone
       }
         .collectLatest { isAllDataDone ->
-          if (isAllDataDone && _chapterPagesUiState.value is ChapterPagesUiState.Loading) {
-            delay(DELAY_TIME_MILLIS)
-            fetchChapterPages()
-          }
+          if (isAllDataDone && _chapterPagesUiState.value is ChapterPagesUiState.Loading) fetchChapterPages()
         }
     }
   }
@@ -541,7 +538,6 @@ constructor(
           currentUiState.currentChapterPage != readingHistory.lastReadPage
         ) {
           viewModelScope.launch {
-            delay(DELAY_TIME_MILLIS)
             updateChapterPage(
               chapterPage = readingHistory.lastReadPage,
               isFromHistory = isFromHistory
@@ -593,6 +589,5 @@ constructor(
     private const val TAG = "ReaderViewModel"
     private const val CHAPTER_LIST_PER_PAGE_SIZE = 20
     private const val READING_HISTORY_LIST_PER_PAGE_SIZE = 50
-    private const val DELAY_TIME_MILLIS = 100L
   }
 }

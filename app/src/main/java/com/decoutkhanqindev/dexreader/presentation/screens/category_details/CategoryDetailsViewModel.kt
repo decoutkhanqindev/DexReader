@@ -168,6 +168,7 @@ class CategoryDetailsViewModel @Inject constructor(
     _categoryCriteriaUiState.update {
       it.copy(statusFilter = statusFilter, contentRatingFilter = contentRatingFilter)
     }
+
     fetchMangaListByCategoryFirstPage()
   }
 
