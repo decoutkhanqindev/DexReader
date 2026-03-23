@@ -20,7 +20,7 @@ class SettingsRepositoryImpl @Inject constructor(
   override fun observeThemeMode(): Flow<ThemeMode> =
     prefsManager.data.map { prefs ->
       prefs[themeModePrefsKey]
-        ?.let { runCatching { ThemeMode.valueOf(it) }.getOrDefault(ThemeMode.SYSTEM) }
+        ?.let { name -> ThemeMode.entries.find { it.name == name } }
         ?: ThemeMode.SYSTEM
     }
 
