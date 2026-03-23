@@ -40,20 +40,24 @@ annotation class MangaDexApiServiceQualifier
 @InstallIn(SingletonComponent::class)
 object NetworkDataModule {
   @Provides
+  @Singleton
   @BaseUrlQualifier
   fun provideBaseUrl(): String = BuildConfig.BASE_URL
 
   @Provides
+  @Singleton
   @UploadUrlQualifier
   fun provideUploadUrl(): String = BuildConfig.UPLOAD_URL
 
   @Provides
+  @Singleton
   fun provideMoshi(): Moshi = Moshi.Builder()
     .add(IsoDateTimeAdapter)
     .addLast(KotlinJsonAdapterFactory())
     .build()
 
   @Provides
+  @Singleton
   fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor =
     HttpLoggingInterceptor().apply {
       level = if (BuildConfig.DEBUG) {
@@ -92,6 +96,7 @@ object NetworkDataModule {
       .build()
 
   @Provides
+  @Singleton
   fun provideMangaDexApiService(
     @MangaDexApiServiceQualifier retrofit: Retrofit,
   ): ApiService = retrofit.create(ApiService::class.java)

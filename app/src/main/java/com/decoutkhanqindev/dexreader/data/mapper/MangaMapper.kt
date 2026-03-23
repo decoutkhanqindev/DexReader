@@ -16,15 +16,19 @@ object MangaMapper {
   private const val REL_ARTIST = "artist"
   private const val COVER_URL_SEGMENT = "covers"
 
-  fun MangaResponse.toManga(uploadUrl: String): Manga {
+  fun MangaResponse.toManga(uploadUrl: String): Manga? {
+    val resolvedId = id ?: return null
+
     val title = attributes?.title?.get(LANG_EN)
       ?: attributes?.title?.values?.firstOrNull()
       ?: Manga.DEFAULT_TITLE
+
     val coverUrl = relationships?.find {
       it.type == REL_COVER_ART
     }?.attributes?.fileName?.let { fileName ->
-      "$uploadUrl/$COVER_URL_SEGMENT/$id/$fileName"
+      "$uploadUrl/$COVER_URL_SEGMENT/$resolvedId/$fileName"
     } ?: Manga.DEFAULT_COVER_URL
+
     val description =
       attributes?.description?.get(LANG_EN)
         ?: attributes?.description?.values?.firstOrNull()
@@ -32,19 +36,21 @@ object MangaMapper {
       relationships?.find { it.type == REL_AUTHOR }?.attributes?.name
     val artist =
       relationships?.find { it.type == REL_ARTIST }?.attributes?.name
-    val tags = attributes?.tags?.map { it.toCategory() } ?: emptyList()
+    val tags = attributes?.tags?.mapNotNull { it.toCategory() } ?: emptyList()
     val status = attributes?.status.toMangaStatus()
     val contentRating = attributes?.contentRating.toMangaContentRating()
     val year = attributes?.year?.toString()
+
     val availableLanguages =
       attributes?.availableTranslatedLanguages
         ?.map { it.toMangaLanguage() }
         ?: emptyList()
+
     val latestChapter = attributes?.lastChapter
     val updatedAt = attributes?.updatedAt.parseIso8601ToEpoch()
 
     return Manga(
-      id = id,
+      id = resolvedId,
       title = title,
       coverUrl = coverUrl,
       description = description,

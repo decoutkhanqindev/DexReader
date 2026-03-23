@@ -1,38 +1,33 @@
 # Session Progress
 
-## Completed This Session (2026-03-22, domain layer review)
+## Data Layer Double-Check Review (2026-03-23)
 
-### Domain Layer Strict Kotlin Review — 3 parallel agents, all fixes staged in worktrees
+### Completed This Session
 
-#### Critical bug fix
-- `UpdateUserProfileUseCase.toFirestoreFlowException()` — `avatarUrl = newAvatarUrl` silently wiped the existing avatar when `newAvatarUrl` was `null` (caller intent: "no change"). Fixed: `val avatarToUpdate = newAvatarUrl ?: currentUser.avatarUrl`.
+#### Agent reviews (7 parallel workers)
+- [x] Unit 1 — Mappers: ApiParamMapper entries.find, ExceptionMapper grouping + toAuthException/toAuthFlowException
+- [x] Unit 2 — Network API layer: IsoDateTimeAdapter already fixed in main; no new changes
+- [x] Unit 3 — Firebase layer: @Exclude DTO fix, toAuthException/toAuthFlowException added, UserRepositoryImpl refactored
+- [x] Unit 4 — Local data layer: StringListTypeConverter nullable → non-null, emptyList() fallback, @JvmStatic
+- [x] Unit 5 — Manga repos: confirmed clean, flagged MOST_VIEWED→createdAt as product question
+- [x] Unit 6 — User/Settings repos: updateUserProfile onCatch → toFirestoreException(); deleteCurrentUser() rollback
+- [x] Unit 7 — DI + Exception hierarchy: LOST (worktree gone, never committed) — exception hierarchy already fixed in main from prior session
 
-#### Design correctness fix (exception types)
-- `BusinessException` and `InfrastructureException` subtypes were `data class` which generated semantically invalid `equals`/`hashCode`/`copy`/`componentN` for exception types. Changed to plain `class`. The redundant `val rootCause` field (an alias for `Throwable.cause`) was removed; parameter renamed to `cause`. All call sites in `ExceptionMapper` and `UserRepositoryImpl` updated.
+#### Applied directly to main (staged, not committed)
+- [x] ExceptionMapper.kt: toAuthException() + toAuthFlowException() added; grouped Retrofit/Cache/Firestore/Auth; CancellationException guard removed
+- [x] ApiParamMapper.kt: runCatching replaced with entries.find; String? → String with sensible defaults (ON_GOING, SAFE, DESC, ENGLISH)
+- [x] FirebaseAuthSource.kt + Impl: deleteCurrentUser() added
+- [x] UserRepositoryImpl.kt: toAuthException(), toAuthFlowException(), deleteCurrentUser() rollback, toFirestoreException()
+- [x] StringListTypeConverter.kt: non-null, emptyList() fallback, @JvmStatic
+- [x] Firebase DTOs (4 files): @Exclude on id fields (was wrongly @PropertyName)
+- [x] Build verified: BUILD SUCCESSFUL
 
-#### Architecture fix (testability)
-- `ClearExpiredCacheUseCase.clock` was `internal var` — mutable field on immutable use case. Moved to constructor parameter with default `System::currentTimeMillis`.
+### Still To Do
 
-#### Allocation fix
-- `CategoryRepository.getMangaListByCategory()` default parameters `listOf(MangaStatus.ON_GOING)` and `listOf(MangaContentRating.SAFE)` created a new list on every defaulted call. Extracted to companion constants. `GetMangaListByCategoryUseCase` updated to reference the same constants.
+- [ ] **Commit all staged changes to main** (user reviewing ExceptionMapper first)
+- [ ] Resolve ExceptionMapper simplification: keep or drop toCacheException/toAuthFlowException?
+- [ ] Fix CategoryRepositoryImpl: mapNotNull → map (since toApiParam() no longer returns null)
+- [ ] Domain layer fixes (separate): UpdateUserProfileUseCase avatar bug, ClearExpiredCacheUseCase.clock internal var
 
-#### Domain constant completions
-- `ChapterPages`: added `companion object { DEFAULT_BASE_URL = "", DEFAULT_HASH = "" }`
-- `Chapter`: added `DEFAULT_LANGUAGE = MangaLanguage.UNKNOWN`
-- `Manga`: added `DEFAULT_STATUS = MangaStatus.UNKNOWN`, `DEFAULT_CONTENT_RATING = MangaContentRating.UNKNOWN`
-- Simplify pass correctly pruned: `DEFAULT_LAST_UPDATED: Long? = null` (redundant) and `DEFAULT_MANGA_ID = ""` (dead constant)
-
----
-
-## Still To Do
-
-Awaiting user approval to commit the 3 worktrees:
-- `agent-a2c8552b` — entity/exception changes (7 files)
-- `agent-abc83fb6` — repository interface changes (2 files)
-- `agent-aeba0533` — use case changes (2 files)
-
-No known outstanding issues in the domain layer after these commits land.
-
-## Single Most Important Next Step
-
-Get user go-ahead to commit all 3 worktrees, then merge changes to main branch. After that, domain layer review is complete.
+### Single Most Important Next Step
+**Get user decision on ExceptionMapper simplification, then commit all staged changes.**

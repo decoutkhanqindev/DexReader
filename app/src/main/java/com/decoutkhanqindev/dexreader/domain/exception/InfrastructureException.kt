@@ -4,12 +4,12 @@ sealed class InfrastructureException(
   message: String? = null,
   cause: Throwable? = null,
 ) : DomainException(message, cause) {
-  data class NetworkUnavailable(val rootCause: Throwable? = null) :
-    InfrastructureException("No internet connection", rootCause)
+  class NetworkUnavailable(cause: Throwable? = null) :
+    InfrastructureException("No internet connection", cause)
 
-  data class ServerUnavailable(val rootCause: Throwable? = null) :
-    InfrastructureException("Server is not responding", rootCause)
+  class ServerUnavailable(cause: Throwable? = null) :
+    InfrastructureException("Server is not responding", cause)
 
-  data class Unexpected(val rootCause: Throwable? = null) :
-    InfrastructureException("An unexpected error occurred", rootCause)
+  class Unexpected(cause: Throwable? = null) :
+    InfrastructureException("An unexpected error occurred", cause)
 }

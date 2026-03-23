@@ -20,31 +20,40 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 interface RepositoryModule {
   @Binds
+  @Singleton
   fun provideMangaRepository(repositoryImpl: MangaRepositoryImpl): MangaRepository
 
   @Binds
-  fun provideChapterRepository(repositoryImpl: ChapterRepositoryImpl): ChapterRepository
+  @Singleton
+  fun provideChapterRepository(impl: ChapterRepositoryImpl): ChapterRepository
 
   @Binds
-  fun provideCacheRepository(repositoryImpl: CacheRepositoryImpl): CacheRepository
+  @Singleton
+  fun provideCacheRepository(impl: CacheRepositoryImpl): CacheRepository
 
   @Binds
-  fun provideCategoryRepository(repositoryImpl: CategoryRepositoryImpl): CategoryRepository
+  @Singleton
+  fun provideCategoryRepository(impl: CategoryRepositoryImpl): CategoryRepository
 
   @Binds
-  fun provideUserRepository(repositoryImpl: UserRepositoryImpl): UserRepository
+  @Singleton
+  fun provideUserRepository(impl: UserRepositoryImpl): UserRepository
 
   @Binds
-  fun provideFavoritesRepository(repositoryImpl: FavoritesRepositoryImpl): FavoritesRepository
+  @Singleton
+  fun provideFavoritesRepository(impl: FavoritesRepositoryImpl): FavoritesRepository
 
   @Binds
-  fun provideHistoryRepository(repositoryImpl: HistoryRepositoryImpl): HistoryRepository
+  @Singleton
+  fun provideHistoryRepository(impl: HistoryRepositoryImpl): HistoryRepository
 
   @Binds
-  fun provideSettingsRepository(repositoryImpl: SettingsRepositoryImpl): SettingsRepository
+  @Singleton
+  fun provideSettingsRepository(impl: SettingsRepositoryImpl): SettingsRepository
 }

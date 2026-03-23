@@ -5,7 +5,7 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class CoverArtResponse(
-  @field:Json(name = "id") val id: String,
+  @field:Json(name = "id") val id: String? = null,
   @field:Json(name = "type") val type: String? = null, // "cover_art"
   @field:Json(name = "attributes") val attributes: CoverArtAttributesResponse? = null,
 )

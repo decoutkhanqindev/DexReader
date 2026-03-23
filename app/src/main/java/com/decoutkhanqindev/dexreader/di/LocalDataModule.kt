@@ -29,7 +29,7 @@ object LocalDataModule {
   @Singleton
   fun provideChapterCacheDB(@ApplicationContext context: Context): ChapterCacheDatabase =
     Room.databaseBuilder(
-      context = context.applicationContext,
+      context = context,
       klass = ChapterCacheDatabase::class.java,
       name = CHAPTER_CACHE_DB_NAME
     )
@@ -42,6 +42,7 @@ object LocalDataModule {
     chapterCacheDatabase.chapterCacheDao()
 
   @Provides
+  @Singleton
   @ThemeModeKeyQualifier
   fun provideThemeModeKey(): String = "theme_mode"
 

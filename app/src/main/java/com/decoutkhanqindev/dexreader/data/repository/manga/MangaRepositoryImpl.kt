@@ -19,7 +19,7 @@ class MangaRepositoryImpl @Inject constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        apiService.getLatestUpdateMangaList().data?.map { it.toManga(uploadUrl) }
+        apiService.getLatestUpdateMangaList().data?.mapNotNull { it.toManga(uploadUrl) }
           ?: emptyList()
       },
       onCatch = { it.toDomainException() }
@@ -29,7 +29,7 @@ class MangaRepositoryImpl @Inject constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        apiService.getTrendingMangaList().data?.map { it.toManga(uploadUrl) }
+        apiService.getTrendingMangaList().data?.mapNotNull { it.toManga(uploadUrl) }
           ?: emptyList()
       },
       onCatch = { it.toDomainException() }
@@ -39,7 +39,7 @@ class MangaRepositoryImpl @Inject constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        apiService.getNewReleaseMangaList().data?.map { it.toManga(uploadUrl) }
+        apiService.getNewReleaseMangaList().data?.mapNotNull { it.toManga(uploadUrl) }
           ?: emptyList()
       },
       onCatch = { it.toDomainException() }
@@ -49,7 +49,7 @@ class MangaRepositoryImpl @Inject constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        apiService.getTopRatedMangaList().data?.map { it.toManga(uploadUrl) }
+        apiService.getTopRatedMangaList().data?.mapNotNull { it.toManga(uploadUrl) }
           ?: emptyList()
       },
       onCatch = { it.toDomainException() }
@@ -73,9 +73,12 @@ class MangaRepositoryImpl @Inject constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        apiService.searchManga(query = query, offset = offset, limit = limit).data?.map {
-          it.toManga(uploadUrl)
-        }
+        apiService.searchManga(
+          query = query,
+          offset = offset,
+          limit = limit
+        ).data
+          ?.mapNotNull { it.toManga(uploadUrl) }
           ?: emptyList()
       },
       onCatch = { it.toDomainException() }

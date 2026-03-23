@@ -1,12 +1,12 @@
 package com.decoutkhanqindev.dexreader.data.network.firebase.dto.response
 
+import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.PropertyName
 import com.google.firebase.firestore.ServerTimestamp
 import java.util.Date
 
 data class FavoriteMangaResponse(
-  @get:PropertyName("manga_id")
-  @set:PropertyName("manga_id")
+  @get:Exclude @set:Exclude // Document ID — populated from document.id via .copy(), not from data.
   var id: String = "",
 
   @get:PropertyName("title")

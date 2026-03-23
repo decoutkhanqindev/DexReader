@@ -53,7 +53,8 @@
       "Bash(for dir:*)",
       "Bash(do echo:*)",
       "Read(//c/Android Development/dex_reader/DexReader/app/src/main/java/com/decoutkhanqindev/dexreader/data/**)",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "Bash(./gradlew clean:*)"
     ]
   },
   "spinnerTipsEnabled": true

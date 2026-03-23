@@ -10,6 +10,7 @@ object ChapterMapper {
   private const val REL_MANGA = "manga"
 
   fun ChapterResponse.toChapter(): Chapter? {
+    val resolvedId = id ?: return null
     val mangaId = relationships?.find { it.type == REL_MANGA }?.id ?: return null
     val title = attributes?.title
     val number = attributes?.chapter
@@ -18,7 +19,7 @@ object ChapterMapper {
     val language = attributes?.translatedLanguage.toMangaLanguage()
 
     return Chapter(
-      id = id,
+      id = resolvedId,
       mangaId = mangaId,
       title = title,
       number = number,

@@ -25,7 +25,7 @@ class CategoryRepositoryImpl @Inject constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        apiService.getTagList().data?.map { it.toCategory() } ?: emptyList()
+        apiService.getTagList().data?.mapNotNull { it.toCategory() } ?: emptyList()
       },
       onCatch = { it.toDomainException() }
     )
@@ -76,6 +76,7 @@ class CategoryRepositoryImpl @Inject constructor(
             rating = orderValue
           }
         }
+
         apiService.getMangaListByTag(
           tagId = categoryId,
           offset = offset,
@@ -83,11 +84,11 @@ class CategoryRepositoryImpl @Inject constructor(
           followedCount = followedCount,
           createdAt = createdAt,
           rating = rating,
-          status = statusFilter.mapNotNull { it.toApiParam() },
-          contentRating = contentRatingFilter.mapNotNull { it.toApiParam() },
+          status = statusFilter.map { it.toApiParam() },
+          contentRating = contentRatingFilter.map { it.toApiParam() },
         )
           .data
-          ?.map { it.toManga(uploadUrl) }
+          ?.mapNotNull { it.toManga(uploadUrl) }
           ?: emptyList()
       },
       onCatch = { it.toDomainException() }

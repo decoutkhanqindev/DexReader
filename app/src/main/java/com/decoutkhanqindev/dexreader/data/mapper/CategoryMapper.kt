@@ -13,9 +13,9 @@ object CategoryMapper {
       it.name.equals(other = this, ignoreCase = true)
     } ?: CategoryType.UNKNOWN
 
-  fun TagResponse.toCategory() =
+  fun TagResponse.toCategory(): Category? =
     Category(
-      id = id,
+      id = id ?: return null,
       title = attributes?.name?.get(LANG_EN)
         ?: attributes?.name?.values?.firstOrNull() ?: Category.DEFAULT_TITLE,
       type = attributes?.group?.toCategoryType() ?: Category.DEFAULT_TYPE

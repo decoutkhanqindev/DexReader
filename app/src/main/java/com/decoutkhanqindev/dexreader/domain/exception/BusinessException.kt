@@ -6,31 +6,31 @@ sealed class BusinessException(
 ) : DomainException(message, cause) {
 
   sealed class Auth(message: String, cause: Throwable? = null) : BusinessException(message, cause) {
-    data class InvalidCredentials(val rootCause: Throwable? = null) :
-      Auth("Invalid email or password", rootCause)
+    class InvalidCredentials(cause: Throwable? = null) :
+      Auth("Invalid email or password", cause)
 
-    data class UserNotFound(val rootCause: Throwable? = null) :
-      Auth("User account not found", rootCause)
+    class UserNotFound(cause: Throwable? = null) :
+      Auth("User account not found", cause)
 
-    data class UserAlreadyExists(val rootCause: Throwable? = null) :
-      Auth("Email is already registered", rootCause)
+    class UserAlreadyExists(cause: Throwable? = null) :
+      Auth("Email is already registered", cause)
 
-    data class RegistrationFailed(val rootCause: Throwable? = null) :
-      Auth("Registration failed", rootCause)
+    class RegistrationFailed(cause: Throwable? = null) :
+      Auth("Registration failed", cause)
   }
 
   sealed class Resource(message: String, cause: Throwable? = null) :
     BusinessException(message, cause) {
-    data class MangaNotFound(val rootCause: Throwable? = null) :
-      Resource("Manga not found", rootCause)
+    class MangaNotFound(cause: Throwable? = null) :
+      Resource("Manga not found", cause)
 
-    data class ChapterNotFound(val rootCause: Throwable? = null) :
-      Resource("Chapter not found", rootCause)
+    class ChapterNotFound(cause: Throwable? = null) :
+      Resource("Chapter not found", cause)
 
-    data class ChapterDataNotFound(val rootCause: Throwable? = null) :
-      Resource("Chapter data not found", rootCause)
+    class ChapterDataNotFound(cause: Throwable? = null) :
+      Resource("Chapter data not found", cause)
 
-    data class AccessDenied(val rootCause: Throwable? = null) :
-      Resource("Access denied", rootCause)
+    class AccessDenied(cause: Throwable? = null) :
+      Resource("Access denied", cause)
   }
 }
