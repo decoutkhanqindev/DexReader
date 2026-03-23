@@ -37,7 +37,6 @@ class UserRepositoryImpl @Inject constructor(
         val registeredUser =
           authSource
             .register(email, password)
-            ?.toUser()
             ?.copy(name = name)
             ?: throw BusinessException.Auth.RegistrationFailed()
 
@@ -88,7 +87,6 @@ class UserRepositoryImpl @Inject constructor(
   override fun observeCurrentUser(): Flow<User?> =
     authSource
       .observeCurrentUser()
-      .map { it?.toUser() }
       .catch { e -> e.toUnexpectedException() }
       .flowOn(Dispatchers.IO)
       .distinctUntilChanged()

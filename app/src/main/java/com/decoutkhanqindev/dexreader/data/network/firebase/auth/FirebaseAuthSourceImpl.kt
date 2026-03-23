@@ -1,5 +1,7 @@
 package com.decoutkhanqindev.dexreader.data.network.firebase.auth
 
+import com.decoutkhanqindev.dexreader.data.mapper.UserMapper.toUser
+import com.decoutkhanqindev.dexreader.domain.entity.user.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.channels.awaitClose
@@ -14,12 +16,12 @@ class FirebaseAuthSourceImpl @Inject constructor(
   override suspend fun register(
     email: String,
     password: String,
-  ): FirebaseUser? {
+  ): User? {
     val result = firebaseAuth.createUserWithEmailAndPassword(
       email,
       password
     ).await()
-    return result.user
+    return result.user?.toUser()
   }
 
   override suspend fun login(
@@ -42,9 +44,9 @@ class FirebaseAuthSourceImpl @Inject constructor(
     firebaseAuth.sendPasswordResetEmail(email).await()
   }
 
-  override fun observeCurrentUser(): Flow<FirebaseUser?> = callbackFlow {
+  override fun observeCurrentUser(): Flow<User?> = callbackFlow {
     val authStateListener = FirebaseAuth.AuthStateListener { auth ->
-      trySend(auth.currentUser)
+      trySend(auth.currentUser?.toUser())
     }
 
     firebaseAuth.addAuthStateListener(authStateListener)
