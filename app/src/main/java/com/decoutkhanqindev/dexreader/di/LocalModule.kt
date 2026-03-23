@@ -12,39 +12,26 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Qualifier
 import javax.inject.Singleton
-
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-annotation class ThemeModeKeyQualifier
 
 @Module
 @InstallIn(SingletonComponent::class)
-object LocalDataModule {
-
-  private const val CHAPTER_CACHE_DB_NAME = "chapter_cache.db"
-
+object LocalModule {
   @Provides
   @Singleton
   fun provideChapterCacheDB(@ApplicationContext context: Context): ChapterCacheDatabase =
     Room.databaseBuilder(
       context = context,
       klass = ChapterCacheDatabase::class.java,
-      name = CHAPTER_CACHE_DB_NAME
+      name = ChapterCacheDatabase.CHAPTER_CACHE_DB_NAME
     )
-      .fallbackToDestructiveMigration(true) // acceptable: cache is re-fetchable on upgrade
+      .fallbackToDestructiveMigration(true) // cache is re-fetchable on upgrade
       .build()
 
   @Provides
   @Singleton
-  fun provideChapterCacheDao(chapterCacheDatabase: ChapterCacheDatabase): ChapterCacheDao =
-    chapterCacheDatabase.chapterCacheDao()
-
-  @Provides
-  @Singleton
-  @ThemeModeKeyQualifier
-  fun provideThemeModeKey(): String = "theme_mode"
+  fun provideChapterCacheDao(db: ChapterCacheDatabase): ChapterCacheDao =
+    db.chapterCacheDao()
 
   @Provides
   @Singleton

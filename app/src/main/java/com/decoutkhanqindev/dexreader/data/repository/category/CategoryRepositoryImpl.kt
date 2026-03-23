@@ -1,11 +1,11 @@
 package com.decoutkhanqindev.dexreader.data.repository.category
 
+import com.decoutkhanqindev.dexreader.BuildConfig
 import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toApiParam
 import com.decoutkhanqindev.dexreader.data.mapper.CategoryMapper.toCategory
 import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toDomainException
 import com.decoutkhanqindev.dexreader.data.mapper.MangaMapper.toManga
 import com.decoutkhanqindev.dexreader.data.network.api.ApiService
-import com.decoutkhanqindev.dexreader.di.UploadUrlQualifier
 import com.decoutkhanqindev.dexreader.domain.entity.category.Category
 import com.decoutkhanqindev.dexreader.domain.entity.manga.Manga
 import com.decoutkhanqindev.dexreader.domain.entity.value.criteria.MangaSortCriteria
@@ -19,7 +19,6 @@ import javax.inject.Inject
 
 class CategoryRepositoryImpl @Inject constructor(
   private val apiService: ApiService,
-  @param:UploadUrlQualifier private val uploadUrl: String,
 ) : CategoryRepository {
   override suspend fun getCategoryList(): List<Category> =
     runSuspendCatching(
@@ -92,7 +91,7 @@ class CategoryRepositoryImpl @Inject constructor(
             .map { it.toApiParam() },
         )
           .data
-          ?.mapNotNull { it.toManga(uploadUrl) }
+          ?.mapNotNull { it.toManga(BuildConfig.UPLOAD_URL) }
           ?: emptyList()
       },
       onCatch = { it.toDomainException() }

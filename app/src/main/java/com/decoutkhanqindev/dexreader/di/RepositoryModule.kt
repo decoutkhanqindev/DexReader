@@ -27,33 +27,33 @@ import javax.inject.Singleton
 interface RepositoryModule {
   @Binds
   @Singleton
-  fun provideMangaRepository(repositoryImpl: MangaRepositoryImpl): MangaRepository
+  fun bindMangaRepository(impl: MangaRepositoryImpl): MangaRepository
 
   @Binds
   @Singleton
-  fun provideChapterRepository(impl: ChapterRepositoryImpl): ChapterRepository
+  fun bindChapterRepository(impl: ChapterRepositoryImpl): ChapterRepository
 
   @Binds
   @Singleton
-  fun provideCacheRepository(impl: CacheRepositoryImpl): CacheRepository
+  fun bindCacheRepository(impl: CacheRepositoryImpl): CacheRepository
 
   @Binds
   @Singleton
-  fun provideCategoryRepository(impl: CategoryRepositoryImpl): CategoryRepository
+  fun bindCategoryRepository(impl: CategoryRepositoryImpl): CategoryRepository
 
   @Binds
   @Singleton
-  fun provideUserRepository(impl: UserRepositoryImpl): UserRepository
+  fun bindUserRepository(impl: UserRepositoryImpl): UserRepository
 
   @Binds
   @Singleton
-  fun provideFavoritesRepository(impl: FavoritesRepositoryImpl): FavoritesRepository
+  fun bindFavoritesRepository(impl: FavoritesRepositoryImpl): FavoritesRepository
 
   @Binds
   @Singleton
-  fun provideHistoryRepository(impl: HistoryRepositoryImpl): HistoryRepository
+  fun bindHistoryRepository(impl: HistoryRepositoryImpl): HistoryRepository
 
   @Binds
   @Singleton
-  fun provideSettingsRepository(impl: SettingsRepositoryImpl): SettingsRepository
+  fun bindSettingsRepository(impl: SettingsRepositoryImpl): SettingsRepository
 }

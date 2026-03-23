@@ -4,7 +4,6 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.decoutkhanqindev.dexreader.di.ThemeModeKeyQualifier
 import com.decoutkhanqindev.dexreader.domain.entity.value.settings.ThemeMode
 import com.decoutkhanqindev.dexreader.domain.repository.settings.SettingsRepository
 import kotlinx.coroutines.flow.Flow
@@ -13,9 +12,8 @@ import javax.inject.Inject
 
 class SettingsRepositoryImpl @Inject constructor(
   private val prefsManager: DataStore<Preferences>,
-  @param:ThemeModeKeyQualifier private val themeModeKey: String,
 ) : SettingsRepository {
-  private val themeModePrefsKey = stringPreferencesKey(themeModeKey)
+  private val themeModePrefsKey = stringPreferencesKey(THEME_MODE_KEY)
 
   override fun observeThemeMode(): Flow<ThemeMode> =
     prefsManager.data.map { prefs ->
@@ -28,5 +26,9 @@ class SettingsRepositoryImpl @Inject constructor(
     prefsManager.edit { prefs ->
       prefs[themeModePrefsKey] = value.name
     }
+  }
+
+  companion object {
+    private const val THEME_MODE_KEY = "theme_mode"
   }
 }

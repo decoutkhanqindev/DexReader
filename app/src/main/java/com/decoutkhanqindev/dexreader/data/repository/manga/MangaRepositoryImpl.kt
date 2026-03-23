@@ -1,9 +1,9 @@
 package com.decoutkhanqindev.dexreader.data.repository.manga
 
+import com.decoutkhanqindev.dexreader.BuildConfig
 import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toDomainException
 import com.decoutkhanqindev.dexreader.data.mapper.MangaMapper.toManga
 import com.decoutkhanqindev.dexreader.data.network.api.ApiService
-import com.decoutkhanqindev.dexreader.di.UploadUrlQualifier
 import com.decoutkhanqindev.dexreader.domain.entity.manga.Manga
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.repository.manga.MangaRepository
@@ -13,13 +13,12 @@ import javax.inject.Inject
 
 class MangaRepositoryImpl @Inject constructor(
   private val apiService: ApiService,
-  @param:UploadUrlQualifier private val uploadUrl: String,
 ) : MangaRepository {
   override suspend fun getLatestUpdateMangaList(): List<Manga> =
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        apiService.getLatestUpdateMangaList().data?.mapNotNull { it.toManga(uploadUrl) }
+        apiService.getLatestUpdateMangaList().data?.mapNotNull { it.toManga(BuildConfig.UPLOAD_URL) }
           ?: emptyList()
       },
       onCatch = { it.toDomainException() }
@@ -29,7 +28,7 @@ class MangaRepositoryImpl @Inject constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        apiService.getTrendingMangaList().data?.mapNotNull { it.toManga(uploadUrl) }
+        apiService.getTrendingMangaList().data?.mapNotNull { it.toManga(BuildConfig.UPLOAD_URL) }
           ?: emptyList()
       },
       onCatch = { it.toDomainException() }
@@ -39,7 +38,7 @@ class MangaRepositoryImpl @Inject constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        apiService.getNewReleaseMangaList().data?.mapNotNull { it.toManga(uploadUrl) }
+        apiService.getNewReleaseMangaList().data?.mapNotNull { it.toManga(BuildConfig.UPLOAD_URL) }
           ?: emptyList()
       },
       onCatch = { it.toDomainException() }
@@ -49,7 +48,7 @@ class MangaRepositoryImpl @Inject constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        apiService.getTopRatedMangaList().data?.mapNotNull { it.toManga(uploadUrl) }
+        apiService.getTopRatedMangaList().data?.mapNotNull { it.toManga(BuildConfig.UPLOAD_URL) }
           ?: emptyList()
       },
       onCatch = { it.toDomainException() }
@@ -59,7 +58,7 @@ class MangaRepositoryImpl @Inject constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = {
-        apiService.getMangaDetails(mangaId).data?.toManga(uploadUrl)
+        apiService.getMangaDetails(mangaId).data?.toManga(BuildConfig.UPLOAD_URL)
           ?: throw BusinessException.Resource.MangaNotFound()
       },
       onCatch = { it.toDomainException() }
@@ -77,8 +76,9 @@ class MangaRepositoryImpl @Inject constructor(
           query = query,
           offset = offset,
           limit = limit
-        ).data
-          ?.mapNotNull { it.toManga(uploadUrl) }
+        )
+          .data
+          ?.mapNotNull { it.toManga(BuildConfig.UPLOAD_URL) }
           ?: emptyList()
       },
       onCatch = { it.toDomainException() }

@@ -14,4 +14,8 @@ import com.decoutkhanqindev.dexreader.data.local.database.entity.ChapterCacheEnt
 @TypeConverters(StringListTypeConverter::class)
 abstract class ChapterCacheDatabase : RoomDatabase() {
   abstract fun chapterCacheDao(): ChapterCacheDao
+
+  companion object {
+    const val CHAPTER_CACHE_DB_NAME = "chapter_cache.db"
+  }
 }
