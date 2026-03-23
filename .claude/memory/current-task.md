@@ -1,26 +1,20 @@
 # Current Task
 
 ## Task
-Data layer strict Kotlin double-check review — all fixes applied. Awaiting commit approval + ExceptionMapper simplification decision.
+Implement all review fixes from the strict Kotlin review of domain/ + data/ layers.
+Plan file: `C:\Users\ADMIN\.claude\plans\ancient-wobbling-russell.md`
 
-## Files Modified (staged, not committed)
-- `data/mapper/ExceptionMapper.kt` — toAuthException() + toAuthFlowException() added; grouped by context; CancellationException guard removed from toAuthFlowException()
-- `data/mapper/ApiParamMapper.kt` — runCatching replaced with entries.find; String? → String with sensible defaults
-- `data/network/firebase/auth/FirebaseAuthSource.kt` — deleteCurrentUser() interface method added
-- `data/network/firebase/auth/FirebaseAuthSourceImpl.kt` — deleteCurrentUser() implemented
-- `data/repository/user/UserRepositoryImpl.kt` — toAuthException(), toAuthFlowException(), deleteCurrentUser() rollback, toFirestoreException()
-- `data/local/database/StringListTypeConverter.kt` — non-null, emptyList() fallback, @JvmStatic
-- `data/network/firebase/dto/request/FavoriteMangaRequest.kt` — @Exclude on id field
-- `data/network/firebase/dto/request/ReadingHistoryRequest.kt` — @Exclude on id field
-- `data/network/firebase/dto/response/FavoriteMangaResponse.kt` — @Exclude on id field
-- `data/network/firebase/dto/response/ReadingHistoryResponse.kt` — @Exclude on id field
+## Files Staged (not yet committed — from prior session + this session)
+- `data/mapper/ExceptionMapper.kt` — toUnexpectedException() replaces toCacheException/toAuthFlowException; blank line fixes
+- `data/repository/manga/CacheRepositoryImpl.kt` — toCacheException → toUnexpectedException
+- `data/repository/user/UserRepositoryImpl.kt` — toAuthFlowException → toUnexpectedException; linter reordered observeCurrentUser's .catch before .flowOn
+- All other prior-session staged files (StringListTypeConverter, Firebase DTOs, FirebaseAuthSource deleteCurrentUser, ApiParamMapper)
 
 ## Last Action
-Context window compressed mid-session. User invoked /save. All staged changes verified BUILD SUCCESSFUL. User still deciding on ExceptionMapper simplification.
+Plan written to `ancient-wobbling-russell.md`. ExitPlanMode rejected by user (hit context limit). Session saved before implementation began.
 
 ## Context to Resume
-- `git add` was run for all 10 files; `git commit` has NOT been run
-- Build verified: `./gradlew assembleDebug` → BUILD SUCCESSFUL
-- ExceptionMapper has 6 functions grouped: Retrofit / Cache / Firestore / Auth
-- User is deciding: keep toCacheException() and toAuthFlowException() or drop them (both are thin wrappers around Unexpected)
-- toAuthException() should STAY — it has real branching logic (3 Firebase Auth types → 3 BusinessException.Auth subtypes)
+- Git commit 0 (staged files above) has NOT been run yet
+- Implementation of Commits 1–7 has NOT started
+- The plan is complete and approved ("your plan look good")
+- Start with: commit staged files, then Commit 1 (exception safety)

@@ -1,8 +1,8 @@
 package com.decoutkhanqindev.dexreader.data.repository.user
 
-import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toAuthException
-import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirestoreException
-import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirestoreFlowException
+import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirebaseAuthException
+import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirebaseFirestoreException
+import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirebaseFirestoreFlowException
 import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toUnexpectedException
 import com.decoutkhanqindev.dexreader.data.mapper.UserMapper.toUser
 import com.decoutkhanqindev.dexreader.data.mapper.UserMapper.toUserProfileRequest
@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -51,13 +50,15 @@ class UserRepositoryImpl @Inject constructor(
           // Swallow deletion failure — the original Firestore write failure is the one to surface.
           try {
             authSource.deleteCurrentUser()
+          } catch (c: CancellationException) {
+            throw c
           } catch (_: Exception) {
           }
 
           throw InfrastructureException.Unexpected(cause = e)
         }
       },
-      onCatch = { e -> e.toAuthException() }
+      onCatch = { e -> e.toFirebaseAuthException() }
     )
 
   override suspend fun login(
@@ -67,16 +68,21 @@ class UserRepositoryImpl @Inject constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = { authSource.login(email, password) },
-      onCatch = { e -> e.toAuthException() }
+      onCatch = { e -> e.toFirebaseAuthException() }
     )
 
-  override suspend fun logout() = withContext(Dispatchers.IO) { authSource.logout() }
+  override suspend fun logout() =
+    runSuspendCatching(
+      context = Dispatchers.IO,
+      onExecute = { authSource.logout() },
+      onCatch = { e -> e.toFirebaseAuthException() }
+    )
 
   override suspend fun sendResetPassword(email: String) =
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = { authSource.sendResetPassword(email) },
-      onCatch = { e -> e.toAuthException() }
+      onCatch = { e -> e.toFirebaseAuthException() }
     )
 
   override fun observeCurrentUser(): Flow<User?> =
@@ -95,7 +101,7 @@ class UserRepositoryImpl @Inject constructor(
           userProfile = user.toUserProfileRequest()
         )
       },
-      onCatch = { e -> e.toFirestoreException() }
+      onCatch = { e -> e.toFirebaseFirestoreException() }
     )
 
   override fun observeUserProfile(userId: String): Flow<User?> =
@@ -103,6 +109,6 @@ class UserRepositoryImpl @Inject constructor(
       .observeUserProfile(userId)
       .map { it?.toUser() }
       .flowOn(Dispatchers.IO)
-      .catch { e -> e.toFirestoreFlowException() }
+      .catch { e -> e.toFirebaseFirestoreFlowException() }
       .distinctUntilChanged()
 }

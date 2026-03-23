@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.data.repository.user
 
-import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirestoreException
-import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirestoreFlowException
+import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirebaseFirestoreException
+import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirebaseFirestoreFlowException
 import com.decoutkhanqindev.dexreader.data.mapper.FavoriteMangaMapper.toFavoriteManga
 import com.decoutkhanqindev.dexreader.data.mapper.FavoriteMangaMapper.toFavoriteMangaRequest
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
@@ -34,7 +34,7 @@ class FavoritesRepositoryImpl @Inject constructor(
         favoriteMangaResponseList.map { it.toFavoriteManga() }
       }
       .flowOn(Dispatchers.IO)
-      .catch { e -> e.toFirestoreFlowException() }
+      .catch { e -> e.toFirebaseFirestoreFlowException() }
       .distinctUntilChanged()
 
   override suspend fun addToFavorites(
@@ -46,7 +46,7 @@ class FavoritesRepositoryImpl @Inject constructor(
       onExecute = {
         firestoreSource.addToFavorites(userId, manga.toFavoriteMangaRequest())
       },
-      onCatch = { it.toFirestoreException() }
+      onCatch = { it.toFirebaseFirestoreException() }
     )
 
   override suspend fun removeFromFavorites(
@@ -56,7 +56,7 @@ class FavoritesRepositoryImpl @Inject constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       onExecute = { firestoreSource.removeFromFavorites(userId, mangaId) },
-      onCatch = { it.toFirestoreException() }
+      onCatch = { it.toFirebaseFirestoreException() }
     )
 
   override fun observeIsFavorite(
@@ -66,6 +66,6 @@ class FavoritesRepositoryImpl @Inject constructor(
     firestoreSource
       .observeIsFavorite(userId, mangaId)
       .flowOn(Dispatchers.IO)
-      .catch { e -> e.toFirestoreFlowException() }
+      .catch { e -> e.toFirebaseFirestoreFlowException() }
       .distinctUntilChanged()
 }

@@ -81,3 +81,50 @@ fun Throwable.toAuthFlowException(): Nothing = when (this) {
 
 **Alternatives rejected:**
 - Adding `is CancellationException -> throw this` guard — rejected; dead code that misleads readers into thinking it's necessary.
+
+---
+
+### Decision: ExceptionMapper — toCacheException + toAuthFlowException → toUnexpectedException
+
+**What was decided:**
+`toCacheException()` and `toAuthFlowException()` were structurally identical (rethrow DomainException, wrap else as Unexpected) with no unique logic. Merged into a single `Throwable.toUnexpectedException()`. `toAuthException()` kept — it has real branching (3 Firebase Auth types → 3 subtypes).
+
+**Reasoning:** Two functions with identical bodies pretending to be context-specific add fake specificity. One honest function is better.
+
+---
+
+### Decision: Review fix plan — CancellationException guards needed in toUnexpectedException + toFirestoreFlowException
+
+**What was decided (reverses prior "no guard needed" decision for toAuthFlowException):**
+- `toUnexpectedException()`: IS a public function, could be called outside Flow.catch — guard is necessary
+- `toFirestoreFlowException()`: `else -> throw this` currently rethrows CE by coincidence — guard should be explicit
+Plan adds `is CancellationException -> throw this` as first branch in both.
+
+**Reasoning:** The prior session decision was specific to `toAuthFlowException` used only in `Flow.catch`. `toUnexpectedException` is more broadly public. And explicitness over "works by accident."
+
+---
+
+### Decision: callbackFlow + await fix — flow { emitAll(callbackFlow { }) } pattern
+
+**What was decided:**
+`observeFavorites()` and `observeHistory()` in `FirebaseFirestoreSourceImpl` call `await()` inside `callbackFlow {}` for cursor-based pagination. Fix: wrap in `flow { ... emitAll(callbackFlow { ... }) }` — the outer `flow {}` is a normal suspend context where `await()` is safe.
+
+**Reasoning:** `callbackFlow {}` is a coroutine scope but designed for callback-to-flow bridging; suspension inside it before `awaitClose` is a structured concurrency violation. Affects only paginated calls (non-null cursor).
+
+---
+
+### Decision: SettingsRepositoryImpl — ordinal → name persistence
+
+**What was decided:**
+`ThemeMode` will be persisted by `value.name` (string) instead of `value.ordinal` (int). Key type changes from `intPreferencesKey` to `stringPreferencesKey`.
+
+**Reasoning:** Ordinal silently maps to wrong value if enum order ever changes. Name is stable as long as enum entries aren't renamed (which is a deliberate breaking change, not accidental).
+
+---
+
+### Decision: FirebaseAuthSource interface — remove FirebaseUser
+
+**What was decided:**
+`register()` and `observeCurrentUser()` return types changed from `FirebaseUser?`/`Flow<FirebaseUser?>` to `User?`/`Flow<User?>`. Mapping via `UserMapper.toUser()` moves from `UserRepositoryImpl` into `FirebaseAuthSourceImpl`.
+
+**Reasoning:** Leaking a Firebase SDK type through an interface boundary defeats the abstraction. The repository should not need to know about `FirebaseUser`.

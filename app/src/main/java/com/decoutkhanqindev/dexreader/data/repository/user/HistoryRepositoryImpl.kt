@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.data.repository.user
 
-import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirestoreException
-import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirestoreFlowException
+import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirebaseFirestoreException
+import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirebaseFirestoreFlowException
 import com.decoutkhanqindev.dexreader.data.mapper.ReadingHistoryMapper.toReadingHistory
 import com.decoutkhanqindev.dexreader.data.mapper.ReadingHistoryMapper.toReadingHistoryRequest
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
@@ -36,7 +36,7 @@ class HistoryRepositoryImpl @Inject constructor(
         readingHistoryResponseList.map { it.toReadingHistory() }
       }
       .flowOn(Dispatchers.IO)
-      .catch { e -> e.toFirestoreFlowException() }
+      .catch { e -> e.toFirebaseFirestoreFlowException() }
       .distinctUntilChanged()
 
   override suspend fun upsertHistory(
@@ -51,7 +51,7 @@ class HistoryRepositoryImpl @Inject constructor(
           readingHistory = readingHistory.toReadingHistoryRequest()
         )
       },
-      onCatch = { it.toFirestoreException() }
+      onCatch = { it.toFirebaseFirestoreException() }
     )
 
   override suspend fun removeFromHistory(
@@ -66,6 +66,6 @@ class HistoryRepositoryImpl @Inject constructor(
           readingHistoryId = readingHistoryId
         )
       },
-      onCatch = { it.toFirestoreException() }
+      onCatch = { it.toFirebaseFirestoreException() }
     )
 }

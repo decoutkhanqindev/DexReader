@@ -1,33 +1,45 @@
 # Session Progress
 
-## Data Layer Double-Check Review (2026-03-23)
+## Review Fix Implementation (2026-03-23 — plan approved, not yet started)
 
-### Completed This Session
+### Pre-work
+- [x] Strict Kotlin review completed (domain/ + data/ layers)
+- [x] Plan written: `C:\Users\ADMIN\.claude\plans\ancient-wobbling-russell.md`
+- [ ] **Commit 0 — commit all currently staged files (prior session + ExceptionMapper simplification)**
 
-#### Agent reviews (7 parallel workers)
-- [x] Unit 1 — Mappers: ApiParamMapper entries.find, ExceptionMapper grouping + toAuthException/toAuthFlowException
-- [x] Unit 2 — Network API layer: IsoDateTimeAdapter already fixed in main; no new changes
-- [x] Unit 3 — Firebase layer: @Exclude DTO fix, toAuthException/toAuthFlowException added, UserRepositoryImpl refactored
-- [x] Unit 4 — Local data layer: StringListTypeConverter nullable → non-null, emptyList() fallback, @JvmStatic
-- [x] Unit 5 — Manga repos: confirmed clean, flagged MOST_VIEWED→createdAt as product question
-- [x] Unit 6 — User/Settings repos: updateUserProfile onCatch → toFirestoreException(); deleteCurrentUser() rollback
-- [x] Unit 7 — DI + Exception hierarchy: LOST (worktree gone, never committed) — exception hierarchy already fixed in main from prior session
+### Commit 1 — Exception Safety
+- [ ] `ExceptionMapper.kt`: CancellationException guard in `toUnexpectedException()`
+- [ ] `ExceptionMapper.kt`: CancellationException guard + UNAVAILABLE/DEADLINE_EXCEEDED in `toFirestoreFlowException()`
+- [ ] `ExceptionMapper.kt`: HTTP status branching in `toDomainException()` (4xx→Unexpected, 5xx→ServerUnavailable)
+- [ ] `UserRepositoryImpl.kt`: fix CE swallow in rollback inner try/catch (deleteCurrentUser)
+- [ ] `UserRepositoryImpl.kt`: wrap `logout()` in `runSuspendCatching`
 
-#### Applied directly to main (staged, not committed)
-- [x] ExceptionMapper.kt: toAuthException() + toAuthFlowException() added; grouped Retrofit/Cache/Firestore/Auth; CancellationException guard removed
-- [x] ApiParamMapper.kt: runCatching replaced with entries.find; String? → String with sensible defaults (ON_GOING, SAFE, DESC, ENGLISH)
-- [x] FirebaseAuthSource.kt + Impl: deleteCurrentUser() added
-- [x] UserRepositoryImpl.kt: toAuthException(), toAuthFlowException(), deleteCurrentUser() rollback, toFirestoreException()
-- [x] StringListTypeConverter.kt: non-null, emptyList() fallback, @JvmStatic
-- [x] Firebase DTOs (4 files): @Exclude on id fields (was wrongly @PropertyName)
-- [x] Build verified: BUILD SUCCESSFUL
+### Commit 2 — Flow Ordering
+- [ ] `UserRepositoryImpl.kt`: `observeUserProfile()` — catch before flowOn
+- [ ] `FavoritesRepositoryImpl.kt`: `observeFavorites()` — catch before flowOn
+- [ ] `FavoritesRepositoryImpl.kt`: `observeIsFavorite()` — catch before flowOn
+- [ ] `HistoryRepositoryImpl.kt`: `observeHistory()` — catch before flowOn
 
-### Still To Do
+### Commit 3 — API Param UNKNOWN
+- [ ] `CategoryRepositoryImpl.kt`: filter UNKNOWN from statusFilter + contentRatingFilter before map
 
-- [ ] **Commit all staged changes to main** (user reviewing ExceptionMapper first)
-- [ ] Resolve ExceptionMapper simplification: keep or drop toCacheException/toAuthFlowException?
-- [ ] Fix CategoryRepositoryImpl: mapNotNull → map (since toApiParam() no longer returns null)
-- [ ] Domain layer fixes (separate): UpdateUserProfileUseCase avatar bug, ClearExpiredCacheUseCase.clock internal var
+### Commit 4 — Settings Persistence
+- [ ] `SettingsRepositoryImpl.kt`: intPreferencesKey+ordinal → stringPreferencesKey+name
 
-### Single Most Important Next Step
-**Get user decision on ExceptionMapper simplification, then commit all staged changes.**
+### Commit 5 — FirebaseAuthSource Interface
+- [ ] `FirebaseAuthSource.kt`: FirebaseUser? → User?, Flow<FirebaseUser?> → Flow<User?>
+- [ ] `FirebaseAuthSourceImpl.kt`: move .toUser() calls inside register() and observeCurrentUser()
+- [ ] `UserRepositoryImpl.kt`: remove .toUser() calls, remove .map { it?.toUser() }
+
+### Commit 6 — Minor Fixes
+- [ ] `ClearExpiredCacheUseCase.kt`: var→val clock, 24L*60*60*1000 Long fix
+- [ ] `FavoriteMangaMapper.kt`: remove dead ?: "" on status.toApiParam()
+- [ ] `FavoriteManga.kt`: DEFAULT_ADDED_AT Long? = null → meaningful constant
+- [ ] `IsoDateTimeAdapter.kt`: formatter.get()!! → requireNotNull
+- [ ] `ChapterCacheDatabase.kt` + `LocalDataModule.kt`: add explanatory comments
+
+### Commit 7 — callbackFlow Refactor
+- [ ] `FirebaseFirestoreSourceImpl.kt`: extract await() before callbackFlow in observeFavorites() + observeHistory()
+
+### **Single Most Important Next Step**
+**Commit 0: `git add` the staged files and commit, then start Commit 1.**
