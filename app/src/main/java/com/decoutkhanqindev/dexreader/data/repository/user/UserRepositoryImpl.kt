@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.data.repository.user
 
+import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirestoreException
 import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirestoreFlowException
 import com.decoutkhanqindev.dexreader.data.mapper.UserMapper.toUser
 import com.decoutkhanqindev.dexreader.data.mapper.UserMapper.toUserProfileRequest
@@ -51,18 +52,18 @@ class UserRepositoryImpl @Inject constructor(
           } catch (_: Exception) {
           }
 
-          throw InfrastructureException.Unexpected(rootCause = e)
+          throw InfrastructureException.Unexpected(cause = e)
         }
       },
       onCatch = { e ->
         when (e) {
           is FirebaseAuthUserCollisionException ->
-            throw BusinessException.Auth.UserAlreadyExists(rootCause = e)
+            throw BusinessException.Auth.UserAlreadyExists(cause = e)
 
           is FirebaseAuthInvalidCredentialsException ->
-            throw BusinessException.Auth.InvalidCredentials(rootCause = e)
+            throw BusinessException.Auth.InvalidCredentials(cause = e)
 
-          else -> throw InfrastructureException.Unexpected(rootCause = e)
+          else -> throw InfrastructureException.Unexpected(cause = e)
         }
       }
     )
@@ -77,12 +78,12 @@ class UserRepositoryImpl @Inject constructor(
       onCatch = { e ->
         when (e) {
           is FirebaseAuthInvalidUserException ->
-            throw BusinessException.Auth.UserNotFound(rootCause = e)
+            throw BusinessException.Auth.UserNotFound(cause = e)
 
           is FirebaseAuthInvalidCredentialsException ->
-            throw BusinessException.Auth.InvalidCredentials(rootCause = e)
+            throw BusinessException.Auth.InvalidCredentials(cause = e)
 
-          else -> throw InfrastructureException.Unexpected(rootCause = e)
+          else -> throw InfrastructureException.Unexpected(cause = e)
         }
       }
     )
@@ -96,9 +97,9 @@ class UserRepositoryImpl @Inject constructor(
       onCatch = { e ->
         when (e) {
           is FirebaseAuthInvalidUserException ->
-            throw BusinessException.Auth.UserNotFound(rootCause = e)
+            throw BusinessException.Auth.UserNotFound(cause = e)
 
-          else -> throw InfrastructureException.Unexpected(rootCause = e)
+          else -> throw InfrastructureException.Unexpected(cause = e)
         }
       }
     )
@@ -118,7 +119,7 @@ class UserRepositoryImpl @Inject constructor(
           userProfile = user.toUserProfileRequest()
         )
       },
-      onCatch = { e -> throw InfrastructureException.Unexpected(rootCause = e) }
+      onCatch = { e -> e.toFirestoreException() }
     )
 
   override fun observeUserProfile(userId: String): Flow<User?> =
