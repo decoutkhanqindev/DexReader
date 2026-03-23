@@ -84,8 +84,12 @@ class CategoryRepositoryImpl @Inject constructor(
           followedCount = followedCount,
           createdAt = createdAt,
           rating = rating,
-          status = statusFilter.map { it.toApiParam() },
-          contentRating = contentRatingFilter.map { it.toApiParam() },
+          status = statusFilter
+            .filter { it != MangaStatus.UNKNOWN }
+            .map { it.toApiParam() },
+          contentRating = contentRatingFilter
+            .filter { it != MangaContentRating.UNKNOWN }
+            .map { it.toApiParam() },
         )
           .data
           ?.mapNotNull { it.toManga(uploadUrl) }
