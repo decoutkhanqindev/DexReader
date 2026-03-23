@@ -9,7 +9,7 @@ import com.decoutkhanqindev.dexreader.data.local.database.entity.ChapterCacheEnt
 @Database(
   entities = [ChapterCacheEntity::class],
   version = 2,
-  exportSchema = false
+  exportSchema = false // chapter cache is ephemeral — no migration history needed
 )
 @TypeConverters(StringListTypeConverter::class)
 abstract class ChapterCacheDatabase : RoomDatabase() {

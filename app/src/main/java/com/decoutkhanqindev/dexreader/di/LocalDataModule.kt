@@ -33,7 +33,7 @@ object LocalDataModule {
       klass = ChapterCacheDatabase::class.java,
       name = CHAPTER_CACHE_DB_NAME
     )
-      .fallbackToDestructiveMigration(true)
+      .fallbackToDestructiveMigration(true) // acceptable: cache is re-fetchable on upgrade
       .build()
 
   @Provides

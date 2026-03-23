@@ -24,6 +24,6 @@ object FavoriteMangaMapper {
       title = title,
       coverUrl = coverUrl,
       author = author,
-      status = status.toApiParam() ?: "",
+      status = status.toApiParam(),
     )
 }

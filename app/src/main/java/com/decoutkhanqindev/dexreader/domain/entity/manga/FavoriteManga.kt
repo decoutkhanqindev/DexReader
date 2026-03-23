@@ -9,8 +9,4 @@ data class FavoriteManga(
   val author: String,
   val status: MangaStatus,
   val addedAt: Long?,
-) {
-  companion object {
-    val DEFAULT_ADDED_AT: Long? = null
-  }
-}
+)

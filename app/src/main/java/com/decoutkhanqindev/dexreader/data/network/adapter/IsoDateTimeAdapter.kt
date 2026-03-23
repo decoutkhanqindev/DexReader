@@ -25,7 +25,7 @@ object IsoDateTimeAdapter {
   fun toJson(value: Long?): String? {
     if (value == null) return null
     return try {
-      formatter.get()!!.format(Date(value))
+      requireNotNull(formatter.get()).format(Date(value))
     } catch (e: Exception) {
       null
     }
