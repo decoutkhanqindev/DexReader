@@ -32,11 +32,9 @@ class HistoryRepositoryImpl @Inject constructor(
         mangaId = mangaId,
         lastReadingHistoryId = lastReadingHistoryId
       )
-      .map { readingHistoryResponseList ->
-        readingHistoryResponseList.map { it.toReadingHistory() }
-      }
-      .flowOn(Dispatchers.IO)
+      .map { items -> items.map { it.toReadingHistory() } }
       .catch { e -> e.toFirebaseFirestoreFlowException() }
+      .flowOn(Dispatchers.IO)
       .distinctUntilChanged()
 
   override suspend fun upsertHistory(

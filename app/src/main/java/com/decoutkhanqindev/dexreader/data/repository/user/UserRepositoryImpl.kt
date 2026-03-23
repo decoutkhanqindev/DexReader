@@ -89,8 +89,8 @@ class UserRepositoryImpl @Inject constructor(
     authSource
       .observeCurrentUser()
       .map { it?.toUser() }
-      .flowOn(Dispatchers.IO)
       .catch { e -> e.toUnexpectedException() }
+      .flowOn(Dispatchers.IO)
       .distinctUntilChanged()
 
   override suspend fun updateUserProfile(user: User) =
@@ -108,7 +108,7 @@ class UserRepositoryImpl @Inject constructor(
     firestoreSource
       .observeUserProfile(userId)
       .map { it?.toUser() }
-      .flowOn(Dispatchers.IO)
       .catch { e -> e.toFirebaseFirestoreFlowException() }
+      .flowOn(Dispatchers.IO)
       .distinctUntilChanged()
 }

@@ -30,11 +30,9 @@ class FavoritesRepositoryImpl @Inject constructor(
         limit = limit.toLong(),
         lastFavoriteMangaId = lastFavoriteMangaId
       )
-      .map { favoriteMangaResponseList ->
-        favoriteMangaResponseList.map { it.toFavoriteManga() }
-      }
-      .flowOn(Dispatchers.IO)
+      .map { items -> items.map { it.toFavoriteManga() } }
       .catch { e -> e.toFirebaseFirestoreFlowException() }
+      .flowOn(Dispatchers.IO)
       .distinctUntilChanged()
 
   override suspend fun addToFavorites(
@@ -65,7 +63,7 @@ class FavoritesRepositoryImpl @Inject constructor(
   ): Flow<Boolean> =
     firestoreSource
       .observeIsFavorite(userId, mangaId)
-      .flowOn(Dispatchers.IO)
       .catch { e -> e.toFirebaseFirestoreFlowException() }
+      .flowOn(Dispatchers.IO)
       .distinctUntilChanged()
 }
