@@ -5,8 +5,12 @@ import com.decoutkhanqindev.dexreader.data.network.adapter.IsoDateTimeAdapter
 import com.decoutkhanqindev.dexreader.data.network.api.ApiService
 import com.decoutkhanqindev.dexreader.data.network.firebase.auth.FirebaseAuthSource
 import com.decoutkhanqindev.dexreader.data.network.firebase.auth.FirebaseAuthSourceImpl
-import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
-import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSourceImpl
+import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.favorite.FirebaseFavoriteFirestoreSource
+import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.favorite.FirebaseFavoriteFirestoreSourceImpl
+import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.history.FirebaseHistoryFirestoreSource
+import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.history.FirebaseHistoryFirestoreSourceImpl
+import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.user.FirebaseUserFirestoreSource
+import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.user.FirebaseUserFirestoreSourceImpl
 import com.decoutkhanqindev.dexreader.data.network.interceptor.NetworkInterceptor
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -117,7 +121,19 @@ object NetworkDataModule {
 
   @Provides
   @Singleton
-  fun provideFirebaseFirestoreSource(
-    firebaseFirestoreSourceImpl: FirebaseFirestoreSourceImpl,
-  ): FirebaseFirestoreSource = firebaseFirestoreSourceImpl
+  fun provideFirebaseUserFirestoreSource(
+    impl: FirebaseUserFirestoreSourceImpl,
+  ): FirebaseUserFirestoreSource = impl
+
+  @Provides
+  @Singleton
+  fun provideFirebaseFavoriteFirestoreSource(
+    impl: FirebaseFavoriteFirestoreSourceImpl,
+  ): FirebaseFavoriteFirestoreSource = impl
+
+  @Provides
+  @Singleton
+  fun provideFirebaseHistoryFirestoreSource(
+    impl: FirebaseHistoryFirestoreSourceImpl,
+  ): FirebaseHistoryFirestoreSource = impl
 }

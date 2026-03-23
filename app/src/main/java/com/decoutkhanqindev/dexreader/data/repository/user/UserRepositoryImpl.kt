@@ -7,7 +7,7 @@ import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toUnexpectedEx
 import com.decoutkhanqindev.dexreader.data.mapper.UserMapper.toUser
 import com.decoutkhanqindev.dexreader.data.mapper.UserMapper.toUserProfileRequest
 import com.decoutkhanqindev.dexreader.data.network.firebase.auth.FirebaseAuthSource
-import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
+import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.user.FirebaseUserFirestoreSource
 import com.decoutkhanqindev.dexreader.domain.entity.user.User
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.exception.InfrastructureException
@@ -24,7 +24,7 @@ import kotlin.coroutines.cancellation.CancellationException
 
 class UserRepositoryImpl @Inject constructor(
   private val authSource: FirebaseAuthSource,
-  private val firestoreSource: FirebaseFirestoreSource,
+  private val firestoreSource: FirebaseUserFirestoreSource,
 ) : UserRepository {
   override suspend fun register(
     email: String,

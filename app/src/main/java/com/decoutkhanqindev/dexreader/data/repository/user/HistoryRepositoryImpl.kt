@@ -4,7 +4,7 @@ import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirebaseFire
 import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirebaseFirestoreFlowException
 import com.decoutkhanqindev.dexreader.data.mapper.ReadingHistoryMapper.toReadingHistory
 import com.decoutkhanqindev.dexreader.data.mapper.ReadingHistoryMapper.toReadingHistoryRequest
-import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
+import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.history.FirebaseHistoryFirestoreSource
 import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.repository.user.HistoryRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class HistoryRepositoryImpl @Inject constructor(
-  private val firestoreSource: FirebaseFirestoreSource,
+  private val firestoreSource: FirebaseHistoryFirestoreSource,
 ) : HistoryRepository {
   override fun observeHistory(
     userId: String,

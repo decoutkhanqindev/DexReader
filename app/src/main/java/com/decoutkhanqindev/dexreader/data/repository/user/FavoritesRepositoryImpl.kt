@@ -4,7 +4,7 @@ import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirebaseFire
 import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirebaseFirestoreFlowException
 import com.decoutkhanqindev.dexreader.data.mapper.FavoriteMangaMapper.toFavoriteManga
 import com.decoutkhanqindev.dexreader.data.mapper.FavoriteMangaMapper.toFavoriteMangaRequest
-import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.FirebaseFirestoreSource
+import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.favorite.FirebaseFavoriteFirestoreSource
 import com.decoutkhanqindev.dexreader.domain.entity.manga.FavoriteManga
 import com.decoutkhanqindev.dexreader.domain.repository.user.FavoritesRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class FavoritesRepositoryImpl @Inject constructor(
-  private val firestoreSource: FirebaseFirestoreSource,
+  private val firestoreSource: FirebaseFavoriteFirestoreSource,
 ) : FavoritesRepository {
   override fun observeFavorites(
     userId: String,
