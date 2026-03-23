@@ -1,12 +1,12 @@
 package com.decoutkhanqindev.dexreader.data.network.firebase.dto.response
 
+import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.PropertyName
 import com.google.firebase.firestore.ServerTimestamp
 import java.util.Date
 
 data class ReadingHistoryResponse(
-  @get:PropertyName("reading_history_id")
-  @set:PropertyName("reading_history_id")
+  @get:Exclude @set:Exclude // Populated from document.id via .copy(), not from document data.
   var id: String = "",
 
   @get:PropertyName("manga_id")
