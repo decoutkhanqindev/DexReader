@@ -55,7 +55,8 @@
       "Read(//c/Android Development/dex_reader/DexReader/app/src/main/java/com/decoutkhanqindev/dexreader/data/**)",
       "Bash(wc:*)",
       "Bash(./gradlew clean:*)",
-      "Bash(./gradlew assembleDebug --quiet)"
+      "Bash(./gradlew assembleDebug --quiet)",
+      "Bash(2)"
     ]
   },
   "spinnerTipsEnabled": true

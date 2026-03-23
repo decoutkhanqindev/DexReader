@@ -1,20 +1,16 @@
 # Current Task
 
-## Task
-Implement all review fixes from the strict Kotlin review of domain/ + data/ layers.
-Plan file: `C:\Users\ADMIN\.claude\plans\ancient-wobbling-russell.md`
+## Status
+All DI qualifier removal complete. No pending implementation work.
 
-## Files Staged (not yet committed — from prior session + this session)
-- `data/mapper/ExceptionMapper.kt` — toUnexpectedException() replaces toCacheException/toAuthFlowException; blank line fixes
-- `data/repository/manga/CacheRepositoryImpl.kt` — toCacheException → toUnexpectedException
-- `data/repository/user/UserRepositoryImpl.kt` — toAuthFlowException → toUnexpectedException; linter reordered observeCurrentUser's .catch before .flowOn
-- All other prior-session staged files (StringListTypeConverter, Firebase DTOs, FirebaseAuthSource deleteCurrentUser, ApiParamMapper)
+## Last Actions (this session)
+1. Split `NetworkDataModule.kt` into `di/network/ApiModule.kt` + `di/network/FirebaseModule.kt` — COMPLETE
+2. Removed all 4 qualifiers across the `di/` directory — COMPLETE:
+   - `@BaseUrlQualifier` — removed from ApiModule; `BASE_URL` inlined into `provideRetrofit()`
+   - `@UploadUrlQualifier` — removed; repos now use `BuildConfig.UPLOAD_URL` directly
+   - `@MangaDexApiServiceQualifier` — removed; only one Retrofit binding
+   - `@ThemeModeKeyQualifier` — removed; `THEME_MODE_KEY = "theme_mode"` companion const in SettingsRepositoryImpl
 
-## Last Action
-Plan written to `ancient-wobbling-russell.md`. ExitPlanMode rejected by user (hit context limit). Session saved before implementation began.
-
-## Context to Resume
-- Git commit 0 (staged files above) has NOT been run yet
-- Implementation of Commits 1–7 has NOT started
-- The plan is complete and approved ("your plan look good")
-- Start with: commit staged files, then Commit 1 (exception safety)
+## What's Next
+- Run `./gradlew assembleDebug` to verify clean build (not yet run — no Bash access during batch)
+- No pending implementation work otherwise

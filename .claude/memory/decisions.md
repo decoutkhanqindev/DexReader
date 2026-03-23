@@ -1,3 +1,22 @@
+## 2026-03-23 (session 2)
+
+### Decision: Split FirebaseFirestoreSource into 3 focused sources
+
+**What was decided:**
+Replaced the single `FirebaseFirestoreSource` interface + `FirebaseFirestoreSourceImpl` with three pairs:
+- `firestore/user/` — `FirebaseUserFirestoreSource` + Impl
+- `firestore/favorite/` — `FirebaseFavoriteFirestoreSource` + Impl
+- `firestore/history/` — `FirebaseHistoryFirestoreSource` + Impl
+
+Each impl has its own `@Inject constructor(FirebaseFirestore)` and `usersCollectionRef`. Each repository now injects only the one interface it needs. `NetworkDataModule` has 3 `@Provides` bindings.
+
+**Reasoning:** The monolithic interface violated ISP — each repository only used a third of it. Splitting makes injection precise, reduces coupling, and mirrors the existing per-concern repository structure.
+
+**Alternatives rejected:**
+- Keep monolithic but split only the impl — rejected; the interface boundary still forces unnecessary awareness of unrelated methods.
+
+---
+
 ## Archive (2026-03-18 through 2026-03-22)
 
 Consolidated decisions from earlier sessions. Key outcomes:
@@ -128,3 +147,33 @@ Plan adds `is CancellationException -> throw this` as first branch in both.
 `register()` and `observeCurrentUser()` return types changed from `FirebaseUser?`/`Flow<FirebaseUser?>` to `User?`/`Flow<User?>`. Mapping via `UserMapper.toUser()` moves from `UserRepositoryImpl` into `FirebaseAuthSourceImpl`.
 
 **Reasoning:** Leaking a Firebase SDK type through an interface boundary defeats the abstraction. The repository should not need to know about `FirebaseUser`.
+
+---
+
+## 2026-03-23 (session 3)
+
+### Decision: Split NetworkDataModule into ApiModule + FirebaseModule under di/network/
+
+**What was decided:**
+`NetworkDataModule.kt` deleted. Replaced by:
+- `di/network/ApiModule.kt` — Retrofit/OkHttp providers + qualifier annotations
+- `di/network/FirebaseModule.kt` — Firebase providers
+
+**Reasoning:** Two unrelated concerns in one file. `di/network/` subfolder mirrors the existing per-concern structure.
+
+**Alternatives rejected:** Keeping them in `di/` root — user explicitly requested a `network/` folder.
+
+---
+
+### Decision: Remove all 4 DI qualifiers; replace with BuildConfig constants and companion constants
+
+**What was decided:**
+All qualifier annotations removed:
+- `@BaseUrlQualifier` — `BuildConfig.BASE_URL` inlined into `provideRetrofit()` directly
+- `@UploadUrlQualifier` — `BuildConfig.UPLOAD_URL` referenced directly in `MangaRepositoryImpl` + `CategoryRepositoryImpl`
+- `@MangaDexApiServiceQualifier` — redundant (only one `Retrofit` binding in the graph)
+- `@ThemeModeKeyQualifier` — `"theme_mode"` moved to `companion object { private const val THEME_MODE_KEY }` in `SettingsRepositoryImpl`
+
+**Reasoning:** Qualifiers exist only to disambiguate multiple bindings of the same type. `@MangaDexApiServiceQualifier` was never needed (one Retrofit). The other three disambiguated `String` providers that are better expressed as compile-time constants — no runtime benefit to injecting them through the DI graph.
+
+**Alternatives rejected:** Keeping `@ThemeModeKeyQualifier` for testability — rejected; the key is a fixed string, not a runtime value, so there is nothing to vary in tests.
