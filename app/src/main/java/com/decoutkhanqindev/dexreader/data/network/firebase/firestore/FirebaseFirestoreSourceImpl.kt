@@ -13,6 +13,8 @@ import com.google.firebase.firestore.Query
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -54,7 +56,7 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
     userId: String,
     limit: Long,
     lastFavoriteMangaId: String?,
-  ): Flow<List<FavoriteMangaResponse>> = callbackFlow {
+  ): Flow<List<FavoriteMangaResponse>> = flow {
     val favoritesCollectionRef = usersCollectionRef
       .document(userId)
       .collection(FirestoreCollections.FAVORITES)
@@ -63,33 +65,29 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
       .orderBy(FirestoreFields.CREATED_AT, Query.Direction.DESCENDING)
       .limit(limit)
 
-    val lastFavoriteManga = lastFavoriteMangaId?.let { id ->
-      favoritesCollectionRef
-        .document(id)
-        .get()
-        .await()
+    lastFavoriteMangaId?.let { id ->
+      val lastDoc = favoritesCollectionRef.document(id).get().await()
+      if (lastDoc.exists()) query = query.startAfter(lastDoc)
     }
 
-    lastFavoriteManga?.let {
-      if (it.exists()) query = query.startAfter(it)
-    }
+    emitAll(
+      callbackFlow {
+        val listenerRegistration = query.addSnapshotListener { snapshot, error ->
+          if (error != null) {
+            close(error)
+            return@addSnapshotListener
+          }
 
-    val listenerRegistration = query.addSnapshotListener { snapshot, error ->
-      if (error != null) {
-        close(error)
-        return@addSnapshotListener
+          val favoriteMangaResponseList = snapshot?.documents?.mapNotNull { document ->
+            document.toObject(FavoriteMangaResponse::class.java)?.copy(id = document.id)
+          } ?: emptyList()
+
+          trySend(favoriteMangaResponseList)
+        }
+
+        awaitClose { listenerRegistration.remove() }
       }
-
-      val favoriteMangaResponseList = snapshot?.documents?.mapNotNull { document ->
-        document.toObject(FavoriteMangaResponse::class.java)?.copy(id = document.id)
-      } ?: emptyList()
-
-      trySend(favoriteMangaResponseList)
-    }
-
-    awaitClose {
-      listenerRegistration.remove()
-    }
+    )
   }
 
   override suspend fun addToFavorites(
@@ -146,48 +144,40 @@ class FirebaseFirestoreSourceImpl @Inject constructor(
     limit: Long,
     mangaId: String?,
     lastReadingHistoryId: String?,
-  ): Flow<List<ReadingHistoryResponse>> = callbackFlow {
+  ): Flow<List<ReadingHistoryResponse>> = flow {
     val historyCollectionRef = usersCollectionRef
       .document(userId)
       .collection(FirestoreCollections.HISTORY)
 
     var query: Query = historyCollectionRef
-
-    mangaId?.let { id ->
-      query = query.whereEqualTo(FirestoreFields.MANGA_ID, id)
-    }
-
+    mangaId?.let { id -> query = query.whereEqualTo(FirestoreFields.MANGA_ID, id) }
     query = query
       .orderBy(FirestoreFields.CREATED_AT, Query.Direction.DESCENDING)
       .limit(limit)
 
-    val lastReadingHistory = lastReadingHistoryId?.let { id ->
-      historyCollectionRef
-        .document(id)
-        .get()
-        .await()
+    lastReadingHistoryId?.let { id ->
+      val lastDoc = historyCollectionRef.document(id).get().await() // safe: flow {} is a suspend context
+      if (lastDoc.exists()) query = query.startAfter(lastDoc)
     }
 
-    lastReadingHistory?.let {
-      if (it.exists()) query = query.startAfter(it)
-    }
+    emitAll(
+      callbackFlow {
+        val listenerRegistration = query.addSnapshotListener { snapshot, error ->
+          if (error != null) {
+            close(error)
+            return@addSnapshotListener
+          }
 
-    val listenerRegistration = query.addSnapshotListener { snapshot, error ->
-      if (error != null) {
-        close(error)
-        return@addSnapshotListener
+          val readingHistoryResponseList = snapshot?.documents?.mapNotNull { document ->
+            document.toObject(ReadingHistoryResponse::class.java)?.copy(id = document.id)
+          } ?: emptyList()
+
+          trySend(readingHistoryResponseList)
+        }
+
+        awaitClose { listenerRegistration.remove() }
       }
-
-      val readingHistoryResponseList = snapshot?.documents?.mapNotNull { document ->
-        document.toObject(ReadingHistoryResponse::class.java)?.copy(id = document.id)
-      } ?: emptyList()
-
-      trySend(readingHistoryResponseList)
-    }
-
-    awaitClose {
-      listenerRegistration.remove()
-    }
+    )
   }
 
   override suspend fun upsertHistory(
