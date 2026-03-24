@@ -27,9 +27,7 @@ constructor(
   private val observeFavoritesUseCase: ObserveFavoritesUseCase,
 ) : ViewModel() {
   private val _uiState =
-    MutableStateFlow<BasePaginationUiState<FavoriteMangaModel>>(
-      BasePaginationUiState.FirstPageLoading
-    )
+    MutableStateFlow<BasePaginationUiState<FavoriteMangaModel>>(BasePaginationUiState.FirstPageLoading)
   val uiState: StateFlow<BasePaginationUiState<FavoriteMangaModel>> = _uiState.asStateFlow()
 
   private val _userId = MutableStateFlow<String?>(null)
@@ -147,9 +145,8 @@ constructor(
                         currentPage = nextPage,
                         nextPageState =
                           BaseNextPageState.fromPageSize(
-                            nextPageFavoriteMangaList
-                              .size,
-                            MANGA_LIST_PER_PAGE_SIZE
+                            resultSize = nextPageFavoriteMangaList.size,
+                            pageSize = MANGA_LIST_PER_PAGE_SIZE
                           )
                       )
                   }
@@ -157,10 +154,7 @@ constructor(
                     if (throwable is BusinessException.Resource.AccessDenied && _userId.value == null)
                       return@onFailure
 
-                    _uiState.value =
-                      currentUiState.copy(
-                        nextPageState = BaseNextPageState.ERROR
-                      )
+                    _uiState.value = currentUiState.copy(nextPageState = BaseNextPageState.ERROR)
                     Log.d(
                       TAG,
                       "observeFavoritesNextPageInternal have error: ${throwable.stackTraceToString()}"
@@ -193,8 +187,7 @@ constructor(
     val currentUiState = _uiState.value
     if (currentUiState is BasePaginationUiState.Content<FavoriteMangaModel> &&
       currentUiState.nextPageState == BaseNextPageState.ERROR
-    )
-      observeFavoritesNextPageInternal(currentUiState)
+    ) observeFavoritesNextPageInternal(currentUiState)
   }
 
   private fun cancelObserveFavoritesJob() {

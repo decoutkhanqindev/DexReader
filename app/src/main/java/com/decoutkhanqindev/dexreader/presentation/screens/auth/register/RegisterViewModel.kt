@@ -34,7 +34,13 @@ constructor(
     val currentName = currentUiState.name.trim()
 
     viewModelScope.launch {
-      _uiState.update { it.copy(isLoading = true, isSuccess = false, isError = false) }
+      _uiState.update {
+        it.copy(
+          isLoading = true,
+          isSuccess = false,
+          isError = false
+        )
+      }
 
       useCase(
         email = currentEmail,
@@ -43,21 +49,50 @@ constructor(
         name = currentName
       )
         .onSuccess {
-          _uiState.update { it.copy(isLoading = false, isSuccess = true, isError = false) }
+          _uiState.update {
+            it.copy(
+              isLoading = false,
+              isSuccess = true,
+              isError = false
+            )
+          }
         }
         .onFailure { throwable ->
           _uiState.update {
             when (val error = throwable.toUserError()) {
-              is UserError.Email -> it.copy(isLoading = false, emailError = error)
-              is UserError.Password -> it.copy(isLoading = false, passwordError = error)
+              is UserError.Email -> it.copy(
+                isLoading = false,
+                emailError = error
+              )
+
+              is UserError.Password -> it.copy(
+                isLoading = false,
+                passwordError = error
+              )
+
               is UserError.ConfirmPassword ->
-                it.copy(isLoading = false, confirmPasswordError = error)
+                it.copy(
+                  isLoading = false,
+                  confirmPasswordError = error
+                )
 
-              is UserError.Name -> it.copy(isLoading = false, nameError = error)
+              is UserError.Name -> it.copy(
+                isLoading = false,
+                nameError = error
+              )
+
               is UserError.RegistrationFailed ->
-                it.copy(isLoading = false, isSuccess = false, isError = true)
+                it.copy(
+                  isLoading = false,
+                  isSuccess = false,
+                  isError = true
+                )
 
-              else -> it.copy(isLoading = false, isSuccess = false, isError = true)
+              else -> it.copy(
+                isLoading = false,
+                isSuccess = false,
+                isError = true
+              )
             }
           }
 
@@ -108,7 +143,13 @@ constructor(
   fun updateName(value: String) {
     if (_uiState.value.name == value) return
     _uiState.update {
-      it.copy(name = value, nameError = null, isLoading = false, isSuccess = false, isError = false)
+      it.copy(
+        name = value,
+        nameError = null,
+        isLoading = false,
+        isSuccess = false,
+        isError = false
+      )
     }
   }
 

@@ -30,9 +30,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel
-@Inject
-constructor(
+class SearchViewModel @Inject constructor(
   private val searchMangaUseCase: SearchMangaUseCase,
   private val getMangaSuggestionsUseCase: GetMangaSuggestionsUseCase,
 ) : ViewModel() {
@@ -90,8 +88,8 @@ constructor(
               currentPage = FIRST_PAGE,
               nextPageState =
                 BaseNextPageState.fromPageSize(
-                  mangaList.size,
-                  MANGA_LIST_PER_PAGE_SIZE
+                  resultSize = mangaList.size,
+                  pageSize = MANGA_LIST_PER_PAGE_SIZE
                 )
             )
         }
@@ -161,8 +159,7 @@ constructor(
     val currentResultsUiState = _resultsUiState.value
     if (currentResultsUiState is BasePaginationUiState.Content<MangaModel> &&
       currentResultsUiState.nextPageState == BaseNextPageState.ERROR
-    )
-      fetchMangaListNextPageInternal(currentResultsUiState)
+    ) fetchMangaListNextPageInternal(currentResultsUiState)
   }
 
   companion object {

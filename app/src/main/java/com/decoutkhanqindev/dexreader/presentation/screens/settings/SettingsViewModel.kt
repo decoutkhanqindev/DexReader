@@ -17,9 +17,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel
-@Inject
-constructor(
+class SettingsViewModel @Inject constructor(
   private val observeThemeModeUseCase: ObserveThemeModeUseCase,
   private val saveThemeModeUseCase: SaveThemeModeUseCase,
 ) : ViewModel() {
@@ -73,10 +71,22 @@ constructor(
 
       saveThemeModeUseCase(currentUiState.themeOption.toThemeMode())
         .onSuccess {
-          _uiState.update { it.copy(isLoading = false, isSuccess = true, isError = false) }
+          _uiState.update {
+            it.copy(
+              isLoading = false,
+              isSuccess = true,
+              isError = false
+            )
+          }
         }
         .onFailure { throwable ->
-          _uiState.update { it.copy(isLoading = false, isSuccess = false, isError = true) }
+          _uiState.update {
+            it.copy(
+              isLoading = false,
+              isSuccess = false,
+              isError = true
+            )
+          }
           Log.e(TAG, "setThemeType have error: ${throwable.stackTraceToString()}")
         }
     }

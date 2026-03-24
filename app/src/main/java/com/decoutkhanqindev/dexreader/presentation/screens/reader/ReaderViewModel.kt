@@ -28,7 +28,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -40,9 +39,7 @@ import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
 
 @HiltViewModel
-class ReaderViewModel
-@Inject
-constructor(
+class ReaderViewModel @Inject constructor(
   savedStateHandle: SavedStateHandle,
   private val getChapterListUseCase: GetChapterListUseCase,
   private val getChapterDetailsUseCase: GetChapterDetailsUseCase,

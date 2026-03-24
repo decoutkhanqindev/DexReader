@@ -74,15 +74,13 @@ constructor(
                         currentPage = FIRST_PAGE,
                         nextPageState =
                           BaseNextPageState.fromPageSize(
-                            readingHistoryList.size,
-                            READING_HISTORY_LIST_PER_PAGE_SIZE
+                            resultSize = readingHistoryList.size,
+                            pageSize = READING_HISTORY_LIST_PER_PAGE_SIZE
                           )
                       )
                   }
                   .onFailure { throwable ->
-                    if (throwable is BusinessException.Resource.AccessDenied &&
-                      _userId.value == null
-                    ) {
+                    if (throwable is BusinessException.Resource.AccessDenied && _userId.value == null) {
                       _historyUiState.value =
                         BasePaginationUiState.FirstPageLoading
                       return@onFailure
@@ -193,12 +191,15 @@ constructor(
     if (currentRemoveFromHistoryUiState.isLoading ||
       currentRemoveFromHistoryUiState.readingHistoryId == null ||
       _historyUiState.value !is BasePaginationUiState.Content
-    )
-      return
+    ) return
 
     viewModelScope.launch {
       _removeFromHistoryUiState.update {
-        it.copy(isLoading = true, isSuccess = false, isError = false)
+        it.copy(
+          isLoading = true,
+          isSuccess = false,
+          isError = false
+        )
       }
 
       val readingHistoryId = currentRemoveFromHistoryUiState.readingHistoryId
@@ -217,7 +218,11 @@ constructor(
           }
           .onFailure { throwable ->
             _removeFromHistoryUiState.update {
-              it.copy(isLoading = false, isSuccess = false, isError = true)
+              it.copy(
+                isLoading = false,
+                isSuccess = false,
+                isError = true
+              )
             }
             Log.d(TAG, "removeFromHistory have error: ${throwable.stackTraceToString()}")
           }
@@ -250,8 +255,7 @@ constructor(
     val currentUiState = _historyUiState.value
     if (currentUiState is BasePaginationUiState.Content<ReadingHistoryModel> &&
       currentUiState.nextPageState == BaseNextPageState.ERROR
-    )
-      observeHistoryNextPageInternal(currentUiState)
+    ) observeHistoryNextPageInternal(currentUiState)
   }
 
   fun retryRemoveFromHistory() {

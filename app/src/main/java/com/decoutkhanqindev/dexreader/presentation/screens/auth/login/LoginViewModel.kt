@@ -31,19 +31,47 @@ class LoginViewModel @Inject constructor(
     val currentPassword = currentUiState.password.trim()
 
     viewModelScope.launch {
-      _uiState.update { it.copy(isLoading = true, isSuccess = false, isError = false) }
+      _uiState.update {
+        it.copy(
+          isLoading = true,
+          isSuccess = false,
+          isError = false
+        )
+      }
 
       userCase(email = currentEmail, password = currentPassword)
         .onSuccess {
-          _uiState.update { it.copy(isLoading = false, isSuccess = true, isError = false) }
+          _uiState.update {
+            it.copy(
+              isLoading = false,
+              isSuccess = true,
+              isError = false
+            )
+          }
         }
         .onFailure { throwable ->
           _uiState.update {
             when (val error = throwable.toUserError()) {
-              is UserError.NotFound -> it.copy(isLoading = false, userError = error)
-              is UserError.Email -> it.copy(isLoading = false, emailError = error)
-              is UserError.Password -> it.copy(isLoading = false, passwordError = error)
-              else -> it.copy(isLoading = false, isSuccess = false, isError = true)
+              is UserError.NotFound -> it.copy(
+                isLoading = false,
+                userError = error
+              )
+
+              is UserError.Email -> it.copy(
+                isLoading = false,
+                emailError = error
+              )
+
+              is UserError.Password -> it.copy(
+                isLoading = false,
+                passwordError = error
+              )
+
+              else -> it.copy(
+                isLoading = false,
+                isSuccess = false,
+                isError = true
+              )
             }
           }
 

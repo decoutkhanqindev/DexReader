@@ -28,17 +28,37 @@ class ForgotPasswordViewModel @Inject constructor(
     if (currentUiState.isLoading) return
 
     viewModelScope.launch {
-      _uiState.update { it.copy(isLoading = true, isSuccess = false, isError = false) }
+      _uiState.update {
+        it.copy(
+          isLoading = true,
+          isSuccess = false,
+          isError = false
+        )
+      }
 
       sendResetPasswordUseCase(email = currentUiState.email.trim())
         .onSuccess {
-          _uiState.update { it.copy(isLoading = false, isSuccess = true, isError = false) }
+          _uiState.update {
+            it.copy(
+              isLoading = false,
+              isSuccess = true,
+              isError = false
+            )
+          }
         }
         .onFailure { throwable ->
           _uiState.update {
             when (val error = throwable.toUserError()) {
-              is UserError.Email -> it.copy(isLoading = false, emailError = error)
-              else -> it.copy(isLoading = false, isSuccess = false, isError = true)
+              is UserError.Email -> it.copy(
+                isLoading = false,
+                emailError = error
+              )
+
+              else -> it.copy(
+                isLoading = false,
+                isSuccess = false,
+                isError = true
+              )
             }
           }
 

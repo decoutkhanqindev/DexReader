@@ -70,7 +70,10 @@ class CategoryDetailsViewModel @Inject constructor(
           _categoryDetailsUiState.value = BasePaginationUiState.Content(
             currentList = mangaList.map { it.toMangaModel() }.toPersistentList(),
             currentPage = FIRST_PAGE,
-            nextPageState = BaseNextPageState.fromPageSize(mangaList.size, MANGA_LIST_PER_PAGE_SIZE)
+            nextPageState = BaseNextPageState.fromPageSize(
+              resultSize = mangaList.size,
+              pageSize = MANGA_LIST_PER_PAGE_SIZE
+            )
           )
         }
         .onFailure { throwable ->
@@ -129,8 +132,8 @@ class CategoryDetailsViewModel @Inject constructor(
             currentList = allMangaList,
             currentPage = nextPage,
             nextPageState = BaseNextPageState.fromPageSize(
-              nextMangaList.size,
-              MANGA_LIST_PER_PAGE_SIZE
+              resultSize = nextMangaList.size,
+              pageSize = MANGA_LIST_PER_PAGE_SIZE
             )
           )
         }
@@ -153,7 +156,10 @@ class CategoryDetailsViewModel @Inject constructor(
     if (current.sortCriteria == sortCriteria && current.sortOrder == sortOrder) return
 
     _categoryCriteriaUiState.update {
-      it.copy(sortCriteria = sortCriteria, sortOrder = sortOrder)
+      it.copy(
+        sortCriteria = sortCriteria,
+        sortOrder = sortOrder
+      )
     }
     fetchMangaListByCategoryFirstPage()
   }
@@ -166,7 +172,10 @@ class CategoryDetailsViewModel @Inject constructor(
     if (current.statusFilter == statusFilter && current.contentRatingFilter == contentRatingFilter) return
 
     _categoryCriteriaUiState.update {
-      it.copy(statusFilter = statusFilter, contentRatingFilter = contentRatingFilter)
+      it.copy(
+        statusFilter = statusFilter,
+        contentRatingFilter = contentRatingFilter
+      )
     }
 
     fetchMangaListByCategoryFirstPage()

@@ -44,9 +44,7 @@ import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
 
 @HiltViewModel
-class MangaDetailsViewModel
-@Inject
-constructor(
+class MangaDetailsViewModel @Inject constructor(
   savedStateHandle: SavedStateHandle,
   private val getMangaDetailsUseCase: GetMangaDetailsUseCase,
   private val getChapterListUseCase: GetChapterListUseCase,
@@ -73,8 +71,7 @@ constructor(
   val availableLanguages: StateFlow<ImmutableList<MangaLanguageValue>> =
     _mangaDetailsUiState
       .map { state ->
-        if (state is MangaDetailsUiState.Success)
-          state.manga.availableLanguages
+        if (state is MangaDetailsUiState.Success) state.manga.availableLanguages
         else persistentListOf()
       }
       .stateIn(
@@ -172,8 +169,8 @@ constructor(
               currentPage = FIRST_PAGE,
               nextPageState =
                 BaseNextPageState.fromPageSize(
-                  chapterList.size,
-                  CHAPTER_LIST_PER_PAGE_SIZE
+                  resultSize = chapterList.size,
+                  pageSize = CHAPTER_LIST_PER_PAGE_SIZE
                 )
             )
         }
@@ -221,8 +218,8 @@ constructor(
               currentPage = nextPage,
               nextPageState =
                 BaseNextPageState.fromPageSize(
-                  nextChapterList.size,
-                  CHAPTER_LIST_PER_PAGE_SIZE
+                  resultSize = nextChapterList.size,
+                  pageSize = CHAPTER_LIST_PER_PAGE_SIZE
                 )
             )
         }
@@ -254,14 +251,16 @@ constructor(
 
             try {
               observeIsFavoriteUseCase(userId = userId, mangaId = mangaId).collect { result ->
-                result.onSuccess { _isFavorite.value = it }.onFailure { throwable ->
-                  _isFavorite.value = false
+                result
+                  .onSuccess { _isFavorite.value = it }
+                  .onFailure { throwable ->
+                    _isFavorite.value = false
 
-                  if (throwable is BusinessException.Resource.AccessDenied && _userId.value == null)
-                    return@onFailure
+                    if (throwable is BusinessException.Resource.AccessDenied && _userId.value == null)
+                      return@onFailure
 
-                  Log.d(TAG, "observeIsFavorite have error: ${throwable.stackTraceToString()}")
-                }
+                    Log.d(TAG, "observeIsFavorite have error: ${throwable.stackTraceToString()}")
+                  }
               }
             } catch (c: CancellationException) {
               throw c
@@ -330,8 +329,7 @@ constructor(
                     isObservingReadingHistoryList = false
                     _readingHistoryList.value = readingHistoryList.toPersistentList()
                     hasNextReadingHistoryListPage =
-                      readingHistoryList.size >=
-                          READING_HISTORY_LIST_PER_PAGE_SIZE
+                      readingHistoryList.size >= READING_HISTORY_LIST_PER_PAGE_SIZE
 
                     if (hasNextReadingHistoryListPage) observeHistoryNextPage()
                     else return@onSuccess
@@ -339,9 +337,7 @@ constructor(
                   .onFailure { throwable ->
                     isObservingReadingHistoryList = false
 
-                    if (throwable is BusinessException.Resource.AccessDenied &&
-                      _userId.value == null
-                    )
+                    if (throwable is BusinessException.Resource.AccessDenied && _userId.value == null)
                       return@onFailure
 
                     _readingHistoryList.value = persistentListOf()
@@ -393,8 +389,7 @@ constructor(
                     _readingHistoryList.value =
                       (_readingHistoryList.value + readingHistoryList).toPersistentList()
                     hasNextReadingHistoryListPage =
-                      readingHistoryList.size >=
-                          READING_HISTORY_LIST_PER_PAGE_SIZE
+                      readingHistoryList.size >= READING_HISTORY_LIST_PER_PAGE_SIZE
 
                     if (hasNextReadingHistoryListPage) observeHistoryNextPage()
                     else return@onSuccess
@@ -402,9 +397,7 @@ constructor(
                   .onFailure { throwable ->
                     isObservingReadingHistoryList = false
 
-                    if (throwable is BusinessException.Resource.AccessDenied &&
-                      _userId.value == null
-                    )
+                    if (throwable is BusinessException.Resource.AccessDenied && _userId.value == null)
                       return@onFailure
 
                     hasNextReadingHistoryListPage = false
@@ -440,23 +433,20 @@ constructor(
   fun retry() {
     if (_mangaDetailsUiState.value is MangaDetailsUiState.Error) fetchMangaDetails()
     if (_startedChapterId.value == null) fetchFirstChapter()
-    if (_mangaChaptersUiState.value is BasePaginationUiState.FirstPageError)
-      fetchChapterListFirstPage()
+    if (_mangaChaptersUiState.value is BasePaginationUiState.FirstPageError) fetchChapterListFirstPage()
     observeIsFavorite()
     observeHistoryFirstPage()
   }
 
   fun retryFetchChapterListFirstPage() {
-    if (_mangaChaptersUiState.value is BasePaginationUiState.FirstPageError)
-      fetchChapterListFirstPage()
+    if (_mangaChaptersUiState.value is BasePaginationUiState.FirstPageError) fetchChapterListFirstPage()
   }
 
   fun retryFetchChapterListNextPage() {
     val currentMangaChaptersUiState = _mangaChaptersUiState.value
     if (currentMangaChaptersUiState is BasePaginationUiState.Content<ChapterModel> &&
       currentMangaChaptersUiState.nextPageState == BaseNextPageState.ERROR
-    )
-      fetchChapterListNextPageInternal(currentMangaChaptersUiState)
+    ) fetchChapterListNextPageInternal(currentMangaChaptersUiState)
   }
 
   private fun cancelObserveIsFavoriteJob() {
