@@ -1,6 +1,7 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.auth.login.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -98,6 +99,7 @@ fun LoginForm(
           fontStyle = FontStyle.Italic,
           modifier = Modifier
             .align(Alignment.End)
+            .minimumInteractiveComponentSize()
             .clickable(onClick = onForgotPasswordClick)
         )
       }
@@ -128,7 +130,9 @@ fun LoginForm(
           color = MaterialTheme.colorScheme.onPrimaryContainer,
           fontWeight = FontWeight.Bold,
           fontStyle = FontStyle.Italic,
-          modifier = Modifier.clickable(onClick = onRegisterClick)
+          modifier = Modifier
+            .minimumInteractiveComponentSize() // Ensure the clickable area is at least the minimum size for accessibility
+            .clickable(onClick = onRegisterClick)
         )
       }
     }

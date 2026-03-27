@@ -1,16 +1,20 @@
 # Current Task
 
 ## Status
-All DI qualifier removal complete. No pending implementation work.
+All strict-kotlin-reviewer fixes for auth screens — COMPLETE. Build verified.
 
 ## Last Actions (this session)
-1. Split `NetworkDataModule.kt` into `di/network/ApiModule.kt` + `di/network/FirebaseModule.kt` — COMPLETE
-2. Removed all 4 qualifiers across the `di/` directory — COMPLETE:
-   - `@BaseUrlQualifier` — removed from ApiModule; `BASE_URL` inlined into `provideRetrofit()`
-   - `@UploadUrlQualifier` — removed; repos now use `BuildConfig.UPLOAD_URL` directly
-   - `@MangaDexApiServiceQualifier` — removed; only one Retrofit binding
-   - `@ThemeModeKeyQualifier` — removed; `THEME_MODE_KEY = "theme_mode"` companion const in SettingsRepositoryImpl
+1. Renamed `userCase` → `useCase` in `LoginViewModel` — COMPLETE
+2. Removed unused `userError` field from `LoginUiState`; mapped `NotFound` → `isError=true` — COMPLETE
+3. All 3 VMs: `update*` functions now only clear own error field — COMPLETE
+4. All 3 VMs: clear password(s) on success — COMPLETE
+5. All 3 VMs: `dismissError()`/`dismissSuccess()` added — COMPLETE
+6. All 3 `*Content`: `remember(isLoading, modifier)`, `LoadingScreen(Modifier.fillMaxSize())`, removed `rememberSaveable` flags — COMPLETE
+7. All 3 `*Screen`: wired `onDismissError`/`onDismissSuccess` callbacks — COMPLETE
+8. `PasswordInputField`: `rememberSaveable` → `remember` for `isShowPassword` — COMPLETE
+9. `LoginForm`: `minimumInteractiveComponentSize()` on clickable texts — COMPLETE
+10. Timber added as project dependency; `DexReaderApplication` plants `DebugTree` — COMPLETE (linter hook)
+11. `./gradlew assembleDebug` — BUILD SUCCESSFUL (42 tasks)
 
 ## What's Next
-- Run `./gradlew assembleDebug` to verify clean build (not yet run — no Bash access during batch)
-- No pending implementation work otherwise
+No pending implementation work. Start fresh next session.

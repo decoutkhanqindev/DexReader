@@ -26,6 +26,7 @@ okhttp = "5.3.2"
 retrofit = "3.0.0"
 roomRuntime = "2.8.4"
 roomCompiler = "2.8.4"
+timber = "5.0.1"
 zoomableImageCoil3 = "0.18.0"
 
 [libraries]
@@ -69,6 +70,7 @@ moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", ver
 moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshiKotlin" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 zoomable-image-coil3 = { module = "me.saket.telephoto:zoomable-image-coil3", version.ref = "zoomableImageCoil3" }
 
 [plugins]

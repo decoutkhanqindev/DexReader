@@ -26,6 +26,8 @@ fun LoginScreen(
     onRegisterClick = onNavigateToRegisterScreen,
     onForgotPasswordClick = onNavigateToForgotPasswordScreen,
     onRetry = viewModel::retry,
+    onDismissError = viewModel::dismissError,
+    onDismissSuccess = viewModel::dismissSuccess,
     modifier = modifier
   )
 }

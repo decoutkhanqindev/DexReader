@@ -1,6 +1,5 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.auth.register
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.user.RegisterUseCase
@@ -12,14 +11,15 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import android.util.Log
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class RegisterViewModel
-@Inject
-constructor(
+class RegisterViewModel @Inject constructor(
   private val useCase: RegisterUseCase,
 ) : ViewModel() {
+
   private val _uiState = MutableStateFlow(RegisterUiState())
   val uiState: StateFlow<RegisterUiState> = _uiState.asStateFlow()
 
@@ -53,7 +53,9 @@ constructor(
             it.copy(
               isLoading = false,
               isSuccess = true,
-              isError = false
+              isError = false,
+              password = "",
+              confirmPassword = ""
             )
           }
         }
@@ -81,7 +83,7 @@ constructor(
                 nameError = error
               )
 
-              is UserError.RegistrationFailed ->
+              is UserError.RegistrationFailed -> // same as else — explicit for exhaustiveness
                 it.copy(
                   isLoading = false,
                   isSuccess = false,
@@ -96,61 +98,37 @@ constructor(
             }
           }
 
-          Log.d(TAG, "submit has error: ${throwable.stackTraceToString()}")
+          Timber.tag(TAG).d("submit has error: ${throwable.stackTraceToString()}")
         }
     }
   }
 
   fun updateEmail(value: String) {
     if (_uiState.value.email == value) return
-    _uiState.update {
-      it.copy(
-        email = value,
-        emailError = null,
-        isLoading = false,
-        isSuccess = false,
-        isError = false
-      )
-    }
+    _uiState.update { it.copy(email = value, emailError = null) }
   }
 
   fun updatePassword(value: String) {
     if (_uiState.value.password == value) return
-    _uiState.update {
-      it.copy(
-        password = value,
-        passwordError = null,
-        isLoading = false,
-        isSuccess = false,
-        isError = false
-      )
-    }
+    _uiState.update { it.copy(password = value, passwordError = null) }
   }
 
   fun updateConfirmPassword(value: String) {
     if (_uiState.value.confirmPassword == value) return
-    _uiState.update {
-      it.copy(
-        confirmPassword = value,
-        confirmPasswordError = null,
-        isLoading = false,
-        isSuccess = false,
-        isError = false
-      )
-    }
+    _uiState.update { it.copy(confirmPassword = value, confirmPasswordError = null) }
   }
 
   fun updateName(value: String) {
     if (_uiState.value.name == value) return
-    _uiState.update {
-      it.copy(
-        name = value,
-        nameError = null,
-        isLoading = false,
-        isSuccess = false,
-        isError = false
-      )
-    }
+    _uiState.update { it.copy(name = value, nameError = null) }
+  }
+
+  fun dismissError() {
+    _uiState.update { it.copy(isError = false) }
+  }
+
+  fun dismissSuccess() {
+    _uiState.update { it.copy(isSuccess = false) }
   }
 
   fun retry() {

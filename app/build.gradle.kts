@@ -126,4 +126,7 @@ dependencies {
   implementation(libs.firebase.auth.ktx)
   implementation(libs.firebase.firestore.ktx)
   implementation(libs.firebase.analytics)
+
+  // Logging
+  implementation(libs.timber)
 }
