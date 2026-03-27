@@ -1,20 +1,32 @@
-# Current Task
+# Current Task: One-Time Event Pattern for Auth Screens
 
 ## Status
-All strict-kotlin-reviewer fixes for auth screens — COMPLETE. Build verified.
+In progress — not yet implemented.
 
-## Last Actions (this session)
-1. Renamed `userCase` → `useCase` in `LoginViewModel` — COMPLETE
-2. Removed unused `userError` field from `LoginUiState`; mapped `NotFound` → `isError=true` — COMPLETE
-3. All 3 VMs: `update*` functions now only clear own error field — COMPLETE
-4. All 3 VMs: clear password(s) on success — COMPLETE
-5. All 3 VMs: `dismissError()`/`dismissSuccess()` added — COMPLETE
-6. All 3 `*Content`: `remember(isLoading, modifier)`, `LoadingScreen(Modifier.fillMaxSize())`, removed `rememberSaveable` flags — COMPLETE
-7. All 3 `*Screen`: wired `onDismissError`/`onDismissSuccess` callbacks — COMPLETE
-8. `PasswordInputField`: `rememberSaveable` → `remember` for `isShowPassword` — COMPLETE
-9. `LoginForm`: `minimumInteractiveComponentSize()` on clickable texts — COMPLETE
-10. Timber added as project dependency; `DexReaderApplication` plants `DebugTree` — COMPLETE (linter hook)
-11. `./gradlew assembleDebug` — BUILD SUCCESSFUL (42 tasks)
+## What
+Refactoring auth screens (Login, Register, ForgotPassword) to use `Channel<AuthEvent>`
+so navigation fires from the Screen/Route layer, not from Content composables.
 
-## What's Next
-No pending implementation work. Start fresh next session.
+## Plan file
+`C:\Users\ADMIN\.claude\plans\rosy-napping-whale.md` — full step-by-step plan.
+
+## Last Action
+Removed all `@Preview` functions from 3 Content files (success).
+
+## CRITICAL: Linter reverted Content files — compile mismatch exists
+After removing previews, the linter reverted all 3 `*Content.kt` to an older state:
+- Uses `uiState.isError` / `uiState.isSuccess` booleans (NOT `AuthDialogState`)
+- Uses `onDismissError: () -> Unit` (NOT `onDismissDialog`)
+- `fun` (NOT `internal fun`)
+- `ForgotPasswordContent`: `onNavigateBack` + `onSubmitSuccess` params restored
+- `AuthContent` call uses named `content = { ... }` (not trailing lambda)
+- ViewModels/UiStates still reference `AuthDialogState` → build is broken
+
+Read ALL files before editing to confirm ground truth.
+
+## Next Steps
+1. Create `presentation/screens/auth/AuthEvent.kt`
+2. Update 3 ViewModels: add `Channel<AuthEvent>`, update `dismissDialog()`
+3. Update 3 Screen files: add `LaunchedEffect(Unit)` for event collection
+4. Update 3 Content files: remove success nav callback, simplify success dialog
+5. `./gradlew assembleDebug`

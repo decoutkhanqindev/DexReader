@@ -22,6 +22,23 @@ Key outcomes from earlier sessions:
 
 ---
 
+## 2026-03-27 (session 4)
+
+### One-time event pattern chosen for auth navigation
+`onLoginSuccess`/`onRegisterSuccess`/`onSubmitSuccess` callbacks in Content (UI) layer
+violate Route/Screen separation — UI should not decide where to navigate.
+**Decision:** Add `Channel<AuthEvent>` to each auth ViewModel. `dismissDialog()` emits
+`AuthEvent.NavigateOnSuccess` when dismissing a success state. Screen/Route layer collects
+via `LaunchedEffect(Unit)`. Success callbacks removed from all 3 Content files.
+**Rejected:** Keeping callbacks in Content (HIGH severity architectural violation).
+**Rejected:** SharedFlow — `Channel.BUFFERED` is sufficient for one-shot nav events.
+
+### @Preview functions removed from auth Content files
+User requested removal. Deleted 4 previews per file; removed `Preview`, `MaterialTheme`,
+`DexReaderTheme` imports that were preview-only.
+
+---
+
 ## 2026-03-27
 
 ### Timber added as project dependency

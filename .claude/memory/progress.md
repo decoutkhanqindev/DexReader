@@ -1,32 +1,30 @@
 # Session Progress
 
-## NetworkDataModule Split (2026-03-23 — COMPLETE ✓)
-- [x] `di/network/ApiModule.kt` + `di/network/FirebaseModule.kt` created
-- [x] `di/NetworkDataModule.kt` deleted
-- [x] `UploadUrlQualifier` import updated in repos
+## Previous Sessions (COMPLETE ✓)
+- [x] Composable parameter reordering (11 defs, 21 call sites) — BUILD SUCCESSFUL
+- [x] Compose performance: input field constants, colorScheme local, form UiState decomp, blur remember
+- [x] Strict Kotlin review: ViewModel typos, Timber, password clear on success, remember(isLoading,modifier), dismissError/dismissSuccess
+- [x] `dismissSuccess` removed (dead code — navigateClearStack destroys VM)
+- [x] `AuthDialogState` sealed interface: replaces `isSuccess`/`isError` booleans in UiStates+VMs
+- [x] All 3 Content files: `when(dialogState)`, `internal`, trailing lambda AuthContent
+- [x] `AuthContent` param order fixed (modifier before content)
+- [x] Form modifier ordering fixed (data → modifier → callbacks)
+- [x] `PasswordInputField`: `isConfirmed: Boolean` → `label: String`
+- [x] @Preview added to all 3 Content files — BUILD SUCCESSFUL
 
-## DI Qualifier Removal (2026-03-23 — COMPLETE ✓)
-- [x] All 4 qualifiers removed (`@BaseUrl`, `@UploadUrl`, `@MangaDexApiService`, `@ThemeMode`)
-- [x] `./gradlew assembleDebug` — BUILD SUCCESSFUL
+## This Session
+- [x] `dismissSuccess`/`onDismissSuccess` removed from auth screens (dead code)
+- [x] `/review-composable` — identified one-time event pattern violations (2 HIGH issues)
+- [x] @Preview functions removed from LoginContent, RegisterContent, ForgotPasswordContent
 
-## Auth Screens: Compose Performance (2026-03-27 — COMPLETE ✓)
-- [x] `UserError.kt` — `@Stable`
-- [x] Input fields — file-level KeyboardOptions constants, single `colorScheme` local
-- [x] `*Form` composables — decomposed UiState params, no wrapper lambdas
-- [x] `*Content` composables — blur remember, structural fix (`RegisterContent`)
+## Remaining (one-time event refactor)
+- [ ] Create `AuthEvent.kt` sealed interface
+- [ ] 3 ViewModels: add `Channel<AuthEvent>`, update `dismissDialog()` to emit on success
+- [ ] 3 Screens: add `LaunchedEffect(Unit)` event collection, remove success nav passthrough
+- [ ] 3 Content files: remove `onLoginSuccess`/`onRegisterSuccess`/`onSubmitSuccess` params
+- [ ] `./gradlew assembleDebug` passes
 
-## Auth Screens: Strict Kotlin Review Fixes (2026-03-27 — COMPLETE ✓)
-- [x] `LoginViewModel`: `userCase`→`useCase` (C1)
-- [x] `LoginUiState`: removed `userError` field; `NotFound`→`isError=true` (C2)
-- [x] All 3 VMs: Timber logging via linter hook (M1)
-- [x] `LoginViewModel`, `RegisterViewModel`: clear password(s) on success (M2)
-- [x] All 3 `*Content`: `remember(isLoading, modifier)` (M3)
-- [x] All 3 `*Content`: `LoadingScreen(Modifier.fillMaxSize())` (M4)
-- [x] All 3 VMs + Content + Screen: `dismissError`/`dismissSuccess`, removed `rememberSaveable` flags (M5)
-- [x] All 3 VMs: `update*` only clears own error field — 8 functions (Minor 1)
-- [x] `PasswordInputField`: `rememberSaveable`→`remember` (Minor 2)
-- [x] `LoginForm`: `minimumInteractiveComponentSize()` on clickable texts (Minor 3)
-- [x] `RegisterViewModel`: `RegistrationFailed` comment, `@Inject constructor` inline (Minor 4)
-- [x] `./gradlew assembleDebug` — BUILD SUCCESSFUL (42 tasks)
+## ⚠️ Blocker
+Linter reverted Content files — must reconcile `isError`/`isSuccess` vs `AuthDialogState` before implementing events.
 
-**No remaining items.**
+**Bold next step: Read LoginUiState + LoginContent current state, confirm which is ground truth, then implement `AuthEvent.kt`**
