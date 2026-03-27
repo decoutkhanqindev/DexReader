@@ -52,8 +52,8 @@ fun NameInputField(
       Icon(
         imageVector = Icons.Default.Person,
         contentDescription = stringResource(R.string.name),
+        modifier = Modifier.size(24.dp),
         tint = colorScheme.onPrimaryContainer,
-        modifier = Modifier.size(24.dp)
       )
     },
     label = {

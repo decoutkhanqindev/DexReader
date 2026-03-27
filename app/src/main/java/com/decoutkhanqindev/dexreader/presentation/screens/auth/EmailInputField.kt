@@ -52,8 +52,8 @@ fun EmailInputField(
       Icon(
         imageVector = Icons.Default.Email,
         contentDescription = stringResource(R.string.email),
+        modifier = Modifier.size(24.dp),
         tint = colorScheme.onPrimaryContainer,
-        modifier = Modifier.size(24.dp)
       )
     },
     label = {

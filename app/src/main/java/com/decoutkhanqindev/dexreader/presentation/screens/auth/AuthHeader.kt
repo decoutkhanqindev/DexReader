@@ -32,8 +32,8 @@ fun AuthHeader(modifier: Modifier = Modifier) {
     Icon(
       painter = painterResource(R.drawable.app_icon),
       contentDescription = stringResource(R.string.app_name),
+      modifier = Modifier.size(100.dp),
       tint = MaterialTheme.colorScheme.onPrimaryContainer,
-      modifier = Modifier.size(100.dp)
     )
     Column(
       modifier = Modifier.fillMaxWidth(),
@@ -42,20 +42,20 @@ fun AuthHeader(modifier: Modifier = Modifier) {
     ) {
       Text(
         text = stringResource(R.string.app_name),
-        style = MaterialTheme.typography.headlineLarge,
-        fontWeight = FontWeight.ExtraBold,
-        color = MaterialTheme.colorScheme.onPrimaryContainer,
         modifier = Modifier
           .fillMaxWidth()
-          .padding(bottom = 8.dp)
+          .padding(bottom = 8.dp),
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
+        fontWeight = FontWeight.ExtraBold,
+        style = MaterialTheme.typography.headlineLarge,
       )
       Text(
         text = stringResource(R.string.slogan),
-        style = MaterialTheme.typography.titleMedium,
-        fontWeight = FontWeight.Light,
-        fontStyle = FontStyle.Italic,
+        modifier = Modifier.fillMaxWidth(),
         color = MaterialTheme.colorScheme.onPrimaryContainer,
-        modifier = Modifier.fillMaxWidth()
+        fontStyle = FontStyle.Italic,
+        fontWeight = FontWeight.Light,
+        style = MaterialTheme.typography.titleMedium,
       )
     }
   }

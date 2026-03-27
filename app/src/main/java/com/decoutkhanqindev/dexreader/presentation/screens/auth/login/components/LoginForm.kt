@@ -62,10 +62,10 @@ fun LoginForm(
         modifier = Modifier
           .fillMaxWidth()
           .padding(top = 16.dp),
-        style = MaterialTheme.typography.headlineMedium,
         color = MaterialTheme.colorScheme.onSurface,
         fontWeight = FontWeight.ExtraBold,
         textAlign = TextAlign.Center,
+        style = MaterialTheme.typography.headlineMedium,
       )
 
       Spacer(modifier = Modifier.height(16.dp))
@@ -74,8 +74,7 @@ fun LoginForm(
         value = email,
         error = emailError,
         modifier = Modifier.fillMaxWidth(),
-        onValueChange = onEmailChange,
-      )
+      ) { onEmailChange(it) }
 
       Column(
         modifier = Modifier
@@ -86,18 +85,17 @@ fun LoginForm(
           value = password,
           error = passwordError,
           modifier = Modifier.fillMaxWidth(),
-          onValueChange = onPasswordChange,
-        )
+        ) { onPasswordChange(it) }
         Text(
           text = stringResource(R.string.forgot_password),
-          style = MaterialTheme.typography.titleMedium,
-          color = MaterialTheme.colorScheme.onPrimaryContainer,
-          fontWeight = FontWeight.Bold,
-          fontStyle = FontStyle.Italic,
           modifier = Modifier
             .align(Alignment.End)
             .minimumInteractiveComponentSize()
-            .clickable(onClick = onForgotPasswordClick)
+            .clickable(onClick = onForgotPasswordClick),
+          color = MaterialTheme.colorScheme.onPrimaryContainer,
+          fontWeight = FontWeight.Bold,
+          fontStyle = FontStyle.Italic,
+          style = MaterialTheme.typography.titleMedium,
         )
       }
 
@@ -116,20 +114,20 @@ fun LoginForm(
       ) {
         Text(
           text = stringResource(R.string.don_t_have_an_account),
-          style = MaterialTheme.typography.titleMedium,
+          modifier = Modifier.padding(end = 4.dp),
           color = MaterialTheme.colorScheme.onSurface,
           fontWeight = FontWeight.Light,
-          modifier = Modifier.padding(end = 4.dp)
+          style = MaterialTheme.typography.titleMedium,
         )
         Text(
           text = stringResource(R.string.sign_up),
-          style = MaterialTheme.typography.titleMedium,
+          modifier = Modifier
+            .minimumInteractiveComponentSize()
+            .clickable(onClick = onRegisterClick),
           color = MaterialTheme.colorScheme.onPrimaryContainer,
           fontWeight = FontWeight.Bold,
           fontStyle = FontStyle.Italic,
-          modifier = Modifier
-            .minimumInteractiveComponentSize() // Ensure the clickable area is at least the minimum size for accessibility
-            .clickable(onClick = onRegisterClick)
+          style = MaterialTheme.typography.titleMedium,
         )
       }
     }

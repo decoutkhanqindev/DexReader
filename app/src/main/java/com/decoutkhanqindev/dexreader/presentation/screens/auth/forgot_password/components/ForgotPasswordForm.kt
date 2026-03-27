@@ -54,13 +54,13 @@ fun ForgotPasswordForm(
     ) {
       Text(
         text = stringResource(R.string.forgot_password),
-        style = MaterialTheme.typography.headlineMedium,
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(top = 16.dp),
         color = MaterialTheme.colorScheme.onSurface,
         fontWeight = FontWeight.ExtraBold,
         textAlign = TextAlign.Center,
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(top = 16.dp)
+        style = MaterialTheme.typography.headlineMedium,
       )
 
       Spacer(modifier = Modifier.height(16.dp))
@@ -69,8 +69,7 @@ fun ForgotPasswordForm(
         value = email,
         error = emailError,
         modifier = Modifier.fillMaxWidth(),
-        onValueChange = onEmailChange,
-      )
+      ) { onEmailChange(it) }
 
       SubmitButton(
         title = stringResource(R.string.reset_password),
@@ -85,9 +84,9 @@ fun ForgotPasswordForm(
         content = {
           Text(
             text = stringResource(R.string.back),
-            style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.inverseSurface,
             fontWeight = FontWeight.ExtraBold,
+            style = MaterialTheme.typography.titleMedium,
           )
         },
         modifier = Modifier.fillMaxWidth()

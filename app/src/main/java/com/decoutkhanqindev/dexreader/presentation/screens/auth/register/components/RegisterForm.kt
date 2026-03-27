@@ -65,13 +65,13 @@ fun RegisterForm(
     ) {
       Text(
         text = stringResource(R.string.sign_up),
-        style = MaterialTheme.typography.headlineMedium,
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(top = 16.dp),
         color = MaterialTheme.colorScheme.onSurface,
         fontWeight = FontWeight.ExtraBold,
         textAlign = TextAlign.Center,
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(top = 16.dp)
+        style = MaterialTheme.typography.headlineMedium,
       )
 
       Spacer(modifier = Modifier.height(16.dp))
@@ -80,23 +80,20 @@ fun RegisterForm(
         value = email,
         error = emailError,
         modifier = Modifier.fillMaxWidth(),
-        onValueChange = onEmailChange,
-      )
+      ) { onEmailChange(it) }
 
       PasswordInputField(
         value = password,
         error = passwordError,
         modifier = Modifier.fillMaxWidth(),
-        onValueChange = onPasswordChange,
-      )
+      ) { onPasswordChange(it) }
 
       PasswordInputField(
         value = confirmPassword,
         isConfirmed = true,
         error = confirmPasswordError,
         modifier = Modifier.fillMaxWidth(),
-        onValueChange = onConfirmPasswordChange,
-      )
+      ) { onConfirmPasswordChange(it) }
 
       NameInputField(
         value = name,
@@ -104,8 +101,7 @@ fun RegisterForm(
         modifier = Modifier
           .fillMaxWidth()
           .padding(bottom = 8.dp),
-        onValueChange = onNameChange,
-      )
+      ) { onNameChange(it) }
 
       SubmitButton(
         title = stringResource(R.string.sign_up),
@@ -120,9 +116,9 @@ fun RegisterForm(
         content = {
           Text(
             text = stringResource(R.string.back),
-            style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.inverseSurface,
             fontWeight = FontWeight.ExtraBold,
+            style = MaterialTheme.typography.titleMedium,
           )
         },
         modifier = Modifier.fillMaxWidth()

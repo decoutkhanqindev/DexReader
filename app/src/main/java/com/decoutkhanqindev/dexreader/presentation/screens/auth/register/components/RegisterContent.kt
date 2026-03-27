@@ -35,28 +35,25 @@ fun RegisterContent(
   }
 
   Box(modifier = contentModifier) {
-    AuthContent(
-      modifier = Modifier.fillMaxSize(),
-      content = {
-        RegisterForm(
-          email = uiState.email,
-          emailError = uiState.emailError,
-          password = uiState.password,
-          passwordError = uiState.passwordError,
-          confirmPassword = uiState.confirmPassword,
-          confirmPasswordError = uiState.confirmPasswordError,
-          name = uiState.name,
-          nameError = uiState.nameError,
-          modifier = Modifier.fillMaxSize(),
-          onEmailChange = onEmailChange,
-          onPasswordChange = onPasswordChange,
-          onConfirmPasswordChange = onConfirmPasswordChange,
-          onNameChange = onNameChange,
-          onSubmitClick = onSubmitClick,
-          onNavigateBack = onNavigateBack,
-        )
-      }
-    )
+    AuthContent(modifier = Modifier.fillMaxSize()) {
+      RegisterForm(
+        email = uiState.email,
+        emailError = uiState.emailError,
+        password = uiState.password,
+        passwordError = uiState.passwordError,
+        confirmPassword = uiState.confirmPassword,
+        confirmPasswordError = uiState.confirmPasswordError,
+        name = uiState.name,
+        nameError = uiState.nameError,
+        modifier = Modifier.fillMaxSize(),
+        onEmailChange = onEmailChange,
+        onPasswordChange = onPasswordChange,
+        onConfirmPasswordChange = onConfirmPasswordChange,
+        onNameChange = onNameChange,
+        onSubmitClick = onSubmitClick,
+        onNavigateBack = onNavigateBack,
+      )
+    }
 
     when {
       uiState.isLoading -> LoadingScreen(modifier = Modifier.fillMaxSize())

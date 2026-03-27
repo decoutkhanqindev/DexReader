@@ -67,8 +67,8 @@ fun PasswordInputField(
         contentDescription =
           if (isConfirmed) stringResource(R.string.confirm_password)
           else stringResource(R.string.password),
+        modifier = Modifier.size(24.dp),
         tint = colorScheme.onPrimaryContainer,
-        modifier = Modifier.size(24.dp)
       )
     },
     label = {
@@ -88,8 +88,8 @@ fun PasswordInputField(
           contentDescription =
             if (isShowPassword) stringResource(R.string.hide_password)
             else stringResource(R.string.show_password),
+          modifier = Modifier.size(24.dp),
           tint = colorScheme.onPrimaryContainer,
-          modifier = Modifier.size(24.dp)
         )
       }
     },
