@@ -12,8 +12,8 @@ fun LoginScreen(
   onNavigateToHomeScreen: () -> Unit,
   onNavigateToRegisterScreen: () -> Unit,
   onNavigateToForgotPasswordScreen: () -> Unit,
-  viewModel: LoginViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
+  viewModel: LoginViewModel = hiltViewModel(),
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

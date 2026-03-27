@@ -1,8 +1,10 @@
 package com.decoutkhanqindev.dexreader.presentation.error
 
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Stable
 import com.decoutkhanqindev.dexreader.R
 
+@Stable
 sealed class UserError(@param:StringRes val messageRes: Int) {
   sealed class Email(@StringRes messageRes: Int) : UserError(messageRes) {
     data object Required : Email(R.string.email_required)

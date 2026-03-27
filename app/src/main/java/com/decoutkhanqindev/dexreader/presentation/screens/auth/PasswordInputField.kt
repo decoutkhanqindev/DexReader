@@ -27,6 +27,13 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.error.UserError
 
+private val PasswordKeyboardOptions = KeyboardOptions(
+  keyboardType = KeyboardType.Password,
+  imeAction = ImeAction.Next,
+)
+
+private val PasswordTransformation = PasswordVisualTransformation()
+
 @Composable
 fun PasswordInputField(
   value: String,
@@ -36,6 +43,20 @@ fun PasswordInputField(
   error: UserError? = null,
 ) {
   var isShowPassword by rememberSaveable { mutableStateOf(false) }
+  // OutlinedTextFieldDefaults.colors() is @Composable so it cannot be wrapped in remember {}.
+  // Consolidating into a single colorScheme read avoids repeated MaterialTheme.colorScheme lookups.
+  val colorScheme = MaterialTheme.colorScheme
+  val colors = OutlinedTextFieldDefaults.colors(
+    focusedContainerColor = colorScheme.surfaceContainer,
+    unfocusedContainerColor = colorScheme.surfaceContainer,
+    focusedBorderColor = colorScheme.onPrimaryContainer,
+    unfocusedBorderColor = colorScheme.onPrimaryContainer,
+    cursorColor = colorScheme.onPrimaryContainer,
+    focusedTextColor = colorScheme.onSurface,
+    unfocusedTextColor = colorScheme.onSurface,
+    focusedLabelColor = colorScheme.onPrimaryContainer,
+    unfocusedLabelColor = colorScheme.onPrimaryContainer,
+  )
 
   OutlinedTextField(
     value = value,
@@ -46,7 +67,7 @@ fun PasswordInputField(
         contentDescription =
           if (isConfirmed) stringResource(R.string.confirm_password)
           else stringResource(R.string.password),
-        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+        tint = colorScheme.onPrimaryContainer,
         modifier = Modifier.size(24.dp)
       )
     },
@@ -67,7 +88,7 @@ fun PasswordInputField(
           contentDescription =
             if (isShowPassword) stringResource(R.string.hide_password)
             else stringResource(R.string.show_password),
-          tint = MaterialTheme.colorScheme.onPrimaryContainer,
+          tint = colorScheme.onPrimaryContainer,
           modifier = Modifier.size(24.dp)
         )
       }
@@ -76,26 +97,18 @@ fun PasswordInputField(
     isError = error != null,
     supportingText = {
       error?.let {
-        Text(text = stringResource(it.messageRes), color = MaterialTheme.colorScheme.error)
+        Text(
+          text = stringResource(it.messageRes),
+          color = colorScheme.error
+        )
       }
     },
     textStyle = MaterialTheme.typography.bodyLarge,
     visualTransformation =
-      if (isShowPassword) VisualTransformation.None else PasswordVisualTransformation(),
-    keyboardOptions =
-      KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
-    colors =
-      OutlinedTextFieldDefaults.colors(
-        focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-        focusedBorderColor = MaterialTheme.colorScheme.onPrimaryContainer,
-        unfocusedBorderColor = MaterialTheme.colorScheme.onPrimaryContainer,
-        cursorColor = MaterialTheme.colorScheme.onPrimaryContainer,
-        focusedTextColor = MaterialTheme.colorScheme.onSurface,
-        unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-        focusedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
-        unfocusedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
-      ),
-    modifier = modifier
+      if (isShowPassword) VisualTransformation.None
+      else PasswordTransformation,
+    keyboardOptions = PasswordKeyboardOptions,
+    colors = colors,
+    modifier = modifier,
   )
 }

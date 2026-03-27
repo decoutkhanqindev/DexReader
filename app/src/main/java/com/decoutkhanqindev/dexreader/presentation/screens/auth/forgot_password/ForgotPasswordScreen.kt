@@ -11,8 +11,8 @@ import com.decoutkhanqindev.dexreader.presentation.screens.auth.forgot_password.
 fun ForgotPasswordScreen(
   onNavigateBack: () -> Unit,
   onNavigateToLoginScreen: () -> Unit,
-  viewModel: ForgotPasswordViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
+  viewModel: ForgotPasswordViewModel = hiltViewModel(),
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

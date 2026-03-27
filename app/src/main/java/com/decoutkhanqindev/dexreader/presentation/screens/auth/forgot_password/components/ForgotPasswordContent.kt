@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -31,18 +32,17 @@ fun ForgotPasswordContent(
 ) {
   var isShowSuccessDialog by rememberSaveable { mutableStateOf(true) }
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
+  val contentModifier = remember(uiState.isLoading) {
+    if (uiState.isLoading) modifier.blur(8.dp) else modifier
+  }
 
-  Box(
-    modifier = modifier.let {
-      if (uiState.isLoading) it.blur(8.dp)
-      else it
-    }
-  ) {
+  Box(modifier = contentModifier) {
     AuthContent(
       modifier = Modifier.fillMaxSize(),
       content = {
         ForgotPasswordForm(
-          uiState = uiState,
+          email = uiState.email,
+          emailError = uiState.emailError,
           onEmailChange = onEmailChange,
           onSubmitClick = onSubmitClick,
           onNavigateBack = onNavigateBack,

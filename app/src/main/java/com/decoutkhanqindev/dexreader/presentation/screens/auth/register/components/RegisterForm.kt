@@ -21,16 +21,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.error.UserError
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.EmailInputField
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.NameInputField
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.PasswordInputField
-import com.decoutkhanqindev.dexreader.presentation.screens.auth.register.RegisterUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
 
 @Composable
 fun RegisterForm(
-  uiState: RegisterUiState,
+  email: String,
+  emailError: UserError?,
+  password: String,
+  passwordError: UserError?,
+  confirmPassword: String,
+  confirmPasswordError: UserError?,
+  name: String,
+  nameError: UserError?,
   onEmailChange: (String) -> Unit,
   onPasswordChange: (String) -> Unit,
   onConfirmPasswordChange: (String) -> Unit,
@@ -70,39 +77,39 @@ fun RegisterForm(
       Spacer(modifier = Modifier.height(16.dp))
 
       EmailInputField(
-        value = uiState.email,
-        onValueChange = { onEmailChange(it) },
+        value = email,
+        onValueChange = onEmailChange,
         modifier = Modifier.fillMaxWidth(),
-        error = uiState.emailError,
+        error = emailError,
       )
 
       PasswordInputField(
-        value = uiState.password,
-        onValueChange = { onPasswordChange(it) },
+        value = password,
+        onValueChange = onPasswordChange,
         modifier = Modifier.fillMaxWidth(),
-        error = uiState.passwordError,
+        error = passwordError,
       )
 
       PasswordInputField(
-        value = uiState.confirmPassword,
-        onValueChange = { onConfirmPasswordChange(it) },
+        value = confirmPassword,
+        onValueChange = onConfirmPasswordChange,
         modifier = Modifier.fillMaxWidth(),
         isConfirmed = true,
-        error = uiState.confirmPasswordError,
+        error = confirmPasswordError,
       )
 
       NameInputField(
-        value = uiState.name,
-        onValueChange = { onNameChange(it) },
+        value = name,
+        onValueChange = onNameChange,
         modifier = Modifier
           .fillMaxWidth()
           .padding(bottom = 8.dp),
-        error = uiState.nameError,
+        error = nameError,
       )
 
       SubmitButton(
         title = stringResource(R.string.sign_up),
-        onClick = { onSubmitClick() },
+        onClick = onSubmitClick,
         modifier = Modifier
           .fillMaxWidth()
           .padding(bottom = 8.dp)

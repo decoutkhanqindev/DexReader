@@ -24,14 +24,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.error.UserError
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.EmailInputField
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.PasswordInputField
-import com.decoutkhanqindev.dexreader.presentation.screens.auth.login.LoginUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
 
 @Composable
 fun LoginForm(
-  uiState: LoginUiState,
+  email: String,
+  emailError: UserError?,
+  password: String,
+  passwordError: UserError?,
   onEmailChange: (String) -> Unit,
   onPasswordChange: (String) -> Unit,
   onSubmitClick: () -> Unit,
@@ -70,10 +73,10 @@ fun LoginForm(
       Spacer(modifier = Modifier.height(16.dp))
 
       EmailInputField(
-        value = uiState.email,
-        onValueChange = { onEmailChange(it) },
+        value = email,
+        onValueChange = onEmailChange,
         modifier = Modifier.fillMaxWidth(),
-        error = uiState.emailError,
+        error = emailError,
       )
 
       Column(
@@ -82,10 +85,10 @@ fun LoginForm(
           .padding(bottom = 16.dp),
       ) {
         PasswordInputField(
-          value = uiState.password,
-          onValueChange = { onPasswordChange(it) },
+          value = password,
+          onValueChange = onPasswordChange,
           modifier = Modifier.fillMaxWidth(),
-          error = uiState.passwordError,
+          error = passwordError,
         )
         Text(
           text = stringResource(R.string.forgot_password),
@@ -95,13 +98,13 @@ fun LoginForm(
           fontStyle = FontStyle.Italic,
           modifier = Modifier
             .align(Alignment.End)
-            .clickable { onForgotPasswordClick() }
+            .clickable(onClick = onForgotPasswordClick)
         )
       }
 
       SubmitButton(
         title = stringResource(R.string.sign_in),
-        onClick = { onSubmitClick() },
+        onClick = onSubmitClick,
         modifier = Modifier
           .fillMaxWidth()
           .padding(bottom = 8.dp)
@@ -125,7 +128,7 @@ fun LoginForm(
           color = MaterialTheme.colorScheme.onPrimaryContainer,
           fontWeight = FontWeight.Bold,
           fontStyle = FontStyle.Italic,
-          modifier = Modifier.clickable { onRegisterClick() }
+          modifier = Modifier.clickable(onClick = onRegisterClick)
         )
       }
     }

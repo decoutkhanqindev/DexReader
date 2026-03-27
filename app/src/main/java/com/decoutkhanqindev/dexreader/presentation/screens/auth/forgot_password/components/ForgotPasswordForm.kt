@@ -21,14 +21,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.error.UserError
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.EmailInputField
-import com.decoutkhanqindev.dexreader.presentation.screens.auth.forgot_password.ForgotPasswordUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
 
 @Composable
 fun ForgotPasswordForm(
-  uiState: ForgotPasswordUiState,
+  email: String,
+  emailError: UserError?,
   onEmailChange: (String) -> Unit,
   onSubmitClick: () -> Unit,
   onNavigateBack: () -> Unit,
@@ -65,15 +66,15 @@ fun ForgotPasswordForm(
       Spacer(modifier = Modifier.height(16.dp))
 
       EmailInputField(
-        value = uiState.email,
-        onValueChange = { onEmailChange(it) },
+        value = email,
+        onValueChange = onEmailChange,
         modifier = Modifier.fillMaxWidth(),
-        error = uiState.emailError,
+        error = emailError,
       )
 
       SubmitButton(
         title = stringResource(R.string.reset_password),
-        onClick = { onSubmitClick() },
+        onClick = onSubmitClick,
         modifier = Modifier
           .fillMaxWidth()
           .padding(bottom = 8.dp)

@@ -18,6 +18,11 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.error.UserError
 
+private val NameKeyboardOptions = KeyboardOptions(
+  keyboardType = KeyboardType.Text,
+  imeAction = ImeAction.Next,
+)
+
 @Composable
 fun NameInputField(
   value: String,
@@ -25,6 +30,21 @@ fun NameInputField(
   modifier: Modifier = Modifier,
   error: UserError? = null,
 ) {
+  // OutlinedTextFieldDefaults.colors() is @Composable so it cannot be wrapped in remember {}.
+  // Consolidating into a single colorScheme read avoids repeated MaterialTheme.colorScheme lookups.
+  val colorScheme = MaterialTheme.colorScheme
+  val colors = OutlinedTextFieldDefaults.colors(
+    focusedContainerColor = colorScheme.surfaceContainer,
+    unfocusedContainerColor = colorScheme.surfaceContainer,
+    focusedBorderColor = colorScheme.onPrimaryContainer,
+    unfocusedBorderColor = colorScheme.onPrimaryContainer,
+    cursorColor = colorScheme.onPrimaryContainer,
+    focusedTextColor = colorScheme.onSurface,
+    unfocusedTextColor = colorScheme.onSurface,
+    focusedLabelColor = colorScheme.onPrimaryContainer,
+    unfocusedLabelColor = colorScheme.onPrimaryContainer,
+  )
+
   OutlinedTextField(
     value = value,
     onValueChange = onValueChange,
@@ -32,35 +52,29 @@ fun NameInputField(
       Icon(
         imageVector = Icons.Default.Person,
         contentDescription = stringResource(R.string.name),
-        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+        tint = colorScheme.onPrimaryContainer,
         modifier = Modifier.size(24.dp)
       )
     },
     label = {
-      Text(text = stringResource(R.string.name), style = MaterialTheme.typography.bodyLarge)
+      Text(
+        text = stringResource(R.string.name),
+        style = MaterialTheme.typography.bodyLarge
+      )
     },
     singleLine = true,
     isError = error != null,
     supportingText = {
       error?.let {
-        Text(text = stringResource(it.messageRes), color = MaterialTheme.colorScheme.error)
+        Text(
+          text = stringResource(it.messageRes),
+          color = colorScheme.error
+        )
       }
     },
     textStyle = MaterialTheme.typography.bodyLarge,
-    keyboardOptions =
-      KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next),
-    colors =
-      OutlinedTextFieldDefaults.colors(
-        focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-        focusedBorderColor = MaterialTheme.colorScheme.onPrimaryContainer,
-        unfocusedBorderColor = MaterialTheme.colorScheme.onPrimaryContainer,
-        cursorColor = MaterialTheme.colorScheme.onPrimaryContainer,
-        focusedTextColor = MaterialTheme.colorScheme.onSurface,
-        unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-        focusedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
-        unfocusedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
-      ),
+    keyboardOptions = NameKeyboardOptions,
+    colors = colors,
     modifier = modifier,
   )
 }

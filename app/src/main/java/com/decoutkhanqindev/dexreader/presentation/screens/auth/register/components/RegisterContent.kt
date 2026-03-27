@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -34,18 +35,23 @@ fun RegisterContent(
 ) {
   var isShowSuccessDialog by rememberSaveable { mutableStateOf(true) }
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
+  val contentModifier = remember(uiState.isLoading) {
+    if (uiState.isLoading) modifier.blur(8.dp) else modifier
+  }
 
-  Box(
-    modifier = modifier.let {
-      if (uiState.isLoading) it.blur(8.dp)
-      else it
-    }
-  ) {
+  Box(modifier = contentModifier) {
     AuthContent(
       modifier = Modifier.fillMaxSize(),
       content = {
         RegisterForm(
-          uiState = uiState,
+          email = uiState.email,
+          emailError = uiState.emailError,
+          password = uiState.password,
+          passwordError = uiState.passwordError,
+          confirmPassword = uiState.confirmPassword,
+          confirmPasswordError = uiState.confirmPasswordError,
+          name = uiState.name,
+          nameError = uiState.nameError,
           onEmailChange = onEmailChange,
           onPasswordChange = onPasswordChange,
           onConfirmPasswordChange = onConfirmPasswordChange,
@@ -56,33 +62,33 @@ fun RegisterContent(
         )
       }
     )
-  }
 
-  when {
-    uiState.isLoading -> LoadingScreen(modifier = modifier)
+    when {
+      uiState.isLoading -> LoadingScreen(modifier = modifier)
 
-    uiState.isError -> {
-      if (isShowErrorDialog) {
-        NotificationDialog(
-          onConfirmClick = onRetry,
-          title = stringResource(R.string.sign_up_failed_please_try_again),
-          onDismissClick = { isShowErrorDialog = false },
-        )
+      uiState.isError -> {
+        if (isShowErrorDialog) {
+          NotificationDialog(
+            onConfirmClick = onRetry,
+            title = stringResource(R.string.sign_up_failed_please_try_again),
+            onDismissClick = { isShowErrorDialog = false },
+          )
+        }
       }
-    }
 
-    uiState.isSuccess -> {
-      if (isShowSuccessDialog) {
-        NotificationDialog(
-          onConfirmClick = {
-            isShowSuccessDialog = false
-            onRegisterSuccess()
-          },
-          icon = Icons.Default.Done,
-          title = stringResource(R.string.sign_up_successful),
-          isEnableDismiss = false,
-          confirm = stringResource(R.string.ok),
-        )
+      uiState.isSuccess -> {
+        if (isShowSuccessDialog) {
+          NotificationDialog(
+            onConfirmClick = {
+              isShowSuccessDialog = false
+              onRegisterSuccess()
+            },
+            icon = Icons.Default.Done,
+            title = stringResource(R.string.sign_up_successful),
+            isEnableDismiss = false,
+            confirm = stringResource(R.string.ok),
+          )
+        }
       }
     }
   }
