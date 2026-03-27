@@ -25,7 +25,6 @@ fun ForgotPasswordContent(
   onNavigateBack: () -> Unit,
   onRetry: () -> Unit,
   onDismissError: () -> Unit,
-  onDismissSuccess: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   val contentModifier = remember(uiState.isLoading, modifier) {
@@ -60,10 +59,7 @@ fun ForgotPasswordContent(
 
       uiState.isSuccess -> {
         NotificationDialog(
-          onConfirmClick = {
-            onDismissSuccess()
-            onSubmitSuccess()
-          },
+          onConfirmClick = onSubmitSuccess,
           icon = Icons.Default.Done,
           title = stringResource(R.string.submit_reset_password_successful),
           isEnableDismiss = false,

@@ -28,7 +28,6 @@ fun RegisterContent(
   onNavigateBack: () -> Unit,
   onRetry: () -> Unit,
   onDismissError: () -> Unit,
-  onDismissSuccess: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   val contentModifier = remember(uiState.isLoading, modifier) {
@@ -72,10 +71,7 @@ fun RegisterContent(
 
       uiState.isSuccess -> {
         NotificationDialog(
-          onConfirmClick = {
-            onDismissSuccess()
-            onRegisterSuccess()
-          },
+          onConfirmClick = onRegisterSuccess,
           icon = Icons.Default.Done,
           title = stringResource(R.string.sign_up_successful),
           isEnableDismiss = false,

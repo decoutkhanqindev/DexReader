@@ -27,7 +27,6 @@ fun LoginContent(
   onForgotPasswordClick: () -> Unit,
   onRetry: () -> Unit,
   onDismissError: () -> Unit,
-  onDismissSuccess: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   val contentModifier = remember(uiState.isLoading, modifier) {
@@ -66,10 +65,7 @@ fun LoginContent(
 
       uiState.isSuccess -> {
         NotificationDialog(
-          onConfirmClick = {
-            onDismissSuccess()
-            onLoginSuccess()
-          },
+          onConfirmClick = onLoginSuccess,
           icon = Icons.Default.Done,
           title = stringResource(R.string.sign_in_successful),
           isEnableDismiss = false,

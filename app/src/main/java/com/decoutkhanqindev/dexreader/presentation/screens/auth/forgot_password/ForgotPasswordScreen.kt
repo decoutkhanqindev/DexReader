@@ -24,7 +24,6 @@ fun ForgotPasswordScreen(
     onNavigateBack = onNavigateBack,
     onRetry = viewModel::retry,
     onDismissError = viewModel::dismissError,
-    onDismissSuccess = viewModel::dismissSuccess,
     modifier = modifier
   )
 }

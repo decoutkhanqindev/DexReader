@@ -77,10 +77,6 @@ class ForgotPasswordViewModel @Inject constructor(
     _uiState.update { it.copy(isError = false) }
   }
 
-  fun dismissSuccess() {
-    _uiState.update { it.copy(isSuccess = false) }
-  }
-
   fun retry() {
     if (_uiState.value.isError) submit()
   }
