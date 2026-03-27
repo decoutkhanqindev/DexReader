@@ -45,8 +45,8 @@ fun SearchScreen(
         onNavigateBack = onNavigateBack,
         modifier = Modifier.fillMaxWidth()
       )
-    },
-    content = { innerPadding ->
+    }
+  ) { innerPadding ->
       SearchContent(
         query = query,
         suggestionsUiState = suggestionsUiState,

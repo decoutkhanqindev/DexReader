@@ -17,51 +17,51 @@ class MangaRepositoryImpl @Inject constructor(
   override suspend fun getLatestUpdateMangaList(): List<Manga> =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = {
+      block = {
         apiService.getLatestUpdateMangaList().data?.mapNotNull { it.toManga(BuildConfig.UPLOAD_URL) }
           ?: emptyList()
       },
-      onCatch = { it.toDomainException() }
+      catch = { it.toDomainException() }
     )
 
   override suspend fun getTrendingMangaList(): List<Manga> =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = {
+      block = {
         apiService.getTrendingMangaList().data?.mapNotNull { it.toManga(BuildConfig.UPLOAD_URL) }
           ?: emptyList()
       },
-      onCatch = { it.toDomainException() }
+      catch = { it.toDomainException() }
     )
 
   override suspend fun getNewReleaseMangaList(): List<Manga> =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = {
+      block = {
         apiService.getNewReleaseMangaList().data?.mapNotNull { it.toManga(BuildConfig.UPLOAD_URL) }
           ?: emptyList()
       },
-      onCatch = { it.toDomainException() }
+      catch = { it.toDomainException() }
     )
 
   override suspend fun getTopRatedMangaList(): List<Manga> =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = {
+      block = {
         apiService.getTopRatedMangaList().data?.mapNotNull { it.toManga(BuildConfig.UPLOAD_URL) }
           ?: emptyList()
       },
-      onCatch = { it.toDomainException() }
+      catch = { it.toDomainException() }
     )
 
   override suspend fun getMangaDetails(mangaId: String): Manga =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = {
+      block = {
         apiService.getMangaDetails(mangaId).data?.toManga(BuildConfig.UPLOAD_URL)
           ?: throw BusinessException.Resource.MangaNotFound()
       },
-      onCatch = { it.toDomainException() }
+      catch = { it.toDomainException() }
     )
 
   override suspend fun searchManga(
@@ -71,7 +71,7 @@ class MangaRepositoryImpl @Inject constructor(
   ): List<Manga> =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = {
+      block = {
         apiService.searchManga(
           query = query,
           offset = offset,
@@ -81,6 +81,6 @@ class MangaRepositoryImpl @Inject constructor(
           ?.mapNotNull { it.toManga(BuildConfig.UPLOAD_URL) }
           ?: emptyList()
       },
-      onCatch = { it.toDomainException() }
+      catch = { it.toDomainException() }
     )
 }

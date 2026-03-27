@@ -52,8 +52,9 @@ fun ReadingHistoryItem(
     enableDismissFromStartToEnd = false,
     enableDismissFromEndToStart = true,
     gesturesEnabled = true,
-    content = {
-      Card(
+    modifier = modifier,
+  ) {
+    Card(
         shape = MaterialTheme.shapes.large,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
         elevation = CardDefaults.cardElevation(4.dp),
@@ -82,7 +83,5 @@ fun ReadingHistoryItem(
           )
         }
       }
-    },
-    modifier = modifier,
-  )
+  }
 }

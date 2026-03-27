@@ -10,10 +10,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ActionButton(
+  isEnabled: Boolean = true,
+  modifier: Modifier = Modifier,
   onClick: () -> Unit,
   content: @Composable () -> Unit,
-  modifier: Modifier = Modifier,
-  isEnabled: Boolean = true,
 ) {
   Button(
     onClick = onClick,

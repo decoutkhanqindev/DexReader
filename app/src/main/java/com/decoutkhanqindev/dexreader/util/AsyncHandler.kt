@@ -26,9 +26,9 @@ object AsyncHandler {
    * Overload of [runSuspendResultCatching] without a [CoroutineContext] — runs on the caller's dispatcher.
    */
   suspend inline fun <T> runSuspendResultCatching(
-    crossinline onExecute: suspend () -> T,
+    crossinline block: suspend () -> T,
   ): Result<T> = try {
-    Result.success(onExecute())
+    Result.success(block())
   } catch (c: CancellationException) {
     throw c
   } catch (e: Throwable) {
@@ -37,15 +37,15 @@ object AsyncHandler {
 
 
   /**
-   * Executes [onExecute] inside the given [context] and wraps the outcome in a [Result].
+   * Executes [block] inside the given [context] and wraps the outcome in a [Result].
    * Defaults to [EmptyCoroutineContext] (no dispatcher switch) if [context] is not provided.
    */
   suspend inline fun <T> runSuspendResultCatching(
     context: CoroutineContext = EmptyCoroutineContext,
-    crossinline onExecute: suspend () -> T,
+    crossinline block: suspend () -> T,
   ): Result<T> = withContext(context) {
     try {
-      Result.success(onExecute())
+      Result.success(block())
     } catch (c: CancellationException) {
       throw c
     } catch (e: Throwable) {
@@ -54,24 +54,24 @@ object AsyncHandler {
   }
 
   /**
-   * Executes [onExecute] and returns [T] directly instead of [Result].
+   * Executes [block] and returns [T] directly instead of [Result].
    * Optionally switches to [context] (defaults to [EmptyCoroutineContext] — no dispatcher switch).
-   * Exceptions are passed to [onCatch] for custom mapping (e.g. Firebase → Domain exceptions).
-   * If [onCatch] is not provided, exceptions are rethrown as-is — equivalent to [withContext].
+   * Exceptions are passed to [catch] for custom mapping (e.g. Firebase → Domain exceptions).
+   * If [catch] is not provided, exceptions are rethrown as-is — equivalent to [withContext].
    *
    * Prefer [withContext] directly when no exception mapping is needed.
    */
   suspend inline fun <T> runSuspendCatching(
     context: CoroutineContext = EmptyCoroutineContext,
-    crossinline onExecute: suspend () -> T,
-    crossinline onCatch: (Exception) -> T = { throw it },
+    crossinline block: suspend () -> T,
+    crossinline catch: (Exception) -> T = { throw it },
   ): T = withContext(context) {
     try {
-      onExecute()
+      block()
     } catch (c: CancellationException) {
       throw c
     } catch (e: Exception) {
-      onCatch(e)
+      catch(e)
     }
   }
 

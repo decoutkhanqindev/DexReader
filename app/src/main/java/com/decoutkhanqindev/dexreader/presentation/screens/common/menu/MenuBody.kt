@@ -17,8 +17,8 @@ import kotlinx.collections.immutable.ImmutableList
 fun MenuBody(
   items: ImmutableList<MenuItemValue>,
   selectedItem: MenuItemValue,
-  onItemClick: (MenuItemValue) -> Unit,
   modifier: Modifier = Modifier,
+  onItemClick: (MenuItemValue) -> Unit,
 ) {
   LazyColumn(
     modifier = modifier.background(color = MaterialTheme.colorScheme.surface),
@@ -29,8 +29,8 @@ fun MenuBody(
       MenuItemRow(
         isSelected = item == selectedItem,
         item = item,
-        onClick = onItemClick,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        onClick = onItemClick
       )
     }
   }

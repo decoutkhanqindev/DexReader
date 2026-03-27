@@ -42,12 +42,13 @@ fun HistoryScreen(
   BaseScreen(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
-    onNavigateToSignInScreen = onNavigateToLoginScreen,
     selectedMenuItem = MenuItemValue.HISTORY,
+    modifier = modifier,
+    onNavigateToSignInScreen = onNavigateToLoginScreen,
     onNavigateToMenuItemScreen = onNavigateToMenuItemScreen,
-    onNavigateToSearchScreen = onNavigateToSearchScreen,
-    content = {
-      if (isUserLoggedIn) {
+    onNavigateToSearchScreen = onNavigateToSearchScreen
+  ) {
+    if (isUserLoggedIn) {
         HistoryContent(
           historyUiState = historyUiState,
           removeFromHistoryUiState = removeFromHistoryUiState,
@@ -67,7 +68,5 @@ fun HistoryScreen(
           modifier = Modifier.fillMaxSize()
         )
       }
-    },
-    modifier = modifier
-  )
+  }
 }

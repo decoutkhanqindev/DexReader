@@ -80,17 +80,16 @@ fun ForgotPasswordForm(
       )
 
       ActionButton(
-        onClick = onNavigateBack,
-        content = {
-          Text(
-            text = stringResource(R.string.back),
-            color = MaterialTheme.colorScheme.inverseSurface,
-            fontWeight = FontWeight.ExtraBold,
-            style = MaterialTheme.typography.titleMedium,
-          )
-        },
-        modifier = Modifier.fillMaxWidth()
-      )
+        modifier = Modifier.fillMaxWidth(),
+        onClick = onNavigateBack
+      ) {
+        Text(
+          text = stringResource(R.string.back),
+          color = MaterialTheme.colorScheme.inverseSurface,
+          fontWeight = FontWeight.ExtraBold,
+          style = MaterialTheme.typography.titleMedium,
+        )
+      }
     }
   }
 }

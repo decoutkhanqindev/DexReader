@@ -21,10 +21,10 @@ import com.decoutkhanqindev.dexreader.R
 @OptIn(ExperimentalMaterial3Api::class)
 fun MainTopBar(
   title: String,
-  onNavigateToMenuItemScreen: () -> Unit,
   isSearchEnabled: Boolean = true,
-  onNavigateToSignInScreen: () -> Unit = {},
   modifier: Modifier = Modifier,
+  onNavigateToMenuItemScreen: () -> Unit,
+  onNavigateToSignInScreen: () -> Unit = {},
 ) {
   CenterAlignedTopAppBar(
     title = {

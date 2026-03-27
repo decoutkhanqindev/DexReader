@@ -19,8 +19,8 @@ import kotlinx.collections.immutable.ImmutableList
 @Composable
 fun HorizontalMangaList(
   items: ImmutableList<MangaModel>,
-  onItemClick: (MangaModel) -> Unit,
   modifier: Modifier = Modifier,
+  onItemClick: (MangaModel) -> Unit,
 ) {
   Box(modifier = modifier) {
     LazyRow(
@@ -34,11 +34,11 @@ fun HorizontalMangaList(
       ) { manga ->
         MangaItem(
           item = manga,
-          onClick = onItemClick,
           modifier = Modifier
             .padding(4.dp)
             .width(194.dp)
-            .height(250.dp)
+            .height(250.dp),
+          onClick = onItemClick
         )
       }
     }

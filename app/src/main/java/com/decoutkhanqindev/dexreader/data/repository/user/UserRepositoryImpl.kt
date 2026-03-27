@@ -33,7 +33,7 @@ class UserRepositoryImpl @Inject constructor(
   ) =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = {
+      block = {
         val registeredUser =
           authSource
             .register(email, password)
@@ -57,7 +57,7 @@ class UserRepositoryImpl @Inject constructor(
           throw InfrastructureException.Unexpected(cause = e)
         }
       },
-      onCatch = { e -> e.toFirebaseAuthException() }
+      catch = { e -> e.toFirebaseAuthException() }
     )
 
   override suspend fun login(
@@ -66,22 +66,22 @@ class UserRepositoryImpl @Inject constructor(
   ) =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = { authSource.login(email, password) },
-      onCatch = { e -> e.toFirebaseAuthException() }
+      block = { authSource.login(email, password) },
+      catch = { e -> e.toFirebaseAuthException() }
     )
 
   override suspend fun logout() =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = { authSource.logout() },
-      onCatch = { e -> e.toFirebaseAuthException() }
+      block = { authSource.logout() },
+      catch = { e -> e.toFirebaseAuthException() }
     )
 
   override suspend fun sendResetPassword(email: String) =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = { authSource.sendResetPassword(email) },
-      onCatch = { e -> e.toFirebaseAuthException() }
+      block = { authSource.sendResetPassword(email) },
+      catch = { e -> e.toFirebaseAuthException() }
     )
 
   override fun observeCurrentUser(): Flow<User?> =
@@ -94,12 +94,12 @@ class UserRepositoryImpl @Inject constructor(
   override suspend fun updateUserProfile(user: User) =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = {
+      block = {
         firestoreSource.upsertUserProfile(
           userProfile = user.toUserProfileRequest()
         )
       },
-      onCatch = { e -> e.toFirebaseFirestoreException() }
+      catch = { e -> e.toFirebaseFirestoreException() }
     )
 
   override fun observeUserProfile(userId: String): Flow<User?> =

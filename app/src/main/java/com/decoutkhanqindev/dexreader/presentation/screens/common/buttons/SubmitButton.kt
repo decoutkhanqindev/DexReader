@@ -13,9 +13,9 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SubmitButton(
   title: String,
-  onClick: () -> Unit,
-  modifier: Modifier = Modifier,
   isEnabled: Boolean = true,
+  modifier: Modifier = Modifier,
+  onClick: () -> Unit,
 ) {
   Button(
     enabled = isEnabled,

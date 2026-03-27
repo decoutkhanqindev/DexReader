@@ -17,35 +17,35 @@ class CacheRepositoryImpl @Inject constructor(
   override suspend fun addChapterCache(chapterPages: ChapterPages) =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = {
+      block = {
         cacheDao.addChapterCache(
           chapterCacheEntity = chapterPages.toChapterCacheEntity()
         )
       },
-      onCatch = { it.toUnexpectedException() }
+      catch = { it.toUnexpectedException() }
     )
 
   override suspend fun getChapterCache(chapterId: String): ChapterPages =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = {
+      block = {
         cacheDao.getChapterCache(chapterId)?.toChapterPages()
           ?: throw BusinessException.Resource.ChapterDataNotFound()
       },
-      onCatch = { it.toUnexpectedException() }
+      catch = { it.toUnexpectedException() }
     )
 
   override suspend fun deleteChapterCache(chapterId: String) =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = { cacheDao.deleteChapterCache(chapterId) },
-      onCatch = { it.toUnexpectedException() }
+      block = { cacheDao.deleteChapterCache(chapterId) },
+      catch = { it.toUnexpectedException() }
     )
 
   override suspend fun clearExpiredCache(olderThan: Long) =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = { cacheDao.clearExpiredCache(olderThan) },
-      onCatch = { it.toUnexpectedException() }
+      block = { cacheDao.clearExpiredCache(olderThan) },
+      catch = { it.toUnexpectedException() }
     )
 }

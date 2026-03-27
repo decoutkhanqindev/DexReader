@@ -27,18 +27,17 @@ fun HomeScreen(
   BaseScreen(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
-    onNavigateToSignInScreen = onNavigateToLoginScreen,
     selectedMenuItem = MenuItemValue.HOME,
+    modifier = modifier,
+    onNavigateToSignInScreen = onNavigateToLoginScreen,
     onNavigateToMenuItemScreen = onNavigateToMenuItemScreen,
-    onNavigateToSearchScreen = onNavigateToSearchScreen,
-    content = {
-      HomeContent(
+    onNavigateToSearchScreen = onNavigateToSearchScreen
+  ) {
+    HomeContent(
         uiState = uiState,
         onSelectedManga = onNavigateToMangaDetailScreen,
         onRetry = viewModel::retry,
         modifier = Modifier.fillMaxSize(),
       )
-    },
-    modifier = modifier
-  )
+  }
 }

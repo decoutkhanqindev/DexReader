@@ -41,10 +41,10 @@ class FavoritesRepositoryImpl @Inject constructor(
   ) =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = {
+      block = {
         firestoreSource.addToFavorites(userId, manga.toFavoriteMangaRequest())
       },
-      onCatch = { it.toFirebaseFirestoreException() }
+      catch = { it.toFirebaseFirestoreException() }
     )
 
   override suspend fun removeFromFavorites(
@@ -53,8 +53,8 @@ class FavoritesRepositoryImpl @Inject constructor(
   ) =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = { firestoreSource.removeFromFavorites(userId, mangaId) },
-      onCatch = { it.toFirebaseFirestoreException() }
+      block = { firestoreSource.removeFromFavorites(userId, mangaId) },
+      catch = { it.toFirebaseFirestoreException() }
     )
 
   override fun observeIsFavorite(

@@ -21,14 +21,14 @@ import kotlinx.coroutines.launch
 fun BaseScreen(
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
-  onNavigateToSignInScreen: () -> Unit,
   selectedMenuItem: MenuItemValue,
-  onNavigateToMenuItemScreen: (MenuItemValue) -> Unit,
   isSearchEnabled: Boolean = true,
+  modifier: Modifier = Modifier,
+  onNavigateToSignInScreen: () -> Unit,
+  onNavigateToMenuItemScreen: (MenuItemValue) -> Unit,
   onNavigateToSearchScreen: () -> Unit = {},
   bottomBar: @Composable () -> Unit = {},
   content: @Composable () -> Unit,
-  modifier: Modifier = Modifier,
 ) {
   val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
   val coroutineScope = rememberCoroutineScope()
@@ -36,40 +36,39 @@ fun BaseScreen(
   MenuDrawer(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
-    onSignInClick = onNavigateToSignInScreen,
     drawerState = drawerState,
     selectedItem = selectedMenuItem,
+    modifier = modifier,
+    onSignInClick = onNavigateToSignInScreen,
     onItemClick = {
       coroutineScope.launch {
         drawerState.close()
         onNavigateToMenuItemScreen(it)
       }
-    },
-    content = {
-      Scaffold(
-        topBar = {
-          MainTopBar(
-            title = stringResource(selectedMenuItem.nameRes),
-            onNavigateToMenuItemScreen = {
-              coroutineScope.launch {
-                drawerState.open()
-              }
-            },
-            isSearchEnabled = isSearchEnabled,
-            onNavigateToSignInScreen = onNavigateToSearchScreen,
-            modifier = Modifier.fillMaxWidth()
-          )
-        },
-        bottomBar = bottomBar,
-        content = { paddingValues ->
-          Box(
-            modifier = Modifier
-              .padding(paddingValues)
-              .fillMaxSize()
-          ) { content() }
-        }
-      )
-    },
-    modifier = modifier,
-  )
+    }
+  ) {
+    Scaffold(
+      modifier = Modifier.fillMaxSize(),
+      topBar = {
+        MainTopBar(
+          title = stringResource(selectedMenuItem.nameRes),
+          isSearchEnabled = isSearchEnabled,
+          modifier = Modifier.fillMaxWidth(),
+          onNavigateToMenuItemScreen = {
+            coroutineScope.launch {
+              drawerState.open()
+            }
+          },
+          onNavigateToSignInScreen = onNavigateToSearchScreen
+        )
+      },
+      bottomBar = bottomBar
+    ) { paddingValues ->
+      Box(
+        modifier = Modifier
+          .padding(paddingValues)
+          .fillMaxSize()
+      ) { content() }
+    }
+  }
 }

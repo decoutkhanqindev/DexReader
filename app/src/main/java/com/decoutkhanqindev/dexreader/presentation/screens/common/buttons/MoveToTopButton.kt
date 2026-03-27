@@ -12,8 +12,8 @@ import com.decoutkhanqindev.dexreader.R
 
 @Composable
 fun MoveToTopButton(
-  onClick: () -> Unit,
   modifier: Modifier = Modifier,
+  onClick: () -> Unit,
 ) {
   FloatingActionButton(
     onClick = onClick,

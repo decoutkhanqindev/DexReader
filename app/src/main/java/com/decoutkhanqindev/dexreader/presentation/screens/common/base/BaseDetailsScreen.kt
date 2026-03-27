@@ -12,33 +12,30 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.top_bars.Detai
 @Composable
 fun BaseDetailsScreen(
   title: String,
-  onNavigateBack: () -> Unit,
   isSearchEnabled: Boolean = true,
+  modifier: Modifier = Modifier,
+  onNavigateBack: () -> Unit,
   onNavigateToSearchScreen: () -> Unit = {},
   bottomBar: @Composable () -> Unit = {},
   content: @Composable () -> Unit,
-  modifier: Modifier = Modifier,
 ) {
   Scaffold(
+    modifier = modifier,
     topBar = {
       DetailsTopBar(
         title = title,
-        onNavigateBack = onNavigateBack,
         isSearchEnabled = isSearchEnabled,
-        onNavigateToSearchScreen = onNavigateToSearchScreen,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        onNavigateBack = onNavigateBack,
+        onNavigateToSearchScreen = onNavigateToSearchScreen
       )
     },
     bottomBar = bottomBar,
-    content = { paddingValues ->
-      Box(
-        modifier = Modifier
-          .fillMaxSize()
-          .padding(paddingValues)
-      ) {
-        content()
-      }
-    },
-    modifier = modifier
-  )
+  ) { paddingValues ->
+    Box(
+      modifier = Modifier
+        .fillMaxSize()
+        .padding(paddingValues)
+    ) { content() }
+  }
 }

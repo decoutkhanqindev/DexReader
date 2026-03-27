@@ -17,8 +17,8 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuItemValu
 fun MenuItemRow(
   isSelected: Boolean,
   item: MenuItemValue,
-  onClick: (MenuItemValue) -> Unit,
   modifier: Modifier = Modifier,
+  onClick: (MenuItemValue) -> Unit,
 ) {
   val title = stringResource(item.nameRes)
 

@@ -8,14 +8,13 @@ import androidx.lifecycle.repeatOnLifecycle
 
 object Lifecycle {
   @Composable
-  inline fun LaunchRepeatOnLifecycle(
+  inline fun LaunchedEffectRepeatOnLifecycle(
     state: Lifecycle.State,
-    crossinline onExecute: suspend () -> Unit,
+    crossinline block: suspend () -> Unit,
   ) {
     val lifecycleOwner = LocalLifecycleOwner.current
-
     LaunchedEffect(lifecycleOwner) {
-      lifecycleOwner.repeatOnLifecycle(state) { onExecute() }
+      lifecycleOwner.repeatOnLifecycle(state) { block() }
     }
   }
 }

@@ -23,10 +23,10 @@ class CategoryRepositoryImpl @Inject constructor(
   override suspend fun getCategoryList(): List<Category> =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = {
+      block = {
         apiService.getTagList().data?.mapNotNull { it.toCategory() } ?: emptyList()
       },
-      onCatch = { it.toDomainException() }
+      catch = { it.toDomainException() }
     )
 
   override suspend fun getMangaListByCategory(
@@ -39,7 +39,7 @@ class CategoryRepositoryImpl @Inject constructor(
   ): List<Manga> =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = {
+      block = {
         val orderValue = sortOrder.toApiParam()
         val lastUpdated: String?
         val followedCount: String?
@@ -94,6 +94,6 @@ class CategoryRepositoryImpl @Inject constructor(
           ?.mapNotNull { it.toManga(BuildConfig.UPLOAD_URL) }
           ?: emptyList()
       },
-      onCatch = { it.toDomainException() }
+      catch = { it.toDomainException() }
     )
 }

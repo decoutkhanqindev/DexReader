@@ -38,6 +38,10 @@ fun ActionButtonsSection(
     horizontalArrangement = Arrangement.spacedBy(8.dp)
   ) {
     ActionButton(
+      isEnabled = canRead,
+      modifier = Modifier
+        .weight(1f)
+        .fillMaxWidth(),
       onClick = {
         if (isContinueReading) {
           onReadingClick(
@@ -50,37 +54,31 @@ fun ActionButtonsSection(
           0,
           mangaId
         )
-      },
-      content = {
-        Text(
-          text =
-            if (isContinueReading) stringResource(R.string.continue_reading)
-            else stringResource(R.string.start_reading),
-          style = MaterialTheme.typography.titleMedium,
-          color = MaterialTheme.colorScheme.inverseSurface,
-          fontWeight = FontWeight.ExtraBold,
-        )
-      },
+      }
+    ) {
+      Text(
+        text =
+          if (isContinueReading) stringResource(R.string.continue_reading)
+          else stringResource(R.string.start_reading),
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.inverseSurface,
+        fontWeight = FontWeight.ExtraBold,
+      )
+    }
+    ActionButton(
       modifier = Modifier
         .weight(1f)
         .fillMaxWidth(),
-      isEnabled = canRead,
-    )
-    ActionButton(
-      onClick = onFavoriteClick,
-      content = {
-        Text(
-          text =
-            if (isFavorite) stringResource(R.string.unfavorite)
-            else stringResource(R.string.favorite),
-          color = MaterialTheme.colorScheme.inverseSurface,
-          style = MaterialTheme.typography.titleMedium,
-          fontWeight = FontWeight.ExtraBold,
-        )
-      },
-      modifier = Modifier
-        .weight(1f)
-        .fillMaxWidth()
-    )
+      onClick = onFavoriteClick
+    ) {
+      Text(
+        text =
+          if (isFavorite) stringResource(R.string.unfavorite)
+          else stringResource(R.string.favorite),
+        color = MaterialTheme.colorScheme.inverseSurface,
+        style = MaterialTheme.typography.titleMedium,
+        fontWeight = FontWeight.ExtraBold,
+      )
+    }
   }
 }

@@ -43,13 +43,13 @@ class HistoryRepositoryImpl @Inject constructor(
   ) =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = {
+      block = {
         firestoreSource.upsertHistory(
           userId = userId,
           readingHistory = readingHistory.toReadingHistoryRequest()
         )
       },
-      onCatch = { it.toFirebaseFirestoreException() }
+      catch = { it.toFirebaseFirestoreException() }
     )
 
   override suspend fun removeFromHistory(
@@ -58,12 +58,12 @@ class HistoryRepositoryImpl @Inject constructor(
   ) =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = {
+      block = {
         firestoreSource.removeFromHistory(
           userId = userId,
           readingHistoryId = readingHistoryId
         )
       },
-      onCatch = { it.toFirebaseFirestoreException() }
+      catch = { it.toFirebaseFirestoreException() }
     )
 }

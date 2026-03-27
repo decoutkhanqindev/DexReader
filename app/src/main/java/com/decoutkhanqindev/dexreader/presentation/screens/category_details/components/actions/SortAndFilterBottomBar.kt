@@ -24,28 +24,26 @@ fun SortAndFilterBottomBar(
   BottomAppBar(
     actions = {
       ActionButton(
-        onClick = onSortClick,
-        content = {
-          Icon(
-            imageVector = Icons.AutoMirrored.Filled.Sort,
-            contentDescription = stringResource(R.string.sort),
-            tint = MaterialTheme.colorScheme.onPrimaryContainer,
-          )
-        },
-        modifier = Modifier.weight(1f)
-      )
+        modifier = Modifier.weight(1f),
+        onClick = onSortClick
+      ) {
+        Icon(
+          imageVector = Icons.AutoMirrored.Filled.Sort,
+          contentDescription = stringResource(R.string.sort),
+          tint = MaterialTheme.colorScheme.onPrimaryContainer,
+        )
+      }
       Spacer(modifier = Modifier.width(8.dp))
       ActionButton(
-        onClick = onFilterClick,
-        content = {
-          Icon(
-            imageVector = Icons.Default.FilterAlt,
-            contentDescription = stringResource(R.string.filter),
-            tint = MaterialTheme.colorScheme.onPrimaryContainer,
-          )
-        },
-        modifier = Modifier.weight(1f)
-      )
+        modifier = Modifier.weight(1f),
+        onClick = onFilterClick
+      ) {
+        Icon(
+          imageVector = Icons.Default.FilterAlt,
+          contentDescription = stringResource(R.string.filter),
+          tint = MaterialTheme.colorScheme.onPrimaryContainer,
+        )
+      }
     },
     containerColor = MaterialTheme.colorScheme.surface,
     modifier = modifier

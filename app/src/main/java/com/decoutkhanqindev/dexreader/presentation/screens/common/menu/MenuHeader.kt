@@ -25,8 +25,8 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.image.ProfileP
 fun MenuHeader(
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
-  onSignInClick: () -> Unit,
   modifier: Modifier = Modifier,
+  onSignInClick: () -> Unit,
 ) {
   if (isUserLoggedIn) {
     Row(
@@ -70,8 +70,8 @@ fun MenuHeader(
   } else {
     SubmitButton(
       title = stringResource(R.string.sign_in),
-      onClick = onSignInClick,
-      modifier = modifier.wrapContentSize()
+      modifier = modifier.wrapContentSize(),
+      onClick = onSignInClick
     )
   }
 }

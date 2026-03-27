@@ -22,8 +22,8 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCov
 @Composable
 fun MangaItem(
   item: MangaModel,
-  onClick: (MangaModel) -> Unit,
   modifier: Modifier = Modifier,
+  onClick: (MangaModel) -> Unit,
 ) {
   // Using remember to avoid unnecessary recompositions and re-creation of the onClick lambda when manga.id doesn't change
   val onClick = remember(item.id) { { onClick(item) } }

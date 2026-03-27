@@ -49,10 +49,11 @@ fun ProfileScreen(
   BaseScreen(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
-    onNavigateToSignInScreen = onNavigateToLoginScreen,
     selectedMenuItem = MenuItemValue.PROFILE,
-    onNavigateToMenuItemScreen = onNavigateToMenuItemScreen,
     isSearchEnabled = false,
+    modifier = modifier,
+    onNavigateToSignInScreen = onNavigateToLoginScreen,
+    onNavigateToMenuItemScreen = onNavigateToMenuItemScreen,
     bottomBar = {
       if (isUserLoggedIn) {
         UpdateAndLogoutUserBottomBar(
@@ -62,8 +63,8 @@ fun ProfileScreen(
           modifier = Modifier.fillMaxWidth()
         )
       }
-    },
-    content = {
+    }
+  ) {
       if (isUserLoggedIn || uiState.isLogoutUserSuccess) {
         ProfileContent(
           uiState = uiState,
@@ -80,7 +81,5 @@ fun ProfileScreen(
           modifier = Modifier.fillMaxSize()
         )
       }
-    },
-    modifier = modifier
-  )
+  }
 }

@@ -39,7 +39,8 @@ fun CategoryDetailScreen(
         modifier = Modifier.fillMaxWidth()
       )
     },
-    content = {
+    modifier = modifier,
+  ) {
       CategoryDetailsContent(
         detailsUiState = detailsUiState,
         criteriaUiState = criteriaUiState,
@@ -61,7 +62,5 @@ fun CategoryDetailScreen(
         onRetry = viewModel::retry,
         modifier = Modifier.fillMaxSize()
       )
-    },
-    modifier = modifier
-  )
+  }
 }

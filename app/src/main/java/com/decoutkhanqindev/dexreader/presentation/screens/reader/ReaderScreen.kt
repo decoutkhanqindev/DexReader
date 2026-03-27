@@ -97,7 +97,8 @@ fun ReaderScreen(
         modifier = Modifier.size(56.dp)
       )
     },
-    content = { innerPadding ->
+    modifier = modifier
+  ) { innerPadding ->
       ReaderContent(
         chapterPageUiState = chapterPagesUiState,
         onUpdateChapterPage = viewModel::updateChapterPage,
@@ -106,7 +107,5 @@ fun ReaderScreen(
           .fillMaxSize()
           .padding(innerPadding)
       )
-    },
-    modifier = modifier
-  )
+  }
 }

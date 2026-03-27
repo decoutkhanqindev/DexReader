@@ -36,12 +36,13 @@ fun FavoritesScreen(
   BaseScreen(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
-    onNavigateToSignInScreen = onNavigateToLoginScreen,
     selectedMenuItem = MenuItemValue.FAVORITES,
+    modifier = modifier,
+    onNavigateToSignInScreen = onNavigateToLoginScreen,
     onNavigateToMenuItemScreen = onNavigateToMenuItemScreen,
-    onNavigateToSearchScreen = onNavigateToSearchScreen,
-    content = {
-      if (isUserLoggedIn) {
+    onNavigateToSearchScreen = onNavigateToSearchScreen
+  ) {
+    if (isUserLoggedIn) {
         FavoritesContent(
           uiState = uiState,
           onSelectedManga = onNavigateToMangaDetailScreen,
@@ -56,7 +57,5 @@ fun FavoritesScreen(
           modifier = Modifier.fillMaxSize()
         )
       }
-    },
-    modifier = modifier
-  )
+  }
 }

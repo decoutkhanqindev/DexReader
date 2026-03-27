@@ -22,36 +22,37 @@ import kotlinx.collections.immutable.toPersistentList
 fun MenuDrawer(
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
-  onSignInClick: () -> Unit,
   drawerState: DrawerState,
   selectedItem: MenuItemValue,
+  modifier: Modifier = Modifier,
+  onSignInClick: () -> Unit,
   onItemClick: (MenuItemValue) -> Unit,
   content: @Composable () -> Unit,
-  modifier: Modifier = Modifier,
 ) {
   val items = remember { MenuItemValue.entries.toPersistentList() }
 
   ModalNavigationDrawer(
     drawerState = drawerState,
+    modifier = modifier,
     drawerContent = {
       ModalDrawerSheet {
         Column(modifier = Modifier.fillMaxSize()) {
           MenuHeader(
             isUserLoggedIn = isUserLoggedIn,
             currentUser = currentUser,
-            onSignInClick = onSignInClick,
             modifier = Modifier
               .weight(0.4f)
               .fillMaxWidth()
-              .padding(16.dp)
+              .padding(16.dp),
+            onSignInClick = onSignInClick
           )
           MenuBody(
             items = items,
             selectedItem = selectedItem,
-            onItemClick = onItemClick,
             modifier = Modifier
               .weight(2f)
-              .fillMaxWidth()
+              .fillMaxWidth(),
+            onItemClick = onItemClick
           )
           MenuFooter(
             modifier = Modifier
@@ -61,8 +62,6 @@ fun MenuDrawer(
           )
         }
       }
-    },
-    content = { content() },
-    modifier = modifier
-  )
+    }
+  ) { content() }
 }

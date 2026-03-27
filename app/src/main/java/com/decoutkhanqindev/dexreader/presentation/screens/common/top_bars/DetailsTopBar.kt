@@ -22,10 +22,10 @@ import com.decoutkhanqindev.dexreader.R
 @Composable
 fun DetailsTopBar(
   title: String,
-  onNavigateBack: () -> Unit,
   isSearchEnabled: Boolean = true,
-  onNavigateToSearchScreen: () -> Unit = {},
   modifier: Modifier = Modifier,
+  onNavigateBack: () -> Unit,
+  onNavigateToSearchScreen: () -> Unit = {},
 ) {
   CenterAlignedTopAppBar(
     title = {

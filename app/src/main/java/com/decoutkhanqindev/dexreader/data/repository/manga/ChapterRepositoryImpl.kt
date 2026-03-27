@@ -27,7 +27,7 @@ class ChapterRepositoryImpl @Inject constructor(
   ): List<Chapter> =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = {
+      block = {
         apiService.getChapterList(
           mangaId = mangaId,
           limit = limit,
@@ -40,26 +40,26 @@ class ChapterRepositoryImpl @Inject constructor(
           ?.mapNotNull { it.toChapter() }
           ?: emptyList()
       },
-      onCatch = { it.toDomainException() }
+      catch = { it.toDomainException() }
     )
 
   override suspend fun getChapterDetails(chapterId: String): Chapter =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = {
+      block = {
         apiService.getChapterDetails(chapterId).data?.toChapter()
           ?: throw BusinessException.Resource.ChapterNotFound()
       },
-      onCatch = { it.toDomainException() }
+      catch = { it.toDomainException() }
     )
 
   override suspend fun getChapterPages(chapterId: String, mangaId: String): ChapterPages =
     runSuspendCatching(
       context = Dispatchers.IO,
-      onExecute = {
+      block = {
         apiService.getChapterPages(chapterId).toChapterPages(chapterId, mangaId)
           ?: throw BusinessException.Resource.ChapterDataNotFound()
       },
-      onCatch = { it.toDomainException() }
+      catch = { it.toDomainException() }
     )
 }

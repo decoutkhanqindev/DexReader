@@ -70,10 +70,11 @@ fun MangaDetailsScreen(
 
   BaseDetailsScreen(
     title = stringResource(R.string.manga_details),
+    modifier = modifier,
     onNavigateBack = onNavigateBack,
-    onNavigateToSearchScreen = onNavigateToSearchScreen,
-    content = {
-      MangaDetailsContent(
+    onNavigateToSearchScreen = onNavigateToSearchScreen
+  ) {
+    MangaDetailsContent(
         mangaDetailsUiState = mangaDetailsUiState,
         mangaChaptersUiState = mangaChaptersUiState,
         onReadingClick = onReadingClick,
@@ -98,7 +99,5 @@ fun MangaDetailsScreen(
         startedChapterId = startedChapterId,
         continueChapter = continueChapter,
       )
-    },
-    modifier = modifier
-  )
+  }
 }

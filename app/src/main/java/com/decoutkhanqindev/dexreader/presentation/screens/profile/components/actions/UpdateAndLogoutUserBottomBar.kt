@@ -37,21 +37,20 @@ fun UpdateAndLogoutUserBottomBar(
   BottomAppBar(
     actions = {
       ActionButton(
-        onClick = { isShowLogoutUserDialog = true },
-        content = {
-          Text(
-            text = stringResource(R.string.logout),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.ExtraBold,
-            textAlign = TextAlign.Center,
-            color = Color.Red,
-            modifier = Modifier.fillMaxWidth()
-          )
-        },
         modifier = Modifier
           .weight(1f)
-          .fillMaxWidth()
-      )
+          .fillMaxWidth(),
+        onClick = { isShowLogoutUserDialog = true }
+      ) {
+        Text(
+          text = stringResource(R.string.logout),
+          style = MaterialTheme.typography.titleMedium,
+          fontWeight = FontWeight.ExtraBold,
+          textAlign = TextAlign.Center,
+          color = Color.Red,
+          modifier = Modifier.fillMaxWidth()
+        )
+      }
       AnimatedVisibility(
         visible = isShowUpdateButton,
         enter = scaleIn(),

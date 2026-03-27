@@ -21,8 +21,8 @@ import com.decoutkhanqindev.dexreader.R
 @Composable
 fun LoadPageErrorMessage(
   message: String,
-  onRetryClick: () -> Unit,
   modifier: Modifier = Modifier,
+  onRetryClick: () -> Unit,
 ) {
   Row(
     modifier = modifier,

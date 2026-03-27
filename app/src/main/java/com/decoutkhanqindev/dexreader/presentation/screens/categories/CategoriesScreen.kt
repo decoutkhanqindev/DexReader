@@ -27,18 +27,17 @@ fun CategoriesScreen(
   BaseScreen(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
-    onNavigateToSignInScreen = onNavigateToLoginScreen,
     selectedMenuItem = MenuItemValue.CATEGORIES,
+    modifier = modifier,
+    onNavigateToSignInScreen = onNavigateToLoginScreen,
     onNavigateToMenuItemScreen = onNavigateToMenuItemScreen,
-    onNavigateToSearchScreen = onNavigateToSearchScreen,
-    content = {
-      CategoriesContent(
-        uiState = uiState,
-        onCategoryClick = onNavigateCategoryDetailScreen,
-        onRetry = viewModel::retry,
-        modifier = Modifier.fillMaxSize()
-      )
-    },
-    modifier = modifier
-  )
+    onNavigateToSearchScreen = onNavigateToSearchScreen
+  ) {
+    CategoriesContent(
+      uiState = uiState,
+      onCategoryClick = onNavigateCategoryDetailScreen,
+      onRetry = viewModel::retry,
+      modifier = Modifier.fillMaxSize()
+    )
+  }
 }

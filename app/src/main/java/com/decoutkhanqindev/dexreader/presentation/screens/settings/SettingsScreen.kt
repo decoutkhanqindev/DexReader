@@ -26,19 +26,18 @@ fun SettingsScreen(
   BaseScreen(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
-    onNavigateToSignInScreen = onNavigateToLoginScreen,
     selectedMenuItem = MenuItemValue.SETTINGS,
-    onNavigateToMenuItemScreen = onNavigateToMenuItemScreen,
     isSearchEnabled = false,
-    content = {
-      SettingsContent(
-        uiState = uiState,
-        onThemeOptionClick = viewModel::updateThemeOption,
-        onSaveThemeOption = viewModel::saveThemeOption,
-        onRetry = viewModel::retry,
-        modifier = Modifier.fillMaxSize()
-      )
-    },
-    modifier = modifier
-  )
+    modifier = modifier,
+    onNavigateToSignInScreen = onNavigateToLoginScreen,
+    onNavigateToMenuItemScreen = onNavigateToMenuItemScreen
+  ) {
+    SettingsContent(
+      uiState = uiState,
+      onThemeOptionClick = viewModel::updateThemeOption,
+      onSaveThemeOption = viewModel::saveThemeOption,
+      onRetry = viewModel::retry,
+      modifier = Modifier.fillMaxSize()
+    )
+  }
 }
