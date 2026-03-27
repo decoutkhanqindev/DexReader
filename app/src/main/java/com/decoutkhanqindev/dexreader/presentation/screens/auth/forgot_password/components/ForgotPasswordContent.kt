@@ -19,32 +19,29 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.states.Loading
 @Composable
 fun ForgotPasswordContent(
   uiState: ForgotPasswordUiState,
+  modifier: Modifier = Modifier,
   onEmailChange: (String) -> Unit,
   onSubmitClick: () -> Unit,
   onSubmitSuccess: () -> Unit,
   onNavigateBack: () -> Unit,
   onRetry: () -> Unit,
   onDismissError: () -> Unit,
-  modifier: Modifier = Modifier,
 ) {
   val contentModifier = remember(uiState.isLoading, modifier) {
     if (uiState.isLoading) modifier.blur(8.dp) else modifier
   }
 
   Box(modifier = contentModifier) {
-    AuthContent(
-      modifier = Modifier.fillMaxSize(),
-      content = {
-        ForgotPasswordForm(
-          email = uiState.email,
-          emailError = uiState.emailError,
-          onEmailChange = onEmailChange,
-          onSubmitClick = onSubmitClick,
-          onNavigateBack = onNavigateBack,
-          modifier = Modifier.fillMaxSize()
-        )
-      }
-    )
+    AuthContent(modifier = Modifier.fillMaxSize()) {
+      ForgotPasswordForm(
+        email = uiState.email,
+        emailError = uiState.emailError,
+        modifier = Modifier.fillMaxSize(),
+        onEmailChange = onEmailChange,
+        onSubmitClick = onSubmitClick,
+        onNavigateBack = onNavigateBack,
+      )
+    }
 
     when {
       uiState.isLoading -> LoadingScreen(modifier = Modifier.fillMaxSize())

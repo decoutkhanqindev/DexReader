@@ -19,6 +19,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.states.Loading
 @Composable
 fun LoginContent(
   uiState: LoginUiState,
+  modifier: Modifier = Modifier,
   onEmailChange: (String) -> Unit,
   onPasswordChange: (String) -> Unit,
   onSubmitClick: () -> Unit,
@@ -27,30 +28,26 @@ fun LoginContent(
   onForgotPasswordClick: () -> Unit,
   onRetry: () -> Unit,
   onDismissError: () -> Unit,
-  modifier: Modifier = Modifier,
 ) {
   val contentModifier = remember(uiState.isLoading, modifier) {
     if (uiState.isLoading) modifier.blur(8.dp) else modifier
   }
 
   Box(modifier = contentModifier) {
-    AuthContent(
-      modifier = Modifier.fillMaxSize(),
-      content = {
-        LoginForm(
-          email = uiState.email,
-          emailError = uiState.emailError,
-          password = uiState.password,
-          passwordError = uiState.passwordError,
-          onEmailChange = onEmailChange,
-          onPasswordChange = onPasswordChange,
-          onSubmitClick = onSubmitClick,
-          onRegisterClick = onRegisterClick,
-          onForgotPasswordClick = onForgotPasswordClick,
-          modifier = Modifier.fillMaxSize()
-        )
-      }
-    )
+    AuthContent(modifier = Modifier.fillMaxSize()) {
+      LoginForm(
+        email = uiState.email,
+        emailError = uiState.emailError,
+        password = uiState.password,
+        passwordError = uiState.passwordError,
+        modifier = Modifier.fillMaxSize(),
+        onEmailChange = onEmailChange,
+        onPasswordChange = onPasswordChange,
+        onSubmitClick = onSubmitClick,
+        onRegisterClick = onRegisterClick,
+        onForgotPasswordClick = onForgotPasswordClick,
+      )
+    }
 
     when {
       uiState.isLoading -> LoadingScreen(modifier = Modifier.fillMaxSize())

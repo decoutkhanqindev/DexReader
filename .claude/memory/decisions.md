@@ -63,3 +63,28 @@ Each `update*` previously reset `isLoading`/`isSuccess`/`isError` in addition to
 ### `OutlinedTextFieldDefaults.colors()` cannot use `remember {}`
 `@Composable` function cannot be called inside `remember {}`'s `@DisallowComposableCalls` lambda.
 **Decision:** Single `val colorScheme = MaterialTheme.colorScheme` local; `colors()` called inline. Comment added to all 3 input field files.
+
+---
+
+## 2026-03-27 (session 5)
+
+### Composable parameter ordering — full auth/ sweep complete (definitions + call sites)
+All 13 auth composable definitions reordered to: required params → optional params → modifier → required lambdas → optional lambdas → content.
+All inter-auth call sites also reordered to match definition order (named args everywhere, no breakage).
+NavGraph call sites for LoginScreen/RegisterScreen/ForgotPasswordScreen also reordered.
+**Agents used:** 5 parallel worktree agents — applied changes to main tree directly (worktrees auto-cleaned). Agents 2+3 also ran `/simplify` successfully.
+
+### Batch agents write to main tree, not isolated worktrees
+Observation: despite `isolation: "worktree"`, agents applied file edits to the main working tree.
+Worktrees appear for in-progress agents, then auto-clean after agent exits (regardless of commit status).
+**How to apply:** Do not rely on worktree isolation for file change isolation between parallel agents in this project.
+
+### `viewModel` param stays last in Screen composables (DI convention)
+LoginScreen, RegisterScreen, ForgotPasswordScreen all have `viewModel: VM = hiltViewModel()` as last param.
+**Decision:** Keep last — this is the standard Hilt/Compose convention (rarely passed by callers, primarily for testing).
+**Rejected:** Moving `viewModel` to group 2 (optional non-lambda before modifier) — too unconventional.
+
+### Call site arg order must mirror definition param order
+User explicitly requested call sites reordered to match definition order.
+This applies to ALL composables used in auth/ — including shared ones (NotificationDialog, SubmitButton, ActionButton, Text, Icon).
+**Pending:** NotificationDialog/SubmitButton/ActionButton definitions still have violations; their call sites in auth/ also need updating.

@@ -298,6 +298,7 @@ fun NavGraph(
         popExitTransition = transitions.popExit
       ) {
         LoginScreen(
+          modifier = Modifier.fillMaxSize(),
           onNavigateToHomeScreen = {
             navController.navigateClearStack<NavRoute.Login>(NavRoute.Home)
           },
@@ -307,7 +308,6 @@ fun NavGraph(
           onNavigateToForgotPasswordScreen = {
             navController.navigate(NavRoute.ForgotPassword)
           },
-          modifier = Modifier.fillMaxSize(),
         )
       }
     }
@@ -319,11 +319,11 @@ fun NavGraph(
         popExitTransition = transitions.popExit
       ) {
         RegisterScreen(
+          modifier = Modifier.fillMaxSize(),
           onNavigateBack = navController::navigateUp,
           onNavigateToLoginScreen = {
             navController.navigateClearStack<NavRoute.Register>(NavRoute.Login)
           },
-          modifier = Modifier.fillMaxSize()
         )
       }
     }
@@ -335,11 +335,11 @@ fun NavGraph(
         popExitTransition = transitions.popExit
       ) {
         ForgotPasswordScreen(
+          modifier = Modifier.fillMaxSize(),
           onNavigateBack = navController::navigateUp,
           onNavigateToLoginScreen = {
             navController.navigateClearStack<NavRoute.ForgotPassword>(NavRoute.Login)
           },
-          modifier = Modifier.fillMaxSize()
         )
       }
     }

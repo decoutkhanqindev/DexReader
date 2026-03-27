@@ -38,13 +38,13 @@ fun RegisterForm(
   confirmPasswordError: UserError?,
   name: String,
   nameError: UserError?,
+  modifier: Modifier = Modifier,
   onEmailChange: (String) -> Unit,
   onPasswordChange: (String) -> Unit,
   onConfirmPasswordChange: (String) -> Unit,
   onNameChange: (String) -> Unit,
   onSubmitClick: () -> Unit,
   onNavigateBack: () -> Unit,
-  modifier: Modifier = Modifier,
 ) {
   val scrollState = rememberScrollState()
 
@@ -78,33 +78,33 @@ fun RegisterForm(
 
       EmailInputField(
         value = email,
-        onValueChange = onEmailChange,
-        modifier = Modifier.fillMaxWidth(),
         error = emailError,
+        modifier = Modifier.fillMaxWidth(),
+        onValueChange = onEmailChange,
       )
 
       PasswordInputField(
         value = password,
-        onValueChange = onPasswordChange,
-        modifier = Modifier.fillMaxWidth(),
         error = passwordError,
+        modifier = Modifier.fillMaxWidth(),
+        onValueChange = onPasswordChange,
       )
 
       PasswordInputField(
         value = confirmPassword,
-        onValueChange = onConfirmPasswordChange,
-        modifier = Modifier.fillMaxWidth(),
         isConfirmed = true,
         error = confirmPasswordError,
+        modifier = Modifier.fillMaxWidth(),
+        onValueChange = onConfirmPasswordChange,
       )
 
       NameInputField(
         value = name,
-        onValueChange = onNameChange,
+        error = nameError,
         modifier = Modifier
           .fillMaxWidth()
           .padding(bottom = 8.dp),
-        error = nameError,
+        onValueChange = onNameChange,
       )
 
       SubmitButton(

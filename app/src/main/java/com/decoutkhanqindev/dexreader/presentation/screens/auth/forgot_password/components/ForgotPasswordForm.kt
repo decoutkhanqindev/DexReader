@@ -30,10 +30,10 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.Submit
 fun ForgotPasswordForm(
   email: String,
   emailError: UserError?,
+  modifier: Modifier = Modifier,
   onEmailChange: (String) -> Unit,
   onSubmitClick: () -> Unit,
   onNavigateBack: () -> Unit,
-  modifier: Modifier = Modifier,
 ) {
   val scrollState = rememberScrollState()
 
@@ -67,9 +67,9 @@ fun ForgotPasswordForm(
 
       EmailInputField(
         value = email,
-        onValueChange = onEmailChange,
-        modifier = Modifier.fillMaxWidth(),
         error = emailError,
+        modifier = Modifier.fillMaxWidth(),
+        onValueChange = onEmailChange,
       )
 
       SubmitButton(

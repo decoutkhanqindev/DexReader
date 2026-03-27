@@ -9,15 +9,16 @@ import com.decoutkhanqindev.dexreader.presentation.screens.auth.register.compone
 
 @Composable
 fun RegisterScreen(
+  modifier: Modifier = Modifier,
   onNavigateBack: () -> Unit,
   onNavigateToLoginScreen: () -> Unit,
-  modifier: Modifier = Modifier,
   viewModel: RegisterViewModel = hiltViewModel(),
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
   RegisterContent(
     uiState = uiState,
+    modifier = modifier,
     onEmailChange = viewModel::updateEmail,
     onPasswordChange = viewModel::updatePassword,
     onConfirmPasswordChange = viewModel::updateConfirmPassword,
@@ -27,6 +28,5 @@ fun RegisterScreen(
     onNavigateBack = onNavigateBack,
     onRetry = viewModel::retry,
     onDismissError = viewModel::dismissError,
-    modifier = modifier
   )
 }

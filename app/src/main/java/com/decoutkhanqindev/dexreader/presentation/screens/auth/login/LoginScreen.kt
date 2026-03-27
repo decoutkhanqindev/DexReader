@@ -9,16 +9,17 @@ import com.decoutkhanqindev.dexreader.presentation.screens.auth.login.components
 
 @Composable
 fun LoginScreen(
+  modifier: Modifier = Modifier,
   onNavigateToHomeScreen: () -> Unit,
   onNavigateToRegisterScreen: () -> Unit,
   onNavigateToForgotPasswordScreen: () -> Unit,
-  modifier: Modifier = Modifier,
   viewModel: LoginViewModel = hiltViewModel(),
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
   LoginContent(
     uiState = uiState,
+    modifier = modifier,
     onEmailChange = viewModel::updateEmail,
     onPasswordChange = viewModel::updatePassword,
     onSubmitClick = viewModel::submit,
@@ -27,6 +28,5 @@ fun LoginScreen(
     onForgotPasswordClick = onNavigateToForgotPasswordScreen,
     onRetry = viewModel::retry,
     onDismissError = viewModel::dismissError,
-    modifier = modifier
   )
 }

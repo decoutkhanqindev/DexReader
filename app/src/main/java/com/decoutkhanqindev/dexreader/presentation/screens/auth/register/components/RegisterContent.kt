@@ -19,6 +19,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.states.Loading
 @Composable
 fun RegisterContent(
   uiState: RegisterUiState,
+  modifier: Modifier = Modifier,
   onEmailChange: (String) -> Unit,
   onPasswordChange: (String) -> Unit,
   onConfirmPasswordChange: (String) -> Unit,
@@ -28,7 +29,6 @@ fun RegisterContent(
   onNavigateBack: () -> Unit,
   onRetry: () -> Unit,
   onDismissError: () -> Unit,
-  modifier: Modifier = Modifier,
 ) {
   val contentModifier = remember(uiState.isLoading, modifier) {
     if (uiState.isLoading) modifier.blur(8.dp) else modifier
@@ -47,13 +47,13 @@ fun RegisterContent(
           confirmPasswordError = uiState.confirmPasswordError,
           name = uiState.name,
           nameError = uiState.nameError,
+          modifier = Modifier.fillMaxSize(),
           onEmailChange = onEmailChange,
           onPasswordChange = onPasswordChange,
           onConfirmPasswordChange = onConfirmPasswordChange,
           onNameChange = onNameChange,
           onSubmitClick = onSubmitClick,
           onNavigateBack = onNavigateBack,
-          modifier = Modifier.fillMaxSize()
         )
       }
     )

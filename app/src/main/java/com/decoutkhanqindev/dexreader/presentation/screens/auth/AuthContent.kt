@@ -14,8 +14,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun AuthContent(
-  content: @Composable () -> Unit,
   modifier: Modifier = Modifier,
+  content: @Composable () -> Unit,
 ) {
   Column(
     verticalArrangement = Arrangement.Top,

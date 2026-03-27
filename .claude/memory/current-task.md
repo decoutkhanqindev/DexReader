@@ -1,32 +1,44 @@
-# Current Task: One-Time Event Pattern for Auth Screens
+# Current Task: Reorder Call Sites of Default Composables in Auth Screens
 
 ## Status
-In progress — not yet implemented.
+In progress — definitions fixed, auth↔auth call sites fixed, now fixing shared composable call sites.
 
 ## What
-Refactoring auth screens (Login, Register, ForgotPassword) to use `Channel<AuthEvent>`
-so navigation fires from the Screen/Route layer, not from Content composables.
+Reorder argument order in call sites of `NotificationDialog`, `SubmitButton`, `ActionButton`,
+`Text`, `Icon` within the auth/ directory to match the convention:
+  required params → optional params → modifier → required lambdas → optional lambdas → content
 
-## Plan file
-`C:\Users\ADMIN\.claude\plans\rosy-napping-whale.md` — full step-by-step plan.
+## Files being edited
+- `presentation/screens/common/dialog/NotificationDialog.kt` — definition needs fixing
+- `presentation/screens/common/buttons/SubmitButton.kt` — definition needs fixing
+- `presentation/screens/common/buttons/ActionButton.kt` — definition needs fixing
+- `login/components/LoginContent.kt` — NotificationDialog call sites
+- `login/components/LoginForm.kt` — SubmitButton, Text call sites
+- `register/components/RegisterContent.kt` — NotificationDialog call sites
+- `register/components/RegisterForm.kt` — SubmitButton, ActionButton, Text call sites
+- `forgot_password/components/ForgotPasswordContent.kt` — NotificationDialog call sites
+- `forgot_password/components/ForgotPasswordForm.kt` — SubmitButton, ActionButton, Text call sites
+- `AuthHeader.kt` — Icon, Text call sites
 
-## Last Action
-Removed all `@Preview` functions from 3 Content files (success).
+## Violations remaining (definitions)
 
-## CRITICAL: Linter reverted Content files — compile mismatch exists
-After removing previews, the linter reverted all 3 `*Content.kt` to an older state:
-- Uses `uiState.isError` / `uiState.isSuccess` booleans (NOT `AuthDialogState`)
-- Uses `onDismissError: () -> Unit` (NOT `onDismissDialog`)
-- `fun` (NOT `internal fun`)
-- `ForgotPasswordContent`: `onNavigateBack` + `onSubmitSuccess` params restored
-- `AuthContent` call uses named `content = { ... }` (not trailing lambda)
-- ViewModels/UiStates still reference `AuthDialogState` → build is broken
+**NotificationDialog** — current:
+`onConfirmClick` (required lambda, no default) is FIRST, before modifier. Optional params
+(`icon`, `title`, `dismiss`, `isEnableDismiss`, `confirm`) are AFTER modifier.
+Target:
+```
+icon, title, dismiss, confirm, isEnableDismiss, modifier, onConfirmClick, onDismissClick
+```
 
-Read ALL files before editing to confirm ground truth.
+**SubmitButton** — current: `onClick` before modifier, `isEnabled` after modifier.
+Target: `title, isEnabled, modifier, onClick`
 
-## Next Steps
-1. Create `presentation/screens/auth/AuthEvent.kt`
-2. Update 3 ViewModels: add `Channel<AuthEvent>`, update `dismissDialog()`
-3. Update 3 Screen files: add `LaunchedEffect(Unit)` for event collection
-4. Update 3 Content files: remove success nav callback, simplify success dialog
-5. `./gradlew assembleDebug`
+**ActionButton** — current: `onClick` and `content` before modifier, `isEnabled` after modifier.
+Target: `isEnabled, modifier, onClick, content`
+
+## Text/Icon pattern to fix
+`Text(text=..., style=..., color=..., fontWeight=..., modifier=...)` — modifier should be 2nd
+`Icon(painter/imageVector=..., contentDescription=..., tint=..., modifier=...)` — correct, tint optional before modifier
+
+## Last action
+Read all 7 auth files to confirm current state. Ready to start editing.

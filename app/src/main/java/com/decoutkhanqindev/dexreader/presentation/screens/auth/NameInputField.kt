@@ -26,9 +26,9 @@ private val NameKeyboardOptions = KeyboardOptions(
 @Composable
 fun NameInputField(
   value: String,
-  onValueChange: (String) -> Unit,
-  modifier: Modifier = Modifier,
   error: UserError? = null,
+  modifier: Modifier = Modifier,
+  onValueChange: (String) -> Unit,
 ) {
   // OutlinedTextFieldDefaults.colors() is @Composable so it cannot be wrapped in remember {}.
   // Consolidating into a single colorScheme read avoids repeated MaterialTheme.colorScheme lookups.

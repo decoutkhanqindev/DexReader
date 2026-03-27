@@ -37,10 +37,10 @@ private val PasswordTransformation = PasswordVisualTransformation()
 @Composable
 fun PasswordInputField(
   value: String,
-  onValueChange: (String) -> Unit,
-  modifier: Modifier = Modifier,
   isConfirmed: Boolean = false,
   error: UserError? = null,
+  modifier: Modifier = Modifier,
+  onValueChange: (String) -> Unit,
 ) {
   var isShowPassword by remember { mutableStateOf(false) }
   // OutlinedTextFieldDefaults.colors() is @Composable so it cannot be wrapped in remember {}.

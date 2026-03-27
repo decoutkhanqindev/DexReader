@@ -1,7 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.auth.login.components
 
 import androidx.compose.foundation.clickable
-import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +15,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,22 +36,19 @@ fun LoginForm(
   emailError: UserError?,
   password: String,
   passwordError: UserError?,
+  modifier: Modifier = Modifier,
   onEmailChange: (String) -> Unit,
   onPasswordChange: (String) -> Unit,
   onSubmitClick: () -> Unit,
   onRegisterClick: () -> Unit,
   onForgotPasswordClick: () -> Unit,
-  modifier: Modifier = Modifier,
 ) {
   val scrollState = rememberScrollState()
 
   Card(
     modifier = modifier.verticalScroll(scrollState),
     shape = RoundedCornerShape(16.dp),
-    colors =
-      CardDefaults.cardColors(
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-      )
+    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh)
   ) {
     Column(
       modifier = Modifier
@@ -62,22 +59,22 @@ fun LoginForm(
     ) {
       Text(
         text = stringResource(R.string.sign_in),
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(top = 16.dp),
         style = MaterialTheme.typography.headlineMedium,
         color = MaterialTheme.colorScheme.onSurface,
         fontWeight = FontWeight.ExtraBold,
         textAlign = TextAlign.Center,
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(top = 16.dp)
       )
 
       Spacer(modifier = Modifier.height(16.dp))
 
       EmailInputField(
         value = email,
-        onValueChange = onEmailChange,
-        modifier = Modifier.fillMaxWidth(),
         error = emailError,
+        modifier = Modifier.fillMaxWidth(),
+        onValueChange = onEmailChange,
       )
 
       Column(
@@ -87,9 +84,9 @@ fun LoginForm(
       ) {
         PasswordInputField(
           value = password,
-          onValueChange = onPasswordChange,
-          modifier = Modifier.fillMaxWidth(),
           error = passwordError,
+          modifier = Modifier.fillMaxWidth(),
+          onValueChange = onPasswordChange,
         )
         Text(
           text = stringResource(R.string.forgot_password),
