@@ -83,12 +83,12 @@ fun CategoryDetailsContent(
     is BasePaginationUiState.FirstPageError -> {
       if (isShowErrorDialog) {
         NotificationDialog(
-          title = stringResource(detailsUiState.error.messageRes),
-          onDismissClick = { isShowErrorDialog = false },
           onConfirmClick = {
             isShowErrorDialog = false
             onRetry()
           },
+          title = stringResource(detailsUiState.error.messageRes),
+          onDismissClick = { isShowErrorDialog = false },
         )
       }
     }

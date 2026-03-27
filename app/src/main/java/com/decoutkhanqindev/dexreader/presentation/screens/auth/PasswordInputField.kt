@@ -29,11 +29,11 @@ import com.decoutkhanqindev.dexreader.presentation.error.UserError
 
 @Composable
 fun PasswordInputField(
-  isConfirmed: Boolean = false,
   value: String,
   onValueChange: (String) -> Unit,
-  error: UserError? = null,
   modifier: Modifier = Modifier,
+  isConfirmed: Boolean = false,
+  error: UserError? = null,
 ) {
   var isShowPassword by rememberSaveable { mutableStateOf(false) }
 

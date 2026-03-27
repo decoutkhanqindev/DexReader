@@ -76,25 +76,25 @@ fun UpdateAndLogoutUserBottomBar(
 
   if (isShowUpdateUserDialog) {
     NotificationDialog(
-      title = stringResource(R.string.are_you_sure_you_want_to_update_with_the_new_changes),
-      onDismissClick = { isShowUpdateUserDialog = false },
-      confirm = stringResource(R.string.update_profile),
       onConfirmClick = {
         onUpdateClick()
         isShowUpdateUserDialog = false
       },
+      title = stringResource(R.string.are_you_sure_you_want_to_update_with_the_new_changes),
+      onDismissClick = { isShowUpdateUserDialog = false },
+      confirm = stringResource(R.string.update_profile),
     )
   }
 
   if (isShowLogoutUserDialog) {
     NotificationDialog(
-      title = stringResource(R.string.are_you_sure_you_want_to_logout),
-      onDismissClick = { isShowLogoutUserDialog = false },
-      confirm = stringResource(R.string.logout),
       onConfirmClick = {
         onLogoutClick()
         isShowLogoutUserDialog = false
       },
+      title = stringResource(R.string.are_you_sure_you_want_to_logout),
+      onDismissClick = { isShowLogoutUserDialog = false },
+      confirm = stringResource(R.string.logout),
     )
   }
 }

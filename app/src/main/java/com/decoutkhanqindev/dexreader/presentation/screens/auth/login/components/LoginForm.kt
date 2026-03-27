@@ -72,8 +72,8 @@ fun LoginForm(
       EmailInputField(
         value = uiState.email,
         onValueChange = { onEmailChange(it) },
+        modifier = Modifier.fillMaxWidth(),
         error = uiState.emailError,
-        modifier = Modifier.fillMaxWidth()
       )
 
       Column(
@@ -84,8 +84,8 @@ fun LoginForm(
         PasswordInputField(
           value = uiState.password,
           onValueChange = { onPasswordChange(it) },
+          modifier = Modifier.fillMaxWidth(),
           error = uiState.passwordError,
-          modifier = Modifier.fillMaxWidth()
         )
         Text(
           text = stringResource(R.string.forgot_password),

@@ -28,7 +28,6 @@ import kotlinx.collections.immutable.persistentListOf
 fun MangaChapterList(
   latestChapter: String,
   chapterList: ImmutableList<ChapterModel>,
-  readingHistoryList: ImmutableList<ReadingHistoryModel> = persistentListOf(),
   onSelectedChapter: (
     chapterId: String,
     lastReadPage: Int,
@@ -38,6 +37,7 @@ fun MangaChapterList(
   onFetchChapterListNextPage: () -> Unit,
   onRetryFetchChapterListNextPage: () -> Unit,
   modifier: Modifier = Modifier,
+  readingHistoryList: ImmutableList<ReadingHistoryModel> = persistentListOf(),
 ) {
   Column(modifier = modifier) {
     if (chapterList.isEmpty()) {
@@ -56,12 +56,12 @@ fun MangaChapterList(
         MangaChapterItem(
           latestChapter = latestChapter,
           chapter = chapter,
-          readingHistory = readingHistory,
           onSelectedChapter = onSelectedChapter,
           modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 12.dp)
-            .padding(horizontal = 4.dp)
+            .padding(horizontal = 4.dp),
+          readingHistory = readingHistory,
         )
       }
 

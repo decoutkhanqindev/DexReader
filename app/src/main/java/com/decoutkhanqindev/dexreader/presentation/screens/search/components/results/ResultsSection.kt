@@ -40,12 +40,12 @@ fun ResultsSection(
     is BasePaginationUiState.FirstPageError -> {
       if (isShowErrorDialog) {
         NotificationDialog(
-          title = stringResource(resultsUiState.error.messageRes),
-          onDismissClick = { isShowErrorDialog = false },
           onConfirmClick = {
             isShowErrorDialog = false
             onRetry()
           },
+          title = stringResource(resultsUiState.error.messageRes),
+          onDismissClick = { isShowErrorDialog = false },
         )
       }
     }

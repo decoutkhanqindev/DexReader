@@ -53,12 +53,12 @@ fun HistoryContent(
     is BasePaginationUiState.FirstPageError -> {
       if (isShowHistoryErrorDialog) {
         NotificationDialog(
-          title = stringResource(historyUiState.error.messageRes),
-          onDismissClick = { isShowHistoryErrorDialog = false },
           onConfirmClick = {
             isShowHistoryErrorDialog = false
             onRetryObserveHistoryFirstPage()
           },
+          title = stringResource(historyUiState.error.messageRes),
+          onDismissClick = { isShowHistoryErrorDialog = false },
         )
       }
     }
@@ -100,12 +100,12 @@ fun HistoryContent(
         removeFromHistoryUiState.isError -> {
           if (isShowRemoveFromHistoryErrorDialog) {
             NotificationDialog(
-              title = stringResource(R.string.removed_from_history_failed),
-              onDismissClick = { isShowRemoveFromHistoryErrorDialog = false },
               onConfirmClick = {
                 isShowRemoveFromHistoryErrorDialog = false
                 onRetryRemoveFromHistory()
               },
+              title = stringResource(R.string.removed_from_history_failed),
+              onDismissClick = { isShowRemoveFromHistoryErrorDialog = false },
             )
           }
         }
@@ -113,11 +113,11 @@ fun HistoryContent(
         removeFromHistoryUiState.isSuccess -> {
           if (isShowRemoveFromHistorySuccessDialog) {
             NotificationDialog(
+              onConfirmClick = { isShowRemoveFromHistorySuccessDialog = false },
               icon = Icons.Default.Done,
               title = stringResource(R.string.you_have_removed_from_history_successfully),
               isEnableDismiss = false,
               confirm = stringResource(R.string.ok),
-              onConfirmClick = { isShowRemoveFromHistorySuccessDialog = false },
             )
           }
         }
@@ -125,13 +125,13 @@ fun HistoryContent(
 
       if (isShowRemoveFromHistoryDialog && removeFromHistoryUiState.readingHistoryId != null) {
         NotificationDialog(
-          title = stringResource(R.string.are_you_sure_you_want_to_remove_it_from_your_history),
-          onDismissClick = { isShowRemoveFromHistoryDialog = false },
-          confirm = stringResource(R.string.remove),
           onConfirmClick = {
             isShowRemoveFromHistoryDialog = false
             onRemoveFromHistory()
           },
+          title = stringResource(R.string.are_you_sure_you_want_to_remove_it_from_your_history),
+          onDismissClick = { isShowRemoveFromHistoryDialog = false },
+          confirm = stringResource(R.string.remove),
         )
       }
 
@@ -141,6 +141,10 @@ fun HistoryContent(
         selectedLastReadPage != null
       ) {
         NotificationDialog(
+          onConfirmClick = {
+            isShowNavigateDialog = false
+            onMangaDetailsClick(selectedMangaId!!)
+          },
           title = stringResource(R.string.view_details_or_continue),
           dismiss = stringResource(R.string.continue_reading),
           onDismissClick = {
@@ -152,10 +156,6 @@ fun HistoryContent(
             )
           },
           confirm = stringResource(R.string.manga_details),
-          onConfirmClick = {
-            isShowNavigateDialog = false
-            onMangaDetailsClick(selectedMangaId!!)
-          },
         )
       }
     }

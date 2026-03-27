@@ -58,12 +58,12 @@ fun SettingsContent(
       uiState.isError -> {
         if (isShowErrorDialog) {
           NotificationDialog(
-            title = stringResource(R.string.change_theme_failed),
-            onDismissClick = { isShowErrorDialog = false },
             onConfirmClick = {
               isShowErrorDialog = false
               onRetry()
             },
+            title = stringResource(R.string.change_theme_failed),
+            onDismissClick = { isShowErrorDialog = false },
           )
         }
       }
@@ -71,11 +71,11 @@ fun SettingsContent(
       uiState.isSuccess -> {
         if (isShowSuccessDialog) {
           NotificationDialog(
+            onConfirmClick = { isShowSuccessDialog = false },
             icon = Icons.Default.Done,
             title = stringResource(R.string.theme_change_successful),
             isEnableDismiss = false,
             confirm = stringResource(R.string.ok),
-            onConfirmClick = { isShowSuccessDialog = false },
           )
         }
       }
@@ -83,13 +83,13 @@ fun SettingsContent(
 
     if (isShowSaveDialog) {
       NotificationDialog(
-        title = stringResource(R.string.are_you_sure_you_want_to_change_the_theme),
-        onDismissClick = { isShowSaveDialog = false },
-        confirm = stringResource(R.string.change),
         onConfirmClick = {
           isShowSaveDialog = false
           onSaveThemeOption()
         },
+        title = stringResource(R.string.are_you_sure_you_want_to_change_the_theme),
+        onDismissClick = { isShowSaveDialog = false },
+        confirm = stringResource(R.string.change),
       )
     }
   }

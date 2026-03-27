@@ -72,32 +72,32 @@ fun RegisterForm(
       EmailInputField(
         value = uiState.email,
         onValueChange = { onEmailChange(it) },
+        modifier = Modifier.fillMaxWidth(),
         error = uiState.emailError,
-        modifier = Modifier.fillMaxWidth()
       )
 
       PasswordInputField(
         value = uiState.password,
         onValueChange = { onPasswordChange(it) },
+        modifier = Modifier.fillMaxWidth(),
         error = uiState.passwordError,
-        modifier = Modifier.fillMaxWidth()
       )
 
       PasswordInputField(
-        isConfirmed = true,
         value = uiState.confirmPassword,
         onValueChange = { onConfirmPasswordChange(it) },
+        modifier = Modifier.fillMaxWidth(),
+        isConfirmed = true,
         error = uiState.confirmPasswordError,
-        modifier = Modifier.fillMaxWidth()
       )
 
       NameInputField(
         value = uiState.name,
         onValueChange = { onNameChange(it) },
-        error = uiState.nameError,
         modifier = Modifier
           .fillMaxWidth()
-          .padding(bottom = 8.dp)
+          .padding(bottom = 8.dp),
+        error = uiState.nameError,
       )
 
       SubmitButton(

@@ -22,7 +22,6 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 fun MangaChaptersSection(
   mangaChaptersUiState: BasePaginationUiState<ChapterModel>,
-  readingHistoryList: ImmutableList<ReadingHistoryModel> = persistentListOf(),
   latestChapter: String,
   chapterLanguage: MangaLanguageValue,
   chapterLanguageList: ImmutableList<MangaLanguageValue>,
@@ -36,6 +35,7 @@ fun MangaChaptersSection(
   onRetryFetchChapterListNextPage: () -> Unit,
   onRetry: () -> Unit,
   modifier: Modifier = Modifier,
+  readingHistoryList: ImmutableList<ReadingHistoryModel> = persistentListOf(),
 ) {
   Column(modifier = modifier) {
     MangaChaptersHeader(
@@ -66,12 +66,12 @@ fun MangaChaptersSection(
         MangaChapterList(
           latestChapter = latestChapter,
           chapterList = chapterList,
-          readingHistoryList = readingHistoryList,
           onSelectedChapter = onSelectedChapter,
           chapterListNextPageState = chapterListNextPageState,
           onFetchChapterListNextPage = onFetchChapterListNextPage,
           onRetryFetchChapterListNextPage = onRetryFetchChapterListNextPage,
-          modifier = Modifier.fillMaxWidth()
+          modifier = Modifier.fillMaxWidth(),
+          readingHistoryList = readingHistoryList,
         )
       }
     }

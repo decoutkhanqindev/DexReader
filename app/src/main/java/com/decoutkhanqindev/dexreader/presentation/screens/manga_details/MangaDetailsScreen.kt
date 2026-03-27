@@ -58,13 +58,13 @@ fun MangaDetailsScreen(
 
   if (isShowFavoritesDialog) {
     NotificationDialog(
-      title = stringResource(R.string.you_must_sign_in_to_favorite_this_manga),
-      onDismissClick = { isShowFavoritesDialog = false },
-      confirm = stringResource(R.string.sign_in),
       onConfirmClick = {
         isShowFavoritesDialog = false
         onNavigateToLoginScreen()
       },
+      title = stringResource(R.string.you_must_sign_in_to_favorite_this_manga),
+      onDismissClick = { isShowFavoritesDialog = false },
+      confirm = stringResource(R.string.sign_in),
     )
   }
 
@@ -76,9 +76,6 @@ fun MangaDetailsScreen(
       MangaDetailsContent(
         mangaDetailsUiState = mangaDetailsUiState,
         mangaChaptersUiState = mangaChaptersUiState,
-        readingHistoryList = readingHistoryList,
-        startedChapterId = startedChapterId,
-        continueChapter = continueChapter,
         onReadingClick = onReadingClick,
         isFavorite = isFavorite,
         onFavoriteClick = {
@@ -96,7 +93,10 @@ fun MangaDetailsScreen(
         onRetryFetchChapterListNextPage = viewModel::retryFetchChapterListNextPage,
         onRetryFetchChapterListFirstPage = viewModel::retryFetchChapterListFirstPage,
         onRetry = viewModel::retry,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        readingHistoryList = readingHistoryList,
+        startedChapterId = startedChapterId,
+        continueChapter = continueChapter,
       )
     },
     modifier = modifier

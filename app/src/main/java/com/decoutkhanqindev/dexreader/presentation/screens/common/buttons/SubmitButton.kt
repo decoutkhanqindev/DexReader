@@ -12,10 +12,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SubmitButton(
-  isEnabled: Boolean = true,
   title: String,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
+  isEnabled: Boolean = true,
 ) {
   Button(
     enabled = isEnabled,

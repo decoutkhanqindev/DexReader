@@ -36,12 +36,12 @@ fun CategoriesContent(
     is CategoriesUiState.Error -> {
       if (isShowErrorDialog) {
         NotificationDialog(
-          title = stringResource(uiState.error.messageRes),
-          onDismissClick = { isShowErrorDialog = false },
           onConfirmClick = {
             isShowErrorDialog = false
             onRetry()
           },
+          title = stringResource(uiState.error.messageRes),
+          onDismissClick = { isShowErrorDialog = false },
         )
       }
     }

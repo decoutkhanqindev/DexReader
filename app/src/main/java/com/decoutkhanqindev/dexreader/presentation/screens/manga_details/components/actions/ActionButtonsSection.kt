@@ -17,9 +17,6 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.Action
 
 @Composable
 fun ActionButtonsSection(
-  startedChapterId: String? = null,
-  mangaId: String = "",
-  continueChapter: ReadingHistoryModel? = null,
   onReadingClick: (
     chapterId: String,
     lastReadPage: Int,
@@ -28,6 +25,9 @@ fun ActionButtonsSection(
   isFavorite: Boolean,
   onFavoriteClick: () -> Unit,
   modifier: Modifier = Modifier,
+  startedChapterId: String? = null,
+  mangaId: String = "",
+  continueChapter: ReadingHistoryModel? = null,
 ) {
   val isContinueReading = continueChapter != null
   val canRead = startedChapterId != null || continueChapter != null
@@ -38,7 +38,6 @@ fun ActionButtonsSection(
     horizontalArrangement = Arrangement.spacedBy(8.dp)
   ) {
     ActionButton(
-      isEnabled = canRead,
       onClick = {
         if (isContinueReading) {
           onReadingClick(
@@ -64,7 +63,8 @@ fun ActionButtonsSection(
       },
       modifier = Modifier
         .weight(1f)
-        .fillMaxWidth()
+        .fillMaxWidth(),
+      isEnabled = canRead,
     )
     ActionButton(
       onClick = onFavoriteClick,

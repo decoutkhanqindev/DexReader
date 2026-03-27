@@ -46,9 +46,6 @@ import kotlinx.coroutines.launch
 fun MangaDetailsContent(
   mangaDetailsUiState: MangaDetailsUiState,
   mangaChaptersUiState: BasePaginationUiState<ChapterModel>,
-  readingHistoryList: ImmutableList<ReadingHistoryModel> = persistentListOf(),
-  startedChapterId: String? = null,
-  continueChapter: ReadingHistoryModel? = null,
   onReadingClick: (
     chapterId: String,
     lastReadPage: Int,
@@ -73,6 +70,9 @@ fun MangaDetailsContent(
   onRetryFetchChapterListFirstPage: () -> Unit,
   onRetry: () -> Unit,
   modifier: Modifier = Modifier,
+  readingHistoryList: ImmutableList<ReadingHistoryModel> = persistentListOf(),
+  startedChapterId: String? = null,
+  continueChapter: ReadingHistoryModel? = null,
 ) {
   val lazyListState = rememberLazyListState()
   val coroutineScope = rememberCoroutineScope()
@@ -92,12 +92,12 @@ fun MangaDetailsContent(
       is MangaDetailsUiState.Error -> {
         if (isShowErrorDialog) {
           NotificationDialog(
-            title = stringResource(mangaDetailsUiState.error.messageRes),
-            onDismissClick = { isShowErrorDialog = false },
             onConfirmClick = {
               isShowErrorDialog = false
               onRetry()
             },
+            title = stringResource(mangaDetailsUiState.error.messageRes),
+            onDismissClick = { isShowErrorDialog = false },
           )
         }
       }
@@ -137,9 +137,6 @@ fun MangaDetailsContent(
 
           item {
             ActionButtonsSection(
-              startedChapterId = startedChapterId,
-              mangaId = manga.id,
-              continueChapter = continueChapter,
               onReadingClick = onReadingClick,
               isFavorite = isFavorite,
               onFavoriteClick = onFavoriteClick,
@@ -147,6 +144,9 @@ fun MangaDetailsContent(
                 .fillMaxWidth()
                 .padding(horizontal = 4.dp)
                 .padding(bottom = 16.dp),
+              startedChapterId = startedChapterId,
+              mangaId = manga.id,
+              continueChapter = continueChapter,
             )
           }
 
@@ -163,7 +163,6 @@ fun MangaDetailsContent(
           item {
             MangaChaptersSection(
               mangaChaptersUiState = mangaChaptersUiState,
-              readingHistoryList = readingHistoryList,
               latestChapter = latestChapter,
               chapterLanguage = chapterLanguage,
               chapterLanguageList = availableLanguages,
@@ -172,7 +171,8 @@ fun MangaDetailsContent(
               onFetchChapterListNextPage = onFetchChapterListNextPage,
               onRetryFetchChapterListNextPage = onRetryFetchChapterListNextPage,
               onRetry = onRetryFetchChapterListFirstPage,
-              modifier = Modifier.fillMaxWidth()
+              modifier = Modifier.fillMaxWidth(),
+              readingHistoryList = readingHistoryList,
             )
           }
         }

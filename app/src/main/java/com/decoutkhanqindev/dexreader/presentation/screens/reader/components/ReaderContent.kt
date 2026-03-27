@@ -38,12 +38,12 @@ fun ReaderContent(
     is ChapterPagesUiState.Error -> {
       if (isShowErrorDialog) {
         NotificationDialog(
-          title = stringResource(chapterPageUiState.error.messageRes),
-          onDismissClick = { isShowErrorDialog = false },
           onConfirmClick = {
             isShowErrorDialog = false
             onRetry()
           },
+          title = stringResource(chapterPageUiState.error.messageRes),
+          onDismissClick = { isShowErrorDialog = false },
         )
       }
     }

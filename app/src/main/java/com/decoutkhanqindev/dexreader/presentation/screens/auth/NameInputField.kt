@@ -22,8 +22,8 @@ import com.decoutkhanqindev.dexreader.presentation.error.UserError
 fun NameInputField(
   value: String,
   onValueChange: (String) -> Unit,
-  error: UserError? = null,
   modifier: Modifier = Modifier,
+  error: UserError? = null,
 ) {
   OutlinedTextField(
     value = value,

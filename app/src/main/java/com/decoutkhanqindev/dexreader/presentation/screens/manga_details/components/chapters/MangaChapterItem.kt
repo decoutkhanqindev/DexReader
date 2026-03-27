@@ -26,13 +26,13 @@ import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryMode
 fun MangaChapterItem(
   latestChapter: String,
   chapter: ChapterModel,
-  readingHistory: ReadingHistoryModel? = null,
   onSelectedChapter: (
     chapterId: String,
     lastReadPage: Int,
     mangaId: String,
   ) -> Unit,
   modifier: Modifier = Modifier,
+  readingHistory: ReadingHistoryModel? = null,
 ) {
   val volume = chapter.volume
   val number = chapter.number

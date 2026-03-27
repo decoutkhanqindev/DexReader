@@ -31,9 +31,9 @@ fun SuggestionsSection(
     is SuggestionsUiState.Error -> {
       if (isShowErrorDialog) {
         NotificationDialog(
+          onConfirmClick = { isShowErrorDialog = false },
           title = stringResource(suggestionsUiState.error.messageRes),
           onDismissClick = { isShowErrorDialog = false },
-          onConfirmClick = { isShowErrorDialog = false },
         )
       }
     }

@@ -85,12 +85,12 @@ fun ProfileContent(
     uiState.isUpdateUserError -> {
       if (isShowUpdateUserErrorDialog) {
         NotificationDialog(
-          title = stringResource(R.string.update_profile_failed),
-          onDismissClick = { isShowUpdateUserErrorDialog = false },
           onConfirmClick = {
             isShowUpdateUserErrorDialog = false
             onRetryUpdate()
           },
+          title = stringResource(R.string.update_profile_failed),
+          onDismissClick = { isShowUpdateUserErrorDialog = false },
         )
       }
     }
@@ -98,12 +98,12 @@ fun ProfileContent(
     uiState.isLogoutUserError -> {
       if (isShowLogoutUserErrorDialog) {
         NotificationDialog(
-          title = stringResource(R.string.logout_failed_please_try_again),
-          onDismissClick = { isShowLogoutUserErrorDialog = false },
           onConfirmClick = {
             isShowLogoutUserErrorDialog = false
             onRetryLogout()
           },
+          title = stringResource(R.string.logout_failed_please_try_again),
+          onDismissClick = { isShowLogoutUserErrorDialog = false },
         )
       }
     }
@@ -111,11 +111,11 @@ fun ProfileContent(
     uiState.isUpdateUserSuccess -> {
       if (isShowUpdateUserSuccessDialog) {
         NotificationDialog(
+          onConfirmClick = { isShowUpdateUserSuccessDialog = false },
           icon = Icons.Default.Done,
           title = stringResource(R.string.your_profile_has_been_updated_successfully),
           isEnableDismiss = false,
           confirm = stringResource(R.string.ok),
-          onConfirmClick = { isShowUpdateUserSuccessDialog = false },
         )
       }
     }
@@ -123,14 +123,14 @@ fun ProfileContent(
     uiState.isLogoutUserSuccess -> {
       if (isShowLogoutUserSuccessDialog) {
         NotificationDialog(
-          icon = Icons.Default.Done,
-          title = stringResource(R.string.logout_successful),
-          isEnableDismiss = false,
-          confirm = stringResource(R.string.ok),
           onConfirmClick = {
             isShowLogoutUserSuccessDialog = false
             onLogoutSuccess()
           },
+          icon = Icons.Default.Done,
+          title = stringResource(R.string.logout_successful),
+          isEnableDismiss = false,
+          confirm = stringResource(R.string.ok),
         )
       }
     }

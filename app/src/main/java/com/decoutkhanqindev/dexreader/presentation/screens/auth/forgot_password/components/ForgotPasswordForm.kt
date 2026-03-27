@@ -67,8 +67,8 @@ fun ForgotPasswordForm(
       EmailInputField(
         value = uiState.email,
         onValueChange = { onEmailChange(it) },
+        modifier = Modifier.fillMaxWidth(),
         error = uiState.emailError,
-        modifier = Modifier.fillMaxWidth()
       )
 
       SubmitButton(
