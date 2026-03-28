@@ -9,10 +9,10 @@ import com.decoutkhanqindev.dexreader.presentation.screens.auth.forgot_password.
 
 @Composable
 fun ForgotPasswordScreen(
+  viewModel: ForgotPasswordViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
   onNavigateBack: () -> Unit,
   onNavigateToLoginScreen: () -> Unit,
-  viewModel: ForgotPasswordViewModel = hiltViewModel(),
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
