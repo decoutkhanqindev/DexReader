@@ -56,7 +56,8 @@
       "Bash(wc:*)",
       "Bash(./gradlew clean:*)",
       "Bash(./gradlew assembleDebug --quiet)",
-      "Bash(2)"
+      "Bash(2)",
+      "Bash(gh pr:*)"
     ]
   },
   "spinnerTipsEnabled": true

@@ -88,3 +88,58 @@ LoginScreen, RegisterScreen, ForgotPasswordScreen all have `viewModel: VM = hilt
 User explicitly requested call sites reordered to match definition order.
 This applies to ALL composables used in auth/ — including shared ones (NotificationDialog, SubmitButton, ActionButton, Text, Icon).
 **Pending:** NotificationDialog/SubmitButton/ActionButton definitions still have violations; their call sites in auth/ also need updating.
+
+---
+
+## 2026-03-28
+
+### `viewModel` param position — REVERSAL of prior session 5 decision
+Session 5 recorded: "keep `viewModel` last — standard Hilt/Compose DI convention."
+**Reversed:** `viewModel: VM = hiltViewModel()` is an optional param (has a default value).
+Per convention, optional params belong in group 2 (before `modifier`), not last.
+**Decision:** Move `viewModel` to FIRST position (before `modifier`) in all 3 Screen composables.
+Applied to: `LoginScreen`, `RegisterScreen`, `ForgotPasswordScreen`.
+**Why it's safe:** NavGraph call sites use named parameters — reordering doesn't break callers.
+**Rejected:** "Keep last as DI convention" — the convention rule is stricter than the DI idiom here.
+
+### Material composable call-site audit — `OutlinedTextField` modifier position
+Audited all 23 Material composable call sites (Text, Icon, Spacer, IconButton, OutlinedTextField) in auth/.
+20/23 were already correct. Only violation: `modifier` last in 3 `OutlinedTextField` calls.
+**Decision:** Move `modifier` to 3rd position (after `value`, `onValueChange`) in all 3 input field files.
+**Why:** Canonical `OutlinedTextField` signature order; naming arg position is enforced by convention not compiler.
+All Text/Icon/Spacer/IconButton calls were already in correct canonical order — no changes needed there.
+
+### One-time event refactor dropped (user decision)
+`AuthEvent` / `Channel<AuthEvent>` pattern for auth navigation was previously planned.
+**Decision:** Dropped entirely by user request. Do not resume this work.
+Remaining effort will focus exclusively on composable parameter reordering.
+
+---
+
+## 2026-03-28 (session 2)
+
+### Trailing lambda rule — clarified (supersedes earlier understanding)
+Four distinct cases:
+1. `content: @Composable () -> Unit` → always trailing `{ }`
+2. `<= 1 lambda total` → trailing `{ }`
+3. `> 1 lambda, same type` (e.g. all `() -> Unit`) → all named inside parens
+4. `action: () -> Unit` + `content: @Composable () -> Unit` → `action = { }) { content }` (action named, content trailing)
+**Consequence:** `Button(onClick = ...) { content }`, `IconButton(onClick = ...) { Icon(...) }`, `FloatingActionButton(onClick = ...) { content }` are all CORRECT. No change needed.
+
+### Text arg ordering — `style` always last
+Canonical `Text` signature has `style: TextStyle` as the last (17th) parameter.
+**Decision:** In all Text call sites, `style` must be the final named arg.
+Also: `fontStyle(5)` before `fontWeight(6)`; `overflow(12)` before `maxLines(14)`.
+Applied to 14 files in `common/` via commit `b048a7e`.
+
+### Material composable canonical arg order (established)
+- `Button/TextButton/IconButton/FAB`: `onClick, modifier, enabled/colors, shape/containerColor, ...`
+- `CenterAlignedTopAppBar`: `title, modifier, navigationIcon, actions, ..., colors`
+- `AlertDialog`: `onDismissRequest, confirmButton, modifier, dismissButton, icon, title, text, shape`
+- `NavigationDrawerItem`: `label, selected, onClick, modifier, icon, badge, shape`
+- `Row`: `modifier, horizontalArrangement, verticalAlignment`
+- `LazyVerticalGrid`: `columns` (required) first, then `modifier, state, ...`
+
+### Explore agents are unreliable for code audit
+Agents hallucinated "OK" for files that actually had violations (e.g. said ActionButton used `content = {}` named, but file had trailing lambda).
+**Decision:** Always verify with direct `Read` tool reads for files that will be edited. Grep is reliable for pattern searches.

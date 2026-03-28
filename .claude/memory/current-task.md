@@ -1,44 +1,25 @@
-# Current Task: Reorder Call Sites of Default Composables in Auth Screens
+# Current Task
 
-## Status
-In progress — definitions fixed, auth↔auth call sites fixed, now fixing shared composable call sites.
+## Status: Session ended — common/ refactor complete
 
-## What
-Reorder argument order in call sites of `NotificationDialog`, `SubmitButton`, `ActionButton`,
-`Text`, `Icon` within the auth/ directory to match the convention:
-  required params → optional params → modifier → required lambdas → optional lambdas → content
+### Completed this session
+- Audited all 31 composable definitions in `presentation/screens/common/` — all already correct
+- Audited all Material/Compose call sites in `common/` for arg ordering + Text style violations
+- Fixed 14 files in a single commit (`b048a7e`) covering:
+  - Button/FAB: onClick, modifier, enabled, shape, colors
+  - AlertDialog: onDismissRequest, confirmButton, modifier, dismissButton, title, text, shape
+  - CenterAlignedTopAppBar: title, modifier, navigationIcon, actions, colors
+  - NavigationDrawerItem: label, selected, onClick, modifier, icon, shape
+  - LazyVerticalGrid: columns first
+  - Row: horizontalArrangement before verticalAlignment
+  - Text: style always last (moved in all files)
 
-## Files being edited
-- `presentation/screens/common/dialog/NotificationDialog.kt` — definition needs fixing
-- `presentation/screens/common/buttons/SubmitButton.kt` — definition needs fixing
-- `presentation/screens/common/buttons/ActionButton.kt` — definition needs fixing
-- `login/components/LoginContent.kt` — NotificationDialog call sites
-- `login/components/LoginForm.kt` — SubmitButton, Text call sites
-- `register/components/RegisterContent.kt` — NotificationDialog call sites
-- `register/components/RegisterForm.kt` — SubmitButton, ActionButton, Text call sites
-- `forgot_password/components/ForgotPasswordContent.kt` — NotificationDialog call sites
-- `forgot_password/components/ForgotPasswordForm.kt` — SubmitButton, ActionButton, Text call sites
-- `AuthHeader.kt` — Icon, Text call sites
+### Next session focus
+Continue refactor to the remaining feature screens in `presentation/screens/`:
+- `home/`, `categories/`, `manga_details/`, `reader/`, `profile/`, `settings/`, `search/`
+- Same rules: definition param order + call-site arg order (including Text style last)
 
-## Violations remaining (definitions)
-
-**NotificationDialog** — current:
-`onConfirmClick` (required lambda, no default) is FIRST, before modifier. Optional params
-(`icon`, `title`, `dismiss`, `isEnableDismiss`, `confirm`) are AFTER modifier.
-Target:
-```
-icon, title, dismiss, confirm, isEnableDismiss, modifier, onConfirmClick, onDismissClick
-```
-
-**SubmitButton** — current: `onClick` before modifier, `isEnabled` after modifier.
-Target: `title, isEnabled, modifier, onClick`
-
-**ActionButton** — current: `onClick` and `content` before modifier, `isEnabled` after modifier.
-Target: `isEnabled, modifier, onClick, content`
-
-## Text/Icon pattern to fix
-`Text(text=..., style=..., color=..., fontWeight=..., modifier=...)` — modifier should be 2nd
-`Icon(painter/imageVector=..., contentDescription=..., tint=..., modifier=...)` — correct, tint optional before modifier
-
-## Last action
-Read all 7 auth files to confirm current state. Ready to start editing.
+### Note
+- Agents don't commit/push — coordinator must commit directly
+- Linter hooks auto-apply worktree changes to main tree (check before editing)
+- One-time event refactor (`AuthEvent`) dropped — do NOT resume
