@@ -48,6 +48,7 @@ fun EmailInputField(
   OutlinedTextField(
     value = value,
     onValueChange = onValueChange,
+    modifier = modifier,
     leadingIcon = {
       Icon(
         imageVector = Icons.Default.Email,
@@ -75,6 +76,5 @@ fun EmailInputField(
     textStyle = MaterialTheme.typography.bodyLarge,
     keyboardOptions = EmailKeyboardOptions,
     colors = colors,
-    modifier = modifier,
   )
 }
