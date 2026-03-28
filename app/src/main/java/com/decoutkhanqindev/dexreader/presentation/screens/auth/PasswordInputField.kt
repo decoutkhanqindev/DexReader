@@ -61,6 +61,7 @@ fun PasswordInputField(
   OutlinedTextField(
     value = value,
     onValueChange = onValueChange,
+    modifier = modifier,
     leadingIcon = {
       Icon(
         imageVector = Icons.Default.Lock,
@@ -109,6 +110,5 @@ fun PasswordInputField(
       else PasswordTransformation,
     keyboardOptions = PasswordKeyboardOptions,
     colors = colors,
-    modifier = modifier,
   )
 }
