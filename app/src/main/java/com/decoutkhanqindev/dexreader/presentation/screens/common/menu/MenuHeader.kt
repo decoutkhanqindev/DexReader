@@ -52,18 +52,18 @@ fun MenuHeader(
       ) {
         Text(
           text = currentUser?.name ?: "",
-          style = MaterialTheme.typography.titleLarge,
-          fontWeight = FontWeight.ExtraBold,
           modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 4.dp)
+            .padding(bottom = 4.dp),
+          style = MaterialTheme.typography.titleLarge,
+          fontWeight = FontWeight.ExtraBold,
         )
         Text(
           text = currentUser?.email?.substringBefore("@gmail.com") ?: "",
+          modifier = Modifier.fillMaxWidth(),
           style = MaterialTheme.typography.bodyLarge,
           fontWeight = FontWeight.Light,
           fontStyle = FontStyle.Italic,
-          modifier = Modifier.fillMaxWidth()
         )
       }
     }
@@ -71,7 +71,6 @@ fun MenuHeader(
     SubmitButton(
       title = stringResource(R.string.sign_in),
       modifier = modifier.wrapContentSize(),
-      onClick = onSignInClick
-    )
+    ) { onSignInClick() }
   }
 }

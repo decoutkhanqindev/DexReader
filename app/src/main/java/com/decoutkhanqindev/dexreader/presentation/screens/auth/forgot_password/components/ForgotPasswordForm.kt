@@ -73,11 +73,10 @@ fun ForgotPasswordForm(
 
       SubmitButton(
         title = stringResource(R.string.reset_password),
-        onClick = onSubmitClick,
         modifier = Modifier
           .fillMaxWidth()
-          .padding(bottom = 8.dp)
-      )
+          .padding(bottom = 8.dp),
+      ) { onSubmitClick() }
 
       ActionButton(
         modifier = Modifier.fillMaxWidth(),

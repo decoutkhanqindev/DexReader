@@ -34,10 +34,10 @@ fun HomeScreen(
     onNavigateToSearchScreen = onNavigateToSearchScreen
   ) {
     HomeContent(
-        uiState = uiState,
-        onSelectedManga = onNavigateToMangaDetailScreen,
-        onRetry = viewModel::retry,
-        modifier = Modifier.fillMaxSize(),
-      )
+      uiState = uiState,
+      onSelectedManga = onNavigateToMangaDetailScreen,
+      onRetry = viewModel::retry,
+      modifier = Modifier.fillMaxSize(),
+    )
   }
 }

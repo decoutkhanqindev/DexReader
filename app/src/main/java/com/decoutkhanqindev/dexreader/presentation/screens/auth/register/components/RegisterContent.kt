@@ -60,19 +60,19 @@ fun RegisterContent(
 
       uiState.isError -> {
         NotificationDialog(
-          onConfirmClick = onRetry,
           title = stringResource(R.string.sign_up_failed_please_try_again),
+          onConfirmClick = onRetry,
           onDismissClick = onDismissError,
         )
       }
 
       uiState.isSuccess -> {
         NotificationDialog(
-          onConfirmClick = onRegisterSuccess,
           icon = Icons.Default.Done,
           title = stringResource(R.string.sign_up_successful),
-          isEnableDismiss = false,
           confirm = stringResource(R.string.ok),
+          isEnableDismiss = false,
+          onConfirmClick = onRegisterSuccess,
         )
       }
     }

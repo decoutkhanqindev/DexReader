@@ -25,12 +25,12 @@ fun AllItemLoadedMessage(
     HorizontalDivider(modifier = Modifier.weight(0.8f))
     Text(
       text = title,
+      modifier = Modifier
+        .weight(1.4f)
+        .fillMaxWidth(),
       style = MaterialTheme.typography.titleMedium,
       fontStyle = FontStyle.Italic,
       textAlign = TextAlign.Center,
-      modifier = Modifier
-        .weight(1.4f)
-        .fillMaxWidth()
     )
     HorizontalDivider(modifier = Modifier.weight(0.8f))
   }

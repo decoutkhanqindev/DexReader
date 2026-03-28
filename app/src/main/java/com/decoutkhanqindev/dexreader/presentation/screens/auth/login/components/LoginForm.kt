@@ -101,11 +101,10 @@ fun LoginForm(
 
       SubmitButton(
         title = stringResource(R.string.sign_in),
-        onClick = onSubmitClick,
         modifier = Modifier
           .fillMaxWidth()
-          .padding(bottom = 8.dp)
-      )
+          .padding(bottom = 8.dp),
+      ) { onSubmitClick() }
 
       Row(
         modifier = Modifier.fillMaxWidth(),

@@ -54,19 +54,19 @@ fun LoginContent(
 
       uiState.isError -> {
         NotificationDialog(
-          onConfirmClick = onRetry,
           title = stringResource(R.string.sign_in_failed_please_try_again),
+          onConfirmClick = onRetry,
           onDismissClick = onDismissError,
         )
       }
 
       uiState.isSuccess -> {
         NotificationDialog(
-          onConfirmClick = onLoginSuccess,
           icon = Icons.Default.Done,
           title = stringResource(R.string.sign_in_successful),
-          isEnableDismiss = false,
           confirm = stringResource(R.string.ok),
+          isEnableDismiss = false,
+          onConfirmClick = onLoginSuccess,
         )
       }
     }

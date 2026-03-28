@@ -48,19 +48,19 @@ fun ForgotPasswordContent(
 
       uiState.isError -> {
         NotificationDialog(
-          onConfirmClick = onRetry,
           title = stringResource(R.string.submit_reset_password_failed_please_try_again),
+          onConfirmClick = onRetry,
           onDismissClick = onDismissError,
         )
       }
 
       uiState.isSuccess -> {
         NotificationDialog(
-          onConfirmClick = onSubmitSuccess,
           icon = Icons.Default.Done,
           title = stringResource(R.string.submit_reset_password_successful),
-          isEnableDismiss = false,
           confirm = stringResource(R.string.ok),
+          isEnableDismiss = false,
+          onConfirmClick = onSubmitSuccess,
         )
       }
     }

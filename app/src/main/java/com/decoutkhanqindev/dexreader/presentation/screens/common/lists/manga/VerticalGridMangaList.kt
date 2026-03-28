@@ -64,8 +64,7 @@ fun VerticalGridMangaList(
             .padding(4.dp)
             .fillMaxWidth()
             .height(250.dp),
-          onClick = onSelectedManga
-        )
+        ) { onSelectedManga(it) }
       }
       item(span = { GridItemSpan(maxLineSpan) }) {
         Box(
@@ -84,14 +83,11 @@ fun VerticalGridMangaList(
         .align(Alignment.BottomEnd)
         .padding(16.dp)
     ) {
-      MoveToTopButton(
-        modifier = Modifier.size(56.dp),
-        onClick = {
-          coroutineScope.launch {
-            lazyGridState.animateScrollToItem(0)
-          }
+      MoveToTopButton(modifier = Modifier.size(56.dp)) {
+        coroutineScope.launch {
+          lazyGridState.animateScrollToItem(0)
         }
-      )
+      }
     }
   }
 }

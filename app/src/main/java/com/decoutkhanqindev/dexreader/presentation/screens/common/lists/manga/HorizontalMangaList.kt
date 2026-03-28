@@ -38,8 +38,7 @@ fun HorizontalMangaList(
             .padding(4.dp)
             .width(194.dp)
             .height(250.dp),
-          onClick = onItemClick
-        )
+        ) { onItemClick(it) }
       }
     }
   }

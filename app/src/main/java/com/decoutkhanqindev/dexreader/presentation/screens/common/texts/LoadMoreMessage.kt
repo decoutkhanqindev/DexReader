@@ -28,12 +28,12 @@ fun LoadMoreMessage(
     HorizontalDivider(modifier = Modifier.weight(1f))
     Text(
       text = stringResource(R.string.load_more),
+      modifier = Modifier
+        .weight(1f)
+        .fillMaxWidth(),
       style = MaterialTheme.typography.titleMedium,
       fontStyle = FontStyle.Italic,
       textAlign = TextAlign.Center,
-      modifier = Modifier
-        .weight(1f)
-        .fillMaxWidth()
     )
     HorizontalDivider(modifier = Modifier.weight(1f))
   }

@@ -29,30 +29,30 @@ fun MangaInfo(
   ) {
     Text(
       text = manga.title,
+      modifier = Modifier.padding(bottom = 4.dp),
       fontWeight = FontWeight.ExtraBold,
       style = MaterialTheme.typography.titleMedium,
       textAlign = TextAlign.Center,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
-      modifier = Modifier.padding(bottom = 4.dp)
     )
     Text(
       text = stringResource(R.string.by_author, manga.author),
+      modifier = Modifier.padding(bottom = 4.dp),
       fontWeight = FontWeight.Bold,
       fontStyle = FontStyle.Italic,
       style = MaterialTheme.typography.bodyLarge,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
-      modifier = Modifier.padding(bottom = 4.dp)
     )
     Text(
       text = stringResource(manga.status.nameRes),
+      modifier = Modifier.padding(bottom = 4.dp),
       fontWeight = FontWeight.Bold,
       fontStyle = FontStyle.Italic,
       style = MaterialTheme.typography.bodyLarge,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
-      modifier = Modifier.padding(bottom = 4.dp)
     )
   }
 }

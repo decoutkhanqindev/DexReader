@@ -105,11 +105,10 @@ fun RegisterForm(
 
       SubmitButton(
         title = stringResource(R.string.sign_up),
-        onClick = onSubmitClick,
         modifier = Modifier
           .fillMaxWidth()
-          .padding(bottom = 8.dp)
-      )
+          .padding(bottom = 8.dp),
+      ) { onSubmitClick() }
 
       ActionButton(
         modifier = Modifier.fillMaxWidth(),

@@ -23,11 +23,11 @@ fun MenuFooter(modifier: Modifier = Modifier) {
   ) {
     Text(
       text = stringResource(R.string.decoutkhanqindev),
+      modifier = Modifier.fillMaxWidth(),
       style = MaterialTheme.typography.bodySmall,
       fontWeight = FontWeight.Light,
       fontStyle = FontStyle.Italic,
       textAlign = TextAlign.Center,
-      modifier = Modifier.fillMaxWidth()
     )
   }
 }
