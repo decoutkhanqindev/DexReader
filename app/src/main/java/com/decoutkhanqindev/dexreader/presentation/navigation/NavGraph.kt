@@ -80,6 +80,7 @@ fun NavGraph(
         CategoriesScreen(
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
+          modifier = Modifier.fillMaxSize(),
           onNavigateToLoginScreen = {
             navController.navigateClearStack<NavRoute.Categories>(NavRoute.Login)
           },
@@ -92,7 +93,6 @@ fun NavGraph(
           onNavigateCategoryDetailScreen = { categoryId, categoryTitle ->
             navController.navigate(NavRoute.CategoryDetails(categoryId, categoryTitle))
           },
-          modifier = Modifier.fillMaxSize()
         )
       }
     }

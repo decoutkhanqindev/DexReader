@@ -15,22 +15,22 @@ import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 @Composable
 fun CategoryItem(
   item: CategoryModel,
-  onClick: (String, String) -> Unit,
   modifier: Modifier = Modifier,
+  onClick: (String, String) -> Unit,
 ) {
   Card(
     onClick = { onClick(item.id, item.title) },
-    shape = MaterialTheme.shapes.large,
     modifier = modifier,
+    shape = MaterialTheme.shapes.large,
   ) {
     Text(
       text = item.title,
-      style = MaterialTheme.typography.bodyLarge,
       fontWeight = FontWeight.Bold,
       textAlign = TextAlign.Center,
       modifier = Modifier
         .padding(8.dp)
-        .wrapContentWidth()
+        .wrapContentWidth(),
+      style = MaterialTheme.typography.bodyLarge,
     )
   }
 }

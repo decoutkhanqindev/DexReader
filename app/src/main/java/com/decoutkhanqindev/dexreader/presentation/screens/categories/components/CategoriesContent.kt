@@ -24,9 +24,9 @@ import kotlinx.collections.immutable.toPersistentList
 @Composable
 fun CategoriesContent(
   uiState: CategoriesUiState,
-  onCategoryClick: (String, String) -> Unit,
-  onRetry: () -> Unit,
   modifier: Modifier = Modifier,
+  onItemClick: (String, String) -> Unit,
+  onRetry: () -> Unit,
 ) {
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
 
@@ -36,11 +36,11 @@ fun CategoriesContent(
     is CategoriesUiState.Error -> {
       if (isShowErrorDialog) {
         NotificationDialog(
+          title = stringResource(uiState.error.messageRes),
           onConfirmClick = {
             isShowErrorDialog = false
             onRetry()
           },
-          title = stringResource(uiState.error.messageRes),
           onDismissClick = { isShowErrorDialog = false },
         )
       }
@@ -65,13 +65,13 @@ fun CategoriesContent(
         ) { type ->
           CategoryTypeSection(
             isExpanded = expandedType == type,
-            onExpandClick = { expandedType = if (expandedType == type) null else type },
             type = type,
-            categoryList = uiState.categoryMap[type] ?: persistentListOf(),
-            onCategoryClick = onCategoryClick,
+            items = uiState.categoryMap[type] ?: persistentListOf(),
             modifier = Modifier
               .fillMaxWidth()
-              .padding(bottom = 12.dp)
+              .padding(bottom = 12.dp),
+            onExpandClick = { expandedType = if (expandedType == type) null else type },
+            onItemClick = onItemClick,
           )
         }
       }

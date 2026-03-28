@@ -1,25 +1,33 @@
 # Current Task
 
-## Status: Session ended — common/ refactor complete
+## Status: Session ended — home/ and categories/ refactor complete
 
 ### Completed this session
-- Audited all 31 composable definitions in `presentation/screens/common/` — all already correct
-- Audited all Material/Compose call sites in `common/` for arg ordering + Text style violations
-- Fixed 14 files in a single commit (`b048a7e`) covering:
-  - Button/FAB: onClick, modifier, enabled, shape, colors
-  - AlertDialog: onDismissRequest, confirmButton, modifier, dismissButton, title, text, shape
-  - CenterAlignedTopAppBar: title, modifier, navigationIcon, actions, colors
-  - NavigationDrawerItem: label, selected, onClick, modifier, icon, shape
-  - LazyVerticalGrid: columns first
-  - Row: horizontalArrangement before verticalAlignment
-  - Text: style always last (moved in all files)
+- Full re-audit of home/ (5 files): HomeScreen, HomeContent, MangaListSection + NavGraph call site
+  - Fixed 7 violations: viewModel first, lambdas after modifier, trailing lambdas, Text style last
+- Full audit + fix of categories/ (6 files): CategoriesScreen, CategoriesContent, CategoryTypeSection, CategoryTypeHeader, CategoryList, CategoryItem + NavGraph call site
+  - Fixed: viewModel first, lambdas after modifier, trailing lambdas for single-lambda composables, Text style last, Card modifier before shape, NotificationDialog arg order
+
+### Linter behaviour observed
+After each save, the linter renames params to shorter canonical names:
+- `mangaList` → `items`, `onSelectedManga` → `onItemClick` in home/
+- `categoryList` → `items`, `onCategoryClick` → `onItemClick` in categories/
+- `onCategoryClick` → `onItemClick` in CategoriesScreen
+
+Always `Read` the file again before the next edit to get the current linter-applied state.
 
 ### Next session focus
-Continue refactor to the remaining feature screens in `presentation/screens/`:
-- `home/`, `categories/`, `manga_details/`, `reader/`, `profile/`, `settings/`, `search/`
-- Same rules: definition param order + call-site arg order (including Text style last)
+Continue composable arg ordering refactor with remaining feature screens:
+- `presentation/screens/manga_details/`
+- `presentation/screens/reader/`
+- `presentation/screens/profile/`
+- `presentation/screens/settings/`
+- `presentation/screens/search/`
 
-### Note
-- Agents don't commit/push — coordinator must commit directly
-- Linter hooks auto-apply worktree changes to main tree (check before editing)
-- One-time event refactor (`AuthEvent`) dropped — do NOT resume
+Same audit process per directory:
+1. Read all .kt files
+2. Check definitions: required non-lambda → optional non-modifier → modifier → required lambdas → optional lambdas
+3. viewModel FIRST in Screen composables
+4. Check call sites mirror definition order
+5. Trailing lambda: ≤1 lambda → trailing; >1 same-type → all named; action+content → action named, content trailing
+6. Text: style last; Card: onClick first then modifier then shape

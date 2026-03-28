@@ -30,8 +30,8 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.category.Category
 fun CategoryTypeHeader(
   type: CategoryTypeValue,
   isExpanded: Boolean,
-  onExpandClick: () -> Unit,
   modifier: Modifier = Modifier,
+  onExpandClick: () -> Unit,
 ) {
   Column(modifier = modifier) {
     Row(
@@ -42,11 +42,11 @@ fun CategoryTypeHeader(
     ) {
       Text(
         text = stringResource(type.nameRes),
-        style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.ExtraBold,
         modifier = Modifier
           .weight(0.9f)
-          .padding(vertical = 12.dp)
+          .padding(vertical = 12.dp),
+        style = MaterialTheme.typography.titleLarge,
       )
       IconButton(
         onClick = onExpandClick,

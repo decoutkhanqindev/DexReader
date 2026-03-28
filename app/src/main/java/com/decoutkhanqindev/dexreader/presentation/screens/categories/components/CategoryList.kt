@@ -13,8 +13,8 @@ import kotlinx.collections.immutable.ImmutableList
 @Composable
 fun CategoryList(
   items: ImmutableList<CategoryModel>,
-  onItemClick: (String, String) -> Unit,
   modifier: Modifier = Modifier,
+  onItemClick: (String, String) -> Unit,
 ) {
   FlowRow(
     modifier = modifier,
@@ -24,9 +24,8 @@ fun CategoryList(
     items.forEach {
       CategoryItem(
         item = it,
-        onClick = onItemClick,
-        modifier = Modifier.wrapContentWidth()
-      )
+        modifier = Modifier.wrapContentWidth(),
+      ) { id, name -> onItemClick(id, name) }
     }
   }
 }

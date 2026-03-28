@@ -13,14 +13,14 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseScree
 
 @Composable
 fun CategoriesScreen(
+  viewModel: CategoriesViewModel = hiltViewModel(),
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
+  modifier: Modifier = Modifier,
   onNavigateToLoginScreen: () -> Unit,
   onNavigateToMenuItemScreen: (MenuItemValue) -> Unit,
   onNavigateToSearchScreen: () -> Unit,
   onNavigateCategoryDetailScreen: (String, String) -> Unit,
-  viewModel: CategoriesViewModel = hiltViewModel(),
-  modifier: Modifier = Modifier,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -35,9 +35,9 @@ fun CategoriesScreen(
   ) {
     CategoriesContent(
       uiState = uiState,
-      onCategoryClick = onNavigateCategoryDetailScreen,
+      modifier = Modifier.fillMaxSize(),
+      onItemClick = onNavigateCategoryDetailScreen,
       onRetry = viewModel::retry,
-      modifier = Modifier.fillMaxSize()
     )
   }
 }

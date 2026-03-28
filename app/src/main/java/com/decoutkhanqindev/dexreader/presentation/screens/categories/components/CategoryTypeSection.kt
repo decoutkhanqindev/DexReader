@@ -17,29 +17,27 @@ import kotlinx.collections.immutable.ImmutableList
 @Composable
 fun CategoryTypeSection(
   isExpanded: Boolean,
-  onExpandClick: () -> Unit,
   type: CategoryTypeValue,
-  categoryList: ImmutableList<CategoryModel>,
-  onCategoryClick: (String, String) -> Unit,
+  items: ImmutableList<CategoryModel>,
   modifier: Modifier = Modifier,
+  onExpandClick: () -> Unit,
+  onItemClick: (String, String) -> Unit,
 ) {
   Column(modifier = modifier) {
     CategoryTypeHeader(
       type = type,
       isExpanded = isExpanded,
-      onExpandClick = onExpandClick,
-      modifier = Modifier.fillMaxWidth()
-    )
+      modifier = Modifier.fillMaxWidth(),
+    ) { onExpandClick() }
     AnimatedVisibility(
       visible = isExpanded,
       enter = expandVertically() + fadeIn(),
       exit = shrinkVertically() + fadeOut()
     ) {
       CategoryList(
-        items = categoryList,
-        onItemClick = onCategoryClick,
-        modifier = Modifier.fillMaxWidth()
-      )
+        items = items,
+        modifier = Modifier.fillMaxWidth(),
+      ) { id, name -> onItemClick(id, name) }
     }
   }
 }

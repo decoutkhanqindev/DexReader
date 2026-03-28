@@ -143,3 +143,20 @@ Applied to 14 files in `common/` via commit `b048a7e`.
 ### Explore agents are unreliable for code audit
 Agents hallucinated "OK" for files that actually had violations (e.g. said ActionButton used `content = {}` named, but file had trailing lambda).
 **Decision:** Always verify with direct `Read` tool reads for files that will be edited. Grep is reliable for pattern searches.
+
+---
+
+## 2026-03-29
+
+### Trailing lambda rule — `≤1 lambda` applies even to non-content action lambdas
+User clarified: `<= 1 lambda total → trailing {}` applies to ANY single lambda, not just `@Composable` content.
+E.g. `CategoryTypeHeader(type, isExpanded, modifier) { onExpandClick() }` ✅
+**Why:** Kotlin convention; trailing lambda is idiomatic for any single final lambda param.
+
+### Linter auto-renames params after save
+The project linter normalises param names on save: `mangaList→items`, `onSelectedManga/onCategoryClick→onItemClick`, `categoryList→items`.
+**How to apply:** Always `Read` a file fresh before editing if any previous save may have triggered the linter.
+
+### Card canonical arg order
+`Card(onClick, modifier, shape, ...)` — `modifier` before `shape`. Same pattern as Button.
+**Why:** Material3 Card signature mirrors Button ordering.
