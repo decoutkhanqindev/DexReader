@@ -30,10 +30,11 @@ fun MainTopBar(
     title = {
       Text(
         text = title,
-        style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.ExtraBold,
+        style = MaterialTheme.typography.titleLarge,
       )
     },
+    modifier = modifier,
     navigationIcon = {
       IconButton(onClick = onNavigateToMenuItemScreen) {
         Icon(
@@ -59,6 +60,5 @@ fun MainTopBar(
       titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
       actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
     ),
-    modifier = modifier
   )
 }

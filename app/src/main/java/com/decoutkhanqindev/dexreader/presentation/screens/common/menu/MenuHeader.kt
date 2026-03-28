@@ -55,15 +55,15 @@ fun MenuHeader(
           modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 4.dp),
-          style = MaterialTheme.typography.titleLarge,
           fontWeight = FontWeight.ExtraBold,
+          style = MaterialTheme.typography.titleLarge,
         )
         Text(
           text = currentUser?.email?.substringBefore("@gmail.com") ?: "",
           modifier = Modifier.fillMaxWidth(),
-          style = MaterialTheme.typography.bodyLarge,
-          fontWeight = FontWeight.Light,
           fontStyle = FontStyle.Italic,
+          fontWeight = FontWeight.Light,
+          style = MaterialTheme.typography.bodyLarge,
         )
       }
     }

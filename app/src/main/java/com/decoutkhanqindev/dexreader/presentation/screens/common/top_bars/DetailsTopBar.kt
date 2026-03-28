@@ -31,10 +31,11 @@ fun DetailsTopBar(
     title = {
       Text(
         text = title,
-        style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.ExtraBold,
+        style = MaterialTheme.typography.titleLarge,
       )
     },
+    modifier = modifier,
     navigationIcon = {
       IconButton(onClick = onNavigateBack) {
         Icon(
@@ -60,6 +61,5 @@ fun DetailsTopBar(
       titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
       actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
     ),
-    modifier = modifier
   )
 }

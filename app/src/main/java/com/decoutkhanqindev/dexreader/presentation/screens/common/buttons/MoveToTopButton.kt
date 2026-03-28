@@ -17,9 +17,9 @@ fun MoveToTopButton(
 ) {
   FloatingActionButton(
     onClick = onClick,
+    modifier = modifier,
     containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
     contentColor = MaterialTheme.colorScheme.surfaceContainer,
-    modifier = modifier
   ) {
     Icon(
       imageVector = Icons.Filled.ArrowUpward,

@@ -18,16 +18,16 @@ import com.decoutkhanqindev.dexreader.R
 fun MenuFooter(modifier: Modifier = Modifier) {
   Row(
     modifier = modifier,
+    horizontalArrangement = Arrangement.Center,
     verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.Center
   ) {
     Text(
       text = stringResource(R.string.decoutkhanqindev),
       modifier = Modifier.fillMaxWidth(),
-      style = MaterialTheme.typography.bodySmall,
-      fontWeight = FontWeight.Light,
       fontStyle = FontStyle.Italic,
+      fontWeight = FontWeight.Light,
       textAlign = TextAlign.Center,
+      style = MaterialTheme.typography.bodySmall,
     )
   }
 }

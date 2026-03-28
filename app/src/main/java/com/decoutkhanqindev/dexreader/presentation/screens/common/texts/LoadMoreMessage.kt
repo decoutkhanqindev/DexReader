@@ -31,9 +31,9 @@ fun LoadMoreMessage(
       modifier = Modifier
         .weight(1f)
         .fillMaxWidth(),
-      style = MaterialTheme.typography.titleMedium,
       fontStyle = FontStyle.Italic,
       textAlign = TextAlign.Center,
+      style = MaterialTheme.typography.titleMedium,
     )
     HorizontalDivider(modifier = Modifier.weight(1f))
   }

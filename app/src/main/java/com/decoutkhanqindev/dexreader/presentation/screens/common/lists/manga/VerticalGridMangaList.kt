@@ -48,9 +48,9 @@ fun VerticalGridMangaList(
 
   Box(modifier = modifier) {
     LazyVerticalGrid(
-      state = lazyGridState,
-      modifier = Modifier.fillMaxSize(),
       columns = GridCells.Fixed(2),
+      modifier = Modifier.fillMaxSize(),
+      state = lazyGridState,
       verticalArrangement = Arrangement.spacedBy(2.dp),
       horizontalArrangement = Arrangement.spacedBy(2.dp),
     ) {

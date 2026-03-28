@@ -28,9 +28,9 @@ fun AllItemLoadedMessage(
       modifier = Modifier
         .weight(1.4f)
         .fillMaxWidth(),
-      style = MaterialTheme.typography.titleMedium,
       fontStyle = FontStyle.Italic,
       textAlign = TextAlign.Center,
+      style = MaterialTheme.typography.titleMedium,
     )
     HorizontalDivider(modifier = Modifier.weight(0.8f))
   }

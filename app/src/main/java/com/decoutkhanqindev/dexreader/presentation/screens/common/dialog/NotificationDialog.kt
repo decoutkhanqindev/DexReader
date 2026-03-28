@@ -23,35 +23,34 @@ import com.decoutkhanqindev.dexreader.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationDialog(
-  modifier: Modifier = Modifier,
   icon: ImageVector = Icons.Default.ErrorOutline,
   title: String = stringResource(R.string.oops_something_went_wrong_please_try_again),
+  confirm: String = stringResource(R.string.ok),
   dismiss: String = stringResource(R.string.cancel),
-  confirm: String = stringResource(R.string.retry),
   isEnableDismiss: Boolean = true,
+  modifier: Modifier = Modifier,
   onConfirmClick: () -> Unit,
   onDismissClick: () -> Unit = {},
 ) {
   AlertDialog(
-    modifier = modifier,
-    shape = MaterialTheme.shapes.large,
     onDismissRequest = onDismissClick,
     confirmButton = {
       TextButton(onClick = onConfirmClick) {
         Text(
           text = confirm,
-          style = MaterialTheme.typography.titleMedium,
           fontWeight = FontWeight.Bold,
+          style = MaterialTheme.typography.titleMedium,
         )
       }
     },
+    modifier = modifier,
     dismissButton = {
       if (isEnableDismiss) {
         TextButton(onClick = onDismissClick) {
           Text(
             text = dismiss,
-            style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.titleMedium,
           )
         }
       }
@@ -68,10 +67,11 @@ fun NotificationDialog(
     text = {
       Text(
         text = title,
-        style = MaterialTheme.typography.titleMedium,
+        modifier = Modifier.fillMaxWidth(),
         fontWeight = FontWeight.Bold,
-        modifier = Modifier.fillMaxWidth()
+        style = MaterialTheme.typography.titleMedium,
       )
-    }
+    },
+    shape = MaterialTheme.shapes.large,
   )
 }

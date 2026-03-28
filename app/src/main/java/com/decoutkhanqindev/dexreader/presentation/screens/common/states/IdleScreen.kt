@@ -33,9 +33,9 @@ fun IdleScreen(
     )
     Text(
       text = message,
-      style = MaterialTheme.typography.titleMedium,
       fontWeight = FontWeight.Light,
       textAlign = TextAlign.Center,
+      style = MaterialTheme.typography.titleMedium,
     )
   }
 }

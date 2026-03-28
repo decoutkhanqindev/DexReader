@@ -23,16 +23,17 @@ fun MenuItemRow(
   val title = stringResource(item.nameRes)
 
   NavigationDrawerItem(
-    selected = isSelected,
-    onClick = { onClick(item) },
     label = {
       Text(
         text = title,
-        style = MaterialTheme.typography.bodyLarge,
         fontWeight = FontWeight.Bold,
         textAlign = TextAlign.Center,
+        style = MaterialTheme.typography.bodyLarge,
       )
     },
+    selected = isSelected,
+    onClick = { onClick(item) },
+    modifier = modifier,
     icon = {
       Icon(
         imageVector = item.icon,
@@ -41,6 +42,5 @@ fun MenuItemRow(
       )
     },
     shape = RoundedCornerShape(0.dp),
-    modifier = modifier,
   )
 }

@@ -13,21 +13,21 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SubmitButton(
   title: String,
-  modifier: Modifier = Modifier,
   isEnabled: Boolean = true,
+  modifier: Modifier = Modifier,
   onClick: () -> Unit,
 ) {
   Button(
+    onClick = onClick,
+    modifier = modifier.height(48.dp),
     enabled = isEnabled,
     shape = MaterialTheme.shapes.medium,
-    onClick = onClick,
-    modifier = modifier.height(48.dp)
   ) {
     Text(
       text = title,
-      style = MaterialTheme.typography.titleMedium,
       fontWeight = FontWeight.ExtraBold,
-      textAlign = TextAlign.Center
+      textAlign = TextAlign.Center,
+      style = MaterialTheme.typography.titleMedium,
     )
   }
 }
