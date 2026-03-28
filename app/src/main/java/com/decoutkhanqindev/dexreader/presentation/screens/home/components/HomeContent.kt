@@ -17,9 +17,9 @@ import com.decoutkhanqindev.dexreader.presentation.screens.home.HomeUiState
 @Composable
 fun HomeContent(
   uiState: HomeUiState,
-  onSelectedManga: (String) -> Unit,
+  modifier: Modifier = Modifier,
+  onItemClick: (String) -> Unit,
   onRetry: () -> Unit,
-  modifier: Modifier,
 ) {
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
 
@@ -29,11 +29,11 @@ fun HomeContent(
     is HomeUiState.Error -> {
       if (isShowErrorDialog) {
         NotificationDialog(
+          title = stringResource(uiState.error.messageRes),
           onConfirmClick = {
             isShowErrorDialog = false
             onRetry()
           },
-          title = stringResource(uiState.error.messageRes),
           onDismissClick = { isShowErrorDialog = false },
         )
       }
@@ -44,37 +44,33 @@ fun HomeContent(
         item {
           MangaListSection(
             title = stringResource(R.string.latest_update),
-            mangaList = uiState.latestUpdatesMangaList,
-            onSelectedManga = { onSelectedManga(it.id) },
-            modifier = Modifier.fillMaxWidth()
-          )
+            items = uiState.latestUpdatesMangaList,
+            modifier = Modifier.fillMaxWidth(),
+          ) { onItemClick(it.id) }
         }
 
         item {
           MangaListSection(
             title = stringResource(R.string.trending),
-            mangaList = uiState.trendingMangaList,
-            onSelectedManga = { onSelectedManga(it.id) },
-            modifier = Modifier.fillMaxWidth()
-          )
+            items = uiState.trendingMangaList,
+            modifier = Modifier.fillMaxWidth(),
+          ) { onItemClick(it.id) }
         }
 
         item {
           MangaListSection(
             title = stringResource(R.string.new_releases),
-            mangaList = uiState.newReleaseMangaList,
-            onSelectedManga = { onSelectedManga(it.id) },
-            modifier = Modifier.fillMaxWidth()
-          )
+            items = uiState.newReleaseMangaList,
+            modifier = Modifier.fillMaxWidth(),
+          ) { onItemClick(it.id) }
         }
 
         item {
           MangaListSection(
             title = stringResource(R.string.top_rated),
-            mangaList = uiState.topRatedMangaList,
-            onSelectedManga = { onSelectedManga(it.id) },
-            modifier = Modifier.fillMaxWidth()
-          )
+            items = uiState.topRatedMangaList,
+            modifier = Modifier.fillMaxWidth(),
+          ) { onItemClick(it.id) }
         }
       }
     }

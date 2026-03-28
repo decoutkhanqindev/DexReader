@@ -52,6 +52,7 @@ fun NavGraph(
         HomeScreen(
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
+          modifier = Modifier.fillMaxSize(),
           onNavigateToLoginScreen = {
             navController.navigateClearStack<NavRoute.Home>(NavRoute.Login)
           },
@@ -64,7 +65,6 @@ fun NavGraph(
           onNavigateToMangaDetailScreen = { mangaId ->
             navController.navigate(NavRoute.MangaDetails(mangaId))
           },
-          modifier = Modifier.fillMaxSize()
         )
       }
     }

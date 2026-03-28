@@ -13,14 +13,14 @@ import com.decoutkhanqindev.dexreader.presentation.screens.home.components.HomeC
 
 @Composable
 fun HomeScreen(
+  viewModel: HomeViewModel = hiltViewModel(),
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
+  modifier: Modifier = Modifier,
   onNavigateToLoginScreen: () -> Unit,
   onNavigateToMenuItemScreen: (MenuItemValue) -> Unit,
   onNavigateToSearchScreen: () -> Unit,
   onNavigateToMangaDetailScreen: (String) -> Unit,
-  viewModel: HomeViewModel = hiltViewModel(),
-  modifier: Modifier = Modifier,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -35,9 +35,9 @@ fun HomeScreen(
   ) {
     HomeContent(
       uiState = uiState,
-      onSelectedManga = onNavigateToMangaDetailScreen,
-      onRetry = viewModel::retry,
       modifier = Modifier.fillMaxSize(),
+      onItemClick = onNavigateToMangaDetailScreen,
+      onRetry = viewModel::retry,
     )
   }
 }

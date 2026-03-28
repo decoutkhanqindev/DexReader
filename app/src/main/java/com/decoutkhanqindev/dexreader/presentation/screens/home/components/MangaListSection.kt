@@ -18,25 +18,24 @@ import kotlinx.collections.immutable.ImmutableList
 @Composable
 fun MangaListSection(
   title: String,
-  mangaList: ImmutableList<MangaModel>,
-  onSelectedManga: (MangaModel) -> Unit,
+  items: ImmutableList<MangaModel>,
   modifier: Modifier = Modifier,
+  onItemClick: (MangaModel) -> Unit,
 ) {
   Column(modifier = modifier) {
     Text(
       text = title,
-      style = MaterialTheme.typography.titleLarge,
       fontWeight = FontWeight.ExtraBold,
       modifier = Modifier.padding(
         start = 16.dp,
         top = 8.dp,
         bottom = 4.dp
-      )
+      ),
+      style = MaterialTheme.typography.titleLarge,
     )
     HorizontalMangaList(
-      items = mangaList,
-      onItemClick = onSelectedManga,
-      modifier = Modifier.fillMaxWidth()
-    )
+      items = items,
+      modifier = Modifier.fillMaxWidth(),
+    ) { onItemClick(it) }
   }
 }
