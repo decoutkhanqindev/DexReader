@@ -48,6 +48,7 @@ fun NameInputField(
   OutlinedTextField(
     value = value,
     onValueChange = onValueChange,
+    modifier = modifier,
     leadingIcon = {
       Icon(
         imageVector = Icons.Default.Person,
@@ -75,6 +76,5 @@ fun NameInputField(
     textStyle = MaterialTheme.typography.bodyLarge,
     keyboardOptions = NameKeyboardOptions,
     colors = colors,
-    modifier = modifier,
   )
 }
