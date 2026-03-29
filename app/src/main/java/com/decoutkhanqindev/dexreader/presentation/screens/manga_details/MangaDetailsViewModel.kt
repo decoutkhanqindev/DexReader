@@ -68,7 +68,7 @@ class MangaDetailsViewModel @Inject constructor(
   private val _chapterLanguage = MutableStateFlow(MangaLanguageValue.ENGLISH)
   val chapterLanguage: StateFlow<MangaLanguageValue> = _chapterLanguage.asStateFlow()
 
-  val availableLanguages: StateFlow<ImmutableList<MangaLanguageValue>> =
+  val availableLanguageList: StateFlow<ImmutableList<MangaLanguageValue>> =
     _mangaDetailsUiState
       .map { state ->
         if (state is MangaDetailsUiState.Success) state.manga.availableLanguages

@@ -18,7 +18,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 fun MangaSummarySection(
   manga: MangaModel,
   modifier: Modifier = Modifier,
-  onSelectedCategory: (
+  onCategoryItemClick: (
     categoryId: String,
     categoryTitle: String,
   ) -> Unit,
@@ -39,8 +39,10 @@ fun MangaSummarySection(
         .padding(horizontal = 4.dp)
     )
     MangaCategoryList(
-      categoryList = manga.categories,
+      items = manga.categories,
       modifier = Modifier.fillMaxWidth(),
-    ) { categoryId, categoryTitle -> onSelectedCategory(categoryId, categoryTitle) }
+    ) { categoryId, categoryTitle ->
+      onCategoryItemClick(categoryId, categoryTitle)
+    }
   }
 }

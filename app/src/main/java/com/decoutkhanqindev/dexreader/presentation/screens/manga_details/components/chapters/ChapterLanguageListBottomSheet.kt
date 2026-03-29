@@ -26,8 +26,8 @@ import kotlinx.collections.immutable.ImmutableList
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChapterLanguageListBottomSheet(
-  items: ImmutableList<MangaLanguageValue>,
   selectedItem: MangaLanguageValue,
+  items: ImmutableList<MangaLanguageValue>,
   modifier: Modifier = Modifier,
   onItemClick: (MangaLanguageValue) -> Unit,
   onDismiss: () -> Unit,

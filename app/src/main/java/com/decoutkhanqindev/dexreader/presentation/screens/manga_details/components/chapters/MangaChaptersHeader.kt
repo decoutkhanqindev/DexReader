@@ -25,18 +25,18 @@ fun MangaChaptersHeader(
   selectedLanguage: MangaLanguageValue,
   languageList: ImmutableList<MangaLanguageValue>,
   modifier: Modifier = Modifier,
-  onSelectedLanguage: (MangaLanguageValue) -> Unit,
+  onLanguageItemClick: (MangaLanguageValue) -> Unit,
 ) {
   var isShowLanguageBottomSheet by rememberSaveable { mutableStateOf(false) }
 
   if (isShowLanguageBottomSheet) {
-    ChapterLanguageBottomSheet(
-      languageList = languageList,
-      selectedLanguage = selectedLanguage,
+    ChapterLanguageListBottomSheet(
+      selectedItem = selectedLanguage,
+      items = languageList,
       modifier = Modifier
         .fillMaxWidth()
         .statusBarsPadding(),
-      onSelectedLanguage = onSelectedLanguage,
+      onItemClick = onLanguageItemClick,
       onDismiss = { isShowLanguageBottomSheet = false },
     )
   }

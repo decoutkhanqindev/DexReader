@@ -261,10 +261,7 @@ fun NavGraph(
           onNavigateToLoginScreen = {
             navController.navigateClearStack<NavRoute.MangaDetails>(NavRoute.Login)
           },
-          onReadingClick = { chapterId, lastReadPage, mangaId ->
-            navController.navigate(NavRoute.Reader(chapterId, lastReadPage, mangaId))
-          },
-          onNavigateCategoryScreen = { categoryId, categoryTitle ->
+          onNavigateCategoryDetailsScreen = { categoryId, categoryTitle ->
             navController.navigate(NavRoute.CategoryDetails(categoryId, categoryTitle))
           },
           onNavigateToReaderScreen = { chapterId, lastReadPage, mangaId ->

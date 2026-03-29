@@ -26,12 +26,7 @@ fun MangaDetailsScreen(
   onNavigateBack: () -> Unit,
   onNavigateToSearchScreen: () -> Unit,
   onNavigateToLoginScreen: () -> Unit,
-  onReadingClick: (
-    chapterId: String,
-    lastReadPage: Int,
-    mangaId: String,
-  ) -> Unit,
-  onNavigateCategoryScreen: (
+  onNavigateCategoryDetailsScreen: (
     categoryId: String,
     categoryTitle: String,
   ) -> Unit,
@@ -44,7 +39,7 @@ fun MangaDetailsScreen(
   val mangaDetailsUiState by viewModel.mangaDetailsUiState.collectAsStateWithLifecycle()
   val mangaChaptersUiState by viewModel.mangaChaptersUiState.collectAsStateWithLifecycle()
   val chapterLanguage by viewModel.chapterLanguage.collectAsStateWithLifecycle()
-  val availableLanguages by viewModel.availableLanguages.collectAsStateWithLifecycle()
+  val availableLanguageList by viewModel.availableLanguageList.collectAsStateWithLifecycle()
   val readingHistoryList by viewModel.readingHistoryList.collectAsStateWithLifecycle()
   val startedChapterId by viewModel.startedChapterId.collectAsStateWithLifecycle()
   val continueChapter by viewModel.continueChapter.collectAsStateWithLifecycle()
@@ -79,21 +74,21 @@ fun MangaDetailsScreen(
         mangaChaptersUiState = mangaChaptersUiState,
         isFavorite = isFavorite,
         chapterLanguage = chapterLanguage,
-        availableLanguages = availableLanguages,
+        availableLanguageList = availableLanguageList,
         readingHistoryList = readingHistoryList,
         startedChapterId = startedChapterId,
         continueChapter = continueChapter,
         modifier = Modifier.fillMaxSize(),
-        onReadingClick = onReadingClick,
+        onReadingClick = onNavigateToReaderScreen,
         onFavoriteClick = {
           if (isUserLoggedIn) {
             if (isFavorite) viewModel.removeFromFavorites()
             else viewModel.addToFavorites()
           } else isShowFavoritesDialog = true
         },
-        onSelectedLanguage = { viewModel.updateChapterLanguage(it) },
-        onSelectedCategory = onNavigateCategoryScreen,
-        onSelectedChapter = onNavigateToReaderScreen,
+        onLanguageItemClick = { viewModel.updateChapterLanguage(it) },
+        onCategoryItemClick = onNavigateCategoryDetailsScreen,
+        onChapterItemClick = onNavigateToReaderScreen,
         onFetchChapterListNextPage = viewModel::fetchChapterListNextPage,
         onRetryFetchChapterListNextPage = viewModel::retryFetchChapterListNextPage,
         onRetryFetchChapterListFirstPage = viewModel::retryFetchChapterListFirstPage,

@@ -24,11 +24,11 @@ import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryMode
 
 @Composable
 fun MangaChapterItem(
-  latestChapter: String,
+  lastChapter: String,
   chapter: ChapterModel,
   readingHistory: ReadingHistoryModel? = null,
   modifier: Modifier = Modifier,
-  onSelectedChapter: (
+  onChapterClick: (
     chapterId: String,
     lastReadPage: Int,
     mangaId: String,
@@ -43,7 +43,7 @@ fun MangaChapterItem(
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
     elevation = CardDefaults.cardElevation(4.dp),
     onClick = {
-      onSelectedChapter(
+      onChapterClick(
         chapter.id,
         readingHistory?.lastReadPage ?: 0,
         chapter.mangaId
@@ -68,7 +68,7 @@ fun MangaChapterItem(
             fontWeight = FontWeight.ExtraBold,
             style = MaterialTheme.typography.titleMedium,
           )
-          if (latestChapter == number) {
+          if (lastChapter == number) {
             Text(
               text = stringResource(R.string.last_chapter),
               fontWeight = FontWeight.ExtraBold,

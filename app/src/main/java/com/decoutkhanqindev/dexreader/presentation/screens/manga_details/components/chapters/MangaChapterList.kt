@@ -26,12 +26,12 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun MangaChapterList(
-  latestChapter: String,
+  lastItem: String,
   chapterList: ImmutableList<ChapterModel>,
   chapterListNextPageState: BaseNextPageState,
   readingHistoryList: ImmutableList<ReadingHistoryModel> = persistentListOf(),
   modifier: Modifier = Modifier,
-  onSelectedChapter: (
+  onChapterClick: (
     chapterId: String,
     lastReadPage: Int,
     mangaId: String,
@@ -54,14 +54,16 @@ fun MangaChapterList(
         val readingHistory = readingHistoryList.find { it.chapterId == chapter.id }
 
         MangaChapterItem(
-          latestChapter = latestChapter,
+          lastChapter = lastItem,
           chapter = chapter,
           readingHistory = readingHistory,
           modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 12.dp)
             .padding(horizontal = 4.dp),
-        ) { chapterId, lastReadPage, mangaId -> onSelectedChapter(chapterId, lastReadPage, mangaId) }
+        ) { chapterId, lastReadPage, mangaId ->
+          onChapterClick(chapterId, lastReadPage, mangaId)
+        }
       }
 
       when (chapterListNextPageState) {

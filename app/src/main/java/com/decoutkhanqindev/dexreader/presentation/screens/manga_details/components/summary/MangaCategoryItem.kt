@@ -15,25 +15,25 @@ import java.util.Locale
 
 @Composable
 fun MangaCategoryItem(
-  category: CategoryModel,
+  item: CategoryModel,
   modifier: Modifier = Modifier,
-  onSelectedCategory: (
+  onClick: (
     categoryId: String,
     categoryTitle: String,
   ) -> Unit,
 ) {
   Card(
     onClick = {
-      onSelectedCategory(
-        category.id,
-        category.title
+      onClick(
+        item.id,
+        item.title
       )
     },
     modifier = modifier,
     shape = MaterialTheme.shapes.large,
   ) {
     Text(
-      text = category.title.replaceFirstChar {
+      text = item.title.replaceFirstChar {
         if (it.isLowerCase()) it.titlecase(Locale.US)
         else it.toString()
       },

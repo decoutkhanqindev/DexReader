@@ -48,7 +48,7 @@ fun MangaDetailsContent(
   mangaChaptersUiState: BasePaginationUiState<ChapterModel>,
   isFavorite: Boolean,
   chapterLanguage: MangaLanguageValue,
-  availableLanguages: ImmutableList<MangaLanguageValue>,
+  availableLanguageList: ImmutableList<MangaLanguageValue>,
   readingHistoryList: ImmutableList<ReadingHistoryModel> = persistentListOf(),
   startedChapterId: String? = null,
   continueChapter: ReadingHistoryModel? = null,
@@ -59,12 +59,12 @@ fun MangaDetailsContent(
     mangaId: String,
   ) -> Unit,
   onFavoriteClick: () -> Unit,
-  onSelectedLanguage: (MangaLanguageValue) -> Unit,
-  onSelectedCategory: (
+  onLanguageItemClick: (MangaLanguageValue) -> Unit,
+  onCategoryItemClick: (
     categoryId: String,
     categoryTitle: String,
   ) -> Unit,
-  onSelectedChapter: (
+  onChapterItemClick: (
     chapterId: String,
     lastReadPage: Int,
     mangaId: String,
@@ -157,7 +157,7 @@ fun MangaDetailsContent(
                 .fillMaxWidth()
                 .padding(bottom = 16.dp),
             ) { categoryId, categoryTitle ->
-              onSelectedCategory(categoryId, categoryTitle)
+              onCategoryItemClick(categoryId, categoryTitle)
             }
           }
 
@@ -166,11 +166,11 @@ fun MangaDetailsContent(
               mangaChaptersUiState = mangaChaptersUiState,
               latestChapter = latestChapter,
               chapterLanguage = chapterLanguage,
-              chapterLanguageList = availableLanguages,
+              chapterLanguageList = availableLanguageList,
               readingHistoryList = readingHistoryList,
               modifier = Modifier.fillMaxWidth(),
-              onLanguageItemClick = onSelectedLanguage,
-              onChapterItemClick = onSelectedChapter,
+              onLanguageItemClick = onLanguageItemClick,
+              onChapterItemClick = onChapterItemClick,
               onFetchChapterListNextPage = onFetchChapterListNextPage,
               onRetryFetchChapterListNextPage = onRetryFetchChapterListNextPage,
               onRetry = onRetryFetchChapterListFirstPage,

@@ -27,8 +27,8 @@ fun MangaChaptersSection(
   chapterLanguageList: ImmutableList<MangaLanguageValue>,
   readingHistoryList: ImmutableList<ReadingHistoryModel> = persistentListOf(),
   modifier: Modifier = Modifier,
-  onSelectedLanguage: (MangaLanguageValue) -> Unit,
-  onSelectedChapter: (
+  onLanguageItemClick: (MangaLanguageValue) -> Unit,
+  onChapterItemClick: (
     chapterId: String,
     lastReadPage: Int,
     mangaId: String,
@@ -45,7 +45,7 @@ fun MangaChaptersSection(
         .fillMaxWidth()
         .padding(bottom = 12.dp)
         .padding(horizontal = 4.dp),
-    ) { onSelectedLanguage(it) }
+    ) { onLanguageItemClick(it) }
 
     when (mangaChaptersUiState) {
       BasePaginationUiState.FirstPageLoading -> ListLoadingIndicator(modifier = Modifier.fillMaxSize())
@@ -63,12 +63,12 @@ fun MangaChaptersSection(
         val chapterListNextPageState = mangaChaptersUiState.nextPageState
 
         MangaChapterList(
-          latestChapter = latestChapter,
+          lastItem = latestChapter,
           chapterList = chapterList,
           chapterListNextPageState = chapterListNextPageState,
           readingHistoryList = readingHistoryList,
           modifier = Modifier.fillMaxWidth(),
-          onSelectedChapter = onSelectedChapter,
+          onChapterClick = onChapterItemClick,
           onFetchChapterListNextPage = onFetchChapterListNextPage,
           onRetryFetchChapterListNextPage = onRetryFetchChapterListNextPage,
         )

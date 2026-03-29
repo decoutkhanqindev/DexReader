@@ -17,9 +17,9 @@ import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun MangaCategoryList(
-  categoryList: ImmutableList<CategoryModel>,
+  items: ImmutableList<CategoryModel>,
   modifier: Modifier = Modifier,
-  onSelectedCategory: (
+  onItemClick: (
     categoryId: String,
     categoryTitle: String,
   ) -> Unit,
@@ -30,13 +30,13 @@ fun MangaCategoryList(
       horizontalArrangement = Arrangement.spacedBy(2.dp),
       verticalAlignment = Alignment.CenterVertically,
     ) {
-      items(categoryList, key = { it.id }) { category ->
+      items(items, key = { it.id }) { category ->
         MangaCategoryItem(
-          category = category,
+          item = category,
           modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 4.dp),
-        ) { categoryId, categoryTitle -> onSelectedCategory(categoryId, categoryTitle) }
+        ) { categoryId, categoryTitle -> onItemClick(categoryId, categoryTitle) }
       }
     }
   }
