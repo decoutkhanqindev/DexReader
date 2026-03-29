@@ -37,7 +37,7 @@ fun MangaChaptersHeader(
         .fillMaxWidth()
         .statusBarsPadding(),
       onItemClick = onLanguageItemClick,
-      onDismiss = { isShowLanguageBottomSheet = false },
+      onDismissClick = { isShowLanguageBottomSheet = false },
     )
   }
 

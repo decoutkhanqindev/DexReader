@@ -30,13 +30,13 @@ fun ChapterLanguageListBottomSheet(
   items: ImmutableList<MangaLanguageValue>,
   modifier: Modifier = Modifier,
   onItemClick: (MangaLanguageValue) -> Unit,
-  onDismiss: () -> Unit,
+  onDismissClick: () -> Unit,
 ) {
   val sheetState = rememberModalBottomSheetState()
 
   ModalBottomSheet(
     sheetState = sheetState,
-    onDismissRequest = onDismiss,
+    onDismissRequest = onDismissClick,
     modifier = modifier
   ) {
     Text(
@@ -76,7 +76,7 @@ fun ChapterLanguageListBottomSheet(
               .padding(bottom = 8.dp)
               .clickable {
                 onItemClick(language)
-                onDismiss()
+                onDismissClick()
               },
             fontWeight = if (isSelected) FontWeight.ExtraBold else FontWeight.Light,
             style = MaterialTheme.typography.titleMedium,

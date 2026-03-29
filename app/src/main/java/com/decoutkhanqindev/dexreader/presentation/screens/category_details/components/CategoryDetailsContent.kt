@@ -98,8 +98,8 @@ fun CategoryDetailsContent(
       val nextPageState = detailsUiState.nextPageState
 
       VerticalGridMangaList(
-        mangaList = mangaList,
-        onSelectedManga = { onMangaClick(it.id) },
+        items = mangaList,
+        onItemClick = { onMangaClick(it.id) },
         loadMoreContent = {
           when (nextPageState) {
             BaseNextPageState.LOADING -> NextPageLoadingIndicator(

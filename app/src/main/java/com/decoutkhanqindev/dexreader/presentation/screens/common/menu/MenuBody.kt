@@ -15,8 +15,8 @@ import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun MenuBody(
-  items: ImmutableList<MenuItemValue>,
   selectedItem: MenuItemValue,
+  items: ImmutableList<MenuItemValue>,
   modifier: Modifier = Modifier,
   onItemClick: (MenuItemValue) -> Unit,
 ) {

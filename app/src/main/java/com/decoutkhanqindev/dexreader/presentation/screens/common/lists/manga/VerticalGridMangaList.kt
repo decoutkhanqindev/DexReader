@@ -31,18 +31,16 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun VerticalGridMangaList(
-  mangaList: ImmutableList<MangaModel>,
+  items: ImmutableList<MangaModel>,
   modifier: Modifier = Modifier,
-  onSelectedManga: (MangaModel) -> Unit,
+  onItemClick: (MangaModel) -> Unit,
   loadMoreContent: @Composable () -> Unit,
 ) {
   val lazyGridState = rememberLazyGridState()
   val coroutineScope = rememberCoroutineScope()
-  val isMoveToTopButtonVisible by remember(mangaList, lazyGridState) {
+  val isMoveToTopButtonVisible by remember(items, lazyGridState) {
     derivedStateOf {
-      val lastVisibleIndex = lazyGridState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
-      val totalItems = lazyGridState.layoutInfo.totalItemsCount
-      lastVisibleIndex >= totalItems - 5
+      items.size > 15 && lazyGridState.firstVisibleItemIndex > 0
     }
   }
 
@@ -55,7 +53,7 @@ fun VerticalGridMangaList(
       horizontalArrangement = Arrangement.spacedBy(2.dp),
     ) {
       items(
-        items = mangaList,
+        items = items,
         key = MangaModel::id
       ) { manga ->
         MangaItem(
@@ -64,7 +62,7 @@ fun VerticalGridMangaList(
             .padding(4.dp)
             .fillMaxWidth()
             .height(250.dp),
-        ) { onSelectedManga(it) }
+        ) { onItemClick(it) }
       }
       item(span = { GridItemSpan(maxLineSpan) }) {
         Box(

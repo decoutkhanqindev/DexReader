@@ -61,8 +61,8 @@ fun ResultsSection(
         )
       } else {
         VerticalGridMangaList(
-          mangaList = mangaList,
-          onSelectedManga = { onSelectedManga(it.id) },
+          items = mangaList,
+          onItemClick = { onSelectedManga(it.id) },
           loadMoreContent = {
             when (nextPageState) {
               BaseNextPageState.LOADING -> NextPageLoadingIndicator(

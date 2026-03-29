@@ -46,8 +46,8 @@ fun MenuDrawer(
               .padding(16.dp),
           ) { onSignInClick() }
           MenuBody(
-            items = items,
             selectedItem = selectedItem,
+            items = items,
             modifier = Modifier
               .weight(2f)
               .fillMaxWidth(),
