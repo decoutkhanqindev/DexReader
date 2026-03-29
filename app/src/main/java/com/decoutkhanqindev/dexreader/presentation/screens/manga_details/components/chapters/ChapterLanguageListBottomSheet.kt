@@ -25,11 +25,11 @@ import kotlinx.collections.immutable.ImmutableList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChapterLanguageBottomSheet(
-  languageList: ImmutableList<MangaLanguageValue>,
-  selectedLanguage: MangaLanguageValue,
+fun ChapterLanguageListBottomSheet(
+  items: ImmutableList<MangaLanguageValue>,
+  selectedItem: MangaLanguageValue,
   modifier: Modifier = Modifier,
-  onSelectedLanguage: (MangaLanguageValue) -> Unit,
+  onItemClick: (MangaLanguageValue) -> Unit,
   onDismiss: () -> Unit,
 ) {
   val sheetState = rememberModalBottomSheetState()
@@ -48,7 +48,7 @@ fun ChapterLanguageBottomSheet(
       textAlign = TextAlign.Center,
       style = MaterialTheme.typography.titleLarge,
     )
-    if (languageList.isEmpty()) {
+    if (items.isEmpty()) {
       Text(
         text = stringResource(R.string.no_languages_available),
         modifier = Modifier
@@ -65,17 +65,17 @@ fun ChapterLanguageBottomSheet(
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
         items(
-          count = languageList.size,
-          key = { index -> "${languageList[index].name}_$index" }
+          count = items.size,
+          key = { index -> "${items[index].name}_$index" }
         ) { index ->
-          val language = languageList[index]
-          val isSelected = language == selectedLanguage
+          val language = items[index]
+          val isSelected = language == selectedItem
           Text(
             text = stringResource(language.value),
             modifier = Modifier
               .padding(bottom = 8.dp)
               .clickable {
-                onSelectedLanguage(language)
+                onItemClick(language)
                 onDismiss()
               },
             fontWeight = if (isSelected) FontWeight.ExtraBold else FontWeight.Light,

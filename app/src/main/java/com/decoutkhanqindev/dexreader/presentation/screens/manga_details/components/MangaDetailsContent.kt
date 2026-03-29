@@ -46,15 +46,19 @@ import kotlinx.coroutines.launch
 fun MangaDetailsContent(
   mangaDetailsUiState: MangaDetailsUiState,
   mangaChaptersUiState: BasePaginationUiState<ChapterModel>,
+  isFavorite: Boolean,
+  chapterLanguage: MangaLanguageValue,
+  availableLanguages: ImmutableList<MangaLanguageValue>,
+  readingHistoryList: ImmutableList<ReadingHistoryModel> = persistentListOf(),
+  startedChapterId: String? = null,
+  continueChapter: ReadingHistoryModel? = null,
+  modifier: Modifier = Modifier,
   onReadingClick: (
     chapterId: String,
     lastReadPage: Int,
     mangaId: String,
   ) -> Unit,
-  isFavorite: Boolean,
   onFavoriteClick: () -> Unit,
-  chapterLanguage: MangaLanguageValue,
-  availableLanguages: ImmutableList<MangaLanguageValue>,
   onSelectedLanguage: (MangaLanguageValue) -> Unit,
   onSelectedCategory: (
     categoryId: String,
@@ -69,10 +73,6 @@ fun MangaDetailsContent(
   onRetryFetchChapterListNextPage: () -> Unit,
   onRetryFetchChapterListFirstPage: () -> Unit,
   onRetry: () -> Unit,
-  modifier: Modifier = Modifier,
-  readingHistoryList: ImmutableList<ReadingHistoryModel> = persistentListOf(),
-  startedChapterId: String? = null,
-  continueChapter: ReadingHistoryModel? = null,
 ) {
   val lazyListState = rememberLazyListState()
   val coroutineScope = rememberCoroutineScope()
@@ -137,16 +137,16 @@ fun MangaDetailsContent(
 
           item {
             ActionButtonsSection(
-              onReadingClick = onReadingClick,
               isFavorite = isFavorite,
-              onFavoriteClick = onFavoriteClick,
+              startedChapterId = startedChapterId,
+              mangaId = manga.id,
+              continueChapter = continueChapter,
               modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 4.dp)
                 .padding(bottom = 16.dp),
-              startedChapterId = startedChapterId,
-              mangaId = manga.id,
-              continueChapter = continueChapter,
+              onReadingClick = onReadingClick,
+              onFavoriteClick = onFavoriteClick,
             )
           }
 
@@ -169,8 +169,8 @@ fun MangaDetailsContent(
               chapterLanguageList = availableLanguages,
               readingHistoryList = readingHistoryList,
               modifier = Modifier.fillMaxWidth(),
-              onSelectedLanguage = onSelectedLanguage,
-              onSelectedChapter = onSelectedChapter,
+              onLanguageItemClick = onSelectedLanguage,
+              onChapterItemClick = onSelectedChapter,
               onFetchChapterListNextPage = onFetchChapterListNextPage,
               onRetryFetchChapterListNextPage = onRetryFetchChapterListNextPage,
               onRetry = onRetryFetchChapterListFirstPage,
