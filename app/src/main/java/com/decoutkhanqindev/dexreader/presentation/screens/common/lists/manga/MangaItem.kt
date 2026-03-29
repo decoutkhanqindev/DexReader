@@ -12,7 +12,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -25,12 +24,9 @@ fun MangaItem(
   modifier: Modifier = Modifier,
   onClick: (MangaModel) -> Unit,
 ) {
-  // Using remember to avoid unnecessary recompositions and re-creation of the onClick lambda when manga.id doesn't change
-  val onClick = remember(item.id) { { onClick(item) } }
-
   Card(
     modifier = modifier,
-    onClick = onClick,
+    onClick = { onClick(item) },
     elevation = CardDefaults.cardElevation(8.dp),
     shape = MaterialTheme.shapes.large,
   ) {

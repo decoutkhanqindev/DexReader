@@ -32,11 +32,9 @@ fun FavoriteMangaItem(
   onSelectedManga: (String) -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  val onClick = remember(manga.id) { { onSelectedManga(manga.id) } }
-
   Card(
     modifier = modifier,
-    onClick = onClick,
+    onClick = { onSelectedManga(manga.id) },
     elevation = CardDefaults.cardElevation(8.dp),
     shape = MaterialTheme.shapes.large,
   ) {
