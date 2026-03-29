@@ -19,8 +19,10 @@ import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.compone
 
 @Composable
 fun MangaDetailsScreen(
+  viewModel: MangaDetailsViewModel = hiltViewModel(),
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
+  modifier: Modifier = Modifier,
   onNavigateBack: () -> Unit,
   onNavigateToSearchScreen: () -> Unit,
   onNavigateToLoginScreen: () -> Unit,
@@ -38,8 +40,6 @@ fun MangaDetailsScreen(
     lastReadPage: Int,
     mangaId: String,
   ) -> Unit,
-  viewModel: MangaDetailsViewModel = hiltViewModel(),
-  modifier: Modifier = Modifier,
 ) {
   val mangaDetailsUiState by viewModel.mangaDetailsUiState.collectAsStateWithLifecycle()
   val mangaChaptersUiState by viewModel.mangaChaptersUiState.collectAsStateWithLifecycle()
@@ -77,16 +77,20 @@ fun MangaDetailsScreen(
     MangaDetailsContent(
         mangaDetailsUiState = mangaDetailsUiState,
         mangaChaptersUiState = mangaChaptersUiState,
-        onReadingClick = onReadingClick,
         isFavorite = isFavorite,
+        chapterLanguage = chapterLanguage,
+        availableLanguages = availableLanguages,
+        readingHistoryList = readingHistoryList,
+        startedChapterId = startedChapterId,
+        continueChapter = continueChapter,
+        modifier = Modifier.fillMaxSize(),
+        onReadingClick = onReadingClick,
         onFavoriteClick = {
           if (isUserLoggedIn) {
             if (isFavorite) viewModel.removeFromFavorites()
             else viewModel.addToFavorites()
           } else isShowFavoritesDialog = true
         },
-        chapterLanguage = chapterLanguage,
-        availableLanguages = availableLanguages,
         onSelectedLanguage = { viewModel.updateChapterLanguage(it) },
         onSelectedCategory = onNavigateCategoryScreen,
         onSelectedChapter = onNavigateToReaderScreen,
@@ -94,10 +98,6 @@ fun MangaDetailsScreen(
         onRetryFetchChapterListNextPage = viewModel::retryFetchChapterListNextPage,
         onRetryFetchChapterListFirstPage = viewModel::retryFetchChapterListFirstPage,
         onRetry = viewModel::retry,
-        modifier = Modifier.fillMaxSize(),
-        readingHistoryList = readingHistoryList,
-        startedChapterId = startedChapterId,
-        continueChapter = continueChapter,
       )
   }
 }

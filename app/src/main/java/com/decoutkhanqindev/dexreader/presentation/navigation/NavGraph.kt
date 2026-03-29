@@ -253,6 +253,7 @@ fun NavGraph(
         MangaDetailsScreen(
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
+          modifier = Modifier.fillMaxSize(),
           onNavigateBack = navController::navigateUp,
           onNavigateToSearchScreen = {
             navController.navigate(NavRoute.Search)
@@ -269,7 +270,6 @@ fun NavGraph(
           onNavigateToReaderScreen = { chapterId, lastReadPage, mangaId ->
             navController.navigate(NavRoute.Reader(chapterId, lastReadPage, mangaId))
           },
-          modifier = Modifier.fillMaxSize()
         )
       }
     }
