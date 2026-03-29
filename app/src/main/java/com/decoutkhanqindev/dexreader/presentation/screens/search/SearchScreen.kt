@@ -67,7 +67,6 @@ fun SearchScreen(
           .padding(innerPadding)
       )
     }
-  )
 }
 
 
