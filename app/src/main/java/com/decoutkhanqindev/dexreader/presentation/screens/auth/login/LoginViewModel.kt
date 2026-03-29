@@ -96,10 +96,6 @@ class LoginViewModel @Inject constructor(
     _uiState.update { it.copy(password = value, passwordError = null) }
   }
 
-  fun dismissError() {
-    _uiState.update { it.copy(isError = false) }
-  }
-
   fun retry() {
     if (_uiState.value.isError) submit()
   }

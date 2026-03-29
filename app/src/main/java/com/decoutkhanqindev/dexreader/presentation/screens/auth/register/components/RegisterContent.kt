@@ -5,7 +5,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.stringResource
@@ -28,9 +32,10 @@ fun RegisterContent(
   onRegisterSuccess: () -> Unit,
   onNavigateBack: () -> Unit,
   onRetry: () -> Unit,
-  onDismissError: () -> Unit,
 ) {
-  val contentModifier = remember(uiState.isLoading, modifier) {
+  var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
+  var isShowSuccessDialog by rememberSaveable { mutableStateOf(true) }
+  val contentModifier = rememberSaveable(uiState.isLoading, modifier) {
     if (uiState.isLoading) modifier.blur(8.dp) else modifier
   }
 
@@ -59,21 +64,28 @@ fun RegisterContent(
       uiState.isLoading -> LoadingScreen(modifier = Modifier.fillMaxSize())
 
       uiState.isError -> {
-        NotificationDialog(
-          title = stringResource(R.string.sign_up_failed_please_try_again),
-          onConfirmClick = onRetry,
-          onDismissClick = onDismissError,
-        )
+        if (isShowErrorDialog) {
+          NotificationDialog(
+            title = stringResource(R.string.sign_up_failed_please_try_again),
+            onConfirmClick = onRetry,
+            onDismissClick = { isShowErrorDialog = false },
+          )
+        }
       }
 
       uiState.isSuccess -> {
-        NotificationDialog(
-          icon = Icons.Default.Done,
-          title = stringResource(R.string.sign_up_successful),
-          confirm = stringResource(R.string.ok),
-          isEnableDismiss = false,
-          onConfirmClick = onRegisterSuccess,
-        )
+        if (isShowSuccessDialog) {
+          NotificationDialog(
+            icon = Icons.Default.Done,
+            title = stringResource(R.string.sign_up_successful),
+            confirm = stringResource(R.string.ok),
+            isEnableDismiss = false,
+            onConfirmClick = {
+              isShowSuccessDialog = false
+              onRegisterSuccess()
+            },
+          )
+        }
       }
     }
   }
