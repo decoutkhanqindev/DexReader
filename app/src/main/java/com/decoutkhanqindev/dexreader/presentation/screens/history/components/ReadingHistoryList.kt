@@ -47,8 +47,6 @@ fun ReadingHistoryList(
 ) {
   val lazyListState = rememberLazyListState()
   val coroutineScope = rememberCoroutineScope()
-  val isMoveToTopButtonVisible = readingHistoryList.size > 7 &&
-      lazyListState.firstVisibleItemIndex > 0
 
   Box(modifier = modifier) {
     LazyColumn(
@@ -107,22 +105,16 @@ fun ReadingHistoryList(
       }
     }
 
-    AnimatedVisibility(
-      visible = isMoveToTopButtonVisible,
-      enter = scaleIn(),
-      exit = scaleOut(),
+    MoveToTopButton(
+      itemsSize = readingHistoryList.size,
+      firstVisibleItemIndex = lazyListState.firstVisibleItemIndex,
       modifier = Modifier
         .align(Alignment.BottomEnd)
         .padding(16.dp)
     ) {
-      MoveToTopButton(
-        onClick = {
-          coroutineScope.launch {
-            lazyListState.animateScrollToItem(0)
-          }
-        },
-        modifier = Modifier.size(56.dp)
-      )
+      coroutineScope.launch {
+        lazyListState.animateScrollToItem(0)
+      }
     }
   }
 }

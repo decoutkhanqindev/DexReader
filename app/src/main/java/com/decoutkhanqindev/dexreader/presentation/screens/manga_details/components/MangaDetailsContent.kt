@@ -76,13 +76,6 @@ fun MangaDetailsContent(
 ) {
   val lazyListState = rememberLazyListState()
   val coroutineScope = rememberCoroutineScope()
-  val isMoveToTopButtonVisible by remember(mangaChaptersUiState, lazyListState) {
-    derivedStateOf {
-      (mangaChaptersUiState is BasePaginationUiState.Content)
-          && mangaChaptersUiState.currentList.size > 15
-          && lazyListState.firstVisibleItemScrollOffset > 0
-    }
-  }
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
 
   Box(modifier = modifier) {
@@ -180,22 +173,16 @@ fun MangaDetailsContent(
       }
     }
 
-    AnimatedVisibility(
-      visible = isMoveToTopButtonVisible,
-      enter = scaleIn(),
-      exit = scaleOut(),
+    MoveToTopButton(
+      itemsSize = (mangaChaptersUiState as BasePaginationUiState.Content<ChapterModel>).currentList.size,
+      firstVisibleItemIndex = lazyListState.firstVisibleItemIndex,
       modifier = Modifier
         .align(Alignment.BottomEnd)
         .padding(16.dp)
     ) {
-      MoveToTopButton(
-        onClick = {
-          coroutineScope.launch {
-            lazyListState.animateScrollToItem(0)
-          }
-        },
-        modifier = Modifier.size(56.dp)
-      )
+      coroutineScope.launch {
+        lazyListState.animateScrollToItem(0)
+      }
     }
   }
 }

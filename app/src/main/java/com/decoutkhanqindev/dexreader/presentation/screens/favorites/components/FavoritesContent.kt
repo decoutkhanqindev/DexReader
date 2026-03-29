@@ -80,11 +80,6 @@ fun FavoritesContent(
       } else {
         val lazyGridState = rememberLazyGridState()
         val coroutineScope = rememberCoroutineScope()
-        val isMoveToTopButtonVisible by remember(favoriteMangaList, lazyGridState) {
-          derivedStateOf {
-            favoriteMangaList.size > 15 && lazyGridState.firstVisibleItemIndex > 0
-          }
-        }
 
         Box(modifier = modifier) {
           LazyVerticalGrid(
@@ -148,22 +143,16 @@ fun FavoritesContent(
             }
           }
 
-          AnimatedVisibility(
-            visible = isMoveToTopButtonVisible,
-            enter = scaleIn(),
-            exit = scaleOut(),
+          MoveToTopButton(
+            itemsSize = favoriteMangaList.size,
+            firstVisibleItemIndex = lazyGridState.firstVisibleItemIndex,
             modifier = Modifier
               .align(Alignment.BottomEnd)
               .padding(16.dp)
           ) {
-            MoveToTopButton(
-              onClick = {
-                coroutineScope.launch {
-                  lazyGridState.animateScrollToItem(0)
-                }
-              },
-              modifier = Modifier.size(56.dp)
-            )
+            coroutineScope.launch {
+              lazyGridState.animateScrollToItem(0)
+            }
           }
         }
       }

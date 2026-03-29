@@ -275,6 +275,6 @@ constructor(
   companion object {
     private const val TAG = "HistoryViewModel"
     private const val FIRST_PAGE = 1
-    private const val READING_HISTORY_LIST_PER_PAGE_SIZE = 10
+    private const val READING_HISTORY_LIST_PER_PAGE_SIZE = 20
   }
 }

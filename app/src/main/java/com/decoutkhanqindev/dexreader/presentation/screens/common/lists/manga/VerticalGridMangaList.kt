@@ -38,11 +38,6 @@ fun VerticalGridMangaList(
 ) {
   val lazyGridState = rememberLazyGridState()
   val coroutineScope = rememberCoroutineScope()
-  val isMoveToTopButtonVisible by remember(items, lazyGridState) {
-    derivedStateOf {
-      items.size > 15 && lazyGridState.firstVisibleItemIndex > 0
-    }
-  }
 
   Box(modifier = modifier) {
     LazyVerticalGrid(
@@ -73,18 +68,15 @@ fun VerticalGridMangaList(
       }
     }
 
-    AnimatedVisibility(
-      visible = isMoveToTopButtonVisible,
-      enter = scaleIn(),
-      exit = scaleOut(),
+    MoveToTopButton(
+      itemsSize = items.size,
+      firstVisibleItemIndex = lazyGridState.firstVisibleItemIndex,
       modifier = Modifier
         .align(Alignment.BottomEnd)
         .padding(16.dp)
     ) {
-      MoveToTopButton(modifier = Modifier.size(56.dp)) {
-        coroutineScope.launch {
-          lazyGridState.animateScrollToItem(0)
-        }
+      coroutineScope.launch {
+        lazyGridState.animateScrollToItem(0)
       }
     }
   }
