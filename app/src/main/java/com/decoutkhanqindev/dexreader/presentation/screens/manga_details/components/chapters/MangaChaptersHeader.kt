@@ -24,8 +24,8 @@ import kotlinx.collections.immutable.ImmutableList
 fun MangaChaptersHeader(
   selectedLanguage: MangaLanguageValue,
   languageList: ImmutableList<MangaLanguageValue>,
-  onSelectedLanguage: (MangaLanguageValue) -> Unit,
   modifier: Modifier = Modifier,
+  onSelectedLanguage: (MangaLanguageValue) -> Unit,
 ) {
   var isShowLanguageBottomSheet by rememberSaveable { mutableStateOf(false) }
 
@@ -33,11 +33,11 @@ fun MangaChaptersHeader(
     ChapterLanguageBottomSheet(
       languageList = languageList,
       selectedLanguage = selectedLanguage,
-      onSelectedLanguage = onSelectedLanguage,
-      onDismiss = { isShowLanguageBottomSheet = false },
       modifier = Modifier
         .fillMaxWidth()
-        .statusBarsPadding()
+        .statusBarsPadding(),
+      onSelectedLanguage = onSelectedLanguage,
+      onDismiss = { isShowLanguageBottomSheet = false },
     )
   }
 
@@ -47,17 +47,17 @@ fun MangaChaptersHeader(
   ) {
     Text(
       text = stringResource(R.string.chapters),
-      style = MaterialTheme.typography.titleLarge,
-      fontWeight = FontWeight.ExtraBold,
       modifier = Modifier
         .weight(0.5f)
-        .fillMaxWidth()
+        .fillMaxWidth(),
+      fontWeight = FontWeight.ExtraBold,
+      style = MaterialTheme.typography.titleLarge,
     )
     Text(
       text = stringResource(selectedLanguage.value),
-      style = MaterialTheme.typography.titleMedium,
+      modifier = Modifier.clickable { isShowLanguageBottomSheet = true },
       fontWeight = FontWeight.Bold,
-      modifier = Modifier.clickable { isShowLanguageBottomSheet = true }
+      style = MaterialTheme.typography.titleMedium,
     )
   }
 }

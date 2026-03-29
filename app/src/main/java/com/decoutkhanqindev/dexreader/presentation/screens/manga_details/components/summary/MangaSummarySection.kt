@@ -17,20 +17,20 @@ import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 @Composable
 fun MangaSummarySection(
   manga: MangaModel,
+  modifier: Modifier = Modifier,
   onSelectedCategory: (
     categoryId: String,
     categoryTitle: String,
   ) -> Unit,
-  modifier: Modifier = Modifier,
 ) {
   Column(modifier = modifier) {
     Text(
       text = stringResource(R.string.summary),
-      style = MaterialTheme.typography.titleLarge,
-      fontWeight = FontWeight.ExtraBold,
       modifier = Modifier
         .padding(horizontal = 4.dp)
-        .padding(bottom = 12.dp)
+        .padding(bottom = 12.dp),
+      fontWeight = FontWeight.ExtraBold,
+      style = MaterialTheme.typography.titleLarge,
     )
     MangaDescription(
       description = manga.description,
@@ -40,8 +40,7 @@ fun MangaSummarySection(
     )
     MangaCategoryList(
       categoryList = manga.categories,
-      onSelectedCategory = onSelectedCategory,
-      modifier = Modifier.fillMaxWidth()
-    )
+      modifier = Modifier.fillMaxWidth(),
+    ) { categoryId, categoryTitle -> onSelectedCategory(categoryId, categoryTitle) }
   }
 }

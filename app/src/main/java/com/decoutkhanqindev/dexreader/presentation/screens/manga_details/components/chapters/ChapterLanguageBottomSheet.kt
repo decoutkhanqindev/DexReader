@@ -28,9 +28,9 @@ import kotlinx.collections.immutable.ImmutableList
 fun ChapterLanguageBottomSheet(
   languageList: ImmutableList<MangaLanguageValue>,
   selectedLanguage: MangaLanguageValue,
+  modifier: Modifier = Modifier,
   onSelectedLanguage: (MangaLanguageValue) -> Unit,
   onDismiss: () -> Unit,
-  modifier: Modifier = Modifier,
 ) {
   val sheetState = rememberModalBottomSheetState()
 
@@ -41,22 +41,22 @@ fun ChapterLanguageBottomSheet(
   ) {
     Text(
       text = stringResource(R.string.language_options),
-      style = MaterialTheme.typography.titleLarge,
-      fontWeight = FontWeight.ExtraBold,
-      textAlign = TextAlign.Center,
       modifier = Modifier
         .fillMaxWidth()
-        .padding(bottom = 16.dp)
+        .padding(bottom = 16.dp),
+      fontWeight = FontWeight.ExtraBold,
+      textAlign = TextAlign.Center,
+      style = MaterialTheme.typography.titleLarge,
     )
     if (languageList.isEmpty()) {
       Text(
         text = stringResource(R.string.no_languages_available),
-        style = MaterialTheme.typography.titleMedium,
-        fontStyle = FontStyle.Italic,
-        textAlign = TextAlign.Center,
         modifier = Modifier
           .fillMaxWidth()
-          .padding(bottom = 8.dp)
+          .padding(bottom = 8.dp),
+        fontStyle = FontStyle.Italic,
+        textAlign = TextAlign.Center,
+        style = MaterialTheme.typography.titleMedium,
       )
     } else {
       LazyColumn(
@@ -72,14 +72,14 @@ fun ChapterLanguageBottomSheet(
           val isSelected = language == selectedLanguage
           Text(
             text = stringResource(language.value),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = if (isSelected) FontWeight.ExtraBold else FontWeight.Light,
             modifier = Modifier
               .padding(bottom = 8.dp)
               .clickable {
                 onSelectedLanguage(language)
                 onDismiss()
-              }
+              },
+            fontWeight = if (isSelected) FontWeight.ExtraBold else FontWeight.Light,
+            style = MaterialTheme.typography.titleMedium,
           )
         }
       }

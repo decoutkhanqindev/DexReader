@@ -31,11 +31,11 @@ fun MangaDescription(
   Column(modifier = modifier) {
     Text(
       text = description,
-      style = MaterialTheme.typography.bodyLarge,
+      modifier = Modifier.fillMaxWidth(),
       fontWeight = FontWeight.Bold,
-      maxLines = if (isExpanded) Int.MAX_VALUE else 3,
       overflow = TextOverflow.Ellipsis,
-      modifier = Modifier.fillMaxWidth()
+      maxLines = if (isExpanded) Int.MAX_VALUE else 3,
+      style = MaterialTheme.typography.bodyLarge,
     )
     IconButton(
       onClick = { isExpanded = !isExpanded },

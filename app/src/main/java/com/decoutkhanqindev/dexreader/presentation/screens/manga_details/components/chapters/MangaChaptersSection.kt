@@ -25,6 +25,8 @@ fun MangaChaptersSection(
   latestChapter: String,
   chapterLanguage: MangaLanguageValue,
   chapterLanguageList: ImmutableList<MangaLanguageValue>,
+  readingHistoryList: ImmutableList<ReadingHistoryModel> = persistentListOf(),
+  modifier: Modifier = Modifier,
   onSelectedLanguage: (MangaLanguageValue) -> Unit,
   onSelectedChapter: (
     chapterId: String,
@@ -34,19 +36,16 @@ fun MangaChaptersSection(
   onFetchChapterListNextPage: () -> Unit,
   onRetryFetchChapterListNextPage: () -> Unit,
   onRetry: () -> Unit,
-  modifier: Modifier = Modifier,
-  readingHistoryList: ImmutableList<ReadingHistoryModel> = persistentListOf(),
 ) {
   Column(modifier = modifier) {
     MangaChaptersHeader(
       selectedLanguage = chapterLanguage,
       languageList = chapterLanguageList,
-      onSelectedLanguage = onSelectedLanguage,
       modifier = modifier
         .fillMaxWidth()
         .padding(bottom = 12.dp)
-        .padding(horizontal = 4.dp)
-    )
+        .padding(horizontal = 4.dp),
+    ) { onSelectedLanguage(it) }
 
     when (mangaChaptersUiState) {
       BasePaginationUiState.FirstPageLoading -> ListLoadingIndicator(modifier = Modifier.fillMaxSize())
@@ -66,12 +65,12 @@ fun MangaChaptersSection(
         MangaChapterList(
           latestChapter = latestChapter,
           chapterList = chapterList,
-          onSelectedChapter = onSelectedChapter,
           chapterListNextPageState = chapterListNextPageState,
+          readingHistoryList = readingHistoryList,
+          modifier = Modifier.fillMaxWidth(),
+          onSelectedChapter = onSelectedChapter,
           onFetchChapterListNextPage = onFetchChapterListNextPage,
           onRetryFetchChapterListNextPage = onRetryFetchChapterListNextPage,
-          modifier = Modifier.fillMaxWidth(),
-          readingHistoryList = readingHistoryList,
         )
       }
     }

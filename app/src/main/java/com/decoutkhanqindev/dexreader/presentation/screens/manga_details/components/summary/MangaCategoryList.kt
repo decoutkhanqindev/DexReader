@@ -18,11 +18,11 @@ import kotlinx.collections.immutable.ImmutableList
 @Composable
 fun MangaCategoryList(
   categoryList: ImmutableList<CategoryModel>,
+  modifier: Modifier = Modifier,
   onSelectedCategory: (
     categoryId: String,
     categoryTitle: String,
   ) -> Unit,
-  modifier: Modifier = Modifier,
 ) {
   Box(modifier = modifier) {
     LazyRow(
@@ -33,11 +33,10 @@ fun MangaCategoryList(
       items(categoryList, key = { it.id }) { category ->
         MangaCategoryItem(
           category = category,
-          onSelectedCategory = onSelectedCategory,
           modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 4.dp)
-        )
+            .padding(horizontal = 4.dp),
+        ) { categoryId, categoryTitle -> onSelectedCategory(categoryId, categoryTitle) }
       }
     }
   }

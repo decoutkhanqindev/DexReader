@@ -20,7 +20,7 @@ fun MangaDetailsBackground(
       .size(1080)
       .build(),
     contentDescription = null,
+    modifier = modifier,
     contentScale = ContentScale.Crop,
-    modifier = modifier
   )
 }

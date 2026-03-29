@@ -17,31 +17,27 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.Action
 
 @Composable
 fun ActionButtonsSection(
+  isFavorite: Boolean,
+  startedChapterId: String? = null,
+  mangaId: String = "",
+  continueChapter: ReadingHistoryModel? = null,
+  modifier: Modifier = Modifier,
   onReadingClick: (
     chapterId: String,
     lastReadPage: Int,
     mangaId: String,
   ) -> Unit,
-  isFavorite: Boolean,
   onFavoriteClick: () -> Unit,
-  modifier: Modifier = Modifier,
-  startedChapterId: String? = null,
-  mangaId: String = "",
-  continueChapter: ReadingHistoryModel? = null,
 ) {
   val isContinueReading = continueChapter != null
   val canRead = startedChapterId != null || continueChapter != null
 
   Row(
     modifier = modifier,
+    horizontalArrangement = Arrangement.spacedBy(8.dp),
     verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.spacedBy(8.dp)
   ) {
     ActionButton(
-      isEnabled = canRead,
-      modifier = Modifier
-        .weight(1f)
-        .fillMaxWidth(),
       onClick = {
         if (isContinueReading) {
           onReadingClick(
@@ -54,30 +50,34 @@ fun ActionButtonsSection(
           0,
           mangaId
         )
-      }
+      },
+      modifier = Modifier
+        .weight(1f)
+        .fillMaxWidth(),
+      isEnabled = canRead,
     ) {
       Text(
         text =
           if (isContinueReading) stringResource(R.string.continue_reading)
           else stringResource(R.string.start_reading),
-        style = MaterialTheme.typography.titleMedium,
         color = MaterialTheme.colorScheme.inverseSurface,
         fontWeight = FontWeight.ExtraBold,
+        style = MaterialTheme.typography.titleMedium,
       )
     }
     ActionButton(
+      onClick = onFavoriteClick,
       modifier = Modifier
         .weight(1f)
         .fillMaxWidth(),
-      onClick = onFavoriteClick
     ) {
       Text(
         text =
           if (isFavorite) stringResource(R.string.unfavorite)
           else stringResource(R.string.favorite),
         color = MaterialTheme.colorScheme.inverseSurface,
-        style = MaterialTheme.typography.titleMedium,
         fontWeight = FontWeight.ExtraBold,
+        style = MaterialTheme.typography.titleMedium,
       )
     }
   }

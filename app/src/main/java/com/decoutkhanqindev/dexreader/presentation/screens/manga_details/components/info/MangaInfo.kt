@@ -28,45 +28,45 @@ fun MangaInfo(
   ) {
     Text(
       text = manga.title,
-      style = MaterialTheme.typography.titleLarge,
+      modifier = Modifier.padding(bottom = 4.dp),
       fontWeight = FontWeight.ExtraBold,
       overflow = TextOverflow.Ellipsis,
-      modifier = Modifier.padding(bottom = 4.dp)
+      style = MaterialTheme.typography.titleLarge,
     )
     Text(
       text = stringResource(R.string.author, manga.author),
-      fontWeight = FontWeight.Bold,
+      modifier = Modifier.padding(bottom = 4.dp),
       fontStyle = FontStyle.Italic,
+      fontWeight = FontWeight.Bold,
       style = MaterialTheme.typography.bodyLarge,
-      modifier = Modifier.padding(bottom = 4.dp)
     )
     Text(
       text = stringResource(R.string.artist, manga.artist),
-      fontWeight = FontWeight.Bold,
+      modifier = Modifier.padding(bottom = 4.dp),
       fontStyle = FontStyle.Italic,
+      fontWeight = FontWeight.Bold,
       style = MaterialTheme.typography.bodyLarge,
-      modifier = Modifier.padding(bottom = 4.dp)
     )
     Text(
       text = stringResource(R.string.year, manga.year),
-      fontWeight = FontWeight.Bold,
+      modifier = Modifier.padding(bottom = 4.dp),
       fontStyle = FontStyle.Italic,
+      fontWeight = FontWeight.Bold,
       style = MaterialTheme.typography.bodyLarge,
-      modifier = Modifier.padding(bottom = 4.dp)
     )
     Text(
       text = stringResource(R.string.status, stringResource(manga.status.nameRes)),
-      fontWeight = FontWeight.Bold,
+      modifier = Modifier.padding(bottom = 4.dp),
       fontStyle = FontStyle.Italic,
+      fontWeight = FontWeight.Bold,
       style = MaterialTheme.typography.bodyLarge,
-      modifier = Modifier.padding(bottom = 4.dp)
     )
     Text(
       text = stringResource(R.string.content_rating, stringResource(manga.contentRating.nameRes)),
-      fontWeight = FontWeight.Bold,
+      modifier = Modifier.padding(bottom = 4.dp),
       fontStyle = FontStyle.Italic,
+      fontWeight = FontWeight.Bold,
       style = MaterialTheme.typography.bodyLarge,
-      modifier = Modifier.padding(bottom = 4.dp)
     )
   }
 }

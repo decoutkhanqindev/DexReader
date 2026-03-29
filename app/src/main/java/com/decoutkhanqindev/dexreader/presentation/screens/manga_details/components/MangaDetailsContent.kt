@@ -153,11 +153,12 @@ fun MangaDetailsContent(
           item {
             MangaSummarySection(
               manga = manga,
-              onSelectedCategory = onSelectedCategory,
               modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 16.dp)
-            )
+                .padding(bottom = 16.dp),
+            ) { categoryId, categoryTitle ->
+              onSelectedCategory(categoryId, categoryTitle)
+            }
           }
 
           item {
@@ -166,13 +167,13 @@ fun MangaDetailsContent(
               latestChapter = latestChapter,
               chapterLanguage = chapterLanguage,
               chapterLanguageList = availableLanguages,
+              readingHistoryList = readingHistoryList,
+              modifier = Modifier.fillMaxWidth(),
               onSelectedLanguage = onSelectedLanguage,
               onSelectedChapter = onSelectedChapter,
               onFetchChapterListNextPage = onFetchChapterListNextPage,
               onRetryFetchChapterListNextPage = onRetryFetchChapterListNextPage,
               onRetry = onRetryFetchChapterListFirstPage,
-              modifier = Modifier.fillMaxWidth(),
-              readingHistoryList = readingHistoryList,
             )
           }
         }

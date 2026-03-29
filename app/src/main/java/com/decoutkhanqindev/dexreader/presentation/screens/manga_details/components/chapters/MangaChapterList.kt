@@ -28,26 +28,26 @@ import kotlinx.collections.immutable.persistentListOf
 fun MangaChapterList(
   latestChapter: String,
   chapterList: ImmutableList<ChapterModel>,
+  chapterListNextPageState: BaseNextPageState,
+  readingHistoryList: ImmutableList<ReadingHistoryModel> = persistentListOf(),
+  modifier: Modifier = Modifier,
   onSelectedChapter: (
     chapterId: String,
     lastReadPage: Int,
     mangaId: String,
   ) -> Unit,
-  chapterListNextPageState: BaseNextPageState,
   onFetchChapterListNextPage: () -> Unit,
   onRetryFetchChapterListNextPage: () -> Unit,
-  modifier: Modifier = Modifier,
-  readingHistoryList: ImmutableList<ReadingHistoryModel> = persistentListOf(),
 ) {
   Column(modifier = modifier) {
     if (chapterList.isEmpty()) {
       Text(
         text = stringResource(R.string.no_chapters_available),
-        style = MaterialTheme.typography.bodyLarge,
-        fontWeight = FontWeight.Bold,
+        modifier = Modifier.fillMaxWidth(),
         fontStyle = FontStyle.Italic,
+        fontWeight = FontWeight.Bold,
         textAlign = TextAlign.Center,
-        modifier = Modifier.fillMaxWidth()
+        style = MaterialTheme.typography.bodyLarge,
       )
     } else {
       chapterList.forEach { chapter ->
@@ -56,13 +56,12 @@ fun MangaChapterList(
         MangaChapterItem(
           latestChapter = latestChapter,
           chapter = chapter,
-          onSelectedChapter = onSelectedChapter,
+          readingHistory = readingHistory,
           modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 12.dp)
             .padding(horizontal = 4.dp),
-          readingHistory = readingHistory,
-        )
+        ) { chapterId, lastReadPage, mangaId -> onSelectedChapter(chapterId, lastReadPage, mangaId) }
       }
 
       when (chapterListNextPageState) {
@@ -74,18 +73,18 @@ fun MangaChapterList(
 
         BaseNextPageState.ERROR -> LoadPageErrorMessage(
           message = stringResource(R.string.can_t_load_next_chapter_page_please_try_again),
-          onRetryClick = onRetryFetchChapterListNextPage,
           modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 8.dp)
+            .padding(top = 8.dp),
+          onRetryClick = onRetryFetchChapterListNextPage,
         )
 
         BaseNextPageState.IDLE -> LoadMoreMessage(
-          onClick = onFetchChapterListNextPage,
           modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp)
-            .padding(bottom = 12.dp)
+            .padding(bottom = 12.dp),
+          onClick = onFetchChapterListNextPage,
         )
 
         BaseNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(

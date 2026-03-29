@@ -26,13 +26,13 @@ import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryMode
 fun MangaChapterItem(
   latestChapter: String,
   chapter: ChapterModel,
+  readingHistory: ReadingHistoryModel? = null,
+  modifier: Modifier = Modifier,
   onSelectedChapter: (
     chapterId: String,
     lastReadPage: Int,
     mangaId: String,
   ) -> Unit,
-  modifier: Modifier = Modifier,
-  readingHistory: ReadingHistoryModel? = null,
 ) {
   val volume = chapter.volume
   val number = chapter.number
@@ -64,15 +64,15 @@ fun MangaChapterItem(
         Row(modifier = Modifier.weight(0.7f)) {
           Text(
             text = stringResource(R.string.volume_chapter, volume, number),
-            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(end = 4.dp),
             fontWeight = FontWeight.ExtraBold,
-            modifier = Modifier.padding(end = 4.dp)
+            style = MaterialTheme.typography.titleMedium,
           )
           if (latestChapter == number) {
             Text(
               text = stringResource(R.string.last_chapter),
-              style = MaterialTheme.typography.titleMedium,
               fontWeight = FontWeight.ExtraBold,
+              style = MaterialTheme.typography.titleMedium,
             )
           }
         }
@@ -84,10 +84,10 @@ fun MangaChapterItem(
               readingHistory.lastReadPage,
               readingHistory.pageCount
             ),
-            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.weight(0.3f),
             fontWeight = FontWeight.ExtraBold,
             textAlign = TextAlign.End,
-            modifier = Modifier.weight(0.3f)
+            style = MaterialTheme.typography.titleMedium,
           )
         }
       }
@@ -98,18 +98,18 @@ fun MangaChapterItem(
       ) {
         Text(
           text = chapter.title,
-          style = MaterialTheme.typography.bodyLarge,
-          fontWeight = FontWeight.Bold,
+          modifier = Modifier.weight(0.6f),
           fontStyle = FontStyle.Italic,
-          modifier = Modifier.weight(0.6f)
+          fontWeight = FontWeight.Bold,
+          style = MaterialTheme.typography.bodyLarge,
         )
         Text(
           text = chapter.publishedAt,
-          style = MaterialTheme.typography.bodyLarge,
-          fontWeight = FontWeight.Bold,
+          modifier = Modifier.weight(0.4f),
           fontStyle = FontStyle.Italic,
+          fontWeight = FontWeight.Bold,
           textAlign = TextAlign.End,
-          modifier = Modifier.weight(0.4f)
+          style = MaterialTheme.typography.bodyLarge,
         )
       }
     }

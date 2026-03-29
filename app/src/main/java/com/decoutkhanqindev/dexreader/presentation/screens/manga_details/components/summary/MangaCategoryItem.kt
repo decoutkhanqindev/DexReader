@@ -16,30 +16,33 @@ import java.util.Locale
 @Composable
 fun MangaCategoryItem(
   category: CategoryModel,
+  modifier: Modifier = Modifier,
   onSelectedCategory: (
     categoryId: String,
     categoryTitle: String,
   ) -> Unit,
-  modifier: Modifier = Modifier,
 ) {
   Card(
-    modifier = modifier,
-    shape = MaterialTheme.shapes.large,
     onClick = {
       onSelectedCategory(
         category.id,
         category.title
       )
-    }
+    },
+    modifier = modifier,
+    shape = MaterialTheme.shapes.large,
   ) {
     Text(
-      text = category.title.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.US) else it.toString() },
-      style = MaterialTheme.typography.bodyLarge,
-      fontWeight = FontWeight.Bold,
-      textAlign = TextAlign.Center,
+      text = category.title.replaceFirstChar {
+        if (it.isLowerCase()) it.titlecase(Locale.US)
+        else it.toString()
+      },
       modifier = Modifier
         .padding(8.dp)
-        .fillMaxSize()
+        .fillMaxSize(),
+      fontWeight = FontWeight.Bold,
+      textAlign = TextAlign.Center,
+      style = MaterialTheme.typography.bodyLarge,
     )
   }
 }
