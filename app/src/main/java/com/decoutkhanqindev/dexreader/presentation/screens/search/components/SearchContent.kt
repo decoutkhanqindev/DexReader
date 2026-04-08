@@ -21,12 +21,12 @@ fun SearchContent(
   resultsUiState: BasePaginationUiState<MangaModel>,
   isExpanded: Boolean,
   suggestionList: ImmutableList<String>,
+  modifier: Modifier = Modifier,
   onSelectedSuggestion: (String) -> Unit,
   onSelectedManga: (String) -> Unit,
   onFetchMangaListNextPage: () -> Unit,
   onRetryFetchMangaListNextPage: () -> Unit,
   onRetry: () -> Unit,
-  modifier: Modifier = Modifier,
 ) {
   if (query.isEmpty()) {
     IdleScreen(
@@ -41,18 +41,17 @@ fun SearchContent(
       query = query,
       suggestionsUiState = suggestionsUiState,
       suggestionList = suggestionList,
-      onSelectedSuggestion = onSelectedSuggestion,
-      modifier = modifier
-    )
+      modifier = modifier,
+    ) { onSelectedSuggestion(it) }
   } else {
     ResultsSection(
       query = query,
       resultsUiState = resultsUiState,
+      modifier = modifier,
       onSelectedManga = onSelectedManga,
       onFetchMangaListNextPage = onFetchMangaListNextPage,
       onRetryFetchMangaListNextPage = onRetryFetchMangaListNextPage,
       onRetry = onRetry,
-      modifier = modifier
     )
   }
 }

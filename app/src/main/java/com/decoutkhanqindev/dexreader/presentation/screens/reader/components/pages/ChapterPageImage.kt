@@ -25,9 +25,9 @@ fun ChapterPageImage(
       .diskCachePolicy(CachePolicy.ENABLED)
       .build(),
     contentDescription = null,
-    contentScale = ContentScale.Fit,
+    modifier = modifier,
     state = zoomableState,
-    modifier = modifier
+    contentScale = ContentScale.Fit,
   )
 }
 

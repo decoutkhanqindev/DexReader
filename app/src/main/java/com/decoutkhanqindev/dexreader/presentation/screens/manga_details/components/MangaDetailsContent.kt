@@ -85,11 +85,11 @@ fun MangaDetailsContent(
       is MangaDetailsUiState.Error -> {
         if (isShowErrorDialog) {
           NotificationDialog(
+            title = stringResource(mangaDetailsUiState.error.messageRes),
             onConfirmClick = {
               isShowErrorDialog = false
               onRetry()
             },
-            title = stringResource(mangaDetailsUiState.error.messageRes),
             onDismissClick = { isShowErrorDialog = false },
           )
         }

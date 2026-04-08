@@ -52,11 +52,10 @@ fun MangaChaptersSection(
 
       is BasePaginationUiState.FirstPageError -> LoadPageErrorMessage(
         message = stringResource(R.string.something_went_wrong_while_loading_chapters_please_try_again),
-        onRetryClick = onRetry,
         modifier = Modifier
           .fillMaxSize()
-          .padding(horizontal = 4.dp)
-      )
+          .padding(horizontal = 4.dp),
+      ) { onRetry() }
 
       is BasePaginationUiState.Content -> {
         val chapterList = mangaChaptersUiState.currentList

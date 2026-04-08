@@ -27,73 +27,71 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.Notific
 @Composable
 fun UpdateAndLogoutUserBottomBar(
   isShowUpdateButton: Boolean,
+  modifier: Modifier = Modifier,
   onUpdateClick: () -> Unit,
   onLogoutClick: () -> Unit,
-  modifier: Modifier = Modifier,
 ) {
   var isShowUpdateUserDialog by rememberSaveable { mutableStateOf(false) }
   var isShowLogoutUserDialog by rememberSaveable { mutableStateOf(false) }
 
   BottomAppBar(
-    actions = {
-      ActionButton(
-        modifier = Modifier
-          .weight(1f)
-          .fillMaxWidth(),
-        onClick = { isShowLogoutUserDialog = true }
-      ) {
-        Text(
-          text = stringResource(R.string.logout),
-          style = MaterialTheme.typography.titleMedium,
-          fontWeight = FontWeight.ExtraBold,
-          textAlign = TextAlign.Center,
-          color = Color.Red,
-          modifier = Modifier.fillMaxWidth()
-        )
-      }
-      AnimatedVisibility(
-        visible = isShowUpdateButton,
-        enter = scaleIn(),
-        exit = scaleOut(),
-        modifier = Modifier
-          .weight(1f)
-          .fillMaxWidth()
-      ) {
-        SubmitButton(
-          title = stringResource(R.string.update_profile),
-          onClick = { isShowUpdateUserDialog = true },
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 8.dp)
-        )
-      }
-    },
+    modifier = modifier,
     containerColor = MaterialTheme.colorScheme.surface,
     contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-    modifier = modifier
-  )
+  ) {
+    ActionButton(
+      modifier = Modifier
+        .weight(1f)
+        .fillMaxWidth(),
+      onClick = { isShowLogoutUserDialog = true }
+    ) {
+      Text(
+        text = stringResource(R.string.logout),
+        modifier = Modifier.fillMaxWidth(),
+        color = Color.Red,
+        fontWeight = FontWeight.ExtraBold,
+        textAlign = TextAlign.Center,
+        style = MaterialTheme.typography.titleMedium,
+      )
+    }
+    AnimatedVisibility(
+      visible = isShowUpdateButton,
+      enter = scaleIn(),
+      exit = scaleOut(),
+      modifier = Modifier
+        .weight(1f)
+        .fillMaxWidth()
+    ) {
+      SubmitButton(
+        title = stringResource(R.string.update_profile),
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(start = 8.dp),
+      ) { isShowUpdateUserDialog = true }
+    }
+  }
 
   if (isShowUpdateUserDialog) {
     NotificationDialog(
+      title = stringResource(R.string.are_you_sure_you_want_to_update_with_the_new_changes),
+      confirm = stringResource(R.string.update_profile),
       onConfirmClick = {
         onUpdateClick()
         isShowUpdateUserDialog = false
       },
-      title = stringResource(R.string.are_you_sure_you_want_to_update_with_the_new_changes),
       onDismissClick = { isShowUpdateUserDialog = false },
-      confirm = stringResource(R.string.update_profile),
     )
   }
 
   if (isShowLogoutUserDialog) {
     NotificationDialog(
+      title = stringResource(R.string.are_you_sure_you_want_to_logout),
+      confirm = stringResource(R.string.logout),
       onConfirmClick = {
         onLogoutClick()
         isShowLogoutUserDialog = false
       },
-      title = stringResource(R.string.are_you_sure_you_want_to_logout),
       onDismissClick = { isShowLogoutUserDialog = false },
-      confirm = stringResource(R.string.logout),
     )
   }
 }

@@ -28,57 +28,56 @@ fun NavigateChapterBottomBar(
   title: String,
   canNavigatePrevious: Boolean,
   canNavigateNext: Boolean,
+  modifier: Modifier = Modifier,
   onNavigatePrevious: () -> Unit,
   onNavigateNext: () -> Unit,
-  modifier: Modifier = Modifier,
 ) {
   BottomAppBar(
-    actions = {
-      IconButton(
-        onClick = onNavigatePrevious,
-        enabled = canNavigatePrevious,
-        modifier = Modifier.weight(0.5f)
-      ) {
-        Icon(
-          imageVector = Icons.Default.ChevronLeft,
-          contentDescription = stringResource(R.string.pre_chapter)
-        )
-      }
-      Column(
-        modifier = Modifier
-          .weight(2f)
-          .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-      ) {
-        Text(
-          text = stringResource(R.string.volume_chapter, volume, chapterNumber),
-          style = MaterialTheme.typography.titleLarge,
-          fontWeight = FontWeight.ExtraBold,
-        )
-        if (title.isNotBlank()) {
-          Text(
-            text = title,
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Bold,
-            fontStyle = FontStyle.Italic,
-            textAlign = TextAlign.Center,
-          )
-        }
-      }
-      IconButton(
-        onClick = onNavigateNext,
-        enabled = canNavigateNext,
-        modifier = Modifier.weight(0.5f)
-      ) {
-        Icon(
-          imageVector = Icons.Default.ChevronRight,
-          contentDescription = stringResource(R.string.next_chapter)
-        )
-      }
-    },
+    modifier = modifier,
     containerColor = MaterialTheme.colorScheme.surfaceContainer,
     contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-    modifier = modifier
-  )
+  ) {
+    IconButton(
+      onClick = onNavigatePrevious,
+      modifier = Modifier.weight(0.5f),
+      enabled = canNavigatePrevious,
+    ) {
+      Icon(
+        imageVector = Icons.Default.ChevronLeft,
+        contentDescription = stringResource(R.string.pre_chapter)
+      )
+    }
+    Column(
+      modifier = Modifier
+        .weight(2f)
+        .fillMaxWidth(),
+      verticalArrangement = Arrangement.spacedBy(4.dp),
+      horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+      Text(
+        text = stringResource(R.string.volume_chapter, volume, chapterNumber),
+        fontWeight = FontWeight.ExtraBold,
+        style = MaterialTheme.typography.titleLarge,
+      )
+      if (title.isNotBlank()) {
+        Text(
+          text = title,
+          fontStyle = FontStyle.Italic,
+          fontWeight = FontWeight.Bold,
+          textAlign = TextAlign.Center,
+          style = MaterialTheme.typography.bodyMedium,
+        )
+      }
+    }
+    IconButton(
+      onClick = onNavigateNext,
+      modifier = Modifier.weight(0.5f),
+      enabled = canNavigateNext,
+    ) {
+      Icon(
+        imageVector = Icons.Default.ChevronRight,
+        contentDescription = stringResource(R.string.next_chapter)
+      )
+    }
+  }
 }

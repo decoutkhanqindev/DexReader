@@ -26,11 +26,11 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPage
 fun ResultsSection(
   query: String,
   resultsUiState: BasePaginationUiState<MangaModel>,
+  modifier: Modifier = Modifier,
   onSelectedManga: (String) -> Unit,
   onFetchMangaListNextPage: () -> Unit,
   onRetryFetchMangaListNextPage: () -> Unit,
   onRetry: () -> Unit,
-  modifier: Modifier = Modifier,
 ) {
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
 
@@ -40,11 +40,11 @@ fun ResultsSection(
     is BasePaginationUiState.FirstPageError -> {
       if (isShowErrorDialog) {
         NotificationDialog(
+          title = stringResource(resultsUiState.error.messageRes),
           onConfirmClick = {
             isShowErrorDialog = false
             onRetry()
           },
-          title = stringResource(resultsUiState.error.messageRes),
           onDismissClick = { isShowErrorDialog = false },
         )
       }
@@ -62,42 +62,39 @@ fun ResultsSection(
       } else {
         VerticalGridMangaList(
           items = mangaList,
+          modifier = modifier,
           onItemClick = { onSelectedManga(it.id) },
-          loadMoreContent = {
-            when (nextPageState) {
-              BaseNextPageState.LOADING -> NextPageLoadingIndicator(
-                modifier = Modifier
-                  .fillMaxWidth()
-                  .padding(bottom = 12.dp)
-              )
+        ) {
+          when (nextPageState) {
+            BaseNextPageState.LOADING -> NextPageLoadingIndicator(
+              modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 12.dp)
+            )
 
-              BaseNextPageState.ERROR -> LoadPageErrorMessage(
-                message = stringResource(R.string.can_t_load_next_manga_page_please_try_again),
-                onRetryClick = onRetryFetchMangaListNextPage,
-                modifier = Modifier
-                  .fillMaxWidth()
-                  .padding(top = 8.dp)
-              )
+            BaseNextPageState.ERROR -> LoadPageErrorMessage(
+              message = stringResource(R.string.can_t_load_next_manga_page_please_try_again),
+              modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            ) { onRetryFetchMangaListNextPage() }
 
-              BaseNextPageState.IDLE -> LoadMoreMessage(
-                onClick = onFetchMangaListNextPage,
-                modifier = Modifier
-                  .fillMaxWidth()
-                  .padding(horizontal = 8.dp)
-                  .padding(bottom = 12.dp)
-              )
+            BaseNextPageState.IDLE -> LoadMoreMessage(
+              modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
+                .padding(bottom = 12.dp),
+            ) { onFetchMangaListNextPage() }
 
-              BaseNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
-                title = stringResource(R.string.all_mangas_loaded),
-                modifier = Modifier
-                  .fillMaxWidth()
-                  .padding(horizontal = 8.dp)
-                  .padding(bottom = 12.dp)
-              )
-            }
-          },
-          modifier = modifier
-        )
+            BaseNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
+              title = stringResource(R.string.all_mangas_loaded),
+              modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
+                .padding(bottom = 12.dp)
+            )
+          }
+        }
       }
     }
   }

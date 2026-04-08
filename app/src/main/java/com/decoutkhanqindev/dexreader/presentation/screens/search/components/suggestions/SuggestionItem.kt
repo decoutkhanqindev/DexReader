@@ -16,26 +16,26 @@ import com.decoutkhanqindev.dexreader.R
 @Composable
 fun SuggestionItem(
   suggestion: String,
-  onSelectedSuggestion: (String) -> Unit,
   modifier: Modifier = Modifier,
+  onSelectedSuggestion: (String) -> Unit,
 ) {
   DropdownMenuItem(
     text = {
       Text(
         text = suggestion,
-        style = MaterialTheme.typography.bodyLarge,
         fontWeight = FontWeight.Light,
+        overflow = TextOverflow.Ellipsis,
         maxLines = 1,
-        overflow = TextOverflow.Ellipsis
+        style = MaterialTheme.typography.bodyLarge,
       )
     },
     onClick = { onSelectedSuggestion(suggestion) },
+    modifier = modifier,
     leadingIcon = {
       Icon(
         imageVector = Icons.Default.Search,
         contentDescription = stringResource(R.string.search)
       )
     },
-    modifier = modifier
   )
 }

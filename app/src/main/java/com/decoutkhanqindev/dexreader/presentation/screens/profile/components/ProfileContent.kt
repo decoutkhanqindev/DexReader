@@ -33,12 +33,12 @@ import com.decoutkhanqindev.dexreader.presentation.screens.profile.components.ac
 @Composable
 fun ProfileContent(
   uiState: ProfileUiState,
+  modifier: Modifier = Modifier,
   onUpdateNameChange: (String) -> Unit,
   onUpdatePicUrlChange: (String) -> Unit,
   onLogoutSuccess: () -> Unit,
   onRetryUpdate: () -> Unit,
   onRetryLogout: () -> Unit,
-  modifier: Modifier = Modifier,
 ) {
   var isShowUpdateUserSuccessDialog by rememberSaveable { mutableStateOf(true) }
   var isShowUpdateUserErrorDialog by rememberSaveable { mutableStateOf(true) }
@@ -59,22 +59,20 @@ fun ProfileContent(
       ProfilePicturePicker(
         url = uiState.newAvatarUrl ?: currentUser?.avatarUrl,
         name = uiState.newName ?: currentUser?.name ?: "",
-        onSelectedImageUrl = onUpdatePicUrlChange,
         modifier = Modifier
           .fillMaxWidth()
-          .padding(top = 16.dp)
-      )
+          .padding(top = 16.dp),
+      ) { onUpdatePicUrlChange(it) }
       ProfileNameEdit(
         name = uiState.newName ?: currentUser?.name ?: "",
-        onNameChange = onUpdateNameChange,
-      )
+      ) { onUpdateNameChange(it) }
       Text(
         text = currentUser?.email ?: "",
-        style = MaterialTheme.typography.bodyLarge,
-        fontWeight = FontWeight.Light,
+        modifier = Modifier.fillMaxWidth(),
         fontStyle = FontStyle.Italic,
+        fontWeight = FontWeight.Light,
         textAlign = TextAlign.Center,
-        modifier = Modifier.fillMaxWidth()
+        style = MaterialTheme.typography.bodyLarge,
       )
     }
   }
@@ -85,11 +83,11 @@ fun ProfileContent(
     uiState.isUpdateUserError -> {
       if (isShowUpdateUserErrorDialog) {
         NotificationDialog(
+          title = stringResource(R.string.update_profile_failed),
           onConfirmClick = {
             isShowUpdateUserErrorDialog = false
             onRetryUpdate()
           },
-          title = stringResource(R.string.update_profile_failed),
           onDismissClick = { isShowUpdateUserErrorDialog = false },
         )
       }
@@ -98,11 +96,11 @@ fun ProfileContent(
     uiState.isLogoutUserError -> {
       if (isShowLogoutUserErrorDialog) {
         NotificationDialog(
+          title = stringResource(R.string.logout_failed_please_try_again),
           onConfirmClick = {
             isShowLogoutUserErrorDialog = false
             onRetryLogout()
           },
-          title = stringResource(R.string.logout_failed_please_try_again),
           onDismissClick = { isShowLogoutUserErrorDialog = false },
         )
       }
@@ -111,11 +109,11 @@ fun ProfileContent(
     uiState.isUpdateUserSuccess -> {
       if (isShowUpdateUserSuccessDialog) {
         NotificationDialog(
-          onConfirmClick = { isShowUpdateUserSuccessDialog = false },
           icon = Icons.Default.Done,
           title = stringResource(R.string.your_profile_has_been_updated_successfully),
-          isEnableDismiss = false,
           confirm = stringResource(R.string.ok),
+          isEnableDismiss = false,
+          onConfirmClick = { isShowUpdateUserSuccessDialog = false },
         )
       }
     }
@@ -123,14 +121,14 @@ fun ProfileContent(
     uiState.isLogoutUserSuccess -> {
       if (isShowLogoutUserSuccessDialog) {
         NotificationDialog(
+          icon = Icons.Default.Done,
+          title = stringResource(R.string.logout_successful),
+          confirm = stringResource(R.string.ok),
+          isEnableDismiss = false,
           onConfirmClick = {
             isShowLogoutUserSuccessDialog = false
             onLogoutSuccess()
           },
-          icon = Icons.Default.Done,
-          title = stringResource(R.string.logout_successful),
-          isEnableDismiss = false,
-          confirm = stringResource(R.string.ok),
         )
       }
     }

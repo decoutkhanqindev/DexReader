@@ -14,25 +14,25 @@ fun ChapterPagesSection(
   chapterPages: ImmutableList<String>,
   currentPage: Int,
   totalPages: Int,
-  onUpdateChapterPage: (Int) -> Unit,
   modifier: Modifier = Modifier,
+  onUpdateChapterPage: (Int) -> Unit,
 ) {
   val pagerState = rememberPagerState(
     initialPage = currentPage - 1,
     pageCount = { totalPages }
   )
 
+  LaunchedEffect(pagerState.currentPage) {
+    onUpdateChapterPage(pagerState.currentPage + 1)
+  }
+
   HorizontalPager(
-    modifier = modifier,
     state = pagerState,
+    modifier = modifier,
   ) { pageIndex ->
     ChapterPageImage(
       imageUrl = chapterPages[pageIndex],
       modifier = Modifier.fillMaxSize()
     )
-  }
-
-  LaunchedEffect(pagerState.currentPage) {
-    onUpdateChapterPage(pagerState.currentPage + 1)
   }
 }

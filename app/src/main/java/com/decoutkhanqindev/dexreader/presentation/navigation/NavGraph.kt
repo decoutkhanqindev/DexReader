@@ -188,6 +188,7 @@ fun NavGraph(
         ProfileScreen(
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
+          modifier = Modifier.fillMaxSize(),
           onNavigateToLoginScreen = {
             navController.navigateClearStack<NavRoute.Profile>(NavRoute.Login)
           },
@@ -197,7 +198,6 @@ fun NavGraph(
           onNavigateToHomeScreen = {
             navController.navigateClearStack<NavRoute.Profile>(NavRoute.Home)
           },
-          modifier = Modifier.fillMaxSize()
         )
       }
     }
@@ -213,13 +213,13 @@ fun NavGraph(
         SettingsScreen(
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
+          modifier = Modifier.fillMaxSize(),
           onNavigateToLoginScreen = {
             navController.navigateClearStack<NavRoute.Settings>(NavRoute.Login)
           },
           onNavigateToMenuItemScreen = { item ->
             navController.navigatePreserveState(item.toNavRoute())
           },
-          modifier = Modifier.fillMaxSize()
         )
       }
     }
@@ -233,11 +233,11 @@ fun NavGraph(
         popExitTransition = transitions.popExit
       ) {
         SearchScreen(
-          onNavigateBack = navController::navigateUp,
+          modifier = Modifier.fillMaxSize(),
           onNavigateToManDetailScreen = { mangaId ->
             navController.navigate(NavRoute.MangaDetails(mangaId))
           },
-          modifier = Modifier.fillMaxSize()
+          onNavigateBack = navController::navigateUp,
         )
       }
     }
@@ -280,9 +280,8 @@ fun NavGraph(
         ReaderScreen(
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
-          onNavigateBack = navController::navigateUp,
-          modifier = Modifier.fillMaxSize()
-        )
+          modifier = Modifier.fillMaxSize(),
+        ) { navController.navigateUp() }
       }
     }
 

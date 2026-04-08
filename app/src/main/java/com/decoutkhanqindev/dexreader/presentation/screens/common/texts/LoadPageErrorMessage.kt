@@ -26,15 +26,15 @@ fun LoadPageErrorMessage(
 ) {
   Row(
     modifier = modifier,
+    horizontalArrangement = Arrangement.Center,
     verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.Center
   ) {
     Text(
       text = message,
-      style = MaterialTheme.typography.titleMedium,
       fontWeight = FontWeight.Light,
       fontStyle = FontStyle.Italic,
       textAlign = TextAlign.Center,
+      style = MaterialTheme.typography.titleMedium,
     )
     IconButton(onClick = onRetryClick) {
       Icon(

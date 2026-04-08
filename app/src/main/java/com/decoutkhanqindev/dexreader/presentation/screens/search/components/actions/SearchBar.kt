@@ -26,16 +26,17 @@ import com.decoutkhanqindev.dexreader.R
 @Composable
 fun SearchBar(
   query: String,
+  modifier: Modifier = Modifier,
   onQueryChange: (String) -> Unit,
   onSearch: (String) -> Unit,
   onNavigateBack: () -> Unit,
-  modifier: Modifier = Modifier,
 ) {
   CenterAlignedTopAppBar(
     title = {
       TextField(
         value = query,
         onValueChange = onQueryChange,
+        modifier = Modifier.fillMaxWidth(),
         placeholder = {
           Text(
             text = stringResource(R.string.search_manga_placeholder),
@@ -53,9 +54,9 @@ fun SearchBar(
           cursorColor = MaterialTheme.colorScheme.onPrimaryContainer
         ),
         textStyle = MaterialTheme.typography.bodyLarge,
-        modifier = Modifier.fillMaxWidth()
       )
     },
+    modifier = modifier,
     navigationIcon = {
       IconButton(onClick = onNavigateBack) {
         Icon(
@@ -81,7 +82,6 @@ fun SearchBar(
       titleContentColor = Color.Unspecified,
       actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
     ),
-    modifier = modifier
   )
 }
 

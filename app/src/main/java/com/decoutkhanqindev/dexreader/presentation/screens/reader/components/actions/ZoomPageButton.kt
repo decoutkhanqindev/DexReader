@@ -16,14 +16,14 @@ import com.decoutkhanqindev.dexreader.R
 @Composable
 fun ZoomPageButton(
   isFullScreen: Boolean,
-  onClick: () -> Unit,
   modifier: Modifier = Modifier,
+  onClick: () -> Unit,
 ) {
   FloatingActionButton(
     onClick = onClick,
+    modifier = modifier,
     containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
     contentColor = MaterialTheme.colorScheme.surfaceContainer,
-    modifier = modifier
   ) {
     Icon(
       imageVector =

@@ -14,12 +14,12 @@ import com.decoutkhanqindev.dexreader.presentation.screens.settings.components.S
 
 @Composable
 fun SettingsScreen(
+  viewModel: SettingsViewModel = hiltViewModel(),
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
+  modifier: Modifier = Modifier,
   onNavigateToLoginScreen: () -> Unit,
   onNavigateToMenuItemScreen: (MenuItemValue) -> Unit,
-  viewModel: SettingsViewModel = hiltViewModel(),
-  modifier: Modifier = Modifier,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -34,10 +34,10 @@ fun SettingsScreen(
   ) {
     SettingsContent(
       uiState = uiState,
+      modifier = Modifier.fillMaxSize(),
       onThemeOptionClick = viewModel::updateThemeOption,
       onSaveThemeOption = viewModel::saveThemeOption,
       onRetry = viewModel::retry,
-      modifier = Modifier.fillMaxSize()
     )
   }
 }

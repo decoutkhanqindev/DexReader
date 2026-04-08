@@ -20,8 +20,8 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.settings.ThemeMod
 fun ThemeOptionItem(
   isSelected: Boolean,
   item: ThemeModeValue,
-  onClick: (ThemeModeValue) -> Unit,
   modifier: Modifier = Modifier,
+  onClick: (ThemeModeValue) -> Unit,
 ) {
   Row(
     modifier = modifier.clickable { onClick(item) },
@@ -33,9 +33,9 @@ fun ThemeOptionItem(
     )
     Text(
       text = stringResource(item.nameRes),
-      style = MaterialTheme.typography.bodyLarge,
+      modifier = Modifier.padding(end = 4.dp),
       fontWeight = FontWeight.Bold,
-      modifier = Modifier.padding(end = 4.dp)
+      style = MaterialTheme.typography.bodyLarge,
     )
     Icon(imageVector = item.icon, contentDescription = item.name, modifier = Modifier.size(24.dp))
   }

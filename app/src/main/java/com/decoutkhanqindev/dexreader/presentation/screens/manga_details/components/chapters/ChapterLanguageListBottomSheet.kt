@@ -35,9 +35,9 @@ fun ChapterLanguageListBottomSheet(
   val sheetState = rememberModalBottomSheetState()
 
   ModalBottomSheet(
-    sheetState = sheetState,
     onDismissRequest = onDismissClick,
-    modifier = modifier
+    modifier = modifier,
+    sheetState = sheetState,
   ) {
     Text(
       text = stringResource(R.string.language_options),

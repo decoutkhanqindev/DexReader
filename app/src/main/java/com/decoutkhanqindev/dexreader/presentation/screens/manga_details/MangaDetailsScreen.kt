@@ -53,13 +53,13 @@ fun MangaDetailsScreen(
 
   if (isShowFavoritesDialog) {
     NotificationDialog(
+      title = stringResource(R.string.you_must_sign_in_to_favorite_this_manga),
+      confirm = stringResource(R.string.sign_in),
       onConfirmClick = {
         isShowFavoritesDialog = false
         onNavigateToLoginScreen()
       },
-      title = stringResource(R.string.you_must_sign_in_to_favorite_this_manga),
       onDismissClick = { isShowFavoritesDialog = false },
-      confirm = stringResource(R.string.sign_in),
     )
   }
 

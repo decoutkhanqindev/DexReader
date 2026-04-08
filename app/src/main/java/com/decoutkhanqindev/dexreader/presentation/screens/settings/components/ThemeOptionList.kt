@@ -23,13 +23,13 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.settings.ThemeMod
 @Composable
 fun ThemeOptionList(
   selectedItem: ThemeModeValue,
-  onItemClick: (ThemeModeValue) -> Unit,
   modifier: Modifier = Modifier,
+  onItemClick: (ThemeModeValue) -> Unit,
 ) {
   Card(
+    modifier = modifier,
     shape = MaterialTheme.shapes.medium,
     elevation = CardDefaults.cardElevation(8.dp),
-    modifier = modifier
   ) {
     LazyColumn(
       verticalArrangement = Arrangement.Center,
@@ -41,22 +41,21 @@ fun ThemeOptionList(
       item {
         Text(
           text = stringResource(R.string.theme),
-          style = MaterialTheme.typography.titleLarge,
-          fontWeight = FontWeight.ExtraBold,
-          textAlign = TextAlign.Center,
           modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 12.dp)
+            .padding(bottom = 12.dp),
+          fontWeight = FontWeight.ExtraBold,
+          textAlign = TextAlign.Center,
+          style = MaterialTheme.typography.titleLarge,
         )
       }
 
-      items(ThemeModeValue.entries, key = { it }) {
+      items(ThemeModeValue.entries, key = { it }) { item ->
         ThemeOptionItem(
-          isSelected = it == selectedItem,
-          item = it,
-          onClick = onItemClick,
-          modifier = Modifier.fillMaxWidth()
-        )
+          isSelected = item == selectedItem,
+          item = item,
+          modifier = Modifier.fillMaxWidth(),
+        ) { onItemClick(it) }
       }
     }
   }

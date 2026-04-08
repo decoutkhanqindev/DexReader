@@ -25,32 +25,31 @@ import com.decoutkhanqindev.dexreader.presentation.screens.settings.SettingsUiSt
 @Composable
 fun SettingsContent(
   uiState: SettingsUiState,
+  modifier: Modifier = Modifier,
   onThemeOptionClick: (ThemeModeValue) -> Unit,
   onSaveThemeOption: () -> Unit,
   onRetry: () -> Unit,
-  modifier: Modifier = Modifier,
 ) {
   var isShowSaveDialog by rememberSaveable { mutableStateOf(false) }
   var isShowSuccessDialog by rememberSaveable { mutableStateOf(true) }
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
 
   Box(
-    contentAlignment = Alignment.Center,
     modifier = modifier,
+    contentAlignment = Alignment.Center,
   ) {
     Column(
+      modifier = Modifier.fillMaxSize().let { if (uiState.isLoading) it.blur(8.dp) else it },
       verticalArrangement = Arrangement.Center,
       horizontalAlignment = Alignment.CenterHorizontally,
-      modifier = Modifier.fillMaxSize().let { if (uiState.isLoading) it.blur(8.dp) else it }
     ) {
       ThemeOptionList(
         selectedItem = uiState.themeOption,
-        onItemClick = {
-          isShowSaveDialog = true
-          onThemeOptionClick(it)
-        },
-        modifier = Modifier
-      )
+        modifier = Modifier,
+      ) {
+        isShowSaveDialog = true
+        onThemeOptionClick(it)
+      }
     }
 
     when {
@@ -58,11 +57,11 @@ fun SettingsContent(
       uiState.isError -> {
         if (isShowErrorDialog) {
           NotificationDialog(
+            title = stringResource(R.string.change_theme_failed),
             onConfirmClick = {
               isShowErrorDialog = false
               onRetry()
             },
-            title = stringResource(R.string.change_theme_failed),
             onDismissClick = { isShowErrorDialog = false },
           )
         }
@@ -71,11 +70,11 @@ fun SettingsContent(
       uiState.isSuccess -> {
         if (isShowSuccessDialog) {
           NotificationDialog(
-            onConfirmClick = { isShowSuccessDialog = false },
             icon = Icons.Default.Done,
             title = stringResource(R.string.theme_change_successful),
-            isEnableDismiss = false,
             confirm = stringResource(R.string.ok),
+            isEnableDismiss = false,
+            onConfirmClick = { isShowSuccessDialog = false },
           )
         }
       }
@@ -83,13 +82,13 @@ fun SettingsContent(
 
     if (isShowSaveDialog) {
       NotificationDialog(
+        title = stringResource(R.string.are_you_sure_you_want_to_change_the_theme),
+        confirm = stringResource(R.string.change),
         onConfirmClick = {
           isShowSaveDialog = false
           onSaveThemeOption()
         },
-        title = stringResource(R.string.are_you_sure_you_want_to_change_the_theme),
         onDismissClick = { isShowSaveDialog = false },
-        confirm = stringResource(R.string.change),
       )
     }
   }

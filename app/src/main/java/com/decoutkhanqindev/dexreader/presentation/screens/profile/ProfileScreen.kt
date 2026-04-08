@@ -22,13 +22,13 @@ import com.decoutkhanqindev.dexreader.presentation.screens.profile.components.ac
 
 @Composable
 fun ProfileScreen(
+  viewModel: ProfileViewModel = hiltViewModel(),
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
+  modifier: Modifier = Modifier,
   onNavigateToLoginScreen: () -> Unit,
   onNavigateToMenuItemScreen: (MenuItemValue) -> Unit,
   onNavigateToHomeScreen: () -> Unit,
-  viewModel: ProfileViewModel = hiltViewModel(),
-  modifier: Modifier = Modifier,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val isShowUpdateButton by remember(uiState) {
@@ -58,9 +58,9 @@ fun ProfileScreen(
       if (isUserLoggedIn) {
         UpdateAndLogoutUserBottomBar(
           isShowUpdateButton = isShowUpdateButton,
+          modifier = Modifier.fillMaxWidth(),
           onUpdateClick = viewModel::updateUserProfile,
           onLogoutClick = viewModel::logoutUser,
-          modifier = Modifier.fillMaxWidth()
         )
       }
     }
@@ -68,12 +68,12 @@ fun ProfileScreen(
       if (isUserLoggedIn || uiState.isLogoutUserSuccess) {
         ProfileContent(
           uiState = uiState,
+          modifier = Modifier.fillMaxSize(),
           onUpdateNameChange = viewModel::updateUserName,
           onUpdatePicUrlChange = viewModel::updateUserPicUrl,
           onLogoutSuccess = onNavigateToHomeScreen,
           onRetryUpdate = viewModel::retryUpdateUserProfile,
           onRetryLogout = viewModel::retryLogoutUser,
-          modifier = Modifier.fillMaxSize()
         )
       } else {
         IdleScreen(

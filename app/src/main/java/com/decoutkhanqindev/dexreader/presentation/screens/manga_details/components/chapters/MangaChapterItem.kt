@@ -38,24 +38,24 @@ fun MangaChapterItem(
   val number = chapter.number
 
   Card(
-    modifier = modifier,
-    shape = MaterialTheme.shapes.large,
-    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-    elevation = CardDefaults.cardElevation(4.dp),
     onClick = {
       onChapterClick(
         chapter.id,
         readingHistory?.lastReadPage ?: 0,
         chapter.mangaId
       )
-    }
+    },
+    modifier = modifier,
+    shape = MaterialTheme.shapes.large,
+    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+    elevation = CardDefaults.cardElevation(4.dp),
   ) {
     Column(
       modifier = Modifier
         .fillMaxSize()
         .padding(12.dp),
-      horizontalAlignment = Alignment.Start,
       verticalArrangement = Arrangement.spacedBy(8.dp),
+      horizontalAlignment = Alignment.Start,
     ) {
       Row(
         modifier = Modifier.fillMaxWidth(),

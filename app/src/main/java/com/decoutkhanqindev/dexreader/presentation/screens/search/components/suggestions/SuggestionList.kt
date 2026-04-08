@@ -11,8 +11,8 @@ import kotlinx.collections.immutable.ImmutableList
 @Composable
 fun SuggestionList(
   suggestionList: ImmutableList<String>,
-  onSelectedSuggestion: (String) -> Unit,
   modifier: Modifier = Modifier,
+  onSelectedSuggestion: (String) -> Unit,
 ) {
   LazyColumn(modifier = modifier) {
     itemsIndexed(
@@ -21,9 +21,8 @@ fun SuggestionList(
     ) { index, suggestion ->
       SuggestionItem(
         suggestion = suggestion,
-        onSelectedSuggestion = onSelectedSuggestion,
-        modifier = Modifier.fillMaxWidth()
-      )
+        modifier = Modifier.fillMaxWidth(),
+      ) { onSelectedSuggestion(it) }
     }
   }
 }

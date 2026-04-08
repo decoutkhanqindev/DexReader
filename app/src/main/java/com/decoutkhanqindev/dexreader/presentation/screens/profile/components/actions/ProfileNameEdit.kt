@@ -35,8 +35,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ProfileNameEdit(
   name: String,
-  onNameChange: (String) -> Unit,
   modifier: Modifier = Modifier,
+  onNameChange: (String) -> Unit,
 ) {
   var isEdit by rememberSaveable { mutableStateOf(false) }
   val focusRequester = remember { FocusRequester() }
@@ -44,20 +44,21 @@ fun ProfileNameEdit(
 
   Row(
     modifier = modifier.fillMaxWidth(),
+    horizontalArrangement = Arrangement.Center,
     verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.Center
   ) {
     if (!isEdit) {
       Text(
         text = name,
-        style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.ExtraBold,
         textAlign = TextAlign.Center,
+        style = MaterialTheme.typography.titleLarge,
       )
     } else {
       TextField(
         value = name,
         onValueChange = onNameChange,
+        modifier = Modifier.focusRequester(focusRequester),
         textStyle = MaterialTheme.typography.titleLarge.copy(textAlign = TextAlign.Center),
         singleLine = true,
         colors = TextFieldDefaults.colors(
@@ -76,7 +77,6 @@ fun ProfileNameEdit(
             focusManager.clearFocus()
           }
         ),
-        modifier = Modifier.focusRequester(focusRequester),
       )
 
       LaunchedEffect(isEdit) {
@@ -90,8 +90,8 @@ fun ProfileNameEdit(
       Icon(
         imageVector = if (!isEdit) Icons.Default.Edit else Icons.Default.Done,
         contentDescription = null,
+        modifier = Modifier.size(24.dp),
         tint = MaterialTheme.colorScheme.onPrimaryContainer,
-        modifier = Modifier.size(24.dp)
       )
     }
   }

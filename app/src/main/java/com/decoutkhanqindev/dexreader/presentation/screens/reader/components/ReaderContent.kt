@@ -26,9 +26,9 @@ import com.decoutkhanqindev.dexreader.presentation.screens.reader.components.pag
 @Composable
 fun ReaderContent(
   chapterPageUiState: ChapterPagesUiState,
+  modifier: Modifier = Modifier,
   onUpdateChapterPage: (Int) -> Unit,
   onRetry: () -> Unit,
-  modifier: Modifier = Modifier,
 ) {
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
 
@@ -38,11 +38,11 @@ fun ReaderContent(
     is ChapterPagesUiState.Error -> {
       if (isShowErrorDialog) {
         NotificationDialog(
+          title = stringResource(chapterPageUiState.error.messageRes),
           onConfirmClick = {
             isShowErrorDialog = false
             onRetry()
           },
-          title = stringResource(chapterPageUiState.error.messageRes),
           onDismissClick = { isShowErrorDialog = false },
         )
       }
@@ -61,20 +61,19 @@ fun ReaderContent(
         if (chapterPages.isEmpty()) {
           Text(
             text = stringResource(R.string.no_chapter_pages_available),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
+            modifier = Modifier.fillMaxWidth(),
             fontStyle = FontStyle.Italic,
+            fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
+            style = MaterialTheme.typography.titleMedium,
           )
         } else {
           ChapterPagesSection(
             chapterPages = chapterPages,
             currentPage = currentPage,
             totalPages = totalPages,
-            onUpdateChapterPage = onUpdateChapterPage,
-            modifier = Modifier.fillMaxSize()
-          )
+            modifier = Modifier.fillMaxSize(),
+          ) { onUpdateChapterPage(it) }
         }
       }
     }

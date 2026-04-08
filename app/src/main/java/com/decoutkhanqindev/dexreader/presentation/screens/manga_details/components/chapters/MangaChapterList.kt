@@ -78,16 +78,14 @@ fun MangaChapterList(
           modifier = Modifier
             .fillMaxWidth()
             .padding(top = 8.dp),
-          onRetryClick = onRetryFetchChapterListNextPage,
-        )
+        ) { onRetryFetchChapterListNextPage() }
 
         BaseNextPageState.IDLE -> LoadMoreMessage(
           modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp)
             .padding(bottom = 12.dp),
-          onClick = onFetchChapterListNextPage,
-        )
+        ) { onFetchChapterListNextPage() }
 
         BaseNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
           title = stringResource(R.string.all_chapters_loaded),

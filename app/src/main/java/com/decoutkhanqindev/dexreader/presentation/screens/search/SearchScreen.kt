@@ -18,10 +18,10 @@ import com.decoutkhanqindev.dexreader.presentation.screens.search.components.act
 
 @Composable
 fun SearchScreen(
-  onNavigateToManDetailScreen: (String) -> Unit,
-  onNavigateBack: () -> Unit,
   viewModel: SearchViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
+  onNavigateToManDetailScreen: (String) -> Unit,
+  onNavigateBack: () -> Unit,
 ) {
   val suggestionsUiState by viewModel.suggestionsUiState.collectAsStateWithLifecycle()
   val resultsUiState by viewModel.resultsUiState.collectAsStateWithLifecycle()
@@ -34,6 +34,7 @@ fun SearchScreen(
     topBar = {
       SearchBar(
         query = query,
+        modifier = Modifier.fillMaxWidth(),
         onQueryChange = {
           viewModel.updateQuery(it)
           isExpanded = true
@@ -43,7 +44,6 @@ fun SearchScreen(
           isExpanded = false
         },
         onNavigateBack = onNavigateBack,
-        modifier = Modifier.fillMaxWidth()
       )
     }
   ) { innerPadding ->
@@ -53,6 +53,9 @@ fun SearchScreen(
         resultsUiState = resultsUiState,
         isExpanded = isExpanded,
         suggestionList = suggestionList,
+        modifier = Modifier
+          .fillMaxSize()
+          .padding(innerPadding),
         onSelectedSuggestion = {
           viewModel.updateQuery(it)
           viewModel.fetchMangaListFirstPage()
@@ -62,9 +65,6 @@ fun SearchScreen(
         onFetchMangaListNextPage = viewModel::fetchMangaListNextPage,
         onRetryFetchMangaListNextPage = viewModel::retryFetchMangaListNextPage,
         onRetry = viewModel::retry,
-        modifier = Modifier
-          .fillMaxSize()
-          .padding(innerPadding)
       )
     }
 }

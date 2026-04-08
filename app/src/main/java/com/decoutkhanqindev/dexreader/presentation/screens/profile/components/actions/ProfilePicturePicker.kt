@@ -28,8 +28,8 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.image.ProfileP
 fun ProfilePicturePicker(
   url: String?,
   name: String,
-  onSelectedImageUrl: (String) -> Unit,
   modifier: Modifier = Modifier,
+  onSelectedImageUrl: (String) -> Unit,
 ) {
   val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
     contract = ActivityResultContracts.PickVisualMedia(),
@@ -52,8 +52,8 @@ fun ProfilePicturePicker(
         .height(30.dp)
         .align(Alignment.BottomCenter)
         .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f)),
+      horizontalArrangement = Arrangement.Center,
       verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.Center
     ) {
       IconButton(
         onClick = {
@@ -67,8 +67,8 @@ fun ProfilePicturePicker(
         Icon(
           imageVector = Icons.Default.Image,
           contentDescription = null,
+          modifier = Modifier.size(18.dp),
           tint = MaterialTheme.colorScheme.onPrimaryContainer,
-          modifier = Modifier.size(18.dp)
         )
       }
     }

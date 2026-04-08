@@ -31,11 +31,11 @@ import com.decoutkhanqindev.dexreader.presentation.screens.reader.components.act
 
 @Composable
 fun ReaderScreen(
+  viewModel: ReaderViewModel = hiltViewModel(),
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
-  onNavigateBack: () -> Unit,
-  viewModel: ReaderViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
+  onNavigateBack: () -> Unit,
 ) {
   val chapterDetailsUiState by viewModel.chapterDetailsUiState.collectAsStateWithLifecycle()
   val chapterPagesUiState by viewModel.chapterPagesUiState.collectAsStateWithLifecycle()
@@ -66,9 +66,9 @@ fun ReaderScreen(
       ) {
         DetailsTopBar(
           title = stringResource(R.string.reader_title, currentPage, totalPages),
-          onNavigateBack = onNavigateBack,
           isSearchEnabled = false,
-          modifier = Modifier.fillMaxWidth()
+          modifier = Modifier.fillMaxWidth(),
+          onNavigateBack = onNavigateBack,
         )
       }
     },
@@ -84,28 +84,27 @@ fun ReaderScreen(
           title = chapterDetailsUiState.title,
           canNavigatePrevious = chapterNavUiState.canNavigatePrevious,
           canNavigateNext = chapterNavUiState.canNavigateNext,
+          modifier = Modifier.fillMaxWidth(),
           onNavigatePrevious = viewModel::navigateToPreviousChapter,
           onNavigateNext = viewModel::navigateToNextChapter,
-          modifier = Modifier.fillMaxWidth()
         )
       }
     },
     floatingActionButton = {
       ZoomPageButton(
         isFullScreen = isFullScreen,
-        onClick = { isFullScreen = !isFullScreen },
-        modifier = Modifier.size(56.dp)
-      )
+        modifier = Modifier.size(56.dp),
+      ) { isFullScreen = !isFullScreen }
     },
     modifier = modifier
   ) { innerPadding ->
       ReaderContent(
         chapterPageUiState = chapterPagesUiState,
-        onUpdateChapterPage = viewModel::updateChapterPage,
-        onRetry = viewModel::retry,
         modifier = Modifier
           .fillMaxSize()
-          .padding(innerPadding)
+          .padding(innerPadding),
+        onUpdateChapterPage = viewModel::updateChapterPage,
+        onRetry = viewModel::retry,
       )
   }
 }

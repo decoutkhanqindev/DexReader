@@ -20,8 +20,8 @@ fun SuggestionsSection(
   query: String,
   suggestionsUiState: SuggestionsUiState,
   suggestionList: ImmutableList<String>,
-  onSelectedSuggestion: (String) -> Unit,
   modifier: Modifier = Modifier,
+  onSelectedSuggestion: (String) -> Unit,
 ) {
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
 
@@ -31,8 +31,8 @@ fun SuggestionsSection(
     is SuggestionsUiState.Error -> {
       if (isShowErrorDialog) {
         NotificationDialog(
-          onConfirmClick = { isShowErrorDialog = false },
           title = stringResource(suggestionsUiState.error.messageRes),
+          onConfirmClick = { isShowErrorDialog = false },
           onDismissClick = { isShowErrorDialog = false },
         )
       }
@@ -47,9 +47,8 @@ fun SuggestionsSection(
       } else {
         SuggestionList(
           suggestionList = suggestionList,
-          onSelectedSuggestion = onSelectedSuggestion,
-          modifier = modifier
-        )
+          modifier = modifier,
+        ) { onSelectedSuggestion(it) }
       }
     }
   }
