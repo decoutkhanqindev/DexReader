@@ -7,16 +7,16 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuItemValu
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuItemValue.HOME
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuItemValue.PROFILE
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuItemValue.SETTINGS
-import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
 
 object MenuItemMapper {
   fun MenuItemValue.toNavRoute() =
     when (this) {
-      HOME -> NavRoute.Home
-      CATEGORIES -> NavRoute.Categories
-      FAVORITES -> NavRoute.Favorites
-      HISTORY -> NavRoute.History
-      PROFILE -> NavRoute.Profile
-      SETTINGS -> NavRoute.Settings
+      HOME -> NavDestination.Home
+      CATEGORIES -> NavDestination.Categories
+      FAVORITES -> NavDestination.Favorites
+      HISTORY -> NavDestination.History
+      PROFILE -> NavDestination.Profile
+      SETTINGS -> NavDestination.Settings
     }
 }

@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.presentation.navigation
 
 import kotlinx.serialization.Serializable
 
-object NavRoute {
+object NavDestination {
 
   @Serializable
   data object Login
