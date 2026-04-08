@@ -18,7 +18,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSor
 import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortOrderValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
-import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,7 +36,7 @@ class CategoryDetailsViewModel @Inject constructor(
   savedStateHandle: SavedStateHandle,
   private val getMangaListByCategoryUseCase: GetMangaListByCategoryUseCase,
 ) : ViewModel() {
-  private val route: NavDestination.CategoryDetails = savedStateHandle.toRoute()
+  private val route: NavRoute.CategoryDetails = savedStateHandle.toRoute()
   private val categoryIdFromArg: String = route.categoryId
   val categoryTitleFromArg: String = route.categoryTitle
 

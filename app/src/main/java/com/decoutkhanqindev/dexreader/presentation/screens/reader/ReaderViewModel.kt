@@ -22,7 +22,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.user.history.ObserveHistory
 import com.decoutkhanqindev.dexreader.domain.usecase.user.history.UpsertHistoryUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.ChapterPagesMapper.toChapterPagesModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
-import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -51,7 +51,7 @@ class ReaderViewModel @Inject constructor(
   private val observeHistoryUseCase: ObserveHistoryUseCase,
   private val upsertHistoryUseCase: UpsertHistoryUseCase,
 ) : ViewModel() {
-  private val route: NavDestination.Reader = savedStateHandle.toRoute()
+  private val route: NavRoute.Reader = savedStateHandle.toRoute()
   private val chapterIdFromArg: String = route.chapterId
   private val lastReadPageFromArg: Int = route.lastReadPage
   private val mangaIdFromArg: String = route.mangaId

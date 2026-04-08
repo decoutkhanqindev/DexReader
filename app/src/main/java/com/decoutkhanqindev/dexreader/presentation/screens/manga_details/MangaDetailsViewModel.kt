@@ -24,7 +24,7 @@ import com.decoutkhanqindev.dexreader.presentation.mapper.ReadingHistoryMapper.t
 import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterModel
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
-import com.decoutkhanqindev.dexreader.presentation.navigation.NavDestination
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -54,7 +54,7 @@ class MangaDetailsViewModel @Inject constructor(
   private val observeHistoryUseCase: ObserveHistoryUseCase,
 ) : ViewModel() {
   private val mangaIdFromArg: String =
-    savedStateHandle.toRoute<NavDestination.MangaDetails>().mangaId
+    savedStateHandle.toRoute<NavRoute.MangaDetails>().mangaId
 
   private val _mangaDetailsUiState =
     MutableStateFlow<MangaDetailsUiState>(MangaDetailsUiState.Loading)
