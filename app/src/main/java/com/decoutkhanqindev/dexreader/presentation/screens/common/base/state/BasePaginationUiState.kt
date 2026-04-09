@@ -6,8 +6,11 @@ import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
+@Immutable
 sealed interface BasePaginationUiState<out T> {
   data object FirstPageLoading : BasePaginationUiState<Nothing>
+
+  @Immutable
   data class FirstPageError(val error: FeatureError = FeatureError.Generic) :
     BasePaginationUiState<Nothing>
 

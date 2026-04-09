@@ -9,8 +9,11 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
 
+@Immutable
 sealed interface CategoriesUiState {
   data object Loading : CategoriesUiState
+
+  @Immutable
   data class Error(val error: FeatureError = FeatureError.Generic) : CategoriesUiState
 
   @Immutable

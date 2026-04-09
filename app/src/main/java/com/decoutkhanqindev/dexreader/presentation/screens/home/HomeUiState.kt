@@ -7,8 +7,11 @@ import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
+@Immutable
 sealed interface HomeUiState {
   data object Loading : HomeUiState
+
+  @Immutable
   data class Error(val error: FeatureError = FeatureError.Generic) : HomeUiState
 
   @Immutable

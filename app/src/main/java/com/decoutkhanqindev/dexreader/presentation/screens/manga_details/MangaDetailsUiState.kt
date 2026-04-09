@@ -4,8 +4,11 @@ import androidx.compose.runtime.Immutable
 import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 
+@Immutable
 sealed interface MangaDetailsUiState {
   data object Loading : MangaDetailsUiState
+
+  @Immutable
   data class Error(val error: FeatureError = FeatureError.Generic) : MangaDetailsUiState
 
   @Immutable
