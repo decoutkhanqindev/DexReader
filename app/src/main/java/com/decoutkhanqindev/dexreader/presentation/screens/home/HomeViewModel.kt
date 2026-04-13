@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.home
 
-import android.util.Log
+import timber.log.Timber
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetLatestUpdateMangaListUseCase
@@ -69,7 +69,7 @@ class HomeViewModel @Inject constructor(
       } else {
         val throwable = results.firstOrNull { it.isFailure }?.exceptionOrNull()
         _uiState.value = HomeUiState.Error(throwable?.toFeatureError() ?: FeatureError.Generic)
-        Log.e(TAG, "fetchMangaLists have error: ${throwable?.stackTraceToString()}")
+        Timber.tag(this::class.java.simpleName).e("fetchMangaLists have error: ${throwable?.stackTraceToString()}")
       }
     }
   }
@@ -78,8 +78,5 @@ class HomeViewModel @Inject constructor(
     if (_uiState.value is HomeUiState.Error) fetchMangaLists()
   }
 
-  companion object {
-    private const val TAG = "HomeViewModel"
-  }
 }
 

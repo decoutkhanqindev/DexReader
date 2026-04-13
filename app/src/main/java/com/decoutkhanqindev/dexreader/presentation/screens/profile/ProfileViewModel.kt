@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.profile
 
-import android.util.Log
+import timber.log.Timber
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.entity.user.User
@@ -65,7 +65,7 @@ class ProfileViewModel @Inject constructor(
               )
             }
 
-            Log.d(TAG, "updateUserProfile has error: ${throwable.stackTraceToString()}")
+            Timber.tag(this::class.java.simpleName).d("updateUserProfile has error: ${throwable.stackTraceToString()}")
           }
       } else {
         _uiState.update { it.copy(isLoading = false) }
@@ -106,7 +106,7 @@ class ProfileViewModel @Inject constructor(
             )
           }
 
-          Log.d(TAG, "logoutUser has error: ${throwable.stackTraceToString()}")
+          Timber.tag(this::class.java.simpleName).d("logoutUser has error: ${throwable.stackTraceToString()}")
         }
     }
   }
@@ -156,7 +156,4 @@ class ProfileViewModel @Inject constructor(
     if (_uiState.value.isLogoutUserError) logoutUser()
   }
 
-  companion object {
-    private const val TAG = "ProfileViewModel"
-  }
 }

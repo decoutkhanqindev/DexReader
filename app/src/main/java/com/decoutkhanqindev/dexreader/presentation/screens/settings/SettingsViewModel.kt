@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.settings
 
-import android.util.Log
+import timber.log.Timber
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.settings.ObserveThemeModeUseCase
@@ -50,7 +50,7 @@ class SettingsViewModel @Inject constructor(
               )
             }
 
-            Log.e(TAG, "observeIsDynamicTheme have error: ${throwable.stackTraceToString()}")
+            Timber.tag(this::class.java.simpleName).e("observeIsDynamicTheme have error: ${throwable.stackTraceToString()}")
           }
       }
     }
@@ -87,7 +87,7 @@ class SettingsViewModel @Inject constructor(
               isError = true
             )
           }
-          Log.e(TAG, "setThemeType have error: ${throwable.stackTraceToString()}")
+          Timber.tag(this::class.java.simpleName).e("setThemeType have error: ${throwable.stackTraceToString()}")
         }
     }
   }
@@ -108,7 +108,4 @@ class SettingsViewModel @Inject constructor(
     if (_uiState.value.isError) saveThemeOption()
   }
 
-  companion object {
-    private const val TAG = "SettingsViewModel"
-  }
 }

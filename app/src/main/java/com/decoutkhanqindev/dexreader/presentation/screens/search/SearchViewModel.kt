@@ -2,6 +2,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.search
 
 
 import android.util.Log
+import timber.log.Timber
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaSuggestionsUseCase
@@ -63,10 +64,6 @@ class SearchViewModel @Inject constructor(
               _suggestionsUiState.value =
                 SuggestionsUiState.Error(throwable.toFeatureError())
               emit(persistentListOf())
-              Log.d(
-                TAG,
-                "suggestionList have error: ${throwable.stackTraceToString()}"
-              )
             }
         }
       }
@@ -96,7 +93,7 @@ class SearchViewModel @Inject constructor(
         .onFailure { throwable ->
           _resultsUiState.value =
             BasePaginationUiState.FirstPageError(throwable.toFeatureError())
-          Log.d(TAG, "fetchMangaListFirstPage have error: ${throwable.stackTraceToString()}")
+          Timber.tag(this::class.java.simpleName).d("fetchMangaListFirstPage have error: ${throwable.stackTraceToString()}")
         }
     }
   }
@@ -141,7 +138,7 @@ class SearchViewModel @Inject constructor(
         .onFailure {
           _resultsUiState.value =
             currentResultsUiState.copy(nextPageState = BaseNextPageState.ERROR)
-          Log.d(TAG, "fetchMangaListNextPageInternal have error: ${it.stackTraceToString()}")
+          Timber.tag(this::class.java.simpleName).d("fetchMangaListNextPageInternal have error: ${it.stackTraceToString()}")
         }
     }
   }
@@ -163,7 +160,6 @@ class SearchViewModel @Inject constructor(
   }
 
   companion object {
-    private const val TAG = "SearchViewModel"
     private const val FIRST_PAGE = 1
     private const val MANGA_LIST_PER_PAGE_SIZE = 20
     private const val DEBOUNCE_TIME_MILLIS = 500L

@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.favorites
 
-import android.util.Log
+import timber.log.Timber
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
@@ -81,17 +81,14 @@ constructor(
                     }
 
                     _uiState.value = BasePaginationUiState.FirstPageError()
-                    Log.d(
-                      TAG,
-                      "observeFavoritesFirstPage have error: ${throwable.stackTraceToString()}"
-                    )
+                    Timber.tag(this::class.java.simpleName).d("observeFavoritesFirstPage have error: ${throwable.stackTraceToString()}")
                   }
               }
           } catch (c: CancellationException) {
             throw c
           } catch (e: Exception) {
             _uiState.value = BasePaginationUiState.FirstPageError()
-            Log.d(TAG, "observeFavoritesFirstPage have error: ${e.stackTraceToString()}")
+            Timber.tag(this::class.java.simpleName).d("observeFavoritesFirstPage have error: ${e.stackTraceToString()}")
           }
         }
       }
@@ -155,20 +152,14 @@ constructor(
                       return@onFailure
 
                     _uiState.value = currentUiState.copy(nextPageState = BaseNextPageState.ERROR)
-                    Log.d(
-                      TAG,
-                      "observeFavoritesNextPageInternal have error: ${throwable.stackTraceToString()}"
-                    )
+                    Timber.tag(this::class.java.simpleName).d("observeFavoritesNextPageInternal have error: ${throwable.stackTraceToString()}")
                   }
               }
           } catch (c: CancellationException) {
             throw c
           } catch (e: Exception) {
             _uiState.value = currentUiState.copy(nextPageState = BaseNextPageState.ERROR)
-            Log.d(
-              TAG,
-              "observeFavoritesNextPageInternal setup error: ${e.stackTraceToString()}"
-            )
+            Timber.tag(this::class.java.simpleName).d("observeFavoritesNextPageInternal setup error: ${e.stackTraceToString()}")
           }
         }
       }
@@ -201,7 +192,6 @@ constructor(
   }
 
   companion object {
-    private const val TAG = "FavoritesViewModel"
     private const val FIRST_PAGE = 1
     private const val MANGA_LIST_PER_PAGE_SIZE = 20
   }

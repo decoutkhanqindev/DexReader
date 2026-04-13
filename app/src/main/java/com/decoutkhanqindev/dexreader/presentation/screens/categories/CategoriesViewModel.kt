@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.categories
 
 
-import android.util.Log
+import timber.log.Timber
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.entity.value.category.CategoryType
@@ -48,7 +48,7 @@ class CategoriesViewModel @Inject constructor(
         }
         .onFailure { throwable ->
           _uiState.value = CategoriesUiState.Error(throwable.toFeatureError())
-          Log.e(TAG, "fetchTagList have error: ${throwable.stackTraceToString()}")
+          Timber.tag(this::class.java.simpleName).e("fetchTagList have error: ${throwable.stackTraceToString()}")
         }
     }
   }
@@ -57,7 +57,4 @@ class CategoriesViewModel @Inject constructor(
     if (_uiState.value is CategoriesUiState.Error) fetchTagList()
   }
 
-  companion object {
-    private const val TAG = "CategoriesViewModel"
-  }
 }

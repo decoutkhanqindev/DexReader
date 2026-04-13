@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.reader
 
 
-import android.util.Log
+import timber.log.Timber
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -138,7 +138,7 @@ class ReaderViewModel @Inject constructor(
           if (throwable is BusinessException.Resource.ChapterNotFound) {
             _chapterPagesUiState.value = ChapterPagesUiState.Error(throwable.toFeatureError())
           }
-          Log.e(TAG, "fetchChapterDetails have error: ${throwable.stackTraceToString()}")
+          Timber.tag(this::class.java.simpleName).e("fetchChapterDetails have error: ${throwable.stackTraceToString()}")
         }
     }
   }
@@ -190,7 +190,7 @@ class ReaderViewModel @Inject constructor(
           return@launch
         }
         .onFailure {
-          Log.d(TAG, "getChapterCacheUseCase have error: ${it.stackTraceToString()}")
+          Timber.tag(this::class.java.simpleName).d("getChapterCacheUseCase have error: ${it.stackTraceToString()}")
         }
 
       // from network
@@ -212,12 +212,9 @@ class ReaderViewModel @Inject constructor(
           }
 
           addChapterCacheUseCase(chapterPages = chapterPages)
-            .onSuccess { Log.d(TAG, "addChapterCacheUseCase success") }
+            .onSuccess { Timber.tag(this::class.java.simpleName).d("addChapterCacheUseCase success") }
             .onFailure {
-              Log.d(
-                TAG,
-                "addChapterCacheUseCase have error: ${it.stackTraceToString()}"
-              )
+              Timber.tag(this::class.java.simpleName).d("addChapterCacheUseCase have error: ${it.stackTraceToString()}")
             }
 
           if (!isPrefetch) prefetchNextChapterPages()
@@ -226,7 +223,7 @@ class ReaderViewModel @Inject constructor(
           if (!isPrefetch) {
             _chapterPagesUiState.value = ChapterPagesUiState.Error(throwable.toFeatureError())
           }
-          Log.d(TAG, "getChapterPagesUseCase have error: ${throwable.stackTraceToString()}")
+          Timber.tag(this::class.java.simpleName).d("getChapterPagesUseCase have error: ${throwable.stackTraceToString()}")
         }
     }
   }
@@ -258,7 +255,7 @@ class ReaderViewModel @Inject constructor(
           isFetchingChapterList = false
           currentChapterList = persistentListOf()
           hasNextChapterListPage = false
-          Log.d(TAG, "fetchChapterListFirstPage error: ${it.stackTraceToString()}")
+          Timber.tag(this::class.java.simpleName).d("fetchChapterListFirstPage error: ${it.stackTraceToString()}")
         }
     }
   }
@@ -283,7 +280,7 @@ class ReaderViewModel @Inject constructor(
         .onFailure {
           isFetchingChapterList = false
           hasNextChapterListPage = false
-          Log.d(TAG, "fetchChapterListNextPage error: ${it.stackTraceToString()}")
+          Timber.tag(this::class.java.simpleName).d("fetchChapterListNextPage error: ${it.stackTraceToString()}")
         }
     }
   }
@@ -393,8 +390,8 @@ class ReaderViewModel @Inject constructor(
           lastReadPage = currentChapterPagesState.currentChapterPage,
           pageCount = currentChapterPagesState.chapterPages.totalPages,
         )
-          .onSuccess { Log.d(TAG, "addAndUpdateToHistory success") }
-          .onFailure { Log.d(TAG, "addAndUpdateToHistory error: ${it.stackTraceToString()}") }
+          .onSuccess { Timber.tag(this::class.java.simpleName).d("addAndUpdateToHistory success") }
+          .onFailure { Timber.tag(this::class.java.simpleName).d("addAndUpdateToHistory error: ${it.stackTraceToString()}") }
       }
     }
   }
@@ -442,10 +439,7 @@ class ReaderViewModel @Inject constructor(
                     currentReadingHistoryList = persistentListOf()
                     hasNextReadingHistoryListPage = false
                     _isObserveHistoryDone.value = true
-                    Log.d(
-                      TAG,
-                      "observeHistoryFirstPage have error: ${throwable.stackTraceToString()}"
-                    )
+                    Timber.tag(this::class.java.simpleName).d("observeHistoryFirstPage have error: ${throwable.stackTraceToString()}")
                   }
               }
           } catch (c: CancellationException) {
@@ -455,7 +449,7 @@ class ReaderViewModel @Inject constructor(
             currentReadingHistoryList = persistentListOf()
             hasNextReadingHistoryListPage = false
             _isObserveHistoryDone.value = true
-            Log.d(TAG, "observeHistoryFirstPage have error: ${e.stackTraceToString()}")
+            Timber.tag(this::class.java.simpleName).d("observeHistoryFirstPage have error: ${e.stackTraceToString()}")
           }
         }
       }
@@ -505,10 +499,7 @@ class ReaderViewModel @Inject constructor(
 
                     hasNextReadingHistoryListPage = false
                     _isObserveHistoryDone.value = previousState
-                    Log.d(
-                      TAG,
-                      "observeHistoryNextPage have error: ${throwable.stackTraceToString()}"
-                    )
+                    Timber.tag(this::class.java.simpleName).d("observeHistoryNextPage have error: ${throwable.stackTraceToString()}")
                   }
               }
           } catch (c: CancellationException) {
@@ -517,7 +508,7 @@ class ReaderViewModel @Inject constructor(
             isObservingReadingHistoryList = false
             hasNextReadingHistoryListPage = false
             _isObserveHistoryDone.value = previousState
-            Log.d(TAG, "observeHistoryNextPage have error: ${e.stackTraceToString()}")
+            Timber.tag(this::class.java.simpleName).d("observeHistoryNextPage have error: ${e.stackTraceToString()}")
           }
         }
       }
@@ -556,8 +547,8 @@ class ReaderViewModel @Inject constructor(
 
   private fun clearExpiredCache() {
     viewModelScope.launch {
-      clearExpiredCacheUseCase().onSuccess { Log.d(TAG, "clearExpiredCache success.") }.onFailure {
-        Log.d(TAG, "clearExpiredCache error: ${it.stackTraceToString()}")
+      clearExpiredCacheUseCase().onSuccess { Timber.tag(this::class.java.simpleName).d("clearExpiredCache success.") }.onFailure {
+        Timber.tag(this::class.java.simpleName).d("clearExpiredCache error: ${it.stackTraceToString()}")
       }
     }
   }
@@ -583,7 +574,6 @@ class ReaderViewModel @Inject constructor(
   }
 
   companion object {
-    private const val TAG = "ReaderViewModel"
     private const val CHAPTER_LIST_PER_PAGE_SIZE = 20
     private const val READING_HISTORY_LIST_PER_PAGE_SIZE = 50
   }

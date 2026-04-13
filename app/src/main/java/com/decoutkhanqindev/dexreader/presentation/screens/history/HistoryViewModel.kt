@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.history
 
-import android.util.Log
+import timber.log.Timber
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
@@ -87,17 +87,14 @@ constructor(
                     }
 
                     _historyUiState.value = BasePaginationUiState.FirstPageError()
-                    Log.d(
-                      TAG,
-                      "observeHistoryFirstPage have error: ${throwable.stackTraceToString()}"
-                    )
+                    Timber.tag(this::class.java.simpleName).d("observeHistoryFirstPage have error: ${throwable.stackTraceToString()}")
                   }
               }
           } catch (c: CancellationException) {
             throw c
           } catch (e: Exception) {
             _historyUiState.value = BasePaginationUiState.FirstPageError()
-            Log.d(TAG, "observeHistoryFirstPage have error: ${e.stackTraceToString()}")
+            Timber.tag(this::class.java.simpleName).d("observeHistoryFirstPage have error: ${e.stackTraceToString()}")
           }
         }
       }
@@ -166,10 +163,7 @@ constructor(
                       currentUiState.copy(
                         nextPageState = BaseNextPageState.ERROR
                       )
-                    Log.d(
-                      TAG,
-                      "observeHistoryNextPageInternal have error: ${throwable.stackTraceToString()}"
-                    )
+                    Timber.tag(this::class.java.simpleName).d("observeHistoryNextPageInternal have error: ${throwable.stackTraceToString()}")
                   }
               }
           } catch (c: CancellationException) {
@@ -177,10 +171,7 @@ constructor(
           } catch (e: Exception) {
             _historyUiState.value =
               currentUiState.copy(nextPageState = BaseNextPageState.ERROR)
-            Log.d(
-              TAG,
-              "observeHistoryNextPageInternal setup error: ${e.stackTraceToString()}"
-            )
+            Timber.tag(this::class.java.simpleName).d("observeHistoryNextPageInternal setup error: ${e.stackTraceToString()}")
           }
         }
       }
@@ -224,7 +215,7 @@ constructor(
                 isError = true
               )
             }
-            Log.d(TAG, "removeFromHistory have error: ${throwable.stackTraceToString()}")
+            Timber.tag(this::class.java.simpleName).d("removeFromHistory have error: ${throwable.stackTraceToString()}")
           }
       }
     }
@@ -273,7 +264,6 @@ constructor(
   }
 
   companion object {
-    private const val TAG = "HistoryViewModel"
     private const val FIRST_PAGE = 1
     private const val READING_HISTORY_LIST_PER_PAGE_SIZE = 20
   }

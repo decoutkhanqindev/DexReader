@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation
 
-import android.util.Log
+import timber.log.Timber
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.entity.user.User
@@ -59,7 +59,7 @@ class UserViewModel @Inject constructor(
           }
           .onFailure {
             _isUserLoggedIn.value = false
-            Log.d(TAG, "observeCurrentUser have error: ${it.stackTraceToString()}")
+            Timber.tag(this::class.java.simpleName).d("observeCurrentUser have error: ${it.stackTraceToString()}")
           }
       }
     }
@@ -75,7 +75,7 @@ class UserViewModel @Inject constructor(
           .onSuccess { _domainUserProfile.value = it }
           .onFailure {
             _domainUserProfile.value = null
-            Log.d(TAG, "observeUserProfile have error: ${it.stackTraceToString()}")
+            Timber.tag(this::class.java.simpleName).d("observeUserProfile have error: ${it.stackTraceToString()}")
           }
       }
     }
@@ -91,7 +91,4 @@ class UserViewModel @Inject constructor(
     super.onCleared()
   }
 
-  companion object {
-    private const val TAG = "UserViewModel"
-  }
 }
