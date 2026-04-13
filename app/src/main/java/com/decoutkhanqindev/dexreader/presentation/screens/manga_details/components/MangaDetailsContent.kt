@@ -168,7 +168,7 @@ fun MangaDetailsContent(
     }
 
     MoveToTopButton(
-      itemsSize = (mangaChaptersUiState as BasePaginationUiState.Content<ChapterModel>).currentList.size,
+      itemsSize = (mangaChaptersUiState as? BasePaginationUiState.Content<ChapterModel>)?.currentList?.size ?: return,
       firstVisibleItemIndex = lazyListState.firstVisibleItemIndex,
       modifier = Modifier
         .align(Alignment.BottomEnd)

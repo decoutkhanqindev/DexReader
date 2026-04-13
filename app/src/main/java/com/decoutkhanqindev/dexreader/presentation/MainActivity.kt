@@ -10,11 +10,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    Timber.tag(this::class.java.simpleName)
+      .d("onCreate: initializing UI")
     enableEdgeToEdge()
     setContent {
       DexReaderTheme {
@@ -25,5 +28,35 @@ class MainActivity : ComponentActivity() {
         )
       }
     }
+  }
+
+  override fun onStart() {
+    super.onStart()
+    Timber.tag(this::class.java.simpleName)
+      .d("onStart: visible but not interactable yet")
+  }
+
+  override fun onResume() {
+    super.onResume()
+    Timber.tag(this::class.java.simpleName)
+      .d("onResume: active and interactable")
+  }
+
+  override fun onPause() {
+    super.onPause()
+    Timber.tag(this::class.java.simpleName)
+      .d("onPause: losing focus")
+  }
+
+  override fun onStop() {
+    super.onStop()
+    Timber.tag(this::class.java.simpleName)
+      .d("onStop: no longer visible")
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    Timber.tag(this::class.java.simpleName)
+      .d("onDestroy: cleaning up resources")
   }
 }
