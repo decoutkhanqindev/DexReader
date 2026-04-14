@@ -152,3 +152,16 @@ All composable definitions and call sites in `presentation/screens/search/` fixe
 
 ### Composable param ordering refactor — COMPLETE
 All `presentation/screens/` directories done: auth/ → common/ → home/ → categories/ → manga_details/ → reader/ → profile/ → settings/ → search/.
+
+---
+
+## 2026-04-14
+
+### strings.xml: merge + group-comment reorganization
+**Decision:** Merge `strings_lang_generated.xml` into `strings.xml` (single source of truth), then reorganize all 214 strings into 15 named screen-group sections using XML comments.
+
+**Groups:** App, Navigation/Menu, Common/Shared, Auth, Home, Categories, Category Details, Manga Details, Reader, Search, Favorites, History, Profile, Settings, Language Names.
+
+**Shared-string placement rule:** Strings used in multiple screens go in the group that is their semantic home (e.g. `sign_in` → Auth). Strings with no clear owner go in Common. `icon_expand_more/less` → Common (used in categories + manga_details). `all_mangas_loaded` / `can_t_load_next_manga_page` → Common (multi-screen). FeatureError / UserError string keys → Common.
+
+**Why:** Easier navigation — developers can jump to the relevant section instead of scanning 200+ entries. All string names unchanged so no code references break.

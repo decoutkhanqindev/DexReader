@@ -8,34 +8,27 @@
 - [x] All auth/ composable definitions + call sites: correct param order
 - [x] All shared composable definitions: correct order
 - [x] All common/ composable definitions (31 files): correct order
-- [x] All Material/Compose call sites in `common/` (14 files) — commit b048a7e
-- [x] `common/texts/LoadPageErrorMessage.kt` — missed violations fixed
+- [x] All Material/Compose call sites in `common/` (14 files)
 - [x] `presentation/screens/home/` — full audit + fix
 - [x] `presentation/screens/categories/` — full audit + fix
-- [x] `presentation/screens/manga_details/` — full audit + fix (10 violations, 7 files)
-- [x] `presentation/screens/reader/` — full audit + fix (7 files incl. NavGraph)
-- [x] `presentation/screens/profile/` — full audit + fix (5 files + NavGraph)
-- [x] `presentation/screens/settings/` — full audit + fix (4 files + NavGraph)
-- [x] `presentation/screens/search/` — full audit + fix (8 files + NavGraph)
+- [x] `presentation/screens/manga_details/` — full audit + fix
+- [x] `presentation/screens/reader/` — full audit + fix
+- [x] `presentation/screens/profile/` — full audit + fix
+- [x] `presentation/screens/settings/` — full audit + fix
+- [x] `presentation/screens/search/` — full audit + fix
+- [x] `strings_lang_generated.xml` merged into `strings.xml` — file deleted
+- [x] `strings.xml` reorganized into 15 screen-group sections with XML comments
 
 ## Remaining
-**None. All presentation/screens/ directories complete.**
+**None.**
 
-**Build verified: `assembleDebug` BUILD SUCCESSFUL — refactor is done.**
+**Build verified: `assembleDebug` BUILD SUCCESSFUL — all work complete.**
 
-## Rules Applied
-1. Definition param order: required non-lambda → optional non-modifier → modifier → required lambdas → optional lambdas
-2. `viewModel` ALWAYS FIRST in Screen composables
-3. Call site named arg order mirrors definition order
-4. Trailing lambda: ≤1 lambda total → trailing `{ }`; >1 same-type → all named; action+content → action named, content trailing
-5. Text: `style` always last; `fontStyle(5)` before `fontWeight(6)`; `overflow(12)` before `maxLines(14)`
-6. Row: `modifier, horizontalArrangement, verticalAlignment`
-7. Box: `modifier, contentAlignment, ...`
-8. Column: `modifier, verticalArrangement, horizontalAlignment`
-9. Button/FAB/IconButton/TextButton: `onClick, modifier, ...`
-10. Card (clickable): `onClick, modifier, shape, ...`
-11. Card (non-clickable): `modifier, shape, colors, elevation, ...`
-12. CenterAlignedTopAppBar: `title, modifier, navigationIcon, actions, ..., colors`
-13. TextField: `value, onValueChange, modifier, ...`
-14. DropdownMenuItem: `text, onClick, modifier, ..., leadingIcon, ...`
-15. ActionButton: `isEnabled, modifier, onClick, content` — modifier IS before onClick
+## Rules Applied (string grouping)
+- Strings used in multiple screens → placed in most semantically fitting group
+- `ok`, `cancel`, `retry`, `load_more`, `move_to_top` → Common (used everywhere)
+- `sign_in` → Auth (semantic home, even though referenced in common/manga_details)
+- `icon_expand_more/less` → Common (shared by categories + manga_details)
+- `all_mangas_loaded`, `can_t_load_next_manga_page` → Common (multi-screen)
+- `error_server_unavailable`, `error_access_denied` → Common (FeatureError/UserError models)
+- `volume_chapter` → Manga Details; `reader_title` → Reader
