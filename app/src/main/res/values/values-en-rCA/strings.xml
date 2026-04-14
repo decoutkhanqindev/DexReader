@@ -1,39 +1,31 @@
 <resources>
-  <!-- App -->
-  <string name="app_name">Dex Reader</string>
   <string name="slogan">Read to enjoy - Save to remember</string>
-
-  <!-- Navigation / Menu -->
   <string name="back">Back</string>
-  <string name="menu">menu</string>
+  <string name="menu">Menu</string>
   <string name="home_menu_item">Home</string>
   <string name="category_menu_item">Categories</string>
-  <string name="favorite_menu_item">Favorites</string>
+  <string name="favorite_menu_item">Favourites</string>
   <string name="history_menu_item">History</string>
   <string name="profile_menu_item">Profile</string>
   <string name="settings_menu_item">Settings</string>
-
-  <!-- Common / Shared -->
-  <string name="search">search</string>
-  <string name="clear">clear</string>
+  <string name="search">Search</string>
+  <string name="clear">Clear</string>
   <string name="retry">Retry</string>
   <string name="ok">OK</string>
   <string name="cancel">Cancel</string>
   <string name="load_more">Load More</string>
-  <string name="move_to_top">move to top</string>
-  <string name="by_author">by %s</string>
+  <string name="move_to_top">Move to Top</string>
+  <string name="by_author">By %s</string>
   <string name="all_mangas_loaded">All mangas loaded</string>
-  <string name="warning_icon">warning icon</string>
-  <string name="icon_expand_more">icon expand-more</string>
-  <string name="icon_expand_less">icon expand-less</string>
+  <string name="warning_icon">Warning Icon</string>
+  <string name="icon_expand_more">Expand More Icon</string>
+  <string name="icon_expand_less">Expand Less Icon</string>
   <string name="decoutkhanqindev">decoutkhanqindev</string>
   <string name="oops_something_went_wrong_please_try_again">Oops, something went wrong. Please try again.</string>
   <string name="no_internet_connection">No internet connection. Please check your connection and try again.</string>
   <string name="can_t_load_next_manga_page_please_try_again">Can\'t load next manga page.\nPlease try again.</string>
   <string name="error_server_unavailable">Server error. Please try again later.</string>
   <string name="error_access_denied">Access denied. Please sign in again.</string>
-
-  <!-- Auth Screen -->
   <string name="email">Email</string>
   <string name="email_required">Email is required.</string>
   <string name="invalid_email_format">Invalid email format.</string>
@@ -45,13 +37,13 @@
   <string name="password_dont_match">Passwords do not match.</string>
   <string name="name">Name</string>
   <string name="name_required">Name is required.</string>
-  <string name="show_password">show password</string>
-  <string name="hide_password">hide password</string>
+  <string name="show_password">Show Password</string>
+  <string name="hide_password">Hide Password</string>
   <string name="sign_up">Sign Up</string>
   <string name="sign_in">Sign In</string>
   <string name="don_t_have_an_account">Don\'t have an account?</string>
   <string name="forgot_password">Forgot Password</string>
-  <string name="reset_password">Reset password</string>
+  <string name="reset_password">Reset Password</string>
   <string name="sign_up_failed_please_try_again">Sign up failed. Please try again.</string>
   <string name="sign_up_successful">Sign up successful.</string>
   <string name="sign_in_failed_please_try_again">Sign in failed. Please try again.</string>
@@ -63,21 +55,15 @@
   <string name="error_user_not_found">User not found.</string>
   <string name="error_unknown">An unexpected error occurred.</string>
   <string name="error_send_reset_password">Error sending reset password email.</string>
-
-  <!-- Home Screen -->
   <string name="latest_update">Latest Updates</string>
   <string name="trending">Trending</string>
   <string name="new_releases">New Releases</string>
   <string name="top_rated">Top Rated</string>
-
-  <!-- Categories Screen -->
   <string name="category_type_genre">Genre</string>
   <string name="category_type_theme">Theme</string>
   <string name="category_type_format">Format</string>
   <string name="category_type_content">Content</string>
   <string name="category_type_unknown">Unknown</string>
-
-  <!-- Category Details Screen -->
   <string name="sort">Sort</string>
   <string name="sort_options">Sort Options</string>
   <string name="sort_order_ascending">Ascending</string>
@@ -96,8 +82,6 @@
   <string name="content_rating_suggestive">Suggestive</string>
   <string name="content_rating_erotica">Erotica</string>
   <string name="content_rating_unknown">Unknown</string>
-
-  <!-- Manga Details Screen -->
   <string name="manga_details">Manga Details</string>
   <string name="manga_not_available">This manga is no longer available.</string>
   <string name="chapter_not_available">This chapter is no longer available.</string>
@@ -111,7 +95,7 @@
   <string name="chapters">Chapters</string>
   <string name="all_chapters_loaded">All chapters loaded</string>
   <string name="no_chapters_available">No chapters available</string>
-  <string name="something_went_wrong_while_loading_chapters_please_try_again">Something went wrong while loading chapters.Please try again.</string>
+  <string name="something_went_wrong_while_loading_chapters_please_try_again">Something went wrong while loading chapters. Please try again.</string>
   <string name="can_t_load_next_chapter_page_please_try_again">Can\'t load next chapter page.\nPlease try again.</string>
   <string name="no_languages_available">No languages available</string>
   <string name="language_options">Language Options</string>
@@ -119,29 +103,21 @@
   <string name="volume_chapter">Vol %1$s - Ch %2$s</string>
   <string name="start_reading">Start Reading</string>
   <string name="continue_reading">Continue Reading</string>
-  <string name="favorite">Favorite</string>
-  <string name="unfavorite">Unfavorite</string>
-  <string name="you_must_sign_in_to_favorite_this_manga">You must sign in to favorite this manga.</string>
-
-  <!-- Reader Screen -->
-  <string name="exit_fullscreen">exit fullscreen</string>
-  <string name="fullscreen">fullscreen</string>
-  <string name="pre_chapter">pre chapter</string>
-  <string name="next_chapter">next chapter</string>
+  <string name="favorite">Favourite</string>
+  <string name="unfavorite">Unfavourite</string>
+  <string name="you_must_sign_in_to_favorite_this_manga">You must sign in to favourite this manga.</string>
+  <string name="exit_fullscreen">Exit Fullscreen</string>
+  <string name="fullscreen">Fullscreen</string>
+  <string name="pre_chapter">Previous Chapter</string>
+  <string name="next_chapter">Next Chapter</string>
   <string name="no_chapter_pages_available">No chapter pages available.</string>
   <string name="reader_title">%1$s/%2$s</string>
-
-  <!-- Search Screen -->
   <string name="search_manga_placeholder">Enter manga title …</string>
   <string name="search_your_manga_here">Search your manga here.</string>
   <string name="sorry_no_manga_found_with_title">Sorry, no manga with title %s was found.\nPlease try again with a different title.</string>
-  <string name="not_found">not found</string>
-
-  <!-- Favorites Screen -->
-  <string name="please_sign_in_to_view_your_favorites">Please sign in to view your favorites.</string>
-  <string name="you_haven_t_added_any_favorite_manga_yet">You haven\'t added any favorite manga yet.</string>
-
-  <!-- History Screen -->
+  <string name="not_found">Not Found</string>
+  <string name="please_sign_in_to_view_your_favorites">Please sign in to view your favourites.</string>
+  <string name="you_haven_t_added_any_favorite_manga_yet">You haven\'t added any favourite manga yet.</string>
   <string name="please_sign_in_to_view_your_history">Please sign in to view your history.</string>
   <string name="you_have_no_reading_history_here">You have no reading history here.</string>
   <string name="are_you_sure_you_want_to_remove_it_from_your_history">Are you sure you want to remove it from your history?</string>
@@ -150,31 +126,25 @@
   <string name="you_have_removed_from_history_successfully">You have removed from history successfully.</string>
   <string name="removed_from_history_failed">Removed from history failed. Please try again.</string>
   <string name="view_details_or_continue">View Details or Continue?</string>
-
-  <!-- Profile Screen -->
   <string name="please_sign_in_to_view_your_profile">Please sign in to view your profile.</string>
   <string name="logout">Logout</string>
   <string name="logout_failed_please_try_again">Logout failed. Please try again.</string>
   <string name="logout_successful">Logout successful.</string>
-  <string name="are_you_sure_you_want_to_logout">Are you sure you want to logout?</string>
+  <string name="are_you_sure_you_want_to_logout">Are you sure you want to log out?</string>
   <string name="update_profile">Update</string>
   <string name="update_profile_failed">Update profile failed. Please try again.</string>
   <string name="are_you_sure_you_want_to_update_with_the_new_changes">Are you sure you want to update with the new changes?</string>
   <string name="your_profile_has_been_updated_successfully">Your profile has been updated successfully.</string>
-
-  <!-- Settings Screen -->
   <string name="system">System</string>
   <string name="dark">Dark Mode</string>
   <string name="light">Light Mode</string>
   <string name="theme">Theme Options</string>
-  <string name="dynamic_color">Dynamic Color</string>
+  <string name="dynamic_color">Dynamic Colour</string>
   <string name="are_you_sure_you_want_to_change_the_theme">Are you sure you want to change the theme?</string>
-  <string name="are_you_sure_you_want_to_enable_dynamic_color_theme">Are you sure you want to enable dynamic color theme?</string>
+  <string name="are_you_sure_you_want_to_enable_dynamic_color_theme">Are you sure you want to enable dynamic colour theme?</string>
   <string name="change">Change</string>
   <string name="change_theme_failed">Change theme failed. Please try again.</string>
   <string name="theme_change_successful">Theme change successful.</string>
-
-  <!-- Language Names -->
   <string name="lang_english">English</string>
   <string name="lang_afrikaans">Afrikaans</string>
   <string name="lang_albanian">Albanian</string>

@@ -57,7 +57,13 @@
       "Bash(./gradlew clean:*)",
       "Bash(./gradlew assembleDebug --quiet)",
       "Bash(2)",
-      "Bash(gh pr:*)"
+      "Bash(gh pr:*)",
+      "Bash(sed 's/.*stringResource\\(R\\\\.string\\\\.//')",
+      "Bash(sed 's/[\\),].*//')",
+      "Bash(sed 's/name=\"\"\"\"//')",
+      "Bash(sed 's/\"\"\"\"//')",
+      "Bash('BASE=C:/Android Development/dex_reader/DexReader/app/src/main/java/com/decoutkhanqindev/dexreader/presentation' grep -roh R.string.[a-z_0-9]* $BASE --include=*.kt)",
+      "Bash(python3:*)"
     ]
   },
   "spinnerTipsEnabled": true
