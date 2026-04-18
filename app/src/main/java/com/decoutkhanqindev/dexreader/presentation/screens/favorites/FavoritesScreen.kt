@@ -10,7 +10,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
-import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuItemValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.favorites.components.FavoritesContent
@@ -20,7 +20,7 @@ fun FavoritesScreen(
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
   onNavigateToLoginScreen: () -> Unit,
-  onNavigateToMenuItemScreen: (MenuItemValue) -> Unit,
+  onNavigateToMenuItemScreen: (MenuValue) -> Unit,
   onNavigateToSearchScreen: () -> Unit,
   onNavigateToMangaDetailScreen: (String) -> Unit,
   viewModel: FavoritesViewModel = hiltViewModel(),
@@ -36,7 +36,7 @@ fun FavoritesScreen(
   BaseScreen(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
-    selectedMenuItem = MenuItemValue.FAVORITES,
+    selectedMenuItem = MenuValue.FAVORITES,
     modifier = modifier,
     onNavigateToSignInScreen = onNavigateToLoginScreen,
     onNavigateToMenuItemScreen = onNavigateToMenuItemScreen,

@@ -10,15 +10,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuItemValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun MenuBody(
-  selectedItem: MenuItemValue,
-  items: ImmutableList<MenuItemValue>,
+  selectedItem: MenuValue,
+  items: ImmutableList<MenuValue>,
   modifier: Modifier = Modifier,
-  onItemClick: (MenuItemValue) -> Unit,
+  onItemClick: (MenuValue) -> Unit,
 ) {
   LazyColumn(
     modifier = modifier.background(color = MaterialTheme.colorScheme.surface),

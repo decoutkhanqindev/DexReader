@@ -11,11 +11,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
-import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuItemValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
@@ -23,14 +22,12 @@ fun MenuDrawer(
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
   drawerState: DrawerState,
-  selectedItem: MenuItemValue,
+  selectedItem: MenuValue,
   modifier: Modifier = Modifier,
   onSignInClick: () -> Unit,
-  onItemClick: (MenuItemValue) -> Unit,
+  onItemClick: (MenuValue) -> Unit,
   content: @Composable () -> Unit,
 ) {
-  val items = remember { MenuItemValue.entries.toPersistentList() }
-
   ModalNavigationDrawer(
     drawerState = drawerState,
     modifier = modifier,
@@ -45,13 +42,15 @@ fun MenuDrawer(
               .fillMaxWidth()
               .padding(16.dp),
           ) { onSignInClick() }
+
           MenuBody(
             selectedItem = selectedItem,
-            items = items,
+            items = MenuValue.entries.toPersistentList(),
             modifier = Modifier
               .weight(2f)
               .fillMaxWidth(),
           ) { onItemClick(it) }
+
           MenuFooter(
             modifier = Modifier
               .weight(0.2f)

@@ -10,7 +10,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
-import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuItemValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.history.components.HistoryContent
@@ -20,7 +20,7 @@ fun HistoryScreen(
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
   onNavigateToLoginScreen: () -> Unit,
-  onNavigateToMenuItemScreen: (MenuItemValue) -> Unit,
+  onNavigateToMenuItemScreen: (MenuValue) -> Unit,
   onNavigateToSearchScreen: () -> Unit,
   onNavigateToReaderScreen: (
     chapterId: String,
@@ -42,7 +42,7 @@ fun HistoryScreen(
   BaseScreen(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
-    selectedMenuItem = MenuItemValue.HISTORY,
+    selectedMenuItem = MenuValue.HISTORY,
     modifier = modifier,
     onNavigateToSignInScreen = onNavigateToLoginScreen,
     onNavigateToMenuItemScreen = onNavigateToMenuItemScreen,

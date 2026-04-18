@@ -12,7 +12,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
-import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuItemValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.menu.MenuDrawer
 import com.decoutkhanqindev.dexreader.presentation.screens.common.top_bars.MainTopBar
 import kotlinx.coroutines.launch
@@ -21,11 +21,11 @@ import kotlinx.coroutines.launch
 fun BaseScreen(
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
-  selectedMenuItem: MenuItemValue,
+  selectedMenuItem: MenuValue,
   isSearchEnabled: Boolean = true,
   modifier: Modifier = Modifier,
   onNavigateToSignInScreen: () -> Unit,
-  onNavigateToMenuItemScreen: (MenuItemValue) -> Unit,
+  onNavigateToMenuItemScreen: (MenuValue) -> Unit,
   onNavigateToSearchScreen: () -> Unit = {},
   bottomBar: @Composable () -> Unit = {},
   content: @Composable () -> Unit,

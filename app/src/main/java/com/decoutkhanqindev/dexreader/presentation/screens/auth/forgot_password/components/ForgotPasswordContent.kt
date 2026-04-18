@@ -31,11 +31,12 @@ fun ForgotPasswordContent(
 ) {
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
   var isShowSuccessDialog by rememberSaveable { mutableStateOf(true) }
-  val contentModifier = rememberSaveable(uiState.isLoading, modifier) {
-    if (uiState.isLoading) modifier.blur(8.dp) else modifier
-  }
 
-  Box(modifier = contentModifier) {
+  Box(
+    modifier =
+      if (uiState.isLoading) modifier.blur(8.dp)
+      else modifier
+  ) {
     AuthContent(modifier = Modifier.fillMaxSize()) {
       ForgotPasswordForm(
         email = uiState.email,

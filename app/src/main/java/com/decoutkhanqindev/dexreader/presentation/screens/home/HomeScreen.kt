@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
-import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuItemValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.home.components.HomeContent
 
@@ -18,7 +18,7 @@ fun HomeScreen(
   currentUser: UserModel?,
   modifier: Modifier = Modifier,
   onNavigateToLoginScreen: () -> Unit,
-  onNavigateToMenuItemScreen: (MenuItemValue) -> Unit,
+  onNavigateToMenuItemScreen: (MenuValue) -> Unit,
   onNavigateToSearchScreen: () -> Unit,
   onNavigateToMangaDetailScreen: (String) -> Unit,
 ) {
@@ -27,7 +27,7 @@ fun HomeScreen(
   BaseScreen(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
-    selectedMenuItem = MenuItemValue.HOME,
+    selectedMenuItem = MenuValue.HOME,
     modifier = modifier,
     onNavigateToSignInScreen = onNavigateToLoginScreen,
     onNavigateToMenuItemScreen = onNavigateToMenuItemScreen,

@@ -40,21 +40,14 @@ fun MoveToTopButton(
   ) {
     FloatingActionButton(
       onClick = onClick,
-      modifier = Modifier
-        .size(48.dp)
-        .border(
-          width = 1.dp,
-          color = MaterialTheme.colorScheme.onPrimaryContainer,
-          shape = CircleShape
-        ),
+      modifier = Modifier.size(48.dp),
       shape = CircleShape,
-      containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
-      contentColor =  MaterialTheme.colorScheme.onPrimaryContainer,
+      containerColor = MaterialTheme.colorScheme.surface,
+      contentColor = MaterialTheme.colorScheme.inverseSurface,
     ) {
       Icon(
         imageVector = Icons.Filled.ArrowUpward,
         contentDescription = stringResource(R.string.move_to_top),
-        tint = Color.White
       )
     }
   }

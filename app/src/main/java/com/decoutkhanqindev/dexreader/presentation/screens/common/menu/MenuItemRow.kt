@@ -11,14 +11,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuItemValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue
 
 @Composable
 fun MenuItemRow(
   isSelected: Boolean,
-  item: MenuItemValue,
+  item: MenuValue,
   modifier: Modifier = Modifier,
-  onClick: (MenuItemValue) -> Unit,
+  onClick: (MenuValue) -> Unit,
 ) {
   val title = stringResource(item.nameRes)
 

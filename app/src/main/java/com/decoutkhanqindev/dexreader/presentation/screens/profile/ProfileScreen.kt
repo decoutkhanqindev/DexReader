@@ -14,7 +14,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
-import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuItemValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.components.ProfileContent
@@ -27,7 +27,7 @@ fun ProfileScreen(
   currentUser: UserModel?,
   modifier: Modifier = Modifier,
   onNavigateToLoginScreen: () -> Unit,
-  onNavigateToMenuItemScreen: (MenuItemValue) -> Unit,
+  onNavigateToMenuItemScreen: (MenuValue) -> Unit,
   onNavigateToHomeScreen: () -> Unit,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -49,7 +49,7 @@ fun ProfileScreen(
   BaseScreen(
     isUserLoggedIn = isUserLoggedIn,
     currentUser = currentUser,
-    selectedMenuItem = MenuItemValue.PROFILE,
+    selectedMenuItem = MenuValue.PROFILE,
     isSearchEnabled = false,
     modifier = modifier,
     onNavigateToSignInScreen = onNavigateToLoginScreen,

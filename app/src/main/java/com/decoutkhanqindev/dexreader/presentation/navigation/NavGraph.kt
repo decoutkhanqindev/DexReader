@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.decoutkhanqindev.dexreader.presentation.mapper.MenuItemMapper.toNavRoute
+import com.decoutkhanqindev.dexreader.presentation.mapper.MenuMapper.toNavRoute
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.forgot_password.ForgotPasswordScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.login.LoginScreen

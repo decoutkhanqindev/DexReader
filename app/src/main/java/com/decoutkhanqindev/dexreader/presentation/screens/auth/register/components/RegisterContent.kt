@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -34,11 +35,12 @@ fun RegisterContent(
 ) {
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
   var isShowSuccessDialog by rememberSaveable { mutableStateOf(true) }
-  val contentModifier = rememberSaveable(uiState.isLoading, modifier) {
-    if (uiState.isLoading) modifier.blur(8.dp) else modifier
-  }
 
-  Box(modifier = contentModifier) {
+  Box(
+    modifier =
+      if (uiState.isLoading) modifier.blur(8.dp)
+      else modifier
+  ) {
     AuthContent(modifier = Modifier.fillMaxSize()) {
       RegisterForm(
         email = uiState.email,
