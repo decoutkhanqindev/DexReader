@@ -130,4 +130,7 @@ dependencies {
 
   // Logging
   implementation(libs.timber)
+
+  // Shimmer
+  implementation(libs.compose.shimmer)
 }

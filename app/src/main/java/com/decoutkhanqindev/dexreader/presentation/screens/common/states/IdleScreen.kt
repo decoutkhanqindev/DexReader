@@ -29,7 +29,7 @@ fun IdleScreen(
     Icon(
       painter = painterResource(R.drawable.app_icon),
       contentDescription = stringResource(R.string.app_name),
-      modifier = Modifier.size(80.dp)
+      modifier = Modifier.size(100.dp)
     )
     Text(
       text = message,

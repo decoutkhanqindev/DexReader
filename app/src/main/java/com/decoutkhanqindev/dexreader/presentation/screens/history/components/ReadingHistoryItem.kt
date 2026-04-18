@@ -12,6 +12,9 @@ import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -37,7 +40,11 @@ fun ReadingHistoryItem(
       } else false
     }
   )
-  val isSwiping = swipeToDismissBoxState.dismissDirection == SwipeToDismissBoxValue.EndToStart
+  val isSwiping by rememberSaveable(swipeToDismissBoxState) {
+    derivedStateOf {
+      swipeToDismissBoxState.dismissDirection == SwipeToDismissBoxValue.EndToStart
+    }
+  }
 
   SwipeToDismissBox(
     state = swipeToDismissBoxState,
@@ -55,33 +62,33 @@ fun ReadingHistoryItem(
     modifier = modifier,
   ) {
     Card(
-        shape = MaterialTheme.shapes.large,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-        elevation = CardDefaults.cardElevation(4.dp),
-        onClick = {
-          onSelectedReadingHistory(
-            readingHistory.mangaId,
-            readingHistory.chapterId,
-            readingHistory.lastReadPage
-          )
-        },
+      shape = MaterialTheme.shapes.large,
+      colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+      elevation = CardDefaults.cardElevation(4.dp),
+      onClick = {
+        onSelectedReadingHistory(
+          readingHistory.mangaId,
+          readingHistory.chapterId,
+          readingHistory.lastReadPage
+        )
+      },
+    ) {
+      Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(8.dp)
       ) {
-        Row(
-          horizontalArrangement = Arrangement.spacedBy(8.dp),
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-        ) {
-          MangaCoverArt(
-            url = readingHistory.mangaCoverUrl,
-            title = readingHistory.mangaTitle,
-            modifier = Modifier.weight(0.25f)
-          )
-          ReadingHistoryInfo(
-            readingHistory = readingHistory,
-            modifier = Modifier.weight(0.75f)
-          )
-        }
+        MangaCoverArt(
+          url = readingHistory.mangaCoverUrl,
+          title = readingHistory.mangaTitle,
+          modifier = Modifier.weight(0.25f)
+        )
+        ReadingHistoryInfo(
+          readingHistory = readingHistory,
+          modifier = Modifier.weight(0.75f)
+        )
       }
+    }
   }
 }

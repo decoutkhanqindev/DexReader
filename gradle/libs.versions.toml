@@ -2,9 +2,11 @@
 agp = "9.1.0"
 coilCompose = "3.4.0"
 coilNetworkOkhttp = "3.4.0"
+composeAutoShimmer = "1.0.1"
+composeShimmer = "1.4.0"
 converterMoshi = "3.0.0"
 datastorePreferences = "1.2.1"
-firebaseBom = "34.10.0"
+firebaseBom = "34.12.0"
 hiltAndroid = "2.59.2"
 hiltAndroidCompiler = "2.59.2"
 hiltNavigationCompose = "1.3.0"
@@ -14,10 +16,10 @@ junit = "4.13.2"
 junitVersion = "1.3.0"
 espressoCore = "3.7.0"
 kotlinxCollectionsImmutable = "0.4.0"
-kotlinxSerializationJson = "1.10.0"
+kotlinxSerializationJson = "1.11.0"
 lifecycleRuntimeKtx = "2.10.0"
 activityCompose = "1.13.0"
-composeBom = "2026.03.00"
+composeBom = "2026.03.01"
 loggingInterceptor = "5.3.2"
 moshiKotlin = "1.15.2"
 moshiKotlinCodegen = "1.15.2"
@@ -27,7 +29,7 @@ retrofit = "3.0.0"
 roomRuntime = "2.8.4"
 roomCompiler = "2.8.4"
 timber = "5.0.1"
-zoomableImageCoil3 = "0.18.0"
+zoomableImageCoil3 = "0.19.0"
 lifecycleProcess = "2.10.0"
 
 [libraries]
@@ -44,6 +46,8 @@ androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRunt
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
+compose-auto-shimmer = { module = "com.github.ChFardeelAzhar:compose-auto-shimmer", version.ref = "composeAutoShimmer" }
+compose-shimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version.ref = "composeShimmer" }
 converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "converterMoshi" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-auth-ktx = { module = "com.google.firebase:firebase-auth" }

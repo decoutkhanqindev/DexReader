@@ -15,7 +15,7 @@ enum class MenuItemValue(
   @param:StringRes val nameRes: Int,
   val icon: ImageVector,
 ) {
-  HOME(nameRes = R.string.home_menu_item, icon = Icons.Default.Home),
+  HOME(nameRes = R.string.app_name, icon = Icons.Default.Home),
   CATEGORIES(nameRes = R.string.category_menu_item, icon = Icons.Default.Category),
   FAVORITES(nameRes = R.string.favorite_menu_item, icon = Icons.Default.Favorite),
   HISTORY(nameRes = R.string.history_menu_item, icon = Icons.Default.History),

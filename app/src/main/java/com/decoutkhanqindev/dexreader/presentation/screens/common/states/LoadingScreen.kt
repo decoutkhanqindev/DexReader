@@ -17,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.screens.common.fastShimmer
 
 @Composable
 fun LoadingScreen(modifier: Modifier = Modifier) {
@@ -32,7 +33,9 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
       Icon(
         painter = painterResource(R.drawable.app_icon),
         contentDescription = stringResource(R.string.app_name),
-        modifier = Modifier.size(80.dp)
+        modifier = Modifier
+          .size(80.dp)
+          .fastShimmer()
       )
       LinearProgressIndicator(
         modifier = Modifier
