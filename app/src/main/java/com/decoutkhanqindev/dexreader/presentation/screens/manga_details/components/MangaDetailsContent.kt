@@ -1,8 +1,12 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components
 
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -36,6 +40,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 
+@SuppressLint("FrequentlyChangingValue")
 @Composable
 fun MangaDetailsContent(
   mangaDetailsUiState: MangaDetailsUiState,
@@ -70,6 +75,7 @@ fun MangaDetailsContent(
 ) {
   val lazyListState = rememberLazyListState()
   val coroutineScope = rememberCoroutineScope()
+  var mangaId by rememberSaveable { mutableStateOf("") }
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
 
   Box(modifier = modifier) {
@@ -93,6 +99,8 @@ fun MangaDetailsContent(
         val manga = mangaDetailsUiState.manga
         val mangaCoverUrl = manga.coverUrl
         val latestChapter = manga.latestChapter
+
+        mangaId = manga.id
 
         MangaDetailsBackground(
           imageUrl = mangaCoverUrl,
@@ -119,21 +127,6 @@ fun MangaDetailsContent(
                 .fillMaxWidth()
                 .padding(4.dp)
                 .padding(top = 8.dp, bottom = 16.dp)
-            )
-          }
-
-          item {
-            ActionButtonsSection(
-              isFavorite = isFavorite,
-              startedChapterId = startedChapterId,
-              mangaId = manga.id,
-              continueChapter = continueChapter,
-              modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 4.dp)
-                .padding(bottom = 16.dp),
-              onReadingClick = onReadingClick,
-              onFavoriteClick = onFavoriteClick,
             )
           }
 
@@ -167,15 +160,33 @@ fun MangaDetailsContent(
       }
     }
 
-    MoveToTopButton(
-      itemsSize = (mangaChaptersUiState as? BasePaginationUiState.Content<ChapterModel>)?.currentList?.size ?: return,
-      firstVisibleItemIndex = lazyListState.firstVisibleItemIndex,
+    Row(
       modifier = Modifier
-        .align(Alignment.BottomEnd)
-        .padding(16.dp)
+        .fillMaxWidth()
+        .align(Alignment.BottomCenter)
+        .padding(horizontal = 16.dp)
+        .padding(bottom = 16.dp),
+      horizontalArrangement = Arrangement.spacedBy(16.dp),
+      verticalAlignment = Alignment.CenterVertically,
     ) {
-      coroutineScope.launch {
-        lazyListState.animateScrollToItem(0)
+      ActionButtonsSection(
+        isFavorite = isFavorite,
+        startedChapterId = startedChapterId,
+        mangaId = mangaId,
+        continueChapter = continueChapter,
+        modifier = Modifier.weight(1f),
+        onReadingClick = onReadingClick,
+        onFavoriteClick = onFavoriteClick,
+      )
+
+      MoveToTopButton(
+        itemsSize = (mangaChaptersUiState as? BasePaginationUiState.Content<ChapterModel>)?.currentList?.size
+          ?: return,
+        firstVisibleItemIndex = lazyListState.firstVisibleItemIndex,
+      ) {
+        coroutineScope.launch {
+          lazyListState.animateScrollToItem(0)
+        }
       }
     }
   }

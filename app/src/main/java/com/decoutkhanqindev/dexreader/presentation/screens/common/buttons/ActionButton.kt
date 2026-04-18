@@ -18,27 +18,25 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClic
 @Composable
 fun ActionButton(
   isEnabled: Boolean = true,
-  backgroundColor: Color = MaterialTheme.colorScheme.surface.copy(alpha = 0.2f),
+  backgroundColor: Color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
   modifier: Modifier = Modifier,
   onClick: () -> Unit,
   content: @Composable RowScope.() -> Unit,
 ) {
-  val shape = MaterialTheme.shapes.medium
-
   Row(
     modifier = modifier
       .alpha(if (isEnabled) 1f else 0.38f)
       .let {
-        if (isEnabled) it.onScalableClick(shape = shape) { onClick() } else it
+        if (isEnabled) it.onScalableClick(shape = MaterialTheme.shapes.large) { onClick() } else it
       }
       .background(
         color = backgroundColor,
-        shape = shape
+        shape = MaterialTheme.shapes.large
       )
       .border(
         width = 1.dp,
         color = MaterialTheme.colorScheme.onPrimaryContainer,
-        shape = shape
+        shape = MaterialTheme.shapes.large
       )
       .padding(horizontal = 16.dp, vertical = 16.dp),
     horizontalArrangement = Arrangement.Center,

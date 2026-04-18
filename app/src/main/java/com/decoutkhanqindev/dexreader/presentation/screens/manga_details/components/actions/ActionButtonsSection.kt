@@ -35,7 +35,7 @@ fun ActionButtonsSection(
 
   Row(
     modifier = modifier,
-    horizontalArrangement = Arrangement.spacedBy(8.dp),
+    horizontalArrangement = Arrangement.spacedBy(16.dp),
     verticalAlignment = Alignment.CenterVertically,
   ) {
     ActionButton(

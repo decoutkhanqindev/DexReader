@@ -44,9 +44,7 @@ fun MangaCoverArt(
           painter = painterResource(R.drawable.placeholder),
           contentDescription = "$title cover art is loading",
           contentScale = ContentScale.FillHeight,
-          modifier = Modifier
-            .fillMaxSize()
-            .fastShimmer()
+          modifier = Modifier.fillMaxSize()
         )
       },
       error = {

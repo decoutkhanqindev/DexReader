@@ -24,7 +24,7 @@ import com.valentinilk.shimmer.shimmer
 
 @Composable
 fun Modifier.onScalableClick(
-  shape: Shape,
+  shape: Shape? = null,
   block: () -> Unit,
 ): Modifier {
   val interactionSource = remember { MutableInteractionSource() }
@@ -40,7 +40,9 @@ fun Modifier.onScalableClick(
       scaleX = scale
       scaleY = scale
     }
-    .clip(shape)
+    .let {
+      if (shape != null) it.clip(shape) else it
+    }
     .clickable(
       interactionSource = interactionSource,
       indication = ripple(),
