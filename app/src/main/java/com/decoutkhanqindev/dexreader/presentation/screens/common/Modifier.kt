@@ -67,3 +67,14 @@ fun Modifier.fastShimmer(
     if (isEnable) it.shimmer(customShimmer = shimmer) else it
   }
 }
+
+@Composable
+fun Modifier.normalShimmer(
+  isEnable: Boolean = true,
+  bounds: ShimmerBounds = ShimmerBounds.View,
+): Modifier {
+  val shimmer = rememberShimmer(shimmerBounds = bounds)
+  return this.let {
+    if (isEnable) it.shimmer(customShimmer = shimmer) else it
+  }
+}
