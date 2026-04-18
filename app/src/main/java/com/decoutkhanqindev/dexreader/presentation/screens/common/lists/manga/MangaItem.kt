@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
+import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
 
 @Composable
 fun MangaItem(
@@ -25,8 +26,7 @@ fun MangaItem(
   onClick: (MangaModel) -> Unit,
 ) {
   Card(
-    modifier = modifier,
-    onClick = { onClick(item) },
+    modifier = modifier.onScalableClick(shape = CardDefaults.shape) { onClick(item) },
     elevation = CardDefaults.cardElevation(8.dp),
     shape = MaterialTheme.shapes.large,
   ) {

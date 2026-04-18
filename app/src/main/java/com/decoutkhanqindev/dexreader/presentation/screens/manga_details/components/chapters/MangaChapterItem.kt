@@ -17,10 +17,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterModel
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
+import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
 
 @Composable
 fun MangaChapterItem(
@@ -38,14 +40,13 @@ fun MangaChapterItem(
   val number = chapter.number
 
   Card(
-    onClick = {
+    modifier = modifier.onScalableClick(shape = MaterialTheme.shapes.large) {
       onChapterClick(
         chapter.id,
         readingHistory?.lastReadPage ?: 0,
         chapter.mangaId
       )
     },
-    modifier = modifier,
     shape = MaterialTheme.shapes.large,
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
     elevation = CardDefaults.cardElevation(4.dp),
@@ -101,6 +102,8 @@ fun MangaChapterItem(
           modifier = Modifier.weight(0.6f),
           fontStyle = FontStyle.Italic,
           fontWeight = FontWeight.Bold,
+          overflow = TextOverflow.Ellipsis,
+          maxLines = 1,
           style = MaterialTheme.typography.bodyLarge,
         )
         Text(

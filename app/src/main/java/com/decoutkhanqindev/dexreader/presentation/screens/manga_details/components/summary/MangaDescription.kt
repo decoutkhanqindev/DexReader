@@ -1,12 +1,12 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.summary
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,7 +28,7 @@ fun MangaDescription(
 ) {
   var isExpanded by rememberSaveable { mutableStateOf(false) }
 
-  Column(modifier = modifier) {
+  Column(modifier = modifier.clickable { isExpanded = !isExpanded }) {
     Text(
       text = description,
       modifier = Modifier.fillMaxWidth(),
@@ -37,17 +37,13 @@ fun MangaDescription(
       maxLines = if (isExpanded) Int.MAX_VALUE else 3,
       style = MaterialTheme.typography.bodyLarge,
     )
-    IconButton(
-      onClick = { isExpanded = !isExpanded },
+
+    Icon(
+      imageVector = if (isExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+      contentDescription =
+        if (isExpanded) stringResource(R.string.icon_expand_less)
+        else stringResource(R.string.icon_expand_more),
       modifier = Modifier.align(Alignment.End)
-    ) {
-      Icon(
-        imageVector = if (isExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-        contentDescription = if (isExpanded)
-          stringResource(R.string.icon_expand_less)
-        else
-          stringResource(R.string.icon_expand_more)
-      )
-    }
+    )
   }
 }

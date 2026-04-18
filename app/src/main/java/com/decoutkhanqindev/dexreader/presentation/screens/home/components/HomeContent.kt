@@ -26,19 +26,6 @@ fun HomeContent(
   when (uiState) {
     HomeUiState.Loading -> LoadingScreen(modifier = modifier)
 
-    is HomeUiState.Error -> {
-      if (isShowErrorDialog) {
-        NotificationDialog(
-          title = stringResource(uiState.error.messageRes),
-          onConfirmClick = {
-            isShowErrorDialog = false
-            onRetry()
-          },
-          onDismissClick = { isShowErrorDialog = false },
-        )
-      }
-    }
-
     is HomeUiState.Success -> {
       LazyColumn(modifier = modifier) {
         item {
@@ -72,6 +59,19 @@ fun HomeContent(
             modifier = Modifier.fillMaxWidth(),
           ) { onItemClick(it.id) }
         }
+      }
+    }
+
+    is HomeUiState.Error -> {
+      if (isShowErrorDialog) {
+        NotificationDialog(
+          title = stringResource(uiState.error.messageRes),
+          onConfirmClick = {
+            isShowErrorDialog = false
+            onRetry()
+          },
+          onDismissClick = { isShowErrorDialog = false },
+        )
       }
     }
   }

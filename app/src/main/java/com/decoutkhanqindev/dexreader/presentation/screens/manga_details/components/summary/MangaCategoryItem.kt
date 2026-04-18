@@ -11,6 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
+import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
 import java.util.Locale
 
 @Composable
@@ -23,13 +24,12 @@ fun MangaCategoryItem(
   ) -> Unit,
 ) {
   Card(
-    onClick = {
+    modifier = modifier.onScalableClick(shape = MaterialTheme.shapes.large) {
       onClick(
         item.id,
         item.title
       )
     },
-    modifier = modifier,
     shape = MaterialTheme.shapes.large,
   ) {
     Text(

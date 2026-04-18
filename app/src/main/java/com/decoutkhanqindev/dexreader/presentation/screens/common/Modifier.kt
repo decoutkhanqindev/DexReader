@@ -13,6 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.Dp
 import com.valentinilk.shimmer.ShimmerBounds
@@ -22,14 +24,15 @@ import com.valentinilk.shimmer.shimmer
 
 @Composable
 fun Modifier.onScalableClick(
-  rippleRadius: Dp,
+  shape: Shape,
   block: () -> Unit,
 ): Modifier {
   val interactionSource = remember { MutableInteractionSource() }
   val isPressed by interactionSource.collectIsPressedAsState()
   val scale by animateFloatAsState(
     targetValue = if (isPressed) 0.95f else 1f,
-    animationSpec = tween(100),
+    animationSpec = tween(200),
+    label = "on_scalable_click_animation"
   )
 
   return this
@@ -37,9 +40,10 @@ fun Modifier.onScalableClick(
       scaleX = scale
       scaleY = scale
     }
+    .clip(shape)
     .clickable(
       interactionSource = interactionSource,
-      indication = ripple(radius = rippleRadius),
+      indication = ripple(),
       onClick = block,
     )
 }

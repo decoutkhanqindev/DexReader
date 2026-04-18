@@ -30,13 +30,15 @@ fun MangaCategoryList(
       horizontalArrangement = Arrangement.spacedBy(2.dp),
       verticalAlignment = Alignment.CenterVertically,
     ) {
-      items(items, key = { it.id }) { category ->
+      items(items, key = CategoryModel::id) { category ->
         MangaCategoryItem(
           item = category,
           modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 4.dp),
-        ) { categoryId, categoryTitle -> onItemClick(categoryId, categoryTitle) }
+        ) { categoryId, categoryTitle ->
+          onItemClick(categoryId, categoryTitle)
+        }
       }
     }
   }
