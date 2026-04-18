@@ -34,9 +34,10 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
         painter = painterResource(R.drawable.app_icon),
         contentDescription = stringResource(R.string.app_name),
         modifier = Modifier
-          .size(80.dp)
+          .size(100.dp)
           .fastShimmer()
       )
+
       LinearProgressIndicator(
         modifier = Modifier
           .width(100.dp)

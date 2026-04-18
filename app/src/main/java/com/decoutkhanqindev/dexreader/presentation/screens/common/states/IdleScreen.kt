@@ -31,6 +31,7 @@ fun IdleScreen(
       contentDescription = stringResource(R.string.app_name),
       modifier = Modifier.size(100.dp)
     )
+
     Text(
       text = message,
       fontWeight = FontWeight.Light,
