@@ -23,7 +23,6 @@ fun MangaCoverArt(
   url: String,
   title: String,
   modifier: Modifier = Modifier,
-  onLoaded: () -> Unit,
 ) {
   Card(
     modifier = modifier,
@@ -36,10 +35,6 @@ fun MangaCoverArt(
         .crossfade(true)
         .memoryCachePolicy(CachePolicy.ENABLED)
         .diskCachePolicy(CachePolicy.ENABLED)
-        .listener(
-          onSuccess = { _, _ -> onLoaded() },
-          onError = { _, _ -> onLoaded() }
-        )
         .build(),
       contentDescription = title,
       contentScale = ContentScale.FillBounds,
