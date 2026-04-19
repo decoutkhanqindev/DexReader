@@ -18,27 +18,21 @@
 - [x] `presentation/screens/search/` — full audit + fix
 - [x] `strings_lang_generated.xml` merged into `strings.xml` — file deleted
 - [x] `strings.xml` reorganized into 15 screen-group sections with XML comments
-- [x] @Preview: `common/` — all composables previewed
-- [x] @Preview: `auth/` — all composables previewed
-- [x] @Preview: `categories/` — all composables previewed
-- [x] @Preview: `category_details/` — ~20 previews across 10 files
-- [x] @Preview: `favorites/` — 9 previews across 2 files
-- [x] @Preview: `history/` — 15 previews across 5 files
-- [x] @Preview: `home/` — 4 previews across 2 files
-- [x] @Preview: `manga_details/` — ~25 previews across 14 files
-- [x] @Preview: `profile/` — 11 previews across 4 files
-- [x] @Preview: `reader/` — 11 previews across 5 files
-- [x] @Preview: `search/` — 17 previews across 7 files
-- [x] @Preview: `settings/` — 9 previews across 3 files
+- [x] @Preview: all screen folders covered (common/ through settings/)
+- [x] `DexReaderTheme` refactored: `hiltViewModel` removed → `themeOption` param (preview-safe)
+- [x] `wrap_previews.py` script written + executed — 93 files, 193 previews wrapped
 
 ## Remaining
-**None.**
+**None known.**
 
-**All screen folders covered. Build verified previously: `assembleDebug` BUILD SUCCESSFUL.**
+**[!] Unverified:** `./gradlew assembleDebug` not run after this session's changes.
+**Next step: run `./gradlew assembleDebug` to confirm BUILD SUCCESSFUL.**
 
-## Rules Applied (preview generation)
-- Skipped `*Screen.kt` and `*ViewModel.kt` (hiltViewModel dependency)
-- `private` modifier on all preview functions
-- `showBackground = true` for light-themed components
-- `Modifier.fillMaxSize()` on content-level composables
-- `private val previewManga` top-level val for shared sample data within a file
+## Script Reference
+`wrap_previews.py` at project root — re-runnable (skips already-wrapped previews).
+`--dry-run` flag available.
+
+## Rules Applied (preview wrapping)
+- All preview bodies wrapped: `DexReaderTheme { <original content + 2 spaces indent> }`
+- Import `com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme` added per file
+- `*Screen.kt` and `*ViewModel.kt` still skipped (hiltViewModel in Screen composables)

@@ -19,7 +19,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.Action
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
-fun ActionButtonsSection(
+fun ActionButtons(
   isFavorite: Boolean,
   startedChapterId: String? = null,
   mangaId: String = "",
@@ -104,9 +104,9 @@ private val previewContinueChapter = ReadingHistoryModel(
 
 @Preview
 @Composable
-private fun ActionButtonsSectionNotStartedPreview() {
+private fun ActionButtonsNotStartedPreview() {
   DexReaderTheme {
-    ActionButtonsSection(
+    ActionButtons(
       isFavorite = false,
       startedChapterId = null,
       continueChapter = null,
@@ -119,9 +119,9 @@ private fun ActionButtonsSectionNotStartedPreview() {
 
 @Preview
 @Composable
-private fun ActionButtonsSectionStartReadingPreview() {
+private fun ActionButtonsStartReadingPreview() {
   DexReaderTheme {
-    ActionButtonsSection(
+    ActionButtons(
       isFavorite = false,
       startedChapterId = "c-001",
       mangaId = "m-001",
@@ -135,9 +135,9 @@ private fun ActionButtonsSectionStartReadingPreview() {
 
 @Preview
 @Composable
-private fun ActionButtonsSectionContinueReadingFavoritePreview() {
+private fun ActionButtonsContinueReadingFavoritePreview() {
   DexReaderTheme {
-    ActionButtonsSection(
+    ActionButtons(
       isFavorite = true,
       continueChapter = previewContinueChapter,
       modifier = Modifier.fillMaxWidth(),

@@ -12,7 +12,7 @@ object UserMapper {
       avatarUrl = avatarUrl,
     )
 
-  fun UserModel.toDomainUser() =
+  fun UserModel.toUser() =
     User(
       id = id,
       name = name,

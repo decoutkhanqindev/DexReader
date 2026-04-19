@@ -2,9 +2,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.manga_details.compon
 
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,11 +28,10 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLangua
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
-import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.MoveToTopButton
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.MangaDetailsUiState
-import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.actions.ActionButtonsSection
+import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.actions.ActionsSection
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.chapters.MangaChaptersSection
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.info.MangaInfoSection
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.info.previewManga
@@ -164,42 +161,24 @@ fun MangaDetailsContent(
       }
     }
 
-    Column(
+    ActionsSection(
+      itemsSize = (mangaChaptersUiState as? BasePaginationUiState.Content<ChapterModel>)?.currentList?.size ?: 0,
+      firstVisibleItemIndex = lazyListState.firstVisibleItemIndex,
+      isFavorite = isFavorite,
+      startedChapterId = startedChapterId,
+      mangaId = mangaId,
+      continueChapter = continueChapter,
       modifier = Modifier
         .fillMaxWidth()
         .align(Alignment.BottomCenter),
-      verticalArrangement = Arrangement.Center,
-      horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-      MoveToTopButton(
-        itemsSize = (mangaChaptersUiState as? BasePaginationUiState.Content<ChapterModel>)?.currentList?.size
-          ?: return,
-        firstVisibleItemIndex = lazyListState.firstVisibleItemIndex,
-        modifier = Modifier
-          .align(Alignment.End)
-          .padding(end = 16.dp)
-      ) {
+      onMoveToTopClick = {
         coroutineScope.launch {
           lazyListState.animateScrollToItem(0)
         }
-      }
-
-      ActionButtonsSection(
-        isFavorite = isFavorite,
-        startedChapterId = startedChapterId,
-        mangaId = mangaId,
-        continueChapter = continueChapter,
-        modifier = Modifier
-          .fillMaxWidth()
-          .blurBackground(
-            topAlpha = 0f,
-            bottomAlpha = 1f,
-          )
-          .padding(16.dp),
-        onReadingClick = onReadingClick,
-        onFavoriteClick = onFavoriteClick,
-      )
-    }
+      },
+      onReadingClick = onReadingClick,
+      onFavoriteClick = onFavoriteClick,
+    )
   }
 }
 

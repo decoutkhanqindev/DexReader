@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.settings.ObserveThemeModeUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.settings.SaveThemeModeUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.ThemeModeMapper.toThemeMode
-import com.decoutkhanqindev.dexreader.presentation.mapper.ThemeModeMapper.toThemeModeEnum
+import com.decoutkhanqindev.dexreader.presentation.mapper.ThemeModeMapper.toThemeModeValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.settings.ThemeModeValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,7 +38,7 @@ class SettingsViewModel @Inject constructor(
             _uiState.update {
               it.copy(
                 isLoading = false,
-                themeOption = mode.toThemeModeEnum(),
+                themeOption = mode.toThemeModeValue(),
               )
             }
           }

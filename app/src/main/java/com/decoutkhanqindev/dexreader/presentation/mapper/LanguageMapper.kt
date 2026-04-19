@@ -4,7 +4,7 @@ import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaLanguage
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
 
 object LanguageMapper {
-  fun MangaLanguage.toMangaLanguageEnum() =
+  fun MangaLanguage.toMangaLanguageValue() =
     MangaLanguageValue.valueOf(this.name)
 
   fun MangaLanguageValue.toMangaLanguage() =

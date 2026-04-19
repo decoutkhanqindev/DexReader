@@ -5,7 +5,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.settings.ThemeMod
 
 
 object ThemeModeMapper {
-  fun ThemeMode.toThemeModeEnum() =
+  fun ThemeMode.toThemeModeValue() =
     when (this) {
       ThemeMode.SYSTEM -> ThemeModeValue.SYSTEM
       ThemeMode.DARK -> ThemeModeValue.DARK

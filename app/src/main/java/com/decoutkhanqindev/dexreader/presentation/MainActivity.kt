@@ -23,10 +23,10 @@ class MainActivity : ComponentActivity() {
     Timber.tag(this::class.java.simpleName).d("onCreate: initializing UI")
     enableEdgeToEdge()
     setContent {
-      val viewModel = hiltViewModel<SettingsViewModel>()
-      val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+      val settingsViewModel = hiltViewModel<SettingsViewModel>()
+      val settingsUiState by settingsViewModel.uiState.collectAsStateWithLifecycle()
 
-      DexReaderTheme(themeOption = uiState.themeOption) {
+      DexReaderTheme(themeOption = settingsUiState.themeOption) {
         DexReaderApp(
           modifier = Modifier
             .fillMaxSize()

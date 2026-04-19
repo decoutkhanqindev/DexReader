@@ -1,42 +1,26 @@
 # Current Task
 
-## Status: COMPLETE — @Preview generation for search/ and settings/ folders
+## Status: COMPLETE — DexReaderTheme wrapping for all @Preview functions
 
 ## Work done this session
 
-### search/ folder — 17 previews across 7 files
-| File | Previews |
-|---|---|
-| `components/actions/SearchBar.kt` | 2 (empty query, with query) |
-| `components/results/ResultsNotFoundMessage.kt` | 1 |
-| `components/results/ResultsSection.kt` | 7 (FirstPageLoading, FirstPageError, Content empty, Content+IDLE, Content+LOADING, Content+ERROR, Content+NO_MORE_ITEMS) |
-| `components/suggestions/SuggestionItem.kt` | 1 |
-| `components/suggestions/SuggestionList.kt` | 1 |
-| `components/suggestions/SuggestionsSection.kt` | 4 (Loading, Error, Success empty, Success with items) |
-| `components/SearchContent.kt` | 3 (Idle/empty query, Suggestions expanded, Results shown) |
+### DexReaderTheme refactor (user-initiated)
+- `Theme.kt` — `hiltViewModel<SettingsViewModel>()` removed; replaced with
+  `themeOption: ThemeModeValue = ThemeModeValue.SYSTEM` as first param (default = SYSTEM).
+  `DexReaderTheme` is now fully preview-safe.
+- `MainActivity.kt` — updated to pass `themeOption` from ViewModel (modified by user).
 
-### settings/ folder — 9 previews across 3 files
-| File | Previews |
-|---|---|
-| `components/ThemeOptionItem.kt` | 2 (selected, unselected) |
-| `components/ThemeOptionList.kt` | 3 (SYSTEM, LIGHT, DARK selected) |
-| `components/SettingsContent.kt` | 4 (Default, Loading, Success, Error) |
+### wrap_previews.py script (project root)
+- Wrote `C:\Android Development\dex_reader\DexReader\wrap_previews.py`
+- Scans all `*.kt` under `presentation/screens/`, finds every `@Preview`-annotated function,
+  wraps body in `DexReaderTheme { }`, adds import.
+- Features: string/comment-aware brace matching, dedup by body_open position,
+  end-to-start modification, `--dry-run` flag.
+- **Result: 93 files modified, 193 previews wrapped.**
 
 ## Last action
-`SettingsContent.kt` previews written — 4 states (Default, Loading, Success, Error).
-
-## Previously completed (prior sessions)
-- `common/` — all composables previewed
-- `auth/` — all composables previewed
-- `categories/` — all composables previewed
-- `category_details/` — all composables previewed
-- `favorites/` — all composables previewed
-- `history/` — all composables previewed
-- `home/` — all composables previewed
-- `manga_details/` — all composables previewed
-- `profile/` — all composables previewed
-- `reader/` — all composables previewed
+Script ran successfully — all 193 previews now wrapped with `DexReaderTheme { }`.
+Build NOT re-run this session (no Gradle run).
 
 ## Next
-All screen folders now covered. No pending preview work.
-Skipped files (hiltViewModel): `*Screen.kt`, `*ViewModel.kt` across all folders.
+Run `./gradlew assembleDebug` to verify build still passes.

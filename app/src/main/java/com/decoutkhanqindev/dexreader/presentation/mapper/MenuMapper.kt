@@ -10,13 +10,12 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue.SE
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 
 object MenuMapper {
-  fun MenuValue.toNavRoute() =
-    when (this) {
-      HOME -> NavRoute.Home
-      CATEGORIES -> NavRoute.Categories
-      FAVORITES -> NavRoute.Favorites
-      HISTORY -> NavRoute.History
-      PROFILE -> NavRoute.Profile
-      SETTINGS -> NavRoute.Settings
-    }
+  fun MenuValue.toNavRoute() = when (this) {
+    HOME -> NavRoute.Home
+    CATEGORIES -> NavRoute.Categories
+    FAVORITES -> NavRoute.Favorites
+    HISTORY -> NavRoute.History
+    PROFILE -> NavRoute.Profile
+    SETTINGS -> NavRoute.Settings
+  }
 }
