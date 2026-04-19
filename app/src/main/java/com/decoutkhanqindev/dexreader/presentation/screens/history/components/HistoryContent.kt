@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.history.components
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
@@ -52,116 +53,122 @@ fun HistoryContent(
   var isShowRemoveFromHistorySuccessDialog by rememberSaveable { mutableStateOf(true) }
   var isShowHistoryErrorDialog by rememberSaveable { mutableStateOf(true) }
 
-  when (historyUiState) {
-    BasePaginationUiState.FirstPageLoading -> LoadingScreen(modifier = modifier)
+  Box(modifier = modifier) {
+    when (historyUiState) {
+      BasePaginationUiState.FirstPageLoading -> LoadingScreen(modifier = Modifier.fillMaxSize())
 
-    is BasePaginationUiState.FirstPageError -> {
-      if (isShowHistoryErrorDialog) {
-        NotificationDialog(
-          onConfirmClick = {
-            isShowHistoryErrorDialog = false
-            onRetryObserveHistoryFirstPage()
-          },
-          title = stringResource(historyUiState.error.messageRes),
-          onDismissClick = { isShowHistoryErrorDialog = false },
-        )
-      }
-    }
-
-    is BasePaginationUiState.Content -> {
-      val readingHistoryList = historyUiState.currentList
-      val nextPageState = historyUiState.nextPageState
-
-      if (readingHistoryList.isEmpty()) {
-        IdleScreen(
-          message = stringResource(R.string.you_have_no_reading_history_here),
-          modifier = Modifier.fillMaxSize()
-        )
-      } else {
-        ReadingHistoryList(
-          readingHistoryList = readingHistoryList,
-          historyNextPageState = nextPageState,
-          onSelectedReadingHistory = { mangaId, chapterId, lastReadPage ->
-            isShowNavigateDialog = true
-            selectedMangaId = mangaId
-            selectedChapterId = chapterId
-            selectedLastReadPage = lastReadPage
-          },
-          onRemoveFromHistory = { readingHistoryId ->
-            isShowRemoveFromHistoryDialog = true
-            onUpdateRemoveReadingHistoryId(readingHistoryId)
-          },
-          onObserveHistoryNextPage = onObserveHistoryNextPage,
-          onRetryObserveHistoryNextPage = onRetryObserveHistoryNextPage,
-          modifier =
-            if (removeFromHistoryUiState.isLoading) modifier.blur(8.dp)
-            else modifier
-        )
-      }
-
-      when {
-        removeFromHistoryUiState.isLoading -> LoadingScreen(modifier = modifier)
-
-        removeFromHistoryUiState.isError -> {
-          if (isShowRemoveFromHistoryErrorDialog) {
-            NotificationDialog(
-              onConfirmClick = {
-                isShowRemoveFromHistoryErrorDialog = false
-                onRetryRemoveFromHistory()
-              },
-              title = stringResource(R.string.removed_from_history_failed),
-              onDismissClick = { isShowRemoveFromHistoryErrorDialog = false },
-            )
-          }
-        }
-
-        removeFromHistoryUiState.isSuccess -> {
-          if (isShowRemoveFromHistorySuccessDialog) {
-            NotificationDialog(
-              onConfirmClick = { isShowRemoveFromHistorySuccessDialog = false },
-              icon = Icons.Default.Done,
-              title = stringResource(R.string.you_have_removed_from_history_successfully),
-              isEnableDismiss = false,
-              confirm = stringResource(R.string.ok),
-            )
-          }
+      is BasePaginationUiState.FirstPageError -> {
+        if (isShowHistoryErrorDialog) {
+          NotificationDialog(
+            onConfirmClick = {
+              isShowHistoryErrorDialog = false
+              onRetryObserveHistoryFirstPage()
+            },
+            title = stringResource(historyUiState.error.messageRes),
+            onDismissClick = { isShowHistoryErrorDialog = false },
+          )
         }
       }
 
-      if (isShowRemoveFromHistoryDialog && removeFromHistoryUiState.readingHistoryId != null) {
-        NotificationDialog(
-          onConfirmClick = {
-            isShowRemoveFromHistoryDialog = false
-            onRemoveFromHistory()
-          },
-          title = stringResource(R.string.are_you_sure_you_want_to_remove_it_from_your_history),
-          onDismissClick = { isShowRemoveFromHistoryDialog = false },
-          confirm = stringResource(R.string.remove),
-        )
-      }
+      is BasePaginationUiState.Content -> {
+        val readingHistoryList = historyUiState.currentList
+        val nextPageState = historyUiState.nextPageState
 
-      if (isShowNavigateDialog &&
-        selectedMangaId != null &&
-        selectedChapterId != null &&
-        selectedLastReadPage != null
-      ) {
-        NotificationDialog(
-          onConfirmClick = {
-            isShowNavigateDialog = false
-            onMangaDetailsClick(selectedMangaId!!)
-          },
-          title = stringResource(R.string.view_details_or_continue),
-          dismiss = stringResource(R.string.continue_reading),
-          onDismissClick = {
-            isShowNavigateDialog = false
-            onContinueReadingClick(
-              selectedChapterId!!,
-              selectedLastReadPage!!,
-              selectedMangaId!!
-            )
-          },
-          confirm = stringResource(R.string.manga_details),
-        )
+        if (readingHistoryList.isEmpty()) {
+          IdleScreen(
+            message = stringResource(R.string.you_have_no_reading_history_here),
+            modifier = Modifier.fillMaxSize()
+          )
+        } else {
+          ReadingHistoryList(
+            readingHistoryList = readingHistoryList,
+            historyNextPageState = nextPageState,
+            onSelectedReadingHistory = { mangaId, chapterId, lastReadPage ->
+              isShowNavigateDialog = true
+              selectedMangaId = mangaId
+              selectedChapterId = chapterId
+              selectedLastReadPage = lastReadPage
+            },
+            onRemoveFromHistory = { readingHistoryId ->
+              isShowRemoveFromHistoryDialog = true
+              onUpdateRemoveReadingHistoryId(readingHistoryId)
+            },
+            onObserveHistoryNextPage = onObserveHistoryNextPage,
+            onRetryObserveHistoryNextPage = onRetryObserveHistoryNextPage,
+            modifier =
+              if (removeFromHistoryUiState.isLoading) {
+                Modifier
+                  .fillMaxSize()
+                  .blur(8.dp)
+              } else Modifier.fillMaxSize()
+          )
+        }
+
+        when {
+          removeFromHistoryUiState.isLoading -> LoadingScreen(modifier = Modifier.fillMaxSize())
+
+          removeFromHistoryUiState.isError -> {
+            if (isShowRemoveFromHistoryErrorDialog) {
+              NotificationDialog(
+                onConfirmClick = {
+                  isShowRemoveFromHistoryErrorDialog = false
+                  onRetryRemoveFromHistory()
+                },
+                title = stringResource(R.string.removed_from_history_failed),
+                onDismissClick = { isShowRemoveFromHistoryErrorDialog = false },
+              )
+            }
+          }
+
+          removeFromHistoryUiState.isSuccess -> {
+            if (isShowRemoveFromHistorySuccessDialog) {
+              NotificationDialog(
+                onConfirmClick = { isShowRemoveFromHistorySuccessDialog = false },
+                icon = Icons.Default.Done,
+                title = stringResource(R.string.you_have_removed_from_history_successfully),
+                isEnableDismiss = false,
+                confirm = stringResource(R.string.ok),
+              )
+            }
+          }
+        }
+
+        if (isShowRemoveFromHistoryDialog && removeFromHistoryUiState.readingHistoryId != null) {
+          NotificationDialog(
+            onConfirmClick = {
+              isShowRemoveFromHistoryDialog = false
+              onRemoveFromHistory()
+            },
+            title = stringResource(R.string.are_you_sure_you_want_to_remove_it_from_your_history),
+            onDismissClick = { isShowRemoveFromHistoryDialog = false },
+            confirm = stringResource(R.string.remove),
+          )
+        }
+
+        if (isShowNavigateDialog &&
+          selectedMangaId != null &&
+          selectedChapterId != null &&
+          selectedLastReadPage != null
+        ) {
+          NotificationDialog(
+            onConfirmClick = {
+              isShowNavigateDialog = false
+              onMangaDetailsClick(selectedMangaId!!)
+            },
+            title = stringResource(R.string.view_details_or_continue),
+            dismiss = stringResource(R.string.continue_reading),
+            onDismissClick = {
+              isShowNavigateDialog = false
+              onContinueReadingClick(
+                selectedChapterId!!,
+                selectedLastReadPage!!,
+                selectedMangaId!!
+              )
+            },
+            onDismissOuterClick = { isShowNavigateDialog = false },
+            confirm = stringResource(R.string.manga_details),
+          )
+        }
       }
     }
   }

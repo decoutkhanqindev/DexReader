@@ -26,6 +26,7 @@ fun MangaCoverArt(
   url: String,
   title: String,
   modifier: Modifier = Modifier,
+  onImageLoaded: () -> Unit = {},
 ) {
   Card(
     modifier = modifier,
@@ -38,6 +39,10 @@ fun MangaCoverArt(
         .crossfade(true)
         .memoryCachePolicy(CachePolicy.ENABLED)
         .diskCachePolicy(CachePolicy.ENABLED)
+        .listener(
+          onSuccess = { _, _ -> onImageLoaded() },
+          onError = { _, _ -> onImageLoaded() }
+        )
         .build(),
       contentDescription = title,
       contentScale = ContentScale.FillBounds,
@@ -71,7 +76,8 @@ private fun MangaCoverArtPreview() {
       title = "One Piece",
       modifier = Modifier
         .width(194.dp)
-        .height(250.dp)
+        .height(250.dp),
+      onImageLoaded = { }
     )
   }
 }

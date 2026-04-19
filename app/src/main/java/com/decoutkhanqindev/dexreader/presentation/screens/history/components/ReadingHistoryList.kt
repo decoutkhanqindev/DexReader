@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -21,7 +23,7 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.MoveToTopButton
-import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.NextPageLoadingIndicator
+import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.ListLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.AllItemLoadedMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadMoreMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPageErrorMessage
@@ -51,27 +53,34 @@ fun ReadingHistoryList(
     LazyColumn(
       state = lazyListState,
       modifier = Modifier.fillMaxSize(),
-      verticalArrangement = Arrangement.spacedBy(2.dp),
+      verticalArrangement = Arrangement.Top,
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
       itemsIndexed(
         items = readingHistoryList,
         key = { index, readingHistory -> "${readingHistory.id}_${index}" }
-      ) { index, readingHistory ->
+      ) { _, readingHistory ->
         ReadingHistoryItem(
           readingHistory = readingHistory,
           onSelectedReadingHistory = onSelectedReadingHistory,
           onRemoveFromHistory = onRemoveFromHistory,
           modifier = Modifier
-            .fillMaxSize()
-            .padding(4.dp)
+            .fillMaxWidth()
             .height(160.dp)
         )
+
+        if (readingHistory != readingHistoryList.last()) {
+          HorizontalDivider(
+            modifier = Modifier.fillMaxWidth(),
+            thickness = 2.dp,
+            color = MaterialTheme.colorScheme.onSurface
+          )
+        }
       }
 
       item {
         when (historyNextPageState) {
-          BaseNextPageState.LOADING -> NextPageLoadingIndicator(
+          BaseNextPageState.LOADING -> ListLoadingIndicator(
             modifier = Modifier
               .fillMaxWidth()
               .padding(bottom = 12.dp)

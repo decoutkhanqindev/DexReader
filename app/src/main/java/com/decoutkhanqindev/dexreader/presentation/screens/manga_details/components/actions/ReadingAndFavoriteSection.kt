@@ -49,7 +49,7 @@ fun ActionsSection(
       startedChapterId = startedChapterId,
       mangaId = mangaId,
       continueChapter = continueChapter,
-      modifier = Modifier.Companion
+      modifier = Modifier
         .fillMaxWidth()
         .blurBackground(
           topAlpha = 0f,

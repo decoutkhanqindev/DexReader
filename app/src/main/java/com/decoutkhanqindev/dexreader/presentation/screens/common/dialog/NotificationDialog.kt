@@ -33,9 +33,10 @@ fun NotificationDialog(
   modifier: Modifier = Modifier,
   onConfirmClick: () -> Unit,
   onDismissClick: () -> Unit = {},
+  onDismissOuterClick: () -> Unit = {},
 ) {
   AlertDialog(
-    onDismissRequest = onDismissClick,
+    onDismissRequest = onDismissOuterClick,
     confirmButton = {
       TextButton(onClick = onConfirmClick) {
         Text(

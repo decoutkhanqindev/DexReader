@@ -32,6 +32,7 @@ fun CategoryTypeSection(
       isExpanded = isExpanded,
       modifier = Modifier.fillMaxWidth(),
     ) { onExpandClick() }
+
     AnimatedVisibility(
       visible = isExpanded,
       enter = expandVertically() + fadeIn(),

@@ -2,6 +2,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.manga_details.compon
 
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -103,82 +104,87 @@ fun MangaDetailsContent(
 
         mangaId = manga.id
 
-        MangaDetailsBackground(
-          imageUrl = mangaCoverUrl,
-          modifier = Modifier.fillMaxSize()
-        )
+        Box(modifier = Modifier.fillMaxSize()) {
+          MangaDetailsBackground(
+            imageUrl = mangaCoverUrl,
+            modifier = Modifier.fillMaxSize()
+          )
 
-        LazyColumn(
-          state = lazyListState,
-          modifier = Modifier
-            .fillMaxSize()
-            .blurBackground(
-              topAlpha = 0.7f,
-              bottomAlpha = 1f,
-            )
-        ) {
-          item {
-            MangaInfoSection(
-              manga = manga,
-              modifier = Modifier
-                .fillMaxWidth()
-                .padding(4.dp)
-                .padding(top = 8.dp, bottom = 16.dp)
-            )
-          }
+          LazyColumn(
+            modifier = Modifier
+              .fillMaxSize()
+              .blurBackground(
+                topAlpha = 0.7f,
+                bottomAlpha = 1f,
+              ),
+            state = lazyListState,
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally,
+          ) {
+            item {
+              MangaInfoSection(
+                manga = manga,
+                modifier = Modifier
+                  .fillMaxWidth()
+                  .padding(4.dp)
+                  .padding(top = 8.dp, bottom = 16.dp)
+              )
+            }
 
-          item {
-            MangaSummarySection(
-              manga = manga,
-              modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp),
-            ) { categoryId, categoryTitle ->
-              onCategoryItemClick(categoryId, categoryTitle)
+            item {
+              MangaSummarySection(
+                manga = manga,
+                modifier = Modifier
+                  .fillMaxWidth()
+                  .padding(bottom = 16.dp),
+              ) { categoryId, categoryTitle ->
+                onCategoryItemClick(categoryId, categoryTitle)
+              }
+            }
+
+            item {
+              MangaChaptersSection(
+                mangaChaptersUiState = mangaChaptersUiState,
+                latestChapter = latestChapter,
+                chapterLanguage = chapterLanguage,
+                chapterLanguageList = availableLanguageList,
+                readingHistoryList = readingHistoryList,
+                modifier = Modifier.fillMaxWidth(),
+                onLanguageItemClick = onLanguageItemClick,
+                onChapterItemClick = onChapterItemClick,
+                onFetchChapterListNextPage = onFetchChapterListNextPage,
+                onRetryFetchChapterListNextPage = onRetryFetchChapterListNextPage,
+                onRetry = onRetryFetchChapterListFirstPage,
+              )
+            }
+
+            item {
+              Spacer(modifier = Modifier.height(70.dp))
             }
           }
 
-          item {
-            MangaChaptersSection(
-              mangaChaptersUiState = mangaChaptersUiState,
-              latestChapter = latestChapter,
-              chapterLanguage = chapterLanguage,
-              chapterLanguageList = availableLanguageList,
-              readingHistoryList = readingHistoryList,
-              modifier = Modifier.fillMaxWidth(),
-              onLanguageItemClick = onLanguageItemClick,
-              onChapterItemClick = onChapterItemClick,
-              onFetchChapterListNextPage = onFetchChapterListNextPage,
-              onRetryFetchChapterListNextPage = onRetryFetchChapterListNextPage,
-              onRetry = onRetryFetchChapterListFirstPage,
-            )
-          }
-
-          item {
-            Spacer(modifier = Modifier.height(70.dp))
-          }
+          ActionsSection(
+            itemsSize = (mangaChaptersUiState as? BasePaginationUiState.Content<ChapterModel>)?.currentList?.size
+              ?: 0,
+            firstVisibleItemIndex = lazyListState.firstVisibleItemIndex,
+            isFavorite = isFavorite,
+            startedChapterId = startedChapterId,
+            mangaId = mangaId,
+            continueChapter = continueChapter,
+            modifier = Modifier
+              .fillMaxWidth()
+              .align(Alignment.BottomCenter),
+            onMoveToTopClick = {
+              coroutineScope.launch {
+                lazyListState.animateScrollToItem(0)
+              }
+            },
+            onReadingClick = onReadingClick,
+            onFavoriteClick = onFavoriteClick,
+          )
         }
       }
     }
-
-    ActionsSection(
-      itemsSize = (mangaChaptersUiState as? BasePaginationUiState.Content<ChapterModel>)?.currentList?.size ?: 0,
-      firstVisibleItemIndex = lazyListState.firstVisibleItemIndex,
-      isFavorite = isFavorite,
-      startedChapterId = startedChapterId,
-      mangaId = mangaId,
-      continueChapter = continueChapter,
-      modifier = Modifier
-        .fillMaxWidth()
-        .align(Alignment.BottomCenter),
-      onMoveToTopClick = {
-        coroutineScope.launch {
-          lazyListState.animateScrollToItem(0)
-        }
-      },
-      onReadingClick = onReadingClick,
-      onFavoriteClick = onFavoriteClick,
-    )
   }
 }
 

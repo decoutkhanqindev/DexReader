@@ -55,14 +55,15 @@ fun Modifier.onScalableClick(
 }
 
 @Composable
-fun Modifier.fastShimmer(
+fun Modifier.shimmer(
   isEnable: Boolean = true,
+  durationMillis: Int = 1000,
   bounds: ShimmerBounds = ShimmerBounds.View,
 ): Modifier {
   val theme = defaultShimmerTheme.copy(
     animationSpec = infiniteRepeatable(
       animation = tween(
-        durationMillis = 800,
+        durationMillis = durationMillis,
         easing = LinearEasing
       ),
       repeatMode = RepeatMode.Restart
@@ -73,17 +74,6 @@ fun Modifier.fastShimmer(
     theme = theme
   )
 
-  return this.let {
-    if (isEnable) it.shimmer(customShimmer = shimmer) else it
-  }
-}
-
-@Composable
-fun Modifier.normalShimmer(
-  isEnable: Boolean = true,
-  bounds: ShimmerBounds = ShimmerBounds.View,
-): Modifier {
-  val shimmer = rememberShimmer(shimmerBounds = bounds)
   return this.let {
     if (isEnable) it.shimmer(customShimmer = shimmer) else it
   }

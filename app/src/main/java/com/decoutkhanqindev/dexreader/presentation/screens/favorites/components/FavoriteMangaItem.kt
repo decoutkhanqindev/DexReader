@@ -13,6 +13,10 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -26,6 +30,7 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.manga.FavoriteMangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
+import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmer
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
@@ -34,8 +39,10 @@ fun FavoriteMangaItem(
   onSelectedManga: (String) -> Unit,
   modifier: Modifier = Modifier,
 ) {
+  var isImageLoaded by rememberSaveable { mutableStateOf(false) }
+
   Card(
-    modifier = modifier,
+    modifier = modifier.shimmer(isEnable = !isImageLoaded),
     onClick = { onSelectedManga(manga.id) },
     elevation = CardDefaults.cardElevation(8.dp),
     shape = MaterialTheme.shapes.large,
@@ -45,7 +52,8 @@ fun FavoriteMangaItem(
         url = manga.coverUrl,
         title = manga.title,
         modifier = Modifier.fillMaxSize()
-      )
+      ) { isImageLoaded = true }
+
       Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Bottom,

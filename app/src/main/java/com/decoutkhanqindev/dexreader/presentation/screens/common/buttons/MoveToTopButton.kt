@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.retain.retain
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,7 +29,7 @@ fun MoveToTopButton(
   modifier: Modifier = Modifier,
   onClick: () -> Unit,
 ) {
-  val isVisible by remember(itemsSize, firstVisibleItemIndex) {
+  val isVisible by retain(itemsSize, firstVisibleItemIndex) {
     derivedStateOf { itemsSize > 15 && firstVisibleItemIndex > 0 }
   }
 

@@ -13,6 +13,10 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,6 +26,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaConten
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
 import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
+import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmer
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.persistentListOf
 
@@ -31,17 +36,24 @@ fun MangaItem(
   modifier: Modifier = Modifier,
   onClick: (MangaModel) -> Unit,
 ) {
+  var isImageLoaded by rememberSaveable { mutableStateOf(false) }
+
   Card(
     modifier = modifier.onScalableClick(shape = CardDefaults.shape) { onClick(item) },
     elevation = CardDefaults.cardElevation(8.dp),
     shape = MaterialTheme.shapes.large,
   ) {
-    Box(modifier = Modifier.fillMaxWidth()) {
+    Box(
+      modifier = Modifier
+        .fillMaxWidth()
+        .shimmer(isEnable = !isImageLoaded)
+    ) {
       MangaCoverArt(
         url = item.coverUrl,
         title = item.title,
         modifier = Modifier.fillMaxSize()
-      )
+      ) { isImageLoaded = true }
+
       Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Bottom,
@@ -79,11 +91,8 @@ private fun MangaItemPreview() {
         availableLanguages = persistentListOf(),
         latestChapter = "1100",
         updatedAt = "2024-01-01"
-      ),
-      modifier = Modifier
+      ), modifier = Modifier
         .width(194.dp)
-        .height(250.dp),
-      onClick = {}
-    )
+        .height(250.dp), onClick = {})
   }
 }

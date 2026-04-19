@@ -1,6 +1,7 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.category_details.components
 
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -9,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,12 +25,14 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaConten
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailsCriteriaUiState
+import com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.actions.SortAndFilterButtons
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.filter.FilterBottomSheet
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.sort.SortBottomSheet
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
+import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
-import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.NextPageLoadingIndicator
+import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.ListLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.screens.common.lists.manga.VerticalGridMangaList
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.AllItemLoadedMessage
@@ -42,14 +46,10 @@ import kotlinx.collections.immutable.persistentListOf
 fun CategoryDetailsContent(
   detailsUiState: BasePaginationUiState<MangaModel>,
   criteriaUiState: CategoryDetailsCriteriaUiState,
-  isSortBottomSheetVisible: Boolean,
-  onSortSheetDismiss: () -> Unit,
   onSortApplyClick: (
     sortCriteria: MangaSortCriteriaValue,
     sortOrder: MangaSortOrderValue,
   ) -> Unit,
-  isFilterBottomSheetVisible: Boolean,
-  onFilterSheetDismiss: () -> Unit,
   onFilterApplyClick: (
     statusFilter: ImmutableList<MangaStatusValue>,
     contentRatingFilter: ImmutableList<MangaContentRatingValue>,
@@ -61,86 +61,106 @@ fun CategoryDetailsContent(
   modifier: Modifier = Modifier,
 ) {
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
+  var isShowSortBottomSheet by rememberSaveable { mutableStateOf(false) }
+  var isShowFilterBottomSheet by rememberSaveable { mutableStateOf(false) }
 
-  if (isSortBottomSheetVisible) {
-    SortBottomSheet(
-      onDismiss = onSortSheetDismiss,
-      criteriaState = criteriaUiState,
-      onApplyClick = { criteriaId, orderId ->
-        onSortApplyClick(criteriaId, orderId)
-      },
-      modifier = Modifier.fillMaxWidth()
-    )
-  }
+  Box(modifier = modifier) {
+    when (detailsUiState) {
+      BasePaginationUiState.FirstPageLoading -> LoadingScreen(modifier = Modifier.fillMaxSize())
 
-  if (isFilterBottomSheetVisible) {
-    FilterBottomSheet(
-      onDismiss = onFilterSheetDismiss,
-      criteriaState = criteriaUiState,
-      onApplyClick = { statusValueIds, contentRatingValueIds ->
-        onFilterApplyClick(statusValueIds, contentRatingValueIds)
-      },
-      modifier = Modifier.fillMaxWidth()
-    )
-  }
+      is BasePaginationUiState.FirstPageError -> {
+        if (isShowErrorDialog) {
+          NotificationDialog(
+            onConfirmClick = {
+              isShowErrorDialog = false
+              onRetry()
+            },
+            title = stringResource(detailsUiState.error.messageRes),
+            onDismissClick = { isShowErrorDialog = false },
+          )
+        }
+      }
 
-  when (detailsUiState) {
-    BasePaginationUiState.FirstPageLoading -> LoadingScreen(modifier = modifier)
+      is BasePaginationUiState.Content<MangaModel> -> {
+        val mangaList = detailsUiState.currentList
+        val nextPageState = detailsUiState.nextPageState
 
-    is BasePaginationUiState.FirstPageError -> {
-      if (isShowErrorDialog) {
-        NotificationDialog(
-          onConfirmClick = {
-            isShowErrorDialog = false
-            onRetry()
-          },
-          title = stringResource(detailsUiState.error.messageRes),
-          onDismissClick = { isShowErrorDialog = false },
-        )
+        Box(modifier = Modifier.fillMaxSize()) {
+          VerticalGridMangaList(
+            items = mangaList,
+            onItemClick = { onMangaClick(it.id) },
+            loadMoreContent = {
+              when (nextPageState) {
+                BaseNextPageState.LOADING -> ListLoadingIndicator(
+                  modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 82.dp)
+                )
+
+                BaseNextPageState.ERROR -> LoadPageErrorMessage(
+                  message = stringResource(R.string.can_t_load_next_manga_page_please_try_again),
+                  onRetryClick = onRetryFetchMangaListNextPage,
+                  modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+                    .padding(bottom = 82.dp)
+                )
+
+                BaseNextPageState.IDLE -> LoadMoreMessage(
+                  onClick = onFetchMangaListNextPage,
+                  modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
+                    .padding(bottom = 82.dp)
+                )
+
+                BaseNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
+                  title = stringResource(R.string.all_mangas_loaded),
+                  modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
+                    .padding(bottom = 82.dp)
+                )
+              }
+            },
+            modifier = Modifier.fillMaxSize()
+          )
+
+          SortAndFilterButtons(
+            onSortClick = { isShowSortBottomSheet = true },
+            onFilterClick = { isShowFilterBottomSheet = true },
+            modifier = Modifier
+              .fillMaxWidth()
+              .align(Alignment.BottomCenter)
+              .blurBackground(
+                topAlpha = 0f,
+                bottomAlpha = 1f,
+              )
+              .padding(16.dp)
+          )
+        }
       }
     }
 
-    is BasePaginationUiState.Content<MangaModel> -> {
-      val mangaList = detailsUiState.currentList
-      val nextPageState = detailsUiState.nextPageState
-
-      VerticalGridMangaList(
-        items = mangaList,
-        onItemClick = { onMangaClick(it.id) },
-        loadMoreContent = {
-          when (nextPageState) {
-            BaseNextPageState.LOADING -> NextPageLoadingIndicator(
-              modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 12.dp)
-            )
-
-            BaseNextPageState.ERROR -> LoadPageErrorMessage(
-              message = stringResource(R.string.can_t_load_next_manga_page_please_try_again),
-              onRetryClick = onRetryFetchMangaListNextPage,
-              modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp)
-            )
-
-            BaseNextPageState.IDLE -> LoadMoreMessage(
-              onClick = onFetchMangaListNextPage,
-              modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp)
-                .padding(bottom = 12.dp)
-            )
-
-            BaseNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
-              title = stringResource(R.string.all_mangas_loaded),
-              modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp)
-                .padding(bottom = 12.dp)
-            )
-          }
+    if (isShowSortBottomSheet) {
+      SortBottomSheet(
+        onDismiss = { isShowSortBottomSheet = false },
+        criteriaState = criteriaUiState,
+        onApplyClick = { criteriaId, orderId ->
+          onSortApplyClick(criteriaId, orderId)
         },
-        modifier = modifier
+        modifier = Modifier.fillMaxWidth()
+      )
+    }
+
+    if (isShowFilterBottomSheet) {
+      FilterBottomSheet(
+        onDismiss = { isShowFilterBottomSheet = false },
+        criteriaState = criteriaUiState,
+        onApplyClick = { statusValueIds, contentRatingValueIds ->
+          onFilterApplyClick(statusValueIds, contentRatingValueIds)
+        },
+        modifier = Modifier.fillMaxWidth()
       )
     }
   }
@@ -188,11 +208,7 @@ private fun CategoryDetailsContentFirstPageLoadingPreview() {
     CategoryDetailsContent(
       detailsUiState = BasePaginationUiState.FirstPageLoading,
       criteriaUiState = previewCriteriaState,
-      isSortBottomSheetVisible = false,
-      onSortSheetDismiss = {},
       onSortApplyClick = { _, _ -> },
-      isFilterBottomSheetVisible = false,
-      onFilterSheetDismiss = {},
       onFilterApplyClick = { _, _ -> },
       onMangaClick = {},
       onFetchMangaListNextPage = {},
@@ -210,11 +226,7 @@ private fun CategoryDetailsContentFirstPageErrorPreview() {
     CategoryDetailsContent(
       detailsUiState = BasePaginationUiState.FirstPageError(FeatureError.NetworkUnavailable),
       criteriaUiState = previewCriteriaState,
-      isSortBottomSheetVisible = false,
-      onSortSheetDismiss = {},
       onSortApplyClick = { _, _ -> },
-      isFilterBottomSheetVisible = false,
-      onFilterSheetDismiss = {},
       onFilterApplyClick = { _, _ -> },
       onMangaClick = {},
       onFetchMangaListNextPage = {},
@@ -235,11 +247,7 @@ private fun CategoryDetailsContentIdlePreview() {
         nextPageState = BaseNextPageState.IDLE
       ),
       criteriaUiState = previewCriteriaState,
-      isSortBottomSheetVisible = false,
-      onSortSheetDismiss = {},
       onSortApplyClick = { _, _ -> },
-      isFilterBottomSheetVisible = false,
-      onFilterSheetDismiss = {},
       onFilterApplyClick = { _, _ -> },
       onMangaClick = {},
       onFetchMangaListNextPage = {},
@@ -260,11 +268,7 @@ private fun CategoryDetailsContentNextPageLoadingPreview() {
         nextPageState = BaseNextPageState.LOADING
       ),
       criteriaUiState = previewCriteriaState,
-      isSortBottomSheetVisible = false,
-      onSortSheetDismiss = {},
       onSortApplyClick = { _, _ -> },
-      isFilterBottomSheetVisible = false,
-      onFilterSheetDismiss = {},
       onFilterApplyClick = { _, _ -> },
       onMangaClick = {},
       onFetchMangaListNextPage = {},
@@ -285,11 +289,7 @@ private fun CategoryDetailsContentNextPageErrorPreview() {
         nextPageState = BaseNextPageState.ERROR
       ),
       criteriaUiState = previewCriteriaState,
-      isSortBottomSheetVisible = false,
-      onSortSheetDismiss = {},
       onSortApplyClick = { _, _ -> },
-      isFilterBottomSheetVisible = false,
-      onFilterSheetDismiss = {},
       onFilterApplyClick = { _, _ -> },
       onMangaClick = {},
       onFetchMangaListNextPage = {},
@@ -310,11 +310,7 @@ private fun CategoryDetailsContentNoMoreItemsPreview() {
         nextPageState = BaseNextPageState.NO_MORE_ITEMS
       ),
       criteriaUiState = previewCriteriaState,
-      isSortBottomSheetVisible = false,
-      onSortSheetDismiss = {},
       onSortApplyClick = { _, _ -> },
-      isFilterBottomSheetVisible = false,
-      onFilterSheetDismiss = {},
       onFilterApplyClick = { _, _ -> },
       onMangaClick = {},
       onFetchMangaListNextPage = {},

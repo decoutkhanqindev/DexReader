@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmer
 import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 

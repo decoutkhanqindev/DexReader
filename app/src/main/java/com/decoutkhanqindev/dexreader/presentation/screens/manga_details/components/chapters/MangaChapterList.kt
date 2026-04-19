@@ -18,7 +18,7 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterModel
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
-import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.NextPageLoadingIndicator
+import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.ListLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.AllItemLoadedMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadMoreMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPageErrorMessage
@@ -69,7 +69,7 @@ fun MangaChapterList(
       }
 
       when (chapterListNextPageState) {
-        BaseNextPageState.LOADING -> NextPageLoadingIndicator(
+        BaseNextPageState.LOADING -> ListLoadingIndicator(
           modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 12.dp)

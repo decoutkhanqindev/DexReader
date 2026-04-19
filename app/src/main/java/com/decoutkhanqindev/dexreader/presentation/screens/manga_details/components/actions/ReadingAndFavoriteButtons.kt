@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
+import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmer
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
@@ -74,7 +75,7 @@ fun ActionButtons(
       backgroundColor = Color(0xFFE0245E),
       modifier = Modifier
         .weight(1f)
-        .fillMaxWidth(),
+        .fillMaxWidth()
     ) {
       Text(
         text =

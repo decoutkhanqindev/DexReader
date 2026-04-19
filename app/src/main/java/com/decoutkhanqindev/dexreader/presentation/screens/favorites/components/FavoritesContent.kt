@@ -30,7 +30,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.Bas
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.MoveToTopButton
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
-import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.NextPageLoadingIndicator
+import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.ListLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.AllItemLoadedMessage
@@ -108,7 +108,7 @@ fun FavoritesContent(
                   .padding(top = 8.dp)
               ) {
                 when (nextPageState) {
-                  BaseNextPageState.LOADING -> NextPageLoadingIndicator(
+                  BaseNextPageState.LOADING -> ListLoadingIndicator(
                     modifier = Modifier
                       .fillMaxWidth()
                       .padding(bottom = 12.dp)

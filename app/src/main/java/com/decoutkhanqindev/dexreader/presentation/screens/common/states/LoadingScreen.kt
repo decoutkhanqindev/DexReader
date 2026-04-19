@@ -18,7 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.screens.common.fastShimmer
+import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmer
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
@@ -30,8 +30,8 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
     Column(
       modifier = Modifier
         .fillMaxSize()
-        .fastShimmer(),
-      verticalArrangement = Arrangement.Center,
+        .shimmer(),
+      verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
       Icon(
@@ -41,9 +41,7 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
       )
 
       LinearProgressIndicator(
-        modifier = Modifier
-          .width(100.dp)
-          .padding(top = 8.dp),
+        modifier = Modifier.width(150.dp),
         color = MaterialTheme.colorScheme.onPrimaryContainer,
         trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
       )

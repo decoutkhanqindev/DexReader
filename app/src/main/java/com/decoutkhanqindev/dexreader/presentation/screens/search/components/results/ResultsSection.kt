@@ -19,7 +19,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatus
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
-import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.NextPageLoadingIndicator
+import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.ListLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.screens.common.lists.manga.VerticalGridMangaList
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.AllItemLoadedMessage
@@ -72,7 +72,7 @@ fun ResultsSection(
           onItemClick = { onSelectedManga(it.id) },
         ) {
           when (nextPageState) {
-            BaseNextPageState.LOADING -> NextPageLoadingIndicator(
+            BaseNextPageState.LOADING -> ListLoadingIndicator(
               modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 12.dp)

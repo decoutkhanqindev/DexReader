@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.CategoryDetailsContent
-import com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.actions.SortAndFilterBottomBar
+import com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.actions.SortAndFilterButtons
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseDetailsScreen
 
 @Composable
@@ -25,36 +25,21 @@ fun CategoryDetailScreen(
   val detailsUiState by viewModel.categoryDetailsUiState.collectAsStateWithLifecycle()
   val criteriaUiState by viewModel.categoryCriteriaUiState.collectAsStateWithLifecycle()
   val categoryTitle = viewModel.categoryTitleFromArg
-  var isShowSortBottomSheet by rememberSaveable { mutableStateOf(false) }
-  var isShowFilterBottomSheet by rememberSaveable { mutableStateOf(false) }
 
   BaseDetailsScreen(
     title = categoryTitle,
     onNavigateBack = onNavigateBack,
     onNavigateToSearchScreen = onNavigateToSearchScreen,
-    bottomBar = {
-      SortAndFilterBottomBar(
-        onSortClick = { isShowSortBottomSheet = true },
-        onFilterClick = { isShowFilterBottomSheet = true },
-        modifier = Modifier.fillMaxWidth()
-      )
-    },
     modifier = modifier,
   ) {
     CategoryDetailsContent(
       detailsUiState = detailsUiState,
       criteriaUiState = criteriaUiState,
-      isSortBottomSheetVisible = isShowSortBottomSheet,
-      onSortSheetDismiss = { isShowSortBottomSheet = false },
       onSortApplyClick = { sortCriteria, sortOrder ->
         viewModel.updateSortingCriteria(sortCriteria, sortOrder)
-        isShowSortBottomSheet = false
       },
-      isFilterBottomSheetVisible = isShowFilterBottomSheet,
-      onFilterSheetDismiss = { isShowFilterBottomSheet = false },
       onFilterApplyClick = { statusFilter, contentRatingFilter ->
         viewModel.updateFilteringCriteria(statusFilter, contentRatingFilter)
-        isShowFilterBottomSheet = false
       },
       onMangaClick = onNavigateToMangaDetailScreen,
       onFetchMangaListNextPage = viewModel::fetchMangaListByCategoryNextPage,

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -15,13 +16,18 @@ import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
+import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
+import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmer
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
@@ -43,20 +49,19 @@ fun ReadingHistoryItem(
       } else false
     }
   )
-  val isSwiping by rememberSaveable(swipeToDismissBoxState) {
+  val isSwiping by retain(swipeToDismissBoxState) {
     derivedStateOf {
       swipeToDismissBoxState.dismissDirection == SwipeToDismissBoxValue.EndToStart
     }
   }
+  var isImageLoaded by rememberSaveable { mutableStateOf(false) }
 
   SwipeToDismissBox(
     state = swipeToDismissBoxState,
     backgroundContent = {
       SwipeToDismissBackground(
         isSwiping = isSwiping,
-        modifier = Modifier
-          .fillMaxSize()
-          .clip(MaterialTheme.shapes.large)
+        modifier = Modifier.fillMaxSize()
       )
     },
     enableDismissFromStartToEnd = false,
@@ -65,28 +70,32 @@ fun ReadingHistoryItem(
     modifier = modifier,
   ) {
     Card(
-      shape = MaterialTheme.shapes.large,
+      modifier = Modifier
+        .fillMaxSize()
+        .shimmer(isEnable = !isImageLoaded),
+      shape = RoundedCornerShape(0.dp),
       colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
       elevation = CardDefaults.cardElevation(8.dp),
-      onClick = {
-        onSelectedReadingHistory(
-          readingHistory.mangaId,
-          readingHistory.chapterId,
-          readingHistory.lastReadPage
-        )
-      },
     ) {
       Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
           .fillMaxWidth()
           .padding(8.dp)
+          .onScalableClick(shape = RoundedCornerShape(0.dp)) {
+            onSelectedReadingHistory(
+              readingHistory.mangaId,
+              readingHistory.chapterId,
+              readingHistory.lastReadPage
+            )
+          }
       ) {
         MangaCoverArt(
           url = readingHistory.mangaCoverUrl,
           title = readingHistory.mangaTitle,
           modifier = Modifier.weight(0.25f)
-        )
+        ) { isImageLoaded = true }
+
         ReadingHistoryInfo(
           readingHistory = readingHistory,
           modifier = Modifier.weight(0.75f)
