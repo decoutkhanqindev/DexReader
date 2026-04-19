@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun MenuFooter(modifier: Modifier = Modifier) {
@@ -36,5 +37,7 @@ fun MenuFooter(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun MenuFooterPreview() {
-  MenuFooter(modifier = Modifier.fillMaxWidth())
+  DexReaderTheme {
+    MenuFooter(modifier = Modifier.fillMaxWidth())
+  }
 }

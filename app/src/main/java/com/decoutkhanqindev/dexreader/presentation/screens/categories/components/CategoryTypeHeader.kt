@@ -22,10 +22,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.model.value.category.CategoryTypeValue
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun CategoryTypeHeader(
@@ -79,21 +80,25 @@ fun CategoryTypeHeader(
 @Preview
 @Composable
 private fun CategoryTypeHeaderCollapsedPreview() {
-  CategoryTypeHeader(
-    type = CategoryTypeValue.GENRE,
-    isExpanded = false,
-    modifier = Modifier.fillMaxWidth(),
-    onExpandClick = {}
-  )
+  DexReaderTheme {
+    CategoryTypeHeader(
+      type = CategoryTypeValue.GENRE,
+      isExpanded = false,
+      modifier = Modifier.fillMaxWidth(),
+      onExpandClick = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun CategoryTypeHeaderExpandedPreview() {
-  CategoryTypeHeader(
-    type = CategoryTypeValue.GENRE,
-    isExpanded = true,
-    modifier = Modifier.fillMaxWidth(),
-    onExpandClick = {}
-  )
+  DexReaderTheme {
+    CategoryTypeHeader(
+      type = CategoryTypeValue.GENRE,
+      isExpanded = true,
+      modifier = Modifier.fillMaxWidth(),
+      onExpandClick = {}
+    )
+  }
 }

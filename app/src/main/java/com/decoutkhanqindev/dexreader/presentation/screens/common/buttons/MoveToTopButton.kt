@@ -3,7 +3,6 @@ package com.decoutkhanqindev.dexreader.presentation.screens.common.buttons
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -16,11 +15,11 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun MoveToTopButton(
@@ -57,19 +56,23 @@ fun MoveToTopButton(
 @Preview
 @Composable
 private fun MoveToTopButtonVisiblePreview() {
-  MoveToTopButton(
-    itemsSize = 20,
-    firstVisibleItemIndex = 5,
-    onClick = {}
-  )
+  DexReaderTheme {
+    MoveToTopButton(
+      itemsSize = 20,
+      firstVisibleItemIndex = 5,
+      onClick = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun MoveToTopButtonHiddenPreview() {
-  MoveToTopButton(
-    itemsSize = 5,
-    firstVisibleItemIndex = 0,
-    onClick = {}
-  )
+  DexReaderTheme {
+    MoveToTopButton(
+      itemsSize = 5,
+      firstVisibleItemIndex = 0,
+      onClick = {}
+    )
+  }
 }

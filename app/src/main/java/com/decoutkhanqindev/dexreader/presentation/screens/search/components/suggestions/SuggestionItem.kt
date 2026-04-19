@@ -13,6 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun SuggestionItem(
@@ -44,8 +45,10 @@ fun SuggestionItem(
 @Preview(showBackground = true)
 @Composable
 private fun SuggestionItemPreview() {
-  SuggestionItem(
-    suggestion = "One Piece",
-    onSelectedSuggestion = {},
-  )
+  DexReaderTheme {
+    SuggestionItem(
+      suggestion = "One Piece",
+      onSelectedSuggestion = {},
+    )
+  }
 }

@@ -22,6 +22,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.settings.ThemeMod
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.settings.SettingsUiState
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun SettingsContent(
@@ -98,47 +99,55 @@ fun SettingsContent(
 @Preview(showBackground = true)
 @Composable
 private fun SettingsContentDefaultPreview() {
-  SettingsContent(
-    uiState = SettingsUiState(themeOption = ThemeModeValue.SYSTEM),
-    modifier = Modifier.fillMaxSize(),
-    onThemeOptionClick = {},
-    onSaveThemeOption = {},
-    onRetry = {},
-  )
+  DexReaderTheme {
+    SettingsContent(
+      uiState = SettingsUiState(themeOption = ThemeModeValue.SYSTEM),
+      modifier = Modifier.fillMaxSize(),
+      onThemeOptionClick = {},
+      onSaveThemeOption = {},
+      onRetry = {},
+    )
+  }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun SettingsContentLoadingPreview() {
-  SettingsContent(
-    uiState = SettingsUiState(isLoading = true, themeOption = ThemeModeValue.DARK),
-    modifier = Modifier.fillMaxSize(),
-    onThemeOptionClick = {},
-    onSaveThemeOption = {},
-    onRetry = {},
-  )
+  DexReaderTheme {
+    SettingsContent(
+      uiState = SettingsUiState(isLoading = true, themeOption = ThemeModeValue.DARK),
+      modifier = Modifier.fillMaxSize(),
+      onThemeOptionClick = {},
+      onSaveThemeOption = {},
+      onRetry = {},
+    )
+  }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun SettingsContentSuccessPreview() {
-  SettingsContent(
-    uiState = SettingsUiState(isSuccess = true, themeOption = ThemeModeValue.LIGHT),
-    modifier = Modifier.fillMaxSize(),
-    onThemeOptionClick = {},
-    onSaveThemeOption = {},
-    onRetry = {},
-  )
+  DexReaderTheme {
+    SettingsContent(
+      uiState = SettingsUiState(isSuccess = true, themeOption = ThemeModeValue.LIGHT),
+      modifier = Modifier.fillMaxSize(),
+      onThemeOptionClick = {},
+      onSaveThemeOption = {},
+      onRetry = {},
+    )
+  }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun SettingsContentErrorPreview() {
-  SettingsContent(
-    uiState = SettingsUiState(isError = true, themeOption = ThemeModeValue.SYSTEM),
-    modifier = Modifier.fillMaxSize(),
-    onThemeOptionClick = {},
-    onSaveThemeOption = {},
-    onRetry = {},
-  )
+  DexReaderTheme {
+    SettingsContent(
+      uiState = SettingsUiState(isError = true, themeOption = ThemeModeValue.SYSTEM),
+      modifier = Modifier.fillMaxSize(),
+      onThemeOptionClick = {},
+      onSaveThemeOption = {},
+      onRetry = {},
+    )
+  }
 }

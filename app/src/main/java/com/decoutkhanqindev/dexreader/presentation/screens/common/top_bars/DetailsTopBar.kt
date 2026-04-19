@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,18 +69,22 @@ fun DetailsTopBar(
 @Preview
 @Composable
 private fun DetailsTopBarPreview() {
-  DetailsTopBar(
-    title = "One Piece",
-    onNavigateBack = {}
-  )
+  DexReaderTheme {
+    DetailsTopBar(
+      title = "One Piece",
+      onNavigateBack = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun DetailsTopBarNoSearchPreview() {
-  DetailsTopBar(
-    title = "One Piece",
-    isSearchEnabled = false,
-    onNavigateBack = {}
-  )
+  DexReaderTheme {
+    DetailsTopBar(
+      title = "One Piece",
+      isSearchEnabled = false,
+      onNavigateBack = {}
+    )
+  }
 }

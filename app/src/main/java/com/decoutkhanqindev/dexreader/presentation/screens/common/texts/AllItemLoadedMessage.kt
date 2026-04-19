@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun AllItemLoadedMessage(
@@ -40,8 +41,10 @@ fun AllItemLoadedMessage(
 @Preview
 @Composable
 private fun AllItemLoadedMessagePreview() {
-  AllItemLoadedMessage(
-    title = "All mangas loaded",
-    modifier = Modifier.fillMaxWidth()
-  )
+  DexReaderTheme {
+    AllItemLoadedMessage(
+      title = "All mangas loaded",
+      modifier = Modifier.fillMaxWidth()
+    )
+  }
 }

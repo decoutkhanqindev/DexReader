@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun PersonPicture(modifier: Modifier = Modifier) {
@@ -28,5 +29,7 @@ fun PersonPicture(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun PersonPicturePreview() {
-  PersonPicture()
+  DexReaderTheme {
+    PersonPicture()
+  }
 }

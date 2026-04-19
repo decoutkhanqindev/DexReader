@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun MangaDescription(
@@ -52,8 +53,10 @@ fun MangaDescription(
 @Preview
 @Composable
 private fun MangaDescriptionCollapsedPreview() {
-  MangaDescription(
-    description = "Monkey D. Luffy sets off on an adventure to find the legendary treasure known as the One Piece and become the Pirate King. Along the way he recruits a crew of diverse and powerful companions.",
-    modifier = Modifier.fillMaxWidth()
-  )
+  DexReaderTheme {
+    MangaDescription(
+      description = "Monkey D. Luffy sets off on an adventure to find the legendary treasure known as the One Piece and become the Pirate King. Along the way he recruits a crew of diverse and powerful companions.",
+      modifier = Modifier.fillMaxWidth()
+    )
+  }
 }

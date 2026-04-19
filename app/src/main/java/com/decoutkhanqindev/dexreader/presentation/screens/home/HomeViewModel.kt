@@ -1,6 +1,5 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.home
 
-import timber.log.Timber
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetLatestUpdateMangaListUseCase
@@ -18,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -69,7 +69,8 @@ class HomeViewModel @Inject constructor(
       } else {
         val throwable = results.firstOrNull { it.isFailure }?.exceptionOrNull()
         _uiState.value = HomeUiState.Error(throwable?.toFeatureError() ?: FeatureError.Generic)
-        Timber.tag(this::class.java.simpleName).e("fetchMangaLists have error: ${throwable?.stackTraceToString()}")
+        Timber.tag(this::class.java.simpleName)
+          .e("fetchMangaLists have error: ${throwable?.stackTraceToString()}")
       }
     }
   }

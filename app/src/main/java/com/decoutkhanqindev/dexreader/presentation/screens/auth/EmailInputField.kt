@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.auth
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -14,11 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.error.UserError
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 private val EmailKeyboardOptions = KeyboardOptions(
   keyboardType = KeyboardType.Email,
@@ -84,31 +85,37 @@ fun EmailInputField(
 @Preview
 @Composable
 private fun EmailInputFieldPreview() {
-  EmailInputField(
-    value = "nguyenvana@gmail.com",
-    modifier = Modifier.fillMaxWidth(),
-    onValueChange = {}
-  )
+  DexReaderTheme {
+    EmailInputField(
+      value = "nguyenvana@gmail.com",
+      modifier = Modifier.fillMaxWidth(),
+      onValueChange = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun EmailInputFieldErrorPreview() {
-  EmailInputField(
-    value = "invalid-email",
-    error = UserError.Email.Invalid,
-    modifier = Modifier.fillMaxWidth(),
-    onValueChange = {}
-  )
+  DexReaderTheme {
+    EmailInputField(
+      value = "invalid-email",
+      error = UserError.Email.Invalid,
+      modifier = Modifier.fillMaxWidth(),
+      onValueChange = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun EmailInputFieldEmptyErrorPreview() {
-  EmailInputField(
-    value = "",
-    error = UserError.Email.Required,
-    modifier = Modifier.fillMaxWidth(),
-    onValueChange = {}
-  )
+  DexReaderTheme {
+    EmailInputField(
+      value = "",
+      error = UserError.Email.Required,
+      modifier = Modifier.fillMaxWidth(),
+      onValueChange = {}
+    )
+  }
 }

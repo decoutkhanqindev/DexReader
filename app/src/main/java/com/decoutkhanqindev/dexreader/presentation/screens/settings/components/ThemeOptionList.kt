@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.value.settings.ThemeModeValue
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun ThemeOptionList(
@@ -65,26 +66,32 @@ fun ThemeOptionList(
 @Preview(showBackground = true)
 @Composable
 private fun ThemeOptionListSystemPreview() {
-  ThemeOptionList(
-    selectedItem = ThemeModeValue.SYSTEM,
-    onItemClick = {},
-  )
+  DexReaderTheme {
+    ThemeOptionList(
+      selectedItem = ThemeModeValue.SYSTEM,
+      onItemClick = {},
+    )
+  }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun ThemeOptionListLightPreview() {
-  ThemeOptionList(
-    selectedItem = ThemeModeValue.LIGHT,
-    onItemClick = {},
-  )
+  DexReaderTheme {
+    ThemeOptionList(
+      selectedItem = ThemeModeValue.LIGHT,
+      onItemClick = {},
+    )
+  }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun ThemeOptionListDarkPreview() {
-  ThemeOptionList(
-    selectedItem = ThemeModeValue.DARK,
-    onItemClick = {},
-  )
+  DexReaderTheme {
+    ThemeOptionList(
+      selectedItem = ThemeModeValue.DARK,
+      onItemClick = {},
+    )
+  }
 }

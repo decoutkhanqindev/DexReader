@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -89,22 +90,26 @@ fun SearchBar(
 @Preview
 @Composable
 private fun SearchBarEmptyPreview() {
-  SearchBar(
-    query = "",
-    onQueryChange = {},
-    onSearch = {},
-    onNavigateBack = {},
-  )
+  DexReaderTheme {
+    SearchBar(
+      query = "",
+      onQueryChange = {},
+      onSearch = {},
+      onNavigateBack = {},
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun SearchBarWithQueryPreview() {
-  SearchBar(
-    query = "One Piece",
-    onQueryChange = {},
-    onSearch = {},
-    onNavigateBack = {},
-  )
+  DexReaderTheme {
+    SearchBar(
+      query = "One Piece",
+      onQueryChange = {},
+      onSearch = {},
+      onNavigateBack = {},
+    )
+  }
 }
 

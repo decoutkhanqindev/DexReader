@@ -20,10 +20,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.PersonPicture
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.ProfilePicture
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun ProfilePicturePicker(
@@ -79,19 +80,23 @@ fun ProfilePicturePicker(
 @Preview
 @Composable
 private fun ProfilePicturePickerWithUrlPreview() {
-  ProfilePicturePicker(
-    url = "",
-    name = "Nguyen Van A",
-    onSelectedImageUrl = {}
-  )
+  DexReaderTheme {
+    ProfilePicturePicker(
+      url = "",
+      name = "Nguyen Van A",
+      onSelectedImageUrl = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun ProfilePicturePickerNoUrlPreview() {
-  ProfilePicturePicker(
-    url = null,
-    name = "Nguyen Van A",
-    onSelectedImageUrl = {}
-  )
+  DexReaderTheme {
+    ProfilePicturePicker(
+      url = null,
+      name = "Nguyen Van A",
+      onSelectedImageUrl = {}
+    )
+  }
 }

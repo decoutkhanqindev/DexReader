@@ -12,11 +12,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
-import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -51,40 +52,44 @@ fun HorizontalMangaList(
 @Preview
 @Composable
 private fun HorizontalMangaListPreview() {
-  HorizontalMangaList(
-    items = persistentListOf(
-      MangaModel(
-        id = "manga-001",
-        title = "One Piece",
-        coverUrl = "",
-        description = "Follow Monkey D. Luffy on his grand adventure to become King of the Pirates.",
-        author = "Eiichiro Oda",
-        artist = "Eiichiro Oda",
-        categories = persistentListOf(),
-        status = MangaStatusValue.ON_GOING,
-        contentRating = MangaContentRatingValue.SAFE,
-        year = "1997",
-        availableLanguages = persistentListOf(),
-        latestChapter = "1100",
-        updatedAt = "2024-01-01"
+  DexReaderTheme {
+    HorizontalMangaList(
+      items = persistentListOf(
+        MangaModel(
+          id = "manga-001",
+          title = "One Piece",
+          coverUrl = "",
+          description = "Follow Monkey D. Luffy on his grand adventure to become King of the Pirates.",
+          author = "Eiichiro Oda",
+          artist = "Eiichiro Oda",
+          categories = persistentListOf(),
+          status = MangaStatusValue.ON_GOING,
+          contentRating = MangaContentRatingValue.SAFE,
+          year = "1997",
+          availableLanguages = persistentListOf(),
+          latestChapter = "1100",
+          updatedAt = "2024-01-01"
+        ),
+        MangaModel(
+          id = "manga-002",
+          title = "Naruto",
+          coverUrl = "",
+          description = "Follow Naruto Uzumaki on his journey to become Hokage.",
+          author = "Masashi Kishimoto",
+          artist = "Masashi Kishimoto",
+          categories = persistentListOf(),
+          status = MangaStatusValue.COMPLETED,
+          contentRating = MangaContentRatingValue.SAFE,
+          year = "1999",
+          availableLanguages = persistentListOf(),
+          latestChapter = "700",
+          updatedAt = "2014-11-10"
+        )
       ),
-      MangaModel(
-        id = "manga-002",
-        title = "Naruto",
-        coverUrl = "",
-        description = "Follow Naruto Uzumaki on his journey to become Hokage.",
-        author = "Masashi Kishimoto",
-        artist = "Masashi Kishimoto",
-        categories = persistentListOf(),
-        status = MangaStatusValue.COMPLETED,
-        contentRating = MangaContentRatingValue.SAFE,
-        year = "1999",
-        availableLanguages = persistentListOf(),
-        latestChapter = "700",
-        updatedAt = "2014-11-10"
-      )
-    ),
-    modifier = Modifier.fillMaxWidth().height(270.dp),
-    onItemClick = {}
-  )
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(270.dp),
+      onItemClick = {}
+    )
+  }
 }

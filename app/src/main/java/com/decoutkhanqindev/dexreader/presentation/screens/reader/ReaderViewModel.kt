@@ -1,7 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.reader
 
 
-import timber.log.Timber
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -35,6 +34,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -138,7 +138,8 @@ class ReaderViewModel @Inject constructor(
           if (throwable is BusinessException.Resource.ChapterNotFound) {
             _chapterPagesUiState.value = ChapterPagesUiState.Error(throwable.toFeatureError())
           }
-          Timber.tag(this::class.java.simpleName).e("fetchChapterDetails have error: ${throwable.stackTraceToString()}")
+          Timber.tag(this::class.java.simpleName)
+            .e("fetchChapterDetails have error: ${throwable.stackTraceToString()}")
         }
     }
   }
@@ -190,7 +191,8 @@ class ReaderViewModel @Inject constructor(
           return@launch
         }
         .onFailure {
-          Timber.tag(this::class.java.simpleName).d("getChapterCacheUseCase have error: ${it.stackTraceToString()}")
+          Timber.tag(this::class.java.simpleName)
+            .d("getChapterCacheUseCase have error: ${it.stackTraceToString()}")
         }
 
       // from network
@@ -212,9 +214,12 @@ class ReaderViewModel @Inject constructor(
           }
 
           addChapterCacheUseCase(chapterPages = chapterPages)
-            .onSuccess { Timber.tag(this::class.java.simpleName).d("addChapterCacheUseCase success") }
+            .onSuccess {
+              Timber.tag(this::class.java.simpleName).d("addChapterCacheUseCase success")
+            }
             .onFailure {
-              Timber.tag(this::class.java.simpleName).d("addChapterCacheUseCase have error: ${it.stackTraceToString()}")
+              Timber.tag(this::class.java.simpleName)
+                .d("addChapterCacheUseCase have error: ${it.stackTraceToString()}")
             }
 
           if (!isPrefetch) prefetchNextChapterPages()
@@ -223,7 +228,8 @@ class ReaderViewModel @Inject constructor(
           if (!isPrefetch) {
             _chapterPagesUiState.value = ChapterPagesUiState.Error(throwable.toFeatureError())
           }
-          Timber.tag(this::class.java.simpleName).d("getChapterPagesUseCase have error: ${throwable.stackTraceToString()}")
+          Timber.tag(this::class.java.simpleName)
+            .d("getChapterPagesUseCase have error: ${throwable.stackTraceToString()}")
         }
     }
   }
@@ -255,7 +261,8 @@ class ReaderViewModel @Inject constructor(
           isFetchingChapterList = false
           currentChapterList = persistentListOf()
           hasNextChapterListPage = false
-          Timber.tag(this::class.java.simpleName).d("fetchChapterListFirstPage error: ${it.stackTraceToString()}")
+          Timber.tag(this::class.java.simpleName)
+            .d("fetchChapterListFirstPage error: ${it.stackTraceToString()}")
         }
     }
   }
@@ -280,7 +287,8 @@ class ReaderViewModel @Inject constructor(
         .onFailure {
           isFetchingChapterList = false
           hasNextChapterListPage = false
-          Timber.tag(this::class.java.simpleName).d("fetchChapterListNextPage error: ${it.stackTraceToString()}")
+          Timber.tag(this::class.java.simpleName)
+            .d("fetchChapterListNextPage error: ${it.stackTraceToString()}")
         }
     }
   }
@@ -391,7 +399,10 @@ class ReaderViewModel @Inject constructor(
           pageCount = currentChapterPagesState.chapterPages.totalPages,
         )
           .onSuccess { Timber.tag(this::class.java.simpleName).d("addAndUpdateToHistory success") }
-          .onFailure { Timber.tag(this::class.java.simpleName).d("addAndUpdateToHistory error: ${it.stackTraceToString()}") }
+          .onFailure {
+            Timber.tag(this::class.java.simpleName)
+              .d("addAndUpdateToHistory error: ${it.stackTraceToString()}")
+          }
       }
     }
   }
@@ -439,7 +450,8 @@ class ReaderViewModel @Inject constructor(
                     currentReadingHistoryList = persistentListOf()
                     hasNextReadingHistoryListPage = false
                     _isObserveHistoryDone.value = true
-                    Timber.tag(this::class.java.simpleName).d("observeHistoryFirstPage have error: ${throwable.stackTraceToString()}")
+                    Timber.tag(this::class.java.simpleName)
+                      .d("observeHistoryFirstPage have error: ${throwable.stackTraceToString()}")
                   }
               }
           } catch (c: CancellationException) {
@@ -449,7 +461,8 @@ class ReaderViewModel @Inject constructor(
             currentReadingHistoryList = persistentListOf()
             hasNextReadingHistoryListPage = false
             _isObserveHistoryDone.value = true
-            Timber.tag(this::class.java.simpleName).d("observeHistoryFirstPage have error: ${e.stackTraceToString()}")
+            Timber.tag(this::class.java.simpleName)
+              .d("observeHistoryFirstPage have error: ${e.stackTraceToString()}")
           }
         }
       }
@@ -499,7 +512,8 @@ class ReaderViewModel @Inject constructor(
 
                     hasNextReadingHistoryListPage = false
                     _isObserveHistoryDone.value = previousState
-                    Timber.tag(this::class.java.simpleName).d("observeHistoryNextPage have error: ${throwable.stackTraceToString()}")
+                    Timber.tag(this::class.java.simpleName)
+                      .d("observeHistoryNextPage have error: ${throwable.stackTraceToString()}")
                   }
               }
           } catch (c: CancellationException) {
@@ -508,7 +522,8 @@ class ReaderViewModel @Inject constructor(
             isObservingReadingHistoryList = false
             hasNextReadingHistoryListPage = false
             _isObserveHistoryDone.value = previousState
-            Timber.tag(this::class.java.simpleName).d("observeHistoryNextPage have error: ${e.stackTraceToString()}")
+            Timber.tag(this::class.java.simpleName)
+              .d("observeHistoryNextPage have error: ${e.stackTraceToString()}")
           }
         }
       }
@@ -547,8 +562,11 @@ class ReaderViewModel @Inject constructor(
 
   private fun clearExpiredCache() {
     viewModelScope.launch {
-      clearExpiredCacheUseCase().onSuccess { Timber.tag(this::class.java.simpleName).d("clearExpiredCache success.") }.onFailure {
-        Timber.tag(this::class.java.simpleName).d("clearExpiredCache error: ${it.stackTraceToString()}")
+      clearExpiredCacheUseCase().onSuccess {
+        Timber.tag(this::class.java.simpleName).d("clearExpiredCache success.")
+      }.onFailure {
+        Timber.tag(this::class.java.simpleName)
+          .d("clearExpiredCache error: ${it.stackTraceToString()}")
       }
     }
   }

@@ -18,12 +18,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun UpdateAndLogoutUserBottomBar(
@@ -100,19 +101,23 @@ fun UpdateAndLogoutUserBottomBar(
 @Preview
 @Composable
 private fun UpdateAndLogoutUserBottomBarWithUpdatePreview() {
-  UpdateAndLogoutUserBottomBar(
-    isShowUpdateButton = true,
-    onUpdateClick = {},
-    onLogoutClick = {}
-  )
+  DexReaderTheme {
+    UpdateAndLogoutUserBottomBar(
+      isShowUpdateButton = true,
+      onUpdateClick = {},
+      onLogoutClick = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun UpdateAndLogoutUserBottomBarLogoutOnlyPreview() {
-  UpdateAndLogoutUserBottomBar(
-    isShowUpdateButton = false,
-    onUpdateClick = {},
-    onLogoutClick = {}
-  )
+  DexReaderTheme {
+    UpdateAndLogoutUserBottomBar(
+      isShowUpdateButton = false,
+      onUpdateClick = {},
+      onLogoutClick = {}
+    )
+  }
 }

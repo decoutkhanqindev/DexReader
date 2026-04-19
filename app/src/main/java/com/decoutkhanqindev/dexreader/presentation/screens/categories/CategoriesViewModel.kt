@@ -1,7 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.categories
 
 
-import timber.log.Timber
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.entity.value.category.CategoryType
@@ -17,6 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -48,7 +48,8 @@ class CategoriesViewModel @Inject constructor(
         }
         .onFailure { throwable ->
           _uiState.value = CategoriesUiState.Error(throwable.toFeatureError())
-          Timber.tag(this::class.java.simpleName).e("fetchTagList have error: ${throwable.stackTraceToString()}")
+          Timber.tag(this::class.java.simpleName)
+            .e("fetchTagList have error: ${throwable.stackTraceToString()}")
         }
     }
   }

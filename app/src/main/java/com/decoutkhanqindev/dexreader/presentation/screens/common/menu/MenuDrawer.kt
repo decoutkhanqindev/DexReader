@@ -7,17 +7,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.rememberDrawerState
-import androidx.compose.ui.tooling.preview.Preview
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
@@ -69,34 +70,38 @@ fun MenuDrawer(
 @Preview
 @Composable
 private fun MenuDrawerLoggedInPreview() {
-  val drawerState = rememberDrawerState(initialValue = DrawerValue.Open)
-  MenuDrawer(
-    isUserLoggedIn = true,
-    currentUser = UserModel(
-      id = "user-001",
-      name = "Nguyen Van A",
-      email = "nguyenvana@gmail.com",
-      avatarUrl = null
-    ),
-    drawerState = drawerState,
-    selectedItem = MenuValue.HOME,
-    onSignInClick = {},
-    onItemClick = {},
-    content = {}
-  )
+  DexReaderTheme {
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Open)
+    MenuDrawer(
+      isUserLoggedIn = true,
+      currentUser = UserModel(
+        id = "user-001",
+        name = "Nguyen Van A",
+        email = "nguyenvana@gmail.com",
+        avatarUrl = null
+      ),
+      drawerState = drawerState,
+      selectedItem = MenuValue.HOME,
+      onSignInClick = {},
+      onItemClick = {},
+      content = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun MenuDrawerLoggedOutPreview() {
-  val drawerState = rememberDrawerState(initialValue = DrawerValue.Open)
-  MenuDrawer(
-    isUserLoggedIn = false,
-    currentUser = null,
-    drawerState = drawerState,
-    selectedItem = MenuValue.HOME,
-    onSignInClick = {},
-    onItemClick = {},
-    content = {}
-  )
+  DexReaderTheme {
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Open)
+    MenuDrawer(
+      isUserLoggedIn = false,
+      currentUser = null,
+      drawerState = drawerState,
+      selectedItem = MenuValue.HOME,
+      onSignInClick = {},
+      onItemClick = {},
+      content = {}
+    )
+  }
 }

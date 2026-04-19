@@ -11,9 +11,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -49,14 +50,16 @@ fun MangaCategoryList(
 @Preview
 @Composable
 private fun MangaCategoryListPreview() {
-  MangaCategoryList(
-    items = persistentListOf(
-      CategoryModel(id = "g1", title = "Action"),
-      CategoryModel(id = "g2", title = "Adventure"),
-      CategoryModel(id = "g3", title = "Comedy"),
-      CategoryModel(id = "g4", title = "Fantasy"),
-    ),
-    modifier = Modifier.fillMaxWidth(),
-    onItemClick = { _, _ -> }
-  )
+  DexReaderTheme {
+    MangaCategoryList(
+      items = persistentListOf(
+        CategoryModel(id = "g1", title = "Action"),
+        CategoryModel(id = "g2", title = "Adventure"),
+        CategoryModel(id = "g3", title = "Comedy"),
+        CategoryModel(id = "g4", title = "Fantasy"),
+      ),
+      modifier = Modifier.fillMaxWidth(),
+      onItemClick = { _, _ -> }
+    )
+  }
 }

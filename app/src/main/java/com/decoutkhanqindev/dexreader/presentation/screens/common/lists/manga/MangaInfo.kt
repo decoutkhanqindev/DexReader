@@ -2,6 +2,8 @@ package com.decoutkhanqindev.dexreader.presentation.screens.common.lists.manga
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -13,14 +15,13 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
@@ -82,8 +83,12 @@ private val previewMangaModel = MangaModel(
 @Preview
 @Composable
 private fun MangaInfoPreview() {
-  MangaInfo(
-    manga = previewMangaModel,
-    modifier = Modifier.fillMaxWidth().height(85.dp)
-  )
+  DexReaderTheme {
+    MangaInfo(
+      manga = previewMangaModel,
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(85.dp)
+    )
+  }
 }

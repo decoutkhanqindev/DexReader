@@ -18,10 +18,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -93,27 +94,31 @@ fun ChapterLanguageListBottomSheet(
 @Preview
 @Composable
 private fun ChapterLanguageListBottomSheetPreview() {
-  ChapterLanguageListBottomSheet(
-    selectedItem = MangaLanguageValue.ENGLISH,
-    items = persistentListOf(
-      MangaLanguageValue.ENGLISH,
-      MangaLanguageValue.JAPANESE,
-      MangaLanguageValue.FRENCH,
-      MangaLanguageValue.SPANISH,
-    ),
-    onItemClick = {},
-    onDismissClick = {}
-  )
+  DexReaderTheme {
+    ChapterLanguageListBottomSheet(
+      selectedItem = MangaLanguageValue.ENGLISH,
+      items = persistentListOf(
+        MangaLanguageValue.ENGLISH,
+        MangaLanguageValue.JAPANESE,
+        MangaLanguageValue.FRENCH,
+        MangaLanguageValue.SPANISH,
+      ),
+      onItemClick = {},
+      onDismissClick = {}
+    )
+  }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun ChapterLanguageListBottomSheetEmptyPreview() {
-  ChapterLanguageListBottomSheet(
-    selectedItem = MangaLanguageValue.ENGLISH,
-    items = persistentListOf(),
-    onItemClick = {},
-    onDismissClick = {}
-  )
+  DexReaderTheme {
+    ChapterLanguageListBottomSheet(
+      selectedItem = MangaLanguageValue.ENGLISH,
+      items = persistentListOf(),
+      onItemClick = {},
+      onDismissClick = {}
+    )
+  }
 }

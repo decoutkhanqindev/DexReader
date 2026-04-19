@@ -9,14 +9,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.lists.manga.HorizontalMangaList
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -97,10 +98,12 @@ private val previewMangaSection = persistentListOf(
 @Preview
 @Composable
 private fun MangaListSectionPreview() {
-  MangaListSection(
-    title = "Latest Updates",
-    items = previewMangaSection,
-    modifier = Modifier.fillMaxWidth(),
-    onItemClick = {}
-  )
+  DexReaderTheme {
+    MangaListSection(
+      title = "Latest Updates",
+      items = previewMangaSection,
+      modifier = Modifier.fillMaxWidth(),
+      onItemClick = {}
+    )
+  }
 }

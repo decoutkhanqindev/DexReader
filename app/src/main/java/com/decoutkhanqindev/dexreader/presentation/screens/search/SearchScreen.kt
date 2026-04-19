@@ -47,26 +47,26 @@ fun SearchScreen(
       )
     }
   ) { innerPadding ->
-      SearchContent(
-        query = query,
-        suggestionsUiState = suggestionsUiState,
-        resultsUiState = resultsUiState,
-        isExpanded = isExpanded,
-        suggestionList = suggestionList,
-        modifier = Modifier
-          .fillMaxSize()
-          .padding(innerPadding),
-        onSelectedSuggestion = {
-          viewModel.updateQuery(it)
-          viewModel.fetchMangaListFirstPage()
-          isExpanded = false
-        },
-        onSelectedManga = onNavigateToManDetailScreen,
-        onFetchMangaListNextPage = viewModel::fetchMangaListNextPage,
-        onRetryFetchMangaListNextPage = viewModel::retryFetchMangaListNextPage,
-        onRetry = viewModel::retry,
-      )
-    }
+    SearchContent(
+      query = query,
+      suggestionsUiState = suggestionsUiState,
+      resultsUiState = resultsUiState,
+      isExpanded = isExpanded,
+      suggestionList = suggestionList,
+      modifier = Modifier
+        .fillMaxSize()
+        .padding(innerPadding),
+      onSelectedSuggestion = {
+        viewModel.updateQuery(it)
+        viewModel.fetchMangaListFirstPage()
+        isExpanded = false
+      },
+      onSelectedManga = onNavigateToManDetailScreen,
+      onFetchMangaListNextPage = viewModel::fetchMangaListNextPage,
+      onRetryFetchMangaListNextPage = viewModel::retryFetchMangaListNextPage,
+      onRetry = viewModel::retry,
+    )
+  }
 }
 
 

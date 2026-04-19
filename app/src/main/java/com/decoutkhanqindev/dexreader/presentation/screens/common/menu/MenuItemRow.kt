@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.common.menu
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -10,10 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun MenuItemRow(
@@ -50,21 +51,25 @@ fun MenuItemRow(
 @Preview
 @Composable
 private fun MenuItemRowSelectedPreview() {
-  MenuItemRow(
-    isSelected = true,
-    item = MenuValue.HOME,
-    modifier = Modifier.fillMaxWidth(),
-    onClick = {}
-  )
+  DexReaderTheme {
+    MenuItemRow(
+      isSelected = true,
+      item = MenuValue.HOME,
+      modifier = Modifier.fillMaxWidth(),
+      onClick = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun MenuItemRowUnselectedPreview() {
-  MenuItemRow(
-    isSelected = false,
-    item = MenuValue.FAVORITES,
-    modifier = Modifier.fillMaxWidth(),
-    onClick = {}
-  )
+  DexReaderTheme {
+    MenuItemRow(
+      isSelected = false,
+      item = MenuValue.FAVORITES,
+      modifier = Modifier.fillMaxWidth(),
+      onClick = {}
+    )
+  }
 }

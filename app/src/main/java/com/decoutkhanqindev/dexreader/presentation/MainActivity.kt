@@ -7,7 +7,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.decoutkhanqindev.dexreader.presentation.screens.settings.SettingsViewModel
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -19,7 +23,10 @@ class MainActivity : ComponentActivity() {
     Timber.tag(this::class.java.simpleName).d("onCreate: initializing UI")
     enableEdgeToEdge()
     setContent {
-      DexReaderTheme {
+      val viewModel = hiltViewModel<SettingsViewModel>()
+      val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+      DexReaderTheme(themeOption = uiState.themeOption) {
         DexReaderApp(
           modifier = Modifier
             .fillMaxSize()

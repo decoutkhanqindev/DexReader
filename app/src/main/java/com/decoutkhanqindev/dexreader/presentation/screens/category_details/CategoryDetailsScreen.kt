@@ -41,26 +41,26 @@ fun CategoryDetailScreen(
     },
     modifier = modifier,
   ) {
-      CategoryDetailsContent(
-        detailsUiState = detailsUiState,
-        criteriaUiState = criteriaUiState,
-        isSortBottomSheetVisible = isShowSortBottomSheet,
-        onSortSheetDismiss = { isShowSortBottomSheet = false },
-        onSortApplyClick = { sortCriteria, sortOrder ->
-          viewModel.updateSortingCriteria(sortCriteria, sortOrder)
-          isShowSortBottomSheet = false
-        },
-        isFilterBottomSheetVisible = isShowFilterBottomSheet,
-        onFilterSheetDismiss = { isShowFilterBottomSheet = false },
-        onFilterApplyClick = { statusFilter, contentRatingFilter ->
-          viewModel.updateFilteringCriteria(statusFilter, contentRatingFilter)
-          isShowFilterBottomSheet = false
-        },
-        onMangaClick = onNavigateToMangaDetailScreen,
-        onFetchMangaListNextPage = viewModel::fetchMangaListByCategoryNextPage,
-        onRetryFetchMangaListNextPage = viewModel::retryFetchMangaListByCategoryNextPage,
-        onRetry = viewModel::retry,
-        modifier = Modifier.fillMaxSize()
-      )
+    CategoryDetailsContent(
+      detailsUiState = detailsUiState,
+      criteriaUiState = criteriaUiState,
+      isSortBottomSheetVisible = isShowSortBottomSheet,
+      onSortSheetDismiss = { isShowSortBottomSheet = false },
+      onSortApplyClick = { sortCriteria, sortOrder ->
+        viewModel.updateSortingCriteria(sortCriteria, sortOrder)
+        isShowSortBottomSheet = false
+      },
+      isFilterBottomSheetVisible = isShowFilterBottomSheet,
+      onFilterSheetDismiss = { isShowFilterBottomSheet = false },
+      onFilterApplyClick = { statusFilter, contentRatingFilter ->
+        viewModel.updateFilteringCriteria(statusFilter, contentRatingFilter)
+        isShowFilterBottomSheet = false
+      },
+      onMangaClick = onNavigateToMangaDetailScreen,
+      onFetchMangaListNextPage = viewModel::fetchMangaListByCategoryNextPage,
+      onRetryFetchMangaListNextPage = viewModel::retryFetchMangaListByCategoryNextPage,
+      onRetry = viewModel::retry,
+      modifier = Modifier.fillMaxSize()
+    )
   }
 }

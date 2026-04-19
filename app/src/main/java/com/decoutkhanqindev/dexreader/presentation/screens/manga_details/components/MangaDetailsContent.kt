@@ -2,7 +2,6 @@ package com.decoutkhanqindev.dexreader.presentation.screens.manga_details.compon
 
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,12 +20,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterModel
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.MoveToTopButton
@@ -37,14 +37,9 @@ import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.MangaDe
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.actions.ActionButtonsSection
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.chapters.MangaChaptersSection
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.info.MangaInfoSection
-import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.summary.MangaSummarySection
-import androidx.compose.ui.tooling.preview.Preview
-import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
-import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
-import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
-import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
-import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.info.previewManga
+import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.summary.MangaSummarySection
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
@@ -211,72 +206,95 @@ fun MangaDetailsContent(
 @Preview
 @Composable
 private fun MangaDetailsContentLoadingPreview() {
-  MangaDetailsContent(
-    mangaDetailsUiState = MangaDetailsUiState.Loading,
-    mangaChaptersUiState = BasePaginationUiState.FirstPageLoading,
-    isFavorite = false,
-    chapterLanguage = MangaLanguageValue.ENGLISH,
-    availableLanguageList = persistentListOf(MangaLanguageValue.ENGLISH),
-    modifier = Modifier.fillMaxSize(),
-    onReadingClick = { _, _, _ -> },
-    onFavoriteClick = {},
-    onLanguageItemClick = {},
-    onCategoryItemClick = { _, _ -> },
-    onChapterItemClick = { _, _, _ -> },
-    onFetchChapterListNextPage = {},
-    onRetryFetchChapterListNextPage = {},
-    onRetryFetchChapterListFirstPage = {},
-    onRetry = {}
-  )
+  DexReaderTheme {
+    MangaDetailsContent(
+      mangaDetailsUiState = MangaDetailsUiState.Loading,
+      mangaChaptersUiState = BasePaginationUiState.FirstPageLoading,
+      isFavorite = false,
+      chapterLanguage = MangaLanguageValue.ENGLISH,
+      availableLanguageList = persistentListOf(MangaLanguageValue.ENGLISH),
+      modifier = Modifier.fillMaxSize(),
+      onReadingClick = { _, _, _ -> },
+      onFavoriteClick = {},
+      onLanguageItemClick = {},
+      onCategoryItemClick = { _, _ -> },
+      onChapterItemClick = { _, _, _ -> },
+      onFetchChapterListNextPage = {},
+      onRetryFetchChapterListNextPage = {},
+      onRetryFetchChapterListFirstPage = {},
+      onRetry = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun MangaDetailsContentErrorPreview() {
-  MangaDetailsContent(
-    mangaDetailsUiState = MangaDetailsUiState.Error(FeatureError.NetworkUnavailable),
-    mangaChaptersUiState = BasePaginationUiState.FirstPageLoading,
-    isFavorite = false,
-    chapterLanguage = MangaLanguageValue.ENGLISH,
-    availableLanguageList = persistentListOf(MangaLanguageValue.ENGLISH),
-    modifier = Modifier.fillMaxSize(),
-    onReadingClick = { _, _, _ -> },
-    onFavoriteClick = {},
-    onLanguageItemClick = {},
-    onCategoryItemClick = { _, _ -> },
-    onChapterItemClick = { _, _, _ -> },
-    onFetchChapterListNextPage = {},
-    onRetryFetchChapterListNextPage = {},
-    onRetryFetchChapterListFirstPage = {},
-    onRetry = {}
-  )
+  DexReaderTheme {
+    MangaDetailsContent(
+      mangaDetailsUiState = MangaDetailsUiState.Error(FeatureError.NetworkUnavailable),
+      mangaChaptersUiState = BasePaginationUiState.FirstPageLoading,
+      isFavorite = false,
+      chapterLanguage = MangaLanguageValue.ENGLISH,
+      availableLanguageList = persistentListOf(MangaLanguageValue.ENGLISH),
+      modifier = Modifier.fillMaxSize(),
+      onReadingClick = { _, _, _ -> },
+      onFavoriteClick = {},
+      onLanguageItemClick = {},
+      onCategoryItemClick = { _, _ -> },
+      onChapterItemClick = { _, _, _ -> },
+      onFetchChapterListNextPage = {},
+      onRetryFetchChapterListNextPage = {},
+      onRetryFetchChapterListFirstPage = {},
+      onRetry = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun MangaDetailsContentSuccessPreview() {
-  MangaDetailsContent(
-    mangaDetailsUiState = MangaDetailsUiState.Success(previewManga),
-    mangaChaptersUiState = BasePaginationUiState.Content(
-      currentList = persistentListOf(
-        ChapterModel(id = "c-001", mangaId = "m-001", title = "Romance Dawn", number = "1", volume = "1", publishedAt = "2024-01-01"),
-        ChapterModel(id = "c-002", mangaId = "m-001", title = "They Call Him 'Straw Hat Luffy'", number = "2", volume = "1", publishedAt = "2024-01-08"),
+  DexReaderTheme {
+    MangaDetailsContent(
+      mangaDetailsUiState = MangaDetailsUiState.Success(previewManga),
+      mangaChaptersUiState = BasePaginationUiState.Content(
+        currentList = persistentListOf(
+          ChapterModel(
+            id = "c-001",
+            mangaId = "m-001",
+            title = "Romance Dawn",
+            number = "1",
+            volume = "1",
+            publishedAt = "2024-01-01"
+          ),
+          ChapterModel(
+            id = "c-002",
+            mangaId = "m-001",
+            title = "They Call Him 'Straw Hat Luffy'",
+            number = "2",
+            volume = "1",
+            publishedAt = "2024-01-08"
+          ),
+        ),
+        nextPageState = BaseNextPageState.IDLE
       ),
-      nextPageState = BaseNextPageState.IDLE
-    ),
-    isFavorite = false,
-    chapterLanguage = MangaLanguageValue.ENGLISH,
-    availableLanguageList = persistentListOf(MangaLanguageValue.ENGLISH, MangaLanguageValue.JAPANESE),
-    startedChapterId = "c-001",
-    modifier = Modifier.fillMaxSize(),
-    onReadingClick = { _, _, _ -> },
-    onFavoriteClick = {},
-    onLanguageItemClick = {},
-    onCategoryItemClick = { _, _ -> },
-    onChapterItemClick = { _, _, _ -> },
-    onFetchChapterListNextPage = {},
-    onRetryFetchChapterListNextPage = {},
-    onRetryFetchChapterListFirstPage = {},
-    onRetry = {}
-  )
+      isFavorite = false,
+      chapterLanguage = MangaLanguageValue.ENGLISH,
+      availableLanguageList = persistentListOf(
+        MangaLanguageValue.ENGLISH,
+        MangaLanguageValue.JAPANESE
+      ),
+      startedChapterId = "c-001",
+      modifier = Modifier.fillMaxSize(),
+      onReadingClick = { _, _, _ -> },
+      onFavoriteClick = {},
+      onLanguageItemClick = {},
+      onCategoryItemClick = { _, _ -> },
+      onChapterItemClick = { _, _, _ -> },
+      onFetchChapterListNextPage = {},
+      onRetryFetchChapterListNextPage = {},
+      onRetryFetchChapterListFirstPage = {},
+      onRetry = {}
+    )
+  }
 }

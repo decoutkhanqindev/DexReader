@@ -10,9 +10,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.category.CategoryTypeValue
-import androidx.compose.ui.tooling.preview.Preview
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -55,25 +56,29 @@ private val previewCategoryItems = persistentListOf(
 @Preview
 @Composable
 private fun CategoryTypeSectionCollapsedPreview() {
-  CategoryTypeSection(
-    isExpanded = false,
-    type = CategoryTypeValue.GENRE,
-    items = previewCategoryItems,
-    modifier = Modifier.fillMaxWidth(),
-    onExpandClick = {},
-    onItemClick = { _, _ -> }
-  )
+  DexReaderTheme {
+    CategoryTypeSection(
+      isExpanded = false,
+      type = CategoryTypeValue.GENRE,
+      items = previewCategoryItems,
+      modifier = Modifier.fillMaxWidth(),
+      onExpandClick = {},
+      onItemClick = { _, _ -> }
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun CategoryTypeSectionExpandedPreview() {
-  CategoryTypeSection(
-    isExpanded = true,
-    type = CategoryTypeValue.GENRE,
-    items = previewCategoryItems,
-    modifier = Modifier.fillMaxWidth(),
-    onExpandClick = {},
-    onItemClick = { _, _ -> }
-  )
+  DexReaderTheme {
+    CategoryTypeSection(
+      isExpanded = true,
+      type = CategoryTypeValue.GENRE,
+      items = previewCategoryItems,
+      modifier = Modifier.fillMaxWidth(),
+      onExpandClick = {},
+      onItemClick = { _, _ -> }
+    )
+  }
 }

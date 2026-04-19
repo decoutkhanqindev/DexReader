@@ -36,7 +36,8 @@ class FirebaseHistoryFirestoreSourceImpl @Inject constructor(
       .limit(limit)
 
     lastReadingHistoryId?.let { id ->
-      val lastDoc = historyCollectionRef.document(id).get().await() // safe: flow {} is a suspend context
+      val lastDoc =
+        historyCollectionRef.document(id).get().await() // safe: flow {} is a suspend context
       if (lastDoc.exists()) query = query.startAfter(lastDoc)
     }
 

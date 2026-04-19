@@ -16,9 +16,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun AuthHeader(modifier: Modifier = Modifier) {
@@ -65,5 +66,9 @@ fun AuthHeader(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun AuthHeaderPreview() {
-  AuthHeader(modifier = Modifier.fillMaxWidth().padding(16.dp))
+  DexReaderTheme {
+    AuthHeader(modifier = Modifier
+      .fillMaxWidth()
+      .padding(16.dp))
+  }
 }

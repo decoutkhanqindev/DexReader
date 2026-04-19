@@ -1,8 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.search
 
 
-import android.util.Log
-import timber.log.Timber
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaSuggestionsUseCase
@@ -28,6 +26,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -93,7 +92,8 @@ class SearchViewModel @Inject constructor(
         .onFailure { throwable ->
           _resultsUiState.value =
             BasePaginationUiState.FirstPageError(throwable.toFeatureError())
-          Timber.tag(this::class.java.simpleName).d("fetchMangaListFirstPage have error: ${throwable.stackTraceToString()}")
+          Timber.tag(this::class.java.simpleName)
+            .d("fetchMangaListFirstPage have error: ${throwable.stackTraceToString()}")
         }
     }
   }
@@ -138,7 +138,8 @@ class SearchViewModel @Inject constructor(
         .onFailure {
           _resultsUiState.value =
             currentResultsUiState.copy(nextPageState = BaseNextPageState.ERROR)
-          Timber.tag(this::class.java.simpleName).d("fetchMangaListNextPageInternal have error: ${it.stackTraceToString()}")
+          Timber.tag(this::class.java.simpleName)
+            .d("fetchMangaListNextPageInternal have error: ${it.stackTraceToString()}")
         }
     }
   }

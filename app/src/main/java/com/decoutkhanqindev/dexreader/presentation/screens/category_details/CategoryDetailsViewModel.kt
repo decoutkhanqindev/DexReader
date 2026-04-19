@@ -1,7 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.category_details
 
 
-import timber.log.Timber
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -29,6 +28,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -79,7 +79,8 @@ class CategoryDetailsViewModel @Inject constructor(
         .onFailure { throwable ->
           _categoryDetailsUiState.value =
             BasePaginationUiState.FirstPageError(throwable.toFeatureError())
-          Timber.tag(this::class.java.simpleName).d("fetchMangaListByCategoryFirstPage have error: ${throwable.stackTraceToString()}")
+          Timber.tag(this::class.java.simpleName)
+            .d("fetchMangaListByCategoryFirstPage have error: ${throwable.stackTraceToString()}")
         }
     }
   }
@@ -137,7 +138,8 @@ class CategoryDetailsViewModel @Inject constructor(
         .onFailure {
           _categoryDetailsUiState.value =
             currentCategoryDetailsUiState.copy(nextPageState = BaseNextPageState.ERROR)
-          Timber.tag(this::class.java.simpleName).d("fetchMangaListByCategoryNextPageInternal have error: ${it.stackTraceToString()}")
+          Timber.tag(this::class.java.simpleName)
+            .d("fetchMangaListByCategoryNextPageInternal have error: ${it.stackTraceToString()}")
         }
     }
   }

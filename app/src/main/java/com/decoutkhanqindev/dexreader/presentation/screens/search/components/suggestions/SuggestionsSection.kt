@@ -15,6 +15,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.Notific
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.search.SuggestionsUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.search.components.results.ResultsNotFoundMessage
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -60,51 +61,59 @@ fun SuggestionsSection(
 @Preview(showBackground = true)
 @Composable
 private fun SuggestionsSectionLoadingPreview() {
-  SuggestionsSection(
-    query = "One",
-    suggestionsUiState = SuggestionsUiState.Loading,
-    suggestionList = persistentListOf(),
-    modifier = Modifier.fillMaxSize(),
-    onSelectedSuggestion = {},
-  )
+  DexReaderTheme {
+    SuggestionsSection(
+      query = "One",
+      suggestionsUiState = SuggestionsUiState.Loading,
+      suggestionList = persistentListOf(),
+      modifier = Modifier.fillMaxSize(),
+      onSelectedSuggestion = {},
+    )
+  }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun SuggestionsSectionErrorPreview() {
-  SuggestionsSection(
-    query = "One",
-    suggestionsUiState = SuggestionsUiState.Error(),
-    suggestionList = persistentListOf(),
-    modifier = Modifier.fillMaxSize(),
-    onSelectedSuggestion = {},
-  )
+  DexReaderTheme {
+    SuggestionsSection(
+      query = "One",
+      suggestionsUiState = SuggestionsUiState.Error(),
+      suggestionList = persistentListOf(),
+      modifier = Modifier.fillMaxSize(),
+      onSelectedSuggestion = {},
+    )
+  }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun SuggestionsSectionEmptyPreview() {
-  SuggestionsSection(
-    query = "xyzabc",
-    suggestionsUiState = SuggestionsUiState.Success,
-    suggestionList = persistentListOf(),
-    modifier = Modifier.fillMaxSize(),
-    onSelectedSuggestion = {},
-  )
+  DexReaderTheme {
+    SuggestionsSection(
+      query = "xyzabc",
+      suggestionsUiState = SuggestionsUiState.Success,
+      suggestionList = persistentListOf(),
+      modifier = Modifier.fillMaxSize(),
+      onSelectedSuggestion = {},
+    )
+  }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun SuggestionsSectionSuccessPreview() {
-  SuggestionsSection(
-    query = "One",
-    suggestionsUiState = SuggestionsUiState.Success,
-    suggestionList = persistentListOf(
-      "One Piece",
-      "One Punch Man",
-      "One Piece Episodio di Ace",
-    ),
-    modifier = Modifier.fillMaxSize(),
-    onSelectedSuggestion = {},
-  )
+  DexReaderTheme {
+    SuggestionsSection(
+      query = "One",
+      suggestionsUiState = SuggestionsUiState.Success,
+      suggestionList = persistentListOf(
+        "One Piece",
+        "One Punch Man",
+        "One Piece Episodio di Ace",
+      ),
+      modifier = Modifier.fillMaxSize(),
+      onSelectedSuggestion = {},
+    )
+  }
 }

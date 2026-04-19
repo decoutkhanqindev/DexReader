@@ -9,11 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.info.previewManga
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 
 @Composable
@@ -52,9 +53,11 @@ fun MangaSummarySection(
 @Preview
 @Composable
 private fun MangaSummarySectionPreview() {
-  MangaSummarySection(
-    manga = previewManga,
-    modifier = Modifier.fillMaxWidth(),
-    onCategoryItemClick = { _, _ -> }
-  )
+  DexReaderTheme {
+    MangaSummarySection(
+      manga = previewManga,
+      modifier = Modifier.fillMaxWidth(),
+      onCategoryItemClick = { _, _ -> }
+    )
+  }
 }

@@ -12,14 +12,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.AuthContent
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.forgot_password.ForgotPasswordUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun ForgotPasswordContent(
@@ -84,55 +84,63 @@ fun ForgotPasswordContent(
 @Preview
 @Composable
 private fun ForgotPasswordContentPreview() {
-  ForgotPasswordContent(
-    uiState = ForgotPasswordUiState(),
-    modifier = Modifier.fillMaxSize(),
-    onEmailChange = {},
-    onSubmitClick = {},
-    onSubmitSuccess = {},
-    onNavigateBack = {},
-    onRetry = {}
-  )
+  DexReaderTheme {
+    ForgotPasswordContent(
+      uiState = ForgotPasswordUiState(),
+      modifier = Modifier.fillMaxSize(),
+      onEmailChange = {},
+      onSubmitClick = {},
+      onSubmitSuccess = {},
+      onNavigateBack = {},
+      onRetry = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun ForgotPasswordContentLoadingPreview() {
-  ForgotPasswordContent(
-    uiState = ForgotPasswordUiState(isLoading = true),
-    modifier = Modifier.fillMaxSize(),
-    onEmailChange = {},
-    onSubmitClick = {},
-    onSubmitSuccess = {},
-    onNavigateBack = {},
-    onRetry = {}
-  )
+  DexReaderTheme {
+    ForgotPasswordContent(
+      uiState = ForgotPasswordUiState(isLoading = true),
+      modifier = Modifier.fillMaxSize(),
+      onEmailChange = {},
+      onSubmitClick = {},
+      onSubmitSuccess = {},
+      onNavigateBack = {},
+      onRetry = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun ForgotPasswordContentErrorPreview() {
-  ForgotPasswordContent(
-    uiState = ForgotPasswordUiState(isError = true),
-    modifier = Modifier.fillMaxSize(),
-    onEmailChange = {},
-    onSubmitClick = {},
-    onSubmitSuccess = {},
-    onNavigateBack = {},
-    onRetry = {}
-  )
+  DexReaderTheme {
+    ForgotPasswordContent(
+      uiState = ForgotPasswordUiState(isError = true),
+      modifier = Modifier.fillMaxSize(),
+      onEmailChange = {},
+      onSubmitClick = {},
+      onSubmitSuccess = {},
+      onNavigateBack = {},
+      onRetry = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun ForgotPasswordContentSuccessPreview() {
-  ForgotPasswordContent(
-    uiState = ForgotPasswordUiState(isSuccess = true),
-    modifier = Modifier.fillMaxSize(),
-    onEmailChange = {},
-    onSubmitClick = {},
-    onSubmitSuccess = {},
-    onNavigateBack = {},
-    onRetry = {}
-  )
+  DexReaderTheme {
+    ForgotPasswordContent(
+      uiState = ForgotPasswordUiState(isSuccess = true),
+      modifier = Modifier.fillMaxSize(),
+      onEmailChange = {},
+      onSubmitClick = {},
+      onSubmitSuccess = {},
+      onNavigateBack = {},
+      onRetry = {}
+    )
+  }
 }

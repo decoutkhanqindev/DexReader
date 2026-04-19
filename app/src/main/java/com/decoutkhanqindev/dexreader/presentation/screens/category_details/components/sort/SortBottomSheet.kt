@@ -17,13 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortCriteriaValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortOrderValue
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailsCriteriaUiState
-import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -103,9 +104,11 @@ fun SortBottomSheet(
 @Preview
 @Composable
 private fun SortBottomSheetPreview() {
-  SortBottomSheet(
-    onDismiss = {},
-    criteriaState = CategoryDetailsCriteriaUiState(),
-    onApplyClick = { _, _ -> }
-  )
+  DexReaderTheme {
+    SortBottomSheet(
+      onDismiss = {},
+      criteriaState = CategoryDetailsCriteriaUiState(),
+      onApplyClick = { _, _ -> }
+    )
+  }
 }

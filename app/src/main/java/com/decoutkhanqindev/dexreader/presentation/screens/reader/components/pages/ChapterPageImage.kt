@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import me.saket.telephoto.zoomable.coil3.ZoomableAsyncImage
 import me.saket.telephoto.zoomable.rememberZoomableImageState
 
@@ -38,11 +39,13 @@ fun ChapterPageImage(
 @Preview
 @Composable
 private fun ChapterPageImagePreview() {
-  ChapterPageImage(
-    imageUrl = "",
-    modifier = Modifier
-      .fillMaxWidth()
-      .height(400.dp)
-  )
+  DexReaderTheme {
+    ChapterPageImage(
+      imageUrl = "",
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(400.dp)
+    )
+  }
 }
 

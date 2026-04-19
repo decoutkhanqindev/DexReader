@@ -3,6 +3,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.auth.forgot_password
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,14 +20,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.error.UserError
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.EmailInputField
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun ForgotPasswordForm(
@@ -98,25 +99,29 @@ fun ForgotPasswordForm(
 @Preview
 @Composable
 private fun ForgotPasswordFormPreview() {
-  ForgotPasswordForm(
-    email = "nguyenvana@gmail.com",
-    emailError = null,
-    modifier = Modifier.fillMaxSize(),
-    onEmailChange = {},
-    onSubmitClick = {},
-    onNavigateBack = {}
-  )
+  DexReaderTheme {
+    ForgotPasswordForm(
+      email = "nguyenvana@gmail.com",
+      emailError = null,
+      modifier = Modifier.fillMaxSize(),
+      onEmailChange = {},
+      onSubmitClick = {},
+      onNavigateBack = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun ForgotPasswordFormWithErrorPreview() {
-  ForgotPasswordForm(
-    email = "invalid-email",
-    emailError = UserError.Email.Invalid,
-    modifier = Modifier.fillMaxSize(),
-    onEmailChange = {},
-    onSubmitClick = {},
-    onNavigateBack = {}
-  )
+  DexReaderTheme {
+    ForgotPasswordForm(
+      email = "invalid-email",
+      emailError = UserError.Email.Invalid,
+      modifier = Modifier.fillMaxSize(),
+      onEmailChange = {},
+      onSubmitClick = {},
+      onNavigateBack = {}
+    )
+  }
 }

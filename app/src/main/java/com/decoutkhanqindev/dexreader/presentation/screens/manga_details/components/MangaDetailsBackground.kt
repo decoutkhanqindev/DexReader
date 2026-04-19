@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun MangaDetailsBackground(
@@ -32,10 +33,12 @@ fun MangaDetailsBackground(
 @Preview
 @Composable
 private fun MangaDetailsBackgroundPreview() {
-  MangaDetailsBackground(
-    imageUrl = "",
-    modifier = Modifier
-      .fillMaxWidth()
-      .height(300.dp)
-  )
+  DexReaderTheme {
+    MangaDetailsBackground(
+      imageUrl = "",
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(300.dp)
+    )
+  }
 }

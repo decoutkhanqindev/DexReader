@@ -1,6 +1,7 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.category_details.components
 
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -10,12 +11,16 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
+import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortCriteriaValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortOrderValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailsCriteriaUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.filter.FilterBottomSheet
@@ -29,11 +34,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.states.Loading
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.AllItemLoadedMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadMoreMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPageErrorMessage
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.ui.tooling.preview.Preview
-import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
-import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
-import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -183,131 +184,143 @@ private val previewMangaList = persistentListOf(
 @Preview
 @Composable
 private fun CategoryDetailsContentFirstPageLoadingPreview() {
-  CategoryDetailsContent(
-    detailsUiState = BasePaginationUiState.FirstPageLoading,
-    criteriaUiState = previewCriteriaState,
-    isSortBottomSheetVisible = false,
-    onSortSheetDismiss = {},
-    onSortApplyClick = { _, _ -> },
-    isFilterBottomSheetVisible = false,
-    onFilterSheetDismiss = {},
-    onFilterApplyClick = { _, _ -> },
-    onMangaClick = {},
-    onFetchMangaListNextPage = {},
-    onRetryFetchMangaListNextPage = {},
-    onRetry = {},
-    modifier = Modifier.fillMaxSize()
-  )
+  DexReaderTheme {
+    CategoryDetailsContent(
+      detailsUiState = BasePaginationUiState.FirstPageLoading,
+      criteriaUiState = previewCriteriaState,
+      isSortBottomSheetVisible = false,
+      onSortSheetDismiss = {},
+      onSortApplyClick = { _, _ -> },
+      isFilterBottomSheetVisible = false,
+      onFilterSheetDismiss = {},
+      onFilterApplyClick = { _, _ -> },
+      onMangaClick = {},
+      onFetchMangaListNextPage = {},
+      onRetryFetchMangaListNextPage = {},
+      onRetry = {},
+      modifier = Modifier.fillMaxSize()
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun CategoryDetailsContentFirstPageErrorPreview() {
-  CategoryDetailsContent(
-    detailsUiState = BasePaginationUiState.FirstPageError(FeatureError.NetworkUnavailable),
-    criteriaUiState = previewCriteriaState,
-    isSortBottomSheetVisible = false,
-    onSortSheetDismiss = {},
-    onSortApplyClick = { _, _ -> },
-    isFilterBottomSheetVisible = false,
-    onFilterSheetDismiss = {},
-    onFilterApplyClick = { _, _ -> },
-    onMangaClick = {},
-    onFetchMangaListNextPage = {},
-    onRetryFetchMangaListNextPage = {},
-    onRetry = {},
-    modifier = Modifier.fillMaxSize()
-  )
+  DexReaderTheme {
+    CategoryDetailsContent(
+      detailsUiState = BasePaginationUiState.FirstPageError(FeatureError.NetworkUnavailable),
+      criteriaUiState = previewCriteriaState,
+      isSortBottomSheetVisible = false,
+      onSortSheetDismiss = {},
+      onSortApplyClick = { _, _ -> },
+      isFilterBottomSheetVisible = false,
+      onFilterSheetDismiss = {},
+      onFilterApplyClick = { _, _ -> },
+      onMangaClick = {},
+      onFetchMangaListNextPage = {},
+      onRetryFetchMangaListNextPage = {},
+      onRetry = {},
+      modifier = Modifier.fillMaxSize()
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun CategoryDetailsContentIdlePreview() {
-  CategoryDetailsContent(
-    detailsUiState = BasePaginationUiState.Content(
-      currentList = previewMangaList,
-      nextPageState = BaseNextPageState.IDLE
-    ),
-    criteriaUiState = previewCriteriaState,
-    isSortBottomSheetVisible = false,
-    onSortSheetDismiss = {},
-    onSortApplyClick = { _, _ -> },
-    isFilterBottomSheetVisible = false,
-    onFilterSheetDismiss = {},
-    onFilterApplyClick = { _, _ -> },
-    onMangaClick = {},
-    onFetchMangaListNextPage = {},
-    onRetryFetchMangaListNextPage = {},
-    onRetry = {},
-    modifier = Modifier.fillMaxSize()
-  )
+  DexReaderTheme {
+    CategoryDetailsContent(
+      detailsUiState = BasePaginationUiState.Content(
+        currentList = previewMangaList,
+        nextPageState = BaseNextPageState.IDLE
+      ),
+      criteriaUiState = previewCriteriaState,
+      isSortBottomSheetVisible = false,
+      onSortSheetDismiss = {},
+      onSortApplyClick = { _, _ -> },
+      isFilterBottomSheetVisible = false,
+      onFilterSheetDismiss = {},
+      onFilterApplyClick = { _, _ -> },
+      onMangaClick = {},
+      onFetchMangaListNextPage = {},
+      onRetryFetchMangaListNextPage = {},
+      onRetry = {},
+      modifier = Modifier.fillMaxSize()
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun CategoryDetailsContentNextPageLoadingPreview() {
-  CategoryDetailsContent(
-    detailsUiState = BasePaginationUiState.Content(
-      currentList = previewMangaList,
-      nextPageState = BaseNextPageState.LOADING
-    ),
-    criteriaUiState = previewCriteriaState,
-    isSortBottomSheetVisible = false,
-    onSortSheetDismiss = {},
-    onSortApplyClick = { _, _ -> },
-    isFilterBottomSheetVisible = false,
-    onFilterSheetDismiss = {},
-    onFilterApplyClick = { _, _ -> },
-    onMangaClick = {},
-    onFetchMangaListNextPage = {},
-    onRetryFetchMangaListNextPage = {},
-    onRetry = {},
-    modifier = Modifier.fillMaxSize()
-  )
+  DexReaderTheme {
+    CategoryDetailsContent(
+      detailsUiState = BasePaginationUiState.Content(
+        currentList = previewMangaList,
+        nextPageState = BaseNextPageState.LOADING
+      ),
+      criteriaUiState = previewCriteriaState,
+      isSortBottomSheetVisible = false,
+      onSortSheetDismiss = {},
+      onSortApplyClick = { _, _ -> },
+      isFilterBottomSheetVisible = false,
+      onFilterSheetDismiss = {},
+      onFilterApplyClick = { _, _ -> },
+      onMangaClick = {},
+      onFetchMangaListNextPage = {},
+      onRetryFetchMangaListNextPage = {},
+      onRetry = {},
+      modifier = Modifier.fillMaxSize()
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun CategoryDetailsContentNextPageErrorPreview() {
-  CategoryDetailsContent(
-    detailsUiState = BasePaginationUiState.Content(
-      currentList = previewMangaList,
-      nextPageState = BaseNextPageState.ERROR
-    ),
-    criteriaUiState = previewCriteriaState,
-    isSortBottomSheetVisible = false,
-    onSortSheetDismiss = {},
-    onSortApplyClick = { _, _ -> },
-    isFilterBottomSheetVisible = false,
-    onFilterSheetDismiss = {},
-    onFilterApplyClick = { _, _ -> },
-    onMangaClick = {},
-    onFetchMangaListNextPage = {},
-    onRetryFetchMangaListNextPage = {},
-    onRetry = {},
-    modifier = Modifier.fillMaxSize()
-  )
+  DexReaderTheme {
+    CategoryDetailsContent(
+      detailsUiState = BasePaginationUiState.Content(
+        currentList = previewMangaList,
+        nextPageState = BaseNextPageState.ERROR
+      ),
+      criteriaUiState = previewCriteriaState,
+      isSortBottomSheetVisible = false,
+      onSortSheetDismiss = {},
+      onSortApplyClick = { _, _ -> },
+      isFilterBottomSheetVisible = false,
+      onFilterSheetDismiss = {},
+      onFilterApplyClick = { _, _ -> },
+      onMangaClick = {},
+      onFetchMangaListNextPage = {},
+      onRetryFetchMangaListNextPage = {},
+      onRetry = {},
+      modifier = Modifier.fillMaxSize()
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun CategoryDetailsContentNoMoreItemsPreview() {
-  CategoryDetailsContent(
-    detailsUiState = BasePaginationUiState.Content(
-      currentList = previewMangaList,
-      nextPageState = BaseNextPageState.NO_MORE_ITEMS
-    ),
-    criteriaUiState = previewCriteriaState,
-    isSortBottomSheetVisible = false,
-    onSortSheetDismiss = {},
-    onSortApplyClick = { _, _ -> },
-    isFilterBottomSheetVisible = false,
-    onFilterSheetDismiss = {},
-    onFilterApplyClick = { _, _ -> },
-    onMangaClick = {},
-    onFetchMangaListNextPage = {},
-    onRetryFetchMangaListNextPage = {},
-    onRetry = {},
-    modifier = Modifier.fillMaxSize()
-  )
+  DexReaderTheme {
+    CategoryDetailsContent(
+      detailsUiState = BasePaginationUiState.Content(
+        currentList = previewMangaList,
+        nextPageState = BaseNextPageState.NO_MORE_ITEMS
+      ),
+      criteriaUiState = previewCriteriaState,
+      isSortBottomSheetVisible = false,
+      onSortSheetDismiss = {},
+      onSortApplyClick = { _, _ -> },
+      isFilterBottomSheetVisible = false,
+      onFilterSheetDismiss = {},
+      onFilterApplyClick = { _, _ -> },
+      onMangaClick = {},
+      onFetchMangaListNextPage = {},
+      onRetryFetchMangaListNextPage = {},
+      onRetry = {},
+      modifier = Modifier.fillMaxSize()
+    )
+  }
 }

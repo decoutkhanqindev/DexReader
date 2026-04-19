@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun LoadMoreMessage(
@@ -43,8 +44,10 @@ fun LoadMoreMessage(
 @Preview
 @Composable
 private fun LoadMoreMessagePreview() {
-  LoadMoreMessage(
-    modifier = Modifier.fillMaxWidth(),
-    onClick = {}
-  )
+  DexReaderTheme {
+    LoadMoreMessage(
+      modifier = Modifier.fillMaxWidth(),
+      onClick = {}
+    )
+  }
 }

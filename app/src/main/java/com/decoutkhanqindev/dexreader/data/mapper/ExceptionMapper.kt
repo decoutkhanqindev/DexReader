@@ -19,6 +19,7 @@ object ExceptionMapper {
       is HttpException ->
         if (code() >= 500) throw InfrastructureException.ServerUnavailable(cause = this)
         else throw InfrastructureException.Unexpected(cause = this)
+
       is IOException -> throw InfrastructureException.NetworkUnavailable(cause = this)
       else -> throw InfrastructureException.Unexpected(cause = this)
     }
@@ -37,6 +38,7 @@ object ExceptionMapper {
         if (code == FirebaseFirestoreException.Code.PERMISSION_DENIED)
           throw BusinessException.Resource.AccessDenied(cause = this)
         else throw InfrastructureException.Unexpected(cause = this)
+
       else -> throw InfrastructureException.Unexpected(cause = this)
     }
 
@@ -45,10 +47,12 @@ object ExceptionMapper {
       is CancellationException -> throw this
       is FirebaseFirestoreException if code == FirebaseFirestoreException.Code.PERMISSION_DENIED ->
         throw BusinessException.Resource.AccessDenied(cause = this)
+
       is FirebaseFirestoreException
         if (code == FirebaseFirestoreException.Code.UNAVAILABLE ||
             code == FirebaseFirestoreException.Code.DEADLINE_EXCEEDED) ->
         throw InfrastructureException.NetworkUnavailable(cause = this)
+
       is FirebaseFirestoreException -> throw InfrastructureException.Unexpected(cause = this)
       else -> throw this
     }
@@ -58,10 +62,13 @@ object ExceptionMapper {
       is DomainException -> throw this
       is FirebaseAuthUserCollisionException ->
         throw BusinessException.Auth.UserAlreadyExists(cause = this)
+
       is FirebaseAuthInvalidUserException ->
         throw BusinessException.Auth.UserNotFound(cause = this)
+
       is FirebaseAuthInvalidCredentialsException ->
         throw BusinessException.Auth.InvalidCredentials(cause = this)
+
       else -> throw InfrastructureException.Unexpected(cause = this)
     }
 }

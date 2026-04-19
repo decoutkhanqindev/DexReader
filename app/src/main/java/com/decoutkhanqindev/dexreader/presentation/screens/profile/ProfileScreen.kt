@@ -65,21 +65,21 @@ fun ProfileScreen(
       }
     }
   ) {
-      if (isUserLoggedIn || uiState.isLogoutUserSuccess) {
-        ProfileContent(
-          uiState = uiState,
-          modifier = Modifier.fillMaxSize(),
-          onUpdateNameChange = viewModel::updateUserName,
-          onUpdatePicUrlChange = viewModel::updateUserPicUrl,
-          onLogoutSuccess = onNavigateToHomeScreen,
-          onRetryUpdate = viewModel::retryUpdateUserProfile,
-          onRetryLogout = viewModel::retryLogoutUser,
-        )
-      } else {
-        IdleScreen(
-          message = stringResource(R.string.please_sign_in_to_view_your_profile),
-          modifier = Modifier.fillMaxSize()
-        )
-      }
+    if (isUserLoggedIn || uiState.isLogoutUserSuccess) {
+      ProfileContent(
+        uiState = uiState,
+        modifier = Modifier.fillMaxSize(),
+        onUpdateNameChange = viewModel::updateUserName,
+        onUpdatePicUrlChange = viewModel::updateUserPicUrl,
+        onLogoutSuccess = onNavigateToHomeScreen,
+        onRetryUpdate = viewModel::retryUpdateUserProfile,
+        onRetryLogout = viewModel::retryLogoutUser,
+      )
+    } else {
+      IdleScreen(
+        message = stringResource(R.string.please_sign_in_to_view_your_profile),
+        modifier = Modifier.fillMaxSize()
+      )
+    }
   }
 }

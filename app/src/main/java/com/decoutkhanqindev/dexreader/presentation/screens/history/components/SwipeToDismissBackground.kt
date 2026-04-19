@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun SwipeToDismissBackground(
@@ -42,21 +43,25 @@ fun SwipeToDismissBackground(
 @Preview
 @Composable
 private fun SwipeToDismissBackgroundSwipingPreview() {
-  SwipeToDismissBackground(
-    isSwiping = true,
-    modifier = Modifier
-      .fillMaxWidth()
-      .height(80.dp)
-  )
+  DexReaderTheme {
+    SwipeToDismissBackground(
+      isSwiping = true,
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(80.dp)
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun SwipeToDismissBackgroundIdlePreview() {
-  SwipeToDismissBackground(
-    isSwiping = false,
-    modifier = Modifier
-      .fillMaxWidth()
-      .height(80.dp)
-  )
+  DexReaderTheme {
+    SwipeToDismissBackground(
+      isSwiping = false,
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(80.dp)
+    )
+  }
 }

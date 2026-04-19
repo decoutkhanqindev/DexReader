@@ -10,15 +10,11 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.presentation.model.value.settings.ThemeModeValue
-import com.decoutkhanqindev.dexreader.presentation.screens.settings.SettingsViewModel
 
 private val lightScheme =
   lightColorScheme(
@@ -256,41 +252,35 @@ private val highContrastDarkColorScheme =
 
 @Composable
 fun DexReaderTheme(
+  themeOption: ThemeModeValue = ThemeModeValue.SYSTEM,
   dynamicColor: Boolean = false,
   contrastLevel: ContrastLevel = ContrastLevel.Standard,
   content: @Composable () -> Unit,
 ) {
-  val viewModel = hiltViewModel<SettingsViewModel>()
-  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  val isDarkTheme = when (themeOption) {
+    ThemeModeValue.SYSTEM -> isSystemInDarkTheme()
+    ThemeModeValue.DARK -> true
+    ThemeModeValue.LIGHT -> false
+  }
 
-  val isDarkTheme =
-    when (uiState.themeOption) {
-      ThemeModeValue.SYSTEM -> isSystemInDarkTheme()
-      ThemeModeValue.DARK -> true
-      ThemeModeValue.LIGHT -> false
+  val colorScheme = when {
+    dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+      val context = LocalContext.current
+      if (isDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
     }
 
-  val colorScheme =
-    when {
-      dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-        val context = LocalContext.current
-        if (isDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-      }
-
-      isDarkTheme ->
-        when (contrastLevel) {
-          ContrastLevel.Standard -> darkScheme
-          ContrastLevel.Medium -> mediumContrastDarkColorScheme
-          ContrastLevel.High -> highContrastDarkColorScheme
-        }
-
-      else ->
-        when (contrastLevel) {
-          ContrastLevel.Standard -> lightScheme
-          ContrastLevel.Medium -> mediumContrastLightColorScheme
-          ContrastLevel.High -> highContrastLightColorScheme
-        }
+    isDarkTheme -> when (contrastLevel) {
+      ContrastLevel.Standard -> darkScheme
+      ContrastLevel.Medium -> mediumContrastDarkColorScheme
+      ContrastLevel.High -> highContrastDarkColorScheme
     }
+
+    else -> when (contrastLevel) {
+      ContrastLevel.Standard -> lightScheme
+      ContrastLevel.Medium -> mediumContrastLightColorScheme
+      ContrastLevel.High -> highContrastLightColorScheme
+    }
+  }
 
   val view = LocalView.current
   if (!view.isInEditMode) {

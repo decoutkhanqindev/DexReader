@@ -1,6 +1,5 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.history
 
-import timber.log.Timber
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
@@ -19,6 +18,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -87,14 +87,16 @@ constructor(
                     }
 
                     _historyUiState.value = BasePaginationUiState.FirstPageError()
-                    Timber.tag(this::class.java.simpleName).d("observeHistoryFirstPage have error: ${throwable.stackTraceToString()}")
+                    Timber.tag(this::class.java.simpleName)
+                      .d("observeHistoryFirstPage have error: ${throwable.stackTraceToString()}")
                   }
               }
           } catch (c: CancellationException) {
             throw c
           } catch (e: Exception) {
             _historyUiState.value = BasePaginationUiState.FirstPageError()
-            Timber.tag(this::class.java.simpleName).d("observeHistoryFirstPage have error: ${e.stackTraceToString()}")
+            Timber.tag(this::class.java.simpleName)
+              .d("observeHistoryFirstPage have error: ${e.stackTraceToString()}")
           }
         }
       }
@@ -163,7 +165,8 @@ constructor(
                       currentUiState.copy(
                         nextPageState = BaseNextPageState.ERROR
                       )
-                    Timber.tag(this::class.java.simpleName).d("observeHistoryNextPageInternal have error: ${throwable.stackTraceToString()}")
+                    Timber.tag(this::class.java.simpleName)
+                      .d("observeHistoryNextPageInternal have error: ${throwable.stackTraceToString()}")
                   }
               }
           } catch (c: CancellationException) {
@@ -171,7 +174,8 @@ constructor(
           } catch (e: Exception) {
             _historyUiState.value =
               currentUiState.copy(nextPageState = BaseNextPageState.ERROR)
-            Timber.tag(this::class.java.simpleName).d("observeHistoryNextPageInternal setup error: ${e.stackTraceToString()}")
+            Timber.tag(this::class.java.simpleName)
+              .d("observeHistoryNextPageInternal setup error: ${e.stackTraceToString()}")
           }
         }
       }
@@ -215,7 +219,8 @@ constructor(
                 isError = true
               )
             }
-            Timber.tag(this::class.java.simpleName).d("removeFromHistory have error: ${throwable.stackTraceToString()}")
+            Timber.tag(this::class.java.simpleName)
+              .d("removeFromHistory have error: ${throwable.stackTraceToString()}")
           }
       }
     }

@@ -9,9 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun CategoryItem(
@@ -39,19 +40,23 @@ fun CategoryItem(
 @Preview
 @Composable
 private fun CategoryItemPreview() {
-  CategoryItem(
-    item = CategoryModel(id = "genre-001", title = "Action"),
-    modifier = Modifier.wrapContentWidth(),
-    onClick = { _, _ -> }
-  )
+  DexReaderTheme {
+    CategoryItem(
+      item = CategoryModel(id = "genre-001", title = "Action"),
+      modifier = Modifier.wrapContentWidth(),
+      onClick = { _, _ -> }
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun CategoryItemLongTitlePreview() {
-  CategoryItem(
-    item = CategoryModel(id = "genre-002", title = "Slice of Life"),
-    modifier = Modifier.wrapContentWidth(),
-    onClick = { _, _ -> }
-  )
+  DexReaderTheme {
+    CategoryItem(
+      item = CategoryModel(id = "genre-002", title = "Slice of Life"),
+      modifier = Modifier.wrapContentWidth(),
+      onClick = { _, _ -> }
+    )
+  }
 }

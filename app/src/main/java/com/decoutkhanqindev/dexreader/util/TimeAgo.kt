@@ -34,6 +34,7 @@ object TimeAgo {
         if ((diff / 1000) < 0) "Unknown time"
         else "${diff / 1000} seconds ago"
       }
+
       diff < 3_600_000L -> "${diff / 60_000} minutes ago"
       diff < 86_400_000L -> "${diff / 3_600_000} hours ago"
       diff < 604_800_000L -> "${diff / 86_400_000} days ago"

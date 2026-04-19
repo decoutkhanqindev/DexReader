@@ -70,29 +70,29 @@ fun MangaDetailsScreen(
     onNavigateToSearchScreen = onNavigateToSearchScreen
   ) {
     MangaDetailsContent(
-        mangaDetailsUiState = mangaDetailsUiState,
-        mangaChaptersUiState = mangaChaptersUiState,
-        isFavorite = isFavorite,
-        chapterLanguage = chapterLanguage,
-        availableLanguageList = availableLanguageList,
-        readingHistoryList = readingHistoryList,
-        startedChapterId = startedChapterId,
-        continueChapter = continueChapter,
-        modifier = Modifier.fillMaxSize(),
-        onReadingClick = onNavigateToReaderScreen,
-        onFavoriteClick = {
-          if (isUserLoggedIn) {
-            if (isFavorite) viewModel.removeFromFavorites()
-            else viewModel.addToFavorites()
-          } else isShowFavoritesDialog = true
-        },
-        onLanguageItemClick = { viewModel.updateChapterLanguage(it) },
-        onCategoryItemClick = onNavigateCategoryDetailsScreen,
-        onChapterItemClick = onNavigateToReaderScreen,
-        onFetchChapterListNextPage = viewModel::fetchChapterListNextPage,
-        onRetryFetchChapterListNextPage = viewModel::retryFetchChapterListNextPage,
-        onRetryFetchChapterListFirstPage = viewModel::retryFetchChapterListFirstPage,
-        onRetry = viewModel::retry,
-      )
+      mangaDetailsUiState = mangaDetailsUiState,
+      mangaChaptersUiState = mangaChaptersUiState,
+      isFavorite = isFavorite,
+      chapterLanguage = chapterLanguage,
+      availableLanguageList = availableLanguageList,
+      readingHistoryList = readingHistoryList,
+      startedChapterId = startedChapterId,
+      continueChapter = continueChapter,
+      modifier = Modifier.fillMaxSize(),
+      onReadingClick = onNavigateToReaderScreen,
+      onFavoriteClick = {
+        if (isUserLoggedIn) {
+          if (isFavorite) viewModel.removeFromFavorites()
+          else viewModel.addToFavorites()
+        } else isShowFavoritesDialog = true
+      },
+      onLanguageItemClick = { viewModel.updateChapterLanguage(it) },
+      onCategoryItemClick = onNavigateCategoryDetailsScreen,
+      onChapterItemClick = onNavigateToReaderScreen,
+      onFetchChapterListNextPage = viewModel::fetchChapterListNextPage,
+      onRetryFetchChapterListNextPage = viewModel::retryFetchChapterListNextPage,
+      onRetryFetchChapterListFirstPage = viewModel::retryFetchChapterListFirstPage,
+      onRetry = viewModel::retry,
+    )
   }
 }

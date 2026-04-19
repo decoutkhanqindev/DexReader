@@ -18,12 +18,13 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterModel
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun MangaChapterItem(
@@ -132,35 +133,39 @@ private val previewChapter = ChapterModel(
 @Preview
 @Composable
 private fun MangaChapterItemNoHistoryPreview() {
-  MangaChapterItem(
-    lastChapter = "1110",
-    chapter = previewChapter,
-    readingHistory = null,
-    modifier = Modifier.fillMaxWidth(),
-    onChapterClick = { _, _, _ -> }
-  )
+  DexReaderTheme {
+    MangaChapterItem(
+      lastChapter = "1110",
+      chapter = previewChapter,
+      readingHistory = null,
+      modifier = Modifier.fillMaxWidth(),
+      onChapterClick = { _, _, _ -> }
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun MangaChapterItemWithHistoryPreview() {
-  MangaChapterItem(
-    lastChapter = "1110",
-    chapter = previewChapter,
-    readingHistory = ReadingHistoryModel(
-      id = "rh-001",
-      mangaId = "m-001",
-      mangaTitle = "One Piece",
-      mangaCoverUrl = "",
-      chapterId = "c-001",
-      chapterTitle = "Romance Dawn",
-      chapterNumber = "1",
-      chapterVolume = "1",
-      lastReadPage = 12,
-      pageCount = 46,
-      lastReadAt = "2 hours ago",
-    ),
-    modifier = Modifier.fillMaxWidth(),
-    onChapterClick = { _, _, _ -> }
-  )
+  DexReaderTheme {
+    MangaChapterItem(
+      lastChapter = "1110",
+      chapter = previewChapter,
+      readingHistory = ReadingHistoryModel(
+        id = "rh-001",
+        mangaId = "m-001",
+        mangaTitle = "One Piece",
+        mangaCoverUrl = "",
+        chapterId = "c-001",
+        chapterTitle = "Romance Dawn",
+        chapterNumber = "1",
+        chapterVolume = "1",
+        lastReadPage = 12,
+        pageCount = 46,
+        lastReadAt = "2 hours ago",
+      ),
+      modifier = Modifier.fillMaxWidth(),
+      onChapterClick = { _, _, _ -> }
+    )
+  }
 }

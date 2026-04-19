@@ -17,15 +17,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import com.decoutkhanqindev.dexreader.R
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.tooling.preview.Preview
+import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterPagesModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.reader.ChapterPagesUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.reader.components.pages.ChapterPagesSection
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
@@ -88,59 +88,67 @@ fun ReaderContent(
 @Preview
 @Composable
 private fun ReaderContentLoadingPreview() {
-  ReaderContent(
-    chapterPageUiState = ChapterPagesUiState.Loading,
-    modifier = Modifier.fillMaxSize(),
-    onUpdateChapterPage = {},
-    onRetry = {}
-  )
+  DexReaderTheme {
+    ReaderContent(
+      chapterPageUiState = ChapterPagesUiState.Loading,
+      modifier = Modifier.fillMaxSize(),
+      onUpdateChapterPage = {},
+      onRetry = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun ReaderContentErrorPreview() {
-  ReaderContent(
-    chapterPageUiState = ChapterPagesUiState.Error(FeatureError.NetworkUnavailable),
-    modifier = Modifier.fillMaxSize(),
-    onUpdateChapterPage = {},
-    onRetry = {}
-  )
+  DexReaderTheme {
+    ReaderContent(
+      chapterPageUiState = ChapterPagesUiState.Error(FeatureError.NetworkUnavailable),
+      modifier = Modifier.fillMaxSize(),
+      onUpdateChapterPage = {},
+      onRetry = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun ReaderContentEmptyPagesPreview() {
-  ReaderContent(
-    chapterPageUiState = ChapterPagesUiState.Success(
-      currentChapterPage = 1,
-      chapterPages = ChapterPagesModel(
-        chapterId = "c-001",
-        pageImageUrls = persistentListOf(),
-        totalPages = 0,
-      )
-    ),
-    modifier = Modifier.fillMaxSize(),
-    onUpdateChapterPage = {},
-    onRetry = {}
-  )
+  DexReaderTheme {
+    ReaderContent(
+      chapterPageUiState = ChapterPagesUiState.Success(
+        currentChapterPage = 1,
+        chapterPages = ChapterPagesModel(
+          chapterId = "c-001",
+          pageImageUrls = persistentListOf(),
+          totalPages = 0,
+        )
+      ),
+      modifier = Modifier.fillMaxSize(),
+      onUpdateChapterPage = {},
+      onRetry = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun ReaderContentWithPagesPreview() {
-  ReaderContent(
-    chapterPageUiState = ChapterPagesUiState.Success(
-      currentChapterPage = 1,
-      chapterPages = ChapterPagesModel(
-        chapterId = "c-001",
-        pageImageUrls = persistentListOf("", "", "", ""),
-        totalPages = 4,
-      )
-    ),
-    modifier = Modifier.fillMaxSize(),
-    onUpdateChapterPage = {},
-    onRetry = {}
-  )
+  DexReaderTheme {
+    ReaderContent(
+      chapterPageUiState = ChapterPagesUiState.Success(
+        currentChapterPage = 1,
+        chapterPages = ChapterPagesModel(
+          chapterId = "c-001",
+          pageImageUrls = persistentListOf("", "", "", ""),
+          totalPages = 4,
+        )
+      ),
+      modifier = Modifier.fillMaxSize(),
+      onUpdateChapterPage = {},
+      onRetry = {}
+    )
+  }
 }
 
 

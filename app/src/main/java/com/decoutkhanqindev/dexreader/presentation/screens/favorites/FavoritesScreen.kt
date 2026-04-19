@@ -43,19 +43,19 @@ fun FavoritesScreen(
     onNavigateToSearchScreen = onNavigateToSearchScreen
   ) {
     if (isUserLoggedIn) {
-        FavoritesContent(
-          uiState = uiState,
-          onSelectedManga = onNavigateToMangaDetailScreen,
-          onObserveFavoriteMangaListNextPage = viewModel::observeFavoritesNextPage,
-          onRetryObserveFavoriteMangaListNextPage = viewModel::retryObserveFavoritesNextPage,
-          onRetry = viewModel::retry,
-          modifier = Modifier.fillMaxSize()
-        )
-      } else {
-        IdleScreen(
-          message = stringResource(R.string.please_sign_in_to_view_your_favorites),
-          modifier = Modifier.fillMaxSize()
-        )
-      }
+      FavoritesContent(
+        uiState = uiState,
+        onSelectedManga = onNavigateToMangaDetailScreen,
+        onObserveFavoriteMangaListNextPage = viewModel::observeFavoritesNextPage,
+        onRetryObserveFavoriteMangaListNextPage = viewModel::retryObserveFavoritesNextPage,
+        onRetry = viewModel::retry,
+        modifier = Modifier.fillMaxSize()
+      )
+    } else {
+      IdleScreen(
+        message = stringResource(R.string.please_sign_in_to_view_your_favorites),
+        modifier = Modifier.fillMaxSize()
+      )
+    }
   }
 }

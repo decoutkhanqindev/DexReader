@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun ResultsNotFoundMessage(
@@ -51,10 +52,12 @@ fun ResultsNotFoundMessage(
 @Preview(showBackground = true)
 @Composable
 private fun ResultsNotFoundMessagePreview() {
-  ResultsNotFoundMessage(
-    message = "Sorry, no manga found with title \"dragon ball\"",
-    modifier = Modifier
-      .fillMaxSize()
-      .padding(16.dp),
-  )
+  DexReaderTheme {
+    ResultsNotFoundMessage(
+      message = "Sorry, no manga found with title \"dragon ball\"",
+      modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp),
+    )
+  }
 }

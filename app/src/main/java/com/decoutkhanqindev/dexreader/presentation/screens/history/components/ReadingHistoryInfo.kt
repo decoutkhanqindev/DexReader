@@ -15,10 +15,11 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun ReadingHistoryInfo(
@@ -105,8 +106,10 @@ private val previewReadingHistory = ReadingHistoryModel(
 @Preview
 @Composable
 private fun ReadingHistoryInfoPreview() {
-  ReadingHistoryInfo(
-    readingHistory = previewReadingHistory,
-    modifier = Modifier.fillMaxWidth()
-  )
+  DexReaderTheme {
+    ReadingHistoryInfo(
+      readingHistory = previewReadingHistory,
+      modifier = Modifier.fillMaxWidth()
+    )
+  }
 }

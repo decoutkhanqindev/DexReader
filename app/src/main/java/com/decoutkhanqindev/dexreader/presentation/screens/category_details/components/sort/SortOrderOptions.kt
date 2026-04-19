@@ -2,6 +2,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.category_details.com
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -12,10 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortOrderValue
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun SortOrderOptions(
@@ -60,19 +61,23 @@ fun SortOrderOptions(
 @Preview
 @Composable
 private fun SortOrderOptionsDescPreview() {
-  SortOrderOptions(
-    selectedItem = MangaSortOrderValue.DESC,
-    onItemClick = {},
-    modifier = Modifier.fillMaxWidth()
-  )
+  DexReaderTheme {
+    SortOrderOptions(
+      selectedItem = MangaSortOrderValue.DESC,
+      onItemClick = {},
+      modifier = Modifier.fillMaxWidth()
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun SortOrderOptionsAscPreview() {
-  SortOrderOptions(
-    selectedItem = MangaSortOrderValue.ASC,
-    onItemClick = {},
-    modifier = Modifier.fillMaxWidth()
-  )
+  DexReaderTheme {
+    SortOrderOptions(
+      selectedItem = MangaSortOrderValue.ASC,
+      onItemClick = {},
+      modifier = Modifier.fillMaxWidth()
+    )
+  }
 }

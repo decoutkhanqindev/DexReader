@@ -11,11 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun ActionButtonsSection(
@@ -104,38 +105,44 @@ private val previewContinueChapter = ReadingHistoryModel(
 @Preview
 @Composable
 private fun ActionButtonsSectionNotStartedPreview() {
-  ActionButtonsSection(
-    isFavorite = false,
-    startedChapterId = null,
-    continueChapter = null,
-    modifier = Modifier.fillMaxWidth(),
-    onReadingClick = { _, _, _ -> },
-    onFavoriteClick = {}
-  )
+  DexReaderTheme {
+    ActionButtonsSection(
+      isFavorite = false,
+      startedChapterId = null,
+      continueChapter = null,
+      modifier = Modifier.fillMaxWidth(),
+      onReadingClick = { _, _, _ -> },
+      onFavoriteClick = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun ActionButtonsSectionStartReadingPreview() {
-  ActionButtonsSection(
-    isFavorite = false,
-    startedChapterId = "c-001",
-    mangaId = "m-001",
-    continueChapter = null,
-    modifier = Modifier.fillMaxWidth(),
-    onReadingClick = { _, _, _ -> },
-    onFavoriteClick = {}
-  )
+  DexReaderTheme {
+    ActionButtonsSection(
+      isFavorite = false,
+      startedChapterId = "c-001",
+      mangaId = "m-001",
+      continueChapter = null,
+      modifier = Modifier.fillMaxWidth(),
+      onReadingClick = { _, _, _ -> },
+      onFavoriteClick = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun ActionButtonsSectionContinueReadingFavoritePreview() {
-  ActionButtonsSection(
-    isFavorite = true,
-    continueChapter = previewContinueChapter,
-    modifier = Modifier.fillMaxWidth(),
-    onReadingClick = { _, _, _ -> },
-    onFavoriteClick = {}
-  )
+  DexReaderTheme {
+    ActionButtonsSection(
+      isFavorite = true,
+      continueChapter = previewContinueChapter,
+      modifier = Modifier.fillMaxWidth(),
+      onReadingClick = { _, _, _ -> },
+      onFavoriteClick = {}
+    )
+  }
 }

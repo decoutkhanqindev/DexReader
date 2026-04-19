@@ -49,24 +49,24 @@ fun HistoryScreen(
     onNavigateToSearchScreen = onNavigateToSearchScreen
   ) {
     if (isUserLoggedIn) {
-        HistoryContent(
-          historyUiState = historyUiState,
-          removeFromHistoryUiState = removeFromHistoryUiState,
-          onContinueReadingClick = onNavigateToReaderScreen,
-          onMangaDetailsClick = onNavigateToMangaDetailScreen,
-          onUpdateRemoveReadingHistoryId = viewModel::updateRemoveReadingHistoryId,
-          onRemoveFromHistory = viewModel::removeFromHistory,
-          onRetryRemoveFromHistory = viewModel::retryRemoveFromHistory,
-          onObserveHistoryNextPage = viewModel::observeHistoryNextPage,
-          onRetryObserveHistoryNextPage = viewModel::retryObserveHistoryNextPage,
-          onRetryObserveHistoryFirstPage = viewModel::retryObserveHistoryFirstPage,
-          modifier = Modifier.fillMaxSize()
-        )
-      } else {
-        IdleScreen(
-          message = stringResource(R.string.please_sign_in_to_view_your_history),
-          modifier = Modifier.fillMaxSize()
-        )
-      }
+      HistoryContent(
+        historyUiState = historyUiState,
+        removeFromHistoryUiState = removeFromHistoryUiState,
+        onContinueReadingClick = onNavigateToReaderScreen,
+        onMangaDetailsClick = onNavigateToMangaDetailScreen,
+        onUpdateRemoveReadingHistoryId = viewModel::updateRemoveReadingHistoryId,
+        onRemoveFromHistory = viewModel::removeFromHistory,
+        onRetryRemoveFromHistory = viewModel::retryRemoveFromHistory,
+        onObserveHistoryNextPage = viewModel::observeHistoryNextPage,
+        onRetryObserveHistoryNextPage = viewModel::retryObserveHistoryNextPage,
+        onRetryObserveHistoryFirstPage = viewModel::retryObserveHistoryFirstPage,
+        modifier = Modifier.fillMaxSize()
+      )
+    } else {
+      IdleScreen(
+        message = stringResource(R.string.please_sign_in_to_view_your_history),
+        modifier = Modifier.fillMaxSize()
+      )
+    }
   }
 }

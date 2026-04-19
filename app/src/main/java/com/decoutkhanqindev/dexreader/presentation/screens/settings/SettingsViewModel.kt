@@ -1,6 +1,5 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.settings
 
-import timber.log.Timber
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.settings.ObserveThemeModeUseCase
@@ -14,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -50,7 +50,8 @@ class SettingsViewModel @Inject constructor(
               )
             }
 
-            Timber.tag(this::class.java.simpleName).e("observeIsDynamicTheme have error: ${throwable.stackTraceToString()}")
+            Timber.tag(this::class.java.simpleName)
+              .e("observeIsDynamicTheme have error: ${throwable.stackTraceToString()}")
           }
       }
     }
@@ -87,7 +88,8 @@ class SettingsViewModel @Inject constructor(
               isError = true
             )
           }
-          Timber.tag(this::class.java.simpleName).e("setThemeType have error: ${throwable.stackTraceToString()}")
+          Timber.tag(this::class.java.simpleName)
+            .e("setThemeType have error: ${throwable.stackTraceToString()}")
         }
     }
   }

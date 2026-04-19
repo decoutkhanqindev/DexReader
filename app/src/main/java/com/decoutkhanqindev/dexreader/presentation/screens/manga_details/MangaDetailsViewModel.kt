@@ -1,7 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.manga_details
 
 
-import timber.log.Timber
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -40,6 +39,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -130,7 +130,8 @@ class MangaDetailsViewModel @Inject constructor(
         }
         .onFailure { throwable ->
           _mangaDetailsUiState.value = MangaDetailsUiState.Error(throwable.toFeatureError())
-          Timber.tag(this::class.java.simpleName).d("fetchMangaDetails have error: ${throwable.stackTraceToString()}")
+          Timber.tag(this::class.java.simpleName)
+            .d("fetchMangaDetails have error: ${throwable.stackTraceToString()}")
         }
     }
   }
@@ -149,7 +150,8 @@ class MangaDetailsViewModel @Inject constructor(
         }
         .onFailure {
           _startedChapterId.value = null
-          Timber.tag(this::class.java.simpleName).d("fetchFirstChapter have error: ${it.stackTraceToString()}")
+          Timber.tag(this::class.java.simpleName)
+            .d("fetchFirstChapter have error: ${it.stackTraceToString()}")
         }
     }
   }
@@ -177,7 +179,8 @@ class MangaDetailsViewModel @Inject constructor(
         .onFailure { throwable ->
           _mangaChaptersUiState.value =
             BasePaginationUiState.FirstPageError(throwable.toFeatureError())
-          Timber.tag(this::class.java.simpleName).d("fetchChapterListFirstPage have error: ${throwable.stackTraceToString()}")
+          Timber.tag(this::class.java.simpleName)
+            .d("fetchChapterListFirstPage have error: ${throwable.stackTraceToString()}")
         }
     }
   }
@@ -226,7 +229,8 @@ class MangaDetailsViewModel @Inject constructor(
         .onFailure {
           _mangaChaptersUiState.value =
             currentMangaChaptersUiState.copy(nextPageState = BaseNextPageState.ERROR)
-          Timber.tag(this::class.java.simpleName).d("fetchChapterListNextPageInternal have error: ${it.stackTraceToString()}")
+          Timber.tag(this::class.java.simpleName)
+            .d("fetchChapterListNextPageInternal have error: ${it.stackTraceToString()}")
         }
     }
   }
@@ -256,14 +260,16 @@ class MangaDetailsViewModel @Inject constructor(
                     if (throwable is BusinessException.Resource.AccessDenied && _userId.value == null)
                       return@onFailure
 
-                    Timber.tag(this::class.java.simpleName).d("observeIsFavorite have error: ${throwable.stackTraceToString()}")
+                    Timber.tag(this::class.java.simpleName)
+                      .d("observeIsFavorite have error: ${throwable.stackTraceToString()}")
                   }
               }
             } catch (c: CancellationException) {
               throw c
             } catch (e: Exception) {
               _isFavorite.value = false
-              Timber.tag(this::class.java.simpleName).d("observeIsFavorite have error: ${e.stackTraceToString()}")
+              Timber.tag(this::class.java.simpleName)
+                .d("observeIsFavorite have error: ${e.stackTraceToString()}")
             }
           }
         }
@@ -278,7 +284,8 @@ class MangaDetailsViewModel @Inject constructor(
         addToFavoritesUseCase(userId = userId, manga = domainManga)
           .onSuccess { Timber.tag(this::class.java.simpleName).d("adResponseFavorites success") }
           .onFailure {
-            Timber.tag(this::class.java.simpleName).d("adResponseFavorites have error: ${it.stackTraceToString()}")
+            Timber.tag(this::class.java.simpleName)
+              .d("adResponseFavorites have error: ${it.stackTraceToString()}")
           }
       }
     }
@@ -294,7 +301,8 @@ class MangaDetailsViewModel @Inject constructor(
         removeFromFavoritesUseCase(userId = userId, mangaId = mangaId)
           .onSuccess { Timber.tag(this::class.java.simpleName).d("removeFromFavorites success") }
           .onFailure {
-            Timber.tag(this::class.java.simpleName).d("removeFromFavorites have error: ${it.stackTraceToString()}")
+            Timber.tag(this::class.java.simpleName)
+              .d("removeFromFavorites have error: ${it.stackTraceToString()}")
           }
       }
     }
@@ -339,7 +347,8 @@ class MangaDetailsViewModel @Inject constructor(
 
                     _readingHistoryList.value = persistentListOf()
                     hasNextReadingHistoryListPage = false
-                    Timber.tag(this::class.java.simpleName).d("observeHistoryFirstPage have error: ${throwable.stackTraceToString()}")
+                    Timber.tag(this::class.java.simpleName)
+                      .d("observeHistoryFirstPage have error: ${throwable.stackTraceToString()}")
                   }
               }
           } catch (c: CancellationException) {
@@ -348,7 +357,8 @@ class MangaDetailsViewModel @Inject constructor(
             isObservingReadingHistoryList = false
             _readingHistoryList.value = persistentListOf()
             hasNextReadingHistoryListPage = false
-            Timber.tag(this::class.java.simpleName).d("observeHistoryFirstPage have error: ${e.stackTraceToString()}")
+            Timber.tag(this::class.java.simpleName)
+              .d("observeHistoryFirstPage have error: ${e.stackTraceToString()}")
           }
         }
       }
@@ -395,7 +405,8 @@ class MangaDetailsViewModel @Inject constructor(
                       return@onFailure
 
                     hasNextReadingHistoryListPage = false
-                    Timber.tag(this::class.java.simpleName).d("observeHistoryNextPage have error: ${throwable.stackTraceToString()}")
+                    Timber.tag(this::class.java.simpleName)
+                      .d("observeHistoryNextPage have error: ${throwable.stackTraceToString()}")
                   }
               }
           } catch (c: CancellationException) {
@@ -403,7 +414,8 @@ class MangaDetailsViewModel @Inject constructor(
           } catch (e: Exception) {
             isObservingReadingHistoryList = false
             hasNextReadingHistoryListPage = false
-            Timber.tag(this::class.java.simpleName).d("observeHistoryNextPage have error: ${e.stackTraceToString()}")
+            Timber.tag(this::class.java.simpleName)
+              .d("observeHistoryNextPage have error: ${e.stackTraceToString()}")
           }
         }
       }

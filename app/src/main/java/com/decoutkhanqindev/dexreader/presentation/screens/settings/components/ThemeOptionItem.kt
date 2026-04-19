@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.value.settings.ThemeModeValue
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun ThemeOptionItem(
@@ -45,19 +46,23 @@ fun ThemeOptionItem(
 @Preview(showBackground = true)
 @Composable
 private fun ThemeOptionItemSelectedPreview() {
-  ThemeOptionItem(
-    isSelected = true,
-    item = ThemeModeValue.SYSTEM,
-    onClick = {},
-  )
+  DexReaderTheme {
+    ThemeOptionItem(
+      isSelected = true,
+      item = ThemeModeValue.SYSTEM,
+      onClick = {},
+    )
+  }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun ThemeOptionItemUnselectedPreview() {
-  ThemeOptionItem(
-    isSelected = false,
-    item = ThemeModeValue.LIGHT,
-    onClick = {},
-  )
+  DexReaderTheme {
+    ThemeOptionItem(
+      isSelected = false,
+      item = ThemeModeValue.LIGHT,
+      onClick = {},
+    )
+  }
 }

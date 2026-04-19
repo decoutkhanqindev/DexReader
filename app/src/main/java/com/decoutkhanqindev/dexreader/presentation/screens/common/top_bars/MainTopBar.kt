@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -67,18 +68,22 @@ fun MainTopBar(
 @Preview
 @Composable
 private fun MainTopBarPreview() {
-  MainTopBar(
-    title = "DexReader",
-    onNavigateToMenuItemScreen = {}
-  )
+  DexReaderTheme {
+    MainTopBar(
+      title = "DexReader",
+      onNavigateToMenuItemScreen = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun MainTopBarNoSearchPreview() {
-  MainTopBar(
-    title = "DexReader",
-    isSearchEnabled = false,
-    onNavigateToMenuItemScreen = {}
-  )
+  DexReaderTheme {
+    MainTopBar(
+      title = "DexReader",
+      isSearchEnabled = false,
+      onNavigateToMenuItemScreen = {}
+    )
+  }
 }

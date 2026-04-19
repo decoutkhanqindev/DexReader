@@ -18,9 +18,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun NavigateChapterBottomBar(
@@ -86,41 +87,47 @@ fun NavigateChapterBottomBar(
 @Preview
 @Composable
 private fun NavigateChapterBottomBarBothEnabledPreview() {
-  NavigateChapterBottomBar(
-    volume = "1",
-    chapterNumber = "5",
-    title = "Romance Dawn",
-    canNavigatePrevious = true,
-    canNavigateNext = true,
-    onNavigatePrevious = {},
-    onNavigateNext = {}
-  )
+  DexReaderTheme {
+    NavigateChapterBottomBar(
+      volume = "1",
+      chapterNumber = "5",
+      title = "Romance Dawn",
+      canNavigatePrevious = true,
+      canNavigateNext = true,
+      onNavigatePrevious = {},
+      onNavigateNext = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun NavigateChapterBottomBarNextOnlyPreview() {
-  NavigateChapterBottomBar(
-    volume = "1",
-    chapterNumber = "1",
-    title = "Romance Dawn",
-    canNavigatePrevious = false,
-    canNavigateNext = true,
-    onNavigatePrevious = {},
-    onNavigateNext = {}
-  )
+  DexReaderTheme {
+    NavigateChapterBottomBar(
+      volume = "1",
+      chapterNumber = "1",
+      title = "Romance Dawn",
+      canNavigatePrevious = false,
+      canNavigateNext = true,
+      onNavigatePrevious = {},
+      onNavigateNext = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun NavigateChapterBottomBarPreviousOnlyPreview() {
-  NavigateChapterBottomBar(
-    volume = "20",
-    chapterNumber = "1110",
-    title = "",
-    canNavigatePrevious = true,
-    canNavigateNext = false,
-    onNavigatePrevious = {},
-    onNavigateNext = {}
-  )
+  DexReaderTheme {
+    NavigateChapterBottomBar(
+      volume = "20",
+      chapterNumber = "1110",
+      title = "",
+      canNavigatePrevious = true,
+      canNavigateNext = false,
+      onNavigatePrevious = {},
+      onNavigateNext = {}
+    )
+  }
 }

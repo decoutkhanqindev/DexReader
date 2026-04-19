@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.home.components
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
@@ -9,9 +10,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.decoutkhanqindev.dexreader.R
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.tooling.preview.Preview
+import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
@@ -21,6 +21,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatus
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.home.HomeUiState
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
@@ -137,37 +138,43 @@ private val previewMangaList = persistentListOf(
 @Preview
 @Composable
 private fun HomeContentLoadingPreview() {
-  HomeContent(
-    uiState = HomeUiState.Loading,
-    modifier = Modifier.fillMaxSize(),
-    onItemClick = {},
-    onRetry = {}
-  )
+  DexReaderTheme {
+    HomeContent(
+      uiState = HomeUiState.Loading,
+      modifier = Modifier.fillMaxSize(),
+      onItemClick = {},
+      onRetry = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun HomeContentErrorPreview() {
-  HomeContent(
-    uiState = HomeUiState.Error(FeatureError.NetworkUnavailable),
-    modifier = Modifier.fillMaxSize(),
-    onItemClick = {},
-    onRetry = {}
-  )
+  DexReaderTheme {
+    HomeContent(
+      uiState = HomeUiState.Error(FeatureError.NetworkUnavailable),
+      modifier = Modifier.fillMaxSize(),
+      onItemClick = {},
+      onRetry = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun HomeContentSuccessPreview() {
-  HomeContent(
-    uiState = HomeUiState.Success(
-      latestUpdatesMangaList = previewMangaList,
-      trendingMangaList = previewMangaList,
-      newReleaseMangaList = previewMangaList,
-      topRatedMangaList = previewMangaList,
-    ),
-    modifier = Modifier.fillMaxSize(),
-    onItemClick = {},
-    onRetry = {}
-  )
+  DexReaderTheme {
+    HomeContent(
+      uiState = HomeUiState.Success(
+        latestUpdatesMangaList = previewMangaList,
+        trendingMangaList = previewMangaList,
+        newReleaseMangaList = previewMangaList,
+        topRatedMangaList = previewMangaList,
+      ),
+      modifier = Modifier.fillMaxSize(),
+      onItemClick = {},
+      onRetry = {}
+    )
+  }
 }

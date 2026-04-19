@@ -1,5 +1,7 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.sort
 
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -8,11 +10,10 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortCriteriaValue
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun VerticalGridSortCriteriaList(
@@ -43,11 +44,13 @@ fun VerticalGridSortCriteriaList(
 @Preview
 @Composable
 private fun VerticalGridSortCriteriaListPreview() {
-  VerticalGridSortCriteriaList(
-    selectedItem = MangaSortCriteriaValue.LATEST_UPDATE,
-    onItemClick = {},
-    modifier = Modifier
-      .fillMaxWidth()
-      .height(200.dp)
-  )
+  DexReaderTheme {
+    VerticalGridSortCriteriaList(
+      selectedItem = MangaSortCriteriaValue.LATEST_UPDATE,
+      onItemClick = {},
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(200.dp)
+    )
+  }
 }

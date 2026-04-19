@@ -1,6 +1,7 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.common.indicators
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.LinearProgressIndicator
@@ -8,9 +9,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun ListLoadingIndicator(modifier: Modifier = Modifier) {
@@ -31,5 +32,7 @@ fun ListLoadingIndicator(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun ListLoadingIndicatorPreview() {
-  ListLoadingIndicator(modifier = Modifier.fillMaxWidth())
+  DexReaderTheme {
+    ListLoadingIndicator(modifier = Modifier.fillMaxWidth())
+  }
 }

@@ -17,9 +17,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,24 +81,30 @@ fun NotificationDialog(
 @Preview
 @Composable
 private fun NotificationDialogPreview() {
-  NotificationDialog(onConfirmClick = {})
+  DexReaderTheme {
+    NotificationDialog(onConfirmClick = {})
+  }
 }
 
 @Preview
 @Composable
 private fun NotificationDialogNoDismissPreview() {
-  NotificationDialog(
-    isEnableDismiss = false,
-    onConfirmClick = {}
-  )
+  DexReaderTheme {
+    NotificationDialog(
+      isEnableDismiss = false,
+      onConfirmClick = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun NotificationDialogCustomPreview() {
-  NotificationDialog(
-    title = "Update available. Please restart the app to apply changes.",
-    confirm = "Restart",
-    onConfirmClick = {}
-  )
+  DexReaderTheme {
+    NotificationDialog(
+      title = "Update available. Please restart the app to apply changes.",
+      confirm = "Restart",
+      onConfirmClick = {}
+    )
+  }
 }

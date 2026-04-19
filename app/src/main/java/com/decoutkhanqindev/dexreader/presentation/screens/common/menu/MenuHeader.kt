@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.MaterialTheme
@@ -14,14 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.PersonPicture
-import androidx.compose.foundation.layout.height
-import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.ProfilePicture
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun MenuHeader(
@@ -80,42 +81,54 @@ fun MenuHeader(
 @Preview
 @Composable
 private fun MenuHeaderLoggedInWithAvatarPreview() {
-  MenuHeader(
-    isUserLoggedIn = true,
-    currentUser = UserModel(
-      id = "user-001",
-      name = "Nguyen Van A",
-      email = "nguyenvana@gmail.com",
-      avatarUrl = "https://example.com/avatar.jpg"
-    ),
-    modifier = Modifier.fillMaxWidth().height(100.dp),
-    onSignInClick = {}
-  )
+  DexReaderTheme {
+    MenuHeader(
+      isUserLoggedIn = true,
+      currentUser = UserModel(
+        id = "user-001",
+        name = "Nguyen Van A",
+        email = "nguyenvana@gmail.com",
+        avatarUrl = "https://example.com/avatar.jpg"
+      ),
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(100.dp),
+      onSignInClick = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun MenuHeaderLoggedInNoAvatarPreview() {
-  MenuHeader(
-    isUserLoggedIn = true,
-    currentUser = UserModel(
-      id = "user-001",
-      name = "Nguyen Van A",
-      email = "nguyenvana@gmail.com",
-      avatarUrl = null
-    ),
-    modifier = Modifier.fillMaxWidth().height(100.dp),
-    onSignInClick = {}
-  )
+  DexReaderTheme {
+    MenuHeader(
+      isUserLoggedIn = true,
+      currentUser = UserModel(
+        id = "user-001",
+        name = "Nguyen Van A",
+        email = "nguyenvana@gmail.com",
+        avatarUrl = null
+      ),
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(100.dp),
+      onSignInClick = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun MenuHeaderLoggedOutPreview() {
-  MenuHeader(
-    isUserLoggedIn = false,
-    currentUser = null,
-    modifier = Modifier.fillMaxWidth().height(100.dp),
-    onSignInClick = {}
-  )
+  DexReaderTheme {
+    MenuHeader(
+      isUserLoggedIn = false,
+      currentUser = null,
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(100.dp),
+      onSignInClick = {}
+    )
+  }
 }

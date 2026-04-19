@@ -1,6 +1,5 @@
 package com.decoutkhanqindev.dexreader.presentation
 
-import timber.log.Timber
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.entity.user.User
@@ -17,6 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -59,7 +59,8 @@ class UserViewModel @Inject constructor(
           }
           .onFailure {
             _isUserLoggedIn.value = false
-            Timber.tag(this::class.java.simpleName).d("observeCurrentUser have error: ${it.stackTraceToString()}")
+            Timber.tag(this::class.java.simpleName)
+              .d("observeCurrentUser have error: ${it.stackTraceToString()}")
           }
       }
     }
@@ -75,7 +76,8 @@ class UserViewModel @Inject constructor(
           .onSuccess { _domainUserProfile.value = it }
           .onFailure {
             _domainUserProfile.value = null
-            Timber.tag(this::class.java.simpleName).d("observeUserProfile have error: ${it.stackTraceToString()}")
+            Timber.tag(this::class.java.simpleName)
+              .d("observeUserProfile have error: ${it.stackTraceToString()}")
           }
       }
     }

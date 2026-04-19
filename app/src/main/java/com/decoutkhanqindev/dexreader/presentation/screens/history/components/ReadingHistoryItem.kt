@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -17,10 +18,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun ReadingHistoryItem(
@@ -97,24 +99,26 @@ fun ReadingHistoryItem(
 @Preview
 @Composable
 private fun ReadingHistoryItemPreview() {
-  ReadingHistoryItem(
-    readingHistory = ReadingHistoryModel(
-      id = "rh-001",
-      mangaId = "m-001",
-      mangaTitle = "One Piece",
-      mangaCoverUrl = "",
-      chapterId = "c-001",
-      chapterTitle = "Romance Dawn",
-      chapterNumber = "1",
-      chapterVolume = "1",
-      lastReadPage = 12,
-      pageCount = 46,
-      lastReadAt = "2 hours ago",
-    ),
-    onSelectedReadingHistory = { _, _, _ -> },
-    onRemoveFromHistory = {},
-    modifier = Modifier
-      .fillMaxWidth()
-      .height(160.dp)
-  )
+  DexReaderTheme {
+    ReadingHistoryItem(
+      readingHistory = ReadingHistoryModel(
+        id = "rh-001",
+        mangaId = "m-001",
+        mangaTitle = "One Piece",
+        mangaCoverUrl = "",
+        chapterId = "c-001",
+        chapterTitle = "Romance Dawn",
+        chapterNumber = "1",
+        chapterVolume = "1",
+        lastReadPage = 12,
+        pageCount = 46,
+        lastReadAt = "2 hours ago",
+      ),
+      onSelectedReadingHistory = { _, _, _ -> },
+      onRemoveFromHistory = {},
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(160.dp)
+    )
+  }
 }

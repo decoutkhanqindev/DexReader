@@ -20,9 +20,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.manga.FavoriteMangaModel
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.MoveToTopButton
@@ -33,10 +36,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.states.Loading
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.AllItemLoadedMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadMoreMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPageErrorMessage
-import androidx.compose.ui.tooling.preview.Preview
-import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
-import com.decoutkhanqindev.dexreader.presentation.model.manga.FavoriteMangaModel
-import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 
@@ -193,105 +193,119 @@ private val previewFavoriteList = persistentListOf(
 @Preview
 @Composable
 private fun FavoritesContentFirstPageLoadingPreview() {
-  FavoritesContent(
-    uiState = BasePaginationUiState.FirstPageLoading,
-    onSelectedManga = {},
-    onObserveFavoriteMangaListNextPage = {},
-    onRetryObserveFavoriteMangaListNextPage = {},
-    onRetry = {},
-    modifier = Modifier.fillMaxSize()
-  )
+  DexReaderTheme {
+    FavoritesContent(
+      uiState = BasePaginationUiState.FirstPageLoading,
+      onSelectedManga = {},
+      onObserveFavoriteMangaListNextPage = {},
+      onRetryObserveFavoriteMangaListNextPage = {},
+      onRetry = {},
+      modifier = Modifier.fillMaxSize()
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun FavoritesContentFirstPageErrorPreview() {
-  FavoritesContent(
-    uiState = BasePaginationUiState.FirstPageError(FeatureError.NetworkUnavailable),
-    onSelectedManga = {},
-    onObserveFavoriteMangaListNextPage = {},
-    onRetryObserveFavoriteMangaListNextPage = {},
-    onRetry = {},
-    modifier = Modifier.fillMaxSize()
-  )
+  DexReaderTheme {
+    FavoritesContent(
+      uiState = BasePaginationUiState.FirstPageError(FeatureError.NetworkUnavailable),
+      onSelectedManga = {},
+      onObserveFavoriteMangaListNextPage = {},
+      onRetryObserveFavoriteMangaListNextPage = {},
+      onRetry = {},
+      modifier = Modifier.fillMaxSize()
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun FavoritesContentEmptyPreview() {
-  FavoritesContent(
-    uiState = BasePaginationUiState.Content(
-      currentList = persistentListOf(),
-      nextPageState = BaseNextPageState.NO_MORE_ITEMS
-    ),
-    onSelectedManga = {},
-    onObserveFavoriteMangaListNextPage = {},
-    onRetryObserveFavoriteMangaListNextPage = {},
-    onRetry = {},
-    modifier = Modifier.fillMaxSize()
-  )
+  DexReaderTheme {
+    FavoritesContent(
+      uiState = BasePaginationUiState.Content(
+        currentList = persistentListOf(),
+        nextPageState = BaseNextPageState.NO_MORE_ITEMS
+      ),
+      onSelectedManga = {},
+      onObserveFavoriteMangaListNextPage = {},
+      onRetryObserveFavoriteMangaListNextPage = {},
+      onRetry = {},
+      modifier = Modifier.fillMaxSize()
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun FavoritesContentIdlePreview() {
-  FavoritesContent(
-    uiState = BasePaginationUiState.Content(
-      currentList = previewFavoriteList,
-      nextPageState = BaseNextPageState.IDLE
-    ),
-    onSelectedManga = {},
-    onObserveFavoriteMangaListNextPage = {},
-    onRetryObserveFavoriteMangaListNextPage = {},
-    onRetry = {},
-    modifier = Modifier.fillMaxSize()
-  )
+  DexReaderTheme {
+    FavoritesContent(
+      uiState = BasePaginationUiState.Content(
+        currentList = previewFavoriteList,
+        nextPageState = BaseNextPageState.IDLE
+      ),
+      onSelectedManga = {},
+      onObserveFavoriteMangaListNextPage = {},
+      onRetryObserveFavoriteMangaListNextPage = {},
+      onRetry = {},
+      modifier = Modifier.fillMaxSize()
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun FavoritesContentNextPageLoadingPreview() {
-  FavoritesContent(
-    uiState = BasePaginationUiState.Content(
-      currentList = previewFavoriteList,
-      nextPageState = BaseNextPageState.LOADING
-    ),
-    onSelectedManga = {},
-    onObserveFavoriteMangaListNextPage = {},
-    onRetryObserveFavoriteMangaListNextPage = {},
-    onRetry = {},
-    modifier = Modifier.fillMaxSize()
-  )
+  DexReaderTheme {
+    FavoritesContent(
+      uiState = BasePaginationUiState.Content(
+        currentList = previewFavoriteList,
+        nextPageState = BaseNextPageState.LOADING
+      ),
+      onSelectedManga = {},
+      onObserveFavoriteMangaListNextPage = {},
+      onRetryObserveFavoriteMangaListNextPage = {},
+      onRetry = {},
+      modifier = Modifier.fillMaxSize()
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun FavoritesContentNextPageErrorPreview() {
-  FavoritesContent(
-    uiState = BasePaginationUiState.Content(
-      currentList = previewFavoriteList,
-      nextPageState = BaseNextPageState.ERROR
-    ),
-    onSelectedManga = {},
-    onObserveFavoriteMangaListNextPage = {},
-    onRetryObserveFavoriteMangaListNextPage = {},
-    onRetry = {},
-    modifier = Modifier.fillMaxSize()
-  )
+  DexReaderTheme {
+    FavoritesContent(
+      uiState = BasePaginationUiState.Content(
+        currentList = previewFavoriteList,
+        nextPageState = BaseNextPageState.ERROR
+      ),
+      onSelectedManga = {},
+      onObserveFavoriteMangaListNextPage = {},
+      onRetryObserveFavoriteMangaListNextPage = {},
+      onRetry = {},
+      modifier = Modifier.fillMaxSize()
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun FavoritesContentNoMoreItemsPreview() {
-  FavoritesContent(
-    uiState = BasePaginationUiState.Content(
-      currentList = previewFavoriteList,
-      nextPageState = BaseNextPageState.NO_MORE_ITEMS
-    ),
-    onSelectedManga = {},
-    onObserveFavoriteMangaListNextPage = {},
-    onRetryObserveFavoriteMangaListNextPage = {},
-    onRetry = {},
-    modifier = Modifier.fillMaxSize()
-  )
+  DexReaderTheme {
+    FavoritesContent(
+      uiState = BasePaginationUiState.Content(
+        currentList = previewFavoriteList,
+        nextPageState = BaseNextPageState.NO_MORE_ITEMS
+      ),
+      onSelectedManga = {},
+      onObserveFavoriteMangaListNextPage = {},
+      onRetryObserveFavoriteMangaListNextPage = {},
+      onRetry = {},
+      modifier = Modifier.fillMaxSize()
+    )
+  }
 }

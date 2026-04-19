@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -33,13 +34,15 @@ fun SuggestionList(
 @Preview(showBackground = true)
 @Composable
 private fun SuggestionListPreview() {
-  SuggestionList(
-    suggestionList = persistentListOf(
-      "One Piece",
-      "One Punch Man",
-      "One Piece Episodio di Ace",
-    ),
-    modifier = Modifier.fillMaxSize(),
-    onSelectedSuggestion = {},
-  )
+  DexReaderTheme {
+    SuggestionList(
+      suggestionList = persistentListOf(
+        "One Piece",
+        "One Punch Man",
+        "One Piece Episodio di Ace",
+      ),
+      modifier = Modifier.fillMaxSize(),
+      onSelectedSuggestion = {},
+    )
+  }
 }

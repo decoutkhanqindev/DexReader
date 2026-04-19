@@ -11,10 +11,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
@@ -23,6 +22,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.Notific
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.history.RemoveFromHistoryUiState
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
@@ -199,119 +199,134 @@ private val previewHistoryItems = persistentListOf(
 @Preview
 @Composable
 private fun HistoryContentFirstPageLoadingPreview() {
-  HistoryContent(
-    historyUiState = BasePaginationUiState.FirstPageLoading,
-    removeFromHistoryUiState = RemoveFromHistoryUiState(),
-    onContinueReadingClick = { _, _, _ -> },
-    onMangaDetailsClick = {},
-    onUpdateRemoveReadingHistoryId = {},
-    onRemoveFromHistory = {},
-    onRetryRemoveFromHistory = {},
-    onObserveHistoryNextPage = {},
-    onRetryObserveHistoryNextPage = {},
-    onRetryObserveHistoryFirstPage = {},
-    modifier = Modifier.fillMaxSize()
-  )
+  DexReaderTheme {
+    HistoryContent(
+      historyUiState = BasePaginationUiState.FirstPageLoading,
+      removeFromHistoryUiState = RemoveFromHistoryUiState(),
+      onContinueReadingClick = { _, _, _ -> },
+      onMangaDetailsClick = {},
+      onUpdateRemoveReadingHistoryId = {},
+      onRemoveFromHistory = {},
+      onRetryRemoveFromHistory = {},
+      onObserveHistoryNextPage = {},
+      onRetryObserveHistoryNextPage = {},
+      onRetryObserveHistoryFirstPage = {},
+      modifier = Modifier.fillMaxSize()
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun HistoryContentFirstPageErrorPreview() {
-  HistoryContent(
-    historyUiState = BasePaginationUiState.FirstPageError(FeatureError.NetworkUnavailable),
-    removeFromHistoryUiState = RemoveFromHistoryUiState(),
-    onContinueReadingClick = { _, _, _ -> },
-    onMangaDetailsClick = {},
-    onUpdateRemoveReadingHistoryId = {},
-    onRemoveFromHistory = {},
-    onRetryRemoveFromHistory = {},
-    onObserveHistoryNextPage = {},
-    onRetryObserveHistoryNextPage = {},
-    onRetryObserveHistoryFirstPage = {},
-    modifier = Modifier.fillMaxSize()
-  )
+  DexReaderTheme {
+    HistoryContent(
+      historyUiState = BasePaginationUiState.FirstPageError(FeatureError.NetworkUnavailable),
+      removeFromHistoryUiState = RemoveFromHistoryUiState(),
+      onContinueReadingClick = { _, _, _ -> },
+      onMangaDetailsClick = {},
+      onUpdateRemoveReadingHistoryId = {},
+      onRemoveFromHistory = {},
+      onRetryRemoveFromHistory = {},
+      onObserveHistoryNextPage = {},
+      onRetryObserveHistoryNextPage = {},
+      onRetryObserveHistoryFirstPage = {},
+      modifier = Modifier.fillMaxSize()
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun HistoryContentEmptyPreview() {
-  HistoryContent(
-    historyUiState = BasePaginationUiState.Content(
-      currentList = persistentListOf(),
-      nextPageState = BaseNextPageState.NO_MORE_ITEMS
-    ),
-    removeFromHistoryUiState = RemoveFromHistoryUiState(),
-    onContinueReadingClick = { _, _, _ -> },
-    onMangaDetailsClick = {},
-    onUpdateRemoveReadingHistoryId = {},
-    onRemoveFromHistory = {},
-    onRetryRemoveFromHistory = {},
-    onObserveHistoryNextPage = {},
-    onRetryObserveHistoryNextPage = {},
-    onRetryObserveHistoryFirstPage = {},
-    modifier = Modifier.fillMaxSize()
-  )
+  DexReaderTheme {
+    HistoryContent(
+      historyUiState = BasePaginationUiState.Content(
+        currentList = persistentListOf(),
+        nextPageState = BaseNextPageState.NO_MORE_ITEMS
+      ),
+      removeFromHistoryUiState = RemoveFromHistoryUiState(),
+      onContinueReadingClick = { _, _, _ -> },
+      onMangaDetailsClick = {},
+      onUpdateRemoveReadingHistoryId = {},
+      onRemoveFromHistory = {},
+      onRetryRemoveFromHistory = {},
+      onObserveHistoryNextPage = {},
+      onRetryObserveHistoryNextPage = {},
+      onRetryObserveHistoryFirstPage = {},
+      modifier = Modifier.fillMaxSize()
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun HistoryContentWithItemsPreview() {
-  HistoryContent(
-    historyUiState = BasePaginationUiState.Content(
-      currentList = previewHistoryItems,
-      nextPageState = BaseNextPageState.IDLE
-    ),
-    removeFromHistoryUiState = RemoveFromHistoryUiState(),
-    onContinueReadingClick = { _, _, _ -> },
-    onMangaDetailsClick = {},
-    onUpdateRemoveReadingHistoryId = {},
-    onRemoveFromHistory = {},
-    onRetryRemoveFromHistory = {},
-    onObserveHistoryNextPage = {},
-    onRetryObserveHistoryNextPage = {},
-    onRetryObserveHistoryFirstPage = {},
-    modifier = Modifier.fillMaxSize()
-  )
+  DexReaderTheme {
+    HistoryContent(
+      historyUiState = BasePaginationUiState.Content(
+        currentList = previewHistoryItems,
+        nextPageState = BaseNextPageState.IDLE
+      ),
+      removeFromHistoryUiState = RemoveFromHistoryUiState(),
+      onContinueReadingClick = { _, _, _ -> },
+      onMangaDetailsClick = {},
+      onUpdateRemoveReadingHistoryId = {},
+      onRemoveFromHistory = {},
+      onRetryRemoveFromHistory = {},
+      onObserveHistoryNextPage = {},
+      onRetryObserveHistoryNextPage = {},
+      onRetryObserveHistoryFirstPage = {},
+      modifier = Modifier.fillMaxSize()
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun HistoryContentRemoveLoadingPreview() {
-  HistoryContent(
-    historyUiState = BasePaginationUiState.Content(
-      currentList = previewHistoryItems,
-      nextPageState = BaseNextPageState.IDLE
-    ),
-    removeFromHistoryUiState = RemoveFromHistoryUiState(isLoading = true, readingHistoryId = "rh-001"),
-    onContinueReadingClick = { _, _, _ -> },
-    onMangaDetailsClick = {},
-    onUpdateRemoveReadingHistoryId = {},
-    onRemoveFromHistory = {},
-    onRetryRemoveFromHistory = {},
-    onObserveHistoryNextPage = {},
-    onRetryObserveHistoryNextPage = {},
-    onRetryObserveHistoryFirstPage = {},
-    modifier = Modifier.fillMaxSize()
-  )
+  DexReaderTheme {
+    HistoryContent(
+      historyUiState = BasePaginationUiState.Content(
+        currentList = previewHistoryItems,
+        nextPageState = BaseNextPageState.IDLE
+      ),
+      removeFromHistoryUiState = RemoveFromHistoryUiState(
+        isLoading = true,
+        readingHistoryId = "rh-001"
+      ),
+      onContinueReadingClick = { _, _, _ -> },
+      onMangaDetailsClick = {},
+      onUpdateRemoveReadingHistoryId = {},
+      onRemoveFromHistory = {},
+      onRetryRemoveFromHistory = {},
+      onObserveHistoryNextPage = {},
+      onRetryObserveHistoryNextPage = {},
+      onRetryObserveHistoryFirstPage = {},
+      modifier = Modifier.fillMaxSize()
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun HistoryContentRemoveSuccessPreview() {
-  HistoryContent(
-    historyUiState = BasePaginationUiState.Content(
-      currentList = previewHistoryItems,
-      nextPageState = BaseNextPageState.IDLE
-    ),
-    removeFromHistoryUiState = RemoveFromHistoryUiState(isSuccess = true),
-    onContinueReadingClick = { _, _, _ -> },
-    onMangaDetailsClick = {},
-    onUpdateRemoveReadingHistoryId = {},
-    onRemoveFromHistory = {},
-    onRetryRemoveFromHistory = {},
-    onObserveHistoryNextPage = {},
-    onRetryObserveHistoryNextPage = {},
-    onRetryObserveHistoryFirstPage = {},
-    modifier = Modifier.fillMaxSize()
-  )
+  DexReaderTheme {
+    HistoryContent(
+      historyUiState = BasePaginationUiState.Content(
+        currentList = previewHistoryItems,
+        nextPageState = BaseNextPageState.IDLE
+      ),
+      removeFromHistoryUiState = RemoveFromHistoryUiState(isSuccess = true),
+      onContinueReadingClick = { _, _, _ -> },
+      onMangaDetailsClick = {},
+      onUpdateRemoveReadingHistoryId = {},
+      onRemoveFromHistory = {},
+      onRetryRemoveFromHistory = {},
+      onObserveHistoryNextPage = {},
+      onRetryObserveHistoryNextPage = {},
+      onRetryObserveHistoryFirstPage = {},
+      modifier = Modifier.fillMaxSize()
+    )
+  }
 }
