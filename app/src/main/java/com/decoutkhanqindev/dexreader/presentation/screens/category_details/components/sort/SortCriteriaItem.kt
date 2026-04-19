@@ -30,7 +30,7 @@ fun SortCriteriaItem(
       containerColor = if (isSelected) MaterialTheme.colorScheme.surfaceVariant
       else MaterialTheme.colorScheme.surfaceContainerHigh,
     ),
-    elevation = CardDefaults.cardElevation(4.dp),
+    elevation = CardDefaults.cardElevation(8.dp),
     modifier = modifier
   ) {
     Column(

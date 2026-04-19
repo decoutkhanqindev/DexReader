@@ -29,6 +29,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterModel
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
+import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.MoveToTopButton
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
@@ -112,13 +113,9 @@ fun MangaDetailsContent(
           state = lazyListState,
           modifier = Modifier
             .fillMaxSize()
-            .background(
-              brush = Brush.verticalGradient(
-                colors = persistentListOf(
-                  MaterialTheme.colorScheme.surface.copy(0.8f),
-                  MaterialTheme.colorScheme.surface.copy(1f)
-                )
-              )
+            .blurBackground(
+              topAlpha = 0.7f,
+              bottomAlpha = 1f,
             )
         ) {
           item {
@@ -159,7 +156,7 @@ fun MangaDetailsContent(
           }
 
           item {
-            Spacer(modifier = Modifier.height(68.dp))
+            Spacer(modifier = Modifier.height(70.dp))
           }
         }
       }
@@ -178,7 +175,7 @@ fun MangaDetailsContent(
         firstVisibleItemIndex = lazyListState.firstVisibleItemIndex,
         modifier = Modifier
           .align(Alignment.End)
-          .padding(16.dp)
+          .padding(end = 16.dp)
       ) {
         coroutineScope.launch {
           lazyListState.animateScrollToItem(0)
@@ -192,8 +189,11 @@ fun MangaDetailsContent(
         continueChapter = continueChapter,
         modifier = Modifier
           .fillMaxWidth()
-          .padding(horizontal = 16.dp)
-          .padding(bottom = 16.dp),
+          .blurBackground(
+            topAlpha = 0f,
+            bottomAlpha = 1f,
+          )
+          .padding(16.dp),
         onReadingClick = onReadingClick,
         onFavoriteClick = onFavoriteClick,
       )

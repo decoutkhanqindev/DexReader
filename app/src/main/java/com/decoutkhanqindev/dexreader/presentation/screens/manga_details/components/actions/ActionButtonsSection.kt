@@ -78,7 +78,7 @@ fun ActionButtonsSection(
         text =
           if (isFavorite) stringResource(R.string.unfavorite)
           else stringResource(R.string.favorite),
-        color = MaterialTheme.colorScheme.inverseSurface,
+        color = Color.White,
         fontWeight = FontWeight.ExtraBold,
         style = MaterialTheme.typography.titleMedium,
       )

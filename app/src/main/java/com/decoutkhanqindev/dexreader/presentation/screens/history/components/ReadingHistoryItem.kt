@@ -64,7 +64,7 @@ fun ReadingHistoryItem(
     Card(
       shape = MaterialTheme.shapes.large,
       colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-      elevation = CardDefaults.cardElevation(4.dp),
+      elevation = CardDefaults.cardElevation(8.dp),
       onClick = {
         onSelectedReadingHistory(
           readingHistory.mangaId,
