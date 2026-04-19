@@ -81,7 +81,7 @@ fun Modifier.shimmer(
 
 @Composable
 fun Modifier.blurBackground(
-  color: Color = MaterialTheme.colorScheme.surface,
+  color: Color = MaterialTheme.colorScheme.surfaceContainer,
   topAlpha: Float = 0.7f,
   bottomAlpha: Float = 1f,
 ): Modifier = this.background(
