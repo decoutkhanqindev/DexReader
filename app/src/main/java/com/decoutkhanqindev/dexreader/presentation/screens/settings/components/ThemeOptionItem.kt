@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.value.settings.ThemeModeValue
 
@@ -39,4 +40,24 @@ fun ThemeOptionItem(
     )
     Icon(imageVector = item.icon, contentDescription = item.name, modifier = Modifier.size(24.dp))
   }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ThemeOptionItemSelectedPreview() {
+  ThemeOptionItem(
+    isSelected = true,
+    item = ThemeModeValue.SYSTEM,
+    onClick = {},
+  )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ThemeOptionItemUnselectedPreview() {
+  ThemeOptionItem(
+    isSelected = false,
+    item = ThemeModeValue.LIGHT,
+    onClick = {},
+  )
 }

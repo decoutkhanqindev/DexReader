@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
 
 @Composable
@@ -59,4 +60,10 @@ fun AuthHeader(modifier: Modifier = Modifier) {
       )
     }
   }
+}
+
+@Preview
+@Composable
+private fun AuthHeaderPreview() {
+  AuthHeader(modifier = Modifier.fillMaxWidth().padding(16.dp))
 }

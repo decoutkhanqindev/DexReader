@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
+import androidx.compose.ui.tooling.preview.Preview
 import coil3.request.crossfade
 
 @Composable
@@ -34,5 +35,14 @@ fun ProfilePicture(
       .clip(CircleShape)
       .size(80.dp)
       .background(MaterialTheme.colorScheme.primary)
+  )
+}
+
+@Preview
+@Composable
+private fun ProfilePicturePreview() {
+  ProfilePicture(
+    url = "",
+    name = "Nguyen Van A"
   )
 }

@@ -11,7 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun MenuBody(
@@ -33,4 +36,15 @@ fun MenuBody(
       ) { onItemClick(it) }
     }
   }
+}
+
+@Preview
+@Composable
+private fun MenuBodyPreview() {
+  MenuBody(
+    selectedItem = MenuValue.HOME,
+    items = MenuValue.entries.toPersistentList(),
+    modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+    onItemClick = {}
+  )
 }

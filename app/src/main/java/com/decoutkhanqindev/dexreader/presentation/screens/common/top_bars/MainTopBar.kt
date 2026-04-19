@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
 
 @Composable
@@ -60,5 +61,24 @@ fun MainTopBar(
       titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
       actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
     ),
+  )
+}
+
+@Preview
+@Composable
+private fun MainTopBarPreview() {
+  MainTopBar(
+    title = "DexReader",
+    onNavigateToMenuItemScreen = {}
+  )
+}
+
+@Preview
+@Composable
+private fun MainTopBarNoSearchPreview() {
+  MainTopBar(
+    title = "DexReader",
+    isSearchEnabled = false,
+    onNavigateToMenuItemScreen = {}
   )
 }

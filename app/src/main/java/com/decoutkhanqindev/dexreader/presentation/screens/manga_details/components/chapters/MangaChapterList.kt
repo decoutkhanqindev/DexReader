@@ -21,6 +21,8 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.Nex
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.AllItemLoadedMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadMoreMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPageErrorMessage
+import androidx.compose.ui.tooling.preview.Preview
+import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -97,4 +99,52 @@ fun MangaChapterList(
       }
     }
   }
+}
+
+private val previewChapterList = persistentListOf(
+  ChapterModel(id = "c-001", mangaId = "m-001", title = "Romance Dawn", number = "1", volume = "1", publishedAt = "2024-01-01"),
+  ChapterModel(id = "c-002", mangaId = "m-001", title = "They Call Him 'Straw Hat Luffy'", number = "2", volume = "1", publishedAt = "2024-01-08"),
+  ChapterModel(id = "c-003", mangaId = "m-001", title = "Enter Zoro the Pirate Hunter", number = "3", volume = "1", publishedAt = "2024-01-15"),
+)
+
+@Preview
+@Composable
+private fun MangaChapterListEmptyPreview() {
+  MangaChapterList(
+    lastItem = "1110",
+    chapterList = persistentListOf(),
+    chapterListNextPageState = BaseNextPageState.NO_MORE_ITEMS,
+    modifier = Modifier.fillMaxWidth(),
+    onChapterClick = { _, _, _ -> },
+    onFetchChapterListNextPage = {},
+    onRetryFetchChapterListNextPage = {}
+  )
+}
+
+@Preview
+@Composable
+private fun MangaChapterListIdlePreview() {
+  MangaChapterList(
+    lastItem = "1110",
+    chapterList = previewChapterList,
+    chapterListNextPageState = BaseNextPageState.IDLE,
+    modifier = Modifier.fillMaxWidth(),
+    onChapterClick = { _, _, _ -> },
+    onFetchChapterListNextPage = {},
+    onRetryFetchChapterListNextPage = {}
+  )
+}
+
+@Preview
+@Composable
+private fun MangaChapterListNoMoreItemsPreview() {
+  MangaChapterList(
+    lastItem = "3",
+    chapterList = previewChapterList,
+    chapterListNextPageState = BaseNextPageState.NO_MORE_ITEMS,
+    modifier = Modifier.fillMaxWidth(),
+    onChapterClick = { _, _, _ -> },
+    onFetchChapterListNextPage = {},
+    onRetryFetchChapterListNextPage = {}
+  )
 }

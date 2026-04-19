@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterModel
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
@@ -117,4 +118,49 @@ fun MangaChapterItem(
       }
     }
   }
+}
+
+private val previewChapter = ChapterModel(
+  id = "c-001",
+  mangaId = "m-001",
+  title = "Romance Dawn",
+  number = "1",
+  volume = "1",
+  publishedAt = "2024-01-01",
+)
+
+@Preview
+@Composable
+private fun MangaChapterItemNoHistoryPreview() {
+  MangaChapterItem(
+    lastChapter = "1110",
+    chapter = previewChapter,
+    readingHistory = null,
+    modifier = Modifier.fillMaxWidth(),
+    onChapterClick = { _, _, _ -> }
+  )
+}
+
+@Preview
+@Composable
+private fun MangaChapterItemWithHistoryPreview() {
+  MangaChapterItem(
+    lastChapter = "1110",
+    chapter = previewChapter,
+    readingHistory = ReadingHistoryModel(
+      id = "rh-001",
+      mangaId = "m-001",
+      mangaTitle = "One Piece",
+      mangaCoverUrl = "",
+      chapterId = "c-001",
+      chapterTitle = "Romance Dawn",
+      chapterNumber = "1",
+      chapterVolume = "1",
+      lastReadPage = 12,
+      pageCount = 46,
+      lastReadAt = "2 hours ago",
+    ),
+    modifier = Modifier.fillMaxWidth(),
+    onChapterClick = { _, _, _ -> }
+  )
 }

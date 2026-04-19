@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailsCriteriaUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
 import kotlinx.collections.immutable.ImmutableList
@@ -95,4 +96,15 @@ fun FilterBottomSheet(
         .padding(bottom = 8.dp)
     )
   }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+private fun FilterBottomSheetPreview() {
+  FilterBottomSheet(
+    onDismiss = {},
+    criteriaState = CategoryDetailsCriteriaUiState(),
+    onApplyClick = { _, _ -> }
+  )
 }

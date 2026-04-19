@@ -25,6 +25,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.error.UserError
 
 private val PasswordKeyboardOptions = KeyboardOptions(
@@ -110,5 +112,49 @@ fun PasswordInputField(
       else PasswordTransformation,
     keyboardOptions = PasswordKeyboardOptions,
     colors = colors,
+  )
+}
+
+@Preview
+@Composable
+private fun PasswordInputFieldPreview() {
+  PasswordInputField(
+    value = "myPassword123",
+    modifier = Modifier.fillMaxWidth(),
+    onValueChange = {}
+  )
+}
+
+@Preview
+@Composable
+private fun PasswordInputFieldConfirmedPreview() {
+  PasswordInputField(
+    value = "myPassword123",
+    isConfirmed = true,
+    modifier = Modifier.fillMaxWidth(),
+    onValueChange = {}
+  )
+}
+
+@Preview
+@Composable
+private fun PasswordInputFieldErrorPreview() {
+  PasswordInputField(
+    value = "123",
+    error = UserError.Password.Weak,
+    modifier = Modifier.fillMaxWidth(),
+    onValueChange = {}
+  )
+}
+
+@Preview
+@Composable
+private fun PasswordInputFieldMismatchPreview() {
+  PasswordInputField(
+    value = "differentPassword",
+    isConfirmed = true,
+    error = UserError.ConfirmPassword.DoesNotMatch,
+    modifier = Modifier.fillMaxWidth(),
+    onValueChange = {}
   )
 }

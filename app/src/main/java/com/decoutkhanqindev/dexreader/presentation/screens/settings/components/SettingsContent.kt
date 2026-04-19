@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.value.settings.ThemeModeValue
@@ -92,4 +93,52 @@ fun SettingsContent(
       )
     }
   }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SettingsContentDefaultPreview() {
+  SettingsContent(
+    uiState = SettingsUiState(themeOption = ThemeModeValue.SYSTEM),
+    modifier = Modifier.fillMaxSize(),
+    onThemeOptionClick = {},
+    onSaveThemeOption = {},
+    onRetry = {},
+  )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SettingsContentLoadingPreview() {
+  SettingsContent(
+    uiState = SettingsUiState(isLoading = true, themeOption = ThemeModeValue.DARK),
+    modifier = Modifier.fillMaxSize(),
+    onThemeOptionClick = {},
+    onSaveThemeOption = {},
+    onRetry = {},
+  )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SettingsContentSuccessPreview() {
+  SettingsContent(
+    uiState = SettingsUiState(isSuccess = true, themeOption = ThemeModeValue.LIGHT),
+    modifier = Modifier.fillMaxSize(),
+    onThemeOptionClick = {},
+    onSaveThemeOption = {},
+    onRetry = {},
+  )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SettingsContentErrorPreview() {
+  SettingsContent(
+    uiState = SettingsUiState(isError = true, themeOption = ThemeModeValue.SYSTEM),
+    modifier = Modifier.fillMaxSize(),
+    onThemeOptionClick = {},
+    onSaveThemeOption = {},
+    onRetry = {},
+  )
 }

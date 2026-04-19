@@ -7,7 +7,12 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun ChapterPagesSection(
@@ -35,4 +40,18 @@ fun ChapterPagesSection(
       modifier = Modifier.fillMaxSize()
     )
   }
+}
+
+@Preview
+@Composable
+private fun ChapterPagesSectionPreview() {
+  ChapterPagesSection(
+    chapterPages = persistentListOf("", "", ""),
+    currentPage = 1,
+    totalPages = 3,
+    modifier = Modifier
+      .fillMaxWidth()
+      .height(500.dp),
+    onUpdateChapterPage = {}
+  )
 }

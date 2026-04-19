@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.value.settings.ThemeModeValue
@@ -59,4 +60,31 @@ fun ThemeOptionList(
       }
     }
   }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ThemeOptionListSystemPreview() {
+  ThemeOptionList(
+    selectedItem = ThemeModeValue.SYSTEM,
+    onItemClick = {},
+  )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ThemeOptionListLightPreview() {
+  ThemeOptionList(
+    selectedItem = ThemeModeValue.LIGHT,
+    onItemClick = {},
+  )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ThemeOptionListDarkPreview() {
+  ThemeOptionList(
+    selectedItem = ThemeModeValue.DARK,
+    onItemClick = {},
+  )
 }

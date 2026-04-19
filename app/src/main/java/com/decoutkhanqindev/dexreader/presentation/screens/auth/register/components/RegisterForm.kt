@@ -26,6 +26,8 @@ import com.decoutkhanqindev.dexreader.presentation.screens.auth.EmailInputField
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.NameInputField
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.PasswordInputField
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
 
 @Composable
@@ -123,4 +125,48 @@ fun RegisterForm(
       }
     }
   }
+}
+
+@Preview
+@Composable
+private fun RegisterFormPreview() {
+  RegisterForm(
+    email = "nguyenvana@gmail.com",
+    emailError = null,
+    password = "myPassword123",
+    passwordError = null,
+    confirmPassword = "myPassword123",
+    confirmPasswordError = null,
+    name = "Nguyen Van A",
+    nameError = null,
+    modifier = Modifier.fillMaxSize(),
+    onEmailChange = {},
+    onPasswordChange = {},
+    onConfirmPasswordChange = {},
+    onNameChange = {},
+    onSubmitClick = {},
+    onNavigateBack = {}
+  )
+}
+
+@Preview
+@Composable
+private fun RegisterFormWithErrorsPreview() {
+  RegisterForm(
+    email = "invalid-email",
+    emailError = UserError.Email.Invalid,
+    password = "123",
+    passwordError = UserError.Password.Weak,
+    confirmPassword = "456",
+    confirmPasswordError = UserError.ConfirmPassword.DoesNotMatch,
+    name = "",
+    nameError = UserError.Name.Required,
+    modifier = Modifier.fillMaxSize(),
+    onEmailChange = {},
+    onPasswordChange = {},
+    onConfirmPasswordChange = {},
+    onNameChange = {},
+    onSubmitClick = {},
+    onNavigateBack = {}
+  )
 }

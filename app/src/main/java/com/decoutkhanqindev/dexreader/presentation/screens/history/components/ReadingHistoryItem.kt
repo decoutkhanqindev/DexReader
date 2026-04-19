@@ -18,6 +18,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
 
@@ -91,4 +92,29 @@ fun ReadingHistoryItem(
       }
     }
   }
+}
+
+@Preview
+@Composable
+private fun ReadingHistoryItemPreview() {
+  ReadingHistoryItem(
+    readingHistory = ReadingHistoryModel(
+      id = "rh-001",
+      mangaId = "m-001",
+      mangaTitle = "One Piece",
+      mangaCoverUrl = "",
+      chapterId = "c-001",
+      chapterTitle = "Romance Dawn",
+      chapterNumber = "1",
+      chapterVolume = "1",
+      lastReadPage = 12,
+      pageCount = 46,
+      lastReadAt = "2 hours ago",
+    ),
+    onSelectedReadingHistory = { _, _, _ -> },
+    onRemoveFromHistory = {},
+    modifier = Modifier
+      .fillMaxWidth()
+      .height(160.dp)
+  )
 }

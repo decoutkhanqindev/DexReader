@@ -15,6 +15,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
 
 
@@ -43,5 +45,15 @@ fun LoadPageErrorMessage(
       )
     }
   }
+}
+
+@Preview
+@Composable
+private fun LoadPageErrorMessagePreview() {
+  LoadPageErrorMessage(
+    message = "Can't load next page. Please try again.",
+    modifier = Modifier.fillMaxWidth(),
+    onRetryClick = {}
+  )
 }
 

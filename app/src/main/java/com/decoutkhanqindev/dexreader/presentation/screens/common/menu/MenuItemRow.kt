@@ -11,6 +11,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue
 
 @Composable
@@ -42,5 +44,27 @@ fun MenuItemRow(
       )
     },
     shape = RoundedCornerShape(0.dp),
+  )
+}
+
+@Preview
+@Composable
+private fun MenuItemRowSelectedPreview() {
+  MenuItemRow(
+    isSelected = true,
+    item = MenuValue.HOME,
+    modifier = Modifier.fillMaxWidth(),
+    onClick = {}
+  )
+}
+
+@Preview
+@Composable
+private fun MenuItemRowUnselectedPreview() {
+  MenuItemRow(
+    isSelected = false,
+    item = MenuValue.FAVORITES,
+    modifier = Modifier.fillMaxWidth(),
+    onClick = {}
   )
 }

@@ -12,7 +12,12 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
@@ -56,4 +61,18 @@ fun VerticalGridFilterCriteriaList(
       )
     }
   }
+}
+
+@Preview
+@Composable
+private fun VerticalGridFilterCriteriaListPreview() {
+  VerticalGridFilterCriteriaList(
+    selectedStatusOptions = persistentListOf(MangaStatusValue.ON_GOING),
+    onStatusOptionsSelect = {},
+    selectedContentRatingOptions = persistentListOf(MangaContentRatingValue.SAFE),
+    onContentRatingOptionsSelect = {},
+    modifier = Modifier
+      .fillMaxWidth()
+      .height(400.dp)
+  )
 }

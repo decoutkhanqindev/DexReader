@@ -22,7 +22,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.model.manga.FavoriteMangaModel
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
 
 @Composable
@@ -88,4 +90,40 @@ fun FavoriteMangaItem(
       }
     }
   }
+}
+
+@Preview
+@Composable
+private fun FavoriteMangaItemOnGoingPreview() {
+  FavoriteMangaItem(
+    manga = FavoriteMangaModel(
+      id = "1",
+      title = "One Piece",
+      coverUrl = "",
+      author = "Eiichiro Oda",
+      status = MangaStatusValue.ON_GOING,
+    ),
+    onSelectedManga = {},
+    modifier = Modifier
+      .fillMaxWidth()
+      .height(250.dp)
+  )
+}
+
+@Preview
+@Composable
+private fun FavoriteMangaItemCompletedPreview() {
+  FavoriteMangaItem(
+    manga = FavoriteMangaModel(
+      id = "2",
+      title = "Fullmetal Alchemist",
+      coverUrl = "",
+      author = "Hiromu Arakawa",
+      status = MangaStatusValue.COMPLETED,
+    ),
+    onSelectedManga = {},
+    modifier = Modifier
+      .fillMaxWidth()
+      .height(250.dp)
+  )
 }

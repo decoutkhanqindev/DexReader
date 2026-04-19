@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.search.components.results
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -9,11 +10,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
+import kotlinx.collections.immutable.persistentListOf
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.NextPageLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.screens.common.lists.manga.VerticalGridMangaList
@@ -98,4 +103,130 @@ fun ResultsSection(
       }
     }
   }
+}
+
+private val previewManga = MangaModel(
+  id = "manga-001",
+  title = "One Piece",
+  coverUrl = "",
+  description = "A boy who ate a Devil Fruit gains the power to stretch like rubber.",
+  author = "Eiichiro Oda",
+  artist = "Eiichiro Oda",
+  categories = persistentListOf(),
+  status = MangaStatusValue.ON_GOING,
+  contentRating = MangaContentRatingValue.SAFE,
+  year = "1997",
+  availableLanguages = persistentListOf(),
+  latestChapter = "1100",
+  updatedAt = "2 days ago",
+)
+
+@Preview(showBackground = true)
+@Composable
+private fun ResultsSectionLoadingPreview() {
+  ResultsSection(
+    query = "One Piece",
+    resultsUiState = BasePaginationUiState.FirstPageLoading,
+    modifier = Modifier.fillMaxSize(),
+    onSelectedManga = {},
+    onFetchMangaListNextPage = {},
+    onRetryFetchMangaListNextPage = {},
+    onRetry = {},
+  )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ResultsSectionErrorPreview() {
+  ResultsSection(
+    query = "One Piece",
+    resultsUiState = BasePaginationUiState.FirstPageError(),
+    modifier = Modifier.fillMaxSize(),
+    onSelectedManga = {},
+    onFetchMangaListNextPage = {},
+    onRetryFetchMangaListNextPage = {},
+    onRetry = {},
+  )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ResultsSectionEmptyPreview() {
+  ResultsSection(
+    query = "Dragon Ball",
+    resultsUiState = BasePaginationUiState.Content<MangaModel>(),
+    modifier = Modifier.fillMaxSize(),
+    onSelectedManga = {},
+    onFetchMangaListNextPage = {},
+    onRetryFetchMangaListNextPage = {},
+    onRetry = {},
+  )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ResultsSectionContentIdlePreview() {
+  ResultsSection(
+    query = "One Piece",
+    resultsUiState = BasePaginationUiState.Content(
+      currentList = persistentListOf(previewManga),
+      nextPageState = BaseNextPageState.IDLE,
+    ),
+    modifier = Modifier.fillMaxSize(),
+    onSelectedManga = {},
+    onFetchMangaListNextPage = {},
+    onRetryFetchMangaListNextPage = {},
+    onRetry = {},
+  )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ResultsSectionContentLoadingNextPagePreview() {
+  ResultsSection(
+    query = "One Piece",
+    resultsUiState = BasePaginationUiState.Content(
+      currentList = persistentListOf(previewManga),
+      nextPageState = BaseNextPageState.LOADING,
+    ),
+    modifier = Modifier.fillMaxSize(),
+    onSelectedManga = {},
+    onFetchMangaListNextPage = {},
+    onRetryFetchMangaListNextPage = {},
+    onRetry = {},
+  )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ResultsSectionContentNextPageErrorPreview() {
+  ResultsSection(
+    query = "One Piece",
+    resultsUiState = BasePaginationUiState.Content(
+      currentList = persistentListOf(previewManga),
+      nextPageState = BaseNextPageState.ERROR,
+    ),
+    modifier = Modifier.fillMaxSize(),
+    onSelectedManga = {},
+    onFetchMangaListNextPage = {},
+    onRetryFetchMangaListNextPage = {},
+    onRetry = {},
+  )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ResultsSectionContentNoMoreItemsPreview() {
+  ResultsSection(
+    query = "One Piece",
+    resultsUiState = BasePaginationUiState.Content(
+      currentList = persistentListOf(previewManga),
+      nextPageState = BaseNextPageState.NO_MORE_ITEMS,
+    ),
+    modifier = Modifier.fillMaxSize(),
+    onSelectedManga = {},
+    onFetchMangaListNextPage = {},
+    onRetryFetchMangaListNextPage = {},
+    onRetry = {},
+  )
 }

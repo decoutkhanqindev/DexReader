@@ -38,6 +38,13 @@ import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.compone
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.chapters.MangaChaptersSection
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.info.MangaInfoSection
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.summary.MangaSummarySection
+import androidx.compose.ui.tooling.preview.Preview
+import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
+import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
+import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.info.previewManga
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
@@ -199,4 +206,77 @@ fun MangaDetailsContent(
       )
     }
   }
+}
+
+@Preview
+@Composable
+private fun MangaDetailsContentLoadingPreview() {
+  MangaDetailsContent(
+    mangaDetailsUiState = MangaDetailsUiState.Loading,
+    mangaChaptersUiState = BasePaginationUiState.FirstPageLoading,
+    isFavorite = false,
+    chapterLanguage = MangaLanguageValue.ENGLISH,
+    availableLanguageList = persistentListOf(MangaLanguageValue.ENGLISH),
+    modifier = Modifier.fillMaxSize(),
+    onReadingClick = { _, _, _ -> },
+    onFavoriteClick = {},
+    onLanguageItemClick = {},
+    onCategoryItemClick = { _, _ -> },
+    onChapterItemClick = { _, _, _ -> },
+    onFetchChapterListNextPage = {},
+    onRetryFetchChapterListNextPage = {},
+    onRetryFetchChapterListFirstPage = {},
+    onRetry = {}
+  )
+}
+
+@Preview
+@Composable
+private fun MangaDetailsContentErrorPreview() {
+  MangaDetailsContent(
+    mangaDetailsUiState = MangaDetailsUiState.Error(FeatureError.NetworkUnavailable),
+    mangaChaptersUiState = BasePaginationUiState.FirstPageLoading,
+    isFavorite = false,
+    chapterLanguage = MangaLanguageValue.ENGLISH,
+    availableLanguageList = persistentListOf(MangaLanguageValue.ENGLISH),
+    modifier = Modifier.fillMaxSize(),
+    onReadingClick = { _, _, _ -> },
+    onFavoriteClick = {},
+    onLanguageItemClick = {},
+    onCategoryItemClick = { _, _ -> },
+    onChapterItemClick = { _, _, _ -> },
+    onFetchChapterListNextPage = {},
+    onRetryFetchChapterListNextPage = {},
+    onRetryFetchChapterListFirstPage = {},
+    onRetry = {}
+  )
+}
+
+@Preview
+@Composable
+private fun MangaDetailsContentSuccessPreview() {
+  MangaDetailsContent(
+    mangaDetailsUiState = MangaDetailsUiState.Success(previewManga),
+    mangaChaptersUiState = BasePaginationUiState.Content(
+      currentList = persistentListOf(
+        ChapterModel(id = "c-001", mangaId = "m-001", title = "Romance Dawn", number = "1", volume = "1", publishedAt = "2024-01-01"),
+        ChapterModel(id = "c-002", mangaId = "m-001", title = "They Call Him 'Straw Hat Luffy'", number = "2", volume = "1", publishedAt = "2024-01-08"),
+      ),
+      nextPageState = BaseNextPageState.IDLE
+    ),
+    isFavorite = false,
+    chapterLanguage = MangaLanguageValue.ENGLISH,
+    availableLanguageList = persistentListOf(MangaLanguageValue.ENGLISH, MangaLanguageValue.JAPANESE),
+    startedChapterId = "c-001",
+    modifier = Modifier.fillMaxSize(),
+    onReadingClick = { _, _, _ -> },
+    onFavoriteClick = {},
+    onLanguageItemClick = {},
+    onCategoryItemClick = { _, _ -> },
+    onChapterItemClick = { _, _, _ -> },
+    onFetchChapterListNextPage = {},
+    onRetryFetchChapterListNextPage = {},
+    onRetryFetchChapterListFirstPage = {},
+    onRetry = {}
+  )
 }

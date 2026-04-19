@@ -22,6 +22,7 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortCriteriaValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortOrderValue
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailsCriteriaUiState
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -96,4 +97,15 @@ fun SortBottomSheet(
         .padding(bottom = 8.dp)
     )
   }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+private fun SortBottomSheetPreview() {
+  SortBottomSheet(
+    onDismiss = {},
+    criteriaState = CategoryDetailsCriteriaUiState(),
+    onApplyClick = { _, _ -> }
+  )
 }

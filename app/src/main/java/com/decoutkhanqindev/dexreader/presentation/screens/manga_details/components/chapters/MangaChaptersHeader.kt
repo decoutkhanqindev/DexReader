@@ -17,8 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.decoutkhanqindev.dexreader.R
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun MangaChaptersHeader(
@@ -60,4 +62,15 @@ fun MangaChaptersHeader(
       style = MaterialTheme.typography.titleMedium,
     )
   }
+}
+
+@Preview
+@Composable
+private fun MangaChaptersHeaderPreview() {
+  MangaChaptersHeader(
+    selectedLanguage = MangaLanguageValue.ENGLISH,
+    languageList = persistentListOf(MangaLanguageValue.ENGLISH, MangaLanguageValue.JAPANESE),
+    modifier = Modifier.fillMaxWidth(),
+    onLanguageItemClick = {}
+  )
 }

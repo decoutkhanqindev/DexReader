@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
 
 @Composable
@@ -46,4 +47,13 @@ fun MangaDescription(
       modifier = Modifier.align(Alignment.End)
     )
   }
+}
+
+@Preview
+@Composable
+private fun MangaDescriptionCollapsedPreview() {
+  MangaDescription(
+    description = "Monkey D. Luffy sets off on an adventure to find the legendary treasure known as the One Piece and become the Pirate King. Along the way he recruits a crew of diverse and powerful companions.",
+    modifier = Modifier.fillMaxWidth()
+  )
 }

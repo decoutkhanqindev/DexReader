@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
 
@@ -32,4 +33,13 @@ fun MangaInfoSection(
       modifier = Modifier.weight(0.6f)
     )
   }
+}
+
+@Preview
+@Composable
+private fun MangaInfoSectionPreview() {
+  MangaInfoSection(
+    manga = previewManga,
+    modifier = Modifier.fillMaxWidth()
+  )
 }

@@ -24,6 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import androidx.compose.ui.tooling.preview.Preview
+import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.ProfileUiState
@@ -133,4 +135,81 @@ fun ProfileContent(
       }
     }
   }
+}
+
+private val previewUser = UserModel(
+  id = "u-001",
+  name = "Nguyen Van A",
+  email = "nguyenvana@email.com",
+  avatarUrl = null,
+)
+
+@Preview
+@Composable
+private fun ProfileContentIdlePreview() {
+  ProfileContent(
+    uiState = ProfileUiState(currentUser = previewUser),
+    modifier = Modifier.fillMaxSize(),
+    onUpdateNameChange = {},
+    onUpdatePicUrlChange = {},
+    onLogoutSuccess = {},
+    onRetryUpdate = {},
+    onRetryLogout = {}
+  )
+}
+
+@Preview
+@Composable
+private fun ProfileContentLoadingPreview() {
+  ProfileContent(
+    uiState = ProfileUiState(currentUser = previewUser, isLoading = true),
+    modifier = Modifier.fillMaxSize(),
+    onUpdateNameChange = {},
+    onUpdatePicUrlChange = {},
+    onLogoutSuccess = {},
+    onRetryUpdate = {},
+    onRetryLogout = {}
+  )
+}
+
+@Preview
+@Composable
+private fun ProfileContentUpdateSuccessPreview() {
+  ProfileContent(
+    uiState = ProfileUiState(currentUser = previewUser, isUpdateUserSuccess = true),
+    modifier = Modifier.fillMaxSize(),
+    onUpdateNameChange = {},
+    onUpdatePicUrlChange = {},
+    onLogoutSuccess = {},
+    onRetryUpdate = {},
+    onRetryLogout = {}
+  )
+}
+
+@Preview
+@Composable
+private fun ProfileContentUpdateErrorPreview() {
+  ProfileContent(
+    uiState = ProfileUiState(currentUser = previewUser, isUpdateUserError = true),
+    modifier = Modifier.fillMaxSize(),
+    onUpdateNameChange = {},
+    onUpdatePicUrlChange = {},
+    onLogoutSuccess = {},
+    onRetryUpdate = {},
+    onRetryLogout = {}
+  )
+}
+
+@Preview
+@Composable
+private fun ProfileContentLogoutErrorPreview() {
+  ProfileContent(
+    uiState = ProfileUiState(currentUser = previewUser, isLogoutUserError = true),
+    modifier = Modifier.fillMaxSize(),
+    onUpdateNameChange = {},
+    onUpdatePicUrlChange = {},
+    onLogoutSuccess = {},
+    onRetryUpdate = {},
+    onRetryLogout = {}
+  )
 }

@@ -16,6 +16,9 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLangua
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.ListLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPageErrorMessage
+import androidx.compose.ui.tooling.preview.Preview
+import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
+import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -74,4 +77,60 @@ fun MangaChaptersSection(
       }
     }
   }
+}
+
+@Preview
+@Composable
+private fun MangaChaptersSectionFirstPageLoadingPreview() {
+  MangaChaptersSection(
+    mangaChaptersUiState = BasePaginationUiState.FirstPageLoading,
+    latestChapter = "1110",
+    chapterLanguage = MangaLanguageValue.ENGLISH,
+    chapterLanguageList = persistentListOf(MangaLanguageValue.ENGLISH, MangaLanguageValue.JAPANESE),
+    modifier = Modifier.fillMaxWidth(),
+    onLanguageItemClick = {},
+    onChapterItemClick = { _, _, _ -> },
+    onFetchChapterListNextPage = {},
+    onRetryFetchChapterListNextPage = {},
+    onRetry = {}
+  )
+}
+
+@Preview
+@Composable
+private fun MangaChaptersSectionFirstPageErrorPreview() {
+  MangaChaptersSection(
+    mangaChaptersUiState = BasePaginationUiState.FirstPageError(FeatureError.NetworkUnavailable),
+    latestChapter = "1110",
+    chapterLanguage = MangaLanguageValue.ENGLISH,
+    chapterLanguageList = persistentListOf(MangaLanguageValue.ENGLISH),
+    modifier = Modifier.fillMaxWidth(),
+    onLanguageItemClick = {},
+    onChapterItemClick = { _, _, _ -> },
+    onFetchChapterListNextPage = {},
+    onRetryFetchChapterListNextPage = {},
+    onRetry = {}
+  )
+}
+
+@Preview
+@Composable
+private fun MangaChaptersSectionContentPreview() {
+  MangaChaptersSection(
+    mangaChaptersUiState = BasePaginationUiState.Content(
+      currentList = persistentListOf(
+        ChapterModel(id = "c-001", mangaId = "m-001", title = "Romance Dawn", number = "1", volume = "1", publishedAt = "2024-01-01"),
+        ChapterModel(id = "c-002", mangaId = "m-001", title = "They Call Him 'Straw Hat Luffy'", number = "2", volume = "1", publishedAt = "2024-01-08"),
+      )
+    ),
+    latestChapter = "1110",
+    chapterLanguage = MangaLanguageValue.ENGLISH,
+    chapterLanguageList = persistentListOf(MangaLanguageValue.ENGLISH, MangaLanguageValue.JAPANESE),
+    modifier = Modifier.fillMaxWidth(),
+    onLanguageItemClick = {},
+    onChapterItemClick = { _, _, _ -> },
+    onFetchChapterListNextPage = {},
+    onRetryFetchChapterListNextPage = {},
+    onRetry = {}
+  )
 }

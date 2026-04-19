@@ -11,7 +11,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
+import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.info.previewManga
 
 
 @Composable
@@ -45,4 +47,14 @@ fun MangaSummarySection(
       onCategoryItemClick(categoryId, categoryTitle)
     }
   }
+}
+
+@Preview
+@Composable
+private fun MangaSummarySectionPreview() {
+  MangaSummarySection(
+    manga = previewManga,
+    modifier = Modifier.fillMaxWidth(),
+    onCategoryItemClick = { _, _ -> }
+  )
 }

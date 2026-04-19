@@ -10,6 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
 import java.util.Locale
@@ -45,4 +47,14 @@ fun MangaCategoryItem(
       style = MaterialTheme.typography.bodyLarge,
     )
   }
+}
+
+@Preview
+@Composable
+private fun MangaCategoryItemPreview() {
+  MangaCategoryItem(
+    item = CategoryModel(id = "g1", title = "Action"),
+    modifier = Modifier.wrapContentWidth(),
+    onClick = { _, _ -> }
+  )
 }

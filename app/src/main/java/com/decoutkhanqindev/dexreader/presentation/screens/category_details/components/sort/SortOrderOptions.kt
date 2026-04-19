@@ -13,6 +13,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortOrderValue
 
 @Composable
@@ -53,4 +55,24 @@ fun SortOrderOptions(
       }
     }
   }
+}
+
+@Preview
+@Composable
+private fun SortOrderOptionsDescPreview() {
+  SortOrderOptions(
+    selectedItem = MangaSortOrderValue.DESC,
+    onItemClick = {},
+    modifier = Modifier.fillMaxWidth()
+  )
+}
+
+@Preview
+@Composable
+private fun SortOrderOptionsAscPreview() {
+  SortOrderOptions(
+    selectedItem = MangaSortOrderValue.ASC,
+    onItemClick = {},
+    modifier = Modifier.fillMaxWidth()
+  )
 }

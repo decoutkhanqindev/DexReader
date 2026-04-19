@@ -15,6 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
@@ -61,4 +64,39 @@ fun MenuDrawer(
       }
     }
   ) { content() }
+}
+
+@Preview
+@Composable
+private fun MenuDrawerLoggedInPreview() {
+  val drawerState = rememberDrawerState(initialValue = DrawerValue.Open)
+  MenuDrawer(
+    isUserLoggedIn = true,
+    currentUser = UserModel(
+      id = "user-001",
+      name = "Nguyen Van A",
+      email = "nguyenvana@gmail.com",
+      avatarUrl = null
+    ),
+    drawerState = drawerState,
+    selectedItem = MenuValue.HOME,
+    onSignInClick = {},
+    onItemClick = {},
+    content = {}
+  )
+}
+
+@Preview
+@Composable
+private fun MenuDrawerLoggedOutPreview() {
+  val drawerState = rememberDrawerState(initialValue = DrawerValue.Open)
+  MenuDrawer(
+    isUserLoggedIn = false,
+    currentUser = null,
+    drawerState = drawerState,
+    selectedItem = MenuValue.HOME,
+    onSignInClick = {},
+    onItemClick = {},
+    content = {}
+  )
 }

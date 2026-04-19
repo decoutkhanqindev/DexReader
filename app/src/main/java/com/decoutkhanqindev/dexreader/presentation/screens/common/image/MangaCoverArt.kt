@@ -16,6 +16,9 @@ import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.decoutkhanqindev.dexreader.R
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.screens.common.fastShimmer
 
 @Composable
@@ -57,4 +60,14 @@ fun MangaCoverArt(
       }
     )
   }
+}
+
+@Preview
+@Composable
+private fun MangaCoverArtPreview() {
+  MangaCoverArt(
+    url = "",
+    title = "One Piece",
+    modifier = Modifier.width(194.dp).height(250.dp)
+  )
 }

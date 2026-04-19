@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.model.value.category.CategoryTypeValue
 
 @Composable
@@ -73,4 +74,26 @@ fun CategoryTypeHeader(
       )
     }
   }
+}
+
+@Preview
+@Composable
+private fun CategoryTypeHeaderCollapsedPreview() {
+  CategoryTypeHeader(
+    type = CategoryTypeValue.GENRE,
+    isExpanded = false,
+    modifier = Modifier.fillMaxWidth(),
+    onExpandClick = {}
+  )
+}
+
+@Preview
+@Composable
+private fun CategoryTypeHeaderExpandedPreview() {
+  CategoryTypeHeader(
+    type = CategoryTypeValue.GENRE,
+    isExpanded = true,
+    modifier = Modifier.fillMaxWidth(),
+    onExpandClick = {}
+  )
 }

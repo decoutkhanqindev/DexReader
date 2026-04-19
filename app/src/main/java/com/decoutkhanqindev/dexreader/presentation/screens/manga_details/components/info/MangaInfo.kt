@@ -14,7 +14,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import androidx.compose.ui.tooling.preview.Preview
+import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun MangaInfo(
@@ -69,4 +75,33 @@ fun MangaInfo(
       style = MaterialTheme.typography.bodyLarge,
     )
   }
+}
+
+internal val previewManga = MangaModel(
+  id = "m-001",
+  title = "One Piece",
+  coverUrl = "",
+  description = "Monkey D. Luffy sets off on an adventure to find the legendary treasure known as the One Piece and become the Pirate King.",
+  author = "Eiichiro Oda",
+  artist = "Eiichiro Oda",
+  categories = persistentListOf(
+    CategoryModel(id = "g1", title = "Action"),
+    CategoryModel(id = "g2", title = "Adventure"),
+    CategoryModel(id = "g3", title = "Comedy"),
+  ),
+  status = MangaStatusValue.ON_GOING,
+  contentRating = MangaContentRatingValue.SAFE,
+  year = "1997",
+  availableLanguages = persistentListOf(MangaLanguageValue.ENGLISH, MangaLanguageValue.JAPANESE),
+  latestChapter = "1110",
+  updatedAt = "2024-01-01",
+)
+
+@Preview
+@Composable
+private fun MangaInfoPreview() {
+  MangaInfo(
+    manga = previewManga,
+    modifier = Modifier
+  )
 }

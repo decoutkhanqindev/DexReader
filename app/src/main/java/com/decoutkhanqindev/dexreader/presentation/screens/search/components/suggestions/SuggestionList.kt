@@ -1,12 +1,15 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.search.components.suggestions
 
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun SuggestionList(
@@ -25,4 +28,18 @@ fun SuggestionList(
       ) { onSelectedSuggestion(it) }
     }
   }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SuggestionListPreview() {
+  SuggestionList(
+    suggestionList = persistentListOf(
+      "One Piece",
+      "One Punch Man",
+      "One Piece Episodio di Ace",
+    ),
+    modifier = Modifier.fillMaxSize(),
+    onSelectedSuggestion = {},
+  )
 }

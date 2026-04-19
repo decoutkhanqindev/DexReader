@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 
 @Composable
@@ -33,4 +34,24 @@ fun CategoryItem(
       style = MaterialTheme.typography.bodyLarge,
     )
   }
+}
+
+@Preview
+@Composable
+private fun CategoryItemPreview() {
+  CategoryItem(
+    item = CategoryModel(id = "genre-001", title = "Action"),
+    modifier = Modifier.wrapContentWidth(),
+    onClick = { _, _ -> }
+  )
+}
+
+@Preview
+@Composable
+private fun CategoryItemLongTitlePreview() {
+  CategoryItem(
+    item = CategoryModel(id = "genre-002", title = "Slice of Life"),
+    modifier = Modifier.wrapContentWidth(),
+    onClick = { _, _ -> }
+  )
 }

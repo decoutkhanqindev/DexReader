@@ -19,6 +19,8 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.PersonPicture
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.ProfilePicture
 
 @Composable
@@ -73,4 +75,47 @@ fun MenuHeader(
       modifier = modifier.wrapContentSize(),
     ) { onSignInClick() }
   }
+}
+
+@Preview
+@Composable
+private fun MenuHeaderLoggedInWithAvatarPreview() {
+  MenuHeader(
+    isUserLoggedIn = true,
+    currentUser = UserModel(
+      id = "user-001",
+      name = "Nguyen Van A",
+      email = "nguyenvana@gmail.com",
+      avatarUrl = "https://example.com/avatar.jpg"
+    ),
+    modifier = Modifier.fillMaxWidth().height(100.dp),
+    onSignInClick = {}
+  )
+}
+
+@Preview
+@Composable
+private fun MenuHeaderLoggedInNoAvatarPreview() {
+  MenuHeader(
+    isUserLoggedIn = true,
+    currentUser = UserModel(
+      id = "user-001",
+      name = "Nguyen Van A",
+      email = "nguyenvana@gmail.com",
+      avatarUrl = null
+    ),
+    modifier = Modifier.fillMaxWidth().height(100.dp),
+    onSignInClick = {}
+  )
+}
+
+@Preview
+@Composable
+private fun MenuHeaderLoggedOutPreview() {
+  MenuHeader(
+    isUserLoggedIn = false,
+    currentUser = null,
+    modifier = Modifier.fillMaxWidth().height(100.dp),
+    onSignInClick = {}
+  )
 }

@@ -15,6 +15,8 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.material3.Text
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
 
 @Composable
@@ -51,5 +53,28 @@ fun ActionButton(
     ) {
       content()
     }
+  }
+}
+
+@Preview
+@Composable
+private fun ActionButtonEnabledPreview() {
+  ActionButton(
+    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+    onClick = {}
+  ) {
+    Text(text = "Add to Favorites")
+  }
+}
+
+@Preview
+@Composable
+private fun ActionButtonDisabledPreview() {
+  ActionButton(
+    isEnabled = false,
+    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+    onClick = {}
+  ) {
+    Text(text = "Add to Favorites")
   }
 }

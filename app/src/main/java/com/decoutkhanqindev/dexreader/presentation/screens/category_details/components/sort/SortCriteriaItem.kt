@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortCriteriaValue
 
 @Composable
@@ -48,4 +49,30 @@ fun SortCriteriaItem(
       )
     }
   }
+}
+
+@Preview
+@Composable
+private fun SortCriteriaItemSelectedPreview() {
+  SortCriteriaItem(
+    isSelected = true,
+    item = MangaSortCriteriaValue.LATEST_UPDATE,
+    onClick = {},
+    modifier = Modifier
+      .padding(4.dp)
+      .size(120.dp)
+  )
+}
+
+@Preview
+@Composable
+private fun SortCriteriaItemUnselectedPreview() {
+  SortCriteriaItem(
+    isSelected = false,
+    item = MangaSortCriteriaValue.TRENDING,
+    onClick = {},
+    modifier = Modifier
+      .padding(4.dp)
+      .size(120.dp)
+  )
 }

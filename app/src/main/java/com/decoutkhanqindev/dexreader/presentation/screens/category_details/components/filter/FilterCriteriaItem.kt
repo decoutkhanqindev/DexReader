@@ -14,7 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun <T> FilterCriteriaItem(
@@ -55,4 +59,19 @@ fun <T> FilterCriteriaItem(
       )
     }
   }
+}
+
+@Preview
+@Composable
+private fun FilterCriteriaItemPreview() {
+  FilterCriteriaItem(
+    title = "Status",
+    items = MangaStatusValue.entries
+      .filter { it != MangaStatusValue.UNKNOWN }
+      .toPersistentList(),
+    selectedItems = persistentListOf(MangaStatusValue.ON_GOING),
+    nameResOf = { it.nameRes },
+    onItemsSelect = {},
+    modifier = Modifier.fillMaxWidth()
+  )
 }

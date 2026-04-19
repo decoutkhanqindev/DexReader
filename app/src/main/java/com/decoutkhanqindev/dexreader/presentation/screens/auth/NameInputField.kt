@@ -16,6 +16,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.error.UserError
 
 private val NameKeyboardOptions = KeyboardOptions(
@@ -76,5 +78,26 @@ fun NameInputField(
     textStyle = MaterialTheme.typography.bodyLarge,
     keyboardOptions = NameKeyboardOptions,
     colors = colors,
+  )
+}
+
+@Preview
+@Composable
+private fun NameInputFieldPreview() {
+  NameInputField(
+    value = "Nguyen Van A",
+    modifier = Modifier.fillMaxWidth(),
+    onValueChange = {}
+  )
+}
+
+@Preview
+@Composable
+private fun NameInputFieldErrorPreview() {
+  NameInputField(
+    value = "",
+    error = UserError.Name.Required,
+    modifier = Modifier.fillMaxWidth(),
+    onValueChange = {}
   )
 }

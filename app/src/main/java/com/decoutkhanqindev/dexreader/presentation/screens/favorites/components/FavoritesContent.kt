@@ -33,6 +33,11 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.states.Loading
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.AllItemLoadedMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadMoreMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPageErrorMessage
+import androidx.compose.ui.tooling.preview.Preview
+import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
+import com.decoutkhanqindev.dexreader.presentation.model.manga.FavoriteMangaModel
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 
 @Composable
@@ -152,4 +157,141 @@ fun FavoritesContent(
       }
     }
   }
+}
+
+private val previewFavoriteList = persistentListOf(
+  FavoriteMangaModel(
+    id = "1",
+    title = "One Piece",
+    coverUrl = "",
+    author = "Eiichiro Oda",
+    status = MangaStatusValue.ON_GOING,
+  ),
+  FavoriteMangaModel(
+    id = "2",
+    title = "Fullmetal Alchemist",
+    coverUrl = "",
+    author = "Hiromu Arakawa",
+    status = MangaStatusValue.COMPLETED,
+  ),
+  FavoriteMangaModel(
+    id = "3",
+    title = "Attack on Titan",
+    coverUrl = "",
+    author = "Hajime Isayama",
+    status = MangaStatusValue.COMPLETED,
+  ),
+  FavoriteMangaModel(
+    id = "4",
+    title = "Demon Slayer",
+    coverUrl = "",
+    author = "Koyoharu Gotouge",
+    status = MangaStatusValue.COMPLETED,
+  ),
+)
+
+@Preview
+@Composable
+private fun FavoritesContentFirstPageLoadingPreview() {
+  FavoritesContent(
+    uiState = BasePaginationUiState.FirstPageLoading,
+    onSelectedManga = {},
+    onObserveFavoriteMangaListNextPage = {},
+    onRetryObserveFavoriteMangaListNextPage = {},
+    onRetry = {},
+    modifier = Modifier.fillMaxSize()
+  )
+}
+
+@Preview
+@Composable
+private fun FavoritesContentFirstPageErrorPreview() {
+  FavoritesContent(
+    uiState = BasePaginationUiState.FirstPageError(FeatureError.NetworkUnavailable),
+    onSelectedManga = {},
+    onObserveFavoriteMangaListNextPage = {},
+    onRetryObserveFavoriteMangaListNextPage = {},
+    onRetry = {},
+    modifier = Modifier.fillMaxSize()
+  )
+}
+
+@Preview
+@Composable
+private fun FavoritesContentEmptyPreview() {
+  FavoritesContent(
+    uiState = BasePaginationUiState.Content(
+      currentList = persistentListOf(),
+      nextPageState = BaseNextPageState.NO_MORE_ITEMS
+    ),
+    onSelectedManga = {},
+    onObserveFavoriteMangaListNextPage = {},
+    onRetryObserveFavoriteMangaListNextPage = {},
+    onRetry = {},
+    modifier = Modifier.fillMaxSize()
+  )
+}
+
+@Preview
+@Composable
+private fun FavoritesContentIdlePreview() {
+  FavoritesContent(
+    uiState = BasePaginationUiState.Content(
+      currentList = previewFavoriteList,
+      nextPageState = BaseNextPageState.IDLE
+    ),
+    onSelectedManga = {},
+    onObserveFavoriteMangaListNextPage = {},
+    onRetryObserveFavoriteMangaListNextPage = {},
+    onRetry = {},
+    modifier = Modifier.fillMaxSize()
+  )
+}
+
+@Preview
+@Composable
+private fun FavoritesContentNextPageLoadingPreview() {
+  FavoritesContent(
+    uiState = BasePaginationUiState.Content(
+      currentList = previewFavoriteList,
+      nextPageState = BaseNextPageState.LOADING
+    ),
+    onSelectedManga = {},
+    onObserveFavoriteMangaListNextPage = {},
+    onRetryObserveFavoriteMangaListNextPage = {},
+    onRetry = {},
+    modifier = Modifier.fillMaxSize()
+  )
+}
+
+@Preview
+@Composable
+private fun FavoritesContentNextPageErrorPreview() {
+  FavoritesContent(
+    uiState = BasePaginationUiState.Content(
+      currentList = previewFavoriteList,
+      nextPageState = BaseNextPageState.ERROR
+    ),
+    onSelectedManga = {},
+    onObserveFavoriteMangaListNextPage = {},
+    onRetryObserveFavoriteMangaListNextPage = {},
+    onRetry = {},
+    modifier = Modifier.fillMaxSize()
+  )
+}
+
+@Preview
+@Composable
+private fun FavoritesContentNoMoreItemsPreview() {
+  FavoritesContent(
+    uiState = BasePaginationUiState.Content(
+      currentList = previewFavoriteList,
+      nextPageState = BaseNextPageState.NO_MORE_ITEMS
+    ),
+    onSelectedManga = {},
+    onObserveFavoriteMangaListNextPage = {},
+    onRetryObserveFavoriteMangaListNextPage = {},
+    onRetry = {},
+    modifier = Modifier.fillMaxSize()
+  )
 }

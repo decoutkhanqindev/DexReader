@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
 
 @Composable
@@ -37,5 +38,14 @@ fun SuggestionItem(
         contentDescription = stringResource(R.string.search)
       )
     },
+  )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SuggestionItemPreview() {
+  SuggestionItem(
+    suggestion = "One Piece",
+    onSelectedSuggestion = {},
   )
 }

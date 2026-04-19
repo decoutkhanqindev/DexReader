@@ -14,8 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
@@ -37,9 +40,19 @@ fun <T> FilterValueOptions(
           .selectable(
             selected = selectedItems.contains(option),
             onClick = {
-              if (selectedItems.contains(option))
-                onItemsSelect(selectedItems.toPersistentList().remove(option))
-              else onItemsSelect(selectedItems.toPersistentList().add(option))
+              if (selectedItems.contains(option)) {
+                onItemsSelect(
+                  selectedItems
+                    .toPersistentList()
+                    .remove(option)
+                )
+              } else {
+                onItemsSelect(
+                  selectedItems
+                    .toPersistentList()
+                    .add(option)
+                )
+              }
             },
             role = Role.Checkbox
           ),
@@ -57,4 +70,18 @@ fun <T> FilterValueOptions(
       }
     }
   }
+}
+
+@Preview
+@Composable
+private fun FilterValueOptionsPreview() {
+  FilterValueOptions(
+    options = MangaStatusValue.entries
+      .filter { it != MangaStatusValue.UNKNOWN }
+      .toPersistentList(),
+    selectedItems = persistentListOf(MangaStatusValue.ON_GOING, MangaStatusValue.COMPLETED),
+    nameResOf = { it.nameRes },
+    onItemsSelect = {},
+    modifier = Modifier.fillMaxWidth()
+  )
 }

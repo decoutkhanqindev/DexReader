@@ -1,32 +1,42 @@
 # Current Task
 
-## Status: COMPLETE — strings.xml reorganized with screen-group comments
+## Status: COMPLETE — @Preview generation for search/ and settings/ folders
 
-## Files edited this session
-1. `app/src/main/res/values/strings.xml`
-   - Merged `strings_lang_generated.xml` (65 lang_* entries) into `strings.xml`
-   - Deleted `strings_lang_generated.xml`
-   - Reorganized all 214 strings into 15 named section groups with XML comments
+## Work done this session
+
+### search/ folder — 17 previews across 7 files
+| File | Previews |
+|---|---|
+| `components/actions/SearchBar.kt` | 2 (empty query, with query) |
+| `components/results/ResultsNotFoundMessage.kt` | 1 |
+| `components/results/ResultsSection.kt` | 7 (FirstPageLoading, FirstPageError, Content empty, Content+IDLE, Content+LOADING, Content+ERROR, Content+NO_MORE_ITEMS) |
+| `components/suggestions/SuggestionItem.kt` | 1 |
+| `components/suggestions/SuggestionList.kt` | 1 |
+| `components/suggestions/SuggestionsSection.kt` | 4 (Loading, Error, Success empty, Success with items) |
+| `components/SearchContent.kt` | 3 (Idle/empty query, Suggestions expanded, Results shown) |
+
+### settings/ folder — 9 previews across 3 files
+| File | Previews |
+|---|---|
+| `components/ThemeOptionItem.kt` | 2 (selected, unselected) |
+| `components/ThemeOptionList.kt` | 3 (SYSTEM, LIGHT, DARK selected) |
+| `components/SettingsContent.kt` | 4 (Default, Loading, Success, Error) |
 
 ## Last action
-`./gradlew assembleDebug` — BUILD SUCCESSFUL (1s, cache reused, no errors).
+`SettingsContent.kt` previews written — 4 states (Default, Loading, Success, Error).
 
-## Section groups added
-1. `<!-- App -->` (2)
-2. `<!-- Navigation / Menu -->` (8)
-3. `<!-- Common / Shared -->` (19)
-4. `<!-- Auth Screen -->` (29)
-5. `<!-- Home Screen -->` (4)
-6. `<!-- Categories Screen -->` (5)
-7. `<!-- Category Details Screen -->` (18)
-8. `<!-- Manga Details Screen -->` (24)
-9. `<!-- Reader Screen -->` (6)
-10. `<!-- Search Screen -->` (4)
-11. `<!-- Favorites Screen -->` (2)
-12. `<!-- History Screen -->` (8)
-13. `<!-- Profile Screen -->` (9)
-14. `<!-- Settings Screen -->` (10)
-15. `<!-- Language Names -->` (65)
+## Previously completed (prior sessions)
+- `common/` — all composables previewed
+- `auth/` — all composables previewed
+- `categories/` — all composables previewed
+- `category_details/` — all composables previewed
+- `favorites/` — all composables previewed
+- `history/` — all composables previewed
+- `home/` — all composables previewed
+- `manga_details/` — all composables previewed
+- `profile/` — all composables previewed
+- `reader/` — all composables previewed
 
 ## Next
-Nothing pending. String resource cleanup is fully complete.
+All screen folders now covered. No pending preview work.
+Skipped files (hiltViewModel): `*Screen.kt`, `*ViewModel.kt` across all folders.

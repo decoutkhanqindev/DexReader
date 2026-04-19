@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,5 +74,30 @@ fun NotificationDialog(
       )
     },
     shape = MaterialTheme.shapes.large,
+  )
+}
+
+@Preview
+@Composable
+private fun NotificationDialogPreview() {
+  NotificationDialog(onConfirmClick = {})
+}
+
+@Preview
+@Composable
+private fun NotificationDialogNoDismissPreview() {
+  NotificationDialog(
+    isEnableDismiss = false,
+    onConfirmClick = {}
+  )
+}
+
+@Preview
+@Composable
+private fun NotificationDialogCustomPreview() {
+  NotificationDialog(
+    title = "Update available. Please restart the app to apply changes.",
+    confirm = "Restart",
+    onConfirmClick = {}
   )
 }

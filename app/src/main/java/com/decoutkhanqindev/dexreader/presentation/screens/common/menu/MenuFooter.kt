@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
 
 @Composable
@@ -30,4 +31,10 @@ fun MenuFooter(modifier: Modifier = Modifier) {
       style = MaterialTheme.typography.bodySmall,
     )
   }
+}
+
+@Preview
+@Composable
+private fun MenuFooterPreview() {
+  MenuFooter(modifier = Modifier.fillMaxWidth())
 }

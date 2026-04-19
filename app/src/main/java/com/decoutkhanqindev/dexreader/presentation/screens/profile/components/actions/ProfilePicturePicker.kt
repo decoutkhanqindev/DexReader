@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.PersonPicture
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.ProfilePicture
 
@@ -73,4 +74,24 @@ fun ProfilePicturePicker(
       }
     }
   }
+}
+
+@Preview
+@Composable
+private fun ProfilePicturePickerWithUrlPreview() {
+  ProfilePicturePicker(
+    url = "",
+    name = "Nguyen Van A",
+    onSelectedImageUrl = {}
+  )
+}
+
+@Preview
+@Composable
+private fun ProfilePicturePickerNoUrlPreview() {
+  ProfilePicturePicker(
+    url = null,
+    name = "Nguyen Van A",
+    onSelectedImageUrl = {}
+  )
 }

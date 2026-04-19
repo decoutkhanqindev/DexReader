@@ -28,6 +28,8 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.error.UserError
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.EmailInputField
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.PasswordInputField
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
 
 @Composable
@@ -131,4 +133,38 @@ fun LoginForm(
       }
     }
   }
+}
+
+@Preview
+@Composable
+private fun LoginFormPreview() {
+  LoginForm(
+    email = "nguyenvana@gmail.com",
+    emailError = null,
+    password = "myPassword123",
+    passwordError = null,
+    modifier = Modifier.fillMaxSize(),
+    onEmailChange = {},
+    onPasswordChange = {},
+    onSubmitClick = {},
+    onRegisterClick = {},
+    onForgotPasswordClick = {}
+  )
+}
+
+@Preview
+@Composable
+private fun LoginFormWithErrorsPreview() {
+  LoginForm(
+    email = "invalid-email",
+    emailError = UserError.Email.Invalid,
+    password = "123",
+    passwordError = UserError.Password.Weak,
+    modifier = Modifier.fillMaxSize(),
+    onEmailChange = {},
+    onPasswordChange = {},
+    onSubmitClick = {},
+    onRegisterClick = {},
+    onForgotPasswordClick = {}
+  )
 }

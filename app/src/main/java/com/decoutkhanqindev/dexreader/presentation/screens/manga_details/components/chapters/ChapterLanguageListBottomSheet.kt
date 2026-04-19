@@ -20,8 +20,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -85,4 +87,33 @@ fun ChapterLanguageListBottomSheet(
       }
     }
   }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+private fun ChapterLanguageListBottomSheetPreview() {
+  ChapterLanguageListBottomSheet(
+    selectedItem = MangaLanguageValue.ENGLISH,
+    items = persistentListOf(
+      MangaLanguageValue.ENGLISH,
+      MangaLanguageValue.JAPANESE,
+      MangaLanguageValue.FRENCH,
+      MangaLanguageValue.SPANISH,
+    ),
+    onItemClick = {},
+    onDismissClick = {}
+  )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+private fun ChapterLanguageListBottomSheetEmptyPreview() {
+  ChapterLanguageListBottomSheet(
+    selectedItem = MangaLanguageValue.ENGLISH,
+    items = persistentListOf(),
+    onItemClick = {},
+    onDismissClick = {}
+  )
 }

@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
 
 @Composable
@@ -51,4 +52,24 @@ fun MoveToTopButton(
       )
     }
   }
+}
+
+@Preview
+@Composable
+private fun MoveToTopButtonVisiblePreview() {
+  MoveToTopButton(
+    itemsSize = 20,
+    firstVisibleItemIndex = 5,
+    onClick = {}
+  )
+}
+
+@Preview
+@Composable
+private fun MoveToTopButtonHiddenPreview() {
+  MoveToTopButton(
+    itemsSize = 5,
+    firstVisibleItemIndex = 0,
+    onClick = {}
+  )
 }

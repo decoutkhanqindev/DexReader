@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
 
 @Composable
@@ -80,4 +81,46 @@ fun NavigateChapterBottomBar(
       )
     }
   }
+}
+
+@Preview
+@Composable
+private fun NavigateChapterBottomBarBothEnabledPreview() {
+  NavigateChapterBottomBar(
+    volume = "1",
+    chapterNumber = "5",
+    title = "Romance Dawn",
+    canNavigatePrevious = true,
+    canNavigateNext = true,
+    onNavigatePrevious = {},
+    onNavigateNext = {}
+  )
+}
+
+@Preview
+@Composable
+private fun NavigateChapterBottomBarNextOnlyPreview() {
+  NavigateChapterBottomBar(
+    volume = "1",
+    chapterNumber = "1",
+    title = "Romance Dawn",
+    canNavigatePrevious = false,
+    canNavigateNext = true,
+    onNavigatePrevious = {},
+    onNavigateNext = {}
+  )
+}
+
+@Preview
+@Composable
+private fun NavigateChapterBottomBarPreviousOnlyPreview() {
+  NavigateChapterBottomBar(
+    volume = "20",
+    chapterNumber = "1110",
+    title = "",
+    canNavigatePrevious = true,
+    canNavigateNext = false,
+    onNavigatePrevious = {},
+    onNavigateNext = {}
+  )
 }

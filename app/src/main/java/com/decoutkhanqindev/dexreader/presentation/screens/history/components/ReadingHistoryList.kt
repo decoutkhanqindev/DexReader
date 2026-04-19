@@ -24,7 +24,10 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.Nex
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.AllItemLoadedMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadMoreMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPageErrorMessage
+import androidx.compose.ui.tooling.preview.Preview
+import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 
 @Composable
@@ -113,4 +116,89 @@ fun ReadingHistoryList(
       }
     }
   }
+}
+
+private val previewHistoryList = persistentListOf(
+  ReadingHistoryModel(
+    id = "rh-001",
+    mangaId = "m-001",
+    mangaTitle = "One Piece",
+    mangaCoverUrl = "",
+    chapterId = "c-001",
+    chapterTitle = "Romance Dawn",
+    chapterNumber = "1",
+    chapterVolume = "1",
+    lastReadPage = 12,
+    pageCount = 46,
+    lastReadAt = "2 hours ago",
+  ),
+  ReadingHistoryModel(
+    id = "rh-002",
+    mangaId = "m-002",
+    mangaTitle = "Naruto",
+    mangaCoverUrl = "",
+    chapterId = "c-002",
+    chapterTitle = "Uzumaki Naruto!!",
+    chapterNumber = "1",
+    chapterVolume = "1",
+    lastReadPage = 5,
+    pageCount = 53,
+    lastReadAt = "Yesterday",
+  ),
+)
+
+@Preview
+@Composable
+private fun ReadingHistoryListIdlePreview() {
+  ReadingHistoryList(
+    readingHistoryList = previewHistoryList,
+    historyNextPageState = BaseNextPageState.IDLE,
+    onSelectedReadingHistory = { _, _, _ -> },
+    onRemoveFromHistory = {},
+    onObserveHistoryNextPage = {},
+    onRetryObserveHistoryNextPage = {},
+    modifier = Modifier.fillMaxSize()
+  )
+}
+
+@Preview
+@Composable
+private fun ReadingHistoryListNextPageLoadingPreview() {
+  ReadingHistoryList(
+    readingHistoryList = previewHistoryList,
+    historyNextPageState = BaseNextPageState.LOADING,
+    onSelectedReadingHistory = { _, _, _ -> },
+    onRemoveFromHistory = {},
+    onObserveHistoryNextPage = {},
+    onRetryObserveHistoryNextPage = {},
+    modifier = Modifier.fillMaxSize()
+  )
+}
+
+@Preview
+@Composable
+private fun ReadingHistoryListNextPageErrorPreview() {
+  ReadingHistoryList(
+    readingHistoryList = previewHistoryList,
+    historyNextPageState = BaseNextPageState.ERROR,
+    onSelectedReadingHistory = { _, _, _ -> },
+    onRemoveFromHistory = {},
+    onObserveHistoryNextPage = {},
+    onRetryObserveHistoryNextPage = {},
+    modifier = Modifier.fillMaxSize()
+  )
+}
+
+@Preview
+@Composable
+private fun ReadingHistoryListNoMoreItemsPreview() {
+  ReadingHistoryList(
+    readingHistoryList = previewHistoryList,
+    historyNextPageState = BaseNextPageState.NO_MORE_ITEMS,
+    onSelectedReadingHistory = { _, _, _ -> },
+    onRemoveFromHistory = {},
+    onObserveHistoryNextPage = {},
+    onRetryObserveHistoryNextPage = {},
+    modifier = Modifier.fillMaxSize()
+  )
 }

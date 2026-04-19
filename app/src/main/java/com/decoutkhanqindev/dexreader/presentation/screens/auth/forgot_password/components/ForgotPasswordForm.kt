@@ -24,6 +24,8 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.error.UserError
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.EmailInputField
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
 
 @Composable
@@ -91,4 +93,30 @@ fun ForgotPasswordForm(
       }
     }
   }
+}
+
+@Preview
+@Composable
+private fun ForgotPasswordFormPreview() {
+  ForgotPasswordForm(
+    email = "nguyenvana@gmail.com",
+    emailError = null,
+    modifier = Modifier.fillMaxSize(),
+    onEmailChange = {},
+    onSubmitClick = {},
+    onNavigateBack = {}
+  )
+}
+
+@Preview
+@Composable
+private fun ForgotPasswordFormWithErrorPreview() {
+  ForgotPasswordForm(
+    email = "invalid-email",
+    emailError = UserError.Email.Invalid,
+    modifier = Modifier.fillMaxSize(),
+    onEmailChange = {},
+    onSubmitClick = {},
+    onNavigateBack = {}
+  )
 }

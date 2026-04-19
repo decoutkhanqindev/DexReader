@@ -14,6 +14,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
 
 @Composable
@@ -39,4 +41,13 @@ fun IdleScreen(
       style = MaterialTheme.typography.titleMedium,
     )
   }
+}
+
+@Preview
+@Composable
+private fun IdleScreenPreview() {
+  IdleScreen(
+    message = "No mangas found. Try a different search.",
+    modifier = Modifier.fillMaxSize()
+  )
 }

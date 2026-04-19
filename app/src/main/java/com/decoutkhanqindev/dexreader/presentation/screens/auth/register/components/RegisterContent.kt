@@ -18,6 +18,8 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.AuthContent
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.register.RegisterUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 
 @Composable
@@ -90,4 +92,72 @@ fun RegisterContent(
       }
     }
   }
+}
+
+@Preview
+@Composable
+private fun RegisterContentPreview() {
+  RegisterContent(
+    uiState = RegisterUiState(),
+    modifier = Modifier.fillMaxSize(),
+    onEmailChange = {},
+    onPasswordChange = {},
+    onConfirmPasswordChange = {},
+    onNameChange = {},
+    onSubmitClick = {},
+    onRegisterSuccess = {},
+    onNavigateBack = {},
+    onRetry = {}
+  )
+}
+
+@Preview
+@Composable
+private fun RegisterContentLoadingPreview() {
+  RegisterContent(
+    uiState = RegisterUiState(isLoading = true),
+    modifier = Modifier.fillMaxSize(),
+    onEmailChange = {},
+    onPasswordChange = {},
+    onConfirmPasswordChange = {},
+    onNameChange = {},
+    onSubmitClick = {},
+    onRegisterSuccess = {},
+    onNavigateBack = {},
+    onRetry = {}
+  )
+}
+
+@Preview
+@Composable
+private fun RegisterContentErrorPreview() {
+  RegisterContent(
+    uiState = RegisterUiState(isError = true),
+    modifier = Modifier.fillMaxSize(),
+    onEmailChange = {},
+    onPasswordChange = {},
+    onConfirmPasswordChange = {},
+    onNameChange = {},
+    onSubmitClick = {},
+    onRegisterSuccess = {},
+    onNavigateBack = {},
+    onRetry = {}
+  )
+}
+
+@Preview
+@Composable
+private fun RegisterContentSuccessPreview() {
+  RegisterContent(
+    uiState = RegisterUiState(isSuccess = true),
+    modifier = Modifier.fillMaxSize(),
+    onEmailChange = {},
+    onPasswordChange = {},
+    onConfirmPasswordChange = {},
+    onNameChange = {},
+    onSubmitClick = {},
+    onRegisterSuccess = {},
+    onNavigateBack = {},
+    onRetry = {}
+  )
 }

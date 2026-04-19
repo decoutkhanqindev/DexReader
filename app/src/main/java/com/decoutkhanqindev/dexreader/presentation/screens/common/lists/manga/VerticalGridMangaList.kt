@@ -20,6 +20,10 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.MoveToTopButton
 import kotlinx.collections.immutable.ImmutableList
+import androidx.compose.ui.tooling.preview.Preview
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 
 @Composable
@@ -73,4 +77,76 @@ fun VerticalGridMangaList(
       }
     }
   }
+}
+
+@Preview
+@Composable
+private fun VerticalGridMangaListPreview() {
+  VerticalGridMangaList(
+    items = persistentListOf(
+      MangaModel(
+        id = "manga-001",
+        title = "One Piece",
+        coverUrl = "",
+        description = "Follow Monkey D. Luffy on his grand adventure to become King of the Pirates.",
+        author = "Eiichiro Oda",
+        artist = "Eiichiro Oda",
+        categories = persistentListOf(),
+        status = MangaStatusValue.ON_GOING,
+        contentRating = MangaContentRatingValue.SAFE,
+        year = "1997",
+        availableLanguages = persistentListOf(),
+        latestChapter = "1100",
+        updatedAt = "2024-01-01"
+      ),
+      MangaModel(
+        id = "manga-002",
+        title = "Naruto",
+        coverUrl = "",
+        description = "Follow Naruto Uzumaki on his journey to become Hokage.",
+        author = "Masashi Kishimoto",
+        artist = "Masashi Kishimoto",
+        categories = persistentListOf(),
+        status = MangaStatusValue.COMPLETED,
+        contentRating = MangaContentRatingValue.SAFE,
+        year = "1999",
+        availableLanguages = persistentListOf(),
+        latestChapter = "700",
+        updatedAt = "2014-11-10"
+      ),
+      MangaModel(
+        id = "manga-003",
+        title = "Attack on Titan",
+        coverUrl = "",
+        description = "Humanity fights for survival against giant humanoid creatures.",
+        author = "Hajime Isayama",
+        artist = "Hajime Isayama",
+        categories = persistentListOf(),
+        status = MangaStatusValue.COMPLETED,
+        contentRating = MangaContentRatingValue.SAFE,
+        year = "2009",
+        availableLanguages = persistentListOf(),
+        latestChapter = "139",
+        updatedAt = "2021-04-09"
+      ),
+      MangaModel(
+        id = "manga-004",
+        title = "Demon Slayer",
+        coverUrl = "",
+        description = "Tanjiro joins the Demon Slayer Corps to avenge his family.",
+        author = "Koyoharu Gotouge",
+        artist = "Koyoharu Gotouge",
+        categories = persistentListOf(),
+        status = MangaStatusValue.COMPLETED,
+        contentRating = MangaContentRatingValue.SAFE,
+        year = "2016",
+        availableLanguages = persistentListOf(),
+        latestChapter = "205",
+        updatedAt = "2020-05-18"
+      )
+    ),
+    modifier = Modifier.fillMaxSize(),
+    onItemClick = {},
+    loadMoreContent = {}
+  )
 }

@@ -29,7 +29,13 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.states.Loading
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.AllItemLoadedMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadMoreMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPageErrorMessage
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.tooling.preview.Preview
+import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
+import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun CategoryDetailsContent(
@@ -137,4 +143,171 @@ fun CategoryDetailsContent(
       )
     }
   }
+}
+
+private val previewCriteriaState = CategoryDetailsCriteriaUiState()
+
+private val previewMangaList = persistentListOf(
+  MangaModel(
+    id = "1",
+    title = "One Piece",
+    coverUrl = "",
+    description = "A pirate adventure.",
+    author = "Oda",
+    artist = "Oda",
+    categories = persistentListOf(CategoryModel(id = "g1", title = "Action")),
+    status = MangaStatusValue.ON_GOING,
+    contentRating = MangaContentRatingValue.SAFE,
+    year = "1997",
+    availableLanguages = persistentListOf(MangaLanguageValue.ENGLISH),
+    latestChapter = "1110",
+    updatedAt = "2024-01-01",
+  ),
+  MangaModel(
+    id = "2",
+    title = "Naruto",
+    coverUrl = "",
+    description = "A ninja story.",
+    author = "Kishimoto",
+    artist = "Kishimoto",
+    categories = persistentListOf(CategoryModel(id = "g2", title = "Adventure")),
+    status = MangaStatusValue.COMPLETED,
+    contentRating = MangaContentRatingValue.SAFE,
+    year = "1999",
+    availableLanguages = persistentListOf(MangaLanguageValue.ENGLISH),
+    latestChapter = "700",
+    updatedAt = "2014-11-10",
+  ),
+)
+
+@Preview
+@Composable
+private fun CategoryDetailsContentFirstPageLoadingPreview() {
+  CategoryDetailsContent(
+    detailsUiState = BasePaginationUiState.FirstPageLoading,
+    criteriaUiState = previewCriteriaState,
+    isSortBottomSheetVisible = false,
+    onSortSheetDismiss = {},
+    onSortApplyClick = { _, _ -> },
+    isFilterBottomSheetVisible = false,
+    onFilterSheetDismiss = {},
+    onFilterApplyClick = { _, _ -> },
+    onMangaClick = {},
+    onFetchMangaListNextPage = {},
+    onRetryFetchMangaListNextPage = {},
+    onRetry = {},
+    modifier = Modifier.fillMaxSize()
+  )
+}
+
+@Preview
+@Composable
+private fun CategoryDetailsContentFirstPageErrorPreview() {
+  CategoryDetailsContent(
+    detailsUiState = BasePaginationUiState.FirstPageError(FeatureError.NetworkUnavailable),
+    criteriaUiState = previewCriteriaState,
+    isSortBottomSheetVisible = false,
+    onSortSheetDismiss = {},
+    onSortApplyClick = { _, _ -> },
+    isFilterBottomSheetVisible = false,
+    onFilterSheetDismiss = {},
+    onFilterApplyClick = { _, _ -> },
+    onMangaClick = {},
+    onFetchMangaListNextPage = {},
+    onRetryFetchMangaListNextPage = {},
+    onRetry = {},
+    modifier = Modifier.fillMaxSize()
+  )
+}
+
+@Preview
+@Composable
+private fun CategoryDetailsContentIdlePreview() {
+  CategoryDetailsContent(
+    detailsUiState = BasePaginationUiState.Content(
+      currentList = previewMangaList,
+      nextPageState = BaseNextPageState.IDLE
+    ),
+    criteriaUiState = previewCriteriaState,
+    isSortBottomSheetVisible = false,
+    onSortSheetDismiss = {},
+    onSortApplyClick = { _, _ -> },
+    isFilterBottomSheetVisible = false,
+    onFilterSheetDismiss = {},
+    onFilterApplyClick = { _, _ -> },
+    onMangaClick = {},
+    onFetchMangaListNextPage = {},
+    onRetryFetchMangaListNextPage = {},
+    onRetry = {},
+    modifier = Modifier.fillMaxSize()
+  )
+}
+
+@Preview
+@Composable
+private fun CategoryDetailsContentNextPageLoadingPreview() {
+  CategoryDetailsContent(
+    detailsUiState = BasePaginationUiState.Content(
+      currentList = previewMangaList,
+      nextPageState = BaseNextPageState.LOADING
+    ),
+    criteriaUiState = previewCriteriaState,
+    isSortBottomSheetVisible = false,
+    onSortSheetDismiss = {},
+    onSortApplyClick = { _, _ -> },
+    isFilterBottomSheetVisible = false,
+    onFilterSheetDismiss = {},
+    onFilterApplyClick = { _, _ -> },
+    onMangaClick = {},
+    onFetchMangaListNextPage = {},
+    onRetryFetchMangaListNextPage = {},
+    onRetry = {},
+    modifier = Modifier.fillMaxSize()
+  )
+}
+
+@Preview
+@Composable
+private fun CategoryDetailsContentNextPageErrorPreview() {
+  CategoryDetailsContent(
+    detailsUiState = BasePaginationUiState.Content(
+      currentList = previewMangaList,
+      nextPageState = BaseNextPageState.ERROR
+    ),
+    criteriaUiState = previewCriteriaState,
+    isSortBottomSheetVisible = false,
+    onSortSheetDismiss = {},
+    onSortApplyClick = { _, _ -> },
+    isFilterBottomSheetVisible = false,
+    onFilterSheetDismiss = {},
+    onFilterApplyClick = { _, _ -> },
+    onMangaClick = {},
+    onFetchMangaListNextPage = {},
+    onRetryFetchMangaListNextPage = {},
+    onRetry = {},
+    modifier = Modifier.fillMaxSize()
+  )
+}
+
+@Preview
+@Composable
+private fun CategoryDetailsContentNoMoreItemsPreview() {
+  CategoryDetailsContent(
+    detailsUiState = BasePaginationUiState.Content(
+      currentList = previewMangaList,
+      nextPageState = BaseNextPageState.NO_MORE_ITEMS
+    ),
+    criteriaUiState = previewCriteriaState,
+    isSortBottomSheetVisible = false,
+    onSortSheetDismiss = {},
+    onSortApplyClick = { _, _ -> },
+    isFilterBottomSheetVisible = false,
+    onFilterSheetDismiss = {},
+    onFilterApplyClick = { _, _ -> },
+    onMangaClick = {},
+    onFetchMangaListNextPage = {},
+    onRetryFetchMangaListNextPage = {},
+    onRetry = {},
+    modifier = Modifier.fillMaxSize()
+  )
 }

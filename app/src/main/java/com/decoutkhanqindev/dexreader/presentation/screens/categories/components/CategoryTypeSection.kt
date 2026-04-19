@@ -12,7 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.category.CategoryTypeValue
+import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun CategoryTypeSection(
@@ -40,4 +42,38 @@ fun CategoryTypeSection(
       ) { id, name -> onItemClick(id, name) }
     }
   }
+}
+
+private val previewCategoryItems = persistentListOf(
+  CategoryModel(id = "1", title = "Action"),
+  CategoryModel(id = "2", title = "Adventure"),
+  CategoryModel(id = "3", title = "Comedy"),
+  CategoryModel(id = "4", title = "Drama"),
+  CategoryModel(id = "5", title = "Fantasy"),
+)
+
+@Preview
+@Composable
+private fun CategoryTypeSectionCollapsedPreview() {
+  CategoryTypeSection(
+    isExpanded = false,
+    type = CategoryTypeValue.GENRE,
+    items = previewCategoryItems,
+    modifier = Modifier.fillMaxWidth(),
+    onExpandClick = {},
+    onItemClick = { _, _ -> }
+  )
+}
+
+@Preview
+@Composable
+private fun CategoryTypeSectionExpandedPreview() {
+  CategoryTypeSection(
+    isExpanded = true,
+    type = CategoryTypeValue.GENRE,
+    items = previewCategoryItems,
+    modifier = Modifier.fillMaxWidth(),
+    onExpandClick = {},
+    onItemClick = { _, _ -> }
+  )
 }

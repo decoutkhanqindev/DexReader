@@ -1,9 +1,11 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.search.components
 
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
@@ -12,6 +14,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.search.SuggestionsUiS
 import com.decoutkhanqindev.dexreader.presentation.screens.search.components.results.ResultsSection
 import com.decoutkhanqindev.dexreader.presentation.screens.search.components.suggestions.SuggestionsSection
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 
 @Composable
@@ -54,4 +57,62 @@ fun SearchContent(
       onRetry = onRetry,
     )
   }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SearchContentIdlePreview() {
+  SearchContent(
+    query = "",
+    suggestionsUiState = SuggestionsUiState.Loading,
+    resultsUiState = BasePaginationUiState.FirstPageLoading,
+    isExpanded = false,
+    suggestionList = persistentListOf(),
+    modifier = Modifier.fillMaxSize(),
+    onSelectedSuggestion = {},
+    onSelectedManga = {},
+    onFetchMangaListNextPage = {},
+    onRetryFetchMangaListNextPage = {},
+    onRetry = {},
+  )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SearchContentSuggestionsPreview() {
+  SearchContent(
+    query = "One",
+    suggestionsUiState = SuggestionsUiState.Success,
+    resultsUiState = BasePaginationUiState.FirstPageLoading,
+    isExpanded = true,
+    suggestionList = persistentListOf(
+      "One Piece",
+      "One Punch Man",
+      "One Piece Episodio di Ace",
+    ),
+    modifier = Modifier.fillMaxSize(),
+    onSelectedSuggestion = {},
+    onSelectedManga = {},
+    onFetchMangaListNextPage = {},
+    onRetryFetchMangaListNextPage = {},
+    onRetry = {},
+  )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SearchContentResultsPreview() {
+  SearchContent(
+    query = "One Piece",
+    suggestionsUiState = SuggestionsUiState.Loading,
+    resultsUiState = BasePaginationUiState.Content<MangaModel>(),
+    isExpanded = false,
+    suggestionList = persistentListOf(),
+    modifier = Modifier.fillMaxSize(),
+    onSelectedSuggestion = {},
+    onSelectedManga = {},
+    onFetchMangaListNextPage = {},
+    onRetryFetchMangaListNextPage = {},
+    onRetry = {},
+  )
 }

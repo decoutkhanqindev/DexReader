@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
 
@@ -84,4 +85,57 @@ fun ActionButtonsSection(
       )
     }
   }
+}
+
+private val previewContinueChapter = ReadingHistoryModel(
+  id = "rh-001",
+  mangaId = "m-001",
+  mangaTitle = "One Piece",
+  mangaCoverUrl = "",
+  chapterId = "c-001",
+  chapterTitle = "Romance Dawn",
+  chapterNumber = "1",
+  chapterVolume = "1",
+  lastReadPage = 12,
+  pageCount = 46,
+  lastReadAt = "2 hours ago",
+)
+
+@Preview
+@Composable
+private fun ActionButtonsSectionNotStartedPreview() {
+  ActionButtonsSection(
+    isFavorite = false,
+    startedChapterId = null,
+    continueChapter = null,
+    modifier = Modifier.fillMaxWidth(),
+    onReadingClick = { _, _, _ -> },
+    onFavoriteClick = {}
+  )
+}
+
+@Preview
+@Composable
+private fun ActionButtonsSectionStartReadingPreview() {
+  ActionButtonsSection(
+    isFavorite = false,
+    startedChapterId = "c-001",
+    mangaId = "m-001",
+    continueChapter = null,
+    modifier = Modifier.fillMaxWidth(),
+    onReadingClick = { _, _, _ -> },
+    onFavoriteClick = {}
+  )
+}
+
+@Preview
+@Composable
+private fun ActionButtonsSectionContinueReadingFavoritePreview() {
+  ActionButtonsSection(
+    isFavorite = true,
+    continueChapter = previewContinueChapter,
+    modifier = Modifier.fillMaxWidth(),
+    onReadingClick = { _, _, _ -> },
+    onFavoriteClick = {}
+  )
 }

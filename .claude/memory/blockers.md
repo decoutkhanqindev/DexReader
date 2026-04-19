@@ -12,3 +12,4 @@
 - Box: `modifier, contentAlignment, ...`. Column: `modifier, verticalArrangement, horizontalAlignment`.
 - DropdownMenuItem: `text, onClick, modifier, ..., leadingIcon, ...`.
 - Text: `overflow(12)` before `maxLines(14)`; `style` always last.
+- Preview files: `*Screen.kt` and `*ViewModel.kt` are always skipped (hiltViewModel).

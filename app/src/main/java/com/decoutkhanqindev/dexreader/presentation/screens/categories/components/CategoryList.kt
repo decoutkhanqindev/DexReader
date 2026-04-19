@@ -8,7 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun CategoryList(
@@ -28,4 +31,21 @@ fun CategoryList(
       ) { id, name -> onItemClick(id, name) }
     }
   }
+}
+
+@Preview
+@Composable
+private fun CategoryListPreview() {
+  CategoryList(
+    items = persistentListOf(
+      CategoryModel(id = "1", title = "Action"),
+      CategoryModel(id = "2", title = "Adventure"),
+      CategoryModel(id = "3", title = "Comedy"),
+      CategoryModel(id = "4", title = "Drama"),
+      CategoryModel(id = "5", title = "Fantasy"),
+      CategoryModel(id = "6", title = "Slice of Life"),
+    ),
+    modifier = Modifier.fillMaxWidth(),
+    onItemClick = { _, _ -> }
+  )
 }

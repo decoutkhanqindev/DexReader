@@ -165,3 +165,21 @@ All `presentation/screens/` directories done: auth/ → common/ → home/ → ca
 **Shared-string placement rule:** Strings used in multiple screens go in the group that is their semantic home (e.g. `sign_in` → Auth). Strings with no clear owner go in Common. `icon_expand_more/less` → Common (used in categories + manga_details). `all_mangas_loaded` / `can_t_load_next_manga_page` → Common (multi-screen). FeatureError / UserError string keys → Common.
 
 **Why:** Easier navigation — developers can jump to the relevant section instead of scanning 200+ entries. All string names unchanged so no code references break.
+
+---
+
+## 2026-04-19
+
+### @Preview coverage — search/ and settings/ complete
+All non-Screen/ViewModel composables in `search/` and `settings/` now have previews.
+
+**search/ strategy:**
+- `ResultsSection`: 7 previews — one per `BasePaginationUiState` subtype + all 4 `BaseNextPageState` values for the `Content` branch. Private `previewManga` val used for shared sample data.
+- `SuggestionsSection`: 4 previews — one per `SuggestionsUiState` subtype (Loading, Error, Success-empty, Success-with-items).
+- `SearchContent`: 3 previews — empty query (Idle screen), isExpanded=true (suggestions), isExpanded=false (results).
+
+**settings/ strategy:**
+- `ThemeOptionList`: 3 previews — one per `ThemeModeValue` selection (SYSTEM, LIGHT, DARK).
+- `SettingsContent`: 4 previews — Default, Loading (blur applied), Success (success dialog visible), Error (error dialog visible).
+
+**Why:** Dialog-triggering states (isSuccess, isError, isShowSaveDialog) previewed with the flag set to `true` and `rememberSaveable` initialized to `true` — the dialog renders immediately in the preview pane without interaction.
