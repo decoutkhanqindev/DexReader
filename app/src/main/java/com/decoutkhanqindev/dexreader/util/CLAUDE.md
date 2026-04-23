@@ -24,7 +24,7 @@ Three `object` singletons. No Android framework dependency in `AsyncHandler` or 
 
 Structured exception handling for coroutines. All functions explicitly rethrow `CancellationException` before any catch block — this is load-bearing. Swallowing `CancellationException` creates zombie coroutines that keep running after their scope is cancelled.
 
-### Function selection guide
+### Function Selection Guide
 
 | Function | Returns | Use when |
 |---|---|---|
@@ -58,6 +58,16 @@ suspend inline fun <T> runSuspendCatching(
 fun <T> Flow<T>.toFlowResult(): Flow<Result<T>>
 ```
 
+### Critical Catch-Type Distinction
+
+**`runSuspendResultCatching` catches `Throwable`** — this includes `Error` subclasses (e.g. `OutOfMemoryError`). Everything that isn't `CancellationException` becomes `Result.failure`.
+
+**`runSuspendCatching` catches `Exception` only** — `Error` subclasses propagate uncaught. This is intentional: repository-layer exception mapping (`onCatch`) should only handle recoverable `Exception` subtypes.
+
+**`toFlowResult()` is not a suspend function** — it's a synchronous Flow transform. The `.catch` operator handles emissions-level exceptions and rethrows `CancellationException`.
+
+### Key Notes
+
 `runSuspendCatching` without a `catch` lambda is equivalent to `withContext` — prefer `withContext` directly in that case.
 
 `toFlowResult()` rethrows `CancellationException` from the `.catch` operator — it does **not** absorb it. A `CancellationException` rethrown by `toFlowResult` will propagate through `collect { }` in ViewModels and hit any outer `try/catch`. Always add a `catch (c: CancellationException) { throw c }` guard before `catch (e: Exception)` in VM coroutines.
@@ -73,47 +83,77 @@ fun String?.parseIso8601ToEpoch(): Long?   // ISO8601 string → epoch millis; r
 fun Long?.toTimeAgo(): String              // epoch millis → human-readable relative string
 ```
 
-**`toTimeAgo()` thresholds:**
+**`toTimeAgo()` thresholds (exact ms values from source):**
 
-| Diff | Output |
-|---|---|
-| < 60 s | "X seconds ago" (negative diff → "Unknown time") |
-| < 1 h | "X minutes ago" |
-| < 24 h | "X hours ago" |
-| < 7 d | "X days ago" |
-| < ~1 mo | "X weeks ago" |
-| < ~1 yr | "X months ago" |
-| ≥ ~1 yr | `dd/MM/yyyy` formatted date (locale-default) |
-| `null` | "Unknown time" |
+| diff value | Threshold | Output |
+|---|---|---|
+| diff < 0 | negative | `"Unknown time"` |
+| diff < 60_000 | 60 s | `"X seconds ago"` |
+| diff < 3_600_000 | 1 h | `"X minutes ago"` |
+| diff < 86_400_000 | 24 h | `"X hours ago"` |
+| diff < 604_800_000 | 7 d | `"X days ago"` |
+| diff < 2_629_746_000 | ~30.44 d | `"X weeks ago"` |
+| diff < 31_556_926_000 | ~365.24 d | `"X months ago"` |
+| else | ≥ ~1 yr | `dd/MM/yyyy` formatted date |
+| `null` input | — | `"Unknown time"` |
 
-ISO8601 parse format: `"yyyy-MM-dd'T'HH:mm:ssXXX"` with `Locale.US`. The `XXX` timezone pattern requires API 24+ (matches `minSdk`).
+**Format details:**
+- **ISO 8601 parse:** `"yyyy-MM-dd'T'HH:mm:ssXXX"` with `Locale.US`. The `XXX` timezone pattern requires API 24+ (matches `minSdk`). Silent catch on any parse failure — returns `null`.
+- **Date display:** `"dd/MM/yyyy"` with `Locale.getDefault()` (not `Locale.US` — locale-aware).
+- Both `SimpleDateFormat` instances are wrapped in `ThreadLocal.withInitial { }` for thread safety.
 
 ---
 
 ## NavTransitions
 
-Navigation animation presets and `NavHostController` extension functions. All animations: 500 ms, `FastOutSlowInEasing`, ±500 px horizontal slide + fade.
+Navigation animation presets and `NavHostController` extension functions.
 
-### Transition presets
+**Animation constants (private):**
+- `ANIMATION_DURATION = 500` ms
+- `OFFSET_X = 500` px
 
-| Function | Use for | Behaviour |
-|---|---|---|
-| `slideFromLeftTransitions()` | Home screen | Slides in/out from the **left** on both enter and pop |
-| `slideFromRightTransitions()` | Most screens (details, categories, search…) | Slides in from right, out to left; reverses on pop |
-| `slideEnterOnlyTransitions()` | Reader, Register, ForgotPassword | Only enter + popExit animated; `exit` and `popEnter` are `null` |
+**Animation specs:**
+- `slideAnimationSpec` — `tween(500, easing = FastOutSlowInEasing)` for `IntOffset`
+- `fadeAnimationSpec` — `tween(500)` with **default linear easing** (not FastOutSlowInEasing)
 
-Returns `NavTransitions.NavTransitions` data class with four nullable lambda fields (`enter`, `exit`, `popEnter`, `popExit`). Applied in `NavGraph.kt` via the `composable<Route>` transition params — do not define per-screen transitions outside of `NavGraph`.
+### Transition Presets
 
-### Navigation helpers (extension functions on `NavHostController`)
+| Function | Screens | enter | exit | popEnter | popExit |
+|---|---|---|---|---|---|
+| `slideFromLeftTransitions()` | Home | −500 | −500 | −500 | −500 |
+| `slideFromRightTransitions()` | Details, Categories, Search, … | +500 | −500 | −500 | +500 |
+| `slideEnterOnlyTransitions()` | Reader, Register, ForgotPassword | +500 | `null` | `null` | +500 |
+
+Offsets are `initialOffsetX` / `targetOffsetX` in pixels. Positive = right side; negative = left side.
+
+All presets combine a horizontal slide with a fade (`slideIn + fadeIn` / `slideOut + fadeOut`).
+
+Returns `NavTransitions.NavTransitions` data class with four nullable lambda fields:
+```kotlin
+data class NavTransitions(
+    val enter:    (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)?,
+    val exit:     (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)?,
+    val popEnter: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)?,
+    val popExit:  (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)?,
+)
+```
+
+Applied in `NavGraph.kt` via the `composable<Route>` transition params — do not define per-screen transitions outside of `NavGraph`.
+
+### Navigation Helpers (Extension Functions on `NavHostController`)
 
 ```kotlin
 // Drawer / bottom-nav switches — preserves and restores screen state
 fun NavHostController.navigatePreserveState(route: Any)
-// popUpTo(startDestination) { saveState = true }, launchSingleTop = true, restoreState = true
+// popUpTo(graph.startDestinationId) { saveState = true }, launchSingleTop = true, restoreState = true
 
 // Post-auth navigation — clears the auth back stack entirely
 inline fun <reified T : Any> NavHostController.navigateClearStack(route: Any)
 // popUpTo<T> { inclusive = true }, launchSingleTop = true
 ```
+
+**Key distinction between the two helpers:**
+- `navigatePreserveState` uses `graph.startDestinationId` (an `Int`) — always pops to the graph's start, regardless of type. Used for menu/drawer navigation where state must be preserved.
+- `navigateClearStack<T>` uses a reified type parameter `T` — pops to (and removes) a specific named route. Used for auth flows: `navigateClearStack<NavRoute.Login>(NavRoute.Home)` removes `Login` from the back stack.
 
 `navigateClearStack<T>` takes a **type parameter** `T` — the screen to pop up to (inclusive). Example: after login succeeds, `navigateClearStack<NavRoute.Login>(NavRoute.Home)` removes all auth screens.

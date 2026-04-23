@@ -15,6 +15,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Do not leave this file stale. An outdated CLAUDE.md is worse than no CLAUDE.md.
 
+## Git Rules
+
+**All git commands must only be executed when explicitly requested or approved by the user.** Claude must never run git operations autonomously. This includes:
+
+- `git add` / `git commit` — only after user asks to commit
+- `git push` — only after user explicitly asks to push
+- `git checkout` / `git switch` / `git branch` — only on user instruction
+- `git reset` / `git restore` / `git clean` — only on user instruction
+- `gh pr create` / `gh pr merge` — only on user instruction
+
+When in doubt, show the command and ask for confirmation before running it.
+
 ## Build Commands
 
 ```bash
