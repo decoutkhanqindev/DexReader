@@ -36,12 +36,14 @@ fun LoginContent(
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
   var isShowSuccessDialog by rememberSaveable { mutableStateOf(true) }
 
-  Box(
-    modifier =
-      if (uiState.isLoading) modifier.blur(8.dp)
-      else modifier
-  ) {
-    AuthContent(modifier = Modifier.fillMaxSize()) {
+  Box(modifier = modifier) {
+    AuthContent(
+      modifier = Modifier
+        .fillMaxSize()
+        .let {
+          if (uiState.isLoading) it.blur(8.dp) else it
+        }
+    ) {
       LoginForm(
         email = uiState.email,
         emailError = uiState.emailError,
@@ -100,8 +102,7 @@ private fun LoginContentPreview() {
       onLoginSuccess = {},
       onRegisterClick = {},
       onForgotPasswordClick = {},
-      onRetry = {}
-    )
+      onRetry = {})
   }
 }
 
@@ -118,8 +119,7 @@ private fun LoginContentLoadingPreview() {
       onLoginSuccess = {},
       onRegisterClick = {},
       onForgotPasswordClick = {},
-      onRetry = {}
-    )
+      onRetry = {})
   }
 }
 
@@ -136,8 +136,7 @@ private fun LoginContentErrorPreview() {
       onLoginSuccess = {},
       onRegisterClick = {},
       onForgotPasswordClick = {},
-      onRetry = {}
-    )
+      onRetry = {})
   }
 }
 
@@ -154,7 +153,6 @@ private fun LoginContentSuccessPreview() {
       onLoginSuccess = {},
       onRegisterClick = {},
       onForgotPasswordClick = {},
-      onRetry = {}
-    )
+      onRetry = {})
   }
 }

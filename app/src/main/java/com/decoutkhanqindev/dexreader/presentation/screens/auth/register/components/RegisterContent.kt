@@ -37,12 +37,14 @@ fun RegisterContent(
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
   var isShowSuccessDialog by rememberSaveable { mutableStateOf(true) }
 
-  Box(
-    modifier =
-      if (uiState.isLoading) modifier.blur(8.dp)
-      else modifier
-  ) {
-    AuthContent(modifier = Modifier.fillMaxSize()) {
+  Box(modifier = modifier) {
+    AuthContent(
+      modifier = Modifier
+        .fillMaxSize()
+        .let {
+          if (uiState.isLoading) it.blur(8.dp) else it
+        }
+    ) {
       RegisterForm(
         email = uiState.email,
         emailError = uiState.emailError,
