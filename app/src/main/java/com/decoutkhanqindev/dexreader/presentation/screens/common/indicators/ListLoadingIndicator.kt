@@ -43,7 +43,7 @@ fun ListLoadingIndicator(modifier: Modifier = Modifier) {
       Icon(
         painter = painterResource(R.drawable.app_icon),
         contentDescription = stringResource(R.string.app_name),
-        modifier = Modifier.size(32.dp)
+        modifier = Modifier.size(36.dp)
       )
 
       LinearProgressIndicator(

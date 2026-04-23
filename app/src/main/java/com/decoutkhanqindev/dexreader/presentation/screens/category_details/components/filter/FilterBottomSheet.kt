@@ -40,7 +40,6 @@ fun FilterBottomSheet(
   ) -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
   var selectedStatusOptions: ImmutableList<MangaStatusValue> by rememberSaveable(
     stateSaver = listSaver(
       save = { list -> list.map { it.name } },
@@ -61,7 +60,7 @@ fun FilterBottomSheet(
   }
 
   ModalBottomSheet(
-    sheetState = sheetState,
+    sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     onDismissRequest = onDismiss,
     modifier = modifier
   ) {

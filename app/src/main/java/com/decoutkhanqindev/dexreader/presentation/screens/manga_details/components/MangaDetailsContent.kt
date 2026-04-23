@@ -164,9 +164,8 @@ fun MangaDetailsContent(
           }
 
           ActionsSection(
-            itemsSize = (mangaChaptersUiState as? BasePaginationUiState.Content<ChapterModel>)?.currentList?.size
-              ?: 0,
-            firstVisibleItemIndex = lazyListState.firstVisibleItemIndex,
+            itemsSize = (mangaChaptersUiState as? BasePaginationUiState.Content<ChapterModel>)?.currentList?.size ?: 0,
+            listState = lazyListState,
             isFavorite = isFavorite,
             startedChapterId = startedChapterId,
             mangaId = mangaId,

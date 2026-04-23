@@ -38,10 +38,8 @@ fun ForgotPasswordForm(
   onSubmitClick: () -> Unit,
   onNavigateBack: () -> Unit,
 ) {
-  val scrollState = rememberScrollState()
-
   Card(
-    modifier = modifier.verticalScroll(scrollState),
+    modifier = modifier.verticalScroll(rememberScrollState()),
     shape = RoundedCornerShape(16.dp),
     colors =
       CardDefaults.cardColors(

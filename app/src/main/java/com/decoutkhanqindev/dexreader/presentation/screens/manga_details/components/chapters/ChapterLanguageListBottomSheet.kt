@@ -35,12 +35,9 @@ fun ChapterLanguageListBottomSheet(
   onItemClick: (MangaLanguageValue) -> Unit,
   onDismissClick: () -> Unit,
 ) {
-  val sheetState = rememberModalBottomSheetState()
-
   ModalBottomSheet(
     onDismissRequest = onDismissClick,
     modifier = modifier,
-    sheetState = sheetState,
   ) {
     Text(
       text = stringResource(R.string.language_options),

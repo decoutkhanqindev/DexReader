@@ -46,10 +46,8 @@ fun LoginForm(
   onRegisterClick: () -> Unit,
   onForgotPasswordClick: () -> Unit,
 ) {
-  val scrollState = rememberScrollState()
-
   Card(
-    modifier = modifier.verticalScroll(scrollState),
+    modifier = modifier.verticalScroll(rememberScrollState()),
     shape = RoundedCornerShape(16.dp),
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh)
   ) {

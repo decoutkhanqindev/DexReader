@@ -68,7 +68,7 @@ fun VerticalGridMangaList(
 
     MoveToTopButton(
       itemsSize = items.size,
-      firstVisibleItemIndex = lazyGridState.firstVisibleItemIndex,
+      gridState = lazyGridState,
       modifier = Modifier
         .align(Alignment.BottomEnd)
         .padding(16.dp)

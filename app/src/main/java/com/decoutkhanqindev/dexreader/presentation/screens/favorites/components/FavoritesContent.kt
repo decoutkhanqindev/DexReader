@@ -144,7 +144,7 @@ fun FavoritesContent(
 
           MoveToTopButton(
             itemsSize = favoriteMangaList.size,
-            firstVisibleItemIndex = lazyGridState.firstVisibleItemIndex,
+            gridState = lazyGridState,
             modifier = Modifier
               .align(Alignment.BottomEnd)
               .padding(16.dp)

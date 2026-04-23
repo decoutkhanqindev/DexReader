@@ -115,7 +115,7 @@ fun ReadingHistoryList(
 
     MoveToTopButton(
       itemsSize = readingHistoryList.size,
-      firstVisibleItemIndex = lazyListState.firstVisibleItemIndex,
+      listState = lazyListState,
       modifier = Modifier
         .align(Alignment.BottomEnd)
         .padding(16.dp)

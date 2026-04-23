@@ -37,7 +37,6 @@ fun SortBottomSheet(
   ) -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
   var selectedCriteria by rememberSaveable(
     stateSaver = Saver(
       save = { it.name },
@@ -57,7 +56,7 @@ fun SortBottomSheet(
 
   ModalBottomSheet(
     onDismissRequest = onDismiss,
-    sheetState = sheetState,
+    sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     modifier = modifier
   ) {
     Text(

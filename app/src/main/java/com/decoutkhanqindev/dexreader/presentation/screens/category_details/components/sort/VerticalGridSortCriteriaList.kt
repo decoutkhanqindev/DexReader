@@ -21,10 +21,7 @@ fun VerticalGridSortCriteriaList(
   onItemClick: (MangaSortCriteriaValue) -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  val lazyGridState = rememberLazyGridState()
-
   LazyVerticalGrid(
-    state = lazyGridState,
     columns = GridCells.Fixed(2),
     modifier = modifier
   ) {
