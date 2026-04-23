@@ -2,6 +2,19 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## IMPORTANT: Keep This File in Sync
+
+**Whenever the project's overall architecture, build setup, or cross-cutting patterns change, this CLAUDE.md must be updated in the same session.** This includes:
+
+- New layer or top-level module added → update Architecture section and package tree
+- Build command changed (new Gradle task, new required property) → update Build Commands section
+- Exception hierarchy updated (new subtype or rename) → update Exception Hierarchy section
+- New Hilt module added or removed → update Hilt DI Modules table
+- New utility added to `util/` → update Key Utilities section
+- Use case or error-handling pattern changed → update the relevant section
+
+Do not leave this file stale. An outdated CLAUDE.md is worse than no CLAUDE.md.
+
 ## Build Commands
 
 ```bash

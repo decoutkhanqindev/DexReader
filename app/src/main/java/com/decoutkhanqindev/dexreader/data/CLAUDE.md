@@ -2,6 +2,21 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## IMPORTANT: Keep This File in Sync
+
+**Whenever any file in the `data/` layer is added, removed, or modified, this CLAUDE.md must be updated in the same session to reflect the change.** This includes:
+
+- New mapper object added or removed → update Package Structure and mapper list
+- Mapper function signature changed → update the relevant mapper section
+- New repository impl added → update Package Structure
+- New Retrofit endpoint or response DTO added → update Network section
+- Room schema changed (new entity, migration, column rename) → update Local section
+- New Firebase source interface or DTO added → update Firebase section
+- New DataStore preference key added → update Local section
+- Exception mapping rule changed → update Exception Mapping section
+
+Do not leave this file stale. An outdated CLAUDE.md is worse than no CLAUDE.md.
+
 ## Data Layer Rules
 
 This layer implements domain interfaces. It may import Android/Firebase/Retrofit/Room, but must never import `presentation/` classes. Domain types (`domain/entity/`, `domain/exception/`) flow inward — this layer depends on them, not the other way.

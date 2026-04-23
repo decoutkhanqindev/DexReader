@@ -2,6 +2,20 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## IMPORTANT: Keep This File in Sync
+
+**Whenever any file in the `domain/` layer is added, removed, or modified, this CLAUDE.md must be updated in the same session to reflect the change.** This includes:
+
+- New entity added or removed → update Package Structure and entity reference
+- Entity field added, removed, or renamed → update the entity's field list
+- New companion method or validation rule added → update the relevant entity section
+- New `DomainException` subtype added or removed → update Exception Hierarchy
+- New repository interface added → update Package Structure
+- New use case added or removed → update Package Structure and use case count
+- Use case pattern changed (signature, return type) → update Use Case Pattern section
+
+Do not leave this file stale. An outdated CLAUDE.md is worse than no CLAUDE.md.
+
 ## Domain Layer Rules
 
 This layer is **pure Kotlin only** — zero Android/framework imports. No Hilt, no Retrofit, no Room, no Compose. Any dependency on an Android class is a CA violation.

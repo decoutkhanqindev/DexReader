@@ -2,6 +2,18 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## IMPORTANT: Keep This File in Sync
+
+**Whenever any file in the `di/` layer is added, removed, or modified, this CLAUDE.md must be updated in the same session to reflect the change.** This includes:
+
+- New Hilt module added → update module list and package tree
+- New `@Binds` or `@Provides` binding added → update the relevant module section
+- New Firebase source bound → update FirebaseModule section
+- Module type changed (`object` ↔ `interface`) → update Module Patterns section
+- DI scope changed (e.g., new non-singleton binding) → update overview note
+
+Do not leave this file stale. An outdated CLAUDE.md is worse than no CLAUDE.md.
+
 ## DI Layer Overview
 
 4 Hilt modules, all `@InstallIn(SingletonComponent::class)` — every binding is application-scoped (`@Singleton`). There are no scoped (activity/fragment/viewmodel) components.

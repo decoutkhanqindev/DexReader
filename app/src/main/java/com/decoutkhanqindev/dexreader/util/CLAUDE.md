@@ -2,6 +2,18 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## IMPORTANT: Keep This File in Sync
+
+**Whenever any file in the `util/` directory is added, removed, or modified, this CLAUDE.md must be updated in the same session to reflect the change.** This includes:
+
+- New utility object or file added → update overview list
+- New function added to `AsyncHandler`, `TimeAgo`, or `NavTransitions` → document its signature
+- Existing function signature changed → update the Signatures section
+- `TimeAgo` threshold behavior changed → update threshold table/description
+- `NavTransitions` animation preset added or removed → update the relevant section
+
+Do not leave this file stale. An outdated CLAUDE.md is worse than no CLAUDE.md.
+
 ## util/ Overview
 
 Three `object` singletons. No Android framework dependency in `AsyncHandler` or `TimeAgo` — pure Kotlin/JVM. `NavTransitions` depends on Compose Navigation.
