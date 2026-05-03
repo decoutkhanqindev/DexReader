@@ -1,10 +1,10 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.common.states
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
@@ -28,16 +28,16 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
     contentAlignment = Alignment.Center
   ) {
     Column(
-      modifier = Modifier
-        .fillMaxSize()
-        .shimmer(),
+      modifier = Modifier.fillMaxSize(),
       verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      Icon(
+      Image(
         painter = painterResource(R.drawable.app_icon),
         contentDescription = stringResource(R.string.app_name),
-        modifier = Modifier.size(100.dp)
+        modifier = Modifier
+          .size(100.dp)
+          .shimmer()
       )
 
       LinearProgressIndicator(

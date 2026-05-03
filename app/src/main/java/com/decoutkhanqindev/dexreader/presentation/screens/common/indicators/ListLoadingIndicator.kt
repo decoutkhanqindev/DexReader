@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.common.indicators
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -28,9 +29,7 @@ fun ListLoadingIndicator(modifier: Modifier = Modifier) {
     contentAlignment = Alignment.Center
   ) {
     Row(
-      modifier = Modifier
-        .fillMaxWidth()
-        .shimmer(),
+      modifier = Modifier.fillMaxWidth(),
       horizontalArrangement = Arrangement.SpaceAround,
       verticalAlignment = Alignment.CenterVertically
     ) {
@@ -40,10 +39,12 @@ fun ListLoadingIndicator(modifier: Modifier = Modifier) {
         trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
       )
 
-      Icon(
+      Image(
         painter = painterResource(R.drawable.app_icon),
         contentDescription = stringResource(R.string.app_name),
-        modifier = Modifier.size(36.dp)
+        modifier = Modifier
+          .size(36.dp)
+          .shimmer()
       )
 
       LinearProgressIndicator(

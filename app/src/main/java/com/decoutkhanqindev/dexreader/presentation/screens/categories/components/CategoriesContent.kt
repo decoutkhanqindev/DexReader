@@ -1,11 +1,12 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.categories.components
 
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -60,23 +61,21 @@ fun CategoriesContent(
         )
       ) { mutableStateOf<CategoryTypeValue?>(null) }
 
-      LazyColumn(
+      Column(
         modifier = modifier
           .padding(top = 8.dp)
           .padding(horizontal = 4.dp)
+          .verticalScroll(rememberScrollState())
       ) {
-        items(
-          items = uiState.categoryMap.keys.toPersistentList(),
-          key = { it.name }
-        ) { type ->
+        uiState.categoryMap.keys.toPersistentList().forEach {
           CategoryTypeSection(
-            isExpanded = expandedType == type,
-            type = type,
-            items = uiState.categoryMap[type] ?: persistentListOf(),
+            isExpanded = expandedType == it,
+            type = it,
+            items = uiState.categoryMap[it] ?: persistentListOf(),
             modifier = Modifier
               .fillMaxWidth()
               .padding(bottom = 12.dp),
-            onExpandClick = { expandedType = if (expandedType == type) null else type },
+            onExpandClick = { expandedType = if (expandedType == it) null else it },
             onItemClick = onItemClick,
           )
         }
