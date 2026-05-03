@@ -294,6 +294,7 @@ fun HorizontalMangaList(
 
 // 2-column vertical grid — used on CategoryDetails, Search, Favorites screens
 fun VerticalGridMangaList(
+    lazyGridState: LazyGridState,             // hoisted from caller — caller owns scroll state
     items: ImmutableList<MangaModel>,
     modifier: Modifier = Modifier,
     onItemClick: (MangaModel) -> Unit,
@@ -301,7 +302,7 @@ fun VerticalGridMangaList(
 )
 // → LazyVerticalGrid(GridCells.Fixed(2)), key = MangaModel::id
 // → Final item uses item(span = { GridItemSpan(maxLineSpan) }) for the load-more slot
-// → MoveToTopButton overlaid at BottomEnd — animates scroll to top via coroutineScope
+// → Grid state is hoisted to caller; MoveToTopButton is the caller's responsibility
 
 fun MangaItem(
     item: MangaModel,
@@ -333,13 +334,13 @@ Box(modifier = Modifier.shimmer(isEnable = !isImageLoaded)) {
 
 ```kotlin
 fun LoadingScreen(modifier: Modifier = Modifier)
-// → Full-screen app icon + LinearProgressIndicator; applies shimmer() to the whole column
+// → Full-screen centered column: app icon (100.dp, shimmer applied to icon only) + LinearProgressIndicator
 
 fun IdleScreen(message: String, modifier: Modifier = Modifier)
 // → Centered app icon + message text (FontWeight.Light) — used for empty states and login prompts
 
 fun ListLoadingIndicator(modifier: Modifier = Modifier)
-// → Row: LinearProgressIndicator | app icon | LinearProgressIndicator with shimmer
+// → Row: LinearProgressIndicator | app icon (36.dp, shimmer applied to icon only) | LinearProgressIndicator
 
 fun LoadMoreMessage(modifier: Modifier = Modifier, onClick: () -> Unit)
 // → Row: HorizontalDivider | "Load more" text | HorizontalDivider — clickable to trigger next page
@@ -389,10 +390,14 @@ Column(modifier = modifier.background(colorScheme.surface)) {
 }
 ```
 
-**Loading blur** — applied in `*Content.kt` on the outer `Box`:
+**Loading blur** — applied in `*Content.kt` on `AuthContent`'s modifier (not the outer `Box`):
 ```kotlin
-Box(modifier = if (uiState.isLoading) modifier.blur(8.dp) else modifier) {
-    AuthContent { LoginForm(...) }
+Box(modifier = modifier) {
+    AuthContent(
+        modifier = Modifier
+            .fillMaxSize()
+            .let { if (uiState.isLoading) it.blur(8.dp) else it }
+    ) { LoginForm(...) }
     when {
         uiState.isLoading -> LoadingScreen(modifier = Modifier.fillMaxSize())
         uiState.isError -> if (isShowErrorDialog) NotificationDialog(...)
@@ -630,14 +635,15 @@ Scaffold(
 )
 ```
 
-**`HorizontalPager`** renders chapter pages; current page is tracked in `ChapterPagesUiState.Success.currentChapterPage` and written to history via `onUpdateChapterPage` callback.
+**`HorizontalPager`** renders chapter pages with `beyondViewportPageCount = 2` (preloads 2 pages on each side). Current page is tracked in `ChapterPagesUiState.Success.currentChapterPage` and written to history via `onUpdateChapterPage` callback.
 
 ---
 
 ## Error Types
 
-**`FeatureError`** — used by all non-auth screens. Sealed class with `@StringRes messageRes`:
+**`FeatureError`** — used by all non-auth screens. `@Immutable` sealed class with `@StringRes messageRes`:
 ```kotlin
+@Immutable
 sealed class FeatureError(@param:StringRes val messageRes: Int) {
     data object NetworkUnavailable : FeatureError(R.string.no_internet_connection)
     data object ServerUnavailable  : FeatureError(R.string.error_server_unavailable)
@@ -648,9 +654,9 @@ sealed class FeatureError(@param:StringRes val messageRes: Int) {
 }
 ```
 
-**`UserError`** — used only by auth screens. `@Stable` sealed class with nested sealed classes for field-level errors:
+**`UserError`** — used only by auth screens. `@Immutable` sealed class with nested sealed classes for field-level errors:
 ```kotlin
-@Stable
+@Immutable
 sealed class UserError(@param:StringRes val messageRes: Int) {
     sealed class Email(@StringRes messageRes: Int) : UserError(messageRes) {
         data object Required    : Email(R.string.email_required)

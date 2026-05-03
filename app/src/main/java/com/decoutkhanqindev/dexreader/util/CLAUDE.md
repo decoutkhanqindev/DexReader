@@ -130,6 +130,7 @@ All presets combine a horizontal slide with a fade (`slideIn + fadeIn` / `slideO
 
 Returns `NavTransitions.NavTransitions` data class with four nullable lambda fields:
 ```kotlin
+@Immutable
 data class NavTransitions(
     val enter:    (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)?,
     val exit:     (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)?,
