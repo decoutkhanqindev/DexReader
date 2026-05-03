@@ -90,7 +90,7 @@ fun FavoritesContent(
           ) {
             items(
               items = favoriteMangaList,
-              key = { it.id }
+              key = FavoriteMangaModel::id
             ) { manga ->
               FavoriteMangaItem(
                 manga = manga,

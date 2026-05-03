@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.sort
 
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,16 +22,17 @@ fun VerticalGridSortCriteriaList(
   onItemClick: (MangaSortCriteriaValue) -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  LazyVerticalGrid(
-    columns = GridCells.Fixed(2),
+  FlowRow(
+    maxItemsInEachRow = 2,
     modifier = modifier
   ) {
-    items(MangaSortCriteriaValue.entries, key = { it.name }) { criteria ->
+    MangaSortCriteriaValue.entries.forEach { criteria ->
       SortCriteriaItem(
         isSelected = selectedItem == criteria,
         item = criteria,
         onClick = { onItemClick(criteria) },
         modifier = Modifier
+          .weight(1f)
           .padding(4.dp)
           .size(50.dp)
       )

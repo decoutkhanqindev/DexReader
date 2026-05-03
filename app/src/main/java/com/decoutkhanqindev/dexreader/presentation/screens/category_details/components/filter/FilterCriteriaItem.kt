@@ -39,7 +39,7 @@ fun <T> FilterCriteriaItem(
   ) {
     Column(
       modifier = Modifier
-        .fillMaxSize()
+        .fillMaxWidth()
         .padding(8.dp)
     ) {
       Text(
