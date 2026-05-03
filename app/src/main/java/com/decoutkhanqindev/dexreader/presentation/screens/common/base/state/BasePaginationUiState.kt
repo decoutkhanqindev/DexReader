@@ -11,8 +11,7 @@ sealed interface BasePaginationUiState<out T> {
   data object FirstPageLoading : BasePaginationUiState<Nothing>
 
   @Immutable
-  data class FirstPageError(val error: FeatureError = FeatureError.Generic) :
-    BasePaginationUiState<Nothing>
+  data class FirstPageError(val error: FeatureError = FeatureError.Generic) : BasePaginationUiState<Nothing>
 
   @Immutable
   data class Content<T>(

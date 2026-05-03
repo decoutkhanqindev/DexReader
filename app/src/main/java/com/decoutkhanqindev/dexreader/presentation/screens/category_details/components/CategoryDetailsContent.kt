@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -25,12 +27,11 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaConten
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailsCriteriaUiState
-import com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.actions.SortAndFilterButtons
+import com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.actions.SortAndFilterSection
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.filter.FilterBottomSheet
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.sort.SortBottomSheet
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
-import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.ListLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.screens.common.lists.manga.VerticalGridMangaList
@@ -41,6 +42,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPage
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.launch
 
 @Composable
 fun CategoryDetailsContent(
@@ -60,6 +62,8 @@ fun CategoryDetailsContent(
   onRetry: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
+  val gridState = rememberLazyGridState()
+  val coroutineScope = rememberCoroutineScope()
   var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
   var isShowSortBottomSheet by rememberSaveable { mutableStateOf(false) }
   var isShowFilterBottomSheet by rememberSaveable { mutableStateOf(false) }
@@ -87,6 +91,7 @@ fun CategoryDetailsContent(
 
         Box(modifier = Modifier.fillMaxSize()) {
           VerticalGridMangaList(
+            lazyGridState = gridState,
             items = mangaList,
             onItemClick = { onMangaClick(it.id) },
             loadMoreContent = {
@@ -126,17 +131,17 @@ fun CategoryDetailsContent(
             modifier = Modifier.fillMaxSize()
           )
 
-          SortAndFilterButtons(
+          SortAndFilterSection(
+            itemsSize = mangaList.size,
+            gridState = gridState,
+            modifier = Modifier.align(Alignment.BottomCenter),
+            onMoveToTopClick = {
+              coroutineScope.launch {
+                gridState.animateScrollToItem(0)
+              }
+            },
             onSortClick = { isShowSortBottomSheet = true },
             onFilterClick = { isShowFilterBottomSheet = true },
-            modifier = Modifier
-              .fillMaxWidth()
-              .align(Alignment.BottomCenter)
-              .blurBackground(
-                topAlpha = 0f,
-                bottomAlpha = 1f,
-              )
-              .padding(16.dp)
           )
         }
       }

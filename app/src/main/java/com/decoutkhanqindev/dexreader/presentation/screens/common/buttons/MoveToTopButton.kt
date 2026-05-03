@@ -1,6 +1,5 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.common.buttons
 
-import android.R.attr.onClick
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
@@ -32,7 +31,7 @@ fun MoveToTopButton(
   modifier: Modifier = Modifier,
   onClick: () -> Unit,
 ) {
-  val isVisible by remember {
+  val isVisible by remember(listState, gridState, itemsSize) {
     derivedStateOf {
       if (listState != null) {
         listState.firstVisibleItemIndex > 0 && itemsSize > 15

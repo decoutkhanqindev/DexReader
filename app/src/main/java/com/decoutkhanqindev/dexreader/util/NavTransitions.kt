@@ -10,6 +10,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.unit.IntOffset
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
@@ -36,22 +37,30 @@ object NavTransitions {
    * Enter: slides in from left with fade
    * Exit: slides out to left with fade
    */
-  fun slideFromLeftTransitions(): NavTransitions = NavTransitions(
+  fun slideFromLeftTransitions() = NavTransitions(
     enter = {
-      slideInHorizontally(animationSpec = slideAnimationSpec, initialOffsetX = { -OFFSET_X }) +
-          fadeIn(animationSpec = fadeAnimationSpec)
+      slideInHorizontally(
+        animationSpec = slideAnimationSpec,
+        initialOffsetX = { -OFFSET_X }
+      ) + fadeIn(animationSpec = fadeAnimationSpec)
     },
     exit = {
-      slideOutHorizontally(animationSpec = slideAnimationSpec, targetOffsetX = { -OFFSET_X }) +
-          fadeOut(animationSpec = fadeAnimationSpec)
+      slideOutHorizontally(
+        animationSpec = slideAnimationSpec,
+        targetOffsetX = { -OFFSET_X }
+      ) + fadeOut(animationSpec = fadeAnimationSpec)
     },
     popEnter = {
-      slideInHorizontally(animationSpec = slideAnimationSpec, initialOffsetX = { -OFFSET_X }) +
-          fadeIn(animationSpec = fadeAnimationSpec)
+      slideInHorizontally(
+        animationSpec = slideAnimationSpec,
+        initialOffsetX = { -OFFSET_X }
+      ) + fadeIn(animationSpec = fadeAnimationSpec)
     },
     popExit = {
-      slideOutHorizontally(animationSpec = slideAnimationSpec, targetOffsetX = { -OFFSET_X }) +
-          fadeOut(animationSpec = fadeAnimationSpec)
+      slideOutHorizontally(
+        animationSpec = slideAnimationSpec,
+        targetOffsetX = { -OFFSET_X }
+      ) + fadeOut(animationSpec = fadeAnimationSpec)
     }
   )
 
@@ -62,22 +71,30 @@ object NavTransitions {
    * PopEnter: slides in from left with fade
    * PopExit: slides out to right with fade
    */
-  fun slideFromRightTransitions(): NavTransitions = NavTransitions(
+  fun slideFromRightTransitions() = NavTransitions(
     enter = {
-      slideInHorizontally(animationSpec = slideAnimationSpec, initialOffsetX = { OFFSET_X }) +
-          fadeIn(animationSpec = fadeAnimationSpec)
+      slideInHorizontally(
+        animationSpec = slideAnimationSpec,
+        initialOffsetX = { OFFSET_X }
+      ) + fadeIn(animationSpec = fadeAnimationSpec)
     },
     exit = {
-      slideOutHorizontally(animationSpec = slideAnimationSpec, targetOffsetX = { -OFFSET_X }) +
-          fadeOut(animationSpec = fadeAnimationSpec)
+      slideOutHorizontally(
+        animationSpec = slideAnimationSpec,
+        targetOffsetX = { -OFFSET_X }
+      ) + fadeOut(animationSpec = fadeAnimationSpec)
     },
     popEnter = {
-      slideInHorizontally(animationSpec = slideAnimationSpec, initialOffsetX = { -OFFSET_X }) +
-          fadeIn(animationSpec = fadeAnimationSpec)
+      slideInHorizontally(
+        animationSpec = slideAnimationSpec,
+        initialOffsetX = { -OFFSET_X }
+      ) + fadeIn(animationSpec = fadeAnimationSpec)
     },
     popExit = {
-      slideOutHorizontally(animationSpec = slideAnimationSpec, targetOffsetX = { OFFSET_X }) +
-          fadeOut(animationSpec = fadeAnimationSpec)
+      slideOutHorizontally(
+        animationSpec = slideAnimationSpec,
+        targetOffsetX = { OFFSET_X }
+      ) + fadeOut(animationSpec = fadeAnimationSpec)
     }
   )
 
@@ -85,20 +102,25 @@ object NavTransitions {
    * Simple ENTER ONLY transition (for Reader, Register, ForgotPassword screens)
    * Only enter and popExit animations
    */
-  fun slideEnterOnlyTransitions(): NavTransitions = NavTransitions(
+  fun slideEnterOnlyTransitions() = NavTransitions(
     enter = {
-      slideInHorizontally(animationSpec = slideAnimationSpec, initialOffsetX = { OFFSET_X }) +
-          fadeIn(animationSpec = fadeAnimationSpec)
+      slideInHorizontally(
+        animationSpec = slideAnimationSpec,
+        initialOffsetX = { OFFSET_X }
+      ) + fadeIn(animationSpec = fadeAnimationSpec)
     },
     exit = null,
     popEnter = null,
     popExit = {
-      slideOutHorizontally(animationSpec = slideAnimationSpec, targetOffsetX = { OFFSET_X }) +
-          fadeOut(animationSpec = fadeAnimationSpec)
+      slideOutHorizontally(
+        animationSpec = slideAnimationSpec,
+        targetOffsetX = { OFFSET_X }
+      ) + fadeOut(animationSpec = fadeAnimationSpec)
     }
   )
 
   // Data class to hold navigation transition animations
+  @Immutable
   data class NavTransitions(
     val enter: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)?,
     val exit: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)?,

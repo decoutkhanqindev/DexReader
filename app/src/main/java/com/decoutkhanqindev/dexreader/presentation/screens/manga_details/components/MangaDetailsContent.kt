@@ -32,7 +32,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.MangaDetailsUiState
-import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.actions.ActionsSection
+import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.actions.ReadingAndFavoriteSection
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.chapters.MangaChaptersSection
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.info.MangaInfoSection
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.info.previewManga
@@ -163,7 +163,7 @@ fun MangaDetailsContent(
             }
           }
 
-          ActionsSection(
+          ReadingAndFavoriteSection(
             itemsSize = (mangaChaptersUiState as? BasePaginationUiState.Content<ChapterModel>)?.currentList?.size ?: 0,
             listState = lazyListState,
             isFavorite = isFavorite,

@@ -16,11 +16,10 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
-import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmer
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
-fun ActionButtons(
+fun ReadingAndFavoriteButtons(
   isFavorite: Boolean,
   startedChapterId: String? = null,
   mangaId: String = "",
@@ -105,9 +104,9 @@ private val previewContinueChapter = ReadingHistoryModel(
 
 @Preview
 @Composable
-private fun ActionButtonsNotStartedPreview() {
+private fun ReadingAndFavoriteButtonsNotStartedPreview() {
   DexReaderTheme {
-    ActionButtons(
+    ReadingAndFavoriteButtons(
       isFavorite = false,
       startedChapterId = null,
       continueChapter = null,
@@ -120,9 +119,9 @@ private fun ActionButtonsNotStartedPreview() {
 
 @Preview
 @Composable
-private fun ActionButtonsStartReadingPreview() {
+private fun ReadingAndFavoriteButtonsStartReadingPreview() {
   DexReaderTheme {
-    ActionButtons(
+    ReadingAndFavoriteButtons(
       isFavorite = false,
       startedChapterId = "c-001",
       mangaId = "m-001",
@@ -136,9 +135,9 @@ private fun ActionButtonsStartReadingPreview() {
 
 @Preview
 @Composable
-private fun ActionButtonsContinueReadingFavoritePreview() {
+private fun ReadingAndFavoriteButtonsContinueReadingFavoritePreview() {
   DexReaderTheme {
-    ActionButtons(
+    ReadingAndFavoriteButtons(
       isFavorite = true,
       continueChapter = previewContinueChapter,
       modifier = Modifier.fillMaxWidth(),
