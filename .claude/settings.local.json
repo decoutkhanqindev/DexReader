@@ -63,7 +63,16 @@
       "Bash(sed 's/name=\"\"\"\"//')",
       "Bash(sed 's/\"\"\"\"//')",
       "Bash('BASE=C:/Android Development/dex_reader/DexReader/app/src/main/java/com/decoutkhanqindev/dexreader/presentation' grep -roh R.string.[a-z_0-9]* $BASE --include=*.kt)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(where android *)",
+      "Bash(android --version)",
+      "Bash(where adb *)",
+      "Bash(adb --version)",
+      "Bash(android emulator *)",
+      "Bash(Remove-Item -Recurse -Force \"C:\\\\Android Development\\\\dex_reader\\\\DexReader\\\\app\\\\src\\\\main\\\\java\\\\com\\\\decoutkhanqindev\\\\dexreader\\\\presentation\\\\screens\\\\search_new\")",
+      "Bash(Remove-Item -Force \"C:\\\\Android Development\\\\dex_reader\\\\DexReader\\\\search_old_result.md\")",
+      "Bash(Remove-Item -Force \"C:\\\\Android Development\\\\dex_reader\\\\DexReader\\\\search_new_result.md\")",
+      "Bash(Remove-Item -Force \"C:\\\\Android Development\\\\dex_reader\\\\DexReader\\\\ORTHER_PATTERN.md\")"
     ]
   },
   "spinnerTipsEnabled": true

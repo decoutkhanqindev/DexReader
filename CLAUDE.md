@@ -15,12 +15,37 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Do not leave this file stale. An outdated CLAUDE.md is worse than no CLAUDE.md.
 
+## Android CLI & Skills
+
+**Always invoke the `android-cli` skill for any task involving:**
+- Emulator/AVD: list, start, stop, create, remove virtual devices
+- Running or deploying the app: `android run`, install APK/AAB to device
+- SDK management: install, update, remove SDK packages
+- Project creation from templates
+- Capturing screenshots: `android screen capture`
+- Inspecting UI layout: `android layout`
+- Searching Android documentation: `android docs search`
+
+**Always invoke the `android-adb` skill for any task involving:**
+- Listing connected devices/emulators
+- Installing APKs manually via ADB
+- Viewing logcat / filtering logs
+- Pushing/pulling files from device
+- Taking screenshots via ADB
+
+**Always invoke the `android-gradle` skill for any task involving:**
+- Running Gradle build tasks (assemble, bundle, clean)
+- Running unit or instrumented tests via Gradle
+- Checking dependencies or generating coverage reports
+
+Do not ask for confirmation before invoking these skills when the user's request clearly maps to one of the triggers above — detect and invoke immediately.
+
 ## Git Rules
 
 **All git commands must only be executed when explicitly requested or approved by the user.** Claude must never run git operations autonomously. This includes:
 
-- `git add` / `git commit` — only after user asks to commit
-- `git push` — only after user explicitly asks to push
+- `git add` / `git commit` — only on user instruction
+- `git push` — only on user instruction
 - `git checkout` / `git switch` / `git branch` — only on user instruction
 - `git reset` / `git restore` / `git clean` — only on user instruction
 - `gh pr create` / `gh pr merge` — only on user instruction
@@ -33,7 +58,7 @@ When in doubt, show the command and ask for confirmation before running it.
 # Build
 ./gradlew assembleDebug          # Build debug APK
 ./gradlew assembleRelease        # Build release APK
-./gradlew installDebug           # Build and install on connected device/emulator
+./gradlew installDebug           # Build and install on connected device/emulator (prefer `android run` via android-cli skill instead)
 ./gradlew clean                  # Clean build artifacts
 
 # Test
