@@ -7,10 +7,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,7 +33,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.category_details.comp
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.sort.SortBottomSheet
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
-import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
+import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.ListLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.screens.common.lists.manga.VerticalGridMangaList
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
@@ -64,9 +65,13 @@ fun CategoryDetailsContent(
 ) {
   val gridState = rememberLazyGridState()
   val coroutineScope = rememberCoroutineScope()
-  var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
-  var isShowSortBottomSheet by rememberSaveable { mutableStateOf(false) }
-  var isShowFilterBottomSheet by rememberSaveable { mutableStateOf(false) }
+  var isShowErrorDialog by remember { mutableStateOf(true) }
+  var isShowSortBottomSheet by remember { mutableStateOf(false) }
+  var isShowFilterBottomSheet by remember { mutableStateOf(false) }
+
+  LaunchedEffect(detailsUiState) {
+    if (detailsUiState is BasePaginationUiState.FirstPageError) isShowErrorDialog = true
+  }
 
   Box(modifier = modifier) {
     when (detailsUiState) {
@@ -74,7 +79,7 @@ fun CategoryDetailsContent(
 
       is BasePaginationUiState.FirstPageError -> {
         if (isShowErrorDialog) {
-          NotificationDialog(
+          AlertDialog(
             onConfirmClick = {
               isShowErrorDialog = false
               onRetry()
@@ -93,7 +98,7 @@ fun CategoryDetailsContent(
           VerticalGridMangaList(
             lazyGridState = gridState,
             items = mangaList,
-            onItemClick = { onMangaClick(it.id) },
+            onItemClick = onMangaClick,
             loadMoreContent = {
               when (nextPageState) {
                 BaseNextPageState.LOADING -> ListLoadingIndicator(
@@ -151,9 +156,7 @@ fun CategoryDetailsContent(
       SortBottomSheet(
         onDismiss = { isShowSortBottomSheet = false },
         criteriaState = criteriaUiState,
-        onApplyClick = { criteriaId, orderId ->
-          onSortApplyClick(criteriaId, orderId)
-        },
+        onApplyClick = onSortApplyClick,
         modifier = Modifier.fillMaxWidth()
       )
     }
@@ -162,9 +165,7 @@ fun CategoryDetailsContent(
       FilterBottomSheet(
         onDismiss = { isShowFilterBottomSheet = false },
         criteriaState = criteriaUiState,
-        onApplyClick = { statusValueIds, contentRatingValueIds ->
-          onFilterApplyClick(statusValueIds, contentRatingValueIds)
-        },
+        onApplyClick = onFilterApplyClick,
         modifier = Modifier.fillMaxWidth()
       )
     }

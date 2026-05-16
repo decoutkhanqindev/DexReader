@@ -3,6 +3,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.categories
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -37,7 +38,7 @@ fun CategoriesScreen(
       uiState = uiState,
       modifier = Modifier.fillMaxSize(),
       onItemClick = onNavigateCategoryDetailScreen,
-      onRetry = viewModel::retry,
+      onRetry = remember { viewModel::retry },
     )
   }
 }

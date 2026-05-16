@@ -75,7 +75,8 @@ fun LoginForm(
         value = email,
         error = emailError,
         modifier = Modifier.fillMaxWidth(),
-      ) { onEmailChange(it) }
+        onValueChange = onEmailChange,
+      )
 
       Column(
         modifier = Modifier
@@ -86,7 +87,8 @@ fun LoginForm(
           value = password,
           error = passwordError,
           modifier = Modifier.fillMaxWidth(),
-        ) { onPasswordChange(it) }
+          onValueChange = onPasswordChange,
+        )
         Text(
           text = stringResource(R.string.forgot_password),
           modifier = Modifier
@@ -105,7 +107,8 @@ fun LoginForm(
         modifier = Modifier
           .fillMaxWidth()
           .padding(bottom = 8.dp),
-      ) { onSubmitClick() }
+        onClick = onSubmitClick,
+      )
 
       Row(
         modifier = Modifier.fillMaxWidth(),

@@ -38,7 +38,7 @@ fun ChapterPagesSection(
     beyondViewportPageCount = 2 // preload 2 pages before and after the current page
   ) { pageIndex ->
     ChapterPageImage(
-      imageUrl = chapterPages[pageIndex],
+      url = chapterPages[pageIndex],
       modifier = Modifier.fillMaxSize()
     )
   }

@@ -6,11 +6,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +24,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatus
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.MoveToTopButton
-import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
+import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.ListLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.screens.common.lists.manga.VerticalGridMangaList
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
@@ -47,8 +47,12 @@ fun ResultsSection(
 ) {
   val gridState = rememberLazyGridState()
   val coroutineScope = rememberCoroutineScope()
-  var mangaListSize by rememberSaveable { mutableIntStateOf(0) }
-  var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
+  val mangaListSize = (resultsUiState as? BasePaginationUiState.Content)?.currentList?.size ?: 0
+  var isShowErrorDialog by remember { mutableStateOf(true) }
+
+  LaunchedEffect(resultsUiState) {
+    if (resultsUiState is BasePaginationUiState.FirstPageError) isShowErrorDialog = true
+  }
 
   Box(modifier = modifier) {
     when (resultsUiState) {
@@ -56,7 +60,7 @@ fun ResultsSection(
 
       is BasePaginationUiState.FirstPageError -> {
         if (isShowErrorDialog) {
-          NotificationDialog(
+          AlertDialog(
             title = stringResource(resultsUiState.error.messageRes),
             onConfirmClick = {
               isShowErrorDialog = false
@@ -77,13 +81,11 @@ fun ResultsSection(
             modifier = Modifier.fillMaxWidth()
           )
         } else {
-          mangaListSize = mangaList.size
-
           VerticalGridMangaList(
             lazyGridState = gridState,
             items = mangaList,
             modifier = Modifier.fillMaxSize(),
-            onItemClick = { onSelectedManga(it.id) },
+            onItemClick = onSelectedManga,
           ) {
             when (nextPageState) {
               BaseNextPageState.LOADING -> ListLoadingIndicator(

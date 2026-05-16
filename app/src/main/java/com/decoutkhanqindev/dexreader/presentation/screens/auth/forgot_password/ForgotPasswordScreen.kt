@@ -2,6 +2,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.auth.forgot_password
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -19,10 +20,10 @@ fun ForgotPasswordScreen(
   ForgotPasswordContent(
     uiState = uiState,
     modifier = modifier,
-    onEmailChange = viewModel::updateEmail,
-    onSubmitClick = viewModel::submit,
+    onEmailChange = remember { viewModel::updateEmail },
+    onSubmitClick = remember { viewModel::submit },
     onSubmitSuccess = onNavigateToLoginScreen,
     onNavigateBack = onNavigateBack,
-    onRetry = viewModel::retry,
+    onRetry = remember { viewModel::retry },
   )
 }

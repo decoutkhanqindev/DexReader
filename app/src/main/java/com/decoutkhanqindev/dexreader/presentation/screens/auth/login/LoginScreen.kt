@@ -2,6 +2,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.auth.login
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -20,12 +21,12 @@ fun LoginScreen(
   LoginContent(
     uiState = uiState,
     modifier = modifier,
-    onEmailChange = viewModel::updateEmail,
-    onPasswordChange = viewModel::updatePassword,
-    onSubmitClick = viewModel::submit,
+    onEmailChange = remember { viewModel::updateEmail },
+    onPasswordChange = remember { viewModel::updatePassword },
+    onSubmitClick = remember { viewModel::submit },
     onLoginSuccess = onNavigateToHomeScreen,
     onRegisterClick = onNavigateToRegisterScreen,
     onForgotPasswordClick = onNavigateToForgotPasswordScreen,
-    onRetry = viewModel::retry,
+    onRetry = remember { viewModel::retry },
   )
 }

@@ -3,6 +3,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.reader.components.pa
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -17,18 +18,22 @@ import me.saket.telephoto.zoomable.rememberZoomableImageState
 
 @Composable
 fun ChapterPageImage(
-  imageUrl: String,
+  url: String,
   modifier: Modifier = Modifier,
 ) {
   val zoomableState = rememberZoomableImageState()
-
-  ZoomableAsyncImage(
-    model = ImageRequest.Builder(LocalContext.current)
-      .data(imageUrl)
+  val context = LocalContext.current
+  val imageRequest = remember(url) {
+    ImageRequest.Builder(context)
+      .data(url)
       .crossfade(true)
       .memoryCachePolicy(CachePolicy.ENABLED)
       .diskCachePolicy(CachePolicy.ENABLED)
-      .build(),
+      .build()
+  }
+
+  ZoomableAsyncImage(
+    model = imageRequest,
     contentDescription = null,
     modifier = modifier,
     state = zoomableState,
@@ -41,7 +46,7 @@ fun ChapterPageImage(
 private fun ChapterPageImagePreview() {
   DexReaderTheme {
     ChapterPageImage(
-      imageUrl = "",
+      url = "",
       modifier = Modifier
         .fillMaxWidth()
         .height(400.dp)

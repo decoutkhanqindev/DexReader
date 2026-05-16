@@ -3,15 +3,16 @@ package com.decoutkhanqindev.dexreader.presentation.screens.search.components.su
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
+import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.search.SuggestionsUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.search.components.results.ResultsNotFoundMessage
@@ -27,14 +28,18 @@ fun SuggestionsSection(
   modifier: Modifier = Modifier,
   onSelectedSuggestion: (String) -> Unit,
 ) {
-  var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
+  var isShowErrorDialog by remember { mutableStateOf(true) }
+
+  LaunchedEffect(suggestionsUiState) {
+    if (suggestionsUiState is SuggestionsUiState.Error) isShowErrorDialog = true
+  }
 
   when (suggestionsUiState) {
     SuggestionsUiState.Loading -> LoadingScreen(modifier = modifier)
 
     is SuggestionsUiState.Error -> {
       if (isShowErrorDialog) {
-        NotificationDialog(
+        AlertDialog(
           title = stringResource(suggestionsUiState.error.messageRes),
           onConfirmClick = { isShowErrorDialog = false },
           onDismissClick = { isShowErrorDialog = false },
@@ -52,7 +57,8 @@ fun SuggestionsSection(
         SuggestionList(
           suggestionList = suggestionList,
           modifier = modifier,
-        ) { onSelectedSuggestion(it) }
+          onSelectedSuggestion = onSelectedSuggestion,
+        )
       }
     }
   }

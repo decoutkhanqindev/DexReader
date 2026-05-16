@@ -81,20 +81,23 @@ fun RegisterForm(
         value = email,
         error = emailError,
         modifier = Modifier.fillMaxWidth(),
-      ) { onEmailChange(it) }
+        onValueChange = onEmailChange,
+      )
 
       PasswordInputField(
         value = password,
         error = passwordError,
         modifier = Modifier.fillMaxWidth(),
-      ) { onPasswordChange(it) }
+        onValueChange = onPasswordChange,
+      )
 
       PasswordInputField(
         value = confirmPassword,
         isConfirmed = true,
         error = confirmPasswordError,
         modifier = Modifier.fillMaxWidth(),
-      ) { onConfirmPasswordChange(it) }
+        onValueChange = onConfirmPasswordChange,
+      )
 
       NameInputField(
         value = name,
@@ -102,14 +105,16 @@ fun RegisterForm(
         modifier = Modifier
           .fillMaxWidth()
           .padding(bottom = 8.dp),
-      ) { onNameChange(it) }
+        onValueChange = onNameChange,
+      )
 
       SubmitButton(
         title = stringResource(R.string.sign_up),
         modifier = Modifier
           .fillMaxWidth()
           .padding(bottom = 8.dp),
-      ) { onSubmitClick() }
+        onClick = onSubmitClick,
+      )
 
       ActionButton(
         modifier = Modifier.fillMaxWidth(),

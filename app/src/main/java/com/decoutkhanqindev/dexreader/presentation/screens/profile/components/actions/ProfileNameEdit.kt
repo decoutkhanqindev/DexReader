@@ -20,7 +20,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,9 +39,13 @@ fun ProfileNameEdit(
   modifier: Modifier = Modifier,
   onNameChange: (String) -> Unit,
 ) {
-  var isEdit by rememberSaveable { mutableStateOf(false) }
+  var isEdit by remember { mutableStateOf(false) }
   val focusRequester = remember { FocusRequester() }
   val focusManager = LocalFocusManager.current
+
+  LaunchedEffect(isEdit) {
+    if (isEdit) focusRequester.requestFocus()
+  }
 
   Row(
     modifier = modifier.fillMaxWidth(),
@@ -70,9 +73,7 @@ fun ProfileNameEdit(
           unfocusedIndicatorColor = MaterialTheme.colorScheme.surface,
           cursorColor = MaterialTheme.colorScheme.onPrimaryContainer
         ),
-        keyboardOptions = KeyboardOptions.Default.copy(
-          imeAction = ImeAction.Done
-        ),
+        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
         keyboardActions = KeyboardActions(
           onDone = {
             isEdit = false
@@ -80,10 +81,6 @@ fun ProfileNameEdit(
           }
         ),
       )
-
-      LaunchedEffect(isEdit) {
-        if (isEdit) focusRequester.requestFocus()
-      }
     }
     IconButton(
       onClick = { isEdit = !isEdit },

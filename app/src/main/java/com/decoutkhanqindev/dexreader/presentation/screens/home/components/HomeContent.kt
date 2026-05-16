@@ -8,9 +8,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +25,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
-import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
+import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.home.HomeUiState
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
@@ -37,7 +38,11 @@ fun HomeContent(
   onItemClick: (String) -> Unit,
   onRetry: () -> Unit,
 ) {
-  var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
+  var isShowErrorDialog by remember { mutableStateOf(true) }
+
+  LaunchedEffect(uiState) {
+    if (uiState is HomeUiState.Error) isShowErrorDialog = true
+  }
 
   Box(modifier = modifier) {
     when (uiState) {
@@ -55,31 +60,35 @@ fun HomeContent(
             title = stringResource(R.string.latest_update),
             items = uiState.latestUpdatesMangaList,
             modifier = Modifier.fillMaxWidth(),
-          ) { onItemClick(it.id) }
+            onItemClick = onItemClick,
+          )
 
           MangaListSection(
             title = stringResource(R.string.trending),
             items = uiState.trendingMangaList,
             modifier = Modifier.fillMaxWidth(),
-          ) { onItemClick(it.id) }
+            onItemClick = onItemClick,
+          )
 
           MangaListSection(
             title = stringResource(R.string.new_releases),
             items = uiState.newReleaseMangaList,
             modifier = Modifier.fillMaxWidth(),
-          ) { onItemClick(it.id) }
+            onItemClick = onItemClick,
+          )
 
           MangaListSection(
             title = stringResource(R.string.top_rated),
             items = uiState.topRatedMangaList,
             modifier = Modifier.fillMaxWidth(),
-          ) { onItemClick(it.id) }
+            onItemClick = onItemClick,
+          )
         }
       }
 
       is HomeUiState.Error -> {
         if (isShowErrorDialog) {
-          NotificationDialog(
+          AlertDialog(
             title = stringResource(uiState.error.messageRes),
             onConfirmClick = {
               isShowErrorDialog = false

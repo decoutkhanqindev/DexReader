@@ -31,12 +31,12 @@ fun ProfileScreen(
   onNavigateToHomeScreen: () -> Unit,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-  val isShowUpdateButton by remember(uiState) {
+  val isShowUpdateButton by remember {
     derivedStateOf {
       val nameChanged = uiState.newName != null
-          && uiState.newName != currentUser?.name
+          && uiState.newName != uiState.currentUser?.name
       val picChanged = uiState.newAvatarUrl != null
-          && uiState.newAvatarUrl != currentUser?.avatarUrl
+          && uiState.newAvatarUrl != uiState.currentUser?.avatarUrl
       nameChanged || picChanged
     }
   }
@@ -59,8 +59,8 @@ fun ProfileScreen(
         UpdateAndLogoutUserBottomBar(
           isShowUpdateButton = isShowUpdateButton,
           modifier = Modifier.fillMaxWidth(),
-          onUpdateClick = viewModel::updateUserProfile,
-          onLogoutClick = viewModel::logoutUser,
+          onUpdateClick = remember { viewModel::updateUserProfile },
+          onLogoutClick = remember { viewModel::logoutUser },
         )
       }
     }
@@ -69,11 +69,11 @@ fun ProfileScreen(
       ProfileContent(
         uiState = uiState,
         modifier = Modifier.fillMaxSize(),
-        onUpdateNameChange = viewModel::updateUserName,
-        onUpdatePicUrlChange = viewModel::updateUserPicUrl,
+        onUpdateNameChange = remember { viewModel::updateUserName },
+        onUpdatePicUrlChange = remember { viewModel::updateUserPicUrl },
         onLogoutSuccess = onNavigateToHomeScreen,
-        onRetryUpdate = viewModel::retryUpdateUserProfile,
-        onRetryLogout = viewModel::retryLogoutUser,
+        onRetryUpdate = remember { viewModel::retryUpdateUserProfile },
+        onRetryLogout = remember { viewModel::retryLogoutUser },
       )
     } else {
       IdleScreen(

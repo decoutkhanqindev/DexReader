@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -14,7 +14,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseDetailsScreen
-import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
+import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.MangaDetailsContent
 
 @Composable
@@ -44,7 +44,7 @@ fun MangaDetailsScreen(
   val startedChapterId by viewModel.startedChapterId.collectAsStateWithLifecycle()
   val continueChapter by viewModel.continueChapter.collectAsStateWithLifecycle()
   val isFavorite by viewModel.isFavorite.collectAsStateWithLifecycle()
-  var isShowFavoritesDialog by rememberSaveable { mutableStateOf(false) }
+  var isShowFavoritesDialog by remember { mutableStateOf(false) }
 
   LaunchedEffect(isUserLoggedIn, currentUser?.id) {
     if (isUserLoggedIn && currentUser != null) viewModel.updateUserId(id = currentUser.id)
@@ -52,7 +52,7 @@ fun MangaDetailsScreen(
   }
 
   if (isShowFavoritesDialog) {
-    NotificationDialog(
+    AlertDialog(
       title = stringResource(R.string.you_must_sign_in_to_favorite_this_manga),
       confirm = stringResource(R.string.sign_in),
       onConfirmClick = {
@@ -80,19 +80,21 @@ fun MangaDetailsScreen(
       continueChapter = continueChapter,
       modifier = Modifier.fillMaxSize(),
       onReadingClick = onNavigateToReaderScreen,
-      onFavoriteClick = {
-        if (isUserLoggedIn) {
-          if (isFavorite) viewModel.removeFromFavorites()
-          else viewModel.addToFavorites()
-        } else isShowFavoritesDialog = true
+      onFavoriteClick = remember(isUserLoggedIn, isFavorite) {
+        {
+          if (isUserLoggedIn) {
+            if (isFavorite) viewModel.removeFromFavorites()
+            else viewModel.addToFavorites()
+          } else isShowFavoritesDialog = true
+        }
       },
-      onLanguageItemClick = { viewModel.updateChapterLanguage(it) },
+      onLanguageItemClick = remember { viewModel::updateChapterLanguage },
       onCategoryItemClick = onNavigateCategoryDetailsScreen,
       onChapterItemClick = onNavigateToReaderScreen,
-      onFetchChapterListNextPage = viewModel::fetchChapterListNextPage,
-      onRetryFetchChapterListNextPage = viewModel::retryFetchChapterListNextPage,
-      onRetryFetchChapterListFirstPage = viewModel::retryFetchChapterListFirstPage,
-      onRetry = viewModel::retry,
+      onFetchChapterListNextPage = remember { viewModel::fetchChapterListNextPage },
+      onRetryFetchChapterListNextPage = remember { viewModel::retryFetchChapterListNextPage },
+      onRetryFetchChapterListFirstPage = remember { viewModel::retryFetchChapterListFirstPage },
+      onRetry = remember { viewModel::retry },
     )
   }
 }

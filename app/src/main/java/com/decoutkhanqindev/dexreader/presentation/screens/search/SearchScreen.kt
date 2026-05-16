@@ -7,7 +7,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -27,7 +27,7 @@ fun SearchScreen(
   val resultsUiState by viewModel.resultsUiState.collectAsStateWithLifecycle()
   val suggestionList by viewModel.suggestionList.collectAsStateWithLifecycle()
   val query by viewModel.query.collectAsStateWithLifecycle()
-  var isExpanded by rememberSaveable { mutableStateOf(false) }
+  var isExpanded by remember { mutableStateOf(false) }
 
   Scaffold(
     modifier = modifier,
@@ -62,9 +62,9 @@ fun SearchScreen(
         isExpanded = false
       },
       onSelectedManga = onNavigateToManDetailScreen,
-      onFetchMangaListNextPage = viewModel::fetchMangaListNextPage,
-      onRetryFetchMangaListNextPage = viewModel::retryFetchMangaListNextPage,
-      onRetry = viewModel::retry,
+      onFetchMangaListNextPage = remember { viewModel::fetchMangaListNextPage },
+      onRetryFetchMangaListNextPage = remember { viewModel::retryFetchMangaListNextPage },
+      onRetry = remember { viewModel::retry },
     )
   }
 }

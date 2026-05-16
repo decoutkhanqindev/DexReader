@@ -31,7 +31,8 @@ fun CategoryTypeSection(
       type = type,
       isExpanded = isExpanded,
       modifier = Modifier.fillMaxWidth(),
-    ) { onExpandClick() }
+      onExpandClick = onExpandClick,
+    )
 
     AnimatedVisibility(
       visible = isExpanded,
@@ -41,7 +42,8 @@ fun CategoryTypeSection(
       CategoryList(
         items = items,
         modifier = Modifier.fillMaxWidth(),
-      ) { id, name -> onItemClick(id, name) }
+        onItemClick = onItemClick,
+      )
     }
   }
 }

@@ -5,9 +5,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -19,7 +20,7 @@ import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
-import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
+import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.history.RemoveFromHistoryUiState
@@ -44,14 +45,26 @@ fun HistoryContent(
   onRetryObserveHistoryFirstPage: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  var selectedMangaId by rememberSaveable { mutableStateOf<String?>(null) }
-  var selectedChapterId by rememberSaveable { mutableStateOf<String?>(null) }
-  var selectedLastReadPage by rememberSaveable { mutableStateOf<Int?>(null) }
-  var isShowNavigateDialog by rememberSaveable { mutableStateOf(false) }
-  var isShowRemoveFromHistoryDialog by rememberSaveable { mutableStateOf(false) }
-  var isShowRemoveFromHistoryErrorDialog by rememberSaveable { mutableStateOf(true) }
-  var isShowRemoveFromHistorySuccessDialog by rememberSaveable { mutableStateOf(true) }
-  var isShowHistoryErrorDialog by rememberSaveable { mutableStateOf(true) }
+  var selectedMangaId by remember { mutableStateOf<String?>(null) }
+  var selectedChapterId by remember { mutableStateOf<String?>(null) }
+  var selectedLastReadPage by remember { mutableStateOf<Int?>(null) }
+  var isShowNavigateDialog by remember { mutableStateOf(false) }
+  var isShowRemoveFromHistoryDialog by remember { mutableStateOf(false) }
+  var isShowRemoveFromHistoryErrorDialog by remember { mutableStateOf(true) }
+  var isShowRemoveFromHistorySuccessDialog by remember { mutableStateOf(true) }
+  var isShowHistoryErrorDialog by remember { mutableStateOf(true) }
+
+  LaunchedEffect(removeFromHistoryUiState.isError) {
+    if (removeFromHistoryUiState.isError) isShowRemoveFromHistoryErrorDialog = true
+  }
+
+  LaunchedEffect(removeFromHistoryUiState.isSuccess) {
+    if (removeFromHistoryUiState.isSuccess) isShowRemoveFromHistorySuccessDialog = true
+  }
+  
+  LaunchedEffect(historyUiState) {
+    if (historyUiState is BasePaginationUiState.FirstPageError) isShowHistoryErrorDialog = true
+  }
 
   Box(modifier = modifier) {
     when (historyUiState) {
@@ -59,7 +72,7 @@ fun HistoryContent(
 
       is BasePaginationUiState.FirstPageError -> {
         if (isShowHistoryErrorDialog) {
-          NotificationDialog(
+          AlertDialog(
             onConfirmClick = {
               isShowHistoryErrorDialog = false
               onRetryObserveHistoryFirstPage()
@@ -109,7 +122,7 @@ fun HistoryContent(
 
           removeFromHistoryUiState.isError -> {
             if (isShowRemoveFromHistoryErrorDialog) {
-              NotificationDialog(
+              AlertDialog(
                 onConfirmClick = {
                   isShowRemoveFromHistoryErrorDialog = false
                   onRetryRemoveFromHistory()
@@ -122,7 +135,7 @@ fun HistoryContent(
 
           removeFromHistoryUiState.isSuccess -> {
             if (isShowRemoveFromHistorySuccessDialog) {
-              NotificationDialog(
+              AlertDialog(
                 onConfirmClick = { isShowRemoveFromHistorySuccessDialog = false },
                 icon = Icons.Default.Done,
                 title = stringResource(R.string.you_have_removed_from_history_successfully),
@@ -134,7 +147,7 @@ fun HistoryContent(
         }
 
         if (isShowRemoveFromHistoryDialog && removeFromHistoryUiState.readingHistoryId != null) {
-          NotificationDialog(
+          AlertDialog(
             onConfirmClick = {
               isShowRemoveFromHistoryDialog = false
               onRemoveFromHistory()
@@ -150,7 +163,7 @@ fun HistoryContent(
           selectedChapterId != null &&
           selectedLastReadPage != null
         ) {
-          NotificationDialog(
+          AlertDialog(
             onConfirmClick = {
               isShowNavigateDialog = false
               onMangaDetailsClick(selectedMangaId!!)

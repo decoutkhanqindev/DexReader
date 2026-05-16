@@ -11,7 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
-import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
+import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
@@ -33,8 +33,8 @@ fun UpdateAndLogoutUserBottomBar(
   onUpdateClick: () -> Unit,
   onLogoutClick: () -> Unit,
 ) {
-  var isShowUpdateUserDialog by rememberSaveable { mutableStateOf(false) }
-  var isShowLogoutUserDialog by rememberSaveable { mutableStateOf(false) }
+  var isShowUpdateUserDialog by remember { mutableStateOf(false) }
+  var isShowLogoutUserDialog by remember { mutableStateOf(false) }
 
   BottomAppBar(
     modifier = modifier,
@@ -74,7 +74,7 @@ fun UpdateAndLogoutUserBottomBar(
   }
 
   if (isShowUpdateUserDialog) {
-    NotificationDialog(
+    AlertDialog(
       title = stringResource(R.string.are_you_sure_you_want_to_update_with_the_new_changes),
       confirm = stringResource(R.string.update_profile),
       onConfirmClick = {
@@ -86,7 +86,7 @@ fun UpdateAndLogoutUserBottomBar(
   }
 
   if (isShowLogoutUserDialog) {
-    NotificationDialog(
+    AlertDialog(
       title = stringResource(R.string.are_you_sure_you_want_to_logout),
       confirm = stringResource(R.string.logout),
       onConfirmClick = {

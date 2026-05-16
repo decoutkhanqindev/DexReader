@@ -1,11 +1,10 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.settings.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -33,31 +32,30 @@ fun ThemeOptionList(
     shape = MaterialTheme.shapes.medium,
     elevation = CardDefaults.cardElevation(8.dp),
   ) {
-    LazyColumn(
+    Column(
       verticalArrangement = Arrangement.Center,
       horizontalAlignment = Alignment.CenterHorizontally,
       modifier = Modifier
         .padding(24.dp)
         .width(165.dp)
     ) {
-      item {
-        Text(
-          text = stringResource(R.string.theme),
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 12.dp),
-          fontWeight = FontWeight.ExtraBold,
-          textAlign = TextAlign.Center,
-          style = MaterialTheme.typography.titleLarge,
-        )
-      }
+      Text(
+        text = stringResource(R.string.theme),
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(bottom = 12.dp),
+        fontWeight = FontWeight.ExtraBold,
+        textAlign = TextAlign.Center,
+        style = MaterialTheme.typography.titleLarge,
+      )
 
-      items(ThemeModeValue.entries, key = { it }) { item ->
+      ThemeModeValue.entries.forEach {
         ThemeOptionItem(
-          isSelected = item == selectedItem,
-          item = item,
+          isSelected = it == selectedItem,
+          item = it,
           modifier = Modifier.fillMaxWidth(),
-        ) { onItemClick(it) }
+          onClick = onItemClick,
+        )
       }
     }
   }

@@ -29,7 +29,8 @@ fun CategoryList(
       CategoryItem(
         item = it,
         modifier = Modifier.wrapContentWidth(),
-      ) { id, name -> onItemClick(id, name) }
+        onClick = onItemClick,
+      )
     }
   }
 }

@@ -17,7 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmer
 import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
@@ -38,9 +37,11 @@ fun ActionButton(
         clip = false // Don't clip the shadow to allow it to be visible even when the button is disabled
       )
       .alpha(if (isEnabled) 1f else 0.38f)
-      .let {
-        if (isEnabled) it.onScalableClick(shape = MaterialTheme.shapes.large) { onClick() } else it
-      }
+      .then(
+        if (isEnabled) {
+          Modifier.onScalableClick(shape = MaterialTheme.shapes.large) { onClick() }
+        } else Modifier
+      )
       .background(
         color = backgroundColor,
         shape = MaterialTheme.shapes.large
@@ -52,9 +53,7 @@ fun ActionButton(
     Box(
       modifier = Modifier.fillMaxWidth(),
       contentAlignment = Alignment.Center
-    ) {
-      content()
-    }
+    ) { content() }
   }
 }
 

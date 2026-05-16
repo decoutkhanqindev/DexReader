@@ -15,7 +15,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
-import timber.log.Timber
 
 @Composable
 fun SwipeToDismissBackground(

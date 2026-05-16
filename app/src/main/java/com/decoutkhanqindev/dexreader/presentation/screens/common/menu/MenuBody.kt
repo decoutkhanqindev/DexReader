@@ -29,12 +29,13 @@ fun MenuBody(
     verticalArrangement = Arrangement.Top,
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
-    items(items, key = { it }) { item ->
+    items(items, key = MenuValue::name) {
       MenuItemRow(
-        isSelected = item == selectedItem,
-        item = item,
+        isSelected = it == selectedItem,
+        item = it,
         modifier = Modifier.fillMaxWidth(),
-      ) { onItemClick(it) }
+        onClick = onItemClick
+      )
     }
   }
 }

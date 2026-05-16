@@ -31,7 +31,7 @@ fun MoveToTopButton(
   modifier: Modifier = Modifier,
   onClick: () -> Unit,
 ) {
-  val isVisible by remember(listState, gridState, itemsSize) {
+  val isVisible by remember(itemsSize) {
     derivedStateOf {
       if (listState != null) {
         listState.firstVisibleItemIndex > 0 && itemsSize > 15

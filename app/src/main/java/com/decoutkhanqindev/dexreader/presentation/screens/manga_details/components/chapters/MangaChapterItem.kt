@@ -11,6 +11,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -40,15 +41,12 @@ fun MangaChapterItem(
 ) {
   val volume = chapter.volume
   val number = chapter.number
+  val onChapterClick = remember(chapter.id, readingHistory?.lastReadPage) {
+    { onChapterClick(chapter.id, readingHistory?.lastReadPage ?: 0, chapter.mangaId) }
+  }
 
   Card(
-    modifier = modifier.onScalableClick(shape = MaterialTheme.shapes.large) {
-      onChapterClick(
-        chapter.id,
-        readingHistory?.lastReadPage ?: 0,
-        chapter.mangaId
-      )
-    },
+    modifier = modifier.onScalableClick(shape = MaterialTheme.shapes.large) { onChapterClick() },
     shape = MaterialTheme.shapes.large,
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
     elevation = CardDefaults.cardElevation(8.dp),

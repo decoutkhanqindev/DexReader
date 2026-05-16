@@ -5,9 +5,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -17,7 +18,8 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.AuthContent
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.login.LoginUiState
-import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
+import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
+import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
@@ -33,16 +35,26 @@ fun LoginContent(
   onForgotPasswordClick: () -> Unit,
   onRetry: () -> Unit,
 ) {
-  var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
-  var isShowSuccessDialog by rememberSaveable { mutableStateOf(true) }
+  var isShowErrorDialog by remember { mutableStateOf(true) }
+  var isShowSuccessDialog by remember { mutableStateOf(true) }
+
+  LaunchedEffect(uiState) {
+    if (uiState.isError) isShowErrorDialog = true
+    if (uiState.isSuccess) isShowSuccessDialog = true
+  }
 
   Box(modifier = modifier) {
     AuthContent(
       modifier = Modifier
         .fillMaxSize()
-        .let {
-          if (uiState.isLoading) it.blur(8.dp) else it
-        }
+        .then(
+          if (uiState.isLoading) {
+            Modifier.blurBackground(
+              topAlpha = 0.7f,
+              bottomAlpha = 0.7f,
+            )
+          } else Modifier
+        )
     ) {
       LoginForm(
         email = uiState.email,
@@ -63,7 +75,7 @@ fun LoginContent(
 
       uiState.isError -> {
         if (isShowErrorDialog) {
-          NotificationDialog(
+          AlertDialog(
             title = stringResource(R.string.sign_in_failed_please_try_again),
             onConfirmClick = onRetry,
             onDismissClick = { isShowErrorDialog = false },
@@ -73,7 +85,7 @@ fun LoginContent(
 
       uiState.isSuccess -> {
         if (isShowSuccessDialog) {
-          NotificationDialog(
+          AlertDialog(
             icon = Icons.Default.Done,
             title = stringResource(R.string.sign_in_successful),
             confirm = stringResource(R.string.ok),

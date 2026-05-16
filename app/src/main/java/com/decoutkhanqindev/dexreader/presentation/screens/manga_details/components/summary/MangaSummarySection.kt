@@ -44,9 +44,8 @@ fun MangaSummarySection(
     MangaCategoryList(
       items = manga.categories,
       modifier = Modifier.fillMaxWidth(),
-    ) { categoryId, categoryTitle ->
-      onCategoryItemClick(categoryId, categoryTitle)
-    }
+      onItemClick = onCategoryItemClick
+    )
   }
 }
 

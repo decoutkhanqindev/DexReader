@@ -15,7 +15,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -50,7 +49,7 @@ fun ReaderScreen(
       else -> "0" to "0"
     }
   }
-  var isFullScreen by rememberSaveable { mutableStateOf(false) }
+  var isFullScreen by remember { mutableStateOf(false) }
 
   LaunchedEffect(isUserLoggedIn, currentUser?.id) {
     if (isUserLoggedIn && currentUser != null) viewModel.updateUserId(userId = currentUser.id)
@@ -85,8 +84,8 @@ fun ReaderScreen(
           canNavigatePrevious = chapterNavUiState.canNavigatePrevious,
           canNavigateNext = chapterNavUiState.canNavigateNext,
           modifier = Modifier.fillMaxWidth(),
-          onNavigatePrevious = viewModel::navigateToPreviousChapter,
-          onNavigateNext = viewModel::navigateToNextChapter,
+          onNavigatePrevious = remember { viewModel::navigateToPreviousChapter },
+          onNavigateNext = remember { viewModel::navigateToNextChapter },
         )
       }
     },
@@ -103,8 +102,8 @@ fun ReaderScreen(
       modifier = Modifier
         .fillMaxSize()
         .padding(innerPadding),
-      onUpdateChapterPage = viewModel::updateChapterPage,
-      onRetry = viewModel::retry,
+      onUpdateChapterPage = remember { { viewModel.updateChapterPage(it) } },
+      onRetry = remember { viewModel::retry },
     )
   }
 }

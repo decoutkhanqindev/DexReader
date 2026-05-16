@@ -15,7 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,12 +34,13 @@ import kotlinx.collections.immutable.persistentListOf
 fun MangaItem(
   item: MangaModel,
   modifier: Modifier = Modifier,
-  onClick: (MangaModel) -> Unit,
+  onClick: (String) -> Unit,
 ) {
-  var isImageLoaded by rememberSaveable { mutableStateOf(false) }
+  val onClick = remember(item.id) { { onClick(item.id) } }
+  var isImageLoaded by remember { mutableStateOf(false) }
 
   Card(
-    modifier = modifier.onScalableClick(shape = CardDefaults.shape) { onClick(item) },
+    modifier = modifier.onScalableClick(shape = CardDefaults.shape) { onClick() },
     elevation = CardDefaults.cardElevation(8.dp),
     shape = MaterialTheme.shapes.large,
   ) {
@@ -51,8 +52,9 @@ fun MangaItem(
       MangaCoverArt(
         url = item.coverUrl,
         title = item.title,
-        modifier = Modifier.fillMaxSize()
-      ) { isImageLoaded = true }
+        modifier = Modifier.fillMaxSize(),
+        onImageLoaded = { isImageLoaded = true }
+      )
 
       Column(
         modifier = Modifier.fillMaxSize(),

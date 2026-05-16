@@ -40,10 +40,9 @@ fun ReadingAndFavoriteSection(
       listState = listState,
       modifier = Modifier
         .align(Alignment.End)
-        .padding(end = 16.dp)
-    ) {
-      onMoveToTopClick()
-    }
+        .padding(end = 16.dp),
+      onClick = onMoveToTopClick
+    )
 
     ReadingAndFavoriteButtons(
       isFavorite = isFavorite,

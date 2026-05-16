@@ -2,7 +2,6 @@ package com.decoutkhanqindev.dexreader.presentation.screens.manga_details.compon
 
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -27,22 +26,19 @@ fun MangaCategoryList(
     categoryTitle: String,
   ) -> Unit,
 ) {
-  Box(modifier = modifier) {
-    LazyRow(
-      modifier = Modifier.fillMaxWidth(),
-      horizontalArrangement = Arrangement.spacedBy(2.dp),
-      verticalAlignment = Alignment.CenterVertically,
-    ) {
-      items(items, key = CategoryModel::id) { category ->
-        MangaCategoryItem(
-          item = category,
-          modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 4.dp),
-        ) { categoryId, categoryTitle ->
-          onItemClick(categoryId, categoryTitle)
-        }
-      }
+  LazyRow(
+    modifier = modifier,
+    horizontalArrangement = Arrangement.spacedBy(2.dp),
+    verticalAlignment = Alignment.CenterVertically,
+  ) {
+    items(items, key = CategoryModel::id) { category ->
+      MangaCategoryItem(
+        item = category,
+        modifier = Modifier
+          .fillMaxSize()
+          .padding(horizontal = 4.dp),
+        onClick = onItemClick
+      )
     }
   }
 }

@@ -24,8 +24,8 @@ fun ZoomPageButton(
   FloatingActionButton(
     onClick = onClick,
     modifier = modifier,
-    containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-    contentColor = MaterialTheme.colorScheme.surfaceContainer,
+    containerColor = MaterialTheme.colorScheme.surface,
+    contentColor = MaterialTheme.colorScheme.inverseSurface,
   ) {
     Icon(
       imageVector =

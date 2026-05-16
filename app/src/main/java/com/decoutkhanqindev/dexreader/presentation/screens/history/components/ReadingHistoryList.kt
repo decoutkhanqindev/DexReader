@@ -8,11 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,6 +49,9 @@ fun ReadingHistoryList(
 ) {
   val lazyListState = rememberLazyListState()
   val coroutineScope = rememberCoroutineScope()
+  val lastHistory = remember(readingHistoryList) {
+    readingHistoryList.lastOrNull()
+  }
 
   Box(modifier = modifier) {
     LazyColumn(
@@ -56,10 +60,10 @@ fun ReadingHistoryList(
       verticalArrangement = Arrangement.Top,
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      itemsIndexed(
+      items(
         items = readingHistoryList,
-        key = { index, readingHistory -> "${readingHistory.id}_${index}" }
-      ) { _, readingHistory ->
+        key = ReadingHistoryModel::id,
+      ) { readingHistory ->
         ReadingHistoryItem(
           readingHistory = readingHistory,
           onSelectedReadingHistory = onSelectedReadingHistory,
@@ -69,7 +73,7 @@ fun ReadingHistoryList(
             .height(160.dp)
         )
 
-        if (readingHistory != readingHistoryList.last()) {
+        if (readingHistory != lastHistory) {
           HorizontalDivider(
             modifier = Modifier.fillMaxWidth(),
             thickness = 2.dp,

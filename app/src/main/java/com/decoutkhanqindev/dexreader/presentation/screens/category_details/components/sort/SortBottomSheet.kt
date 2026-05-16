@@ -10,8 +10,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -37,22 +36,8 @@ fun SortBottomSheet(
   ) -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  var selectedCriteria by rememberSaveable(
-    stateSaver = Saver(
-      save = { it.name },
-      restore = { MangaSortCriteriaValue.valueOf(it) }
-    )
-  ) {
-    mutableStateOf(criteriaState.sortCriteria)
-  }
-  var selectedOrder by rememberSaveable(
-    stateSaver = Saver(
-      save = { it.name },
-      restore = { MangaSortOrderValue.valueOf(it) }
-    )
-  ) {
-    mutableStateOf(criteriaState.sortOrder)
-  }
+  var selectedCriteria by remember { mutableStateOf(criteriaState.sortCriteria) }
+  var selectedOrder by remember { mutableStateOf(criteriaState.sortOrder) }
 
   ModalBottomSheet(
     onDismissRequest = onDismiss,

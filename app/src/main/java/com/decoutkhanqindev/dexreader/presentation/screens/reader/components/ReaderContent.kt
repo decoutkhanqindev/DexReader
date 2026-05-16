@@ -7,9 +7,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterPagesModel
-import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
+import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.reader.ChapterPagesUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.reader.components.pages.ChapterPagesSection
@@ -35,14 +36,18 @@ fun ReaderContent(
   onUpdateChapterPage: (Int) -> Unit,
   onRetry: () -> Unit,
 ) {
-  var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
+  var isShowErrorDialog by remember { mutableStateOf(true) }
+
+  LaunchedEffect(chapterPageUiState) {
+    if (chapterPageUiState is ChapterPagesUiState.Error) isShowErrorDialog = true
+  }
 
   when (chapterPageUiState) {
     ChapterPagesUiState.Loading -> LoadingScreen(modifier = modifier)
 
     is ChapterPagesUiState.Error -> {
       if (isShowErrorDialog) {
-        NotificationDialog(
+        AlertDialog(
           title = stringResource(chapterPageUiState.error.messageRes),
           onConfirmClick = {
             isShowErrorDialog = false
@@ -78,7 +83,8 @@ fun ReaderContent(
             currentPage = currentPage,
             totalPages = totalPages,
             modifier = Modifier.fillMaxSize(),
-          ) { onUpdateChapterPage(it) }
+            onUpdateChapterPage = onUpdateChapterPage,
+          )
         }
       }
     }

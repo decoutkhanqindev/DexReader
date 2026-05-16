@@ -11,9 +11,10 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
-import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
+import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.ProfileUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.components.actions.ProfileNameEdit
@@ -43,16 +44,31 @@ fun ProfileContent(
   onRetryUpdate: () -> Unit,
   onRetryLogout: () -> Unit,
 ) {
-  var isShowUpdateUserSuccessDialog by rememberSaveable { mutableStateOf(true) }
-  var isShowUpdateUserErrorDialog by rememberSaveable { mutableStateOf(true) }
-  var isShowLogoutUserSuccessDialog by rememberSaveable { mutableStateOf(true) }
-  var isShowLogoutUserErrorDialog by rememberSaveable { mutableStateOf(true) }
+  var isShowUpdateUserSuccessDialog by remember { mutableStateOf(true) }
+  var isShowUpdateUserErrorDialog by remember { mutableStateOf(true) }
+  var isShowLogoutUserSuccessDialog by remember { mutableStateOf(true) }
+  var isShowLogoutUserErrorDialog by remember { mutableStateOf(true) }
   val currentUser = uiState.currentUser
 
+  LaunchedEffect(uiState.isUpdateUserSuccess) {
+    if (uiState.isUpdateUserSuccess) isShowUpdateUserSuccessDialog = true
+  }
+
+  LaunchedEffect(uiState.isUpdateUserError) {
+    if (uiState.isUpdateUserError) isShowUpdateUserErrorDialog = true
+  }
+
+  LaunchedEffect(uiState.isLogoutUserSuccess) {
+    if (uiState.isLogoutUserSuccess) isShowLogoutUserSuccessDialog = true
+  }
+
+  LaunchedEffect(uiState.isLogoutUserError) {
+    if (uiState.isLogoutUserError) isShowLogoutUserErrorDialog = true
+  }
+
   Box(
-    modifier =
-      if (uiState.isLoading) modifier.blur(8.dp)
-      else modifier
+    modifier = if (uiState.isLoading) modifier.blur(8.dp)
+    else modifier
   ) {
     Column(
       modifier = Modifier.fillMaxSize(),
@@ -85,7 +101,7 @@ fun ProfileContent(
 
     uiState.isUpdateUserError -> {
       if (isShowUpdateUserErrorDialog) {
-        NotificationDialog(
+        AlertDialog(
           title = stringResource(R.string.update_profile_failed),
           onConfirmClick = {
             isShowUpdateUserErrorDialog = false
@@ -98,7 +114,7 @@ fun ProfileContent(
 
     uiState.isLogoutUserError -> {
       if (isShowLogoutUserErrorDialog) {
-        NotificationDialog(
+        AlertDialog(
           title = stringResource(R.string.logout_failed_please_try_again),
           onConfirmClick = {
             isShowLogoutUserErrorDialog = false
@@ -111,7 +127,7 @@ fun ProfileContent(
 
     uiState.isUpdateUserSuccess -> {
       if (isShowUpdateUserSuccessDialog) {
-        NotificationDialog(
+        AlertDialog(
           icon = Icons.Default.Done,
           title = stringResource(R.string.your_profile_has_been_updated_successfully),
           confirm = stringResource(R.string.ok),
@@ -123,7 +139,7 @@ fun ProfileContent(
 
     uiState.isLogoutUserSuccess -> {
       if (isShowLogoutUserSuccessDialog) {
-        NotificationDialog(
+        AlertDialog(
           icon = Icons.Default.Done,
           title = stringResource(R.string.logout_successful),
           confirm = stringResource(R.string.ok),
@@ -156,8 +172,7 @@ private fun ProfileContentIdlePreview() {
       onUpdatePicUrlChange = {},
       onLogoutSuccess = {},
       onRetryUpdate = {},
-      onRetryLogout = {}
-    )
+      onRetryLogout = {})
   }
 }
 
@@ -172,8 +187,7 @@ private fun ProfileContentLoadingPreview() {
       onUpdatePicUrlChange = {},
       onLogoutSuccess = {},
       onRetryUpdate = {},
-      onRetryLogout = {}
-    )
+      onRetryLogout = {})
   }
 }
 
@@ -188,8 +202,7 @@ private fun ProfileContentUpdateSuccessPreview() {
       onUpdatePicUrlChange = {},
       onLogoutSuccess = {},
       onRetryUpdate = {},
-      onRetryLogout = {}
-    )
+      onRetryLogout = {})
   }
 }
 
@@ -204,8 +217,7 @@ private fun ProfileContentUpdateErrorPreview() {
       onUpdatePicUrlChange = {},
       onLogoutSuccess = {},
       onRetryUpdate = {},
-      onRetryLogout = {}
-    )
+      onRetryLogout = {})
   }
 }
 
@@ -220,7 +232,6 @@ private fun ProfileContentLogoutErrorPreview() {
       onUpdatePicUrlChange = {},
       onLogoutSuccess = {},
       onRetryUpdate = {},
-      onRetryLogout = {}
-    )
+      onRetryLogout = {})
   }
 }

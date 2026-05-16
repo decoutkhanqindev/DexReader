@@ -46,7 +46,8 @@ fun SearchContent(
       suggestionsUiState = suggestionsUiState,
       suggestionList = suggestionList,
       modifier = modifier,
-    ) { onSelectedSuggestion(it) }
+      onSelectedSuggestion = onSelectedSuggestion,
+    )
   } else {
     ResultsSection(
       query = query,

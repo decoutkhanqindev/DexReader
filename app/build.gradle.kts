@@ -42,8 +42,10 @@ android {
 
   buildTypes {
     release {
-      isMinifyEnabled = false
+      isMinifyEnabled = false // Disable code shrinking to prevent issues with missing classes in release builds
+      isShrinkResources = false // Disable resource shrinking to prevent issues with missing resources in release builds
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+      signingConfig = signingConfigs.getByName("debug")
     }
   }
   compileOptions {
@@ -53,6 +55,21 @@ android {
 
   buildFeatures {
     compose = true
+  }
+
+  lint {
+    // False positive on AGP 9.x: ComponentActivity is a valid Activity subclass
+    // but Lint's bytecode analysis doesn't resolve the inheritance chain correctly.
+    disable += "Instantiatable"
+  }
+}
+
+composeCompiler {
+  // Emit reports only when explicitly requested via -PcomposeCompilerReports=true
+  // to avoid slowing down regular builds.
+  if (providers.gradleProperty("composeCompilerReports").orNull == "true") {
+    reportsDestination = layout.buildDirectory.dir("compose_compiler")
+    metricsDestination = layout.buildDirectory.dir("compose_compiler")
   }
 }
 

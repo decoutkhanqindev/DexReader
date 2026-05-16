@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,7 +30,7 @@ fun VerticalGridMangaList(
   lazyGridState: LazyGridState,
   items: ImmutableList<MangaModel>,
   modifier: Modifier = Modifier,
-  onItemClick: (MangaModel) -> Unit,
+  onItemClick: (String) -> Unit,
   loadMoreContent: @Composable () -> Unit,
 ) {
   LazyVerticalGrid(
@@ -39,17 +40,15 @@ fun VerticalGridMangaList(
     verticalArrangement = Arrangement.spacedBy(2.dp),
     horizontalArrangement = Arrangement.spacedBy(2.dp),
   ) {
-    items(
-      items = items,
-      key = MangaModel::id
-    ) { manga ->
+    items(items = items, key = MangaModel::id) {
       MangaItem(
-        item = manga,
+        item = it,
         modifier = Modifier
           .padding(4.dp)
           .fillMaxWidth()
           .height(250.dp),
-      ) { onItemClick(it) }
+        onClick = onItemClick
+      )
     }
     item(span = { GridItemSpan(maxLineSpan) }) {
       Box(

@@ -9,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -25,13 +26,15 @@ fun ThemeOptionItem(
   modifier: Modifier = Modifier,
   onClick: (ThemeModeValue) -> Unit,
 ) {
+  val onClick = remember(item.name) { { onClick(item) } }
+
   Row(
-    modifier = modifier.clickable { onClick(item) },
+    modifier = modifier.clickable(onClick = onClick),
     verticalAlignment = Alignment.CenterVertically,
   ) {
     RadioButton(
       selected = isSelected,
-      onClick = { onClick(item) },
+      onClick = onClick,
     )
     Text(
       text = stringResource(item.nameRes),

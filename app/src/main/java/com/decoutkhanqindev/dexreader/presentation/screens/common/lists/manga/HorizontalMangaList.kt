@@ -2,7 +2,6 @@ package com.decoutkhanqindev.dexreader.presentation.screens.common.lists.manga
 
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -10,6 +9,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,26 +25,22 @@ import kotlinx.collections.immutable.persistentListOf
 fun HorizontalMangaList(
   items: ImmutableList<MangaModel>,
   modifier: Modifier = Modifier,
-  onItemClick: (MangaModel) -> Unit,
+  onItemClick: (String) -> Unit,
 ) {
-  Box(modifier = modifier) {
-    LazyRow(
-      modifier = Modifier.fillMaxWidth(),
-      horizontalArrangement = Arrangement.spacedBy(2.dp),
-      verticalAlignment = Alignment.CenterVertically,
-    ) {
-      items(
-        items = items,
-        key = MangaModel::id
-      ) { manga ->
-        MangaItem(
-          item = manga,
-          modifier = Modifier
-            .padding(4.dp)
-            .width(194.dp)
-            .height(250.dp),
-        ) { onItemClick(it) }
-      }
+  LazyRow(
+    modifier = modifier,
+    horizontalArrangement = Arrangement.spacedBy(2.dp),
+    verticalAlignment = Alignment.CenterVertically,
+  ) {
+    items(items = items, key = MangaModel::id) {
+      MangaItem(
+        item = it,
+        modifier = Modifier
+          .padding(4.dp)
+          .width(194.dp)
+          .height(250.dp),
+        onClick = onItemClick
+      )
     }
   }
 }

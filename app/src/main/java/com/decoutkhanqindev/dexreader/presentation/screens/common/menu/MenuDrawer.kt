@@ -45,7 +45,8 @@ fun MenuDrawer(
               .weight(0.4f)
               .fillMaxWidth()
               .padding(16.dp),
-          ) { onSignInClick() }
+            onSignInClick = onSignInClick
+          )
 
           MenuBody(
             selectedItem = selectedItem,
@@ -53,7 +54,8 @@ fun MenuDrawer(
             modifier = Modifier
               .weight(2f)
               .fillMaxWidth(),
-          ) { onItemClick(it) }
+            onItemClick = onItemClick
+          )
 
           MenuFooter(
             modifier = Modifier

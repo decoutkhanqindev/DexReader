@@ -1,17 +1,13 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.category_details
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.CategoryDetailsContent
-import com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.actions.SortAndFilterButtons
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseDetailsScreen
 
 @Composable
@@ -35,16 +31,16 @@ fun CategoryDetailScreen(
     CategoryDetailsContent(
       detailsUiState = detailsUiState,
       criteriaUiState = criteriaUiState,
-      onSortApplyClick = { sortCriteria, sortOrder ->
-        viewModel.updateSortingCriteria(sortCriteria, sortOrder)
+      onSortApplyClick = remember {
+        { s, o -> viewModel.updateSortingCriteria(s, o) }
       },
-      onFilterApplyClick = { statusFilter, contentRatingFilter ->
-        viewModel.updateFilteringCriteria(statusFilter, contentRatingFilter)
+      onFilterApplyClick = remember {
+        { s, c -> viewModel.updateFilteringCriteria(s, c) }
       },
       onMangaClick = onNavigateToMangaDetailScreen,
-      onFetchMangaListNextPage = viewModel::fetchMangaListByCategoryNextPage,
-      onRetryFetchMangaListNextPage = viewModel::retryFetchMangaListByCategoryNextPage,
-      onRetry = viewModel::retry,
+      onFetchMangaListNextPage = remember { viewModel::fetchMangaListByCategoryNextPage },
+      onRetryFetchMangaListNextPage = remember { viewModel::retryFetchMangaListByCategoryNextPage },
+      onRetry = remember { viewModel::retry },
       modifier = Modifier.fillMaxSize()
     )
   }

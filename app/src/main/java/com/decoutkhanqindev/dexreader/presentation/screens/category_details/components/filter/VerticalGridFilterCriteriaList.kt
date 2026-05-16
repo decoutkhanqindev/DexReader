@@ -5,9 +5,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,12 +27,17 @@ fun VerticalGridFilterCriteriaList(
   onContentRatingOptionsSelect: (ImmutableList<MangaContentRatingValue>) -> Unit,
   modifier: Modifier = Modifier,
 ) {
+  val statusItems = remember {
+    MangaStatusValue.entries.filter { it != MangaStatusValue.UNKNOWN }.toPersistentList()
+  }
+  val contentRatingItems = remember {
+    MangaContentRatingValue.entries.filter { it != MangaContentRatingValue.UNKNOWN }.toPersistentList()
+  }
+
   Row(modifier = modifier) {
     FilterCriteriaItem(
       title = stringResource(R.string.filter_status),
-      items = MangaStatusValue.entries.filter {
-        it != MangaStatusValue.UNKNOWN
-      }.toPersistentList(),
+      items = statusItems,
       selectedItems = selectedStatusOptions,
       nameResOf = { it.nameRes },
       onItemsSelect = onStatusOptionsSelect,
@@ -43,9 +47,7 @@ fun VerticalGridFilterCriteriaList(
     )
     FilterCriteriaItem(
       title = stringResource(R.string.filter_content_rating),
-      items = MangaContentRatingValue.entries.filter {
-        it != MangaContentRatingValue.UNKNOWN
-      }.toPersistentList(),
+      items = contentRatingItems,
       selectedItems = selectedContentRatingOptions,
       nameResOf = { it.nameRes },
       onItemsSelect = onContentRatingOptionsSelect,

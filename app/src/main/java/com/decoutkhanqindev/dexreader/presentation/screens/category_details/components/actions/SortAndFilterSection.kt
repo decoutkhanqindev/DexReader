@@ -29,12 +29,11 @@ fun SortAndFilterSection(
     MoveToTopButton(
       itemsSize = itemsSize,
       gridState = gridState,
+      onClick = onMoveToTopClick,
       modifier = Modifier
         .align(Alignment.End)
         .padding(end = 16.dp)
-    ) {
-      onMoveToTopClick()
-    }
+    )
 
     SortAndFilterButtons(
       onSortClick = onSortClick,

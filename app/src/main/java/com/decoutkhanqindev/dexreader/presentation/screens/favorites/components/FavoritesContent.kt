@@ -12,10 +12,11 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,7 +30,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatus
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.MoveToTopButton
-import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
+import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.ListLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
@@ -49,14 +50,18 @@ fun FavoritesContent(
   onRetry: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
+  var isShowErrorDialog by remember { mutableStateOf(true) }
+
+  LaunchedEffect(uiState) {
+    if (uiState is BasePaginationUiState.FirstPageError) isShowErrorDialog = true
+  }
 
   when (uiState) {
     BasePaginationUiState.FirstPageLoading -> LoadingScreen(modifier = modifier)
 
     is BasePaginationUiState.FirstPageError -> {
       if (isShowErrorDialog) {
-        NotificationDialog(
+        AlertDialog(
           onConfirmClick = {
             isShowErrorDialog = false
             onRetry()
@@ -91,9 +96,9 @@ fun FavoritesContent(
             items(
               items = favoriteMangaList,
               key = FavoriteMangaModel::id
-            ) { manga ->
+            ) {
               FavoriteMangaItem(
-                manga = manga,
+                manga = it,
                 onSelectedManga = onSelectedManga,
                 modifier = Modifier
                   .padding(4.dp)

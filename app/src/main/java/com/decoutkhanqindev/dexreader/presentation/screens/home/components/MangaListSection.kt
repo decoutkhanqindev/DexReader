@@ -27,7 +27,7 @@ fun MangaListSection(
   title: String,
   items: ImmutableList<MangaModel>,
   modifier: Modifier = Modifier,
-  onItemClick: (MangaModel) -> Unit,
+  onItemClick: (String) -> Unit,
 ) {
   Column(modifier = modifier) {
     Text(
@@ -43,7 +43,8 @@ fun MangaListSection(
     HorizontalMangaList(
       items = items,
       modifier = Modifier.fillMaxWidth(),
-    ) { onItemClick(it) }
+      onItemClick = onItemClick,
+    )
   }
 }
 

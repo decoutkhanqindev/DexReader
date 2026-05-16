@@ -24,7 +24,7 @@ import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NotificationDialog(
+fun AlertDialog(
   icon: ImageVector = Icons.Default.ErrorOutline,
   title: String = stringResource(R.string.oops_something_went_wrong_please_try_again),
   confirm: String = stringResource(R.string.ok),
@@ -81,17 +81,17 @@ fun NotificationDialog(
 
 @Preview
 @Composable
-private fun NotificationDialogPreview() {
+private fun AlertDialogPreview() {
   DexReaderTheme {
-    NotificationDialog(onConfirmClick = {})
+    AlertDialog(onConfirmClick = {})
   }
 }
 
 @Preview
 @Composable
-private fun NotificationDialogNoDismissPreview() {
+private fun AlertDialogNoDismissPreview() {
   DexReaderTheme {
-    NotificationDialog(
+    AlertDialog(
       isEnableDismiss = false,
       onConfirmClick = {}
     )
@@ -100,9 +100,9 @@ private fun NotificationDialogNoDismissPreview() {
 
 @Preview
 @Composable
-private fun NotificationDialogCustomPreview() {
+private fun AlertDialogCustomPreview() {
   DexReaderTheme {
-    NotificationDialog(
+    AlertDialog(
       title = "Update available. Please restart the app to apply changes.",
       confirm = "Restart",
       onConfirmClick = {}

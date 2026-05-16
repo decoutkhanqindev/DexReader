@@ -5,11 +5,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,7 +27,7 @@ fun VerticalGridSortCriteriaList(
       SortCriteriaItem(
         isSelected = selectedItem == criteria,
         item = criteria,
-        onClick = { onItemClick(criteria) },
+        onClick = remember(criteria) { { onItemClick(criteria) } },
         modifier = Modifier
           .weight(1f)
           .padding(4.dp)

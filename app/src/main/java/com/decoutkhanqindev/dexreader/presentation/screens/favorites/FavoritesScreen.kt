@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -46,9 +47,9 @@ fun FavoritesScreen(
       FavoritesContent(
         uiState = uiState,
         onSelectedManga = onNavigateToMangaDetailScreen,
-        onObserveFavoriteMangaListNextPage = viewModel::observeFavoritesNextPage,
-        onRetryObserveFavoriteMangaListNextPage = viewModel::retryObserveFavoritesNextPage,
-        onRetry = viewModel::retry,
+        onObserveFavoriteMangaListNextPage = remember { viewModel::observeFavoritesNextPage },
+        onRetryObserveFavoriteMangaListNextPage = remember { viewModel::retryObserveFavoritesNextPage },
+        onRetry = remember { viewModel::retry },
         modifier = Modifier.fillMaxSize()
       )
     } else {

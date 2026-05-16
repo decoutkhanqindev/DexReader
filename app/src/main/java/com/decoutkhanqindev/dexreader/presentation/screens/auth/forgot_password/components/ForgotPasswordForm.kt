@@ -70,14 +70,16 @@ fun ForgotPasswordForm(
         value = email,
         error = emailError,
         modifier = Modifier.fillMaxWidth(),
-      ) { onEmailChange(it) }
+        onValueChange = onEmailChange,
+      )
 
       SubmitButton(
         title = stringResource(R.string.reset_password),
         modifier = Modifier
           .fillMaxWidth()
           .padding(bottom = 8.dp),
-      ) { onSubmitClick() }
+        onClick = onSubmitClick,
+      )
 
       ActionButton(
         modifier = Modifier.fillMaxWidth(),

@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,6 +22,7 @@ class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     Timber.tag(this::class.java.simpleName).d("onCreate: initializing UI")
+    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     enableEdgeToEdge()
     setContent {
       val settingsViewModel = hiltViewModel<SettingsViewModel>()

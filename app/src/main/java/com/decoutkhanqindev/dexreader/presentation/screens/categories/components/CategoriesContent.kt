@@ -8,10 +8,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -21,7 +21,7 @@ import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.category.CategoryTypeValue
 import com.decoutkhanqindev.dexreader.presentation.screens.categories.CategoriesUiState
-import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NotificationDialog
+import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.persistentListOf
@@ -35,14 +35,18 @@ fun CategoriesContent(
   onItemClick: (String, String) -> Unit,
   onRetry: () -> Unit,
 ) {
-  var isShowErrorDialog by rememberSaveable { mutableStateOf(true) }
+  var isShowErrorDialog by remember { mutableStateOf(true) }
+
+  LaunchedEffect(uiState) {
+    if (uiState is CategoriesUiState.Error) isShowErrorDialog = true
+  }
 
   when (uiState) {
     CategoriesUiState.Loading -> LoadingScreen(modifier = modifier)
 
     is CategoriesUiState.Error -> {
       if (isShowErrorDialog) {
-        NotificationDialog(
+        AlertDialog(
           title = stringResource(uiState.error.messageRes),
           onConfirmClick = {
             isShowErrorDialog = false
@@ -54,12 +58,10 @@ fun CategoriesContent(
     }
 
     is CategoriesUiState.Success -> {
-      var expandedType by rememberSaveable(
-        stateSaver = Saver(
-          save = { it?.name },
-          restore = { CategoryTypeValue.valueOf(it) }
-        )
-      ) { mutableStateOf<CategoryTypeValue?>(null) }
+      var expandedType by remember { mutableStateOf<CategoryTypeValue?>(null) }
+      val categoryTypes = remember(uiState) {
+        uiState.categoryMap.keys.toPersistentList()
+      }
 
       Column(
         modifier = modifier
@@ -67,7 +69,7 @@ fun CategoriesContent(
           .padding(horizontal = 4.dp)
           .verticalScroll(rememberScrollState())
       ) {
-        uiState.categoryMap.keys.toPersistentList().forEach {
+        categoryTypes.forEach {
           CategoryTypeSection(
             isExpanded = expandedType == it,
             type = it,
