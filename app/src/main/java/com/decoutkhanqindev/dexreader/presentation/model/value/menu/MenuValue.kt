@@ -8,9 +8,11 @@ import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.decoutkhanqindev.dexreader.R
 
+@Immutable
 enum class MenuValue(
   @param:StringRes val nameRes: Int,
   val icon: ImageVector,

@@ -92,5 +92,4 @@ class UserViewModel @Inject constructor(
     cancelUserProfileJob()
     super.onCleared()
   }
-
 }

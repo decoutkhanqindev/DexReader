@@ -5,9 +5,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.PhoneAndroid
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.decoutkhanqindev.dexreader.R
 
+@Immutable
 enum class ThemeModeValue(
   @param:StringRes val nameRes: Int,
   val icon: ImageVector,

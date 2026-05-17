@@ -1,8 +1,10 @@
 package com.decoutkhanqindev.dexreader.presentation.model.value.criteria
 
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Immutable
 import com.decoutkhanqindev.dexreader.R
 
+@Immutable
 enum class MangaSortCriteriaValue(@param:StringRes val nameRes: Int) {
   LATEST_UPDATE(R.string.latest_update),
   TRENDING(R.string.trending),

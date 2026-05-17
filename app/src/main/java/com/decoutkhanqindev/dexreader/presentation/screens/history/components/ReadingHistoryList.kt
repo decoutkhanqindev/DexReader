@@ -49,9 +49,7 @@ fun ReadingHistoryList(
 ) {
   val lazyListState = rememberLazyListState()
   val coroutineScope = rememberCoroutineScope()
-  val lastHistory = remember(readingHistoryList) {
-    readingHistoryList.lastOrNull()
-  }
+  val lastHistory = remember(readingHistoryList) { readingHistoryList.lastOrNull() }
 
   Box(modifier = modifier) {
     LazyColumn(
@@ -69,6 +67,7 @@ fun ReadingHistoryList(
           onSelectedReadingHistory = onSelectedReadingHistory,
           onRemoveFromHistory = onRemoveFromHistory,
           modifier = Modifier
+            .animateItem() // animate item placement when the list changes
             .fillMaxWidth()
             .height(160.dp)
         )

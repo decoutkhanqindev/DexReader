@@ -23,12 +23,10 @@ fun MenuItemRow(
   modifier: Modifier = Modifier,
   onClick: (MenuValue) -> Unit,
 ) {
-  val title = stringResource(item.nameRes)
-
   NavigationDrawerItem(
     label = {
       Text(
-        text = title,
+        text = stringResource(item.nameRes),
         fontWeight = FontWeight.Bold,
         textAlign = TextAlign.Center,
         style = MaterialTheme.typography.bodyLarge,
@@ -40,7 +38,7 @@ fun MenuItemRow(
     icon = {
       Icon(
         imageVector = item.icon,
-        contentDescription = title,
+        contentDescription = null,
         tint = MaterialTheme.colorScheme.onPrimaryContainer
       )
     },

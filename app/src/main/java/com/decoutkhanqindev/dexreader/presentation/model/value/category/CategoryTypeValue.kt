@@ -1,8 +1,10 @@
 package com.decoutkhanqindev.dexreader.presentation.model.value.category
 
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Immutable
 import com.decoutkhanqindev.dexreader.R
 
+@Immutable
 enum class CategoryTypeValue(@param:StringRes val nameRes: Int) {
   GENRE(R.string.category_type_genre),
   THEME(R.string.category_type_theme),

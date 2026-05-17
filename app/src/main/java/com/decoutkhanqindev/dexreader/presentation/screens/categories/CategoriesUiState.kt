@@ -11,6 +11,7 @@ import kotlinx.collections.immutable.persistentMapOf
 
 @Immutable
 sealed interface CategoriesUiState {
+  @Immutable
   data object Loading : CategoriesUiState
 
   @Immutable

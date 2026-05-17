@@ -3,10 +3,9 @@ package com.decoutkhanqindev.dexreader.presentation.screens.common.menu
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,12 +23,12 @@ fun MenuBody(
   modifier: Modifier = Modifier,
   onItemClick: (MenuValue) -> Unit,
 ) {
-  LazyColumn(
+  Column(
     modifier = modifier.background(color = MaterialTheme.colorScheme.surface),
     verticalArrangement = Arrangement.Top,
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
-    items(items, key = MenuValue::name) {
+    items.forEach {
       MenuItemRow(
         isSelected = it == selectedItem,
         item = it,

@@ -5,10 +5,12 @@ import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 
 @Immutable
 sealed interface SuggestionsUiState {
+  @Immutable
   data object Loading : SuggestionsUiState
 
   @Immutable
   data class Error(val error: FeatureError = FeatureError.Generic) : SuggestionsUiState
 
+  @Immutable
   data object Success : SuggestionsUiState
 }

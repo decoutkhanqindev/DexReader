@@ -6,6 +6,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 
 @Immutable
 sealed interface MangaDetailsUiState {
+  @Immutable
   data object Loading : MangaDetailsUiState
 
   @Immutable

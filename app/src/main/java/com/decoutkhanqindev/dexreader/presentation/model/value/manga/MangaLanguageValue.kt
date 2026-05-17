@@ -1,8 +1,10 @@
 package com.decoutkhanqindev.dexreader.presentation.model.value.manga
 
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Immutable
 import com.decoutkhanqindev.dexreader.R
 
+@Immutable
 enum class MangaLanguageValue(@param:StringRes val value: Int) {
   ENGLISH(R.string.lang_english),
   AFRIKAANS(R.string.lang_afrikaans),

@@ -75,6 +75,8 @@ fun FavoritesContent(
     is BasePaginationUiState.Content<FavoriteMangaModel> -> {
       val favoriteMangaList = uiState.currentList
       val nextPageState = uiState.nextPageState
+      val lazyGridState = rememberLazyGridState()
+      val coroutineScope = rememberCoroutineScope()
 
       if (favoriteMangaList.isEmpty()) {
         IdleScreen(
@@ -82,9 +84,6 @@ fun FavoritesContent(
           modifier = Modifier.fillMaxSize()
         )
       } else {
-        val lazyGridState = rememberLazyGridState()
-        val coroutineScope = rememberCoroutineScope()
-
         Box(modifier = modifier) {
           LazyVerticalGrid(
             state = lazyGridState,

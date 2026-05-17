@@ -26,7 +26,6 @@ import com.decoutkhanqindev.dexreader.presentation.screens.category_details.Cate
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toPersistentList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

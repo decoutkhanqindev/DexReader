@@ -1,5 +1,8 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.common.base.state
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 enum class BaseNextPageState {
   IDLE,
   LOADING,

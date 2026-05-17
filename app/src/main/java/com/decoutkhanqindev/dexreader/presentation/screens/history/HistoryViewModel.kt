@@ -35,8 +35,7 @@ constructor(
     _historyUiState.asStateFlow()
 
   private val _removeFromHistoryUiState = MutableStateFlow(RemoveFromHistoryUiState())
-  val removeFromHistoryUiState: StateFlow<RemoveFromHistoryUiState> =
-    _removeFromHistoryUiState.asStateFlow()
+  val removeFromHistoryUiState: StateFlow<RemoveFromHistoryUiState> = _removeFromHistoryUiState.asStateFlow()
 
   private val _userId = MutableStateFlow<String?>(null)
 

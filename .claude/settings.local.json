@@ -38,7 +38,14 @@
       "Bash(Select-Object LineNumber, Line)",
       "Bash(Format-Table -AutoSize)",
       "Bash(python *)",
-      "PowerShell(Select-String *)"
+      "PowerShell(Select-String *)",
+      "Bash(./gradlew :app:compileDebugKotlin --quiet)",
+      "Bash(./gradlew :app:dependencies --configuration debugCompileClasspath --quiet)",
+      "Bash(jar tf *)",
+      "Bash(jar xf *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Android Development\\\\dex_reader\\\\DexReader\\\\app\\\\src\\\\main\\\\java\\\\com\\\\decoutkhanqindev\\\\dexreader\\\\presentation\" -Recurse -Filter \"*.kt\")",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(grep -v \"//.*on[A-Z]\")"
     ]
   }
 }

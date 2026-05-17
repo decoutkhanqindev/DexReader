@@ -1,8 +1,10 @@
 package com.decoutkhanqindev.dexreader.presentation.model.value.manga
 
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Immutable
 import com.decoutkhanqindev.dexreader.R
 
+@Immutable
 enum class MangaContentRatingValue(@param:StringRes val nameRes: Int) {
   SAFE(R.string.content_rating_safe),
   SUGGESTIVE(R.string.content_rating_suggestive),

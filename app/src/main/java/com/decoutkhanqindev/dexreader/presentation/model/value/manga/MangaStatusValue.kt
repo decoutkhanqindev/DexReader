@@ -1,8 +1,10 @@
 package com.decoutkhanqindev.dexreader.presentation.model.value.manga
 
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Immutable
 import com.decoutkhanqindev.dexreader.R
 
+@Immutable
 enum class MangaStatusValue(@param:StringRes val nameRes: Int) {
   ON_GOING(R.string.status_on_going),
   COMPLETED(R.string.status_completed),
