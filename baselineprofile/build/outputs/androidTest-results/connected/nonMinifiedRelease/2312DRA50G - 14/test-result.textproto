@@ -1,7 +1,7 @@
 # proto-message: google.testing.platform.proto.api.core.TestSuiteResult
-# 2026-05-17T17:18:23.323539700Z:
+# 2026-05-18T16:09:08.706719Z:
 test_suite_meta_data {
-  scheduled_test_case_count: 1
+  scheduled_test_case_count: 4
   device {
     id: "de7b2ba"
     friendly_name: "primary"
@@ -14,12 +14,12 @@ test_result {
     test_package: "com.decoutkhanqindev.dexreader.baselineprofile"
     test_method: "generate"
     start_time {
-      seconds: 1779038104
-      nanos: 637000000
+      seconds: 1779120314
+      nanos: 434000000
     }
     end_time {
-      seconds: 1779038301
-      nanos: 181000000
+      seconds: 1779120546
+      nanos: 288000000
     }
     device {
       id: "de7b2ba"
@@ -42,7 +42,7 @@ test_result {
       namespace: "android"
     }
     source_path {
-      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\nonMinifiedRelease\\connected\\2312DRA50G - 14\\BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt"
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\nonMinifiedRelease\\connected\\2312DRA50G - 14\\BaselineProfileGenerator_generate-startup-prof-2026-05-18-16-08-44.txt"
     }
   }
   output_artifact {
@@ -86,16 +86,16 @@ test_result {
     value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt"
   }
   details {
-    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt"
-    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt"
+    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof-2026-05-18-16-08-44.txt"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof-2026-05-18-16-08-44.txt"
   }
   details {
     key: "android.studio.display.benchmark"
-    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 196304427685.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 231558897620.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-18-16-08-44.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
   }
   details {
     key: "android.studio.v2display.benchmark"
-    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 196304427685.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 231558897620.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-18-16-08-44.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
   }
   details {
     key: "android.studio.v2display.benchmark.outputDirPath"
@@ -103,7 +103,7 @@ test_result {
   }
   details {
     key: "android.studio.v3display.benchmark"
-    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 196304427685.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 231558897620.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-18-16-08-44.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
   }
   details {
     key: "android.studio.v3display.benchmark.outputDirPath"
@@ -114,16 +114,16 @@ test_result {
     value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt"
   }
   details {
-    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt"
-    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt"
+    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof-2026-05-18-16-08-44.txt"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof-2026-05-18-16-08-44.txt"
   }
   details {
     key: "android.studio.display.benchmark"
-    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 196304427685.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 231558897620.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-18-16-08-44.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
   }
   details {
     key: "android.studio.v2display.benchmark"
-    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 196304427685.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 231558897620.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-18-16-08-44.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
   }
   details {
     key: "android.studio.v2display.benchmark.outputDirPath"
@@ -131,7 +131,7 @@ test_result {
   }
   details {
     key: "android.studio.v3display.benchmark"
-    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 196304427685.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 231558897620.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-18-16-08-44.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
   }
   details {
     key: "android.studio.v3display.benchmark.outputDirPath"
@@ -142,16 +142,16 @@ test_result {
     value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt"
   }
   details {
-    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt"
-    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt"
+    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof-2026-05-18-16-08-44.txt"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof-2026-05-18-16-08-44.txt"
   }
   details {
     key: "android.studio.display.benchmark"
-    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 196304427685.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 231558897620.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-18-16-08-44.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
   }
   details {
     key: "android.studio.v2display.benchmark"
-    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 196304427685.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 231558897620.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-18-16-08-44.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
   }
   details {
     key: "android.studio.v2display.benchmark.outputDirPath"
@@ -159,7 +159,7 @@ test_result {
   }
   details {
     key: "android.studio.v3display.benchmark"
-    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 196304427685.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 231558897620.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-18-16-08-44.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
   }
   details {
     key: "android.studio.v3display.benchmark.outputDirPath"
@@ -170,16 +170,16 @@ test_result {
     value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt"
   }
   details {
-    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt"
-    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt"
+    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof-2026-05-18-16-08-44.txt"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof-2026-05-18-16-08-44.txt"
   }
   details {
     key: "android.studio.display.benchmark"
-    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 196304427685.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 231558897620.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-18-16-08-44.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
   }
   details {
     key: "android.studio.v2display.benchmark"
-    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 196304427685.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 231558897620.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-18-16-08-44.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
   }
   details {
     key: "android.studio.v2display.benchmark.outputDirPath"
@@ -187,11 +187,86 @@ test_result {
   }
   details {
     key: "android.studio.v3display.benchmark"
-    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 196304427685.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 231558897620.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-18-16-08-44.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
   }
   details {
     key: "android.studio.v3display.benchmark.outputDirPath"
     value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output"
+  }
+}
+test_result {
+  test_case {
+    test_class: "StartupBenchmarks"
+    test_package: "com.decoutkhanqindev.dexreader.baselineprofile"
+    test_method: "feedScrollPerformance"
+    start_time {
+      seconds: 1779120546
+      nanos: 812000000
+    }
+    end_time {
+      seconds: 1779120546
+      nanos: 821000000
+    }
+    device {
+      id: "de7b2ba"
+      friendly_name: "primary"
+    }
+  }
+  test_status: IGNORED
+  error {
+    error_message: "org.junit.AssumptionViolatedException: got: <false>, expected: is <true>\nat org.junit.Assume.assumeThat(Assume.java:106)\nat org.junit.Assume.assumeTrue(Assume.java:50)\nat androidx.benchmark.macro.junit4.MacrobenchmarkRule$apply$1.evaluate(MacrobenchmarkRule.kt:210)\nat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\nat org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)\nat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)\nat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)\nat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)\nat org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)\nat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)\nat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)\nat org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)\nat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)\nat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\nat org.junit.runners.ParentRunner.run(ParentRunner.java:413)\nat androidx.test.ext.junit.runners.AndroidJUnit4.run(AndroidJUnit4.java:162)\nat org.junit.runners.Suite.runChild(Suite.java:128)\nat org.junit.runners.Suite.runChild(Suite.java:27)\nat org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)\nat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)\nat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)\nat org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)\nat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)\nat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\nat org.junit.runners.ParentRunner.run(ParentRunner.java:413)\nat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\nat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\nat androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:68)\nat androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:59)\nat androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:467)\nat android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2446)\n"
+    error_type: "org.junit.AssumptionViolatedException"
+    stack_trace: "org.junit.AssumptionViolatedException: got: <false>, expected: is <true>\nat org.junit.Assume.assumeThat(Assume.java:106)\nat org.junit.Assume.assumeTrue(Assume.java:50)\nat androidx.benchmark.macro.junit4.MacrobenchmarkRule$apply$1.evaluate(MacrobenchmarkRule.kt:210)\nat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\nat org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)\nat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)\nat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)\nat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)\nat org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)\nat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)\nat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)\nat org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)\nat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)\nat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\nat org.junit.runners.ParentRunner.run(ParentRunner.java:413)\nat androidx.test.ext.junit.runners.AndroidJUnit4.run(AndroidJUnit4.java:162)\nat org.junit.runners.Suite.runChild(Suite.java:128)\nat org.junit.runners.Suite.runChild(Suite.java:27)\nat org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)\nat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)\nat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)\nat org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)\nat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)\nat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\nat org.junit.runners.ParentRunner.run(ParentRunner.java:413)\nat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\nat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\nat androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:68)\nat androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:59)\nat androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:467)\nat android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2446)\n"
+  }
+}
+test_result {
+  test_case {
+    test_class: "StartupBenchmarks"
+    test_package: "com.decoutkhanqindev.dexreader.baselineprofile"
+    test_method: "startupNoCompilation"
+    start_time {
+      seconds: 1779120546
+      nanos: 823000000
+    }
+    end_time {
+      seconds: 1779120546
+      nanos: 833000000
+    }
+    device {
+      id: "de7b2ba"
+      friendly_name: "primary"
+    }
+  }
+  test_status: IGNORED
+  error {
+    error_message: "org.junit.AssumptionViolatedException: got: <false>, expected: is <true>\nat org.junit.Assume.assumeThat(Assume.java:106)\nat org.junit.Assume.assumeTrue(Assume.java:50)\nat androidx.benchmark.macro.junit4.MacrobenchmarkRule$apply$1.evaluate(MacrobenchmarkRule.kt:210)\nat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\nat org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)\nat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)\nat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)\nat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)\nat org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)\nat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)\nat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)\nat org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)\nat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)\nat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\nat org.junit.runners.ParentRunner.run(ParentRunner.java:413)\nat androidx.test.ext.junit.runners.AndroidJUnit4.run(AndroidJUnit4.java:162)\nat org.junit.runners.Suite.runChild(Suite.java:128)\nat org.junit.runners.Suite.runChild(Suite.java:27)\nat org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)\nat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)\nat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)\nat org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)\nat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)\nat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\nat org.junit.runners.ParentRunner.run(ParentRunner.java:413)\nat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\nat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\nat androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:68)\nat androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:59)\nat androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:467)\nat android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2446)\n"
+    error_type: "org.junit.AssumptionViolatedException"
+    stack_trace: "org.junit.AssumptionViolatedException: got: <false>, expected: is <true>\nat org.junit.Assume.assumeThat(Assume.java:106)\nat org.junit.Assume.assumeTrue(Assume.java:50)\nat androidx.benchmark.macro.junit4.MacrobenchmarkRule$apply$1.evaluate(MacrobenchmarkRule.kt:210)\nat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\nat org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)\nat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)\nat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)\nat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)\nat org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)\nat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)\nat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)\nat org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)\nat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)\nat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\nat org.junit.runners.ParentRunner.run(ParentRunner.java:413)\nat androidx.test.ext.junit.runners.AndroidJUnit4.run(AndroidJUnit4.java:162)\nat org.junit.runners.Suite.runChild(Suite.java:128)\nat org.junit.runners.Suite.runChild(Suite.java:27)\nat org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)\nat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)\nat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)\nat org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)\nat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)\nat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\nat org.junit.runners.ParentRunner.run(ParentRunner.java:413)\nat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\nat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\nat androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:68)\nat androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:59)\nat androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:467)\nat android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2446)\n"
+  }
+}
+test_result {
+  test_case {
+    test_class: "StartupBenchmarks"
+    test_package: "com.decoutkhanqindev.dexreader.baselineprofile"
+    test_method: "startupBaselineProfile"
+    start_time {
+      seconds: 1779120546
+      nanos: 834000000
+    }
+    end_time {
+      seconds: 1779120546
+      nanos: 843000000
+    }
+    device {
+      id: "de7b2ba"
+      friendly_name: "primary"
+    }
+  }
+  test_status: IGNORED
+  error {
+    error_message: "org.junit.AssumptionViolatedException: got: <false>, expected: is <true>\nat org.junit.Assume.assumeThat(Assume.java:106)\nat org.junit.Assume.assumeTrue(Assume.java:50)\nat androidx.benchmark.macro.junit4.MacrobenchmarkRule$apply$1.evaluate(MacrobenchmarkRule.kt:210)\nat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\nat org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)\nat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)\nat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)\nat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)\nat org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)\nat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)\nat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)\nat org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)\nat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)\nat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\nat org.junit.runners.ParentRunner.run(ParentRunner.java:413)\nat androidx.test.ext.junit.runners.AndroidJUnit4.run(AndroidJUnit4.java:162)\nat org.junit.runners.Suite.runChild(Suite.java:128)\nat org.junit.runners.Suite.runChild(Suite.java:27)\nat org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)\nat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)\nat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)\nat org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)\nat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)\nat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\nat org.junit.runners.ParentRunner.run(ParentRunner.java:413)\nat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\nat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\nat androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:68)\nat androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:59)\nat androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:467)\nat android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2446)\n"
+    error_type: "org.junit.AssumptionViolatedException"
+    stack_trace: "org.junit.AssumptionViolatedException: got: <false>, expected: is <true>\nat org.junit.Assume.assumeThat(Assume.java:106)\nat org.junit.Assume.assumeTrue(Assume.java:50)\nat androidx.benchmark.macro.junit4.MacrobenchmarkRule$apply$1.evaluate(MacrobenchmarkRule.kt:210)\nat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\nat org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)\nat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)\nat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)\nat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)\nat org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)\nat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)\nat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)\nat org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)\nat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)\nat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\nat org.junit.runners.ParentRunner.run(ParentRunner.java:413)\nat androidx.test.ext.junit.runners.AndroidJUnit4.run(AndroidJUnit4.java:162)\nat org.junit.runners.Suite.runChild(Suite.java:128)\nat org.junit.runners.Suite.runChild(Suite.java:27)\nat org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)\nat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)\nat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)\nat org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)\nat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)\nat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\nat org.junit.runners.ParentRunner.run(ParentRunner.java:413)\nat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\nat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\nat androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:68)\nat androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:59)\nat androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:467)\nat android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2446)\n"
   }
 }
 output_artifact {

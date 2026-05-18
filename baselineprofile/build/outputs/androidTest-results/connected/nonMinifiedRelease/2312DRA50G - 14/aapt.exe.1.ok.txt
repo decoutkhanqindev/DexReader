@@ -1,7 +1,7 @@
 EXECUTING: C:\Users\ADMIN\AppData\Local\Android\Sdk\build-tools\36.0.0\aapt.exe dump badging C:\Android Development\dex_reader\DexReader\app\build\outputs\apk\nonMinifiedRelease\app-nonMinifiedRelease.apk
 CURRENT_WORKING_DIRECTORY: C:\Android Development\dex_reader\DexReader
-START_TIME: 2026-05-18 00:18:22.324
-START_TIME-NANOS: 2026-05-18 00:18:22.324986300
+START_TIME: 2026-05-18 23:09:07.676
+START_TIME-NANOS: 2026-05-18 23:09:07.676363000
 ENVIRONMENT:
 
 *****************************************
@@ -130,7 +130,7 @@ locales: '--_--' 'af' 'am' 'ar' 'as' 'az' 'be' 'bg' 'bn' 'bs' 'ca' 'cs' 'da' 'de
 densities: '120' '160' '240' '320' '480' '640' '65534'
 native-code: 'arm64-v8a' 'armeabi-v7a' 'x86' 'x86_64'
 ===================
-END_TIME: 2026-05-18 00:18:22.370
-END_TIME-NANOS: 2026-05-18 00:18:22.370092200
+END_TIME: 2026-05-18 23:09:07.721
+END_TIME-NANOS: 2026-05-18 23:09:07.721901900
 DURATION: 45ms
 EXIT CODE: 0

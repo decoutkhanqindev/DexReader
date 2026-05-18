@@ -18,7 +18,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.splash.SplashLogonAnd
 @Composable
 fun SplashContent(modifier: Modifier = Modifier) {
   Box(modifier = modifier) {
-    SplashLogonAndSlogan(modifier = Modifier.align(Alignment.Center))
+    SplashLogonAndSlogan(modifier = Modifier.align(Alignment.TopCenter))
 
     Column(
       modifier = Modifier

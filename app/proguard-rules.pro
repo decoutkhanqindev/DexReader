@@ -45,16 +45,11 @@
 # All fields + no-arg constructor must survive R8
 # -----------------------------------------------------------------------
 -keep class com.decoutkhanqindev.dexreader.data.network.firebase.dto.** { *; }
--keepclassmembers class com.decoutkhanqindev.dexreader.data.network.firebase.dto.** {
-    <init>();
-    <fields>;
-    <methods>;
-}
 
 # -----------------------------------------------------------------------
-# Room — has bundled consumer rules; add entity package as safety net
+# Room — has bundled consumer rules via KSP; keep only @Entity-annotated classes
 # -----------------------------------------------------------------------
--keep class com.decoutkhanqindev.dexreader.data.local.database.entity.** { *; }
+-keep @androidx.room.Entity class * { *; }
 
 # -----------------------------------------------------------------------
 # Kotlinx Coroutines — keep internal dispatcher resolution
