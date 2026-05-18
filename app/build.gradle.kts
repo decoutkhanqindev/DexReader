@@ -4,6 +4,7 @@ plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.compose)
   alias(libs.plugins.kotlin.serialization)
+  alias(libs.plugins.baselineprofile)
   id("com.google.devtools.ksp")
   id("com.google.dagger.hilt.android")
   id("com.google.gms.google-services")
@@ -42,8 +43,8 @@ android {
 
   buildTypes {
     release {
-      isMinifyEnabled = false // Disable code shrinking to prevent issues with missing classes in release builds
-      isShrinkResources = false // Disable resource shrinking to prevent issues with missing resources in release builds
+      isMinifyEnabled = true // Enable code shrinking for release builds
+      isShrinkResources = true // Enable resource shrinking for release builds
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
       signingConfig = signingConfigs.getByName("debug")
     }
@@ -150,4 +151,9 @@ dependencies {
 
   // Shimmer
   implementation(libs.compose.shimmer)
+
+  // Profile Installer — required for Macrobenchmark to install/drop baseline profile at runtime
+  implementation(libs.androidx.profileinstaller)
+
+  baselineProfile(project(":baselineprofile"))
 }

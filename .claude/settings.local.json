@@ -45,7 +45,19 @@
       "Bash(jar xf *)",
       "Bash(Get-ChildItem -Path \"C:\\\\Android Development\\\\dex_reader\\\\DexReader\\\\app\\\\src\\\\main\\\\java\\\\com\\\\decoutkhanqindev\\\\dexreader\\\\presentation\" -Recurse -Filter \"*.kt\")",
       "Bash(Select-Object -ExpandProperty FullName)",
-      "Bash(grep -v \"//.*on[A-Z]\")"
+      "Bash(grep -v \"//.*on[A-Z]\")",
+      "Skill(save)",
+      "WebSearch",
+      "WebFetch(domain:mvnrepository.com)",
+      "WebFetch(domain:dl.google.com)",
+      "Bash(adb devices *)",
+      "Bash(adb shell *)",
+      "Bash(./gradlew :app:generateReleaseBaselineProfile --info)",
+      "Bash(Select-String -Pattern \"FAILED|error|Error|no tests|install|Cannot|exception|Exception|BaselineProfile|collect\")",
+      "Bash(adb install *)",
+      "PowerShell(Get-ChildItem *)",
+      "Bash(Remove-Item *)",
+      "Bash(git restore *)"
     ]
   }
 }

@@ -24,3 +24,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "DexReader"
 include(":app")
+include(":baselineprofile")

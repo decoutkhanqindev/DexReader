@@ -1,8 +1,11 @@
 [versions]
 agp = "9.1.0"
+benchmarkMacroJunit4 = "1.4.1"
+baselineProfile = "1.5.0-alpha06"
+profileinstaller = "1.4.1"
+uiautomator = "2.3.0"
 coilCompose = "3.4.0"
 coilNetworkOkhttp = "3.4.0"
-composeAutoShimmer = "1.0.1"
 composeShimmer = "1.4.0"
 converterMoshi = "3.0.0"
 datastorePreferences = "1.2.1"
@@ -46,7 +49,6 @@ androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRunt
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
-compose-auto-shimmer = { module = "com.github.ChFardeelAzhar:compose-auto-shimmer", version.ref = "composeAutoShimmer" }
 compose-shimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version.ref = "composeShimmer" }
 converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "converterMoshi" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
@@ -78,10 +80,14 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 zoomable-image-coil3 = { module = "me.saket.telephoto:zoomable-image-coil3", version.ref = "zoomableImageCoil3" }
 androidx-lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "lifecycleProcess" }
+androidx-benchmark-macro-junit4 = { module = "androidx.benchmark:benchmark-macro-junit4", version.ref = "benchmarkMacroJunit4" }
+androidx-uiautomator = { module = "androidx.test.uiautomator:uiautomator", version.ref = "uiautomator" }
+androidx-profileinstaller = { module = "androidx.profileinstaller:profileinstaller", version.ref = "profileinstaller" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+baselineprofile = { id = "androidx.baselineprofile", version.ref = "baselineProfile" }
 

@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuites tests="1" failures="0" errors="0" skipped="0" time="198.652" timestamp="2026-05-17T17:18:23" hostname="localhost">
+  <testsuite name="com.decoutkhanqindev.dexreader.baselineprofile.BaselineProfileGenerator" tests="1" failures="0" errors="0" skipped="0" time="196.95" timestamp="2026-05-17T17:18:23" hostname="localhost">
+    <properties>
+      <property name="device" value="2312DRA50G - 14" />
+      <property name="flavor" value="" />
+      <property name="project" value=":baselineprofile" />
+    </properties>
+    <testcase name="generate" classname="com.decoutkhanqindev.dexreader.baselineprofile.BaselineProfileGenerator" time="196.95" />
+  </testsuite>
+</testsuites>

@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.auth.register
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -16,6 +17,8 @@ fun RegisterScreen(
   onNavigateToLoginScreen: () -> Unit,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+  BackHandler { onNavigateBack() }
 
   RegisterContent(
     uiState = uiState,

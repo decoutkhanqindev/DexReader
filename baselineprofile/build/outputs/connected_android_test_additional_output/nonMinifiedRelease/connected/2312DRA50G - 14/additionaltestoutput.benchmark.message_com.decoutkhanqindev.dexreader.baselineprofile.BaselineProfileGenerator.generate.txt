@@ -1,0 +1,6 @@
+BaselineProfileGenerator_generate
+Total run time Ns: 196304427685.
+Baseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt)
+
+To copy the profile use:
+adb -s de7b2ba pull "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt" .

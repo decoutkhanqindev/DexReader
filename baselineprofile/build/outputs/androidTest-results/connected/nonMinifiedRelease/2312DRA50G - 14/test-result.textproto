@@ -1,0 +1,207 @@
+# proto-message: google.testing.platform.proto.api.core.TestSuiteResult
+# 2026-05-17T17:18:23.323539700Z:
+test_suite_meta_data {
+  scheduled_test_case_count: 1
+  device {
+    id: "de7b2ba"
+    friendly_name: "primary"
+  }
+}
+test_status: PASSED
+test_result {
+  test_case {
+    test_class: "BaselineProfileGenerator"
+    test_package: "com.decoutkhanqindev.dexreader.baselineprofile"
+    test_method: "generate"
+    start_time {
+      seconds: 1779038104
+      nanos: 637000000
+    }
+    end_time {
+      seconds: 1779038301
+      nanos: 181000000
+    }
+    device {
+      id: "de7b2ba"
+      friendly_name: "primary"
+    }
+  }
+  test_status: PASSED
+  output_artifact {
+    label {
+      label: "additionaltestoutput.benchmark.message"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\nonMinifiedRelease\\connected\\2312DRA50G - 14\\additionaltestoutput.benchmark.message_com.decoutkhanqindev.dexreader.baselineprofile.BaselineProfileGenerator.generate.txt"
+    }
+  }
+  output_artifact {
+    label {
+      label: "additionaltestoutput.benchmark.trace"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\nonMinifiedRelease\\connected\\2312DRA50G - 14\\BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt"
+    }
+  }
+  output_artifact {
+    label {
+      label: "logcat"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\androidTest-results\\connected\\nonMinifiedRelease\\2312DRA50G - 14\\logcat-com.decoutkhanqindev.dexreader.baselineprofile.BaselineProfileGenerator-generate.txt"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\androidTest-results\\connected\\nonMinifiedRelease\\2312DRA50G - 14\\device-info.pb"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.meminfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\androidTest-results\\connected\\nonMinifiedRelease\\2312DRA50G - 14\\meminfo"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.cpuinfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\androidTest-results\\connected\\nonMinifiedRelease\\2312DRA50G - 14\\cpuinfo"
+    }
+  }
+  details {
+    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof.txt"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt"
+  }
+  details {
+    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt"
+  }
+  details {
+    key: "android.studio.display.benchmark"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 196304427685.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
+  }
+  details {
+    key: "android.studio.v2display.benchmark"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 196304427685.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
+  }
+  details {
+    key: "android.studio.v2display.benchmark.outputDirPath"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output"
+  }
+  details {
+    key: "android.studio.v3display.benchmark"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 196304427685.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
+  }
+  details {
+    key: "android.studio.v3display.benchmark.outputDirPath"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output"
+  }
+  details {
+    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof.txt"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt"
+  }
+  details {
+    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt"
+  }
+  details {
+    key: "android.studio.display.benchmark"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 196304427685.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
+  }
+  details {
+    key: "android.studio.v2display.benchmark"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 196304427685.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
+  }
+  details {
+    key: "android.studio.v2display.benchmark.outputDirPath"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output"
+  }
+  details {
+    key: "android.studio.v3display.benchmark"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 196304427685.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
+  }
+  details {
+    key: "android.studio.v3display.benchmark.outputDirPath"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output"
+  }
+  details {
+    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof.txt"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt"
+  }
+  details {
+    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt"
+  }
+  details {
+    key: "android.studio.display.benchmark"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 196304427685.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
+  }
+  details {
+    key: "android.studio.v2display.benchmark"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 196304427685.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
+  }
+  details {
+    key: "android.studio.v2display.benchmark.outputDirPath"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output"
+  }
+  details {
+    key: "android.studio.v3display.benchmark"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 196304427685.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
+  }
+  details {
+    key: "android.studio.v3display.benchmark.outputDirPath"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output"
+  }
+  details {
+    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof.txt"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt"
+  }
+  details {
+    key: "additionalTestOutputFile_BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt"
+  }
+  details {
+    key: "android.studio.display.benchmark"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 196304427685.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
+  }
+  details {
+    key: "android.studio.v2display.benchmark"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 196304427685.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
+  }
+  details {
+    key: "android.studio.v2display.benchmark.outputDirPath"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output"
+  }
+  details {
+    key: "android.studio.v3display.benchmark"
+    value: "BaselineProfileGenerator_generate\nTotal run time Ns: 196304427685.\nBaseline profile [results](file://BaselineProfileGenerator_generate-startup-prof-2026-05-17-17-18-00.txt)\n\nTo copy the profile use:\nadb -s de7b2ba pull \"/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/BaselineProfileGenerator_generate-startup-prof.txt\" .\n"
+  }
+  details {
+    key: "android.studio.v3display.benchmark.outputDirPath"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output"
+  }
+}
+output_artifact {
+  label {
+    label: "test-results.log"
+    namespace: "com.google.testing.platform.runtime.android.driver.AndroidInstrumentationDriver"
+  }
+  source_path {
+    path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\androidTest-results\\connected\\nonMinifiedRelease\\2312DRA50G - 14\\testlog\\test-results.log"
+  }
+  type: TEST_DATA
+  mime_type: "text/plain"
+}

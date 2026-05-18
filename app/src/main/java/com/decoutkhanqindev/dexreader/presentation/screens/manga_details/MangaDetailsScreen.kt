@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.manga_details
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,6 +46,8 @@ fun MangaDetailsScreen(
   val continueChapter by viewModel.continueChapter.collectAsStateWithLifecycle()
   val isFavorite by viewModel.isFavorite.collectAsStateWithLifecycle()
   var isShowFavoritesDialog by remember { mutableStateOf(false) }
+
+  BackHandler { onNavigateBack() }
 
   LaunchedEffect(isUserLoggedIn, currentUser?.id) {
     if (isUserLoggedIn && currentUser != null) viewModel.updateUserId(id = currentUser.id)

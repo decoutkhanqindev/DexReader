@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.reader
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -50,6 +51,8 @@ fun ReaderScreen(
     }
   }
   var isFullScreen by remember { mutableStateOf(false) }
+
+  BackHandler { onNavigateBack() }
 
   LaunchedEffect(isUserLoggedIn, currentUser?.id) {
     if (isUserLoggedIn && currentUser != null) viewModel.updateUserId(userId = currentUser.id)

@@ -186,16 +186,3 @@ All UiState/UiModel: `@Immutable`. Lists: `ImmutableList<T>` / `persistentListOf
 - `inline forEach` inside a `@Composable` content lambda runs in `@Composable` scope — strong skipping auto-memoizes; key per stable value: `remember(entry) { { cb(entry) } }`
 - `derivedStateOf { }` only tracks `State<T>` reads — read `uiState.field` (through the State delegate), never a bare composable parameter; bare params are invisible to the tracker
 
----
-
-## Compose Performance Skills — Auto-Trigger
-
-When working on any Compose task, automatically invoke the relevant skill from `.claude/skills/`. **Just one, two, three, ... skills not all to load. No confirmation needed.**
-
-**Stability**: `diagnosing-compose-stability` | `stabilizing-compose-types` | `understanding-stability-inference` | `using-strong-skipping-correctly` | `validating-compose-stability` | `enforcing-stability-in-ci` | `using-stability-analyzer-ide-plugin`
-
-**Recomposition**: `debugging-recompositions` | `tracing-recompositions-at-runtime` | `deferring-state-reads` | `visualizing-recomposition-cascades` | `using-efficient-effects` | `collecting-flows-safely`
-
-**Layout**: `optimizing-lazy-layouts` | `configuring-lazy-prefetch` | `avoiding-subcomposition-pitfalls` | `ordering-modifier-chains`
-
-**Build**: `auditing-compose-performance` | `generating-baseline-profiles` | `configuring-r8-for-compose`

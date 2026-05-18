@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.search
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,6 +29,8 @@ fun SearchScreen(
   val suggestionList by viewModel.suggestionList.collectAsStateWithLifecycle()
   val query by viewModel.query.collectAsStateWithLifecycle()
   var isExpanded by remember { mutableStateOf(false) }
+
+  BackHandler { onNavigateBack() }
 
   Scaffold(
     modifier = modifier,

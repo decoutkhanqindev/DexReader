@@ -1,0 +1,1064 @@
+# proto-message: google.testing.platform.proto.api.core.TestSuiteResult
+# 2026-05-17T16:57:43.014568400Z:
+test_suite_meta_data {
+  scheduled_test_case_count: 3
+  device {
+    id: "de7b2ba"
+    friendly_name: "primary"
+  }
+}
+test_status: FAILED
+test_result {
+  test_case {
+    test_class: "StartupBenchmarks"
+    test_package: "com.decoutkhanqindev.dexreader.baselineprofile"
+    test_method: "startupNoCompilation"
+    start_time {
+      seconds: 1779036882
+      nanos: 192000000
+    }
+    end_time {
+      seconds: 1779036962
+      nanos: 696000000
+    }
+    device {
+      id: "de7b2ba"
+      friendly_name: "primary"
+    }
+  }
+  test_status: PASSED
+  output_artifact {
+    label {
+      label: "additionaltestoutput.benchmark.message"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\benchmarkRelease\\connected\\2312DRA50G - 14\\additionaltestoutput.benchmark.message_com.decoutkhanqindev.dexreader.baselineprofile.StartupBenchmarks.startupNoCompilation.txt"
+    }
+  }
+  output_artifact {
+    label {
+      label: "additionaltestoutput.benchmark.trace"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\benchmarkRelease\\connected\\2312DRA50G - 14\\StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace"
+    }
+  }
+  output_artifact {
+    label {
+      label: "additionaltestoutput.benchmark.trace"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\benchmarkRelease\\connected\\2312DRA50G - 14\\StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace"
+    }
+  }
+  output_artifact {
+    label {
+      label: "additionaltestoutput.benchmark.trace"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\benchmarkRelease\\connected\\2312DRA50G - 14\\StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace"
+    }
+  }
+  output_artifact {
+    label {
+      label: "additionaltestoutput.benchmark.trace"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\benchmarkRelease\\connected\\2312DRA50G - 14\\StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace"
+    }
+  }
+  output_artifact {
+    label {
+      label: "additionaltestoutput.benchmark.trace"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\benchmarkRelease\\connected\\2312DRA50G - 14\\StartupBenchmarks_startupNoCompilation_iter000_2026-05-17-16-54-29.perfetto-trace"
+    }
+  }
+  output_artifact {
+    label {
+      label: "additionaltestoutput.benchmark.trace"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\benchmarkRelease\\connected\\2312DRA50G - 14\\StartupBenchmarks_startupNoCompilation_iter001_2026-05-17-16-54-36.perfetto-trace"
+    }
+  }
+  output_artifact {
+    label {
+      label: "additionaltestoutput.benchmark.trace"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\benchmarkRelease\\connected\\2312DRA50G - 14\\StartupBenchmarks_startupNoCompilation_iter002_2026-05-17-16-54-44.perfetto-trace"
+    }
+  }
+  output_artifact {
+    label {
+      label: "additionaltestoutput.benchmark.trace"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\benchmarkRelease\\connected\\2312DRA50G - 14\\StartupBenchmarks_startupNoCompilation_iter003_2026-05-17-16-54-51.perfetto-trace"
+    }
+  }
+  output_artifact {
+    label {
+      label: "additionaltestoutput.benchmark.trace"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\benchmarkRelease\\connected\\2312DRA50G - 14\\StartupBenchmarks_startupNoCompilation_iter007_2026-05-17-16-55-22.perfetto-trace"
+    }
+  }
+  output_artifact {
+    label {
+      label: "additionaltestoutput.benchmark.trace"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\benchmarkRelease\\connected\\2312DRA50G - 14\\StartupBenchmarks_startupNoCompilation_iter009_2026-05-17-16-55-36.perfetto-trace"
+    }
+  }
+  output_artifact {
+    label {
+      label: "logcat"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\androidTest-results\\connected\\benchmarkRelease\\2312DRA50G - 14\\logcat-com.decoutkhanqindev.dexreader.baselineprofile.StartupBenchmarks-startupNoCompilation.txt"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\androidTest-results\\connected\\benchmarkRelease\\2312DRA50G - 14\\device-info.pb"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.meminfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\androidTest-results\\connected\\benchmarkRelease\\2312DRA50G - 14\\meminfo"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.cpuinfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\androidTest-results\\connected\\benchmarkRelease\\2312DRA50G - 14\\cpuinfo"
+    }
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter000_2026-05-17-16-54-29.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter000_2026-05-17-16-54-29.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter001_2026-05-17-16-54-36.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter001_2026-05-17-16-54-36.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter002_2026-05-17-16-54-44.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter002_2026-05-17-16-54-44.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter003_2026-05-17-16-54-51.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter003_2026-05-17-16-54-51.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter007_2026-05-17-16-55-22.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter007_2026-05-17-16-55-22.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter009_2026-05-17-16-55-36.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter009_2026-05-17-16-55-36.perfetto-trace"
+  }
+  details {
+    key: "android.studio.display.benchmark"
+    value: "StartupBenchmarks_startupNoCompilation\ntimeToFullDisplayMs      [min 1,469.7](file://StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace),   [median 1,581.1](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace),   [max 1,762.6](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace)\ntimeToInitialDisplayMs   [min   896.3](file://StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace),   [median   978.9](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace),   [max 1,105.0](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace)\nTraces: Iteration [0](file://StartupBenchmarks_startupNoCompilation_iter000_2026-05-17-16-54-29.perfetto-trace) [1](file://StartupBenchmarks_startupNoCompilation_iter001_2026-05-17-16-54-36.perfetto-trace) [2](file://StartupBenchmarks_startupNoCompilation_iter002_2026-05-17-16-54-44.perfetto-trace) [3](file://StartupBenchmarks_startupNoCompilation_iter003_2026-05-17-16-54-51.perfetto-trace) [4](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace) [5](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace) [6](file://StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace) [7](file://StartupBenchmarks_startupNoCompilation_iter007_2026-05-17-16-55-22.perfetto-trace) [8](file://StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace) [9](file://StartupBenchmarks_startupNoCompilation_iter009_2026-05-17-16-55-36.perfetto-trace)\n"
+  }
+  details {
+    key: "android.studio.v2display.benchmark"
+    value: "StartupBenchmarks_startupNoCompilation\ntimeToFullDisplayMs      [min 1,469.7](file://StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace),   [median 1,581.1](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace),   [max 1,762.6](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace)\ntimeToInitialDisplayMs   [min   896.3](file://StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace),   [median   978.9](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace),   [max 1,105.0](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace)\nTraces: Iteration [0](file://StartupBenchmarks_startupNoCompilation_iter000_2026-05-17-16-54-29.perfetto-trace) [1](file://StartupBenchmarks_startupNoCompilation_iter001_2026-05-17-16-54-36.perfetto-trace) [2](file://StartupBenchmarks_startupNoCompilation_iter002_2026-05-17-16-54-44.perfetto-trace) [3](file://StartupBenchmarks_startupNoCompilation_iter003_2026-05-17-16-54-51.perfetto-trace) [4](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace) [5](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace) [6](file://StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace) [7](file://StartupBenchmarks_startupNoCompilation_iter007_2026-05-17-16-55-22.perfetto-trace) [8](file://StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace) [9](file://StartupBenchmarks_startupNoCompilation_iter009_2026-05-17-16-55-36.perfetto-trace)\n"
+  }
+  details {
+    key: "android.studio.v2display.benchmark.outputDirPath"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output"
+  }
+  details {
+    key: "android.studio.v3display.benchmark"
+    value: "StartupBenchmarks_startupNoCompilation\ntimeToFullDisplayMs      [min 1,469.7](file://StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace),   [median 1,581.1](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace),   [max 1,762.6](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace)\ntimeToInitialDisplayMs   [min   896.3](file://StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace),   [median   978.9](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace),   [max 1,105.0](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace)\nTraces: Iteration [0](file://StartupBenchmarks_startupNoCompilation_iter000_2026-05-17-16-54-29.perfetto-trace) [1](file://StartupBenchmarks_startupNoCompilation_iter001_2026-05-17-16-54-36.perfetto-trace) [2](file://StartupBenchmarks_startupNoCompilation_iter002_2026-05-17-16-54-44.perfetto-trace) [3](file://StartupBenchmarks_startupNoCompilation_iter003_2026-05-17-16-54-51.perfetto-trace) [4](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace) [5](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace) [6](file://StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace) [7](file://StartupBenchmarks_startupNoCompilation_iter007_2026-05-17-16-55-22.perfetto-trace) [8](file://StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace) [9](file://StartupBenchmarks_startupNoCompilation_iter009_2026-05-17-16-55-36.perfetto-trace)\n"
+  }
+  details {
+    key: "android.studio.v3display.benchmark.outputDirPath"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output"
+  }
+  details {
+    key: "time_to_full_display_millis_median"
+    value: "1581.0622389999999"
+  }
+  details {
+    key: "time_to_full_display_millis_min"
+    value: "1469.721302"
+  }
+  details {
+    key: "time_to_full_display_millis_stddev"
+    value: "94.91728088312567"
+  }
+  details {
+    key: "time_to_initial_display_millis_median"
+    value: "978.933177"
+  }
+  details {
+    key: "time_to_initial_display_millis_min"
+    value: "896.323906"
+  }
+  details {
+    key: "time_to_initial_display_millis_stddev"
+    value: "59.256202446984496"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter000_2026-05-17-16-54-29.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter000_2026-05-17-16-54-29.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter001_2026-05-17-16-54-36.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter001_2026-05-17-16-54-36.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter002_2026-05-17-16-54-44.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter002_2026-05-17-16-54-44.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter003_2026-05-17-16-54-51.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter003_2026-05-17-16-54-51.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter007_2026-05-17-16-55-22.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter007_2026-05-17-16-55-22.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter009_2026-05-17-16-55-36.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter009_2026-05-17-16-55-36.perfetto-trace"
+  }
+  details {
+    key: "android.studio.display.benchmark"
+    value: "StartupBenchmarks_startupNoCompilation\ntimeToFullDisplayMs      [min 1,469.7](file://StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace),   [median 1,581.1](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace),   [max 1,762.6](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace)\ntimeToInitialDisplayMs   [min   896.3](file://StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace),   [median   978.9](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace),   [max 1,105.0](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace)\nTraces: Iteration [0](file://StartupBenchmarks_startupNoCompilation_iter000_2026-05-17-16-54-29.perfetto-trace) [1](file://StartupBenchmarks_startupNoCompilation_iter001_2026-05-17-16-54-36.perfetto-trace) [2](file://StartupBenchmarks_startupNoCompilation_iter002_2026-05-17-16-54-44.perfetto-trace) [3](file://StartupBenchmarks_startupNoCompilation_iter003_2026-05-17-16-54-51.perfetto-trace) [4](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace) [5](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace) [6](file://StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace) [7](file://StartupBenchmarks_startupNoCompilation_iter007_2026-05-17-16-55-22.perfetto-trace) [8](file://StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace) [9](file://StartupBenchmarks_startupNoCompilation_iter009_2026-05-17-16-55-36.perfetto-trace)\n"
+  }
+  details {
+    key: "android.studio.v2display.benchmark"
+    value: "StartupBenchmarks_startupNoCompilation\ntimeToFullDisplayMs      [min 1,469.7](file://StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace),   [median 1,581.1](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace),   [max 1,762.6](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace)\ntimeToInitialDisplayMs   [min   896.3](file://StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace),   [median   978.9](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace),   [max 1,105.0](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace)\nTraces: Iteration [0](file://StartupBenchmarks_startupNoCompilation_iter000_2026-05-17-16-54-29.perfetto-trace) [1](file://StartupBenchmarks_startupNoCompilation_iter001_2026-05-17-16-54-36.perfetto-trace) [2](file://StartupBenchmarks_startupNoCompilation_iter002_2026-05-17-16-54-44.perfetto-trace) [3](file://StartupBenchmarks_startupNoCompilation_iter003_2026-05-17-16-54-51.perfetto-trace) [4](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace) [5](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace) [6](file://StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace) [7](file://StartupBenchmarks_startupNoCompilation_iter007_2026-05-17-16-55-22.perfetto-trace) [8](file://StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace) [9](file://StartupBenchmarks_startupNoCompilation_iter009_2026-05-17-16-55-36.perfetto-trace)\n"
+  }
+  details {
+    key: "android.studio.v2display.benchmark.outputDirPath"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output"
+  }
+  details {
+    key: "android.studio.v3display.benchmark"
+    value: "StartupBenchmarks_startupNoCompilation\ntimeToFullDisplayMs      [min 1,469.7](file://StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace),   [median 1,581.1](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace),   [max 1,762.6](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace)\ntimeToInitialDisplayMs   [min   896.3](file://StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace),   [median   978.9](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace),   [max 1,105.0](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace)\nTraces: Iteration [0](file://StartupBenchmarks_startupNoCompilation_iter000_2026-05-17-16-54-29.perfetto-trace) [1](file://StartupBenchmarks_startupNoCompilation_iter001_2026-05-17-16-54-36.perfetto-trace) [2](file://StartupBenchmarks_startupNoCompilation_iter002_2026-05-17-16-54-44.perfetto-trace) [3](file://StartupBenchmarks_startupNoCompilation_iter003_2026-05-17-16-54-51.perfetto-trace) [4](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace) [5](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace) [6](file://StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace) [7](file://StartupBenchmarks_startupNoCompilation_iter007_2026-05-17-16-55-22.perfetto-trace) [8](file://StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace) [9](file://StartupBenchmarks_startupNoCompilation_iter009_2026-05-17-16-55-36.perfetto-trace)\n"
+  }
+  details {
+    key: "android.studio.v3display.benchmark.outputDirPath"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output"
+  }
+  details {
+    key: "time_to_full_display_millis_median"
+    value: "1581.0622389999999"
+  }
+  details {
+    key: "time_to_full_display_millis_min"
+    value: "1469.721302"
+  }
+  details {
+    key: "time_to_full_display_millis_stddev"
+    value: "94.91728088312567"
+  }
+  details {
+    key: "time_to_initial_display_millis_median"
+    value: "978.933177"
+  }
+  details {
+    key: "time_to_initial_display_millis_min"
+    value: "896.323906"
+  }
+  details {
+    key: "time_to_initial_display_millis_stddev"
+    value: "59.256202446984496"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter000_2026-05-17-16-54-29.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter000_2026-05-17-16-54-29.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter001_2026-05-17-16-54-36.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter001_2026-05-17-16-54-36.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter002_2026-05-17-16-54-44.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter002_2026-05-17-16-54-44.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter003_2026-05-17-16-54-51.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter003_2026-05-17-16-54-51.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter007_2026-05-17-16-55-22.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter007_2026-05-17-16-55-22.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter009_2026-05-17-16-55-36.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter009_2026-05-17-16-55-36.perfetto-trace"
+  }
+  details {
+    key: "android.studio.display.benchmark"
+    value: "StartupBenchmarks_startupNoCompilation\ntimeToFullDisplayMs      [min 1,469.7](file://StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace),   [median 1,581.1](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace),   [max 1,762.6](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace)\ntimeToInitialDisplayMs   [min   896.3](file://StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace),   [median   978.9](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace),   [max 1,105.0](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace)\nTraces: Iteration [0](file://StartupBenchmarks_startupNoCompilation_iter000_2026-05-17-16-54-29.perfetto-trace) [1](file://StartupBenchmarks_startupNoCompilation_iter001_2026-05-17-16-54-36.perfetto-trace) [2](file://StartupBenchmarks_startupNoCompilation_iter002_2026-05-17-16-54-44.perfetto-trace) [3](file://StartupBenchmarks_startupNoCompilation_iter003_2026-05-17-16-54-51.perfetto-trace) [4](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace) [5](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace) [6](file://StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace) [7](file://StartupBenchmarks_startupNoCompilation_iter007_2026-05-17-16-55-22.perfetto-trace) [8](file://StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace) [9](file://StartupBenchmarks_startupNoCompilation_iter009_2026-05-17-16-55-36.perfetto-trace)\n"
+  }
+  details {
+    key: "android.studio.v2display.benchmark"
+    value: "StartupBenchmarks_startupNoCompilation\ntimeToFullDisplayMs      [min 1,469.7](file://StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace),   [median 1,581.1](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace),   [max 1,762.6](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace)\ntimeToInitialDisplayMs   [min   896.3](file://StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace),   [median   978.9](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace),   [max 1,105.0](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace)\nTraces: Iteration [0](file://StartupBenchmarks_startupNoCompilation_iter000_2026-05-17-16-54-29.perfetto-trace) [1](file://StartupBenchmarks_startupNoCompilation_iter001_2026-05-17-16-54-36.perfetto-trace) [2](file://StartupBenchmarks_startupNoCompilation_iter002_2026-05-17-16-54-44.perfetto-trace) [3](file://StartupBenchmarks_startupNoCompilation_iter003_2026-05-17-16-54-51.perfetto-trace) [4](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace) [5](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace) [6](file://StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace) [7](file://StartupBenchmarks_startupNoCompilation_iter007_2026-05-17-16-55-22.perfetto-trace) [8](file://StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace) [9](file://StartupBenchmarks_startupNoCompilation_iter009_2026-05-17-16-55-36.perfetto-trace)\n"
+  }
+  details {
+    key: "android.studio.v2display.benchmark.outputDirPath"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output"
+  }
+  details {
+    key: "android.studio.v3display.benchmark"
+    value: "StartupBenchmarks_startupNoCompilation\ntimeToFullDisplayMs      [min 1,469.7](file://StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace),   [median 1,581.1](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace),   [max 1,762.6](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace)\ntimeToInitialDisplayMs   [min   896.3](file://StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace),   [median   978.9](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace),   [max 1,105.0](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace)\nTraces: Iteration [0](file://StartupBenchmarks_startupNoCompilation_iter000_2026-05-17-16-54-29.perfetto-trace) [1](file://StartupBenchmarks_startupNoCompilation_iter001_2026-05-17-16-54-36.perfetto-trace) [2](file://StartupBenchmarks_startupNoCompilation_iter002_2026-05-17-16-54-44.perfetto-trace) [3](file://StartupBenchmarks_startupNoCompilation_iter003_2026-05-17-16-54-51.perfetto-trace) [4](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace) [5](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace) [6](file://StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace) [7](file://StartupBenchmarks_startupNoCompilation_iter007_2026-05-17-16-55-22.perfetto-trace) [8](file://StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace) [9](file://StartupBenchmarks_startupNoCompilation_iter009_2026-05-17-16-55-36.perfetto-trace)\n"
+  }
+  details {
+    key: "android.studio.v3display.benchmark.outputDirPath"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output"
+  }
+  details {
+    key: "time_to_full_display_millis_median"
+    value: "1581.0622389999999"
+  }
+  details {
+    key: "time_to_full_display_millis_min"
+    value: "1469.721302"
+  }
+  details {
+    key: "time_to_full_display_millis_stddev"
+    value: "94.91728088312567"
+  }
+  details {
+    key: "time_to_initial_display_millis_median"
+    value: "978.933177"
+  }
+  details {
+    key: "time_to_initial_display_millis_min"
+    value: "896.323906"
+  }
+  details {
+    key: "time_to_initial_display_millis_stddev"
+    value: "59.256202446984496"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter000_2026-05-17-16-54-29.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter000_2026-05-17-16-54-29.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter001_2026-05-17-16-54-36.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter001_2026-05-17-16-54-36.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter002_2026-05-17-16-54-44.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter002_2026-05-17-16-54-44.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter003_2026-05-17-16-54-51.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter003_2026-05-17-16-54-51.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter007_2026-05-17-16-55-22.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter007_2026-05-17-16-55-22.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupNoCompilation_iter009_2026-05-17-16-55-36.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupNoCompilation_iter009_2026-05-17-16-55-36.perfetto-trace"
+  }
+  details {
+    key: "android.studio.display.benchmark"
+    value: "StartupBenchmarks_startupNoCompilation\ntimeToFullDisplayMs      [min 1,469.7](file://StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace),   [median 1,581.1](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace),   [max 1,762.6](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace)\ntimeToInitialDisplayMs   [min   896.3](file://StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace),   [median   978.9](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace),   [max 1,105.0](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace)\nTraces: Iteration [0](file://StartupBenchmarks_startupNoCompilation_iter000_2026-05-17-16-54-29.perfetto-trace) [1](file://StartupBenchmarks_startupNoCompilation_iter001_2026-05-17-16-54-36.perfetto-trace) [2](file://StartupBenchmarks_startupNoCompilation_iter002_2026-05-17-16-54-44.perfetto-trace) [3](file://StartupBenchmarks_startupNoCompilation_iter003_2026-05-17-16-54-51.perfetto-trace) [4](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace) [5](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace) [6](file://StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace) [7](file://StartupBenchmarks_startupNoCompilation_iter007_2026-05-17-16-55-22.perfetto-trace) [8](file://StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace) [9](file://StartupBenchmarks_startupNoCompilation_iter009_2026-05-17-16-55-36.perfetto-trace)\n"
+  }
+  details {
+    key: "android.studio.v2display.benchmark"
+    value: "StartupBenchmarks_startupNoCompilation\ntimeToFullDisplayMs      [min 1,469.7](file://StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace),   [median 1,581.1](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace),   [max 1,762.6](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace)\ntimeToInitialDisplayMs   [min   896.3](file://StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace),   [median   978.9](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace),   [max 1,105.0](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace)\nTraces: Iteration [0](file://StartupBenchmarks_startupNoCompilation_iter000_2026-05-17-16-54-29.perfetto-trace) [1](file://StartupBenchmarks_startupNoCompilation_iter001_2026-05-17-16-54-36.perfetto-trace) [2](file://StartupBenchmarks_startupNoCompilation_iter002_2026-05-17-16-54-44.perfetto-trace) [3](file://StartupBenchmarks_startupNoCompilation_iter003_2026-05-17-16-54-51.perfetto-trace) [4](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace) [5](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace) [6](file://StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace) [7](file://StartupBenchmarks_startupNoCompilation_iter007_2026-05-17-16-55-22.perfetto-trace) [8](file://StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace) [9](file://StartupBenchmarks_startupNoCompilation_iter009_2026-05-17-16-55-36.perfetto-trace)\n"
+  }
+  details {
+    key: "android.studio.v2display.benchmark.outputDirPath"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output"
+  }
+  details {
+    key: "android.studio.v3display.benchmark"
+    value: "StartupBenchmarks_startupNoCompilation\ntimeToFullDisplayMs      [min 1,469.7](file://StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace),   [median 1,581.1](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace),   [max 1,762.6](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace)\ntimeToInitialDisplayMs   [min   896.3](file://StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace),   [median   978.9](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace),   [max 1,105.0](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace)\nTraces: Iteration [0](file://StartupBenchmarks_startupNoCompilation_iter000_2026-05-17-16-54-29.perfetto-trace) [1](file://StartupBenchmarks_startupNoCompilation_iter001_2026-05-17-16-54-36.perfetto-trace) [2](file://StartupBenchmarks_startupNoCompilation_iter002_2026-05-17-16-54-44.perfetto-trace) [3](file://StartupBenchmarks_startupNoCompilation_iter003_2026-05-17-16-54-51.perfetto-trace) [4](file://StartupBenchmarks_startupNoCompilation_iter004_2026-05-17-16-54-58.perfetto-trace) [5](file://StartupBenchmarks_startupNoCompilation_iter005_2026-05-17-16-55-06.perfetto-trace) [6](file://StartupBenchmarks_startupNoCompilation_iter006_2026-05-17-16-55-14.perfetto-trace) [7](file://StartupBenchmarks_startupNoCompilation_iter007_2026-05-17-16-55-22.perfetto-trace) [8](file://StartupBenchmarks_startupNoCompilation_iter008_2026-05-17-16-55-29.perfetto-trace) [9](file://StartupBenchmarks_startupNoCompilation_iter009_2026-05-17-16-55-36.perfetto-trace)\n"
+  }
+  details {
+    key: "android.studio.v3display.benchmark.outputDirPath"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output"
+  }
+  details {
+    key: "time_to_full_display_millis_median"
+    value: "1581.0622389999999"
+  }
+  details {
+    key: "time_to_full_display_millis_min"
+    value: "1469.721302"
+  }
+  details {
+    key: "time_to_full_display_millis_stddev"
+    value: "94.91728088312567"
+  }
+  details {
+    key: "time_to_initial_display_millis_median"
+    value: "978.933177"
+  }
+  details {
+    key: "time_to_initial_display_millis_min"
+    value: "896.323906"
+  }
+  details {
+    key: "time_to_initial_display_millis_stddev"
+    value: "59.256202446984496"
+  }
+}
+test_result {
+  test_case {
+    test_class: "StartupBenchmarks"
+    test_package: "com.decoutkhanqindev.dexreader.baselineprofile"
+    test_method: "startupBaselineProfile"
+    start_time {
+      seconds: 1779036965
+      nanos: 905000000
+    }
+    end_time {
+      seconds: 1779037043
+      nanos: 276000000
+    }
+    device {
+      id: "de7b2ba"
+      friendly_name: "primary"
+    }
+  }
+  test_status: PASSED
+  output_artifact {
+    label {
+      label: "additionaltestoutput.benchmark.message"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\benchmarkRelease\\connected\\2312DRA50G - 14\\additionaltestoutput.benchmark.message_com.decoutkhanqindev.dexreader.baselineprofile.StartupBenchmarks.startupBaselineProfile.txt"
+    }
+  }
+  output_artifact {
+    label {
+      label: "additionaltestoutput.benchmark.trace"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\benchmarkRelease\\connected\\2312DRA50G - 14\\StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace"
+    }
+  }
+  output_artifact {
+    label {
+      label: "additionaltestoutput.benchmark.trace"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\benchmarkRelease\\connected\\2312DRA50G - 14\\StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace"
+    }
+  }
+  output_artifact {
+    label {
+      label: "additionaltestoutput.benchmark.trace"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\benchmarkRelease\\connected\\2312DRA50G - 14\\StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace"
+    }
+  }
+  output_artifact {
+    label {
+      label: "additionaltestoutput.benchmark.trace"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\benchmarkRelease\\connected\\2312DRA50G - 14\\StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace"
+    }
+  }
+  output_artifact {
+    label {
+      label: "additionaltestoutput.benchmark.trace"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\benchmarkRelease\\connected\\2312DRA50G - 14\\StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace"
+    }
+  }
+  output_artifact {
+    label {
+      label: "additionaltestoutput.benchmark.trace"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\benchmarkRelease\\connected\\2312DRA50G - 14\\StartupBenchmarks_startupBaselineProfile_iter000_2026-05-17-16-55-49.perfetto-trace"
+    }
+  }
+  output_artifact {
+    label {
+      label: "additionaltestoutput.benchmark.trace"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\benchmarkRelease\\connected\\2312DRA50G - 14\\StartupBenchmarks_startupBaselineProfile_iter002_2026-05-17-16-56-03.perfetto-trace"
+    }
+  }
+  output_artifact {
+    label {
+      label: "additionaltestoutput.benchmark.trace"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\benchmarkRelease\\connected\\2312DRA50G - 14\\StartupBenchmarks_startupBaselineProfile_iter004_2026-05-17-16-56-22.perfetto-trace"
+    }
+  }
+  output_artifact {
+    label {
+      label: "additionaltestoutput.benchmark.trace"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\benchmarkRelease\\connected\\2312DRA50G - 14\\StartupBenchmarks_startupBaselineProfile_iter008_2026-05-17-16-56-52.perfetto-trace"
+    }
+  }
+  output_artifact {
+    label {
+      label: "additionaltestoutput.benchmark.trace"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\connected_android_test_additional_output\\benchmarkRelease\\connected\\2312DRA50G - 14\\StartupBenchmarks_startupBaselineProfile_iter009_2026-05-17-16-56-59.perfetto-trace"
+    }
+  }
+  output_artifact {
+    label {
+      label: "logcat"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\androidTest-results\\connected\\benchmarkRelease\\2312DRA50G - 14\\logcat-com.decoutkhanqindev.dexreader.baselineprofile.StartupBenchmarks-startupBaselineProfile.txt"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\androidTest-results\\connected\\benchmarkRelease\\2312DRA50G - 14\\device-info.pb"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.meminfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\androidTest-results\\connected\\benchmarkRelease\\2312DRA50G - 14\\meminfo"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.cpuinfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\androidTest-results\\connected\\benchmarkRelease\\2312DRA50G - 14\\cpuinfo"
+    }
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter000_2026-05-17-16-55-49.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter000_2026-05-17-16-55-49.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter002_2026-05-17-16-56-03.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter002_2026-05-17-16-56-03.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter004_2026-05-17-16-56-22.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter004_2026-05-17-16-56-22.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter008_2026-05-17-16-56-52.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter008_2026-05-17-16-56-52.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter009_2026-05-17-16-56-59.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter009_2026-05-17-16-56-59.perfetto-trace"
+  }
+  details {
+    key: "android.studio.display.benchmark"
+    value: "StartupBenchmarks_startupBaselineProfile\ntimeToFullDisplayMs      [min 1,243.7](file://StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace),   [median 1,377.8](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace),   [max 1,679.6](file://StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace)\ntimeToInitialDisplayMs   [min   852.2](file://StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace),   [median   899.7](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace),   [max 1,080.6](file://StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace)\nTraces: Iteration [0](file://StartupBenchmarks_startupBaselineProfile_iter000_2026-05-17-16-55-49.perfetto-trace) [1](file://StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace) [2](file://StartupBenchmarks_startupBaselineProfile_iter002_2026-05-17-16-56-03.perfetto-trace) [3](file://StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace) [4](file://StartupBenchmarks_startupBaselineProfile_iter004_2026-05-17-16-56-22.perfetto-trace) [5](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace) [6](file://StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace) [7](file://StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace) [8](file://StartupBenchmarks_startupBaselineProfile_iter008_2026-05-17-16-56-52.perfetto-trace) [9](file://StartupBenchmarks_startupBaselineProfile_iter009_2026-05-17-16-56-59.perfetto-trace)\n"
+  }
+  details {
+    key: "android.studio.v2display.benchmark"
+    value: "StartupBenchmarks_startupBaselineProfile\ntimeToFullDisplayMs      [min 1,243.7](file://StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace),   [median 1,377.8](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace),   [max 1,679.6](file://StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace)\ntimeToInitialDisplayMs   [min   852.2](file://StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace),   [median   899.7](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace),   [max 1,080.6](file://StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace)\nTraces: Iteration [0](file://StartupBenchmarks_startupBaselineProfile_iter000_2026-05-17-16-55-49.perfetto-trace) [1](file://StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace) [2](file://StartupBenchmarks_startupBaselineProfile_iter002_2026-05-17-16-56-03.perfetto-trace) [3](file://StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace) [4](file://StartupBenchmarks_startupBaselineProfile_iter004_2026-05-17-16-56-22.perfetto-trace) [5](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace) [6](file://StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace) [7](file://StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace) [8](file://StartupBenchmarks_startupBaselineProfile_iter008_2026-05-17-16-56-52.perfetto-trace) [9](file://StartupBenchmarks_startupBaselineProfile_iter009_2026-05-17-16-56-59.perfetto-trace)\n"
+  }
+  details {
+    key: "android.studio.v2display.benchmark.outputDirPath"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output"
+  }
+  details {
+    key: "android.studio.v3display.benchmark"
+    value: "StartupBenchmarks_startupBaselineProfile\ntimeToFullDisplayMs      [min 1,243.7](file://StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace),   [median 1,377.8](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace),   [max 1,679.6](file://StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace)\ntimeToInitialDisplayMs   [min   852.2](file://StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace),   [median   899.7](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace),   [max 1,080.6](file://StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace)\nTraces: Iteration [0](file://StartupBenchmarks_startupBaselineProfile_iter000_2026-05-17-16-55-49.perfetto-trace) [1](file://StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace) [2](file://StartupBenchmarks_startupBaselineProfile_iter002_2026-05-17-16-56-03.perfetto-trace) [3](file://StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace) [4](file://StartupBenchmarks_startupBaselineProfile_iter004_2026-05-17-16-56-22.perfetto-trace) [5](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace) [6](file://StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace) [7](file://StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace) [8](file://StartupBenchmarks_startupBaselineProfile_iter008_2026-05-17-16-56-52.perfetto-trace) [9](file://StartupBenchmarks_startupBaselineProfile_iter009_2026-05-17-16-56-59.perfetto-trace)\n"
+  }
+  details {
+    key: "android.studio.v3display.benchmark.outputDirPath"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output"
+  }
+  details {
+    key: "time_to_full_display_millis_median"
+    value: "1377.824999"
+  }
+  details {
+    key: "time_to_full_display_millis_min"
+    value: "1243.698854"
+  }
+  details {
+    key: "time_to_full_display_millis_stddev"
+    value: "151.38063717028243"
+  }
+  details {
+    key: "time_to_initial_display_millis_median"
+    value: "899.7313275"
+  }
+  details {
+    key: "time_to_initial_display_millis_min"
+    value: "852.153333"
+  }
+  details {
+    key: "time_to_initial_display_millis_stddev"
+    value: "89.01945469400447"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter000_2026-05-17-16-55-49.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter000_2026-05-17-16-55-49.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter002_2026-05-17-16-56-03.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter002_2026-05-17-16-56-03.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter004_2026-05-17-16-56-22.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter004_2026-05-17-16-56-22.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter008_2026-05-17-16-56-52.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter008_2026-05-17-16-56-52.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter009_2026-05-17-16-56-59.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter009_2026-05-17-16-56-59.perfetto-trace"
+  }
+  details {
+    key: "android.studio.display.benchmark"
+    value: "StartupBenchmarks_startupBaselineProfile\ntimeToFullDisplayMs      [min 1,243.7](file://StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace),   [median 1,377.8](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace),   [max 1,679.6](file://StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace)\ntimeToInitialDisplayMs   [min   852.2](file://StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace),   [median   899.7](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace),   [max 1,080.6](file://StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace)\nTraces: Iteration [0](file://StartupBenchmarks_startupBaselineProfile_iter000_2026-05-17-16-55-49.perfetto-trace) [1](file://StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace) [2](file://StartupBenchmarks_startupBaselineProfile_iter002_2026-05-17-16-56-03.perfetto-trace) [3](file://StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace) [4](file://StartupBenchmarks_startupBaselineProfile_iter004_2026-05-17-16-56-22.perfetto-trace) [5](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace) [6](file://StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace) [7](file://StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace) [8](file://StartupBenchmarks_startupBaselineProfile_iter008_2026-05-17-16-56-52.perfetto-trace) [9](file://StartupBenchmarks_startupBaselineProfile_iter009_2026-05-17-16-56-59.perfetto-trace)\n"
+  }
+  details {
+    key: "android.studio.v2display.benchmark"
+    value: "StartupBenchmarks_startupBaselineProfile\ntimeToFullDisplayMs      [min 1,243.7](file://StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace),   [median 1,377.8](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace),   [max 1,679.6](file://StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace)\ntimeToInitialDisplayMs   [min   852.2](file://StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace),   [median   899.7](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace),   [max 1,080.6](file://StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace)\nTraces: Iteration [0](file://StartupBenchmarks_startupBaselineProfile_iter000_2026-05-17-16-55-49.perfetto-trace) [1](file://StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace) [2](file://StartupBenchmarks_startupBaselineProfile_iter002_2026-05-17-16-56-03.perfetto-trace) [3](file://StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace) [4](file://StartupBenchmarks_startupBaselineProfile_iter004_2026-05-17-16-56-22.perfetto-trace) [5](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace) [6](file://StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace) [7](file://StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace) [8](file://StartupBenchmarks_startupBaselineProfile_iter008_2026-05-17-16-56-52.perfetto-trace) [9](file://StartupBenchmarks_startupBaselineProfile_iter009_2026-05-17-16-56-59.perfetto-trace)\n"
+  }
+  details {
+    key: "android.studio.v2display.benchmark.outputDirPath"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output"
+  }
+  details {
+    key: "android.studio.v3display.benchmark"
+    value: "StartupBenchmarks_startupBaselineProfile\ntimeToFullDisplayMs      [min 1,243.7](file://StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace),   [median 1,377.8](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace),   [max 1,679.6](file://StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace)\ntimeToInitialDisplayMs   [min   852.2](file://StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace),   [median   899.7](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace),   [max 1,080.6](file://StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace)\nTraces: Iteration [0](file://StartupBenchmarks_startupBaselineProfile_iter000_2026-05-17-16-55-49.perfetto-trace) [1](file://StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace) [2](file://StartupBenchmarks_startupBaselineProfile_iter002_2026-05-17-16-56-03.perfetto-trace) [3](file://StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace) [4](file://StartupBenchmarks_startupBaselineProfile_iter004_2026-05-17-16-56-22.perfetto-trace) [5](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace) [6](file://StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace) [7](file://StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace) [8](file://StartupBenchmarks_startupBaselineProfile_iter008_2026-05-17-16-56-52.perfetto-trace) [9](file://StartupBenchmarks_startupBaselineProfile_iter009_2026-05-17-16-56-59.perfetto-trace)\n"
+  }
+  details {
+    key: "android.studio.v3display.benchmark.outputDirPath"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output"
+  }
+  details {
+    key: "time_to_full_display_millis_median"
+    value: "1377.824999"
+  }
+  details {
+    key: "time_to_full_display_millis_min"
+    value: "1243.698854"
+  }
+  details {
+    key: "time_to_full_display_millis_stddev"
+    value: "151.38063717028243"
+  }
+  details {
+    key: "time_to_initial_display_millis_median"
+    value: "899.7313275"
+  }
+  details {
+    key: "time_to_initial_display_millis_min"
+    value: "852.153333"
+  }
+  details {
+    key: "time_to_initial_display_millis_stddev"
+    value: "89.01945469400447"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter000_2026-05-17-16-55-49.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter000_2026-05-17-16-55-49.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter002_2026-05-17-16-56-03.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter002_2026-05-17-16-56-03.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter004_2026-05-17-16-56-22.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter004_2026-05-17-16-56-22.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter008_2026-05-17-16-56-52.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter008_2026-05-17-16-56-52.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter009_2026-05-17-16-56-59.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter009_2026-05-17-16-56-59.perfetto-trace"
+  }
+  details {
+    key: "android.studio.display.benchmark"
+    value: "StartupBenchmarks_startupBaselineProfile\ntimeToFullDisplayMs      [min 1,243.7](file://StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace),   [median 1,377.8](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace),   [max 1,679.6](file://StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace)\ntimeToInitialDisplayMs   [min   852.2](file://StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace),   [median   899.7](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace),   [max 1,080.6](file://StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace)\nTraces: Iteration [0](file://StartupBenchmarks_startupBaselineProfile_iter000_2026-05-17-16-55-49.perfetto-trace) [1](file://StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace) [2](file://StartupBenchmarks_startupBaselineProfile_iter002_2026-05-17-16-56-03.perfetto-trace) [3](file://StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace) [4](file://StartupBenchmarks_startupBaselineProfile_iter004_2026-05-17-16-56-22.perfetto-trace) [5](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace) [6](file://StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace) [7](file://StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace) [8](file://StartupBenchmarks_startupBaselineProfile_iter008_2026-05-17-16-56-52.perfetto-trace) [9](file://StartupBenchmarks_startupBaselineProfile_iter009_2026-05-17-16-56-59.perfetto-trace)\n"
+  }
+  details {
+    key: "android.studio.v2display.benchmark"
+    value: "StartupBenchmarks_startupBaselineProfile\ntimeToFullDisplayMs      [min 1,243.7](file://StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace),   [median 1,377.8](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace),   [max 1,679.6](file://StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace)\ntimeToInitialDisplayMs   [min   852.2](file://StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace),   [median   899.7](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace),   [max 1,080.6](file://StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace)\nTraces: Iteration [0](file://StartupBenchmarks_startupBaselineProfile_iter000_2026-05-17-16-55-49.perfetto-trace) [1](file://StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace) [2](file://StartupBenchmarks_startupBaselineProfile_iter002_2026-05-17-16-56-03.perfetto-trace) [3](file://StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace) [4](file://StartupBenchmarks_startupBaselineProfile_iter004_2026-05-17-16-56-22.perfetto-trace) [5](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace) [6](file://StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace) [7](file://StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace) [8](file://StartupBenchmarks_startupBaselineProfile_iter008_2026-05-17-16-56-52.perfetto-trace) [9](file://StartupBenchmarks_startupBaselineProfile_iter009_2026-05-17-16-56-59.perfetto-trace)\n"
+  }
+  details {
+    key: "android.studio.v2display.benchmark.outputDirPath"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output"
+  }
+  details {
+    key: "android.studio.v3display.benchmark"
+    value: "StartupBenchmarks_startupBaselineProfile\ntimeToFullDisplayMs      [min 1,243.7](file://StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace),   [median 1,377.8](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace),   [max 1,679.6](file://StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace)\ntimeToInitialDisplayMs   [min   852.2](file://StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace),   [median   899.7](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace),   [max 1,080.6](file://StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace)\nTraces: Iteration [0](file://StartupBenchmarks_startupBaselineProfile_iter000_2026-05-17-16-55-49.perfetto-trace) [1](file://StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace) [2](file://StartupBenchmarks_startupBaselineProfile_iter002_2026-05-17-16-56-03.perfetto-trace) [3](file://StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace) [4](file://StartupBenchmarks_startupBaselineProfile_iter004_2026-05-17-16-56-22.perfetto-trace) [5](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace) [6](file://StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace) [7](file://StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace) [8](file://StartupBenchmarks_startupBaselineProfile_iter008_2026-05-17-16-56-52.perfetto-trace) [9](file://StartupBenchmarks_startupBaselineProfile_iter009_2026-05-17-16-56-59.perfetto-trace)\n"
+  }
+  details {
+    key: "android.studio.v3display.benchmark.outputDirPath"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output"
+  }
+  details {
+    key: "time_to_full_display_millis_median"
+    value: "1377.824999"
+  }
+  details {
+    key: "time_to_full_display_millis_min"
+    value: "1243.698854"
+  }
+  details {
+    key: "time_to_full_display_millis_stddev"
+    value: "151.38063717028243"
+  }
+  details {
+    key: "time_to_initial_display_millis_median"
+    value: "899.7313275"
+  }
+  details {
+    key: "time_to_initial_display_millis_min"
+    value: "852.153333"
+  }
+  details {
+    key: "time_to_initial_display_millis_stddev"
+    value: "89.01945469400447"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter000_2026-05-17-16-55-49.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter000_2026-05-17-16-55-49.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter002_2026-05-17-16-56-03.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter002_2026-05-17-16-56-03.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter004_2026-05-17-16-56-22.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter004_2026-05-17-16-56-22.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter008_2026-05-17-16-56-52.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter008_2026-05-17-16-56-52.perfetto-trace"
+  }
+  details {
+    key: "additionalTestOutputFile_StartupBenchmarks_startupBaselineProfile_iter009_2026-05-17-16-56-59.perfetto-trace"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output/StartupBenchmarks_startupBaselineProfile_iter009_2026-05-17-16-56-59.perfetto-trace"
+  }
+  details {
+    key: "android.studio.display.benchmark"
+    value: "StartupBenchmarks_startupBaselineProfile\ntimeToFullDisplayMs      [min 1,243.7](file://StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace),   [median 1,377.8](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace),   [max 1,679.6](file://StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace)\ntimeToInitialDisplayMs   [min   852.2](file://StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace),   [median   899.7](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace),   [max 1,080.6](file://StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace)\nTraces: Iteration [0](file://StartupBenchmarks_startupBaselineProfile_iter000_2026-05-17-16-55-49.perfetto-trace) [1](file://StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace) [2](file://StartupBenchmarks_startupBaselineProfile_iter002_2026-05-17-16-56-03.perfetto-trace) [3](file://StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace) [4](file://StartupBenchmarks_startupBaselineProfile_iter004_2026-05-17-16-56-22.perfetto-trace) [5](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace) [6](file://StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace) [7](file://StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace) [8](file://StartupBenchmarks_startupBaselineProfile_iter008_2026-05-17-16-56-52.perfetto-trace) [9](file://StartupBenchmarks_startupBaselineProfile_iter009_2026-05-17-16-56-59.perfetto-trace)\n"
+  }
+  details {
+    key: "android.studio.v2display.benchmark"
+    value: "StartupBenchmarks_startupBaselineProfile\ntimeToFullDisplayMs      [min 1,243.7](file://StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace),   [median 1,377.8](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace),   [max 1,679.6](file://StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace)\ntimeToInitialDisplayMs   [min   852.2](file://StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace),   [median   899.7](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace),   [max 1,080.6](file://StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace)\nTraces: Iteration [0](file://StartupBenchmarks_startupBaselineProfile_iter000_2026-05-17-16-55-49.perfetto-trace) [1](file://StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace) [2](file://StartupBenchmarks_startupBaselineProfile_iter002_2026-05-17-16-56-03.perfetto-trace) [3](file://StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace) [4](file://StartupBenchmarks_startupBaselineProfile_iter004_2026-05-17-16-56-22.perfetto-trace) [5](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace) [6](file://StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace) [7](file://StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace) [8](file://StartupBenchmarks_startupBaselineProfile_iter008_2026-05-17-16-56-52.perfetto-trace) [9](file://StartupBenchmarks_startupBaselineProfile_iter009_2026-05-17-16-56-59.perfetto-trace)\n"
+  }
+  details {
+    key: "android.studio.v2display.benchmark.outputDirPath"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output"
+  }
+  details {
+    key: "android.studio.v3display.benchmark"
+    value: "StartupBenchmarks_startupBaselineProfile\ntimeToFullDisplayMs      [min 1,243.7](file://StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace),   [median 1,377.8](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace),   [max 1,679.6](file://StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace)\ntimeToInitialDisplayMs   [min   852.2](file://StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace),   [median   899.7](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace),   [max 1,080.6](file://StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace)\nTraces: Iteration [0](file://StartupBenchmarks_startupBaselineProfile_iter000_2026-05-17-16-55-49.perfetto-trace) [1](file://StartupBenchmarks_startupBaselineProfile_iter001_2026-05-17-16-55-56.perfetto-trace) [2](file://StartupBenchmarks_startupBaselineProfile_iter002_2026-05-17-16-56-03.perfetto-trace) [3](file://StartupBenchmarks_startupBaselineProfile_iter003_2026-05-17-16-56-12.perfetto-trace) [4](file://StartupBenchmarks_startupBaselineProfile_iter004_2026-05-17-16-56-22.perfetto-trace) [5](file://StartupBenchmarks_startupBaselineProfile_iter005_2026-05-17-16-56-29.perfetto-trace) [6](file://StartupBenchmarks_startupBaselineProfile_iter006_2026-05-17-16-56-37.perfetto-trace) [7](file://StartupBenchmarks_startupBaselineProfile_iter007_2026-05-17-16-56-45.perfetto-trace) [8](file://StartupBenchmarks_startupBaselineProfile_iter008_2026-05-17-16-56-52.perfetto-trace) [9](file://StartupBenchmarks_startupBaselineProfile_iter009_2026-05-17-16-56-59.perfetto-trace)\n"
+  }
+  details {
+    key: "android.studio.v3display.benchmark.outputDirPath"
+    value: "/sdcard/Android/media/com.decoutkhanqindev.dexreader.baselineprofile/additional_test_output"
+  }
+  details {
+    key: "time_to_full_display_millis_median"
+    value: "1377.824999"
+  }
+  details {
+    key: "time_to_full_display_millis_min"
+    value: "1243.698854"
+  }
+  details {
+    key: "time_to_full_display_millis_stddev"
+    value: "151.38063717028243"
+  }
+  details {
+    key: "time_to_initial_display_millis_median"
+    value: "899.7313275"
+  }
+  details {
+    key: "time_to_initial_display_millis_min"
+    value: "852.153333"
+  }
+  details {
+    key: "time_to_initial_display_millis_stddev"
+    value: "89.01945469400447"
+  }
+}
+test_result {
+  test_case {
+    test_class: "StartupBenchmarks"
+    test_package: "com.decoutkhanqindev.dexreader.baselineprofile"
+    test_method: "scrollBaselineProfile"
+    start_time {
+      seconds: 1779037047
+      nanos: 237000000
+    }
+    end_time {
+      seconds: 1779037055
+      nanos: 377000000
+    }
+    device {
+      id: "de7b2ba"
+      friendly_name: "primary"
+    }
+  }
+  test_status: FAILED
+  error {
+    error_message: "androidx.test.uiautomator.StaleObjectException\nat androidx.test.uiautomator.UiObject2.getAccessibilityNodeInfo(UiObject2.java:1018)\nat androidx.test.uiautomator.UiObject2.getVisibleBoundsForGestures(UiObject2.java:340)\nat androidx.test.uiautomator.UiObject2.fling(UiObject2.java:943)\nat androidx.test.uiautomator.UiObject2.fling(UiObject2.java:924)\nat com.decoutkhanqindev.dexreader.baselineprofile.StartupBenchmarks.scrollBaselineProfile$lambda$0(StartupBenchmarks.kt:60)\nat com.decoutkhanqindev.dexreader.baselineprofile.StartupBenchmarks$$ExternalSyntheticLambda1.invoke(D8$$SyntheticClass:0)\nat androidx.benchmark.macro.MacrobenchmarkKt.macrobenchmarkWithStartupMode$lambda$18(Macrobenchmark.kt:438)\nat androidx.benchmark.macro.MacrobenchmarkKt$$ExternalSyntheticLambda3.invoke(D8$$SyntheticClass:0)\nat androidx.benchmark.macro.MacrobenchmarkPhaseKt.runPhase(MacrobenchmarkPhase.kt:99)\nat androidx.benchmark.macro.MacrobenchmarkKt.macrobenchmark$lambda$6(Macrobenchmark.kt:271)\nat androidx.benchmark.macro.MacrobenchmarkKt$$ExternalSyntheticLambda1.invoke(D8$$SyntheticClass:0)\nat androidx.benchmark.macro.TraceProcessorExtensionsKt.runServer(TraceProcessorExtensions.kt:163)\nat androidx.benchmark.macro.TraceProcessorExtensionsKt.runServer$default(TraceProcessorExtensions.kt:158)\nat androidx.benchmark.macro.MacrobenchmarkKt.macrobenchmark(Macrobenchmark.kt:263)\nat androidx.benchmark.macro.MacrobenchmarkKt.macrobenchmarkWithStartupMode(Macrobenchmark.kt:400)\nat androidx.benchmark.macro.junit4.MacrobenchmarkRule.measureRepeated(MacrobenchmarkRule.kt:87)\nat androidx.benchmark.macro.junit4.MacrobenchmarkRule.measureRepeated$default(MacrobenchmarkRule.kt:77)\nat com.decoutkhanqindev.dexreader.baselineprofile.StartupBenchmarks.scrollBaselineProfile(StartupBenchmarks.kt:48)\n"
+    error_type: "androidx.test.uiautomator.StaleObjectException\nat androidx.test.uiautomator.UiObject2.getAccessibilityNodeInfo(UiObject2.java"
+    stack_trace: "androidx.test.uiautomator.StaleObjectException\nat androidx.test.uiautomator.UiObject2.getAccessibilityNodeInfo(UiObject2.java:1018)\nat androidx.test.uiautomator.UiObject2.getVisibleBoundsForGestures(UiObject2.java:340)\nat androidx.test.uiautomator.UiObject2.fling(UiObject2.java:943)\nat androidx.test.uiautomator.UiObject2.fling(UiObject2.java:924)\nat com.decoutkhanqindev.dexreader.baselineprofile.StartupBenchmarks.scrollBaselineProfile$lambda$0(StartupBenchmarks.kt:60)\nat com.decoutkhanqindev.dexreader.baselineprofile.StartupBenchmarks$$ExternalSyntheticLambda1.invoke(D8$$SyntheticClass:0)\nat androidx.benchmark.macro.MacrobenchmarkKt.macrobenchmarkWithStartupMode$lambda$18(Macrobenchmark.kt:438)\nat androidx.benchmark.macro.MacrobenchmarkKt$$ExternalSyntheticLambda3.invoke(D8$$SyntheticClass:0)\nat androidx.benchmark.macro.MacrobenchmarkPhaseKt.runPhase(MacrobenchmarkPhase.kt:99)\nat androidx.benchmark.macro.MacrobenchmarkKt.macrobenchmark$lambda$6(Macrobenchmark.kt:271)\nat androidx.benchmark.macro.MacrobenchmarkKt$$ExternalSyntheticLambda1.invoke(D8$$SyntheticClass:0)\nat androidx.benchmark.macro.TraceProcessorExtensionsKt.runServer(TraceProcessorExtensions.kt:163)\nat androidx.benchmark.macro.TraceProcessorExtensionsKt.runServer$default(TraceProcessorExtensions.kt:158)\nat androidx.benchmark.macro.MacrobenchmarkKt.macrobenchmark(Macrobenchmark.kt:263)\nat androidx.benchmark.macro.MacrobenchmarkKt.macrobenchmarkWithStartupMode(Macrobenchmark.kt:400)\nat androidx.benchmark.macro.junit4.MacrobenchmarkRule.measureRepeated(MacrobenchmarkRule.kt:87)\nat androidx.benchmark.macro.junit4.MacrobenchmarkRule.measureRepeated$default(MacrobenchmarkRule.kt:77)\nat com.decoutkhanqindev.dexreader.baselineprofile.StartupBenchmarks.scrollBaselineProfile(StartupBenchmarks.kt:48)\n"
+  }
+  output_artifact {
+    label {
+      label: "logcat"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\androidTest-results\\connected\\benchmarkRelease\\2312DRA50G - 14\\logcat-com.decoutkhanqindev.dexreader.baselineprofile.StartupBenchmarks-scrollBaselineProfile.txt"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\androidTest-results\\connected\\benchmarkRelease\\2312DRA50G - 14\\device-info.pb"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.meminfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\androidTest-results\\connected\\benchmarkRelease\\2312DRA50G - 14\\meminfo"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.cpuinfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\androidTest-results\\connected\\benchmarkRelease\\2312DRA50G - 14\\cpuinfo"
+    }
+  }
+}
+output_artifact {
+  label {
+    label: "test-results.log"
+    namespace: "com.google.testing.platform.runtime.android.driver.AndroidInstrumentationDriver"
+  }
+  source_path {
+    path: "C:\\Android Development\\dex_reader\\DexReader\\baselineprofile\\build\\outputs\\androidTest-results\\connected\\benchmarkRelease\\2312DRA50G - 14\\testlog\\test-results.log"
+  }
+  type: TEST_DATA
+  mime_type: "text/plain"
+}

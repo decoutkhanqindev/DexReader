@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.category_details
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,6 +22,8 @@ fun CategoryDetailScreen(
   val detailsUiState by viewModel.categoryDetailsUiState.collectAsStateWithLifecycle()
   val criteriaUiState by viewModel.categoryCriteriaUiState.collectAsStateWithLifecycle()
   val categoryTitle = viewModel.categoryTitleFromArg
+
+  BackHandler { onNavigateBack() }
 
   BaseDetailsScreen(
     title = categoryTitle,
