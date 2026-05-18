@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,11 +35,7 @@ fun ReaderContent(
   onUpdateChapterPage: (Int) -> Unit,
   onRetry: () -> Unit,
 ) {
-  var isShowErrorDialog by remember { mutableStateOf(true) }
-
-  LaunchedEffect(chapterPageUiState) {
-    if (chapterPageUiState is ChapterPagesUiState.Error) isShowErrorDialog = true
-  }
+  var isShowErrorDialog by remember(chapterPageUiState) { mutableStateOf(chapterPageUiState is ChapterPagesUiState.Error) }
 
   when (chapterPageUiState) {
     ChapterPagesUiState.Loading -> LoadingScreen(modifier = modifier)

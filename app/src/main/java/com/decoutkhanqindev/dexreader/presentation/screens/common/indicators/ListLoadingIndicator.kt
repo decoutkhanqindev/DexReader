@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -37,9 +38,10 @@ fun ListLoadingIndicator(modifier: Modifier = Modifier) {
         trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
       )
 
-      Image(
+      Icon(
         painter = painterResource(R.drawable.app_icon),
         contentDescription = stringResource(R.string.app_name),
+        tint = MaterialTheme.colorScheme.onPrimaryContainer,
         modifier = Modifier
           .size(36.dp)
           .shimmer()

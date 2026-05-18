@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,11 +49,7 @@ fun FavoritesContent(
   onRetry: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  var isShowErrorDialog by remember { mutableStateOf(true) }
-
-  LaunchedEffect(uiState) {
-    if (uiState is BasePaginationUiState.FirstPageError) isShowErrorDialog = true
-  }
+  var isShowErrorDialog by remember(uiState) { mutableStateOf(uiState is BasePaginationUiState.FirstPageError) }
 
   when (uiState) {
     BasePaginationUiState.FirstPageLoading -> LoadingScreen(modifier = modifier)

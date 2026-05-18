@@ -3,7 +3,6 @@ package com.decoutkhanqindev.dexreader.presentation.screens.search.components.su
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,11 +27,7 @@ fun SuggestionsSection(
   modifier: Modifier = Modifier,
   onSelectedSuggestion: (String) -> Unit,
 ) {
-  var isShowErrorDialog by remember { mutableStateOf(true) }
-
-  LaunchedEffect(suggestionsUiState) {
-    if (suggestionsUiState is SuggestionsUiState.Error) isShowErrorDialog = true
-  }
+  var isShowErrorDialog by remember(suggestionsUiState) { mutableStateOf(suggestionsUiState is SuggestionsUiState.Error) }
 
   when (suggestionsUiState) {
     SuggestionsUiState.Loading -> LoadingScreen(modifier = modifier)

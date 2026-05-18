@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,13 +64,9 @@ fun CategoryDetailsContent(
 ) {
   val gridState = rememberLazyGridState()
   val coroutineScope = rememberCoroutineScope()
-  var isShowErrorDialog by remember { mutableStateOf(true) }
+  var isShowErrorDialog by remember(detailsUiState) { mutableStateOf(detailsUiState is BasePaginationUiState.FirstPageError) }
   var isShowSortBottomSheet by remember { mutableStateOf(false) }
   var isShowFilterBottomSheet by remember { mutableStateOf(false) }
-
-  LaunchedEffect(detailsUiState) {
-    if (detailsUiState is BasePaginationUiState.FirstPageError) isShowErrorDialog = true
-  }
 
   Box(modifier = modifier) {
     when (detailsUiState) {

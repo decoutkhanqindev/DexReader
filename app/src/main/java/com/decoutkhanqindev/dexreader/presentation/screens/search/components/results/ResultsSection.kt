@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,11 +47,7 @@ fun ResultsSection(
   val gridState = rememberLazyGridState()
   val coroutineScope = rememberCoroutineScope()
   val mangaListSize = (resultsUiState as? BasePaginationUiState.Content)?.currentList?.size ?: 0
-  var isShowErrorDialog by remember { mutableStateOf(true) }
-
-  LaunchedEffect(resultsUiState) {
-    if (resultsUiState is BasePaginationUiState.FirstPageError) isShowErrorDialog = true
-  }
+  var isShowErrorDialog by remember(resultsUiState) { mutableStateOf(resultsUiState is BasePaginationUiState.FirstPageError) }
 
   Box(modifier = modifier) {
     when (resultsUiState) {

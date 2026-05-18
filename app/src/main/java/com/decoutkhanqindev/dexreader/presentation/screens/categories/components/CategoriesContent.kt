@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,11 +34,7 @@ fun CategoriesContent(
   onItemClick: (String, String) -> Unit,
   onRetry: () -> Unit,
 ) {
-  var isShowErrorDialog by remember { mutableStateOf(true) }
-
-  LaunchedEffect(uiState) {
-    if (uiState is CategoriesUiState.Error) isShowErrorDialog = true
-  }
+  var isShowErrorDialog by remember(uiState) { mutableStateOf(uiState is CategoriesUiState.Error) }
 
   when (uiState) {
     CategoriesUiState.Loading -> LoadingScreen(modifier = modifier)

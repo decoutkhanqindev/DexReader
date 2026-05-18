@@ -25,6 +25,7 @@ object NavTransitions {
 
   // Transition Animation Constants
   private const val ANIMATION_DURATION = 700
+  private const val FADE_ANIMATION_DURATION = 400
   private const val OFFSET_X = 700
 
   // Navigation debounce time to prevent rapid multiple navigations
@@ -36,6 +37,18 @@ object NavTransitions {
   )
 
   private val fadeAnimationSpec: FiniteAnimationSpec<Float> = tween(ANIMATION_DURATION)
+  private val shortFadeAnimationSpec: FiniteAnimationSpec<Float> = tween(FADE_ANIMATION_DURATION)
+
+  /**
+   * Fade transition for tab/drawer-level screens (Home, Categories, Favorites, etc.)
+   * Cross-fade feel appropriate for switching between major sections
+   */
+  fun fadeTransitions() = NavTransitions(
+    enter = { fadeIn(animationSpec = shortFadeAnimationSpec) },
+    exit = { fadeOut(animationSpec = shortFadeAnimationSpec) },
+    popEnter = { fadeIn(animationSpec = shortFadeAnimationSpec) },
+    popExit = { fadeOut(animationSpec = shortFadeAnimationSpec) },
+  )
 
   /**
    * Slide from LEFT transition (for Home screen)
@@ -122,6 +135,23 @@ object NavTransitions {
         targetOffsetX = { OFFSET_X }
       ) + fadeOut(animationSpec = fadeAnimationSpec)
     }
+  )
+
+  fun slideExitOnlyTransitions() = NavTransitions(
+    enter = null,
+    exit = {
+      slideOutHorizontally(
+        animationSpec = slideAnimationSpec,
+        targetOffsetX = { -OFFSET_X }
+      ) + fadeOut(animationSpec = fadeAnimationSpec)
+    },
+    popEnter = {
+      slideInHorizontally(
+        animationSpec = slideAnimationSpec,
+        initialOffsetX = { -OFFSET_X }
+      ) + fadeIn(animationSpec = fadeAnimationSpec)
+    },
+    popExit = null
   )
 
   // Data class to hold navigation transition animations

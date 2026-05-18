@@ -64,6 +64,9 @@
   <string name="error_unknown">An unexpected error occurred.</string>
   <string name="error_send_reset_password">Error sending reset password email.</string>
 
+  <!-- Splash Screen -->
+  <string name="loading">Loading …</string>
+
   <!-- Home Screen -->
   <string name="latest_update">Latest Updates</string>
   <string name="trending">Trending</string>

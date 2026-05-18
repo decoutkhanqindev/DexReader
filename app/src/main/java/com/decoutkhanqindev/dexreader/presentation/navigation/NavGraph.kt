@@ -22,12 +22,13 @@ import com.decoutkhanqindev.dexreader.presentation.screens.profile.ProfileScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.reader.ReaderScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.search.SearchScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.settings.SettingsScreen
+import com.decoutkhanqindev.dexreader.presentation.screens.splash.SplashScreen
 import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateBackWithDebounce
 import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateClearStack
 import com.decoutkhanqindev.dexreader.util.NavTransitions.navigatePreserveState
 import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateToWithDebounce
 import com.decoutkhanqindev.dexreader.util.NavTransitions.slideEnterOnlyTransitions
-import com.decoutkhanqindev.dexreader.util.NavTransitions.slideFromLeftTransitions
+import com.decoutkhanqindev.dexreader.util.NavTransitions.slideExitOnlyTransitions
 import com.decoutkhanqindev.dexreader.util.NavTransitions.slideFromRightTransitions
 
 @Composable
@@ -40,11 +41,23 @@ fun NavGraph(
 
   NavHost(
     navController = navController,
-    startDestination = NavRoute.Home,
+    startDestination = NavRoute.Splash,
     modifier = modifier
   ) {
-    // Home Screen - slides from LEFT
-    slideFromLeftTransitions().let { transitions ->
+    // Splash Screen - EXIT ONLY (start destination, slides out left when Home enters)
+    composable<NavRoute.Splash>(
+      exitTransition = slideExitOnlyTransitions().exit,
+    ) {
+      SplashScreen(
+        modifier = Modifier.fillMaxSize(),
+        onNavigateToHome = {
+          navController.navigateClearStack<NavRoute.Splash>(NavRoute.Home)
+        },
+      )
+    }
+
+    // Home Screen - slides from RIGHT
+    slideFromRightTransitions().let { transitions ->
       composable<NavRoute.Home>(
         enterTransition = transitions.enter,
         exitTransition = transitions.exit,

@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -88,11 +87,7 @@ fun MangaDetailsContent(
 ) {
   val lazyListState = rememberLazyListState()
   val coroutineScope = rememberCoroutineScope()
-  var isShowErrorDialog by remember { mutableStateOf(true) }
-
-  LaunchedEffect(mangaDetailsUiState) {
-    if (mangaDetailsUiState is MangaDetailsUiState.Error) isShowErrorDialog = true
-  }
+  var isShowErrorDialog by remember(mangaDetailsUiState) { mutableStateOf(mangaDetailsUiState is MangaDetailsUiState.Error) }
 
   Box(modifier = modifier) {
     when (mangaDetailsUiState) {

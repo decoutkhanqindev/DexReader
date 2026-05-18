@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,11 +40,7 @@ fun HomeContent(
   onItemClick: (String) -> Unit,
   onRetry: () -> Unit,
 ) {
-  var isShowErrorDialog by remember { mutableStateOf(true) }
-
-  LaunchedEffect(uiState) {
-    if (uiState is HomeUiState.Error) isShowErrorDialog = true
-  }
+  var isShowErrorDialog by remember(uiState) { mutableStateOf(uiState is HomeUiState.Error) }
 
   ReportDrawnWhen { uiState is HomeUiState.Success }
 
