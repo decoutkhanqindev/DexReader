@@ -38,7 +38,11 @@ fun ReadingAndFavoriteButtons(
   val onReadingClick = remember(continueChapter, startedChapterId) {
     {
       if (isContinueReading) {
-        onReadingClick(continueChapter.chapterId, continueChapter.lastReadPage, continueChapter.mangaId)
+        onReadingClick(
+          continueChapter.chapterId,
+          continueChapter.lastReadPage,
+          continueChapter.mangaId
+        )
       } else onReadingClick(startedChapterId!!, 0, mangaId)
     }
   }

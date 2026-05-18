@@ -67,8 +67,10 @@ fun AuthHeader(modifier: Modifier = Modifier) {
 @Composable
 private fun AuthHeaderPreview() {
   DexReaderTheme {
-    AuthHeader(modifier = Modifier
-      .fillMaxWidth()
-      .padding(16.dp))
+    AuthHeader(
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(16.dp)
+    )
   }
 }

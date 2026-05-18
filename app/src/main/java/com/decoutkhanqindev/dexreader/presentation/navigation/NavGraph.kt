@@ -93,7 +93,12 @@ fun NavGraph(
             navController.navigateToWithDebounce(NavRoute.Search)
           },
           onNavigateCategoryDetailScreen = { categoryId, categoryTitle ->
-            navController.navigateToWithDebounce(NavRoute.CategoryDetails(categoryId, categoryTitle))
+            navController.navigateToWithDebounce(
+              NavRoute.CategoryDetails(
+                categoryId,
+                categoryTitle
+              )
+            )
           },
         )
       }
@@ -270,7 +275,12 @@ fun NavGraph(
             navController.navigateClearStack<NavRoute.MangaDetails>(NavRoute.Login)
           },
           onNavigateCategoryDetailsScreen = { categoryId, categoryTitle ->
-            navController.navigateToWithDebounce(NavRoute.CategoryDetails(categoryId, categoryTitle))
+            navController.navigateToWithDebounce(
+              NavRoute.CategoryDetails(
+                categoryId,
+                categoryTitle
+              )
+            )
           },
           onNavigateToReaderScreen = { chapterId, lastReadPage, mangaId ->
             navController.navigateToWithDebounce(NavRoute.Reader(chapterId, lastReadPage, mangaId))

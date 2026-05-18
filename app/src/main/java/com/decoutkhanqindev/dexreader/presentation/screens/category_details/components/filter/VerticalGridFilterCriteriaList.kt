@@ -31,7 +31,8 @@ fun VerticalGridFilterCriteriaList(
     MangaStatusValue.entries.filter { it != MangaStatusValue.UNKNOWN }.toPersistentList()
   }
   val contentRatingItems = remember {
-    MangaContentRatingValue.entries.filter { it != MangaContentRatingValue.UNKNOWN }.toPersistentList()
+    MangaContentRatingValue.entries.filter { it != MangaContentRatingValue.UNKNOWN }
+      .toPersistentList()
   }
 
   Row(modifier = modifier) {

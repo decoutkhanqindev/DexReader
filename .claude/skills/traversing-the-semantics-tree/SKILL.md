@@ -19,33 +19,46 @@ metadata:
 
 # Traversing the Semantics Tree — When a Single Finder Won't Reach the Node
 
-The single-finder shortcuts (`onNodeWithTag`, etc.) cover ~95% of test queries. The remainder need tree navigation: "the parent of this Text", "the third child of this Row", "any sibling that is enabled". This skill maps those navigation operators, calls out the `LazyColumn` snapshot caveat, and shows when traversal is the wrong tool.
+The single-finder shortcuts (`onNodeWithTag`, etc.) cover ~95% of test queries. The remainder need
+tree navigation: "the parent of this Text", "the third child of this Row", "any sibling that is
+enabled". This skill maps those navigation operators, calls out the `LazyColumn` snapshot caveat,
+and shows when traversal is the wrong tool.
 
 ## When to use this skill
 
-- The target node has no stable `testTag` and one cannot be added to production (third-party composable, dynamically generated children).
+- The target node has no stable `testTag` and one cannot be added to production (third-party
+  composable, dynamically generated children).
 - The test verifies structural relationships ("the second child of the row is the icon").
-- The developer chains `.onChildren()[i].onChildAt(j)` and wants to know whether that is the right shape.
-- The developer mentions `onChildren`, `onChild`, `onParent`, `onSibling`, `onSiblings`, `onAncestors`, `filterToOne`, `onFirst`, `onLast`, or `[index]`.
+- The developer chains `.onChildren()[i].onChildAt(j)` and wants to know whether that is the right
+  shape.
+- The developer mentions `onChildren`, `onChild`, `onParent`, `onSibling`, `onSiblings`,
+  `onAncestors`, `filterToOne`, `onFirst`, `onLast`, or `[index]`.
 - A `LazyColumn` test misses items because they are off-screen.
 
 ## When NOT to use this skill
 
-- A `Modifier.testTag(...)` could be added to the target node — adding a tag is almost always cleaner than a traversal chain. See `../finding-nodes-by-tag-text-content/SKILL.md`.
-- The relationship is "anywhere above" / "anywhere below" — prefer the matcher-based `hasAnyAncestor` / `hasAnyDescendant` (see `../composing-semantics-matchers/SKILL.md`).
-- The query is about a LazyColumn item by key — use `performScrollToKey` instead (see `../../actions/clicking-and-scrolling/SKILL.md`, `../../patterns/testing-lazy-lists/SKILL.md`).
+- A `Modifier.testTag(...)` could be added to the target node — adding a tag is almost always
+  cleaner than a traversal chain. See `../finding-nodes-by-tag-text-content/SKILL.md`.
+- The relationship is "anywhere above" / "anywhere below" — prefer the matcher-based
+  `hasAnyAncestor` / `hasAnyDescendant` (see `../composing-semantics-matchers/SKILL.md`).
+- The query is about a LazyColumn item by key — use `performScrollToKey` instead (see
+  `../../actions/clicking-and-scrolling/SKILL.md`, `../../patterns/testing-lazy-lists/SKILL.md`).
 
 ## Prerequisites
 
-- A working `ComposeTestRule` / `ComposeUiTest`. See `../../setup/configuring-test-dependencies/SKILL.md`.
-- Familiarity with the merged vs unmerged tree distinction. See `../finding-nodes-by-tag-text-content/SKILL.md`.
+- A working `ComposeTestRule` / `ComposeUiTest`. See
+  `../../setup/configuring-test-dependencies/SKILL.md`.
+- Familiarity with the merged vs unmerged tree distinction. See
+  `../finding-nodes-by-tag-text-content/SKILL.md`.
 
 ## Workflow
 
-- [ ] **1. Pick the navigator by relationship type.** Each operator returns either a `SemanticsNodeInteraction` (single — fails on 0 or >1) or a `SemanticsNodeInteractionCollection` (plural — never fails on 0).
+- [ ] **1. Pick the navigator by relationship type.** Each operator returns either a
+  `SemanticsNodeInteraction` (single — fails on 0 or >1) or a `SemanticsNodeInteractionCollection` (
+  plural — never fails on 0).
 
   | From a single node, go to … | API | Returns | File:line |
-  |---|---|---|---|
+    |---|---|---|---|
   | parent | `onParent()` | single | `Selectors.kt:36-42` |
   | exactly one child | `onChild()` | single | `Selectors.kt:71-77` |
   | child at an index | `onChildAt(index)` | single | `Selectors.kt:85` |
@@ -55,22 +68,38 @@ The single-finder shortcuts (`onNodeWithTag`, etc.) cover ~95% of test queries. 
   | every ancestor up to root | `onAncestors()` | collection | `Selectors.kt:140-146` |
 
   | From a collection, narrow to … | API | Returns | File:line |
-  |---|---|---|---|
+    |---|---|---|---|
   | first | `onFirst()` (= `[0]`) | single | `Selectors.kt:156-158` |
   | last | `onLast()` | single | `Selectors.kt:168-170` |
   | nth | `[index]` | single | `SemanticsNodeInteraction.kt:261-267` |
   | filter to a sub-collection | `filter(matcher)` | collection | `Selectors.kt:178-186` |
   | filter to exactly one | `filterToOne(matcher)` | single | `Selectors.kt:198-206` |
 
-- [ ] **2. Do not look for `onAncestor` (singular) — it does not exist.** The API surface ships only `onAncestors()` plural (`Selectors.kt:140-146`). It returns `[parent, grandparent, …, root]` in that order. To assert "the immediate parent satisfies X", use `onParent().assert(matcherX)` or the `hasParent(matcherX)` predicate.
+- [ ] **2. Do not look for `onAncestor` (singular) — it does not exist.** The API surface ships only
+  `onAncestors()` plural (`Selectors.kt:140-146`). It returns `[parent, grandparent, …, root]` in
+  that order. To assert "the immediate parent satisfies X", use `onParent().assert(matcherX)` or the
+  `hasParent(matcherX)` predicate.
 
-- [ ] **3. Remember the `useUnmergedTree` flag is sticky.** Every navigator carries the same `useUnmergedTree` value as the source `SemanticsNodeInteraction` (`SemanticsNodeInteraction.kt:42-49`; each `Selectors.kt` constructor passes `useUnmergedTree` through unchanged). A finder created with `onNodeWithTag(tag, useUnmergedTree = true)` keeps the flag on across `onChild`/`onParent`/`filter`. Skydoves hot take #2: default merged, flip to unmerged only when targeting composition detail.
+- [ ] **3. Remember the `useUnmergedTree` flag is sticky.** Every navigator carries the same
+  `useUnmergedTree` value as the source `SemanticsNodeInteraction` (
+  `SemanticsNodeInteraction.kt:42-49`; each `Selectors.kt` constructor passes `useUnmergedTree`
+  through unchanged). A finder created with `onNodeWithTag(tag, useUnmergedTree = true)` keeps the
+  flag on across `onChild`/`onParent`/`filter`. Skydoves hot take #2: default merged, flip to
+  unmerged only when targeting composition detail.
 
-- [ ] **4. `onChildren()` is a snapshot at invocation time.** It returns nodes "currently present in the semantic tree" (`Selectors.kt:46-52`). For a `LazyColumn` or `LazyRow` only the on-screen items appear. To reach an off-screen item, scroll first with `performScrollToIndex` / `performScrollToKey` / `performScrollToNode` (see `../../actions/clicking-and-scrolling/SKILL.md`).
+- [ ] **4. `onChildren()` is a snapshot at invocation time.** It returns nodes "currently present in
+  the semantic tree" (`Selectors.kt:46-52`). For a `LazyColumn` or `LazyRow` only the on-screen
+  items appear. To reach an off-screen item, scroll first with `performScrollToIndex` /
+  `performScrollToKey` / `performScrollToNode` (see
+  `../../actions/clicking-and-scrolling/SKILL.md`).
 
-- [ ] **5. Re-finding by tag usually beats navigating.** If the tree shape might change between Compose versions or under translation rotation, a stable tag on the target node is more durable than a `[2].onChildAt(0)` chain. Add the tag in production. Skydoves hot take #1.
+- [ ] **5. Re-finding by tag usually beats navigating.** If the tree shape might change between
+  Compose versions or under translation rotation, a stable tag on the target node is more durable
+  than a `[2].onChildAt(0)` chain. Add the tag in production. Skydoves hot take #1.
 
-- [ ] **6. Use `filterToOne(matcher)` when the count assertion is implicit.** `filterToOne` throws on 0 or >1 matches at fetch time, the same way `onNode(matcher)` does (`Selectors.kt:198-206`). It is the collection-narrowing analogue of `onNode(matcher)`.
+- [ ] **6. Use `filterToOne(matcher)` when the count assertion is implicit.** `filterToOne` throws
+  on 0 or >1 matches at fetch time, the same way `onNode(matcher)` does (`Selectors.kt:198-206`). It
+  is the collection-narrowing analogue of `onNode(matcher)`.
 
 ## Patterns
 
@@ -131,7 +160,8 @@ fun row_third_child_isIcon() {
 }
 ```
 
-`onChildAt(index)` is exactly `onChildren()[index]` (`Selectors.kt:85`). Both fail if the index is out of range or if the resolved node count is not exactly 1 at the leaf.
+`onChildAt(index)` is exactly `onChildren()[index]` (`Selectors.kt:85`). Both fail if the index is
+out of range or if the resolved node count is not exactly 1 at the leaf.
 
 ### Pattern: `filterToOne` instead of `[i]`
 
@@ -168,7 +198,8 @@ fun submitText_isInsideEnabledButton() {
 }
 ```
 
-The `useUnmergedTree = true` set on the inner `Text` finder propagates to `onParent()` automatically — no need to repeat it.
+The `useUnmergedTree = true` set on the inner `Text` finder propagates to `onParent()`
+automatically — no need to repeat it.
 
 ### Pattern: `onAncestors()` for the chain to root
 
@@ -184,7 +215,9 @@ fun confirmButton_isInsideDialog() {
 }
 ```
 
-PREFERRED: `rule.onNode(hasTestTag(ConfirmButtonTag) and hasAnyAncestor(isDialog())).assertExists()` — same intent in one matcher. See `../composing-semantics-matchers/SKILL.md`.
+PREFERRED:
+`rule.onNode(hasTestTag(ConfirmButtonTag) and hasAnyAncestor(isDialog())).assertExists()` — same
+intent in one matcher. See `../composing-semantics-matchers/SKILL.md`.
 
 ### Pattern: LazyColumn — only on-screen children appear
 
@@ -223,24 +256,37 @@ fun checkbox_label_isPresent() {
 }
 ```
 
-`onSibling()` requires exactly one sibling (`Selectors.kt:114-125`). For multiple siblings use `onSiblings()` plus `filterToOne(...)`.
+`onSibling()` requires exactly one sibling (`Selectors.kt:114-125`). For multiple siblings use
+`onSiblings()` plus `filterToOne(...)`.
 
 ## Mandatory rules
 
-- **MUST** prefer adding a `Modifier.testTag(...)` to the target node over a multi-step traversal chain. Skydoves hot take #1.
-- **MUST** use `filterToOne(matcher)` over `filter(matcher).onFirst()` when the contract is "exactly one match"; the former throws on >1, the latter silently picks the first.
-- **MUST NOT** assume `onChildren()` returns the full data set for a `LazyColumn` / `LazyRow` — it returns the currently-composed snapshot only. Scroll first with `performScrollToIndex` / `performScrollToKey`.
-- **MUST NOT** look up a singular `onAncestor` — only `onAncestors()` plural exists. Use `onParent()` for the immediate parent or `hasParent(matcher)` / `hasAnyAncestor(matcher)` as predicates.
-- **MUST** remember the `useUnmergedTree` flag is sticky across `onChild`/`onParent`/`filter`. Skydoves hot take #2.
-- **PREFERRED:** for "anywhere above/below" relationships, replace traversal chains with `hasAnyAncestor` / `hasAnyDescendant` from `../composing-semantics-matchers/SKILL.md`.
+- **MUST** prefer adding a `Modifier.testTag(...)` to the target node over a multi-step traversal
+  chain. Skydoves hot take #1.
+- **MUST** use `filterToOne(matcher)` over `filter(matcher).onFirst()` when the contract is "exactly
+  one match"; the former throws on >1, the latter silently picks the first.
+- **MUST NOT** assume `onChildren()` returns the full data set for a `LazyColumn` / `LazyRow` — it
+  returns the currently-composed snapshot only. Scroll first with `performScrollToIndex` /
+  `performScrollToKey`.
+- **MUST NOT** look up a singular `onAncestor` — only `onAncestors()` plural exists. Use
+  `onParent()` for the immediate parent or `hasParent(matcher)` / `hasAnyAncestor(matcher)` as
+  predicates.
+- **MUST** remember the `useUnmergedTree` flag is sticky across `onChild`/`onParent`/`filter`.
+  Skydoves hot take #2.
+- **PREFERRED:** for "anywhere above/below" relationships, replace traversal chains with
+  `hasAnyAncestor` / `hasAnyDescendant` from `../composing-semantics-matchers/SKILL.md`.
 
 ## Verification
 
-- [ ] Every traversal chain has at most one navigation step, OR the deeper chain is justified by a comment naming the missing tag.
-- [ ] No `onChildren()[i]` chain spans a `LazyColumn` / `LazyRow` boundary without a preceding `performScrollTo*`.
+- [ ] Every traversal chain has at most one navigation step, OR the deeper chain is justified by a
+  comment naming the missing tag.
+- [ ] No `onChildren()[i]` chain spans a `LazyColumn` / `LazyRow` boundary without a preceding
+  `performScrollTo*`.
 - [ ] No `onAncestor` (singular) usage — only `onParent`, `onAncestors`, or `hasAnyAncestor`.
-- [ ] `filterToOne` is used wherever the contract is "exactly one match"; `filter().onFirst()` is replaced.
-- [ ] `useUnmergedTree = true` on a chain root is intentional — there is a comment or matcher reason for it.
+- [ ] `filterToOne` is used wherever the contract is "exactly one match"; `filter().onFirst()` is
+  replaced.
+- [ ] `useUnmergedTree = true` on a chain root is intentional — there is a comment or matcher reason
+  for it.
 - [ ] `./gradlew :app:connectedDebugAndroidTest` or `:app:testDebugUnitTest` passes.
 
 ## References
@@ -248,6 +294,11 @@ fun checkbox_label_isPresent() {
 - Compose testing overview: https://developer.android.com/develop/ui/compose/testing
 - Compose testing cheat sheet: https://developer.android.com/develop/ui/compose/testing-cheatsheet
 - Semantics in Compose: https://developer.android.com/develop/ui/compose/accessibility/semantics
-- `compose/ui/ui-test/src/commonMain/kotlin/androidx/compose/ui/test/Selectors.kt` — `onParent`, `onChildren`, `onChild`, `onChildAt`, `onSibling(s)`, `onAncestors`, `onFirst`, `onLast`, `filter`, `filterToOne`.
-- `compose/ui/ui-test/src/commonMain/kotlin/androidx/compose/ui/test/SemanticsNodeInteraction.kt` — collection `[index]` operator and the sticky `useUnmergedTree` field.
-- `compose/ui/ui-test/src/commonMain/kotlin/androidx/compose/ui/test/Filters.kt` — `hasParent`, `hasAnyChild`, `hasAnySibling`, `hasAnyAncestor`, `hasAnyDescendant` predicate alternatives to traversal.
+- `compose/ui/ui-test/src/commonMain/kotlin/androidx/compose/ui/test/Selectors.kt` — `onParent`,
+  `onChildren`, `onChild`, `onChildAt`, `onSibling(s)`, `onAncestors`, `onFirst`, `onLast`,
+  `filter`, `filterToOne`.
+- `compose/ui/ui-test/src/commonMain/kotlin/androidx/compose/ui/test/SemanticsNodeInteraction.kt` —
+  collection `[index]` operator and the sticky `useUnmergedTree` field.
+- `compose/ui/ui-test/src/commonMain/kotlin/androidx/compose/ui/test/Filters.kt` — `hasParent`,
+  `hasAnyChild`, `hasAnySibling`, `hasAnyAncestor`, `hasAnyDescendant` predicate alternatives to
+  traversal.

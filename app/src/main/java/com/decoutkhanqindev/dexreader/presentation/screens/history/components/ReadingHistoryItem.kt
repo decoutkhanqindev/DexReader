@@ -43,7 +43,13 @@ fun ReadingHistoryItem(
     { onRemoveFromHistory(readingHistory.id) }
   }
   val onSelectedReadingHistory = remember(readingHistory.id, readingHistory.lastReadPage) {
-    { onSelectedReadingHistory(readingHistory.mangaId, readingHistory.chapterId, readingHistory.lastReadPage) }
+    {
+      onSelectedReadingHistory(
+        readingHistory.mangaId,
+        readingHistory.chapterId,
+        readingHistory.lastReadPage
+      )
+    }
   }
   val swipeToDismissBoxState = rememberSwipeToDismissBoxState(
     confirmValueChange = { value ->

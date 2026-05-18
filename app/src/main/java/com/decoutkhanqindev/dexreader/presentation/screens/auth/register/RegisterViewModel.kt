@@ -2,7 +2,6 @@ package com.decoutkhanqindev.dexreader.presentation.screens.auth.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
 import com.decoutkhanqindev.dexreader.domain.usecase.user.RegisterUseCase
 import com.decoutkhanqindev.dexreader.presentation.error.UserError
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toUserError

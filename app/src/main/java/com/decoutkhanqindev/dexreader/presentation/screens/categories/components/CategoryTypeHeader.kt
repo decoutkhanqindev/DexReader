@@ -56,7 +56,9 @@ fun CategoryTypeHeader(
       ) {
         Icon(
           imageVector = if (isExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-          contentDescription = if (isExpanded) stringResource(R.string.icon_expand_less) else stringResource(R.string.icon_expand_more)
+          contentDescription = if (isExpanded) stringResource(R.string.icon_expand_less) else stringResource(
+            R.string.icon_expand_more
+          )
         )
       }
     }

@@ -19,29 +19,43 @@ metadata:
 
 # Organizing Test Source Sets — `src/test/`, `src/androidTest/`, and the KMP Split
 
-Where a test file lives determines which JVM runs it, which dependencies it sees, and whether it ships in the test APK. Most modules need only `src/test/` and `src/androidTest/`. Modules that share helpers between host and device tests historically used `src/sharedTest/` (a Codelab convention, not Google-documented as such), which broke on AGP 7.2+ and pushed Compose itself to the KMP-style `androidHostTest` / `androidDeviceTest` split. This skill encodes the matrix so the agent can place a test file with confidence.
+Where a test file lives determines which JVM runs it, which dependencies it sees, and whether it
+ships in the test APK. Most modules need only `src/test/` and `src/androidTest/`. Modules that share
+helpers between host and device tests historically used `src/sharedTest/` (a Codelab convention, not
+Google-documented as such), which broke on AGP 7.2+ and pushed Compose itself to the KMP-style
+`androidHostTest` / `androidDeviceTest` split. This skill encodes the matrix so the agent can place
+a test file with confidence.
 
 ## When to use this skill
 
 - The user asks "where do I put my tests" or "src/test/ or src/androidTest/".
 - The user asks "what's testImplementation vs androidTestImplementation vs debugImplementation".
-- The user reports `Unresolved reference: createComposeRule` and the agent suspects the dependency is on the wrong configuration.
-- The user is migrating off `src/sharedTest/` after AGP 7.2+ broke their `sourceSets { test.java.srcDir(...) }` block.
-- The user mentions `androidHostTest` / `androidDeviceTest` and asks how to set them up in a non-KMP module.
+- The user reports `Unresolved reference: createComposeRule` and the agent suspects the dependency
+  is on the wrong configuration.
+- The user is migrating off `src/sharedTest/` after AGP 7.2+ broke their
+  `sourceSets { test.java.srcDir(...) }` block.
+- The user mentions `androidHostTest` / `androidDeviceTest` and asks how to set them up in a non-KMP
+  module.
 - The user asks "why is my Robolectric test in `src/androidTest/`" — it should be in `src/test/`.
 
 ## When NOT to use this skill
 
-- The user is wiring Gradle dependencies for Compose test (`ui-test-junit4`, `ui-test-manifest`) — use `../../../compose/setup/configuring-test-dependencies/SKILL.md`.
-- The user is choosing test scope (small/medium/big) — use `../../concepts/understanding-the-testing-pyramid/SKILL.md`.
-- The user is configuring `AndroidJUnitRunner` itself — use `../../../instrumentation/runner/running-instrumented-tests-with-androidjunit4/SKILL.md`.
-- The user is configuring a JUnit4 runner for JVM tests — use `../../../jvm-tests/runner/configuring-junit4-on-android/SKILL.md`.
+- The user is wiring Gradle dependencies for Compose test (`ui-test-junit4`, `ui-test-manifest`) —
+  use `../../../compose/setup/configuring-test-dependencies/SKILL.md`.
+- The user is choosing test scope (small/medium/big) — use
+  `../../concepts/understanding-the-testing-pyramid/SKILL.md`.
+- The user is configuring `AndroidJUnitRunner` itself — use
+  `../../../instrumentation/runner/running-instrumented-tests-with-androidjunit4/SKILL.md`.
+- The user is configuring a JUnit4 runner for JVM tests — use
+  `../../../jvm-tests/runner/configuring-junit4-on-android/SKILL.md`.
 
 ## Prerequisites
 
 - A module with the Android Gradle Plugin (`com.android.application` or `com.android.library`).
-- Familiarity with Gradle configuration names (`testImplementation`, `androidTestImplementation`, `debugImplementation`).
-- An understanding that JVM tests run on the host's JVM and instrumented tests run on a device/emulator. (See `../../concepts/understanding-the-testing-pyramid/SKILL.md`.)
+- Familiarity with Gradle configuration names (`testImplementation`, `androidTestImplementation`,
+  `debugImplementation`).
+- An understanding that JVM tests run on the host's JVM and instrumented tests run on a
+  device/emulator. (See `../../concepts/understanding-the-testing-pyramid/SKILL.md`.)
 
 ## The two source sets Google documents
 
@@ -49,26 +63,34 @@ Where a test file lives determines which JVM runs it, which dependencies it sees
 
 Per `/training/testing/local-tests`:
 
-> "By default, the source files for local unit tests are placed in `module-name/src/test/`. This directory already exists when you create a new project using Android Studio."
+> "By default, the source files for local unit tests are placed in `module-name/src/test/`. This
+> directory already exists when you create a new project using Android Studio."
 > — `developer.android.com/training/testing/local-tests`
 
-> "A **local** test runs directly on your own workstation, rather than an Android device or emulator. As such, it uses your local Java Virtual Machine (JVM)."
+> "A **local** test runs directly on your own workstation, rather than an Android device or
+> emulator. As such, it uses your local Java Virtual Machine (JVM)."
 > — `developer.android.com/training/testing/local-tests`
 
-Driven by `testImplementation`. Runs via `./gradlew test` or `./gradlew testDebugUnitTest`. No Android device, no emulator. The Android framework is unavailable unless Robolectric simulates it.
+Driven by `testImplementation`. Runs via `./gradlew test` or `./gradlew testDebugUnitTest`. No
+Android device, no emulator. The Android framework is unavailable unless Robolectric simulates it.
 
 ### `src/androidTest/` — instrumented tests
 
 Per `/training/testing/instrumented-tests`:
 
-> "In your Android Studio project, you store the source files for instrumented tests in `module-name/src/androidTest/java/`. This directory already exists when you create a new project and contains an example instrumented test."
+> "In your Android Studio project, you store the source files for instrumented tests in
+`module-name/src/androidTest/java/`. This directory already exists when you create a new project and
+> contains an example instrumented test."
 > — `developer.android.com/training/testing/instrumented-tests`
 
-Driven by `androidTestImplementation`. Runs via `./gradlew connectedAndroidTest` or `./gradlew connectedDebugAndroidTest`. Requires a connected device or emulator. Uses `AndroidJUnitRunner` per CORPUS §H.2.
+Driven by `androidTestImplementation`. Runs via `./gradlew connectedAndroidTest` or
+`./gradlew connectedDebugAndroidTest`. Requires a connected device or emulator. Uses
+`AndroidJUnitRunner` per CORPUS §H.2.
 
 The page is also explicit on the `testImplementation` vs `androidTestImplementation` split:
 
-> "**Note:** `testImplementation` adds dependencies for local tests and `androidTestImplementation` adds dependencies for Instrumented tests."
+> "**Note:** `testImplementation` adds dependencies for local tests and `androidTestImplementation`
+> adds dependencies for Instrumented tests."
 > — `developer.android.com/training/testing/local-tests`
 
 ## The configuration matrix
@@ -88,19 +110,28 @@ androidTestUtil              n/a               all           orchestrator/util i
 
 Three configurations the agent must keep straight:
 
-- **`testImplementation`** — JVM (host) tests. Includes Mockito, MockK, Robolectric, kotlinx-coroutines-test, Turbine.
-- **`androidTestImplementation`** — instrumented (device) tests. Includes Espresso, UiAutomator, AndroidJUnitRunner, Compose `ui-test-junit4`.
-- **`debugImplementation`** — main `debug` variant. Used by `androidx.compose.ui:ui-test-manifest` and `androidx.fragment:fragment-testing-manifest` because the test APK is built on top of the debug APK and needs the manifest entries merged in.
+- **`testImplementation`** — JVM (host) tests. Includes Mockito, MockK, Robolectric,
+  kotlinx-coroutines-test, Turbine.
+- **`androidTestImplementation`** — instrumented (device) tests. Includes Espresso, UiAutomator,
+  AndroidJUnitRunner, Compose `ui-test-junit4`.
+- **`debugImplementation`** — main `debug` variant. Used by `androidx.compose.ui:ui-test-manifest`
+  and `androidx.fragment:fragment-testing-manifest` because the test APK is built on top of the
+  debug APK and needs the manifest entries merged in.
 
-`androidx.compose.ui:ui-test-manifest` MUST go on `debugImplementation`, not `androidTestImplementation` — see `../../../compose/setup/configuring-test-dependencies/SKILL.md` for the lint check (`TestManifestGradleConfiguration`) that enforces this.
+`androidx.compose.ui:ui-test-manifest` MUST go on `debugImplementation`, not
+`androidTestImplementation` — see `../../../compose/setup/configuring-test-dependencies/SKILL.md`
+for the lint check (`TestManifestGradleConfiguration`) that enforces this.
 
 ## `src/sharedTest/` — community convention, NOT Google-documented
 
 Per `tasks/research/R8-android-fundamentals.md`:
 
-> `src/sharedTest/` is **not mentioned by name** on any of the six in-scope `developer.android.com/training/testing/...` pages or on the fetched Hilt-testing / rules pages.
+> `src/sharedTest/` is **not mentioned by name** on any of the six in-scope
+`developer.android.com/training/testing/...` pages or on the fetched Hilt-testing / rules pages.
 
-It originated in Google's own *Architecture Blueprints* sample and the *Advanced Android Testing* Codelab. The pattern uses Gradle `sourceSets` to inject the same Java/Kotlin folder into BOTH `test` and `androidTest`:
+It originated in Google's own *Architecture Blueprints* sample and the *Advanced Android Testing*
+Codelab. The pattern uses Gradle `sourceSets` to inject the same Java/Kotlin folder into BOTH `test`
+and `androidTest`:
 
 ```kotlin
 // pre-AGP 7.2 — the classic sharedTest wiring
@@ -112,12 +143,20 @@ android {
 }
 ```
 
-Why it existed: write a test once, run it as a fast Robolectric host test in CI and as a high-fidelity instrumented test on emulator. The test class uses `androidx.test.ext.junit.runners.AndroidJUnit4` (which dispatches correctly in both environments per CORPUS §G.6).
+Why it existed: write a test once, run it as a fast Robolectric host test in CI and as a
+high-fidelity instrumented test on emulator. The test class uses
+`androidx.test.ext.junit.runners.AndroidJUnit4` (which dispatches correctly in both environments per
+CORPUS §G.6).
 
-Why it broke: AGP 7.2+ enforces that the same source directory cannot be shared across multiple source sets at build time — the build itself refuses, with an error pointing at the duplicated `srcDir(...)` call. (The mode of failure is build-time refusal in AGP, not a runtime `LinkageError`.) Tracked at https://github.com/robolectric/robolectric/issues/7432 (Robolectric maintainer thread, with reproductions and AGP-version table). Many modules either:
+Why it broke: AGP 7.2+ enforces that the same source directory cannot be shared across multiple
+source sets at build time — the build itself refuses, with an error pointing at the duplicated
+`srcDir(...)` call. (The mode of failure is build-time refusal in AGP, not a runtime
+`LinkageError`.) Tracked at https://github.com/robolectric/robolectric/issues/7432 (Robolectric
+maintainer thread, with reproductions and AGP-version table). Many modules either:
 
 - Stopped sharing tests and accepted duplication.
-- Migrated to a separate Gradle sub-module (`:core-testing`) that ships test helpers via `testImplementation` and `androidTestImplementation`.
+- Migrated to a separate Gradle sub-module (`:core-testing`) that ships test helpers via
+  `testImplementation` and `androidTestImplementation`.
 - Adopted KMP-style source set names (`androidHostTest` / `androidDeviceTest`).
 
 ## KMP-style `androidHostTest` / `androidDeviceTest`
@@ -131,7 +170,11 @@ commonTest
     └── androidHostTest        (Robolectric on JVM)
 ```
 
-Real androidx evidence: `compose/ui/ui-test/src/androidHostTest/kotlin/androidx/compose/ui/test/RobolectricComposeTest.kt` is a host (Robolectric) test, while `compose/material3/material3/src/androidDeviceTest/.../SwitchTest.kt` is a device test. Both compile against `commonTest` for shared helpers.
+Real androidx evidence:
+`compose/ui/ui-test/src/androidHostTest/kotlin/androidx/compose/ui/test/RobolectricComposeTest.kt`
+is a host (Robolectric) test, while
+`compose/material3/material3/src/androidDeviceTest/.../SwitchTest.kt` is a device test. Both compile
+against `commonTest` for shared helpers.
 
 For non-KMP Android-only modules, the same effect can be approximated with separate sub-modules:
 
@@ -148,11 +191,16 @@ dependencies {
 plugins { id("java-library") }   // or com.android.library if Android types needed
 ```
 
-The `:feature:home-testing` module hosts `FakeUserRepository`, `MainDispatcherRule`, custom matchers — anything both host and device tests want.
+The `:feature:home-testing` module hosts `FakeUserRepository`, `MainDispatcherRule`, custom
+matchers — anything both host and device tests want.
 
-Alternative: AGP 7.0+ `testFixtures` flag (`android { testFixtures { enable = true } }`), which exposes `testFixtures()` Gradle artifacts for `testFixturesImplementation` and is consumable from sibling modules' `testImplementation` / `androidTestImplementation`.
+Alternative: AGP 7.0+ `testFixtures` flag (`android { testFixtures { enable = true } }`), which
+exposes `testFixtures()` Gradle artifacts for `testFixturesImplementation` and is consumable from
+sibling modules' `testImplementation` / `androidTestImplementation`.
 
-**MUST NOT** cite `developer.android.com/training/testing/...` for `sharedTest` — none of those pages document it. **MUST** cite the Architecture Blueprints repo or `tasks/research/R8-android-fundamentals.md` instead.
+**MUST NOT** cite `developer.android.com/training/testing/...` for `sharedTest` — none of those
+pages document it. **MUST** cite the Architecture Blueprints repo or
+`tasks/research/R8-android-fundamentals.md` instead.
 
 ## File placement decision tree
 
@@ -361,36 +409,70 @@ dependencies {
 ## Mandatory rules
 
 - **MUST** put pure Kotlin / JVM tests in `src/test/` with `testImplementation` deps.
-- **MUST** put Robolectric tests in `src/test/`. Robolectric is a JVM Android simulator, not an instrumented runner.
-- **MUST** put real-device / emulator tests in `src/androidTest/` with `androidTestImplementation` deps.
-- **MUST** put `androidx.compose.ui:ui-test-manifest` and `androidx.fragment:fragment-testing-manifest` on `debugImplementation`, never `androidTestImplementation`.
-- **MUST NOT** cite `developer.android.com/training/testing/...` as the source for `src/sharedTest/`. It is not documented there. Cite the Architecture Blueprints repo or `tasks/research/R8-android-fundamentals.md`.
-- **MUST NOT** add Espresso, UiAutomator, or `ui-test-junit4` to `testImplementation`. They will compile but fail at runtime when no `Instrumentation` is present.
-- **PREFERRED:** for shared test helpers, extract a `:core-testing` Gradle sub-module or use `android.testFixtures.enable = true` rather than the AGP-7.2-fragile `sharedTest` source set.
-- **PREFERRED:** in KMP modules, follow Compose's lead — `androidCommonTest` for helpers, `androidHostTest` for Robolectric, `androidDeviceTest` for emulator tests.
-- **PREFERRED:** name backtick test methods freely in `src/test/`; restrict to API 30+ devices in `src/androidTest/` per `/training/testing/instrumented-tests`.
+- **MUST** put Robolectric tests in `src/test/`. Robolectric is a JVM Android simulator, not an
+  instrumented runner.
+- **MUST** put real-device / emulator tests in `src/androidTest/` with `androidTestImplementation`
+  deps.
+- **MUST** put `androidx.compose.ui:ui-test-manifest` and
+  `androidx.fragment:fragment-testing-manifest` on `debugImplementation`, never
+  `androidTestImplementation`.
+- **MUST NOT** cite `developer.android.com/training/testing/...` as the source for
+  `src/sharedTest/`. It is not documented there. Cite the Architecture Blueprints repo or
+  `tasks/research/R8-android-fundamentals.md`.
+- **MUST NOT** add Espresso, UiAutomator, or `ui-test-junit4` to `testImplementation`. They will
+  compile but fail at runtime when no `Instrumentation` is present.
+- **PREFERRED:** for shared test helpers, extract a `:core-testing` Gradle sub-module or use
+  `android.testFixtures.enable = true` rather than the AGP-7.2-fragile `sharedTest` source set.
+- **PREFERRED:** in KMP modules, follow Compose's lead — `androidCommonTest` for helpers,
+  `androidHostTest` for Robolectric, `androidDeviceTest` for emulator tests.
+- **PREFERRED:** name backtick test methods freely in `src/test/`; restrict to API 30+ devices in
+  `src/androidTest/` per `/training/testing/instrumented-tests`.
 
 ## Verification
 
-- [ ] No Robolectric test exists under `src/androidTest/`. Run `find src/androidTest -name '*.kt' -exec grep -l 'org.robolectric' {} +`; expect empty output.
-- [ ] No Espresso / UiAutomator import exists under `src/test/`. Run `find src/test -name '*.kt' -exec grep -l 'androidx.test.espresso\|androidx.test.uiautomator' {} +`; expect empty output.
-- [ ] `androidx.compose.ui:ui-test-manifest` is declared exactly on `debugImplementation`. Run `./gradlew :<module>:lint`; expect no `TestManifestGradleConfiguration` warning.
-- [ ] `./gradlew :<module>:testDebugUnitTest` runs JVM tests without invoking `connectedDebugAndroidTest`.
-- [ ] `./gradlew :<module>:connectedDebugAndroidTest` invokes only tests under `src/androidTest/` (verify with `--info` output).
-- [ ] If shared helpers exist, they live in a `:core-testing` sub-module, in `testFixtures`, or in `androidCommonTest` — never in a literal `src/sharedTest/` folder wired via `sourceSets { ... srcDir(...) }`.
-- [ ] `testOptions.unitTests.isIncludeAndroidResources = true` is set when any host test references `R.*`.
+- [ ] No Robolectric test exists under `src/androidTest/`. Run
+  `find src/androidTest -name '*.kt' -exec grep -l 'org.robolectric' {} +`; expect empty output.
+- [ ] No Espresso / UiAutomator import exists under `src/test/`. Run
+  `find src/test -name '*.kt' -exec grep -l 'androidx.test.espresso\|androidx.test.uiautomator' {} +`;
+  expect empty output.
+- [ ] `androidx.compose.ui:ui-test-manifest` is declared exactly on `debugImplementation`. Run
+  `./gradlew :<module>:lint`; expect no `TestManifestGradleConfiguration` warning.
+- [ ] `./gradlew :<module>:testDebugUnitTest` runs JVM tests without invoking
+  `connectedDebugAndroidTest`.
+- [ ] `./gradlew :<module>:connectedDebugAndroidTest` invokes only tests under `src/androidTest/` (
+  verify with `--info` output).
+- [ ] If shared helpers exist, they live in a `:core-testing` sub-module, in `testFixtures`, or in
+  `androidCommonTest` — never in a literal `src/sharedTest/` folder wired via
+  `sourceSets { ... srcDir(...) }`.
+- [ ] `testOptions.unitTests.isIncludeAndroidResources = true` is set when any host test references
+  `R.*`.
 
 ## References
 
-- `developer.android.com/training/testing/local-tests` — `src/test/`, `testImplementation`, "local test runs directly on your own workstation".
-- `developer.android.com/training/testing/instrumented-tests` — `src/androidTest/`, `androidTestImplementation`, AndroidJUnitRunner, backtick caveat.
-- `developer.android.com/training/testing/fundamentals` — "Big local test: You can use an Android simulator that runs locally, such as Robolectric".
-- `tasks/research/R8-android-fundamentals.md` — verbatim quotes; documents that `src/sharedTest/` is NOT on any of the six in-scope `/training/testing/...` pages.
-- Architecture Blueprints (origin of the `sharedTest` pattern): https://github.com/android/architecture-samples
+- `developer.android.com/training/testing/local-tests` — `src/test/`, `testImplementation`, "local
+  test runs directly on your own workstation".
+- `developer.android.com/training/testing/instrumented-tests` — `src/androidTest/`,
+  `androidTestImplementation`, AndroidJUnitRunner, backtick caveat.
+- `developer.android.com/training/testing/fundamentals` — "Big local test: You can use an Android
+  simulator that runs locally, such as Robolectric".
+- `tasks/research/R8-android-fundamentals.md` — verbatim quotes; documents that `src/sharedTest/` is
+  NOT on any of the six in-scope `/training/testing/...` pages.
+- Architecture Blueprints (origin of the `sharedTest`
+  pattern): https://github.com/android/architecture-samples
 - AGP source-set documentation: https://developer.android.com/build/build-variants#sourcesets
 - `testFixtures` flag: https://developer.android.com/build/dependencies#test-fixtures
-- CORPUS §C "Source set conventions (KMP)" — Compose's internal `androidHostTest` / `androidDeviceTest` layout.
-- `compose/ui/ui-test/src/androidHostTest/kotlin/androidx/compose/ui/test/RobolectricComposeTest.kt` — canonical host-test skeleton in androidx.
-- `compose/material3/material3/src/androidDeviceTest/.../SwitchTest.kt` — canonical device-test skeleton.
-- Sibling skills: `../../concepts/understanding-the-testing-pyramid/SKILL.md`, `../../concepts/choosing-what-to-test/SKILL.md`, `../../doubles/picking-test-doubles/SKILL.md`, `../applying-testing-strategies/SKILL.md`.
-- Cross-category: `../../../compose/setup/configuring-test-dependencies/SKILL.md`, `../../../jvm-tests/runner/configuring-junit4-on-android/SKILL.md`, `../../../jvm-tests/robolectric/using-robolectric-correctly/SKILL.md`, `../../../instrumentation/runner/running-instrumented-tests-with-androidjunit4/SKILL.md`, `../../../adb/tests/running-instrumented-tests-via-adb/SKILL.md`.
+- CORPUS §C "Source set conventions (KMP)" — Compose's internal `androidHostTest` /
+  `androidDeviceTest` layout.
+-
+`compose/ui/ui-test/src/androidHostTest/kotlin/androidx/compose/ui/test/RobolectricComposeTest.kt` —
+canonical host-test skeleton in androidx.
+- `compose/material3/material3/src/androidDeviceTest/.../SwitchTest.kt` — canonical device-test
+  skeleton.
+- Sibling skills: `../../concepts/understanding-the-testing-pyramid/SKILL.md`,
+  `../../concepts/choosing-what-to-test/SKILL.md`, `../../doubles/picking-test-doubles/SKILL.md`,
+  `../applying-testing-strategies/SKILL.md`.
+- Cross-category: `../../../compose/setup/configuring-test-dependencies/SKILL.md`,
+  `../../../jvm-tests/runner/configuring-junit4-on-android/SKILL.md`,
+  `../../../jvm-tests/robolectric/using-robolectric-correctly/SKILL.md`,
+  `../../../instrumentation/runner/running-instrumented-tests-with-androidjunit4/SKILL.md`,
+  `../../../adb/tests/running-instrumented-tests-via-adb/SKILL.md`.

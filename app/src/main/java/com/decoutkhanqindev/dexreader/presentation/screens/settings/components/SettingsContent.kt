@@ -59,58 +59,58 @@ fun SettingsContent(
             )
           } else Modifier
         ),
-  verticalArrangement = Arrangement.Center,
-  horizontalAlignment = Alignment.CenterHorizontally,
-  ) {
-    ThemeOptionList(
-      selectedItem = uiState.themeOption,
-      modifier = Modifier,
+      verticalArrangement = Arrangement.Center,
+      horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-      isShowSaveDialog = true
-      onThemeOptionClick(it)
-    }
-  }
-
-  when {
-    uiState.isLoading -> LoadingScreen(modifier = Modifier.fillMaxSize())
-    uiState.isError -> {
-      if (isShowErrorDialog) {
-        AlertDialog(
-          title = stringResource(R.string.change_theme_failed),
-          onConfirmClick = {
-            isShowErrorDialog = false
-            onRetry()
-          },
-          onDismissClick = { isShowErrorDialog = false },
-        )
+      ThemeOptionList(
+        selectedItem = uiState.themeOption,
+        modifier = Modifier,
+      ) {
+        isShowSaveDialog = true
+        onThemeOptionClick(it)
       }
     }
 
-    uiState.isSuccess -> {
-      if (isShowSuccessDialog) {
-        AlertDialog(
-          icon = Icons.Default.Done,
-          title = stringResource(R.string.theme_change_successful),
-          confirm = stringResource(R.string.ok),
-          isEnableDismiss = false,
-          onConfirmClick = { isShowSuccessDialog = false },
-        )
+    when {
+      uiState.isLoading -> LoadingScreen(modifier = Modifier.fillMaxSize())
+      uiState.isError -> {
+        if (isShowErrorDialog) {
+          AlertDialog(
+            title = stringResource(R.string.change_theme_failed),
+            onConfirmClick = {
+              isShowErrorDialog = false
+              onRetry()
+            },
+            onDismissClick = { isShowErrorDialog = false },
+          )
+        }
+      }
+
+      uiState.isSuccess -> {
+        if (isShowSuccessDialog) {
+          AlertDialog(
+            icon = Icons.Default.Done,
+            title = stringResource(R.string.theme_change_successful),
+            confirm = stringResource(R.string.ok),
+            isEnableDismiss = false,
+            onConfirmClick = { isShowSuccessDialog = false },
+          )
+        }
       }
     }
-  }
 
-  if (isShowSaveDialog) {
-    AlertDialog(
-      title = stringResource(R.string.are_you_sure_you_want_to_change_the_theme),
-      confirm = stringResource(R.string.change),
-      onConfirmClick = {
-        isShowSaveDialog = false
-        onSaveThemeOption()
-      },
-      onDismissClick = { isShowSaveDialog = false },
-    )
+    if (isShowSaveDialog) {
+      AlertDialog(
+        title = stringResource(R.string.are_you_sure_you_want_to_change_the_theme),
+        confirm = stringResource(R.string.change),
+        onConfirmClick = {
+          isShowSaveDialog = false
+          onSaveThemeOption()
+        },
+        onDismissClick = { isShowSaveDialog = false },
+      )
+    }
   }
-}
 }
 
 @Preview(showBackground = true)

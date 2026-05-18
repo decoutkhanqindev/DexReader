@@ -20,13 +20,19 @@ metadata:
 
 # Setting Up Host vs Device Tests — Pick the Right Source Set
 
-Compose tests run unchanged on either Robolectric (JVM, fast, no emulator) or on a real/virtual device (full Android stack, RenderThread, accessibility). The same `runComposeUiTest { setContent { … } }` block compiles in both — only the underlying `Looper` and `Choreographer` differ. This skill encodes which flavor each test should live in, the Robolectric class skeleton, and the one legitimate `Thread.sleep` exception (screenshot tests waiting on the RenderThread).
+Compose tests run unchanged on either Robolectric (JVM, fast, no emulator) or on a real/virtual
+device (full Android stack, RenderThread, accessibility). The same
+`runComposeUiTest { setContent { … } }` block compiles in both — only the underlying `Looper` and
+`Choreographer` differ. This skill encodes which flavor each test should live in, the Robolectric
+class skeleton, and the one legitimate `Thread.sleep` exception (screenshot tests waiting on the
+RenderThread).
 
 ## When to use this skill
 
 - The user is starting a Compose UI test and asks "test/ or androidTest/?".
 - A test passes on a local emulator but fails on CI's Robolectric runner (or vice versa).
-- The user reports `Build.FINGERPRINT == "robolectric"` warnings from `enableAccessibilityChecks(...)`.
+- The user reports `Build.FINGERPRINT == "robolectric"` warnings from
+  `enableAccessibilityChecks(...)`.
 - A screenshot test produces a black/empty PNG on the host runner.
 - A ripple/`pressInteraction` test renders no ripple on Robolectric and the user is debugging why.
 - The user wrote `Thread.sleep(1000)` to "wait for an animation" and is asking why it is flaky.
@@ -34,15 +40,22 @@ Compose tests run unchanged on either Robolectric (JVM, fast, no emulator) or on
 
 ## When NOT to use this skill
 
-- The dependencies are not yet wired correctly — start with `./configuring-test-dependencies/SKILL.md`.
-- The choice is between `createComposeRule()` and `runComposeUiTest { }` — see `./choosing-test-rule-vs-runtest/SKILL.md`.
-- The test runs in the right flavor but is flaky on idle/animation — see `../../synchronization/synchronizing-with-idle/SKILL.md` and `../../synchronization/testing-animations-deterministically/SKILL.md`.
+- The dependencies are not yet wired correctly — start with
+  `./configuring-test-dependencies/SKILL.md`.
+- The choice is between `createComposeRule()` and `runComposeUiTest { }` — see
+  `./choosing-test-rule-vs-runtest/SKILL.md`.
+- The test runs in the right flavor but is flaky on idle/animation — see
+  `../../synchronization/synchronizing-with-idle/SKILL.md` and
+  `../../synchronization/testing-animations-deterministically/SKILL.md`.
 
 ## Prerequisites
 
-- `androidx.compose.ui:ui-test`, `ui-test-junit4`, and `ui-test-manifest` on the correct configurations for the chosen flavor — see `./configuring-test-dependencies/SKILL.md`.
-- For host tests: `org.robolectric:robolectric` on `testImplementation`, `testOptions { unitTests.isIncludeAndroidResources = true }` in the Android block.
-- For device tests: a configured emulator or physical device, `androidx.test.runner.AndroidJUnitRunner` (or a Hilt subclass) as the `testInstrumentationRunner`.
+- `androidx.compose.ui:ui-test`, `ui-test-junit4`, and `ui-test-manifest` on the correct
+  configurations for the chosen flavor — see `./configuring-test-dependencies/SKILL.md`.
+- For host tests: `org.robolectric:robolectric` on `testImplementation`,
+  `testOptions { unitTests.isIncludeAndroidResources = true }` in the Android block.
+- For device tests: a configured emulator or physical device,
+  `androidx.test.runner.AndroidJUnitRunner` (or a Hilt subclass) as the `testInstrumentationRunner`.
 - Working knowledge of `MainTestClock` semantics — see the synchronization skill set.
 
 ## Workflow
@@ -50,7 +63,7 @@ Compose tests run unchanged on either Robolectric (JVM, fast, no emulator) or on
 - [ ] **1. Decide the flavor by capability, not by speed.** The matrix:
 
   | Capability | Host (Robolectric, `src/test/`) | Device (instrumentation, `src/androidTest/`) |
-  |---|---|---|
+    |---|---|---|
   | Recomposition + state changes | Works | Works |
   | Layout + measurement | Works | Works |
   | Touch input via `performTouchInput` | Works (synthetic events) | Works (real input pipeline) |
@@ -63,7 +76,9 @@ Compose tests run unchanged on either Robolectric (JVM, fast, no emulator) or on
   | Speed (rough order) | Seconds | Tens of seconds + emulator boot |
   | CI footprint | JVM only | Emulator service or Firebase Test Lab |
 
-  Choose host for logic/recomposition/finder coverage. Choose device for anything that touches the RenderThread, real animations involving `Modifier.indication`, screenshot golden tests, or accessibility validation.
+  Choose host for logic/recomposition/finder coverage. Choose device for anything that touches the
+  RenderThread, real animations involving `Modifier.indication`, screenshot golden tests, or
+  accessibility validation.
 
 - [ ] **2. Place files in the matching source set.** The androidx convention is:
 
@@ -77,9 +92,12 @@ Compose tests run unchanged on either Robolectric (JVM, fast, no emulator) or on
       └── kotlin/.../FooTestHelpers.kt
   ```
 
-  In a typical app module without KMP source sets, the equivalent is `src/test/` (host) and `src/androidTest/` (device). The **same** `runComposeUiTest { setContent { … } }` body compiles unchanged in both — only the Looper/Choreographer differs at runtime.
+  In a typical app module without KMP source sets, the equivalent is `src/test/` (host) and
+  `src/androidTest/` (device). The **same** `runComposeUiTest { setContent { … } }` body compiles
+  unchanged in both — only the Looper/Choreographer differs at runtime.
 
-- [ ] **3. Configure the host test class skeleton.** Copy the canonical androidx pattern from `compose/ui/ui-test/src/androidHostTest/kotlin/androidx/compose/ui/test/RobolectricComposeTest.kt`:
+- [ ] **3. Configure the host test class skeleton.** Copy the canonical androidx pattern from
+  `compose/ui/ui-test/src/androidHostTest/kotlin/androidx/compose/ui/test/RobolectricComposeTest.kt`:
 
 ```kotlin
 @RunWith(AndroidJUnit4::class)
@@ -110,7 +128,9 @@ class MyHostTest {
 }
 ```
 
-  `AndroidJUnit4::class` delegates to Robolectric on the JVM and to `AndroidJUnit4ClassRunner` on a device — making the same class portable. `@RunWith(RobolectricTestRunner::class)` also works but ties the class to host-only.
+`AndroidJUnit4::class` delegates to Robolectric on the JVM and to `AndroidJUnit4ClassRunner` on a
+device — making the same class portable. `@RunWith(RobolectricTestRunner::class)` also works but
+ties the class to host-only.
 
 - [ ] **4. Configure the device test class skeleton.**
 
@@ -128,9 +148,19 @@ class MyDeviceTest {
 }
 ```
 
-- [ ] **5. Compose `mainClock.advanceTimeBy(...)` for any animation/gesture-detection test.** On Robolectric, gesture detectors (double-tap, long-press) rely on the test clock advancing — they do NOT receive real wall-clock ticks. The `RobolectricComposeTest.kt` source quotes this directly: gesture detectors require manual `mainClock.advanceTimeBy(...)` because they detect events through clock changes. Same applies to any `animateFloatAsState` driven by the recomposer's frame clock — see `../../synchronization/testing-animations-deterministically/SKILL.md`.
+- [ ] **5. Compose `mainClock.advanceTimeBy(...)` for any animation/gesture-detection test.** On
+  Robolectric, gesture detectors (double-tap, long-press) rely on the test clock advancing — they do
+  NOT receive real wall-clock ticks. The `RobolectricComposeTest.kt` source quotes this directly:
+  gesture detectors require manual `mainClock.advanceTimeBy(...)` because they detect events through
+  clock changes. Same applies to any `animateFloatAsState` driven by the recomposer's frame clock —
+  see `../../synchronization/testing-animations-deterministically/SKILL.md`.
 
-- [ ] **6. Identify the one legitimate `Thread.sleep` use case: screenshot tests waiting on the RenderThread.** Compose's `IdlingResource` aggregates the recomposer, snapshot, and frame-clock awaiters, but the RenderThread is outside that aggregation. Ripple animations (`Modifier.indication`) and any draw-time animation owned by the platform render pipeline cannot be waited on through `mainClock.advanceTimeBy` or `waitForIdle`. From `compose/material3/material3/src/androidDeviceTest/.../ToggleButtonScreenshotTest.kt:115-123`:
+- [ ] **6. Identify the one legitimate `Thread.sleep` use case: screenshot tests waiting on the
+  RenderThread.** Compose's `IdlingResource` aggregates the recomposer, snapshot, and frame-clock
+  awaiters, but the RenderThread is outside that aggregation. Ripple animations (
+  `Modifier.indication`) and any draw-time animation owned by the platform render pipeline cannot be
+  waited on through `mainClock.advanceTimeBy` or `waitForIdle`. From
+  `compose/material3/material3/src/androidDeviceTest/.../ToggleButtonScreenshotTest.kt:115-123`:
 
 ```kotlin
 rule.mainClock.autoAdvance = false
@@ -147,20 +177,31 @@ Thread.sleep(300)
 assertAgainstGolden("toggleButton_lightTheme_defaultToPressed")
 ```
 
-  This is the only case. Anywhere else, `Thread.sleep` is a smell — it desyncs from `MainTestClock` and produces flakes that wear the developer down. Use `mainClock.advanceTimeBy(durationMs)` (test clock) for animations or `rule.waitUntil(timeoutMillis = …) { … }` (wall clock) for external state.
+This is the only case. Anywhere else, `Thread.sleep` is a smell — it desyncs from `MainTestClock`
+and produces flakes that wear the developer down. Use `mainClock.advanceTimeBy(durationMs)` (test
+clock) for animations or `rule.waitUntil(timeoutMillis = …) { … }` (wall clock) for external state.
 
-- [ ] **7. Enforce: NO `Thread.sleep` in host tests.** Host tests cannot drive the RenderThread anyway, so the screenshot exception does not apply. Replace every `Thread.sleep(N)` in a host test with `mainClock.advanceTimeBy(N)` (animation case) or `rule.waitUntil { … }` (external state).
+- [ ] **7. Enforce: NO `Thread.sleep` in host tests.** Host tests cannot drive the RenderThread
+  anyway, so the screenshot exception does not apply. Replace every `Thread.sleep(N)` in a host test
+  with `mainClock.advanceTimeBy(N)` (animation case) or `rule.waitUntil { … }` (external state).
 
-- [ ] **8. Place screenshot, ripple, and accessibility tests in the device source set.** The host runner cannot satisfy them. Specifically:
-  - Screenshots: `captureToImage()` requires a real `Surface`. Host returns no pixel data.
-  - Ripples: `Modifier.indication` draws on the RenderThread — no observable state on host.
-  - Accessibility: `enableAccessibilityChecks(...)` is `@RequiresApi(34)`. On Robolectric, both extension implementations check `Build.FINGERPRINT.lowercase() == "robolectric"`, emit a `Log.w` warning, AND still install the validator — but Robolectric does not faithfully drive accessibility services, so any pass is inconclusive (b/332778271). Run accessibility checks on a real device for trustworthy results.
+- [ ] **8. Place screenshot, ripple, and accessibility tests in the device source set.** The host
+  runner cannot satisfy them. Specifically:
+    - Screenshots: `captureToImage()` requires a real `Surface`. Host returns no pixel data.
+    - Ripples: `Modifier.indication` draws on the RenderThread — no observable state on host.
+    - Accessibility: `enableAccessibilityChecks(...)` is `@RequiresApi(34)`. On Robolectric, both
+      extension implementations check `Build.FINGERPRINT.lowercase() == "robolectric"`, emit a
+      `Log.w` warning, AND still install the validator — but Robolectric does not faithfully drive
+      accessibility services, so any pass is inconclusive (b/332778271). Run accessibility checks on
+      a real device for trustworthy results.
 
-- [ ] **9. Place fast logic/recomposition/state tests in the host source set.** Examples that thrive on Robolectric:
-  - `StateRestorationTester.emulateSavedInstanceStateRestore()` flows.
-  - Pure state-change verification (`assertTextEquals`, `assertIsOn`).
-  - LazyList finder/scroll tests that don't depend on velocity-driven physics.
-  - `mainClock.advanceTimeBy(durationMs)` driven animation snapshots that don't need rasterization.
+- [ ] **9. Place fast logic/recomposition/state tests in the host source set.** Examples that thrive
+  on Robolectric:
+    - `StateRestorationTester.emulateSavedInstanceStateRestore()` flows.
+    - Pure state-change verification (`assertTextEquals`, `assertIsOn`).
+    - LazyList finder/scroll tests that don't depend on velocity-driven physics.
+    - `mainClock.advanceTimeBy(durationMs)` driven animation snapshots that don't need
+      rasterization.
 
 ## Patterns
 
@@ -233,7 +274,8 @@ fun fadeIn() = runComposeUiTest {
 }
 ```
 
-For pixel verification of the fade, move the test to the device source set and use `captureToImage()`.
+For pixel verification of the fade, move the test to the device source set and use
+`captureToImage()`.
 
 ### Pattern: WRONG vs RIGHT — accessibility checks on host
 
@@ -267,37 +309,79 @@ class SubmitA11yTest {
 
 ### Pattern: shared body, two source sets
 
-The same `runComposeUiTest { ... }` body can compile in both source sets when the test only uses the common API. Place the body in `androidCommonTest/` and create two thin wrappers — one in `androidHostTest/` (with `@RunWith(AndroidJUnit4::class) @Config(minSdk = 23)`), one in `androidDeviceTest/` (no `@Config`). This is how androidx's own ui-test module exercises both flavors without code duplication. For an app module without KMP source sets, prefer keeping the body inline in whichever flavor is appropriate.
+The same `runComposeUiTest { ... }` body can compile in both source sets when the test only uses the
+common API. Place the body in `androidCommonTest/` and create two thin wrappers — one in
+`androidHostTest/` (with `@RunWith(AndroidJUnit4::class) @Config(minSdk = 23)`), one in
+`androidDeviceTest/` (no `@Config`). This is how androidx's own ui-test module exercises both
+flavors without code duplication. For an app module without KMP source sets, prefer keeping the body
+inline in whichever flavor is appropriate.
 
 ## Mandatory rules
 
-- **MUST NOT** put screenshot / `captureToImage` / ripple / `Modifier.indication`-dependent tests in the host source set. The RenderThread is not driven; the test is meaningless even when it appears to pass.
-- **MUST NOT** rely on `enableAccessibilityChecks(...)` results from a host test. Both extensions log a warning under `Build.FINGERPRINT.lowercase() == "robolectric"` and still install the validator, but Robolectric does not faithfully drive accessibility services so the result is inconclusive — run accessibility checks on a real device API 34+.
-- **MUST NOT** use `Thread.sleep` in a host test under any circumstance. The screenshot exception does not apply (host has no RenderThread).
-- **MUST NOT** use `Thread.sleep` in a device test except when waiting on the RenderThread for ripple/screenshot golden capture. Skydoves hot take #7: `Thread.sleep` is a smell. Anywhere else, replace it with `mainClock.advanceTimeBy(durationMs)` (test clock) or `rule.waitUntil(timeoutMillis) { ... }` (wall clock) — see `../../synchronization/synchronizing-with-idle/SKILL.md`.
-- **MUST** annotate Robolectric host tests with `@Config(minSdk = 23)` or higher. Lower SDK levels are not supported by androidx's host test infrastructure (`internal const val RobolectricMinSdk = 23`).
-- **MUST** annotate gesture-detection or animation host tests to step the clock manually with `mainClock.advanceTimeBy(...)`. Robolectric does not advance the test clock from real-time signals.
-- **MUST** set `testOptions { unitTests.isIncludeAndroidResources = true }` in the module's `android { }` block so Robolectric can read merged resources during host Compose tests.
-- **PREFERRED:** start with a host test for fast feedback. Move to a device test only when capability requires it (RenderThread, accessibility, real input timing).
-- **PREFERRED:** when a test must work in both flavors, factor the body into `androidCommonTest/` (KMP) or a helper function the two flavors call.
+- **MUST NOT** put screenshot / `captureToImage` / ripple / `Modifier.indication`-dependent tests in
+  the host source set. The RenderThread is not driven; the test is meaningless even when it appears
+  to pass.
+- **MUST NOT** rely on `enableAccessibilityChecks(...)` results from a host test. Both extensions
+  log a warning under `Build.FINGERPRINT.lowercase() == "robolectric"` and still install the
+  validator, but Robolectric does not faithfully drive accessibility services so the result is
+  inconclusive — run accessibility checks on a real device API 34+.
+- **MUST NOT** use `Thread.sleep` in a host test under any circumstance. The screenshot exception
+  does not apply (host has no RenderThread).
+- **MUST NOT** use `Thread.sleep` in a device test except when waiting on the RenderThread for
+  ripple/screenshot golden capture. Skydoves hot take #7: `Thread.sleep` is a smell. Anywhere else,
+  replace it with `mainClock.advanceTimeBy(durationMs)` (test clock) or
+  `rule.waitUntil(timeoutMillis) { ... }` (wall clock) — see
+  `../../synchronization/synchronizing-with-idle/SKILL.md`.
+- **MUST** annotate Robolectric host tests with `@Config(minSdk = 23)` or higher. Lower SDK levels
+  are not supported by androidx's host test infrastructure (
+  `internal const val RobolectricMinSdk = 23`).
+- **MUST** annotate gesture-detection or animation host tests to step the clock manually with
+  `mainClock.advanceTimeBy(...)`. Robolectric does not advance the test clock from real-time
+  signals.
+- **MUST** set `testOptions { unitTests.isIncludeAndroidResources = true }` in the module's
+  `android { }` block so Robolectric can read merged resources during host Compose tests.
+- **PREFERRED:** start with a host test for fast feedback. Move to a device test only when
+  capability requires it (RenderThread, accessibility, real input timing).
+- **PREFERRED:** when a test must work in both flavors, factor the body into `androidCommonTest/` (
+  KMP) or a helper function the two flavors call.
 
 ## Verification
 
-- [ ] `./gradlew :<module>:testDebugUnitTest` runs and passes for all host tests; `./gradlew :<module>:connectedDebugAndroidTest` runs and passes for all device tests.
-- [ ] No `Thread.sleep` appears in any host test (`grep -r "Thread.sleep" src/test src/androidHostTest`).
-- [ ] No `captureToImage`, no `enableAccessibilityChecks`, and no test that depends on `Modifier.indication` ripples appears in the host source set.
-- [ ] Every `Thread.sleep` in the device source set has a comment explaining the RenderThread / screenshot rationale.
-- [ ] Robolectric host test classes carry `@RunWith(AndroidJUnit4::class)` (or `@RunWith(RobolectricTestRunner::class)`) AND `@Config(minSdk = 23)` (or higher).
-- [ ] Animation/gesture host tests set `mainClock.autoAdvance = false` and call `mainClock.advanceTimeBy(durationMs)` explicitly.
+- [ ] `./gradlew :<module>:testDebugUnitTest` runs and passes for all host tests;
+  `./gradlew :<module>:connectedDebugAndroidTest` runs and passes for all device tests.
+- [ ] No `Thread.sleep` appears in any host test (
+  `grep -r "Thread.sleep" src/test src/androidHostTest`).
+- [ ] No `captureToImage`, no `enableAccessibilityChecks`, and no test that depends on
+  `Modifier.indication` ripples appears in the host source set.
+- [ ] Every `Thread.sleep` in the device source set has a comment explaining the RenderThread /
+  screenshot rationale.
+- [ ] Robolectric host test classes carry `@RunWith(AndroidJUnit4::class)` (or
+  `@RunWith(RobolectricTestRunner::class)`) AND `@Config(minSdk = 23)` (or higher).
+- [ ] Animation/gesture host tests set `mainClock.autoAdvance = false` and call
+  `mainClock.advanceTimeBy(durationMs)` explicitly.
 
 ## References
 
-- Compose testing overview (Android Developers): https://developer.android.com/develop/ui/compose/testing
+- Compose testing overview (Android
+  Developers): https://developer.android.com/develop/ui/compose/testing
 - Robolectric — Compose support: http://robolectric.org/
 - Compose UI release notes: https://developer.android.com/jetpack/androidx/releases/compose-ui
-- Testing animations (Android Developers): https://developer.android.com/develop/ui/compose/animation/testing
-- `compose/ui/ui-test/src/androidHostTest/kotlin/androidx/compose/ui/test/RobolectricComposeTest.kt` — canonical host class skeleton, `@RunWith(AndroidJUnit4::class) @Config(minSdk = RobolectricMinSdk)`, gesture-detector clock comment, `IdlingPolicies` setup/teardown.
-- `compose/ui/ui-test/src/androidHostTest/kotlin/androidx/compose/ui/test/Constants.kt` — `internal const val RobolectricMinSdk = 23`.
-- `compose/material3/material3/src/androidDeviceTest/kotlin/androidx/compose/material3/ToggleButtonScreenshotTest.kt:115-123` — the canonical legitimate `Thread.sleep(300)` waiting on the RenderThread for ripple completion before `assertAgainstGolden`.
-- `compose/ui/ui-test/src/androidMain/kotlin/androidx/compose/ui/test/RobolectricIdlingStrategy.android.kt` — Robolectric idling strategy that drives the host idle loop.
-- `compose/ui/ui-test/src/androidMain/kotlin/androidx/compose/ui/test/ComposeIdlingResource.android.kt` — the recomposer + snapshot + frame-clock aggregator (caps at 100 frames/call); does NOT include the RenderThread, which is why ripple tests need `Thread.sleep`.
+- Testing animations (Android
+  Developers): https://developer.android.com/develop/ui/compose/animation/testing
+-
+`compose/ui/ui-test/src/androidHostTest/kotlin/androidx/compose/ui/test/RobolectricComposeTest.kt` —
+canonical host class skeleton, `@RunWith(AndroidJUnit4::class) @Config(minSdk = RobolectricMinSdk)`,
+gesture-detector clock comment, `IdlingPolicies` setup/teardown.
+- `compose/ui/ui-test/src/androidHostTest/kotlin/androidx/compose/ui/test/Constants.kt` —
+  `internal const val RobolectricMinSdk = 23`.
+-
+`compose/material3/material3/src/androidDeviceTest/kotlin/androidx/compose/material3/ToggleButtonScreenshotTest.kt:115-123` —
+the canonical legitimate `Thread.sleep(300)` waiting on the RenderThread for ripple completion
+before `assertAgainstGolden`.
+-
+`compose/ui/ui-test/src/androidMain/kotlin/androidx/compose/ui/test/RobolectricIdlingStrategy.android.kt` —
+Robolectric idling strategy that drives the host idle loop.
+-
+`compose/ui/ui-test/src/androidMain/kotlin/androidx/compose/ui/test/ComposeIdlingResource.android.kt` —
+the recomposer + snapshot + frame-clock aggregator (caps at 100 frames/call); does NOT include the
+RenderThread, which is why ripple tests need `Thread.sleep`.

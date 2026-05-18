@@ -157,7 +157,7 @@ object NavTransitions {
     route: Any,
     debounceTime: Long = NAVIGATION_DEBOUNCE_TIME,
     builder: NavOptionsBuilder.() -> Unit = {},
-    ) {
+  ) {
     var lastClickTime = 0L
     // SystemClock.uptimeMillis() is used to get the time in milliseconds since the system was booted,
     // including time spent in sleep. This is ideal for measuring time intervals, such as debouncing clicks,

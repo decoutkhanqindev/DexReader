@@ -61,7 +61,7 @@ fun HistoryContent(
   LaunchedEffect(removeFromHistoryUiState.isSuccess) {
     if (removeFromHistoryUiState.isSuccess) isShowRemoveFromHistorySuccessDialog = true
   }
-  
+
   LaunchedEffect(historyUiState) {
     if (historyUiState is BasePaginationUiState.FirstPageError) isShowHistoryErrorDialog = true
   }
