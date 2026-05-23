@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.presentation.mapper
 
 import com.decoutkhanqindev.dexreader.domain.entity.manga.Chapter
 import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterModel
-import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
+import com.decoutkhanqindev.dexreader.util.DateTimeHandler.toTimeAgo
 
 object ChapterMapper {
   fun Chapter.toChapterModel() =

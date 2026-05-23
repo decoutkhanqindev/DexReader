@@ -1,10 +1,10 @@
-package com.decoutkhanqindev.dexreader.presentation.screens.auth
+package com.decoutkhanqindev.dexreader.presentation.screens.auth.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -21,20 +21,14 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.error.UserError
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
-private val NameKeyboardOptions = KeyboardOptions(
-  keyboardType = KeyboardType.Text,
-  imeAction = ImeAction.Next,
-)
-
 @Composable
-fun NameInputField(
+fun EmailInputField(
   value: String,
   error: UserError? = null,
   modifier: Modifier = Modifier,
   onValueChange: (String) -> Unit,
 ) {
-  // OutlinedTextFieldDefaults.colors() is @Composable so it cannot be wrapped in remember {}.
-  // Consolidating into a single colorScheme read avoids repeated MaterialTheme.colorScheme lookups.
+  val keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next)
   val colorScheme = MaterialTheme.colorScheme
   val colors = OutlinedTextFieldDefaults.colors(
     focusedContainerColor = colorScheme.surfaceContainer,
@@ -54,15 +48,15 @@ fun NameInputField(
     modifier = modifier,
     leadingIcon = {
       Icon(
-        imageVector = Icons.Default.Person,
-        contentDescription = stringResource(R.string.name),
+        imageVector = Icons.Default.Email,
+        contentDescription = stringResource(R.string.email),
         modifier = Modifier.size(24.dp),
         tint = colorScheme.onPrimaryContainer,
       )
     },
     label = {
       Text(
-        text = stringResource(R.string.name),
+        text = stringResource(R.string.email),
         style = MaterialTheme.typography.bodyLarge
       )
     },
@@ -77,17 +71,17 @@ fun NameInputField(
       }
     },
     textStyle = MaterialTheme.typography.bodyLarge,
-    keyboardOptions = NameKeyboardOptions,
+    keyboardOptions = keyboardOptions,
     colors = colors,
   )
 }
 
 @Preview
 @Composable
-private fun NameInputFieldPreview() {
+private fun EmailInputFieldPreview() {
   DexReaderTheme {
-    NameInputField(
-      value = "Nguyen Van A",
+    EmailInputField(
+      value = "nguyenvana@gmail.com",
       modifier = Modifier.fillMaxWidth(),
       onValueChange = {}
     )
@@ -96,11 +90,24 @@ private fun NameInputFieldPreview() {
 
 @Preview
 @Composable
-private fun NameInputFieldErrorPreview() {
+private fun EmailInputFieldErrorPreview() {
   DexReaderTheme {
-    NameInputField(
+    EmailInputField(
+      value = "invalid-email",
+      error = UserError.Email.Invalid,
+      modifier = Modifier.fillMaxWidth(),
+      onValueChange = {}
+    )
+  }
+}
+
+@Preview
+@Composable
+private fun EmailInputFieldEmptyErrorPreview() {
+  DexReaderTheme {
+    EmailInputField(
       value = "",
-      error = UserError.Name.Required,
+      error = UserError.Email.Required,
       modifier = Modifier.fillMaxWidth(),
       onValueChange = {}
     )

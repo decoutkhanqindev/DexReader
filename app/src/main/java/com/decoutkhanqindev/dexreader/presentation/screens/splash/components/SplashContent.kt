@@ -1,10 +1,9 @@
-package com.decoutkhanqindev.dexreader.presentation.screens.splash.com
+package com.decoutkhanqindev.dexreader.presentation.screens.splash.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -14,12 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.screens.splash.SplashLogonAndSlogan
 
 @Composable
 fun SplashContent(modifier: Modifier = Modifier) {
   Box(modifier = modifier) {
-    SplashLogonAndSlogan(modifier = Modifier.align(Alignment.Center))
+    SplashLogoAndSlogan(modifier = Modifier.align(Alignment.Center))
 
     Column(
       modifier = Modifier

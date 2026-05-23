@@ -8,7 +8,7 @@ import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toManga
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
-import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
+import com.decoutkhanqindev.dexreader.util.DateTimeHandler.toTimeAgo
 import kotlinx.collections.immutable.toPersistentList
 
 object MangaMapper {

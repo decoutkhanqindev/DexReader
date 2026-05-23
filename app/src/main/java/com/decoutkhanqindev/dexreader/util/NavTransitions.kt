@@ -17,18 +17,11 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 
-/**
- * Navigation and screen transitions utility
- * Contains navigation helpers and reusable transition animations
- */
 object NavTransitions {
 
-  // Transition Animation Constants
   private const val ANIMATION_DURATION = 700
   private const val FADE_ANIMATION_DURATION = 400
   private const val OFFSET_X = 700
-
-  // Navigation debounce time to prevent rapid multiple navigations
   private const val NAVIGATION_DEBOUNCE_TIME = 500L
 
   private val slideAnimationSpec: FiniteAnimationSpec<IntOffset> = tween(
@@ -39,10 +32,6 @@ object NavTransitions {
   private val fadeAnimationSpec: FiniteAnimationSpec<Float> = tween(ANIMATION_DURATION)
   private val shortFadeAnimationSpec: FiniteAnimationSpec<Float> = tween(FADE_ANIMATION_DURATION)
 
-  /**
-   * Fade transition for tab/drawer-level screens (Home, Categories, Favorites, etc.)
-   * Cross-fade feel appropriate for switching between major sections
-   */
   fun fadeTransitions() = NavTransitions(
     enter = { fadeIn(animationSpec = shortFadeAnimationSpec) },
     exit = { fadeOut(animationSpec = shortFadeAnimationSpec) },
@@ -50,11 +39,6 @@ object NavTransitions {
     popExit = { fadeOut(animationSpec = shortFadeAnimationSpec) },
   )
 
-  /**
-   * Slide from LEFT transition (for Home screen)
-   * Enter: slides in from left with fade
-   * Exit: slides out to left with fade
-   */
   fun slideFromLeftTransitions() = NavTransitions(
     enter = {
       slideInHorizontally(
@@ -82,13 +66,6 @@ object NavTransitions {
     }
   )
 
-  /**
-   * Slide from RIGHT transition (for most screens)
-   * Enter: slides in from right with fade
-   * Exit: slides out to left with fade
-   * PopEnter: slides in from left with fade
-   * PopExit: slides out to right with fade
-   */
   fun slideFromRightTransitions() = NavTransitions(
     enter = {
       slideInHorizontally(
@@ -116,10 +93,6 @@ object NavTransitions {
     }
   )
 
-  /**
-   * Simple ENTER ONLY transition (for Reader, Register, ForgotPassword screens)
-   * Only enter and popExit animations
-   */
   fun slideEnterOnlyTransitions() = NavTransitions(
     enter = {
       slideInHorizontally(
@@ -154,7 +127,6 @@ object NavTransitions {
     popExit = null
   )
 
-  // Data class to hold navigation transition animations
   @Immutable
   data class NavTransitions(
     val enter: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)?,
@@ -163,47 +135,44 @@ object NavTransitions {
     val popExit: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)?,
   )
 
-  // Extension functions for NavHostController
   fun NavHostController.navigatePreserveState(route: Any) {
-    this.navigateToWithDebounce(route) {
+    this.navigateTo(route) {
       popUpTo(graph.startDestinationId) {
-        saveState = true     // Saves state
+        saveState = true
       }
-      launchSingleTop = true // Prevents duplicates
-      restoreState = true    // Restores state when back
+      launchSingleTop = true
+      restoreState = true
     }
   }
 
   inline fun <reified T : Any> NavHostController.navigateClearStack(route: Any) {
-    this.navigateToWithDebounce(route) {
+    this.navigateTo(route) {
       popUpTo<T> {
-        inclusive = true     // Removes current screen from stack
+        inclusive = true
       }
-      launchSingleTop = true // Prevents duplicates
+      launchSingleTop = true
     }
   }
 
-  fun NavHostController.navigateToWithDebounce(
+  fun NavHostController.navigateTo(
     route: Any,
-    debounceTime: Long = NAVIGATION_DEBOUNCE_TIME,
     builder: NavOptionsBuilder.() -> Unit = {},
   ) {
-    var lastClickTime = 0L
-    // SystemClock.uptimeMillis() is used to get the time in milliseconds since the system was booted,
-    // including time spent in sleep. This is ideal for measuring time intervals, such as debouncing clicks,
-    // because it is not affected by changes in the system clock (e.g., due to user adjustments or daylight saving time).
-    val currentTime = SystemClock.uptimeMillis()
-    if (currentTime - lastClickTime >= debounceTime) {
-      this.navigate(route, builder)
-      lastClickTime = currentTime
-    }
+    tryNavigate { this.navigate(route, builder) }
   }
 
-  fun NavHostController.navigateBackWithDebounce(debounceTime: Long = NAVIGATION_DEBOUNCE_TIME) {
+  fun NavHostController.navigateBack() {
+    tryNavigate { this.popBackStack() }
+  }
+
+  private fun tryNavigate(
+    debounceTime: Long = NAVIGATION_DEBOUNCE_TIME,
+    action: () -> Unit,
+  ) {
     var lastClickTime = 0L
     val currentTime = SystemClock.uptimeMillis()
     if (currentTime - lastClickTime >= debounceTime) {
-      this.popBackStack()
+      action()
       lastClickTime = currentTime
     }
   }

@@ -6,7 +6,7 @@ import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toMangaStatus
 import com.decoutkhanqindev.dexreader.data.mapper.CategoryMapper.toCategory
 import com.decoutkhanqindev.dexreader.data.network.api.response.manga.MangaResponse
 import com.decoutkhanqindev.dexreader.domain.entity.manga.Manga
-import com.decoutkhanqindev.dexreader.util.TimeAgo.parseIso8601ToEpoch
+import com.decoutkhanqindev.dexreader.util.DateTimeHandler.parseIso8601ToEpoch
 
 object MangaMapper {
 

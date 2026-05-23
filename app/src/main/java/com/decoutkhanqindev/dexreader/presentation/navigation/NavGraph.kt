@@ -23,10 +23,10 @@ import com.decoutkhanqindev.dexreader.presentation.screens.reader.ReaderScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.search.SearchScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.settings.SettingsScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.splash.SplashScreen
-import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateBackWithDebounce
+import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateBack
 import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateClearStack
 import com.decoutkhanqindev.dexreader.util.NavTransitions.navigatePreserveState
-import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateToWithDebounce
+import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateTo
 import com.decoutkhanqindev.dexreader.util.NavTransitions.slideEnterOnlyTransitions
 import com.decoutkhanqindev.dexreader.util.NavTransitions.slideExitOnlyTransitions
 import com.decoutkhanqindev.dexreader.util.NavTransitions.slideFromRightTransitions
@@ -75,10 +75,10 @@ fun NavGraph(
             navController.navigatePreserveState(item.toNavRoute())
           },
           onNavigateToSearchScreen = {
-            navController.navigateToWithDebounce(NavRoute.Search)
+            navController.navigateTo(NavRoute.Search)
           },
           onNavigateToMangaDetailScreen = { mangaId ->
-            navController.navigateToWithDebounce(NavRoute.MangaDetails(mangaId))
+            navController.navigateTo(NavRoute.MangaDetails(mangaId))
           },
         )
       }
@@ -103,10 +103,10 @@ fun NavGraph(
             navController.navigatePreserveState(item.toNavRoute())
           },
           onNavigateToSearchScreen = {
-            navController.navigateToWithDebounce(NavRoute.Search)
+            navController.navigateTo(NavRoute.Search)
           },
           onNavigateCategoryDetailScreen = { categoryId, categoryTitle ->
-            navController.navigateToWithDebounce(
+            navController.navigateTo(
               NavRoute.CategoryDetails(
                 categoryId,
                 categoryTitle
@@ -127,13 +127,13 @@ fun NavGraph(
       ) {
         CategoryDetailScreen(
           onNavigateBack = {
-            navController.navigateBackWithDebounce()
+            navController.navigateBack()
           },
           onNavigateToSearchScreen = {
-            navController.navigateToWithDebounce(NavRoute.Search)
+            navController.navigateTo(NavRoute.Search)
           },
           onNavigateToMangaDetailScreen = { mangaId ->
-            navController.navigateToWithDebounce(NavRoute.MangaDetails(mangaId))
+            navController.navigateTo(NavRoute.MangaDetails(mangaId))
           },
           modifier = Modifier.fillMaxSize(),
         )
@@ -158,10 +158,10 @@ fun NavGraph(
             navController.navigatePreserveState(item.toNavRoute())
           },
           onNavigateToSearchScreen = {
-            navController.navigateToWithDebounce(NavRoute.Search)
+            navController.navigateTo(NavRoute.Search)
           },
           onNavigateToMangaDetailScreen = { mangaId ->
-            navController.navigateToWithDebounce(NavRoute.MangaDetails(mangaId))
+            navController.navigateTo(NavRoute.MangaDetails(mangaId))
           },
           modifier = Modifier.fillMaxSize()
         )
@@ -186,13 +186,13 @@ fun NavGraph(
             navController.navigatePreserveState(item.toNavRoute())
           },
           onNavigateToSearchScreen = {
-            navController.navigateToWithDebounce(NavRoute.Search)
+            navController.navigateTo(NavRoute.Search)
           },
           onNavigateToReaderScreen = { chapterId, lastReadPage, mangaId ->
-            navController.navigateToWithDebounce(NavRoute.Reader(chapterId, lastReadPage, mangaId))
+            navController.navigateTo(NavRoute.Reader(chapterId, lastReadPage, mangaId))
           },
           onNavigateToMangaDetailScreen = { mangaId ->
-            navController.navigateToWithDebounce(NavRoute.MangaDetails(mangaId))
+            navController.navigateTo(NavRoute.MangaDetails(mangaId))
           },
           modifier = Modifier.fillMaxSize()
         )
@@ -257,10 +257,10 @@ fun NavGraph(
         SearchScreen(
           modifier = Modifier.fillMaxSize(),
           onNavigateToManDetailScreen = { mangaId ->
-            navController.navigateToWithDebounce(NavRoute.MangaDetails(mangaId))
+            navController.navigateTo(NavRoute.MangaDetails(mangaId))
           },
           onNavigateBack = {
-            navController.navigateBackWithDebounce()
+            navController.navigateBack()
           },
         )
       }
@@ -279,16 +279,16 @@ fun NavGraph(
           currentUser = currentUser,
           modifier = Modifier.fillMaxSize(),
           onNavigateBack = {
-            navController.navigateBackWithDebounce()
+            navController.navigateBack()
           },
           onNavigateToSearchScreen = {
-            navController.navigateToWithDebounce(NavRoute.Search)
+            navController.navigateTo(NavRoute.Search)
           },
           onNavigateToLoginScreen = {
             navController.navigateClearStack<NavRoute.MangaDetails>(NavRoute.Login)
           },
           onNavigateCategoryDetailsScreen = { categoryId, categoryTitle ->
-            navController.navigateToWithDebounce(
+            navController.navigateTo(
               NavRoute.CategoryDetails(
                 categoryId,
                 categoryTitle
@@ -296,7 +296,7 @@ fun NavGraph(
             )
           },
           onNavigateToReaderScreen = { chapterId, lastReadPage, mangaId ->
-            navController.navigateToWithDebounce(NavRoute.Reader(chapterId, lastReadPage, mangaId))
+            navController.navigateTo(NavRoute.Reader(chapterId, lastReadPage, mangaId))
           },
         )
       }
@@ -312,7 +312,7 @@ fun NavGraph(
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
           modifier = Modifier.fillMaxSize(),
-        ) { navController.navigateBackWithDebounce() }
+        ) { navController.navigateBack() }
       }
     }
 
@@ -330,10 +330,10 @@ fun NavGraph(
             navController.navigateClearStack<NavRoute.Login>(NavRoute.Home)
           },
           onNavigateToRegisterScreen = {
-            navController.navigateToWithDebounce(NavRoute.Register)
+            navController.navigateTo(NavRoute.Register)
           },
           onNavigateToForgotPasswordScreen = {
-            navController.navigateToWithDebounce(NavRoute.ForgotPassword)
+            navController.navigateTo(NavRoute.ForgotPassword)
           },
         )
       }
@@ -348,7 +348,7 @@ fun NavGraph(
         RegisterScreen(
           modifier = Modifier.fillMaxSize(),
           onNavigateBack = {
-            navController.navigateBackWithDebounce()
+            navController.navigateBack()
           },
           onNavigateToLoginScreen = {
             navController.navigateClearStack<NavRoute.Register>(NavRoute.Login)
@@ -366,7 +366,7 @@ fun NavGraph(
         ForgotPasswordScreen(
           modifier = Modifier.fillMaxSize(),
           onNavigateBack = {
-            navController.navigateBackWithDebounce()
+            navController.navigateBack()
           },
           onNavigateToLoginScreen = {
             navController.navigateClearStack<NavRoute.ForgotPassword>(NavRoute.Login)

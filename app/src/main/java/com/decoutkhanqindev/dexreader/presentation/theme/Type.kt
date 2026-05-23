@@ -17,7 +17,6 @@ private val JsFont = FontFamily(
 )
 
 val Typography = Typography(
-  // Body text
   bodySmall = TextStyle(
     fontFamily = JsFont,
     fontWeight = FontWeight.Normal,
@@ -40,7 +39,6 @@ val Typography = Typography(
     letterSpacing = 0.5.sp
   ),
 
-  // Label text
   labelSmall = TextStyle(
     fontFamily = JsFont,
     fontWeight = FontWeight.Medium,
@@ -63,7 +61,6 @@ val Typography = Typography(
     letterSpacing = 0.1.sp
   ),
 
-  // Title text
   titleSmall = TextStyle(
     fontFamily = JsFont,
     fontWeight = FontWeight.Medium,

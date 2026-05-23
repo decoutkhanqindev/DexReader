@@ -10,7 +10,6 @@ object ApiQueries {
   const val TRANSLATED_LANGUAGE = "translatedLanguage[]"
   const val INCLUDES = "includes[]"
 
-  // Order
   const val ORDER_UPDATED_AT = "order[updatedAt]"
   const val ORDER_FOLLOWED_COUNT = "order[followedCount]"
   const val ORDER_CREATED_AT = "order[createdAt]"

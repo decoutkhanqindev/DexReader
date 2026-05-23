@@ -9,19 +9,18 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.screens.splash.com.SplashContent
+import com.decoutkhanqindev.dexreader.presentation.screens.splash.components.SplashContent
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.coroutines.delay
-
-private const val SPLASH_DURATION_MS = 3000L
 
 @Composable
 fun SplashScreen(
   modifier: Modifier = Modifier,
   onNavigateToHome: () -> Unit,
 ) {
+  val splashDurationMs = 3000L
   LaunchedEffect(Unit) {
-    delay(SPLASH_DURATION_MS)
+    delay(splashDurationMs)
     onNavigateToHome()
   }
 

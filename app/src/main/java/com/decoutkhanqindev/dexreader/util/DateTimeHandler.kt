@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-object TimeAgo {
+object DateTimeHandler {
 
   private val displayFormat = ThreadLocal.withInitial {
     SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())

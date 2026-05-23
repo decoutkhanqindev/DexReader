@@ -36,7 +36,6 @@ class UserViewModel @Inject constructor(
       initialValue = null
     )
 
-  // manage observe user profile job
   private var userProfileJob: Job? = null
 
   init {
@@ -51,8 +50,6 @@ class UserViewModel @Inject constructor(
             _isUserLoggedIn.value = it != null
             if (it != null) observeUserProfile(userId = it.id)
             else {
-              // user is null like user logged out
-              // clear user profile state and cancel user profile job
               cancelUserProfileJob()
               _domainUserProfile.value = null
             }
@@ -67,8 +64,6 @@ class UserViewModel @Inject constructor(
   }
 
   private fun observeUserProfile(userId: String) {
-    // cancels any previous observation before starting a new one
-    // make sure only one active job for per user
     cancelUserProfileJob()
     userProfileJob = viewModelScope.launch {
       observeUserProfileUseCase(userId).collect { result ->

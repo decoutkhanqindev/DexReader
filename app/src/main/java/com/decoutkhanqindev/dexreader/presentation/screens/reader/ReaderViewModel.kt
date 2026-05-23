@@ -170,7 +170,6 @@ class ReaderViewModel @Inject constructor(
     viewModelScope.launch {
       if (!isPrefetch) _chapterPagesUiState.value = ChapterPagesUiState.Loading
 
-      // from cache
       getChapterCacheUseCase(chapterId = chapterIdToFetch)
         .onSuccess { chapterPages ->
           if (!isPrefetch) {
@@ -195,7 +194,6 @@ class ReaderViewModel @Inject constructor(
             .d("getChapterCacheUseCase have error: ${it.stackTraceToString()}")
         }
 
-      // from network
       getChapterPagesUseCase(chapterId = chapterIdToFetch, mangaId = mangaIdFromArg)
         .onSuccess { chapterPages ->
           if (!isPrefetch) {

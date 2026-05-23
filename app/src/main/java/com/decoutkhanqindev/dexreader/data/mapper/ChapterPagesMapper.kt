@@ -13,7 +13,6 @@ object ChapterPagesMapper {
     val hash = chapter?.hash ?: return null
     val data = chapter.data ?: return null
 
-    // {baseUrl}/data/{dataHash}/{pageHash}
     val pages = data.map { pageHash ->
       "$resolvedBaseUrl/$DATA_URL_SEGMENT/$hash/$pageHash"
     }
@@ -28,7 +27,6 @@ object ChapterPagesMapper {
   }
 
   fun ChapterCacheEntity.toChapterPages(): ChapterPages {
-    // {baseUrl}/data/{dataHash}/{pageHash}
     val pages = pageHashes.map { hash ->
       "$baseUrl/$DATA_URL_SEGMENT/$dataHash/$hash"
     }
