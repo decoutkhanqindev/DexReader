@@ -57,7 +57,16 @@
       "Bash(adb install *)",
       "PowerShell(Get-ChildItem *)",
       "Bash(Remove-Item *)",
-      "Bash(git restore *)"
+      "Bash(git restore *)",
+      "Skill(android-cli)",
+      "Bash(android emulator *)",
+      "Bash(android run *)",
+      "Bash(./gradlew assembleDebug)",
+      "Bash(android screen *)",
+      "Bash(android layout *)",
+      "Skill(android-adb)",
+      "Bash(adb *)",
+      "Skill(update-config)"
     ]
   }
 }

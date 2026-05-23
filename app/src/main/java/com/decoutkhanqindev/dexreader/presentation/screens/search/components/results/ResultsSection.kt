@@ -49,7 +49,10 @@ fun ResultsSection(
   val mangaListSize = (resultsUiState as? BasePaginationUiState.Content)?.currentList?.size ?: 0
   var isShowErrorDialog by remember(resultsUiState) { mutableStateOf(resultsUiState is BasePaginationUiState.FirstPageError) }
 
-  Box(modifier = modifier) {
+  Box(
+    modifier = modifier,
+    contentAlignment = Alignment.Center
+  ) {
     when (resultsUiState) {
       BasePaginationUiState.FirstPageLoading -> LoadingScreen(modifier = Modifier.fillMaxSize())
 
