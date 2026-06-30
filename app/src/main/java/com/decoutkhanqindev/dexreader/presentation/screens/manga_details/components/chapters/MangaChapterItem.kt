@@ -3,9 +3,11 @@ package com.decoutkhanqindev.dexreader.presentation.screens.manga_details.compon
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -46,73 +48,82 @@ fun MangaChapterItem(
   }
 
   Card(
-    modifier = modifier.onScalableClick(shape = MaterialTheme.shapes.large) { onChapterClick() },
-    shape = MaterialTheme.shapes.large,
-    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-    elevation = CardDefaults.cardElevation(8.dp),
+    modifier = modifier.onScalableClick(shape = MaterialTheme.shapes.medium) { onChapterClick() },
+    shape = MaterialTheme.shapes.medium,
+    colors = CardDefaults.cardColors(
+      containerColor = MaterialTheme.colorScheme.surfaceContainer
+    ),
+    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
   ) {
     Column(
       modifier = Modifier
         .fillMaxSize()
-        .padding(12.dp),
-      verticalArrangement = Arrangement.spacedBy(8.dp),
+        .padding(16.dp),
+      verticalArrangement = Arrangement.spacedBy(4.dp),
       horizontalAlignment = Alignment.Start,
     ) {
       Row(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
       ) {
-        Row(modifier = Modifier.weight(0.7f)) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
           Text(
-            text = stringResource(R.string.volume_chapter, volume, number),
-            modifier = Modifier.padding(end = 4.dp),
-            fontWeight = FontWeight.ExtraBold,
-            style = MaterialTheme.typography.titleMedium,
+            text = "Ch. $number",
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.titleLarge,
           )
-          if (lastChapter == number) {
+          if (volume != "null" && volume.isNotEmpty()) {
             Text(
-              text = stringResource(R.string.last_chapter),
-              fontWeight = FontWeight.ExtraBold,
-              style = MaterialTheme.typography.titleMedium,
+              text = " • Vol. $volume",
+              color = MaterialTheme.colorScheme.onSurfaceVariant,
+              style = MaterialTheme.typography.bodyMedium,
+              modifier = Modifier.padding(start = 4.dp)
             )
           }
         }
 
         if (readingHistory != null) {
+          val progress = (readingHistory.lastReadPage.toFloat() / readingHistory.pageCount.toFloat())
           Text(
-            text = stringResource(
-              R.string.reader_title,
-              readingHistory.lastReadPage,
-              readingHistory.pageCount
-            ),
-            modifier = Modifier.weight(0.3f),
-            fontWeight = FontWeight.ExtraBold,
-            textAlign = TextAlign.End,
-            style = MaterialTheme.typography.titleMedium,
+            text = "${(progress * 100).toInt()}%",
+            color = MaterialTheme.colorScheme.secondary,
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.labelLarge,
           )
         }
       }
 
+      Text(
+        text = chapter.title,
+        color = MaterialTheme.colorScheme.onSurface,
+        fontWeight = FontWeight.Medium,
+        overflow = TextOverflow.Ellipsis,
+        maxLines = 1,
+        style = MaterialTheme.typography.bodyLarge,
+      )
+
       Row(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
       ) {
-        Text(
-          text = chapter.title,
-          modifier = Modifier.weight(0.6f),
-          fontStyle = FontStyle.Italic,
-          fontWeight = FontWeight.Bold,
-          overflow = TextOverflow.Ellipsis,
-          maxLines = 1,
-          style = MaterialTheme.typography.bodyLarge,
-        )
+        if (lastChapter == number) {
+          Text(
+            text = "NEWEST",
+            color = MaterialTheme.colorScheme.tertiary,
+            fontWeight = FontWeight.Black,
+            style = MaterialTheme.typography.labelSmall,
+          )
+        } else {
+          Spacer(modifier = Modifier.width(1.dp))
+        }
+
         Text(
           text = chapter.publishedAt,
-          modifier = Modifier.weight(0.4f),
-          fontStyle = FontStyle.Italic,
-          fontWeight = FontWeight.Bold,
-          textAlign = TextAlign.End,
-          style = MaterialTheme.typography.bodyLarge,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
+          style = MaterialTheme.typography.labelSmall,
         )
       }
     }

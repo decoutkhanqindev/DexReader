@@ -6,8 +6,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,6 +38,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.home.HomeUiState
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.persistentListOf
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeContent(
   uiState: HomeUiState,
@@ -41,12 +47,19 @@ fun HomeContent(
   onRetry: () -> Unit,
 ) {
   var isShowErrorDialog by remember(uiState) { mutableStateOf(uiState is HomeUiState.Error) }
+  val pullToRefreshState = rememberPullToRefreshState()
+  val isRefreshing = uiState is HomeUiState.Loading
 
   ReportDrawnWhen { uiState is HomeUiState.Success }
 
-  Box(modifier = modifier) {
+  PullToRefreshBox(
+    state = pullToRefreshState,
+    isRefreshing = isRefreshing,
+    onRefresh = onRetry,
+    modifier = modifier
+  ) {
     when (uiState) {
-      HomeUiState.Loading -> LoadingScreen(modifier = Modifier.fillMaxSize())
+      HomeUiState.Loading -> if (!isRefreshing) LoadingScreen(modifier = Modifier.fillMaxSize())
 
       is HomeUiState.Success -> {
         Column(
@@ -54,36 +67,52 @@ fun HomeContent(
             .fillMaxSize()
             .semantics { contentDescription = "home_feed" }
             .verticalScroll(rememberScrollState()),
-          verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
+          verticalArrangement = Arrangement.Top,
           horizontalAlignment = Alignment.CenterHorizontally
         ) {
-          MangaListSection(
-            title = stringResource(R.string.latest_update),
-            items = uiState.latestUpdatesMangaList,
-            modifier = Modifier.fillMaxWidth(),
-            onItemClick = onItemClick,
-          )
+          // Featured Section (using first item of trending)
+          if (uiState.trendingMangaList.isNotEmpty()) {
+            FeaturedMangaBanner(
+              manga = uiState.trendingMangaList.first(),
+              modifier = Modifier
+                .fillMaxWidth()
+                .height(300.dp),
+              onItemClick = onItemClick
+            )
+          }
 
-          MangaListSection(
-            title = stringResource(R.string.trending),
-            items = uiState.trendingMangaList,
-            modifier = Modifier.fillMaxWidth(),
-            onItemClick = onItemClick,
-          )
+          Column(
+            modifier = Modifier.padding(vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp)
+          ) {
+            MangaListSection(
+              title = stringResource(R.string.trending),
+              items = uiState.trendingMangaList,
+              modifier = Modifier.fillMaxWidth(),
+              onItemClick = onItemClick,
+            )
 
-          MangaListSection(
-            title = stringResource(R.string.new_releases),
-            items = uiState.newReleaseMangaList,
-            modifier = Modifier.fillMaxWidth(),
-            onItemClick = onItemClick,
-          )
+            MangaListSection(
+              title = stringResource(R.string.latest_update),
+              items = uiState.latestUpdatesMangaList,
+              modifier = Modifier.fillMaxWidth(),
+              onItemClick = onItemClick,
+            )
 
-          MangaListSection(
-            title = stringResource(R.string.top_rated),
-            items = uiState.topRatedMangaList,
-            modifier = Modifier.fillMaxWidth(),
-            onItemClick = onItemClick,
-          )
+            MangaListSection(
+              title = stringResource(R.string.new_releases),
+              items = uiState.newReleaseMangaList,
+              modifier = Modifier.fillMaxWidth(),
+              onItemClick = onItemClick,
+            )
+
+            MangaListSection(
+              title = stringResource(R.string.top_rated),
+              items = uiState.topRatedMangaList,
+              modifier = Modifier.fillMaxWidth(),
+              onItemClick = onItemClick,
+            )
+          }
         }
       }
 

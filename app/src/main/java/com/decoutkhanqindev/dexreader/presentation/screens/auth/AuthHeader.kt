@@ -1,9 +1,14 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.auth
 
+
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -18,48 +23,52 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun AuthHeader(modifier: Modifier = Modifier) {
-  Row(
+  Column(
     modifier = modifier,
-    verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.spacedBy(
-      space = 16.dp,
-      alignment = Alignment.CenterHorizontally
-    )
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally
   ) {
-    Icon(
-      painter = painterResource(R.drawable.app_icon),
-      contentDescription = stringResource(R.string.app_name),
-      modifier = Modifier.size(100.dp),
-      tint = MaterialTheme.colorScheme.onPrimaryContainer,
-    )
-    Column(
-      modifier = Modifier.fillMaxWidth(),
-      verticalArrangement = Arrangement.Center,
-      horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+      modifier = Modifier
+        .size(120.dp)
+        .background(
+          color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f),
+          shape = MaterialTheme.shapes.extraLarge
+        )
+        .padding(16.dp),
+      contentAlignment = Alignment.Center
     ) {
-      Text(
-        text = stringResource(R.string.app_name),
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(bottom = 8.dp),
-        color = MaterialTheme.colorScheme.onPrimaryContainer,
-        fontWeight = FontWeight.ExtraBold,
-        style = MaterialTheme.typography.headlineLarge,
-      )
-      Text(
-        text = stringResource(R.string.slogan),
-        modifier = Modifier.fillMaxWidth(),
-        color = MaterialTheme.colorScheme.onPrimaryContainer,
-        fontStyle = FontStyle.Italic,
-        fontWeight = FontWeight.Light,
-        style = MaterialTheme.typography.titleMedium,
+      Icon(
+        painter = painterResource(R.drawable.app_icon),
+        contentDescription = stringResource(R.string.app_name),
+        modifier = Modifier.size(80.dp),
+        tint = MaterialTheme.colorScheme.primary,
       )
     }
+    
+    Spacer(modifier = Modifier.height(24.dp))
+
+    Text(
+      text = stringResource(R.string.app_name),
+      color = MaterialTheme.colorScheme.onSurface,
+      fontWeight = FontWeight.Black,
+      style = MaterialTheme.typography.displaySmall,
+      letterSpacing = 2.sp
+    )
+    
+    Text(
+      text = stringResource(R.string.slogan),
+      color = MaterialTheme.colorScheme.onSurfaceVariant,
+      fontWeight = FontWeight.Medium,
+      style = MaterialTheme.typography.bodyLarge,
+      modifier = Modifier.padding(top = 4.dp)
+    )
   }
 }
 

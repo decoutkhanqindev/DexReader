@@ -1,7 +1,0 @@
-com.decoutkhanqindev.dexreader.baselineprofile-pngs-0 C:\Android Development\dex_reader\DexReader\baselineprofile\build\generated\res\pngs\nonMinifiedRelease
-com.decoutkhanqindev.dexreader.baselineprofile-updated_navigation_xml-1 C:\Android Development\dex_reader\DexReader\baselineprofile\build\generated\updated_navigation_xml\nonMinifiedRelease
-com.decoutkhanqindev.dexreader.baselineprofile-packageNonMinifiedReleaseResources-2 C:\Android Development\dex_reader\DexReader\baselineprofile\build\intermediates\incremental\nonMinifiedRelease\packageNonMinifiedReleaseResources\merged.dir
-com.decoutkhanqindev.dexreader.baselineprofile-packageNonMinifiedReleaseResources-3 C:\Android Development\dex_reader\DexReader\baselineprofile\build\intermediates\incremental\nonMinifiedRelease\packageNonMinifiedReleaseResources\stripped.dir
-com.decoutkhanqindev.dexreader.baselineprofile-nonMinifiedRelease-4 C:\Android Development\dex_reader\DexReader\baselineprofile\build\intermediates\merged_res\nonMinifiedRelease\mergeNonMinifiedReleaseResources
-com.decoutkhanqindev.dexreader.baselineprofile-main-5 C:\Android Development\dex_reader\DexReader\baselineprofile\src\main\res
-com.decoutkhanqindev.dexreader.baselineprofile-nonMinifiedRelease-6 C:\Android Development\dex_reader\DexReader\baselineprofile\src\nonMinifiedRelease\res
