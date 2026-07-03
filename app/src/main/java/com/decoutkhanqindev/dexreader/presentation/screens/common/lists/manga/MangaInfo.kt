@@ -50,7 +50,7 @@ fun MangaInfo(
       fontWeight = FontWeight.Bold,
       overflow = TextOverflow.Ellipsis,
       maxLines = 1,
-      style = MaterialTheme.typography.bodyLarge,
+      style = MaterialTheme.typography.bodyMedium,
     )
     Text(
       text = stringResource(manga.status.nameRes),
@@ -59,8 +59,16 @@ fun MangaInfo(
       fontWeight = FontWeight.Bold,
       overflow = TextOverflow.Ellipsis,
       maxLines = 1,
-      style = MaterialTheme.typography.bodyLarge,
+      style = MaterialTheme.typography.bodyMedium,
     )
+    if (manga.rating.isNotEmpty()) {
+      Text(
+        text = stringResource(R.string.rating_compact, manga.rating),
+        fontWeight = FontWeight.Bold,
+        maxLines = 1,
+        style = MaterialTheme.typography.bodyMedium,
+      )
+    }
   }
 }
 
@@ -77,7 +85,9 @@ private val previewMangaModel = MangaModel(
   year = "1997",
   availableLanguages = persistentListOf(),
   latestChapter = "1100",
-  updatedAt = "2024-01-01"
+  updatedAt = "2024-01-01",
+  rating = "8.5",
+  follows = "2.3M",
 )
 
 @Preview
@@ -88,7 +98,7 @@ private fun MangaInfoPreview() {
       manga = previewMangaModel,
       modifier = Modifier
         .fillMaxWidth()
-        .height(85.dp)
+        .height(100.dp)
     )
   }
 }

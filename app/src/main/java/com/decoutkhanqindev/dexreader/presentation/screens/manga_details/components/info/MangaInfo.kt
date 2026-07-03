@@ -75,6 +75,24 @@ fun MangaInfo(
       fontWeight = FontWeight.Bold,
       style = MaterialTheme.typography.bodyLarge,
     )
+    if (manga.rating.isNotEmpty()) {
+      Text(
+        text = stringResource(R.string.rating, manga.rating),
+        modifier = Modifier.padding(bottom = 4.dp),
+        fontStyle = FontStyle.Italic,
+        fontWeight = FontWeight.Bold,
+        style = MaterialTheme.typography.bodyLarge,
+      )
+    }
+    if (manga.follows.isNotEmpty()) {
+      Text(
+        text = stringResource(R.string.follows, manga.follows),
+        modifier = Modifier.padding(bottom = 4.dp),
+        fontStyle = FontStyle.Italic,
+        fontWeight = FontWeight.Bold,
+        style = MaterialTheme.typography.bodyLarge,
+      )
+    }
   }
 }
 
@@ -96,6 +114,8 @@ internal val previewManga = MangaModel(
   availableLanguages = persistentListOf(MangaLanguageValue.ENGLISH, MangaLanguageValue.JAPANESE),
   latestChapter = "1110",
   updatedAt = "2024-01-01",
+  rating = "9.1",
+  follows = "2.3M",
 )
 
 @Preview

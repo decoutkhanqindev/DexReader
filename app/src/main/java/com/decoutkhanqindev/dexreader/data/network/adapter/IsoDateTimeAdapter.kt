@@ -1,6 +1,6 @@
 package com.decoutkhanqindev.dexreader.data.network.adapter
 
-import com.decoutkhanqindev.dexreader.util.DateTimeHandler.parseIso8601ToEpoch
+import com.decoutkhanqindev.dexreader.util.DataTypeFormatter.parseIso8601ToEpoch
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 import java.text.SimpleDateFormat

@@ -1,16 +1,19 @@
 package com.decoutkhanqindev.dexreader.domain.usecase.category
 
 import com.decoutkhanqindev.dexreader.domain.entity.manga.Manga
+import com.decoutkhanqindev.dexreader.domain.entity.manga.MangaStats
 import com.decoutkhanqindev.dexreader.domain.entity.value.criteria.MangaSortCriteria
 import com.decoutkhanqindev.dexreader.domain.entity.value.criteria.MangaSortOrder
 import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaContentRating
 import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaStatus
 import com.decoutkhanqindev.dexreader.domain.repository.category.CategoryRepository
+import com.decoutkhanqindev.dexreader.domain.repository.manga.MangaStatsRepository
 import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendResultCatching
 import javax.inject.Inject
 
 class GetMangaListByCategoryUseCase @Inject constructor(
-  private val repository: CategoryRepository,
+  private val categoryRepository: CategoryRepository,
+  private val statsRepository: MangaStatsRepository,
 ) {
   suspend operator fun invoke(
     categoryId: String,
@@ -20,7 +23,7 @@ class GetMangaListByCategoryUseCase @Inject constructor(
     statusFilter: List<MangaStatus> = listOf(MangaStatus.ON_GOING),
     contentRatingFilter: List<MangaContentRating> = listOf(MangaContentRating.SAFE),
   ): Result<List<Manga>> = runSuspendResultCatching {
-    repository.getMangaListByCategory(
+    val list: List<Manga> = categoryRepository.getMangaListByCategory(
       categoryId = categoryId,
       offset = offset,
       sortCriteria = sortCriteria,
@@ -28,5 +31,8 @@ class GetMangaListByCategoryUseCase @Inject constructor(
       statusFilter = statusFilter,
       contentRatingFilter = contentRatingFilter,
     )
+    val listIds: List<String> = list.map { it.id }
+    val stats: List<MangaStats> = statsRepository.getMangaStats(listIds)
+    Manga.mergeStats(list, stats)
   }
 }

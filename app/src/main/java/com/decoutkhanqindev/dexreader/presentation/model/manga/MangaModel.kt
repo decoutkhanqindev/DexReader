@@ -22,4 +22,6 @@ data class MangaModel(
   val availableLanguages: ImmutableList<MangaLanguageValue>,
   val latestChapter: String,
   val updatedAt: String,
+  val rating: String,
+  val follows: String,
 )

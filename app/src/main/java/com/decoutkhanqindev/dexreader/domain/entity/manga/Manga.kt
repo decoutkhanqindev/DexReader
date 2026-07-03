@@ -19,6 +19,8 @@ data class Manga(
   val availableLanguages: List<MangaLanguage>,
   val latestChapter: String?,
   val updatedAt: Long?,
+  val rating: Double?,
+  val follows: Long?,
 ) {
   companion object {
     const val DEFAULT_TITLE = "Untitled"
@@ -28,5 +30,14 @@ data class Manga(
     const val DEFAULT_YEAR = "Unknown"
     const val DEFAULT_LAST_CHAPTER = "Unknown"
     const val DEFAULT_COVER_URL = ""
+
+    fun mergeStats(list: List<Manga>, stats: List<MangaStats>): List<Manga> {
+      if (list.isEmpty() || stats.isEmpty()) return list
+      val statsMap = stats.associateBy { it.mangaId }
+      return list.map { manga ->
+        val entry = statsMap[manga.id]
+        manga.copy(rating = entry?.rating, follows = entry?.follows)
+      }
+    }
   }
 }

@@ -4,6 +4,7 @@ import com.decoutkhanqindev.dexreader.data.repository.category.CategoryRepositor
 import com.decoutkhanqindev.dexreader.data.repository.manga.CacheRepositoryImpl
 import com.decoutkhanqindev.dexreader.data.repository.manga.ChapterRepositoryImpl
 import com.decoutkhanqindev.dexreader.data.repository.manga.MangaRepositoryImpl
+import com.decoutkhanqindev.dexreader.data.repository.manga.MangaStatsRepositoryImpl
 import com.decoutkhanqindev.dexreader.data.repository.settings.SettingsRepositoryImpl
 import com.decoutkhanqindev.dexreader.data.repository.user.FavoritesRepositoryImpl
 import com.decoutkhanqindev.dexreader.data.repository.user.HistoryRepositoryImpl
@@ -12,6 +13,7 @@ import com.decoutkhanqindev.dexreader.domain.repository.category.CategoryReposit
 import com.decoutkhanqindev.dexreader.domain.repository.manga.CacheRepository
 import com.decoutkhanqindev.dexreader.domain.repository.manga.ChapterRepository
 import com.decoutkhanqindev.dexreader.domain.repository.manga.MangaRepository
+import com.decoutkhanqindev.dexreader.domain.repository.manga.MangaStatsRepository
 import com.decoutkhanqindev.dexreader.domain.repository.settings.SettingsRepository
 import com.decoutkhanqindev.dexreader.domain.repository.user.FavoritesRepository
 import com.decoutkhanqindev.dexreader.domain.repository.user.HistoryRepository
@@ -56,4 +58,8 @@ interface RepositoryModule {
   @Binds
   @Singleton
   fun bindSettingsRepository(impl: SettingsRepositoryImpl): SettingsRepository
+
+  @Binds
+  @Singleton
+  fun bindMangaStatsRepository(impl: MangaStatsRepositoryImpl): MangaStatsRepository
 }

@@ -9,6 +9,7 @@ object ApiQueries {
   const val CONTENT_RATING = "contentRating[]"
   const val TRANSLATED_LANGUAGE = "translatedLanguage[]"
   const val INCLUDES = "includes[]"
+  const val MANGA_IDS = "manga[]"
 
   const val ORDER_UPDATED_AT = "order[updatedAt]"
   const val ORDER_FOLLOWED_COUNT = "order[followedCount]"

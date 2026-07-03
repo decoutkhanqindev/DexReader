@@ -165,6 +165,8 @@ private val previewFavoriteList = persistentListOf(
     coverUrl = "",
     author = "Eiichiro Oda",
     status = MangaStatusValue.ON_GOING,
+    rating = "9.1",
+    follows = "2.3M",
   ),
   FavoriteMangaModel(
     id = "2",
@@ -172,6 +174,8 @@ private val previewFavoriteList = persistentListOf(
     coverUrl = "",
     author = "Hiromu Arakawa",
     status = MangaStatusValue.COMPLETED,
+    rating = "9.2",
+    follows = "1.1M",
   ),
   FavoriteMangaModel(
     id = "3",
@@ -179,6 +183,8 @@ private val previewFavoriteList = persistentListOf(
     coverUrl = "",
     author = "Hajime Isayama",
     status = MangaStatusValue.COMPLETED,
+    rating = "9.0",
+    follows = "1.2M",
   ),
   FavoriteMangaModel(
     id = "4",
@@ -186,6 +192,8 @@ private val previewFavoriteList = persistentListOf(
     coverUrl = "",
     author = "Koyoharu Gotouge",
     status = MangaStatusValue.COMPLETED,
+    rating = "8.8",
+    follows = "900K",
   ),
 )
 

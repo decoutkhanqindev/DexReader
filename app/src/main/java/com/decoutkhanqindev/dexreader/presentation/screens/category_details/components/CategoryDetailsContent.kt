@@ -184,6 +184,8 @@ private val previewMangaList = persistentListOf(
     availableLanguages = persistentListOf(MangaLanguageValue.ENGLISH),
     latestChapter = "1110",
     updatedAt = "2024-01-01",
+    rating = "9.1",
+    follows = "2.3M",
   ),
   MangaModel(
     id = "2",
@@ -199,6 +201,8 @@ private val previewMangaList = persistentListOf(
     availableLanguages = persistentListOf(MangaLanguageValue.ENGLISH),
     latestChapter = "700",
     updatedAt = "2014-11-10",
+    rating = "8.7",
+    follows = "1.8M",
   ),
 )
 

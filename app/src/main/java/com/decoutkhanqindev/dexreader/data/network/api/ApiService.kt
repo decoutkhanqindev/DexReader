@@ -13,6 +13,7 @@ import com.decoutkhanqindev.dexreader.data.network.api.response.chapter.ChapterD
 import com.decoutkhanqindev.dexreader.data.network.api.response.chapter.ChapterListResponse
 import com.decoutkhanqindev.dexreader.data.network.api.response.manga.MangaDetailsResponse
 import com.decoutkhanqindev.dexreader.data.network.api.response.manga.MangaListResponse
+import com.decoutkhanqindev.dexreader.data.network.api.response.statistics.MangaStatisticsResponse
 import com.decoutkhanqindev.dexreader.data.network.api.response.tag.TagListResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -124,6 +125,11 @@ interface ApiService {
 
   @GET(ApiEndpoints.AT_HOME_SERVER_ID)
   suspend fun getChapterPages(@Path(ApiPaths.ID) chapterId: String): AtHomeServerResponse
+
+  @GET(ApiEndpoints.MANGA_STATISTICS)
+  suspend fun getMangaStatistics(
+    @Query(ApiQueries.MANGA_IDS) mangaIds: List<String>,
+  ): MangaStatisticsResponse
 
   @GET(ApiEndpoints.MANGA_TAG)
   suspend fun getTagList(): TagListResponse

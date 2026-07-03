@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-object DateTimeHandler {
+object DataTypeFormatter {
 
   private val displayFormat = ThreadLocal.withInitial {
     SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
@@ -42,5 +42,11 @@ object DateTimeHandler {
       diff < 31_556_926_000L -> "${diff / 2_629_746_000} months ago"
       else -> displayFormat.get()!!.format(Date(this))
     }
+  }
+
+  fun Long.toFormattedCount(): String = when {
+    this >= 1_000_000L -> String.format(Locale.US, "%.1fM", this / 1_000_000.0)
+    this >= 1_000L -> String.format(Locale.US, "%.1fK", this / 1_000.0)
+    else -> toString()
   }
 }

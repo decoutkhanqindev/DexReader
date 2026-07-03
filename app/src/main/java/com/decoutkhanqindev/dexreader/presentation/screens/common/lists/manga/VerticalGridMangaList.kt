@@ -79,7 +79,9 @@ private fun VerticalGridMangaListPreview() {
           year = "1997",
           availableLanguages = persistentListOf(),
           latestChapter = "1100",
-          updatedAt = "2024-01-01"
+          updatedAt = "2024-01-01",
+          rating = "9.1",
+          follows = "2.3M",
         ),
         MangaModel(
           id = "manga-002",
@@ -94,7 +96,9 @@ private fun VerticalGridMangaListPreview() {
           year = "1999",
           availableLanguages = persistentListOf(),
           latestChapter = "700",
-          updatedAt = "2014-11-10"
+          updatedAt = "2014-11-10",
+          rating = "8.7",
+          follows = "1.8M",
         ),
         MangaModel(
           id = "manga-003",
@@ -109,7 +113,9 @@ private fun VerticalGridMangaListPreview() {
           year = "2009",
           availableLanguages = persistentListOf(),
           latestChapter = "139",
-          updatedAt = "2021-04-09"
+          updatedAt = "2021-04-09",
+          rating = "9.0",
+          follows = "1.2M",
         ),
         MangaModel(
           id = "manga-004",
@@ -124,7 +130,9 @@ private fun VerticalGridMangaListPreview() {
           year = "2016",
           availableLanguages = persistentListOf(),
           latestChapter = "205",
-          updatedAt = "2020-05-18"
+          updatedAt = "2020-05-18",
+          rating = "8.9",
+          follows = "980.5K",
         )
       ),
       modifier = Modifier.fillMaxSize(),
