@@ -6,6 +6,7 @@
   <string name="category_menu_item">دسته‌بندی‌ها</string>
   <string name="favorite_menu_item">علاقه‌مندی‌ها</string>
   <string name="history_menu_item">تاریخچه</string>
+  <string name="statistics_menu_item">آمار مطالعه</string>
   <string name="profile_menu_item">پروفایل</string>
   <string name="settings_menu_item">تنظیمات</string>
   <string name="search">جستجو</string>
@@ -126,6 +127,13 @@
   <string name="you_have_removed_from_history_successfully">با موفقیت از سابقه حذف شد.</string>
   <string name="removed_from_history_failed">حذف از سابقه با شکست مواجه شد. لطفاً دوباره امتحان کنید.</string>
   <string name="view_details_or_continue">مشاهده جزئیات یا ادامه؟</string>
+
+  <!-- Statistics Screen -->
+  <string name="daily_reading_time">زمان مطالعه روزانه</string>
+  <string name="weekly_reading_time">زمان مطالعه هفتگی</string>
+  <string name="total_reading_time">زمان مطالعه کل</string>
+  <string name="minutes_suffix">%d دقیقه</string>
+  <string name="hours_suffix">%d ساعت</string>
   <string name="please_sign_in_to_view_your_profile">برای مشاهده نمایه خود لطفاً وارد شوید.</string>
   <string name="logout">خروج از حساب</string>
   <string name="logout_failed_please_try_again">خروج از حساب با شکست مواجه شد. لطفاً دوباره امتحان کنید.</string>

@@ -29,6 +29,9 @@ sealed interface NavRoute {
   data object History : NavRoute
 
   @Serializable
+  data object Statistics : NavRoute
+
+  @Serializable
   data object Profile : NavRoute
 
   @Serializable

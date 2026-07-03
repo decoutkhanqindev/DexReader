@@ -29,6 +29,7 @@ fun MainBottomBar(
             MenuValue.HOME,
             MenuValue.CATEGORIES,
             MenuValue.FAVORITES,
+            MenuValue.HISTORY,
             MenuValue.PROFILE
         )
 
