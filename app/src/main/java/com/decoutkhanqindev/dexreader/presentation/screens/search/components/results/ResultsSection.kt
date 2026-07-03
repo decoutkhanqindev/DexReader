@@ -147,6 +147,8 @@ private val previewManga = MangaModel(
   availableLanguages = persistentListOf(),
   latestChapter = "1100",
   updatedAt = "2 days ago",
+  rating = "9.1",
+  follows = "2.3M",
 )
 
 @Preview(showBackground = true)

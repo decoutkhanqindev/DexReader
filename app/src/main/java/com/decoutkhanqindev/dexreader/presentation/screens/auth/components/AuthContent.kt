@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.screens.auth
+package com.decoutkhanqindev.dexreader.presentation.screens.auth.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

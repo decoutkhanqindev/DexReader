@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.screens.auth.AuthContent
+import com.decoutkhanqindev.dexreader.presentation.screens.auth.components.AuthContent
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.register.RegisterUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog

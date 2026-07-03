@@ -22,7 +22,6 @@ class BaselineProfileGenerator {
     pressHome()
     startActivityAndWait()
 
-    // Wait for the real content column (not shimmer) — contentDescription set in HomeContent
     device.wait(Until.hasObject(By.desc("home_feed")), 10_000)
 
     repeat(3) { i ->

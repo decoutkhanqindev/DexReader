@@ -63,7 +63,9 @@ private fun HorizontalMangaListPreview() {
           year = "1997",
           availableLanguages = persistentListOf(),
           latestChapter = "1100",
-          updatedAt = "2024-01-01"
+          updatedAt = "2024-01-01",
+          rating = "9.1",
+          follows = "2.3M",
         ),
         MangaModel(
           id = "manga-002",
@@ -78,7 +80,9 @@ private fun HorizontalMangaListPreview() {
           year = "1999",
           availableLanguages = persistentListOf(),
           latestChapter = "700",
-          updatedAt = "2014-11-10"
+          updatedAt = "2014-11-10",
+          rating = "8.7",
+          follows = "1.8M",
         )
       ),
       modifier = Modifier

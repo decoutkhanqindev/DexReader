@@ -45,8 +45,6 @@ class UserRepositoryImpl @Inject constructor(
         } catch (c: CancellationException) {
           throw c
         } catch (e: Exception) {
-          // Best-effort rollback: delete the auth account so the user can retry registration.
-          // Swallow deletion failure — the original Firestore write failure is the one to surface.
           try {
             authSource.deleteCurrentUser()
           } catch (c: CancellationException) {

@@ -1,40 +1,46 @@
-package com.decoutkhanqindev.dexreader.presentation.screens.auth
+package com.decoutkhanqindev.dexreader.presentation.screens.auth.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.error.UserError
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
-private val EmailKeyboardOptions = KeyboardOptions(
-  keyboardType = KeyboardType.Email,
-  imeAction = ImeAction.Next,
-)
-
 @Composable
-fun EmailInputField(
+fun PasswordInputField(
   value: String,
+  isConfirmed: Boolean = false,
   error: UserError? = null,
   modifier: Modifier = Modifier,
   onValueChange: (String) -> Unit,
 ) {
-  // OutlinedTextFieldDefaults.colors() is @Composable so it cannot be wrapped in remember {}.
-  // Consolidating into a single colorScheme read avoids repeated MaterialTheme.colorScheme lookups.
+  val keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next)
+  val passwordTransformation = remember { PasswordVisualTransformation() }
+  var isShowPassword by remember { mutableStateOf(false) }
   val colorScheme = MaterialTheme.colorScheme
   val colors = OutlinedTextFieldDefaults.colors(
     focusedContainerColor = colorScheme.surfaceContainer,
@@ -54,17 +60,35 @@ fun EmailInputField(
     modifier = modifier,
     leadingIcon = {
       Icon(
-        imageVector = Icons.Default.Email,
-        contentDescription = stringResource(R.string.email),
+        imageVector = Icons.Default.Lock,
+        contentDescription =
+          if (isConfirmed) stringResource(R.string.confirm_password)
+          else stringResource(R.string.password),
         modifier = Modifier.size(24.dp),
         tint = colorScheme.onPrimaryContainer,
       )
     },
     label = {
       Text(
-        text = stringResource(R.string.email),
+        text =
+          if (isConfirmed) stringResource(R.string.confirm_password)
+          else stringResource(R.string.password),
         style = MaterialTheme.typography.bodyLarge
       )
+    },
+    trailingIcon = {
+      IconButton(onClick = { isShowPassword = !isShowPassword }) {
+        Icon(
+          imageVector =
+            if (isShowPassword) Icons.Default.Visibility
+            else Icons.Default.VisibilityOff,
+          contentDescription =
+            if (isShowPassword) stringResource(R.string.hide_password)
+            else stringResource(R.string.show_password),
+          modifier = Modifier.size(24.dp),
+          tint = colorScheme.onPrimaryContainer,
+        )
+      }
     },
     singleLine = true,
     isError = error != null,
@@ -77,17 +101,20 @@ fun EmailInputField(
       }
     },
     textStyle = MaterialTheme.typography.bodyLarge,
-    keyboardOptions = EmailKeyboardOptions,
+    visualTransformation =
+      if (isShowPassword) VisualTransformation.None
+      else passwordTransformation,
+    keyboardOptions = keyboardOptions,
     colors = colors,
   )
 }
 
 @Preview
 @Composable
-private fun EmailInputFieldPreview() {
+private fun PasswordInputFieldPreview() {
   DexReaderTheme {
-    EmailInputField(
-      value = "nguyenvana@gmail.com",
+    PasswordInputField(
+      value = "myPassword123",
       modifier = Modifier.fillMaxWidth(),
       onValueChange = {}
     )
@@ -96,11 +123,11 @@ private fun EmailInputFieldPreview() {
 
 @Preview
 @Composable
-private fun EmailInputFieldErrorPreview() {
+private fun PasswordInputFieldConfirmedPreview() {
   DexReaderTheme {
-    EmailInputField(
-      value = "invalid-email",
-      error = UserError.Email.Invalid,
+    PasswordInputField(
+      value = "myPassword123",
+      isConfirmed = true,
       modifier = Modifier.fillMaxWidth(),
       onValueChange = {}
     )
@@ -109,11 +136,25 @@ private fun EmailInputFieldErrorPreview() {
 
 @Preview
 @Composable
-private fun EmailInputFieldEmptyErrorPreview() {
+private fun PasswordInputFieldErrorPreview() {
   DexReaderTheme {
-    EmailInputField(
-      value = "",
-      error = UserError.Email.Required,
+    PasswordInputField(
+      value = "123",
+      error = UserError.Password.Weak,
+      modifier = Modifier.fillMaxWidth(),
+      onValueChange = {}
+    )
+  }
+}
+
+@Preview
+@Composable
+private fun PasswordInputFieldMismatchPreview() {
+  DexReaderTheme {
+    PasswordInputField(
+      value = "differentPassword",
+      isConfirmed = true,
+      error = UserError.ConfirmPassword.DoesNotMatch,
       modifier = Modifier.fillMaxWidth(),
       onValueChange = {}
     )

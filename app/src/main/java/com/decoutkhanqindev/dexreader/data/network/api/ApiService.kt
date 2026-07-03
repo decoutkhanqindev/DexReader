@@ -13,6 +13,7 @@ import com.decoutkhanqindev.dexreader.data.network.api.response.chapter.ChapterD
 import com.decoutkhanqindev.dexreader.data.network.api.response.chapter.ChapterListResponse
 import com.decoutkhanqindev.dexreader.data.network.api.response.manga.MangaDetailsResponse
 import com.decoutkhanqindev.dexreader.data.network.api.response.manga.MangaListResponse
+import com.decoutkhanqindev.dexreader.data.network.api.response.statistics.MangaStatisticsResponse
 import com.decoutkhanqindev.dexreader.data.network.api.response.tag.TagListResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -125,6 +126,11 @@ interface ApiService {
   @GET(ApiEndpoints.AT_HOME_SERVER_ID)
   suspend fun getChapterPages(@Path(ApiPaths.ID) chapterId: String): AtHomeServerResponse
 
+  @GET(ApiEndpoints.MANGA_STATISTICS)
+  suspend fun getMangaStatistics(
+    @Query(ApiQueries.MANGA_IDS) mangaIds: List<String>,
+  ): MangaStatisticsResponse
+
   @GET(ApiEndpoints.MANGA_TAG)
   suspend fun getTagList(): TagListResponse
 
@@ -133,16 +139,14 @@ interface ApiService {
     @Query(ApiQueries.LIMIT) limit: Int = 20,
     @Query(ApiQueries.OFFSET) offset: Int = 0,
     @Query(ApiQueries.INCLUDED_TAGS) tagId: String,
-    // sorting
-    @Query(ApiQueries.ORDER_UPDATED_AT) lastUpdated: String? = null, // latest update
-    @Query(ApiQueries.ORDER_FOLLOWED_COUNT) followedCount: String? = null, // trending
-    @Query(ApiQueries.ORDER_CREATED_AT) createdAt: String? = null, // new release
-    @Query(ApiQueries.ORDER_RATING) rating: String? = null, // top rated
-    // filtering
+    @Query(ApiQueries.ORDER_UPDATED_AT) lastUpdated: String? = null,
+    @Query(ApiQueries.ORDER_FOLLOWED_COUNT) followedCount: String? = null,
+    @Query(ApiQueries.ORDER_CREATED_AT) createdAt: String? = null,
+    @Query(ApiQueries.ORDER_RATING) rating: String? = null,
     @Query(ApiQueries.STATUS)
-    status: List<String> = listOf(MangaStatusParam.ON_GOING.value), // ongoing, completed, hiatus, cancelled
+    status: List<String> = listOf(MangaStatusParam.ON_GOING.value),
     @Query(ApiQueries.CONTENT_RATING)
-    contentRating: List<String> = listOf(MangaContentRatingParam.SAFE.value), // safe, suggestive, erotica
+    contentRating: List<String> = listOf(MangaContentRatingParam.SAFE.value),
     @Query(ApiQueries.INCLUDES)
     includes: List<String> = listOf(
       MangaIncludesParam.COVER_ART.value,

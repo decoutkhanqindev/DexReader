@@ -137,7 +137,9 @@ private fun MangaItemPreview() {
         year = "1997",
         availableLanguages = persistentListOf(),
         latestChapter = "1100",
-        updatedAt = "2024-01-01"
+        updatedAt = "2024-01-01",
+        rating = "8.5",
+        follows = "2.3M",
       ), modifier = Modifier
         .width(194.dp)
         .height(250.dp), onClick = {})

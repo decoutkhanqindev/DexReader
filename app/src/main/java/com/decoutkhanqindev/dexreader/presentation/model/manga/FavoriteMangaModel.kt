@@ -10,4 +10,6 @@ data class FavoriteMangaModel(
   val coverUrl: String,
   val author: String,
   val status: MangaStatusValue,
+  val rating: String,
+  val follows: String,
 )

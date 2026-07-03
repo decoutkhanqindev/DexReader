@@ -22,7 +22,6 @@ class StartupBenchmarks {
   @get:Rule
   val rule = MacrobenchmarkRule()
 
-  // Baseline: profile applied — fails loudly if assets/dexopt/baseline.prof is missing.
   @Test
   fun startupBaselineProfile() = rule.measureRepeated(
     packageName = PACKAGE,
@@ -36,7 +35,6 @@ class StartupBenchmarks {
     device.wait(Until.hasObject(By.desc("home_feed")), FEED_WAIT_MS)
   }
 
-  // A/B control: no profile — compare medians to prove the profile moved the number.
   @Test
   fun startupNoCompilation() = rule.measureRepeated(
     packageName = PACKAGE,
@@ -50,7 +48,6 @@ class StartupBenchmarks {
     device.wait(Until.hasObject(By.desc("home_feed")), FEED_WAIT_MS)
   }
 
-  // Scroll perf: P95 frameOverrunMs is the headline number (negative = on time).
   @Test
   fun feedScrollPerformance() = rule.measureRepeated(
     packageName = PACKAGE,

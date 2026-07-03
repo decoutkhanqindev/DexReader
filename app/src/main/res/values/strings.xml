@@ -111,6 +111,9 @@
   <string name="year">Year: %s</string>
   <string name="last_updated">Last updated: %s</string>
   <string name="content_rating">Content Rating: %s</string>
+  <string name="rating">Rating: ★ %s/10</string>
+  <string name="rating_compact">★ %s</string>
+  <string name="follows">Follows: %s</string>
   <string name="summary">Summary</string>
   <string name="chapters">Chapters</string>
   <string name="all_chapters_loaded">All chapters loaded</string>

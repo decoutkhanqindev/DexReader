@@ -60,6 +60,15 @@ fun MangaInfo(
       maxLines = 1,
       style = MaterialTheme.typography.labelSmall,
     )
+    if (manga.rating.isNotEmpty()) {
+      Text(
+        text = stringResource(R.string.rating_compact, manga.rating),
+        color = Color.White.copy(alpha = 0.8f),
+        fontWeight = FontWeight.SemiBold,
+        maxLines = 1,
+        style = MaterialTheme.typography.labelSmall,
+      )
+    }
   }
 }
 
@@ -76,7 +85,9 @@ private val previewMangaModel = MangaModel(
   year = "1997",
   availableLanguages = persistentListOf(),
   latestChapter = "1100",
-  updatedAt = "2024-01-01"
+  updatedAt = "2024-01-01",
+  rating = "8.5",
+  follows = "2.3M",
 )
 
 @Preview

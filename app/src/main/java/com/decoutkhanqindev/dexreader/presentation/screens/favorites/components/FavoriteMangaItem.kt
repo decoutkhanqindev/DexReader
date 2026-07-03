@@ -63,7 +63,7 @@ fun FavoriteMangaItem(
         Column(
           modifier = Modifier
             .fillMaxWidth()
-            .height(85.dp)
+            .height(100.dp)
             .background(MaterialTheme.colorScheme.surface.copy(0.8f))
             .padding(horizontal = 4.dp),
           verticalArrangement = Arrangement.Center,
@@ -82,7 +82,7 @@ fun FavoriteMangaItem(
             text = stringResource(R.string.by_author, manga.author),
             fontWeight = FontWeight.Bold,
             fontStyle = FontStyle.Italic,
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyMedium,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.padding(bottom = 4.dp)
@@ -91,11 +91,19 @@ fun FavoriteMangaItem(
             text = stringResource(manga.status.nameRes),
             fontWeight = FontWeight.Bold,
             fontStyle = FontStyle.Italic,
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyMedium,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.padding(bottom = 4.dp)
           )
+          if (manga.rating.isNotEmpty()) {
+            Text(
+              text = stringResource(R.string.rating_compact, manga.rating),
+              fontWeight = FontWeight.Bold,
+              maxLines = 1,
+              style = MaterialTheme.typography.bodyMedium,
+            )
+          }
         }
       }
     }
@@ -113,6 +121,8 @@ private fun FavoriteMangaItemOnGoingPreview() {
         coverUrl = "",
         author = "Eiichiro Oda",
         status = MangaStatusValue.ON_GOING,
+        rating = "9.1",
+        follows = "2.3M",
       ),
       onSelectedManga = {},
       modifier = Modifier
@@ -133,6 +143,8 @@ private fun FavoriteMangaItemCompletedPreview() {
         coverUrl = "",
         author = "Hiromu Arakawa",
         status = MangaStatusValue.COMPLETED,
+        rating = "9.2",
+        follows = "1.1M",
       ),
       onSelectedManga = {},
       modifier = Modifier

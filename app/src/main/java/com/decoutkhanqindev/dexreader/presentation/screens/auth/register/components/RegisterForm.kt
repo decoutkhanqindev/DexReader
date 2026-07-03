@@ -24,9 +24,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.error.UserError
-import com.decoutkhanqindev.dexreader.presentation.screens.auth.EmailInputField
-import com.decoutkhanqindev.dexreader.presentation.screens.auth.NameInputField
-import com.decoutkhanqindev.dexreader.presentation.screens.auth.PasswordInputField
+import com.decoutkhanqindev.dexreader.presentation.screens.auth.components.EmailInputField
+import com.decoutkhanqindev.dexreader.presentation.screens.auth.components.NameInputField
+import com.decoutkhanqindev.dexreader.presentation.screens.auth.components.PasswordInputField
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme

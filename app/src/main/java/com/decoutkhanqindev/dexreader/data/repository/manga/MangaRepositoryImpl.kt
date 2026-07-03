@@ -18,7 +18,8 @@ class MangaRepositoryImpl @Inject constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       block = {
-        apiService.getLatestUpdateMangaList().data?.mapNotNull { it.toManga(BuildConfig.UPLOAD_URL) }
+        apiService.getLatestUpdateMangaList().data
+          ?.mapNotNull { it.toManga(BuildConfig.UPLOAD_URL) }
           ?: emptyList()
       },
       catch = { it.toDomainException() }
@@ -28,7 +29,8 @@ class MangaRepositoryImpl @Inject constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       block = {
-        apiService.getTrendingMangaList().data?.mapNotNull { it.toManga(BuildConfig.UPLOAD_URL) }
+        apiService.getTrendingMangaList().data
+          ?.mapNotNull { it.toManga(BuildConfig.UPLOAD_URL) }
           ?: emptyList()
       },
       catch = { it.toDomainException() }
@@ -38,7 +40,8 @@ class MangaRepositoryImpl @Inject constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       block = {
-        apiService.getNewReleaseMangaList().data?.mapNotNull { it.toManga(BuildConfig.UPLOAD_URL) }
+        apiService.getNewReleaseMangaList().data
+          ?.mapNotNull { it.toManga(BuildConfig.UPLOAD_URL) }
           ?: emptyList()
       },
       catch = { it.toDomainException() }
@@ -48,7 +51,8 @@ class MangaRepositoryImpl @Inject constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       block = {
-        apiService.getTopRatedMangaList().data?.mapNotNull { it.toManga(BuildConfig.UPLOAD_URL) }
+        apiService.getTopRatedMangaList().data
+          ?.mapNotNull { it.toManga(BuildConfig.UPLOAD_URL) }
           ?: emptyList()
       },
       catch = { it.toDomainException() }

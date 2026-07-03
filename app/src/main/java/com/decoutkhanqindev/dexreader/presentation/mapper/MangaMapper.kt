@@ -8,7 +8,8 @@ import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toManga
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
-import com.decoutkhanqindev.dexreader.util.TimeAgo.toTimeAgo
+import com.decoutkhanqindev.dexreader.util.DataTypeFormatter.toFormattedCount
+import com.decoutkhanqindev.dexreader.util.DataTypeFormatter.toTimeAgo
 import kotlinx.collections.immutable.toPersistentList
 
 object MangaMapper {
@@ -32,5 +33,7 @@ object MangaMapper {
       availableLanguages = availableLanguages.map { it.toMangaLanguageValue() }.toPersistentList(),
       latestChapter = latestChapter ?: Manga.DEFAULT_LAST_CHAPTER,
       updatedAt = updatedAt.toTimeAgo(),
+      rating = rating?.let { String.format(java.util.Locale.US, "%.1f", it) } ?: "",
+      follows = follows?.toFormattedCount() ?: "",
     )
 }

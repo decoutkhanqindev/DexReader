@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.screens.splash
+package com.decoutkhanqindev.dexreader.presentation.screens.splash.components
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -27,40 +27,35 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmer
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-private val enterSpec = tween<Float>(durationMillis = 900, easing = FastOutSlowInEasing)
-private val exitSpec = tween<Float>(durationMillis = 700, easing = FastOutSlowInEasing)
-private const val VISIBLE_PAUSE_MS = 800L
-private const val CYCLE_GAP_MS = 300L
-private const val OFFSET_Y = -80f
-
 @Composable
-fun SplashLogonAndSlogan(modifier: Modifier = Modifier) {
+fun SplashLogoAndSlogan(modifier: Modifier = Modifier) {
+  val enterSpec = tween<Float>(durationMillis = 900, easing = FastOutSlowInEasing)
+  val exitSpec = tween<Float>(durationMillis = 700, easing = FastOutSlowInEasing)
+  val visiblePauseMs = 800L
+  val cycleGapMs = 300L
+  val offsetY = -80f
   val appNameAlpha = remember { Animatable(0f) }
-  val appNameOffsetY = remember { Animatable(OFFSET_Y) }
+  val appNameOffsetY = remember { Animatable(offsetY) }
   val sloganAlpha = remember { Animatable(0f) }
-  val sloganOffsetY = remember { Animatable(OFFSET_Y) }
+  val sloganOffsetY = remember { Animatable(offsetY) }
 
   LaunchedEffect(Unit) {
     while (true) {
-      // 1. App name slides in
       launch { appNameOffsetY.animateTo(0f, enterSpec) }
       appNameAlpha.animateTo(1f, enterSpec)
 
-      // 2. Slogan slides in (after app name completes)
       launch { sloganOffsetY.animateTo(0f, enterSpec) }
       sloganAlpha.animateTo(1f, enterSpec)
 
-      delay(VISIBLE_PAUSE_MS)
+      delay(visiblePauseMs)
 
-      // 3. App name slides out
-      launch { appNameOffsetY.animateTo(OFFSET_Y, exitSpec) }
+      launch { appNameOffsetY.animateTo(offsetY, exitSpec) }
       appNameAlpha.animateTo(0f, exitSpec)
 
-      // 4. Slogan slides out (after app name completes)
-      launch { sloganOffsetY.animateTo(OFFSET_Y, exitSpec) }
+      launch { sloganOffsetY.animateTo(offsetY, exitSpec) }
       sloganAlpha.animateTo(0f, exitSpec)
 
-      delay(CYCLE_GAP_MS)
+      delay(cycleGapMs)
     }
   }
 
