@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,11 +21,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
+import com.decoutkhanqindev.dexreader.presentation.screens.common.animateItemOnAppear
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
 import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
 import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmer
@@ -40,9 +47,14 @@ fun MangaItem(
   var isImageLoaded by remember { mutableStateOf(false) }
 
   Card(
-    modifier = modifier.onScalableClick(shape = CardDefaults.shape) { onClick() },
-    elevation = CardDefaults.cardElevation(8.dp),
-    shape = MaterialTheme.shapes.large,
+    modifier = modifier
+      .animateItemOnAppear()
+      .onScalableClick(shape = MaterialTheme.shapes.medium) { onClick() },
+    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+    shape = MaterialTheme.shapes.medium,
+    colors = CardDefaults.cardColors(
+      containerColor = MaterialTheme.colorScheme.surfaceVariant
+    )
   ) {
     Box(
       modifier = Modifier
@@ -56,18 +68,51 @@ fun MangaItem(
         onImageLoaded = { isImageLoaded = true }
       )
 
+      // Modern Gradient Overlay
+      Box(
+        modifier = Modifier
+          .fillMaxSize()
+          .background(
+            brush = Brush.verticalGradient(
+              colors = listOf(
+                Color.Transparent,
+                Color.Black.copy(alpha = 0.1f),
+                Color.Black.copy(alpha = 0.8f),
+                Color.Black
+              ),
+              startY = 350f
+            )
+          )
+      )
+
+      // Status Badge
+      Surface(
+        modifier = Modifier
+          .align(Alignment.TopEnd)
+          .padding(8.dp),
+        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.9f),
+        shape = MaterialTheme.shapes.small,
+        tonalElevation = 4.dp
+      ) {
+        Text(
+          text = stringResource(item.status.nameRes).uppercase(),
+          modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+          style = MaterialTheme.typography.labelSmall,
+          fontWeight = FontWeight.Black,
+          color = MaterialTheme.colorScheme.onPrimaryContainer
+        )
+      }
+
       Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Bottom,
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.Start,
       ) {
         MangaInfo(
           manga = item,
           modifier = Modifier
             .fillMaxWidth()
-            .height(100.dp)
-            .background(MaterialTheme.colorScheme.surface.copy(0.8f))
-            .padding(horizontal = 4.dp)
+            .padding(12.dp),
         )
       }
     }
@@ -97,6 +142,6 @@ private fun MangaItemPreview() {
         follows = "2.3M",
       ), modifier = Modifier
         .width(194.dp)
-        .height(265.dp), onClick = {})
+        .height(250.dp), onClick = {})
   }
 }

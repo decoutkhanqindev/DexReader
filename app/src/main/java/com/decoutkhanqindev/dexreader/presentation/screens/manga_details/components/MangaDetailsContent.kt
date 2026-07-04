@@ -3,15 +3,20 @@ package com.decoutkhanqindev.dexreader.presentation.screens.manga_details.compon
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,7 +39,6 @@ import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryMode
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
-import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.ListLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
@@ -121,46 +125,55 @@ fun MangaDetailsContent(
           )
 
           LazyColumn(
-            modifier = Modifier
-              .fillMaxSize()
-              .blurBackground(
-                topAlpha = 0.7f,
-                bottomAlpha = 1f,
-              ),
+            modifier = Modifier.fillMaxSize(),
             state = lazyListState,
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
           ) {
             item {
-              MangaInfoSection(
-                manga = manga,
+              Box(
                 modifier = Modifier
                   .fillMaxWidth()
-                  .padding(4.dp)
-                  .padding(top = 8.dp, bottom = 16.dp)
+                  .height(350.dp)
               )
             }
 
             item {
-              MangaSummarySection(
-                manga = manga,
-                modifier = Modifier
-                  .fillMaxWidth()
-                  .padding(bottom = 16.dp),
-                onCategoryItemClick = onCategoryItemClick
-              )
-            }
+              Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = MaterialTheme.shapes.extraLarge,
+                tonalElevation = 4.dp,
+                color = MaterialTheme.colorScheme.surface
+              ) {
+                Column(
+                  modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                  horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                  MangaInfoSection(
+                    manga = manga,
+                    modifier = Modifier.fillMaxWidth()
+                  )
 
-            item {
-              MangaChaptersHeader(
-                selectedLanguage = chapterLanguage,
-                languageList = availableLanguageList,
-                modifier = Modifier
-                  .fillMaxWidth()
-                  .padding(bottom = 12.dp)
-                  .padding(horizontal = 4.dp),
-                onLanguageItemClick = onLanguageItemClick
-              )
+                  MangaSummarySection(
+                    manga = manga,
+                    modifier = Modifier
+                      .fillMaxWidth()
+                      .padding(top = 16.dp),
+                    onCategoryItemClick = onCategoryItemClick
+                  )
+
+                  MangaChaptersHeader(
+                    selectedLanguage = chapterLanguage,
+                    languageList = availableLanguageList,
+                    modifier = Modifier
+                      .fillMaxWidth()
+                      .padding(top = 24.dp, bottom = 12.dp),
+                    onLanguageItemClick = onLanguageItemClick
+                  )
+                }
+              }
             }
 
             when (mangaChaptersUiState) {

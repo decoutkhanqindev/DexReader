@@ -4,4 +4,5 @@ object FirestoreCollections {
   const val USERS = "users"
   const val FAVORITES = "favorites"
   const val HISTORY = "history"
+  const val STATISTICS = "statistics"
 }

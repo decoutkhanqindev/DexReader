@@ -10,6 +10,7 @@
   <string name="category_menu_item">Categories</string>
   <string name="favorite_menu_item">Favorites</string>
   <string name="history_menu_item">History</string>
+  <string name="statistics_menu_item">Statistics</string>
   <string name="profile_menu_item">Profile</string>
   <string name="settings_menu_item">Settings</string>
 
@@ -156,6 +157,13 @@
   <string name="you_have_removed_from_history_successfully">You have removed from history successfully.</string>
   <string name="removed_from_history_failed">Removed from history failed. Please try again.</string>
   <string name="view_details_or_continue">View Details or Continue?</string>
+
+  <!-- Statistics Screen -->
+  <string name="daily_reading_time">Daily Reading Time</string>
+  <string name="weekly_reading_time">Weekly Reading Time</string>
+  <string name="total_reading_time">Total Reading Time</string>
+  <string name="minutes_suffix">%d min</string>
+  <string name="hours_suffix">%d h</string>
 
   <!-- Profile Screen -->
   <string name="please_sign_in_to_view_your_profile">Please sign in to view your profile.</string>

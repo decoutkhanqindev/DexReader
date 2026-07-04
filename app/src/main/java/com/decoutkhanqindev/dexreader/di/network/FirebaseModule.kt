@@ -8,6 +8,8 @@ import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.history.Fi
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.history.FirebaseHistoryFirestoreSourceImpl
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.user.FirebaseUserFirestoreSource
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.user.FirebaseUserFirestoreSourceImpl
+import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.statistics.FirebaseStatisticsFirestoreSource
+import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.statistics.FirebaseStatisticsFirestoreSourceImpl
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
@@ -50,4 +52,10 @@ object FirebaseModule {
   fun provideFirebaseHistoryFirestoreSource(
     impl: FirebaseHistoryFirestoreSourceImpl,
   ): FirebaseHistoryFirestoreSource = impl
+
+  @Provides
+  @Singleton
+  fun provideFirebaseStatisticsFirestoreSource(
+    impl: FirebaseStatisticsFirestoreSourceImpl,
+  ): FirebaseStatisticsFirestoreSource = impl
 }

@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -31,42 +32,41 @@ fun MangaInfo(
 ) {
   Column(
     modifier = modifier,
-    verticalArrangement = Arrangement.Center,
-    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.spacedBy(2.dp),
+    horizontalAlignment = Alignment.Start,
   ) {
     Text(
       text = manga.title,
-      modifier = Modifier.padding(bottom = 4.dp),
-      fontWeight = FontWeight.ExtraBold,
-      textAlign = TextAlign.Center,
+      color = Color.White,
+      fontWeight = FontWeight.Bold,
+      textAlign = TextAlign.Start,
       overflow = TextOverflow.Ellipsis,
-      maxLines = 1,
+      maxLines = 2,
       style = MaterialTheme.typography.titleMedium,
     )
     Text(
-      text = stringResource(R.string.by_author, manga.author),
-      modifier = Modifier.padding(bottom = 4.dp),
-      fontStyle = FontStyle.Italic,
-      fontWeight = FontWeight.Bold,
+      text = manga.author,
+      color = Color.White.copy(alpha = 0.8f),
+      fontWeight = FontWeight.Medium,
       overflow = TextOverflow.Ellipsis,
       maxLines = 1,
-      style = MaterialTheme.typography.bodyMedium,
+      style = MaterialTheme.typography.labelMedium,
     )
     Text(
       text = stringResource(manga.status.nameRes),
-      modifier = Modifier.padding(bottom = 4.dp),
-      fontStyle = FontStyle.Italic,
-      fontWeight = FontWeight.Bold,
+      color = MaterialTheme.colorScheme.primaryContainer,
+      fontWeight = FontWeight.SemiBold,
       overflow = TextOverflow.Ellipsis,
       maxLines = 1,
-      style = MaterialTheme.typography.bodyMedium,
+      style = MaterialTheme.typography.labelSmall,
     )
     if (manga.rating.isNotEmpty()) {
       Text(
         text = stringResource(R.string.rating_compact, manga.rating),
-        fontWeight = FontWeight.Bold,
+        color = Color.White.copy(alpha = 0.8f),
+        fontWeight = FontWeight.SemiBold,
         maxLines = 1,
-        style = MaterialTheme.typography.bodyMedium,
+        style = MaterialTheme.typography.labelSmall,
       )
     }
   }
@@ -98,7 +98,7 @@ private fun MangaInfoPreview() {
       manga = previewMangaModel,
       modifier = Modifier
         .fillMaxWidth()
-        .height(100.dp)
+        .height(85.dp)
     )
   }
 }

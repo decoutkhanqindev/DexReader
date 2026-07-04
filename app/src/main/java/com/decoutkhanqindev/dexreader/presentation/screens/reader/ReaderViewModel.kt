@@ -19,6 +19,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.manga.cache.ClearExpiredCac
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.cache.GetChapterCacheUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.history.ObserveHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.history.UpsertHistoryUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.user.statistics.IncrementReadingDurationUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.ChapterPagesMapper.toChapterPagesModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
@@ -50,6 +51,7 @@ class ReaderViewModel @Inject constructor(
   private val getMangaDetailsUseCase: GetMangaDetailsUseCase,
   private val observeHistoryUseCase: ObserveHistoryUseCase,
   private val upsertHistoryUseCase: UpsertHistoryUseCase,
+  private val incrementReadingDurationUseCase: IncrementReadingDurationUseCase,
 ) : ViewModel() {
   private val route: NavRoute.Reader = savedStateHandle.toRoute()
   private val chapterIdFromArg: String = route.chapterId
@@ -84,6 +86,8 @@ class ReaderViewModel @Inject constructor(
   private var isObservingReadingHistoryList = false
   private var currentReadingHistory: ReadingHistory? = null
   private var observeHistoryJob: Job? = null
+  private var readingTimerJob: Job? = null
+  private var lastUpdateTime: Long = System.currentTimeMillis()
 
   private var _isFetchChapterDetailsDone = MutableStateFlow(false)
   private var _isFetchMangaDetailsDone = MutableStateFlow(false)
@@ -94,6 +98,32 @@ class ReaderViewModel @Inject constructor(
     observeHistoryFirstPage()
     fetchChapterDetails()
     observeIsFetchDataDone()
+    startReadingTimer()
+  }
+
+  private fun startReadingTimer() {
+    readingTimerJob?.cancel()
+    lastUpdateTime = System.currentTimeMillis()
+    readingTimerJob = viewModelScope.launch {
+      while (true) {
+        kotlinx.coroutines.delay(STATS_UPDATE_INTERVAL_MS)
+        updateReadingDuration()
+      }
+    }
+  }
+
+  private fun updateReadingDuration() {
+    val currentTime = System.currentTimeMillis()
+    val duration = currentTime - lastUpdateTime
+    if (duration < MIN_DURATION_TO_SAVE_MS) return
+
+    val userId = _userId.value ?: return
+    lastUpdateTime = currentTime
+
+    viewModelScope.launch {
+      incrementReadingDurationUseCase(userId, duration)
+        .onFailure { Timber.tag(TAG).e("Failed to update reading duration: ${it.message}") }
+    }
   }
 
   private fun observeIsFetchDataDone() {
@@ -585,12 +615,17 @@ class ReaderViewModel @Inject constructor(
   }
 
   override fun onCleared() {
+    updateReadingDuration()
     cancelObserveHistoryJob()
+    readingTimerJob?.cancel()
     super.onCleared()
   }
 
   companion object {
     private const val CHAPTER_LIST_PER_PAGE_SIZE = 20
     private const val READING_HISTORY_LIST_PER_PAGE_SIZE = 50
+    private const val STATS_UPDATE_INTERVAL_MS = 30_000L // 30 seconds
+    private const val MIN_DURATION_TO_SAVE_MS = 1_000L
+    private const val TAG = "ReaderViewModel"
   }
 }

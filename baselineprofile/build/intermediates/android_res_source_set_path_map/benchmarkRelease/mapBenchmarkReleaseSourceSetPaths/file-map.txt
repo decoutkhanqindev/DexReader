@@ -1,7 +1,0 @@
-com.decoutkhanqindev.dexreader.baselineprofile-pngs-0 C:\Android Development\dex_reader\DexReader\baselineprofile\build\generated\res\pngs\benchmarkRelease
-com.decoutkhanqindev.dexreader.baselineprofile-updated_navigation_xml-1 C:\Android Development\dex_reader\DexReader\baselineprofile\build\generated\updated_navigation_xml\benchmarkRelease
-com.decoutkhanqindev.dexreader.baselineprofile-packageBenchmarkReleaseResources-2 C:\Android Development\dex_reader\DexReader\baselineprofile\build\intermediates\incremental\benchmarkRelease\packageBenchmarkReleaseResources\merged.dir
-com.decoutkhanqindev.dexreader.baselineprofile-packageBenchmarkReleaseResources-3 C:\Android Development\dex_reader\DexReader\baselineprofile\build\intermediates\incremental\benchmarkRelease\packageBenchmarkReleaseResources\stripped.dir
-com.decoutkhanqindev.dexreader.baselineprofile-benchmarkRelease-4 C:\Android Development\dex_reader\DexReader\baselineprofile\build\intermediates\merged_res\benchmarkRelease\mergeBenchmarkReleaseResources
-com.decoutkhanqindev.dexreader.baselineprofile-benchmarkRelease-5 C:\Android Development\dex_reader\DexReader\baselineprofile\src\benchmarkRelease\res
-com.decoutkhanqindev.dexreader.baselineprofile-main-6 C:\Android Development\dex_reader\DexReader\baselineprofile\src\main\res

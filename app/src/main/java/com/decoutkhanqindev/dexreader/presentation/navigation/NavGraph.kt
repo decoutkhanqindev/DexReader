@@ -19,6 +19,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.history.HistoryScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.home.HomeScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.MangaDetailsScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.ProfileScreen
+import com.decoutkhanqindev.dexreader.presentation.screens.statistics.StatisticsScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.reader.ReaderScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.search.SearchScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.settings.SettingsScreen
@@ -193,6 +194,31 @@ fun NavGraph(
           },
           onNavigateToMangaDetailScreen = { mangaId ->
             navController.navigateTo(NavRoute.MangaDetails(mangaId))
+          },
+          modifier = Modifier.fillMaxSize()
+        )
+      }
+    }
+
+    // Statistics Screen - slides from RIGHT
+    slideFromRightTransitions().let { transitions ->
+      composable<NavRoute.Statistics>(
+        enterTransition = transitions.enter,
+        exitTransition = transitions.exit,
+        popEnterTransition = transitions.popEnter,
+        popExitTransition = transitions.popExit
+      ) {
+        StatisticsScreen(
+          isUserLoggedIn = isUserLoggedIn,
+          currentUser = currentUser,
+          onNavigateToLoginScreen = {
+            navController.navigateClearStack<NavRoute.Statistics>(NavRoute.Login)
+          },
+          onNavigateToMenuItemScreen = { item ->
+            navController.navigatePreserveState(item.toNavRoute())
+          },
+          onNavigateToSearchScreen = {
+            navController.navigateToWithDebounce(NavRoute.Search)
           },
           modifier = Modifier.fillMaxSize()
         )
