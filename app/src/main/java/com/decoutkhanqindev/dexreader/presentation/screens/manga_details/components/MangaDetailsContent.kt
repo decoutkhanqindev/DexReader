@@ -5,12 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -39,6 +36,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryMode
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
+import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.ListLoadingIndicator
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
@@ -59,326 +57,331 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MangaDetailsContent(
-  mangaDetailsUiState: MangaDetailsUiState,
-  mangaChaptersUiState: BasePaginationUiState<ChapterModel>,
-  isFavorite: Boolean,
-  chapterLanguage: MangaLanguageValue,
-  availableLanguageList: ImmutableList<MangaLanguageValue>,
-  readingHistoryList: ImmutableList<ReadingHistoryModel> = persistentListOf(),
-  startedChapterId: String? = null,
-  continueChapter: ReadingHistoryModel? = null,
-  modifier: Modifier = Modifier,
-  onReadingClick: (
-    chapterId: String,
-    lastReadPage: Int,
-    mangaId: String,
-  ) -> Unit,
-  onFavoriteClick: () -> Unit,
-  onLanguageItemClick: (MangaLanguageValue) -> Unit,
-  onCategoryItemClick: (
-    categoryId: String,
-    categoryTitle: String,
-  ) -> Unit,
-  onChapterItemClick: (
-    chapterId: String,
-    lastReadPage: Int,
-    mangaId: String,
-  ) -> Unit,
-  onFetchChapterListNextPage: () -> Unit,
-  onRetryFetchChapterListNextPage: () -> Unit,
-  onRetryFetchChapterListFirstPage: () -> Unit,
-  onRetry: () -> Unit,
+    mangaDetailsUiState: MangaDetailsUiState,
+    mangaChaptersUiState: BasePaginationUiState<ChapterModel>,
+    isFavorite: Boolean,
+    chapterLanguage: MangaLanguageValue,
+    availableLanguageList: ImmutableList<MangaLanguageValue>,
+    readingHistoryList: ImmutableList<ReadingHistoryModel> = persistentListOf(),
+    startedChapterId: String? = null,
+    continueChapter: ReadingHistoryModel? = null,
+    modifier: Modifier = Modifier,
+    onReadingClick: (
+        chapterId: String,
+        lastReadPage: Int,
+        mangaId: String,
+    ) -> Unit,
+    onFavoriteClick: () -> Unit,
+    onLanguageItemClick: (MangaLanguageValue) -> Unit,
+    onCategoryItemClick: (
+        categoryId: String,
+        categoryTitle: String,
+    ) -> Unit,
+    onChapterItemClick: (
+        chapterId: String,
+        lastReadPage: Int,
+        mangaId: String,
+    ) -> Unit,
+    onFetchChapterListNextPage: () -> Unit,
+    onRetryFetchChapterListNextPage: () -> Unit,
+    onRetryFetchChapterListFirstPage: () -> Unit,
+    onRetry: () -> Unit,
 ) {
-  val lazyListState = rememberLazyListState()
-  val coroutineScope = rememberCoroutineScope()
-  var isShowErrorDialog by remember(mangaDetailsUiState) { mutableStateOf(mangaDetailsUiState is MangaDetailsUiState.Error) }
+    val lazyListState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+    var isShowErrorDialog by remember(mangaDetailsUiState) { mutableStateOf(mangaDetailsUiState is MangaDetailsUiState.Error) }
 
-  Box(modifier = modifier) {
-    when (mangaDetailsUiState) {
-      MangaDetailsUiState.Loading -> LoadingScreen(modifier = Modifier.fillMaxSize())
+    Box(modifier = modifier) {
+        when (mangaDetailsUiState) {
+            MangaDetailsUiState.Loading -> LoadingScreen(modifier = Modifier.fillMaxSize())
 
-      is MangaDetailsUiState.Error -> {
-        if (isShowErrorDialog) {
-          AlertDialog(
-            title = stringResource(mangaDetailsUiState.error.messageRes),
-            onConfirmClick = {
-              isShowErrorDialog = false
-              onRetry()
-            },
-            onDismissClick = { isShowErrorDialog = false },
-          )
-        }
-      }
-
-      is MangaDetailsUiState.Success -> {
-        val manga = mangaDetailsUiState.manga
-        val mangaCoverUrl = manga.coverUrl
-        val latestChapter = manga.latestChapter
-        val historyByChapterId = remember(readingHistoryList) {
-          readingHistoryList.associateBy { it.chapterId }
-        }
-
-        Box(modifier = Modifier.fillMaxSize()) {
-          MangaDetailsBackground(
-            url = mangaCoverUrl,
-            modifier = Modifier.fillMaxSize()
-          )
-
-          LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            state = lazyListState,
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally,
-          ) {
-            item {
-              Box(
-                modifier = Modifier
-                  .fillMaxWidth()
-                  .height(350.dp)
-              )
-            }
-
-            item {
-              Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = MaterialTheme.shapes.extraLarge,
-                tonalElevation = 4.dp,
-                color = MaterialTheme.colorScheme.surface
-              ) {
-                Column(
-                  modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                  horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                  MangaInfoSection(
-                    manga = manga,
-                    modifier = Modifier.fillMaxWidth()
-                  )
-
-                  MangaSummarySection(
-                    manga = manga,
-                    modifier = Modifier
-                      .fillMaxWidth()
-                      .padding(top = 16.dp),
-                    onCategoryItemClick = onCategoryItemClick
-                  )
-
-                  MangaChaptersHeader(
-                    selectedLanguage = chapterLanguage,
-                    languageList = availableLanguageList,
-                    modifier = Modifier
-                      .fillMaxWidth()
-                      .padding(top = 24.dp, bottom = 12.dp),
-                    onLanguageItemClick = onLanguageItemClick
-                  )
+            is MangaDetailsUiState.Error -> {
+                if (isShowErrorDialog) {
+                    AlertDialog(
+                        title = stringResource(mangaDetailsUiState.error.messageRes),
+                        onConfirmClick = {
+                            isShowErrorDialog = false
+                            onRetry()
+                        },
+                        onDismissClick = { isShowErrorDialog = false },
+                    )
                 }
-              }
             }
 
-            when (mangaChaptersUiState) {
-              BasePaginationUiState.FirstPageLoading -> item {
-                ListLoadingIndicator(modifier = Modifier.fillMaxSize())
-              }
+            is MangaDetailsUiState.Success -> {
+                val manga = mangaDetailsUiState.manga
+                val mangaCoverUrl = manga.coverUrl
+                val latestChapter = manga.latestChapter
+                val historyByChapterId = remember(readingHistoryList) {
+                    readingHistoryList.associateBy { it.chapterId }
+                }
 
-              is BasePaginationUiState.FirstPageError -> item {
-                LoadPageErrorMessage(
-                  message = stringResource(R.string.something_went_wrong_while_loading_chapters_please_try_again),
-                  modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 4.dp),
-                  onRetryClick = onRetryFetchChapterListFirstPage
-                )
-              }
-
-              is BasePaginationUiState.Content -> {
-                val chapterList = mangaChaptersUiState.currentList
-                val nextPageState = mangaChaptersUiState.nextPageState
-
-                if (chapterList.isEmpty()) {
-                  item {
-                    Text(
-                      text = stringResource(R.string.no_chapters_available),
-                      modifier = Modifier.fillMaxWidth(),
-                      fontStyle = FontStyle.Italic,
-                      fontWeight = FontWeight.Bold,
-                      textAlign = TextAlign.Center,
-                      style = MaterialTheme.typography.bodyLarge,
+                Box(modifier = Modifier.fillMaxSize()) {
+                    MangaDetailsBackground(
+                        url = mangaCoverUrl,
+                        modifier = Modifier.fillMaxSize()
                     )
-                  }
-                } else {
-                  items(chapterList, key = { it.id }) { chapter ->
-                    MangaChapterItem(
-                      lastChapter = latestChapter,
-                      chapter = chapter,
-                      readingHistory = historyByChapterId[chapter.id],
-                      modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 12.dp)
-                        .padding(horizontal = 4.dp),
-                      onChapterClick = onChapterItemClick,
-                    )
-                  }
 
-                  item {
-                    when (nextPageState) {
-                      BaseNextPageState.LOADING -> ListLoadingIndicator(
+                    LazyColumn(
                         modifier = Modifier
-                          .fillMaxWidth()
-                          .padding(bottom = 12.dp)
-                      )
+                            .fillMaxSize()
+                            .blurBackground(
+                                topAlpha = 0.7f,
+                                bottomAlpha = 1f,
+                            ),
+                        state = lazyListState,
+                        verticalArrangement = Arrangement.Top,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(350.dp)
+                            )
+                        }
 
-                      BaseNextPageState.ERROR -> LoadPageErrorMessage(
-                        message = stringResource(R.string.can_t_load_next_chapter_page_please_try_again),
-                        modifier = Modifier
-                          .fillMaxWidth()
-                          .padding(top = 8.dp),
-                        onRetryClick = onRetryFetchChapterListNextPage
-                      )
+                        item {
+                            Surface(
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = MaterialTheme.shapes.extraLarge,
+                                tonalElevation = 4.dp,
+                                color = MaterialTheme.colorScheme.surface
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    MangaInfoSection(
+                                        manga = manga,
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
 
-                      BaseNextPageState.IDLE -> LoadMoreMessage(
-                        modifier = Modifier
-                          .fillMaxWidth()
-                          .padding(horizontal = 8.dp)
-                          .padding(bottom = 12.dp),
-                        onClick = onFetchChapterListNextPage
-                      )
+                                    MangaSummarySection(
+                                        manga = manga,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(top = 16.dp),
+                                        onCategoryItemClick = onCategoryItemClick
+                                    )
 
-                      BaseNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
-                        title = stringResource(R.string.all_chapters_loaded),
-                        modifier = Modifier
-                          .fillMaxWidth()
-                          .padding(horizontal = 8.dp)
-                          .padding(bottom = 12.dp)
-                      )
+                                    MangaChaptersHeader(
+                                        selectedLanguage = chapterLanguage,
+                                        languageList = availableLanguageList,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(top = 24.dp, bottom = 12.dp),
+                                        onLanguageItemClick = onLanguageItemClick
+                                    )
+                                }
+                            }
+                        }
+
+                        when (mangaChaptersUiState) {
+                            BasePaginationUiState.FirstPageLoading -> item {
+                                ListLoadingIndicator(modifier = Modifier.fillMaxSize())
+                            }
+
+                            is BasePaginationUiState.FirstPageError -> item {
+                                LoadPageErrorMessage(
+                                    message = stringResource(R.string.something_went_wrong_while_loading_chapters_please_try_again),
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(horizontal = 4.dp),
+                                    onRetryClick = onRetryFetchChapterListFirstPage
+                                )
+                            }
+
+                            is BasePaginationUiState.Content -> {
+                                val chapterList = mangaChaptersUiState.currentList
+                                val nextPageState = mangaChaptersUiState.nextPageState
+
+                                if (chapterList.isEmpty()) {
+                                    item {
+                                        Text(
+                                            text = stringResource(R.string.no_chapters_available),
+                                            modifier = Modifier.fillMaxWidth(),
+                                            fontStyle = FontStyle.Italic,
+                                            fontWeight = FontWeight.Bold,
+                                            textAlign = TextAlign.Center,
+                                            style = MaterialTheme.typography.bodyLarge,
+                                        )
+                                    }
+                                } else {
+                                    items(chapterList, key = { it.id }) { chapter ->
+                                        MangaChapterItem(
+                                            lastChapter = latestChapter,
+                                            chapter = chapter,
+                                            readingHistory = historyByChapterId[chapter.id],
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(bottom = 12.dp)
+                                                .padding(horizontal = 4.dp),
+                                            onChapterClick = onChapterItemClick,
+                                        )
+                                    }
+
+                                    item {
+                                        when (nextPageState) {
+                                            BaseNextPageState.LOADING -> ListLoadingIndicator(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(bottom = 12.dp)
+                                            )
+
+                                            BaseNextPageState.ERROR -> LoadPageErrorMessage(
+                                                message = stringResource(R.string.can_t_load_next_chapter_page_please_try_again),
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(top = 8.dp),
+                                                onRetryClick = onRetryFetchChapterListNextPage
+                                            )
+
+                                            BaseNextPageState.IDLE -> LoadMoreMessage(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(horizontal = 8.dp)
+                                                    .padding(bottom = 12.dp),
+                                                onClick = onFetchChapterListNextPage
+                                            )
+
+                                            BaseNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
+                                                title = stringResource(R.string.all_chapters_loaded),
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(horizontal = 8.dp)
+                                                    .padding(bottom = 12.dp)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        item {
+                            Spacer(modifier = Modifier.height(70.dp))
+                        }
                     }
-                  }
+
+                    ReadingAndFavoriteSection(
+                        itemsSize = (mangaChaptersUiState as? BasePaginationUiState.Content<ChapterModel>)?.currentList?.size
+                            ?: 0,
+                        listState = lazyListState,
+                        isFavorite = isFavorite,
+                        startedChapterId = startedChapterId,
+                        mangaId = manga.id,
+                        continueChapter = continueChapter,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.BottomCenter),
+                        onMoveToTopClick = {
+                            coroutineScope.launch {
+                                lazyListState.animateScrollToItem(0)
+                            }
+                        },
+                        onReadingClick = onReadingClick,
+                        onFavoriteClick = onFavoriteClick,
+                    )
                 }
-              }
             }
-
-            item {
-              Spacer(modifier = Modifier.height(70.dp))
-            }
-          }
-
-          ReadingAndFavoriteSection(
-            itemsSize = (mangaChaptersUiState as? BasePaginationUiState.Content<ChapterModel>)?.currentList?.size
-              ?: 0,
-            listState = lazyListState,
-            isFavorite = isFavorite,
-            startedChapterId = startedChapterId,
-            mangaId = manga.id,
-            continueChapter = continueChapter,
-            modifier = Modifier
-              .fillMaxWidth()
-              .align(Alignment.BottomCenter),
-            onMoveToTopClick = {
-              coroutineScope.launch {
-                lazyListState.animateScrollToItem(0)
-              }
-            },
-            onReadingClick = onReadingClick,
-            onFavoriteClick = onFavoriteClick,
-          )
         }
-      }
     }
-  }
 }
 
 @Preview
 @Composable
 private fun MangaDetailsContentLoadingPreview() {
-  DexReaderTheme {
-    MangaDetailsContent(
-      mangaDetailsUiState = MangaDetailsUiState.Loading,
-      mangaChaptersUiState = BasePaginationUiState.FirstPageLoading,
-      isFavorite = false,
-      chapterLanguage = MangaLanguageValue.ENGLISH,
-      availableLanguageList = persistentListOf(MangaLanguageValue.ENGLISH),
-      modifier = Modifier.fillMaxSize(),
-      onReadingClick = { _, _, _ -> },
-      onFavoriteClick = {},
-      onLanguageItemClick = {},
-      onCategoryItemClick = { _, _ -> },
-      onChapterItemClick = { _, _, _ -> },
-      onFetchChapterListNextPage = {},
-      onRetryFetchChapterListNextPage = {},
-      onRetryFetchChapterListFirstPage = {},
-      onRetry = {}
-    )
-  }
+    DexReaderTheme {
+        MangaDetailsContent(
+            mangaDetailsUiState = MangaDetailsUiState.Loading,
+            mangaChaptersUiState = BasePaginationUiState.FirstPageLoading,
+            isFavorite = false,
+            chapterLanguage = MangaLanguageValue.ENGLISH,
+            availableLanguageList = persistentListOf(MangaLanguageValue.ENGLISH),
+            modifier = Modifier.fillMaxSize(),
+            onReadingClick = { _, _, _ -> },
+            onFavoriteClick = {},
+            onLanguageItemClick = {},
+            onCategoryItemClick = { _, _ -> },
+            onChapterItemClick = { _, _, _ -> },
+            onFetchChapterListNextPage = {},
+            onRetryFetchChapterListNextPage = {},
+            onRetryFetchChapterListFirstPage = {},
+            onRetry = {}
+        )
+    }
 }
 
 @Preview
 @Composable
 private fun MangaDetailsContentErrorPreview() {
-  DexReaderTheme {
-    MangaDetailsContent(
-      mangaDetailsUiState = MangaDetailsUiState.Error(FeatureError.NetworkUnavailable),
-      mangaChaptersUiState = BasePaginationUiState.FirstPageLoading,
-      isFavorite = false,
-      chapterLanguage = MangaLanguageValue.ENGLISH,
-      availableLanguageList = persistentListOf(MangaLanguageValue.ENGLISH),
-      modifier = Modifier.fillMaxSize(),
-      onReadingClick = { _, _, _ -> },
-      onFavoriteClick = {},
-      onLanguageItemClick = {},
-      onCategoryItemClick = { _, _ -> },
-      onChapterItemClick = { _, _, _ -> },
-      onFetchChapterListNextPage = {},
-      onRetryFetchChapterListNextPage = {},
-      onRetryFetchChapterListFirstPage = {},
-      onRetry = {}
-    )
-  }
+    DexReaderTheme {
+        MangaDetailsContent(
+            mangaDetailsUiState = MangaDetailsUiState.Error(FeatureError.NetworkUnavailable),
+            mangaChaptersUiState = BasePaginationUiState.FirstPageLoading,
+            isFavorite = false,
+            chapterLanguage = MangaLanguageValue.ENGLISH,
+            availableLanguageList = persistentListOf(MangaLanguageValue.ENGLISH),
+            modifier = Modifier.fillMaxSize(),
+            onReadingClick = { _, _, _ -> },
+            onFavoriteClick = {},
+            onLanguageItemClick = {},
+            onCategoryItemClick = { _, _ -> },
+            onChapterItemClick = { _, _, _ -> },
+            onFetchChapterListNextPage = {},
+            onRetryFetchChapterListNextPage = {},
+            onRetryFetchChapterListFirstPage = {},
+            onRetry = {}
+        )
+    }
 }
 
 @Preview
 @Composable
 private fun MangaDetailsContentSuccessPreview() {
-  DexReaderTheme {
-    MangaDetailsContent(
-      mangaDetailsUiState = MangaDetailsUiState.Success(previewManga),
-      mangaChaptersUiState = BasePaginationUiState.Content(
-        currentList = persistentListOf(
-          ChapterModel(
-            id = "c-001",
-            mangaId = "m-001",
-            title = "Romance Dawn",
-            number = "1",
-            volume = "1",
-            publishedAt = "2024-01-01"
-          ),
-          ChapterModel(
-            id = "c-002",
-            mangaId = "m-001",
-            title = "They Call Him 'Straw Hat Luffy'",
-            number = "2",
-            volume = "1",
-            publishedAt = "2024-01-08"
-          ),
-        ),
-        nextPageState = BaseNextPageState.IDLE
-      ),
-      isFavorite = false,
-      chapterLanguage = MangaLanguageValue.ENGLISH,
-      availableLanguageList = persistentListOf(
-        MangaLanguageValue.ENGLISH,
-        MangaLanguageValue.JAPANESE
-      ),
-      startedChapterId = "c-001",
-      modifier = Modifier.fillMaxSize(),
-      onReadingClick = { _, _, _ -> },
-      onFavoriteClick = {},
-      onLanguageItemClick = {},
-      onCategoryItemClick = { _, _ -> },
-      onChapterItemClick = { _, _, _ -> },
-      onFetchChapterListNextPage = {},
-      onRetryFetchChapterListNextPage = {},
-      onRetryFetchChapterListFirstPage = {},
-      onRetry = {}
-    )
-  }
+    DexReaderTheme {
+        MangaDetailsContent(
+            mangaDetailsUiState = MangaDetailsUiState.Success(previewManga),
+            mangaChaptersUiState = BasePaginationUiState.Content(
+                currentList = persistentListOf(
+                    ChapterModel(
+                        id = "c-001",
+                        mangaId = "m-001",
+                        title = "Romance Dawn",
+                        number = "1",
+                        volume = "1",
+                        publishedAt = "2024-01-01"
+                    ),
+                    ChapterModel(
+                        id = "c-002",
+                        mangaId = "m-001",
+                        title = "They Call Him 'Straw Hat Luffy'",
+                        number = "2",
+                        volume = "1",
+                        publishedAt = "2024-01-08"
+                    ),
+                ),
+                nextPageState = BaseNextPageState.IDLE
+            ),
+            isFavorite = false,
+            chapterLanguage = MangaLanguageValue.ENGLISH,
+            availableLanguageList = persistentListOf(
+                MangaLanguageValue.ENGLISH,
+                MangaLanguageValue.JAPANESE
+            ),
+            startedChapterId = "c-001",
+            modifier = Modifier.fillMaxSize(),
+            onReadingClick = { _, _, _ -> },
+            onFavoriteClick = {},
+            onLanguageItemClick = {},
+            onCategoryItemClick = { _, _ -> },
+            onChapterItemClick = { _, _, _ -> },
+            onFetchChapterListNextPage = {},
+            onRetryFetchChapterListNextPage = {},
+            onRetryFetchChapterListFirstPage = {},
+            onRetry = {}
+        )
+    }
 }

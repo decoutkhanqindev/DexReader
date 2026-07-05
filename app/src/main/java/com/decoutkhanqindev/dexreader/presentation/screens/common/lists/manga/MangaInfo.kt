@@ -32,7 +32,7 @@ fun MangaInfo(
 ) {
   Column(
     modifier = modifier,
-    verticalArrangement = Arrangement.spacedBy(2.dp),
+    verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically),
     horizontalAlignment = Alignment.Start,
   ) {
     Text(
@@ -51,14 +51,6 @@ fun MangaInfo(
       overflow = TextOverflow.Ellipsis,
       maxLines = 1,
       style = MaterialTheme.typography.labelMedium,
-    )
-    Text(
-      text = stringResource(manga.status.nameRes),
-      color = MaterialTheme.colorScheme.primaryContainer,
-      fontWeight = FontWeight.SemiBold,
-      overflow = TextOverflow.Ellipsis,
-      maxLines = 1,
-      style = MaterialTheme.typography.labelSmall,
     )
     if (manga.rating.isNotEmpty()) {
       Text(
