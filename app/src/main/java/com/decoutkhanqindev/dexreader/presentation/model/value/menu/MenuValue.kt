@@ -25,4 +25,10 @@ enum class MenuValue(
   STATISTICS(nameRes = R.string.statistics_menu_item, icon = Icons.Default.Timeline),
   PROFILE(nameRes = R.string.profile_menu_item, icon = Icons.Default.Person),
   SETTINGS(nameRes = R.string.settings_menu_item, icon = Icons.Default.Settings);
+
+  companion object {
+    val bottomBarItems by lazy {
+      listOf(HOME, CATEGORIES, FAVORITES, HISTORY, PROFILE)
+    }
+  }
 }

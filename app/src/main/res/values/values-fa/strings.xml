@@ -60,6 +60,8 @@
   <string name="trending">پرطرفدار</string>
   <string name="new_releases">انتشارات جدید</string>
   <string name="top_rated">برترین امتیازها</string>
+  <string name="featured">ویژه</string>
+  <string name="read_now">اکنون بخوانید</string>
   <string name="category_type_genre">ژانر</string>
   <string name="category_type_theme">تم</string>
   <string name="category_type_format">فرمت</string>
