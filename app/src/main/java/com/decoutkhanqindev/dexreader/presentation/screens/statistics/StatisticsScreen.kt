@@ -21,6 +21,7 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseScreen
+import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScreen
 
 @Composable
 fun StatisticsScreen(
@@ -47,31 +48,38 @@ fun StatisticsScreen(
     onNavigateToSearchScreen = onNavigateToSearchScreen,
     modifier = modifier,
   ) {
-    Column(
-      modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp),
-      horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-      Text(
-        text = stringResource(R.string.statistics_menu_item),
-        style = MaterialTheme.typography.headlineMedium
-      )
-      Spacer(modifier = Modifier.height(24.dp))
+    if (isUserLoggedIn) {
+      Column(
+        modifier = Modifier
+          .fillMaxSize()
+          .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+      ) {
+        Text(
+          text = stringResource(R.string.statistics_menu_item),
+          style = MaterialTheme.typography.headlineMedium
+        )
+        Spacer(modifier = Modifier.height(24.dp))
 
-      StatCard(
-        label = stringResource(R.string.daily_reading_time),
-        millis = uiState.dailyTimeMillis
-      )
-      Spacer(modifier = Modifier.height(16.dp))
-      StatCard(
-        label = stringResource(R.string.weekly_reading_time),
-        millis = uiState.weeklyTimeMillis
-      )
-      Spacer(modifier = Modifier.height(16.dp))
-      StatCard(
-        label = stringResource(R.string.total_reading_time),
-        millis = uiState.totalTimeMillis
+        StatCard(
+          label = stringResource(R.string.daily_reading_time),
+          millis = uiState.dailyTimeMillis
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        StatCard(
+          label = stringResource(R.string.weekly_reading_time),
+          millis = uiState.weeklyTimeMillis
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        StatCard(
+          label = stringResource(R.string.total_reading_time),
+          millis = uiState.totalTimeMillis
+        )
+      }
+    } else {
+      IdleScreen(
+        message = stringResource(R.string.please_sign_in_to_view_your_statistics),
+        modifier = Modifier.fillMaxSize()
       )
     }
   }

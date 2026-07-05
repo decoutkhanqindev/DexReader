@@ -4,28 +4,25 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterModel
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
+import com.decoutkhanqindev.dexreader.presentation.screens.common.animateItemOnAppear
 import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
@@ -35,6 +32,7 @@ fun MangaChapterItem(
   chapter: ChapterModel,
   readingHistory: ReadingHistoryModel? = null,
   modifier: Modifier = Modifier,
+  shape: Shape = RectangleShape,
   onChapterClick: (
     chapterId: String,
     lastReadPage: Int,
@@ -47,17 +45,16 @@ fun MangaChapterItem(
     { onChapterClick(chapter.id, readingHistory?.lastReadPage ?: 0, chapter.mangaId) }
   }
 
-  Card(
-    modifier = modifier.onScalableClick(shape = MaterialTheme.shapes.medium) { onChapterClick() },
-    shape = MaterialTheme.shapes.medium,
-    colors = CardDefaults.cardColors(
-      containerColor = MaterialTheme.colorScheme.surfaceContainer
-    ),
-    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+  Surface(
+    modifier = modifier
+      .animateItemOnAppear()
+      .onScalableClick(shape = shape) { onChapterClick() },
+    shape = shape,
+    color = MaterialTheme.colorScheme.surface,
   ) {
     Column(
       modifier = Modifier
-        .fillMaxSize()
+        .fillMaxWidth()
         .padding(16.dp),
       verticalArrangement = Arrangement.spacedBy(4.dp),
       horizontalAlignment = Alignment.Start,

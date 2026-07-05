@@ -165,11 +165,12 @@ object NavTransitions {
     tryNavigate { this.popBackStack() }
   }
 
+  private var lastClickTime = 0L
+
   private fun tryNavigate(
     debounceTime: Long = NAVIGATION_DEBOUNCE_TIME,
     action: () -> Unit,
   ) {
-    var lastClickTime = 0L
     val currentTime = SystemClock.uptimeMillis()
     if (currentTime - lastClickTime >= debounceTime) {
       action()

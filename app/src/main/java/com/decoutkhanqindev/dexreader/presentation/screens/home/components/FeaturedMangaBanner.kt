@@ -7,11 +7,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -25,72 +28,92 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
+import kotlinx.coroutines.delay
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun FeaturedMangaBanner(
-  manga: MangaModel,
+  mangaList: ImmutableList<MangaModel>,
   modifier: Modifier = Modifier,
   onItemClick: (String) -> Unit,
 ) {
-  Box(modifier = modifier) {
-    AsyncImage(
-      model = manga.coverUrl,
-      contentDescription = manga.title,
-      modifier = Modifier.fillMaxSize(),
-      contentScale = ContentScale.Crop
-    )
+  val pagerState = rememberPagerState(pageCount = { mangaList.size })
 
-    // Gradient Overlay
-    Box(
-      modifier = Modifier
-        .fillMaxSize()
-        .background(
-          brush = Brush.verticalGradient(
-            colors = listOf(
-              Color.Transparent,
-              Color.Black.copy(alpha = 0.5f),
-              Color.Black
+  LaunchedEffect(Unit) {
+    while (true) {
+      delay(5000)
+      if (mangaList.isNotEmpty()) {
+        val nextPage = (pagerState.currentPage + 1) % mangaList.size
+        pagerState.animateScrollToPage(nextPage)
+      }
+    }
+  }
+
+  HorizontalPager(
+    state = pagerState,
+    modifier = modifier
+  ) { page ->
+    val manga = mangaList[page]
+    Box(modifier = Modifier.fillMaxSize()) {
+      AsyncImage(
+        model = manga.coverUrl,
+        contentDescription = manga.title,
+        modifier = Modifier.fillMaxSize(),
+        contentScale = ContentScale.Crop
+      )
+
+      // Gradient Overlay
+      Box(
+        modifier = Modifier
+          .fillMaxSize()
+          .background(
+            brush = Brush.verticalGradient(
+              colors = listOf(
+                Color.Transparent,
+                Color.Black.copy(alpha = 0.5f),
+                Color.Black
+              )
             )
           )
-        )
-    )
+      )
 
-    Column(
-      modifier = Modifier
-        .align(Alignment.BottomStart)
-        .padding(24.dp),
-      verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-      Text(
-        text = stringResource(id = R.string.featured),
-        style = MaterialTheme.typography.labelLarge,
-        color = MaterialTheme.colorScheme.primaryContainer,
-        fontWeight = FontWeight.Bold,
-        letterSpacing = 2.sp
-      )
-      Text(
-        text = manga.title,
-        style = MaterialTheme.typography.headlineLarge,
-        color = Color.White,
-        fontWeight = FontWeight.ExtraBold,
-        maxLines = 2,
-        overflow = TextOverflow.Ellipsis
-      )
-      Text(
-        text = manga.description,
-        style = MaterialTheme.typography.bodyMedium,
-        color = Color.White.copy(alpha = 0.7f),
-        maxLines = 2,
-        overflow = TextOverflow.Ellipsis
-      )
-      Button(
-        onClick = { onItemClick(manga.id) },
-        colors = ButtonDefaults.buttonColors(
-          containerColor = MaterialTheme.colorScheme.primary
-        ),
-        shape = MaterialTheme.shapes.medium
+      Column(
+        modifier = Modifier
+          .align(Alignment.BottomStart)
+          .padding(24.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
       ) {
-        Text(text = stringResource(id = R.string.read_now), fontWeight = FontWeight.Bold)
+        Text(
+          text = stringResource(id = R.string.featured),
+          style = MaterialTheme.typography.labelLarge,
+          color = MaterialTheme.colorScheme.primaryContainer,
+          fontWeight = FontWeight.Bold,
+          letterSpacing = 2.sp
+        )
+        Text(
+          text = manga.title,
+          style = MaterialTheme.typography.headlineLarge,
+          color = Color.White,
+          fontWeight = FontWeight.ExtraBold,
+          maxLines = 2,
+          overflow = TextOverflow.Ellipsis
+        )
+        Text(
+          text = manga.description,
+          style = MaterialTheme.typography.bodyMedium,
+          color = Color.White.copy(alpha = 0.7f),
+          maxLines = 2,
+          overflow = TextOverflow.Ellipsis
+        )
+        Button(
+          onClick = { onItemClick(manga.id) },
+          colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary
+          ),
+          shape = MaterialTheme.shapes.medium
+        ) {
+          Text(text = stringResource(id = R.string.read_now), fontWeight = FontWeight.Bold)
+        }
       }
     }
   }

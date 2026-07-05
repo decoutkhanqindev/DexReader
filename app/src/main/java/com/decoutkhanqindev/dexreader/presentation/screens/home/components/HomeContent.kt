@@ -70,10 +70,10 @@ fun HomeContent(
           verticalArrangement = Arrangement.Top,
           horizontalAlignment = Alignment.CenterHorizontally
         ) {
-          // Featured Section (using first item of trending)
+          // Featured Section (Auto-sliding Banner)
           if (uiState.trendingMangaList.isNotEmpty()) {
             FeaturedMangaBanner(
-              manga = uiState.trendingMangaList.first(),
+              mangaList = uiState.trendingMangaList,
               modifier = Modifier
                 .fillMaxWidth()
                 .height(300.dp),
