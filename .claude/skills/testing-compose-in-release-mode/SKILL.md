@@ -19,73 +19,46 @@ metadata:
 
 # Testing Compose in Release Mode — Debug Builds Lie About Performance
 
-Compose ships unbundled — its UI runtime is loaded from app code, runs interpreted in debug, and the
-Live Literals plugin turns every constant into a getter. Debug recomposition counts, debug startup
-numbers, and debug compiler reports are not what users experience. This skill teaches Claude how to
-set up a release-with-symbols build for honest measurement before any perf claim is made.
+Compose ships unbundled — its UI runtime is loaded from app code, runs interpreted in debug, and the Live Literals plugin turns every constant into a getter. Debug recomposition counts, debug startup numbers, and debug compiler reports are not what users experience. This skill teaches Claude how to set up a release-with-symbols build for honest measurement before any perf claim is made.
 
 ## When to use this skill
 
-- The developer reports a perf number ("startup is 1.4s", "this composable recomposes 50 times per
-  scroll") that came from a debug build, Layout Inspector against debug, or `CompilationMode.None`.
-- The developer is about to file a perf bug, open a regression report, or post benchmark numbers in
-  a PR.
+- The developer reports a perf number ("startup is 1.4s", "this composable recomposes 50 times per scroll") that came from a debug build, Layout Inspector against debug, or `CompilationMode.None`.
+- The developer is about to file a perf bug, open a regression report, or post benchmark numbers in a PR.
 - A CI perf gate is being designed (Macrobenchmark, baseline-profile diff, frame-timing budget).
 - The developer asks "why are my benchmark numbers so much worse than what I see on Play Store?".
-- Compose Compiler reports are about to be read — they MUST come from the release output directory
-  or every conclusion is suspect.
+- Compose Compiler reports are about to be read — they MUST come from the release output directory or every conclusion is suspect.
 
 ## When NOT to use this skill
 
-- Feature development before perf is in scope — debug iteration speed is fine while functionality is
-  being built.
-- Behavior testing (correctness, integration, instrumentation tests for screens) — that is separate
-  from perf testing and stays in debug.
+- Feature development before perf is in scope — debug iteration speed is fine while functionality is being built.
+- Behavior testing (correctness, integration, instrumentation tests for screens) — that is separate from perf testing and stays in debug.
 - Build configuration of R8 itself — see `../../build/configuring-r8-for-compose/SKILL.md`.
-- Generating a Baseline Profile from a benchmark run — see
-  `../generating-baseline-profiles/SKILL.md`.
-- Reading individual lines of a Compose Compiler report — see
-  `../../stability/diagnosing-compose-stability/SKILL.md`.
+- Generating a Baseline Profile from a benchmark run — see `../generating-baseline-profiles/SKILL.md`.
+- Reading individual lines of a Compose Compiler report — see `../../stability/diagnosing-compose-stability/SKILL.md`.
 
 ## Prerequisites
 
 - A working Android project with a Compose UI.
-- A release signing config. A debug-signed release-mode build is acceptable for measurement (use a
-  `signingConfig signingConfigs.debug` on the release type), but unsigned release builds will not
-  install.
+- A release signing config. A debug-signed release-mode build is acceptable for measurement (use a `signingConfig signingConfigs.debug` on the release type), but unsigned release builds will not install.
 - Kotlin 2.0+ with the `org.jetbrains.kotlin.plugin.compose` Gradle plugin.
-- A real physical device to run on. Emulator and Cuttlefish numbers are not interchangeable with
-  on-device numbers.
+- A real physical device to run on. Emulator and Cuttlefish numbers are not interchangeable with on-device numbers.
 - Familiarity with Macrobenchmark and Baseline Profiles helps but is not required.
 
 ## Why debug lies — the four mechanisms
 
 Surface these to the developer when they push back on "but my numbers feel real":
 
-1. **Interpreted Compose runtime.** Compose UI is a regular dependency, not part of the platform. In
-   debug, much of the runtime executes interpreted with JIT warmup happening across the first
-   seconds of the app. R8 in release performs lambda grouping, strips `sourceInformation()` calls,
-   devirtualizes `ComposerImpl`, and constant-folds composable args.
-2. **Live Literals.** The Live Literals compiler plugin (on by default in debug for Android Studio's
-   live edit) wraps every literal — `0.dp`, `"Hello"`, `Color.Red` — in a getter. The recomposer
-   treats these as dynamic, so reports flag composables as taking unstable params even when source
-   code only uses constants.
-3. **No R8 / no full mode.** Even if R8 were enabled in debug it would be configured weakly. Without
-   R8 full mode, lambda allocations stay, `sourceInformation` strings remain, and the cost-per-frame
-   budget is bigger than what release ships.
-4. **Layout Inspector approximations.** Layout Inspector recomposition counts are approximate — they
-   snapshot at intervals and miss intermediate work. Live Literals can also inflate them. Debug-only
-   counts are diagnostic, not authoritative.
+1. **Interpreted Compose runtime.** Compose UI is a regular dependency, not part of the platform. In debug, much of the runtime executes interpreted with JIT warmup happening across the first seconds of the app. R8 in release performs lambda grouping, strips `sourceInformation()` calls, devirtualizes `ComposerImpl`, and constant-folds composable args.
+2. **Live Literals.** The Live Literals compiler plugin (on by default in debug for Android Studio's live edit) wraps every literal — `0.dp`, `"Hello"`, `Color.Red` — in a getter. The recomposer treats these as dynamic, so reports flag composables as taking unstable params even when source code only uses constants.
+3. **No R8 / no full mode.** Even if R8 were enabled in debug it would be configured weakly. Without R8 full mode, lambda allocations stay, `sourceInformation` strings remain, and the cost-per-frame budget is bigger than what release ships.
+4. **Layout Inspector approximations.** Layout Inspector recomposition counts are approximate — they snapshot at intervals and miss intermediate work. Live Literals can also inflate them. Debug-only counts are diagnostic, not authoritative.
 
-Cited measurement: roughly **75 percent startup gain** and **60 percent frame-render gain** when
-switching debug to release with R8. Source: Ben Trengrove, "Why should you always test Compose
-performance in release" (Android Developers Medium).
+Cited measurement: roughly **75 percent startup gain** and **60 percent frame-render gain** when switching debug to release with R8. Source: Ben Trengrove, "Why should you always test Compose performance in release" (Android Developers Medium).
 
 ## Workflow
 
-- [ ] **1. Configure R8 on the release variant.** This is the foundation; without it the rest of the
-  workflow is moot. See `../../build/configuring-r8-for-compose/SKILL.md` for the full keep-rule
-  story. Minimum:
+- [ ] **1. Configure R8 on the release variant.** This is the foundation; without it the rest of the workflow is moot. See `../../build/configuring-r8-for-compose/SKILL.md` for the full keep-rule story. Minimum:
 
 ```kotlin
 android {
@@ -104,16 +77,9 @@ android {
 }
 ```
 
-- [ ] **2. Confirm Live Literals is not enabled for the measured variant.** Live Literals is no
-  longer present in the new Compose Compiler Gradle DSL (Kotlin 2.0+) — the `featureFlags` enum
-  exposes only `IntrinsicRemember`, `OptimizeNonSkippingGroups`, `PausableComposition`, and
-  `StrongSkipping`. On the legacy Compose Compiler 1.5.x extension the property was `liveLiterals`,
-  marked deprecated. For measurement, build the **release** variant — Live Literals is off by
-  default in release. If a separate "benchmark" build type is used (recommended — release minus
-  signing constraints), it inherits the release defaults.
+- [ ] **2. Confirm Live Literals is not enabled for the measured variant.** Live Literals is no longer present in the new Compose Compiler Gradle DSL (Kotlin 2.0+) — the `featureFlags` enum exposes only `IntrinsicRemember`, `OptimizeNonSkippingGroups`, `PausableComposition`, and `StrongSkipping`. On the legacy Compose Compiler 1.5.x extension the property was `liveLiterals`, marked deprecated. For measurement, build the **release** variant — Live Literals is off by default in release. If a separate "benchmark" build type is used (recommended — release minus signing constraints), it inherits the release defaults.
 
-- [ ] **3. Read Compose Compiler reports from the release output directory.** Always. Cross-link
-  `../../stability/diagnosing-compose-stability/SKILL.md` for how to interpret the reports.
+- [ ] **3. Read Compose Compiler reports from the release output directory.** Always. Cross-link `../../stability/diagnosing-compose-stability/SKILL.md` for how to interpret the reports.
 
 ```bash
 ./gradlew :app:assembleRelease -PcomposeCompilerReports=true
@@ -121,10 +87,7 @@ ls app/build/compose_compiler/
 # app_release-classes.txt, app_release-composables.txt, app_release-composables.csv, app_release-module.json
 ```
 
-- [ ] **4. For Macrobenchmark, target a release variant of the app under test,
-  with `CompilationMode.Partial(BaselineProfileMode.Require)`.** The benchmark module itself stays
-  its own variant; the **target** app must be release. Cross-link
-  `../generating-baseline-profiles/SKILL.md`.
+- [ ] **4. For Macrobenchmark, target a release variant of the app under test, with `CompilationMode.Partial(BaselineProfileMode.Require)`.** The benchmark module itself stays its own variant; the **target** app must be release. Cross-link `../generating-baseline-profiles/SKILL.md`.
 
 ```kotlin
 @RunWith(AndroidJUnit4::class)
@@ -144,14 +107,9 @@ class StartupBenchmark {
 }
 ```
 
-- [ ] **5. Layout Inspector counts are approximate — confirm in release with `@TraceRecomposition`.
-  ** The Layout Inspector recomposition count surface is a debug-only convenience. For an
-  authoritative count, use skydoves' `@TraceRecomposition` from `compose-stability-analyzer` against
-  a release-with-symbols build. Cross-link `../tracing-recompositions-at-runtime/SKILL.md`.
+- [ ] **5. Layout Inspector counts are approximate — confirm in release with `@TraceRecomposition`.** The Layout Inspector recomposition count surface is a debug-only convenience. For an authoritative count, use skydoves' `@TraceRecomposition` from `compose-stability-analyzer` against a release-with-symbols build. Cross-link `../tracing-recompositions-at-runtime/SKILL.md`.
 
-- [ ] **6. For runtime profiling without instrumentation, use a release-with-debug-symbols build.**
-  Add the following so `simpleperf` and the Android Studio Profiler can resolve **native (NDK)**
-  frames in the release variant:
+- [ ] **6. For runtime profiling without instrumentation, use a release-with-debug-symbols build.** Add the following so `simpleperf` and the Android Studio Profiler can resolve **native (NDK)** frames in the release variant:
 
 ```kotlin
 android {
@@ -165,21 +123,14 @@ android {
 }
 ```
 
-`ndk { debugSymbolLevel = "FULL" }` controls **NDK / native** symbol packaging only; it does **not**
-affect Kotlin / Java frame readability. Kotlin frame readability comes from `mapping.txt`, which R8
-always produces when `isMinifyEnabled = true`. Pair native profiling with R8 retrace (see
-`../../build/configuring-r8-for-compose/SKILL.md`) to map obfuscated Kotlin stacks back to source
-lines.
+`ndk { debugSymbolLevel = "FULL" }` controls **NDK / native** symbol packaging only; it does **not** affect Kotlin / Java frame readability. Kotlin frame readability comes from `mapping.txt`, which R8 always produces when `isMinifyEnabled = true`. Pair native profiling with R8 retrace (see `../../build/configuring-r8-for-compose/SKILL.md`) to map obfuscated Kotlin stacks back to source lines.
 
 - [ ] **7. Pick the device.** PREFERRED order for benchmark runs:
-    1. Physical low-end device (e.g. Pixel 4a, mid-range partner device) — this is what real users
-       feel.
-    2. Cuttlefish — predictable but not representative of GPU/thermal behavior.
-    3. Emulator — only as a last resort, never for frame-timing budgets.
+  1. Physical low-end device (e.g. Pixel 4a, mid-range partner device) — this is what real users feel.
+  2. Cuttlefish — predictable but not representative of GPU/thermal behavior.
+  3. Emulator — only as a last resort, never for frame-timing budgets.
 
-- [ ] **8. Report the variant + device + R8 status alongside any number.** A perf number without "
-  release / R8 on / Pixel 6 / cold start" is unreviewable. Make this part of the bug-report
-  template.
+- [ ] **8. Report the variant + device + R8 status alongside any number.** A perf number without "release / R8 on / Pixel 6 / cold start" is unreviewable. Make this part of the bug-report template.
 
 ## Patterns
 
@@ -282,56 +233,33 @@ composeCompiler {
 
 ## Mandatory rules
 
-- **MUST** measure Compose performance in the release variant with R8 enabled on a real physical
-  device. Numbers from debug, from `CompilationMode.None`, or from emulator-only runs are diagnostic
-  at best.
-- **MUST** read Compose Compiler reports from the release output directory (
-  `build/compose_compiler/<module>_release-*`). Debug reports are corrupted by Live Literals.
-- **MUST NOT** report perf numbers from a debug build without an explicit "debug build, treat as
-  approximate" caveat in the same sentence.
-- **MUST NOT** trust Live Literals' constant treatment for any measurement. Measure release — Live
-  Literals is off by default in release in the new (Kotlin 2.0+) Compose Compiler DSL, and the
-  property no longer exists as a feature flag to toggle.
-- **MUST** quote variant + device + compilation mode + iteration count alongside any startup or
-  frame-timing number.
-- **MUST NOT** equate Layout Inspector recomposition counts (sampled, approximate, debug-only) with
-  `@TraceRecomposition` counts (deterministic, runtime-instrumented). Use the latter for any
-  conclusion.
-- **PREFERRED:** physical low-end device > Cuttlefish > emulator for benchmark runs. The thermal and
-  GPU envelope of a low-end device is what surfaces real jank.
-- **PREFERRED:** keep `ndk { debugSymbolLevel = "FULL" }` on the release variant so simpleperf, the
-  Android Studio Profiler, and crash retrace work without rebuilding.
+- **MUST** measure Compose performance in the release variant with R8 enabled on a real physical device. Numbers from debug, from `CompilationMode.None`, or from emulator-only runs are diagnostic at best.
+- **MUST** read Compose Compiler reports from the release output directory (`build/compose_compiler/<module>_release-*`). Debug reports are corrupted by Live Literals.
+- **MUST NOT** report perf numbers from a debug build without an explicit "debug build, treat as approximate" caveat in the same sentence.
+- **MUST NOT** trust Live Literals' constant treatment for any measurement. Measure release — Live Literals is off by default in release in the new (Kotlin 2.0+) Compose Compiler DSL, and the property no longer exists as a feature flag to toggle.
+- **MUST** quote variant + device + compilation mode + iteration count alongside any startup or frame-timing number.
+- **MUST NOT** equate Layout Inspector recomposition counts (sampled, approximate, debug-only) with `@TraceRecomposition` counts (deterministic, runtime-instrumented). Use the latter for any conclusion.
+- **PREFERRED:** physical low-end device > Cuttlefish > emulator for benchmark runs. The thermal and GPU envelope of a low-end device is what surfaces real jank.
+- **PREFERRED:** keep `ndk { debugSymbolLevel = "FULL" }` on the release variant so simpleperf, the Android Studio Profiler, and crash retrace work without rebuilding.
 
 ## Verification
 
 - [ ] The variant under measurement is `release` (or a release-derived build type), not `debug`.
 - [ ] `isMinifyEnabled = true` and `proguard-android-optimize.txt` are present on that variant.
-- [ ] The measurement variant is `release` (Live Literals is off by default there in the Kotlin 2.0+
-  Compose Compiler DSL — there is no `LiveLiterals` feature flag to toggle).
-- [ ] Compose Compiler report files have the `_release` suffix in their names (
-  `app_release-composables.txt`, etc.).
-- [ ] Macrobenchmark uses `CompilationMode.Partial(BaselineProfileMode.Require)` and the target app
-  installed for the run is the release variant.
+- [ ] The measurement variant is `release` (Live Literals is off by default there in the Kotlin 2.0+ Compose Compiler DSL — there is no `LiveLiterals` feature flag to toggle).
+- [ ] Compose Compiler report files have the `_release` suffix in their names (`app_release-composables.txt`, etc.).
+- [ ] Macrobenchmark uses `CompilationMode.Partial(BaselineProfileMode.Require)` and the target app installed for the run is the release variant.
 - [ ] Reported numbers include variant, device, compilation mode, iteration count.
-- [ ] If Layout Inspector was the source of a recomposition claim, the claim has been re-confirmed
-  with `@TraceRecomposition` (or Macrobenchmark `FrameTimingMetric`) on a release build.
+- [ ] If Layout Inspector was the source of a recomposition claim, the claim has been re-confirmed with `@TraceRecomposition` (or Macrobenchmark `FrameTimingMetric`) on a release build.
 
 ## References
 
-- Android Developers — Performance
-  overview: https://developer.android.com/develop/ui/compose/performance
-- Android Developers — Why test perf in release (Ben
-  Trengrove): https://medium.com/androiddevelopers/why-should-you-always-test-compose-performance-in-release-4168dd0f2c71
-- Android Developers — Compose Compiler release
-  notes: https://developer.android.com/jetpack/androidx/releases/compose-compiler
-- Android Developers — Baseline Profiles with
-  Compose: https://developer.android.com/develop/ui/compose/performance/baseline-profiles
-- Android Developers — Measure a Baseline Profile with
-  Macrobenchmark: https://developer.android.com/topic/performance/baselineprofiles/measure-baselineprofile
-- Android Developers — Configure and troubleshoot R8 keep rules (
-  2025): https://android-developers.googleblog.com/2025/11/configure-and-troubleshoot-r8-keep-rules.html
+- Android Developers — Performance overview: https://developer.android.com/develop/ui/compose/performance
+- Android Developers — Why test perf in release (Ben Trengrove): https://medium.com/androiddevelopers/why-should-you-always-test-compose-performance-in-release-4168dd0f2c71
+- Android Developers — Compose Compiler release notes: https://developer.android.com/jetpack/androidx/releases/compose-compiler
+- Android Developers — Baseline Profiles with Compose: https://developer.android.com/develop/ui/compose/performance/baseline-profiles
+- Android Developers — Measure a Baseline Profile with Macrobenchmark: https://developer.android.com/topic/performance/baselineprofiles/measure-baselineprofile
+- Android Developers — Configure and troubleshoot R8 keep rules (2025): https://android-developers.googleblog.com/2025/11/configure-and-troubleshoot-r8-keep-rules.html
 - Chris Banes — Composable Metrics: https://chrisbanes.me/posts/composable-metrics/
-- skydoves — compose-stability-analyzer (
-  `@TraceRecomposition`): https://github.com/skydoves/compose-stability-analyzer
-- skydoves — 6 Jetpack Compose
-  Guidelines: https://medium.com/proandroiddev/6-jetpack-compose-guidelines-to-optimize-your-app-performance-be18533721f9
+- skydoves — compose-stability-analyzer (`@TraceRecomposition`): https://github.com/skydoves/compose-stability-analyzer
+- skydoves — 6 Jetpack Compose Guidelines: https://medium.com/proandroiddev/6-jetpack-compose-guidelines-to-optimize-your-app-performance-be18533721f9

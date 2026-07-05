@@ -1,13 +1,8 @@
 # Twelve-phase stability inference algorithm
 
-This file expands the SKILL.md decision tree into pseudocode that mirrors the structure of
-`Stability.kt` and `ClassStabilityTransformer.kt` in the Compose compiler. Read it after the
-SKILL.md when an unusual case demands deeper detail.
+This file expands the SKILL.md decision tree into pseudocode that mirrors the structure of `Stability.kt` and `ClassStabilityTransformer.kt` in the Compose compiler. Read it after the SKILL.md when an unusual case demands deeper detail.
 
-The algorithm is a single recursive function `stabilityOf(type)` that returns one of five values:
-`Certain`, `Runtime`, `Unknown`, `Parameter`, or `Combined`. The first matching phase wins. Cycle
-detection is global — a type currently being analyzed is on a stack, and re-entering it
-short-circuits to the conservative result.
+The algorithm is a single recursive function `stabilityOf(type)` that returns one of five values: `Certain`, `Runtime`, `Unknown`, `Parameter`, or `Combined`. The first matching phase wins. Cycle detection is global — a type currently being analyzed is on a stack, and re-entering it short-circuits to the conservative result.
 
 ## Top-level algorithm
 
@@ -69,8 +64,7 @@ fun stabilityOf(type: KotlinType, visited: Set<ClassId> = emptySet()): Stability
 
 ## Field-by-field analysis (phase 12)
 
-The compiler walks every property of the class — including inherited fields — and combines their
-stabilities. This is where most user-defined classes are decided.
+The compiler walks every property of the class — including inherited fields — and combines their stabilities. This is where most user-defined classes are decided.
 
 ```text
 fun analyzeFields(type: KotlinType, visited: Set<ClassId>): Stability {
@@ -118,37 +112,32 @@ fun List<Stability>.normalize(): Stability = when {
 
 Two consequences worth memorizing:
 
-1. **Unstable dominates.** A single `var` field, or a single field of unstable type, makes the whole
-   class unstable. Adding `@Stable` to the class is the only way to override this — and it shifts
-   the burden to the developer to honor the contract.
-2. **Runtime and Parameter are deferred, not unstable.** A `Combined` containing only `Stable`,
-   `Runtime`, and `Parameter` components stays as `Combined` and is resolved at runtime via the
-   `$stable: Int` field.
+1. **Unstable dominates.** A single `var` field, or a single field of unstable type, makes the whole class unstable. Adding `@Stable` to the class is the only way to override this — and it shifts the burden to the developer to honor the contract.
+2. **Runtime and Parameter are deferred, not unstable.** A `Combined` containing only `Stable`, `Runtime`, and `Parameter` components stays as `Combined` and is resolved at runtime via the `$stable: Int` field.
 
 ## Phase-by-phase quick reference
 
-| Phase | Trigger                                                                | Result                                           |
-|-------|------------------------------------------------------------------------|--------------------------------------------------|
-| 1     | primitive / `String` / `Unit` / function / suspend function            | `Certain(stable=true)`                           |
-| 2     | bare type parameter                                                    | `Parameter`                                      |
-| 3     | nullable                                                               | unwrap, recurse                                  |
-| 4     | inline / value class                                                   | recurse on underlying                            |
-| 5     | cycle                                                                  | `Certain(stable=false)` (conservative)           |
-| 6     | `@Stable` / `@Immutable` / `@StableMarker`                             | `Certain(stable=true)`                           |
-| 7     | Known Stable Constructs registry hit                                   | `Parameter` with bitmask                         |
-| 8     | `stability_config.conf` match                                          | `Parameter` with config bitmask                  |
-| 9     | external module with `@StabilityInferred`                              | `Runtime` with annotation bitmask                |
-| 10    | Java class (no config match)                                           | `Certain(stable=false)`                          |
-| 11    | interface / abstract class                                             | `Unknown`                                        |
-| 12    | field-by-field analysis (handles inheritance via linearized hierarchy) | `Combined`, `Certain(false)`, or `Certain(true)` |
+| Phase | Trigger | Result |
+|---|---|---|
+| 1 | primitive / `String` / `Unit` / function / suspend function | `Certain(stable=true)` |
+| 2 | bare type parameter | `Parameter` |
+| 3 | nullable | unwrap, recurse |
+| 4 | inline / value class | recurse on underlying |
+| 5 | cycle | `Certain(stable=false)` (conservative) |
+| 6 | `@Stable` / `@Immutable` / `@StableMarker` | `Certain(stable=true)` |
+| 7 | Known Stable Constructs registry hit | `Parameter` with bitmask |
+| 8 | `stability_config.conf` match | `Parameter` with config bitmask |
+| 9 | external module with `@StabilityInferred` | `Runtime` with annotation bitmask |
+| 10 | Java class (no config match) | `Certain(stable=false)` |
+| 11 | interface / abstract class | `Unknown` |
+| 12 | field-by-field analysis (handles inheritance via linearized hierarchy) | `Combined`, `Certain(false)`, or `Certain(true)` |
 
 ## Worked examples
 
 ### Example 1 — `data class User(val id: Int, val name: String)`
 
 - Phases 1–11 do not match for `User` itself.
-- Phase 12: walks `id: Int` (phase 1 → Stable), `name: String` (phase 1 → Stable). No `var`.
-  Combined collapses to `Certain(stable=true)`.
+- Phase 12: walks `id: Int` (phase 1 → Stable), `name: String` (phase 1 → Stable). No `var`. Combined collapses to `Certain(stable=true)`.
 - Report: `stable class User`.
 
 ### Example 2 — `class Counter(var count: Int)`
@@ -159,70 +148,48 @@ Two consequences worth memorizing:
 ### Example 3 — `class Box<T>(val value: T)`
 
 - Phase 2 matches `T`, but `Box` itself is not a type parameter.
-- Phase 12: walks `value: T`. Recursion hits phase 2 → `Parameter(T)`. Combined contains only
-  `Parameter`. Final classification at the class level becomes `Stability.Parameter` with bitmask
-  `0b1`.
-- If `Box` is in another module, the compiler also emits `@StabilityInferred(parameters = 0b1)` so
-  phase 9 picks it up at the call site.
+- Phase 12: walks `value: T`. Recursion hits phase 2 → `Parameter(T)`. Combined contains only `Parameter`. Final classification at the class level becomes `Stability.Parameter` with bitmask `0b1`.
+- If `Box` is in another module, the compiler also emits `@StabilityInferred(parameters = 0b1)` so phase 9 picks it up at the call site.
 
 ### Example 4 — `data class Node(val id: String, val children: List<Node>)`
 
 - Phase 12 begins. `id: String` → Stable. `children: List<Node>` → recurse.
-    - `List<Node>` is `kotlin.collections.List`, an interface. Phase 11 returns `Unknown`.
-    - But the field-by-field analysis treats `Unknown` differently from `Unstable` — it produces
-      `Stability.Unknown` for the whole class only if no field is `Unstable`.
-- The `Node` recursion via `List` does not directly trigger phase 5 because `List<Node>` is
-  `Unknown` from phase 11 before recursion proceeds. Result: `Unknown`.
+  - `List<Node>` is `kotlin.collections.List`, an interface. Phase 11 returns `Unknown`.
+  - But the field-by-field analysis treats `Unknown` differently from `Unstable` — it produces `Stability.Unknown` for the whole class only if no field is `Unstable`.
+- The `Node` recursion via `List` does not directly trigger phase 5 because `List<Node>` is `Unknown` from phase 11 before recursion proceeds. Result: `Unknown`.
 - Now replace `List<Node>` with `ImmutableList<Node>`:
-    - Phase 7 hits the registry → `Parameter` with bitmask `0b1`.
-    - Recursion into `Node` (the type argument) re-enters phase 12 with `Node` already on the
-      visited stack → phase 5 short-circuits to conservative `Unstable`.
-    - The `0b1` bitmask says element stability matters → unstable element → unstable container →
-      unstable `Node`.
+  - Phase 7 hits the registry → `Parameter` with bitmask `0b1`.
+  - Recursion into `Node` (the type argument) re-enters phase 12 with `Node` already on the visited stack → phase 5 short-circuits to conservative `Unstable`.
+  - The `0b1` bitmask says element stability matters → unstable element → unstable container → unstable `Node`.
 - Add `@Immutable` to `Node`:
-    - Phase 6 fires *before* recursion enters phase 12. The annotation is a contract; the class is
-      `Certain(stable=true)` regardless of the cycle.
+  - Phase 6 fires *before* recursion enters phase 12. The annotation is a contract; the class is `Certain(stable=true)` regardless of the cycle.
 - Report sequence: `unknown` → `unstable` → `stable` as the developer applies the fixes.
 
 ### Example 5 — `interface UiState`
 
-- Phase 11 fires first: `type.isInterface` → `Stability.Unknown`. The runtime falls back to `===`
-  identity for the equality probe at every call site that takes a `UiState` parameter.
+- Phase 11 fires first: `type.isInterface` → `Stability.Unknown`. The runtime falls back to `===` identity for the equality probe at every call site that takes a `UiState` parameter.
 
 ### Example 6 — `class JavaPojo` (Java source)
 
-- Phase 10 fires: `type.isJavaClass` → `Stability.Certain(stable=false)`. To stabilize, add an entry
-  to `stability_config.conf` matching `com.example.JavaPojo`; phase 8 then promotes it to
-  `Parameter` (or stable if no type parameters).
+- Phase 10 fires: `type.isJavaClass` → `Stability.Certain(stable=false)`. To stabilize, add an entry to `stability_config.conf` matching `com.example.JavaPojo`; phase 8 then promotes it to `Parameter` (or stable if no type parameters).
 
 ## Why cycle detection is conservative
 
-The compiler must terminate. If it attempted to compute `stabilityOf(Node)` while already inside a
-`stabilityOf(Node)` call, naive recursion would loop forever. Two strategies exist:
+The compiler must terminate. If it attempted to compute `stabilityOf(Node)` while already inside a `stabilityOf(Node)` call, naive recursion would loop forever. Two strategies exist:
 
-1. **Conservative bail (chosen).** On cycle detection, return `Certain(stable=false)`. Simple and
-   safe. The cost is false negatives on recursive trees that are genuinely safe.
-2. **Fixed-point iteration (not chosen).** Initialize all cycle members to `Stable`, recompute until
-   a pass changes nothing. Correct but expensive in compile time, and brittle when cycles span
-   modules.
+1. **Conservative bail (chosen).** On cycle detection, return `Certain(stable=false)`. Simple and safe. The cost is false negatives on recursive trees that are genuinely safe.
+2. **Fixed-point iteration (not chosen).** Initialize all cycle members to `Stable`, recompute until a pass changes nothing. Correct but expensive in compile time, and brittle when cycles span modules.
 
-Compose chose option 1. The escape hatch is `@Stable` or `@Immutable` on the recursive class — phase
-6 fires before the recursion ever reaches phase 5.
+Compose chose option 1. The escape hatch is `@Stable` or `@Immutable` on the recursive class — phase 6 fires before the recursion ever reaches phase 5.
 
 ## Source pointers
 
-The algorithm lives in the `androidx.compose.compiler.plugins.kotlin.analysis` package of the
-Compose compiler. Specific files to consult:
+The algorithm lives in the `androidx.compose.compiler.plugins.kotlin.analysis` package of the Compose compiler. Specific files to consult:
 
-- `Stability.kt` — the algebraic data type (`Certain`, `Runtime`, `Unknown`, `Parameter`,
-  `Combined`) and the `normalize()` function that collapses `Combined`.
-- `KnownStableConstructs.kt` — the hard-coded registry hit by phase 9 (`Pair`, `Triple`, `Result`,
-  `ImmutableList`, `dagger.Lazy`, etc.) with their bitmasks.
-- `ClassStabilityTransformer.kt` — emits the `@StabilityInferred(parameters = ...)` annotation on
-  the declaring class and synthesizes the `$stable: Int` companion field on the JVM.
-- `StabilityConfigParser.kt` — parses `stability_config.conf`, matches class IDs against patterns (
-  `*`, `**`, generic syntax `Foo<*,_>`), and feeds phase 10.
+- `Stability.kt` — the algebraic data type (`Certain`, `Runtime`, `Unknown`, `Parameter`, `Combined`) and the `normalize()` function that collapses `Combined`.
+- `KnownStableConstructs.kt` — the hard-coded registry hit by phase 9 (`Pair`, `Triple`, `Result`, `ImmutableList`, `dagger.Lazy`, etc.) with their bitmasks.
+- `ClassStabilityTransformer.kt` — emits the `@StabilityInferred(parameters = ...)` annotation on the declaring class and synthesizes the `$stable: Int` companion field on the JVM.
+- `StabilityConfigParser.kt` — parses `stability_config.conf`, matches class IDs against patterns (`*`, `**`, generic syntax `Foo<*,_>`), and feeds phase 10.
 - `StabilityInferencer.kt` — orchestrates the phases above; the entry point most call sites land on.
 
-For the runtime side of the contract — how the `$stable` field is read by `Composer.changed` and how
-the bitmask is ANDed against substituted type-argument stabilities — see `bitmask-encoding.md`.
+For the runtime side of the contract — how the `$stable` field is read by `Composer.changed` and how the bitmask is ANDed against substituted type-argument stabilities — see `bitmask-encoding.md`.

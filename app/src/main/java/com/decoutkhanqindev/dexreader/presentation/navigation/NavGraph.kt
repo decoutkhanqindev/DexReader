@@ -107,11 +107,7 @@ fun NavGraph(
             navController.navigateTo(NavRoute.Search)
           },
           onNavigateCategoryDetailScreen = { categoryId, categoryTitle ->
-            navController.navigateTo(
-              NavRoute.CategoryDetails(
-                categoryId,
-                categoryTitle
-              )
+            navController.navigateTo(NavRoute.CategoryDetails(categoryId, categoryTitle)
             )
           },
         )
@@ -218,7 +214,7 @@ fun NavGraph(
             navController.navigatePreserveState(item.toNavRoute())
           },
           onNavigateToSearchScreen = {
-            navController.navigateToWithDebounce(NavRoute.Search)
+            navController.navigateTo(NavRoute.Search)
           },
           modifier = Modifier.fillMaxSize()
         )
