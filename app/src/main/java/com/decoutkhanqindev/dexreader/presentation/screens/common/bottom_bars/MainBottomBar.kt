@@ -25,13 +25,7 @@ fun MainBottomBar(
         containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f),
         tonalElevation = 8.dp
     ) {
-        val items = listOf(
-            MenuValue.HOME,
-            MenuValue.CATEGORIES,
-            MenuValue.FAVORITES,
-            MenuValue.HISTORY,
-            MenuValue.PROFILE
-        )
+        val items = MenuValue.bottomBarItems
 
         items.forEach { item ->
             val isSelected = selectedItem == item

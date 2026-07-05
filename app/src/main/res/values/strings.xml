@@ -73,6 +73,8 @@
   <string name="trending">Trending</string>
   <string name="new_releases">New Releases</string>
   <string name="top_rated">Top Rated</string>
+  <string name="featured">FEATURED</string>
+  <string name="read_now">Read Now</string>
 
   <!-- Categories Screen -->
   <string name="category_type_genre">Genre</string>

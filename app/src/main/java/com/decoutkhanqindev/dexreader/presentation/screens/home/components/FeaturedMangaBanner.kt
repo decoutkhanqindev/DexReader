@@ -17,11 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 
 @Composable
@@ -60,7 +62,7 @@ fun FeaturedMangaBanner(
       verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
       Text(
-        text = "FEATURED",
+        text = stringResource(id = R.string.featured),
         style = MaterialTheme.typography.labelLarge,
         color = MaterialTheme.colorScheme.primaryContainer,
         fontWeight = FontWeight.Bold,
@@ -88,7 +90,7 @@ fun FeaturedMangaBanner(
         ),
         shape = MaterialTheme.shapes.medium
       ) {
-        Text(text = "Read Now", fontWeight = FontWeight.Bold)
+        Text(text = stringResource(id = R.string.read_now), fontWeight = FontWeight.Bold)
       }
     }
   }
