@@ -1,6 +1,7 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components
 
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -23,6 +26,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -54,11 +58,6 @@ import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
-
-import androidx.compose.foundation.background
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.ui.graphics.RectangleShape
 
 @Composable
 fun MangaDetailsContent(
@@ -134,7 +133,7 @@ fun MangaDetailsContent(
                         modifier = Modifier
                             .fillMaxSize()
                             .blurBackground(
-                                topAlpha = 0.7f,
+                                topAlpha = 0.5f,
                                 bottomAlpha = 1f,
                             ),
                         state = lazyListState,
@@ -160,7 +159,8 @@ fun MangaDetailsContent(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(16.dp),
-                                    horizontalAlignment = Alignment.CenterHorizontally
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.spacedBy(16.dp)
                                 ) {
                                     MangaInfoSection(
                                         manga = manga,
@@ -169,9 +169,7 @@ fun MangaDetailsContent(
 
                                     MangaSummarySection(
                                         manga = manga,
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(top = 16.dp),
+                                        modifier = Modifier.fillMaxWidth(),
                                         onCategoryItemClick = onCategoryItemClick
                                     )
 
@@ -180,14 +178,8 @@ fun MangaDetailsContent(
                                         languageList = availableLanguageList,
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .padding(top = 24.dp, bottom = 12.dp),
+                                            .padding(top = 8.dp),
                                         onLanguageItemClick = onLanguageItemClick
-                                    )
-                                    
-                                    HorizontalDivider(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        thickness = 1.dp,
-                                        color = MaterialTheme.colorScheme.outlineVariant
                                     )
                                 }
                             }
@@ -246,7 +238,8 @@ fun MangaDetailsContent(
                                     }
                                 } else {
                                     items(chapterList, key = { it.id }) { chapter ->
-                                        val isLast = chapterList.last().id == chapter.id && nextPageState == BaseNextPageState.NO_MORE_ITEMS
+                                        val isLast =
+                                            chapterList.last().id == chapter.id && nextPageState == BaseNextPageState.NO_MORE_ITEMS
                                         MangaChapterItem(
                                             lastChapter = latestChapter,
                                             chapter = chapter,

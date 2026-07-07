@@ -39,6 +39,7 @@ fun HomeScreen(
       modifier = Modifier.fillMaxSize(),
       onItemClick = onNavigateToMangaDetailScreen,
       onRetry = remember { viewModel::retry },
+      onRefresh = remember { viewModel::fetchMangaLists }
     )
   }
 }

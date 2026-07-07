@@ -37,7 +37,6 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.states.Loading
 import com.decoutkhanqindev.dexreader.presentation.screens.home.HomeUiState
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,21 +45,21 @@ fun HomeContent(
   modifier: Modifier = Modifier,
   onItemClick: (String) -> Unit,
   onRetry: () -> Unit,
+  onRefresh: () -> Unit ,
 ) {
   var isShowErrorDialog by remember(uiState) { mutableStateOf(uiState is HomeUiState.Error) }
   val pullToRefreshState = rememberPullToRefreshState()
-  val isRefreshing = uiState is HomeUiState.Loading
 
   ReportDrawnWhen { uiState is HomeUiState.Success }
 
   PullToRefreshBox(
     state = pullToRefreshState,
-    isRefreshing = isRefreshing,
-    onRefresh = onRetry,
+    isRefreshing = uiState is HomeUiState.Loading,
+    onRefresh = onRefresh,
     modifier = modifier
   ) {
     when (uiState) {
-      HomeUiState.Loading -> if (!isRefreshing) LoadingScreen(modifier = Modifier.fillMaxSize())
+      HomeUiState.Loading -> LoadingScreen(modifier = Modifier.fillMaxSize())
 
       is HomeUiState.Success -> {
         Column(
@@ -71,17 +70,9 @@ fun HomeContent(
           verticalArrangement = Arrangement.Top,
           horizontalAlignment = Alignment.CenterHorizontally
         ) {
-          // Featured Section (Auto-sliding Banner)
-          val featuredMangaList = remember(uiState) {
-            (uiState.trendingMangaList + uiState.latestUpdatesMangaList + uiState.newReleaseMangaList + uiState.topRatedMangaList)
-              .distinctBy { it.id }
-              .shuffled()
-              .toImmutableList()
-          }
-
-          if (featuredMangaList.isNotEmpty()) {
+          if (uiState.bannerMangaList.isNotEmpty()) {
             FeaturedMangaBanner(
-              mangaList = featuredMangaList,
+              mangaList = uiState.bannerMangaList,
               modifier = Modifier
                 .fillMaxWidth()
                 .height(300.dp),
@@ -202,7 +193,9 @@ private fun HomeContentLoadingPreview() {
       uiState = HomeUiState.Loading,
       modifier = Modifier.fillMaxSize(),
       onItemClick = {},
-      onRetry = {})
+      onRetry = {},
+      onRefresh = {}
+    )
   }
 }
 
@@ -214,7 +207,9 @@ private fun HomeContentErrorPreview() {
       uiState = HomeUiState.Error(FeatureError.NetworkUnavailable),
       modifier = Modifier.fillMaxSize(),
       onItemClick = {},
-      onRetry = {})
+      onRetry = {},
+      onRefresh = {}
+    )
   }
 }
 
@@ -228,6 +223,7 @@ private fun HomeContentSuccessPreview() {
         trendingMangaList = previewMangaList,
         newReleaseMangaList = previewMangaList,
         topRatedMangaList = previewMangaList,
-      ), modifier = Modifier.fillMaxSize(), onItemClick = {}, onRetry = {})
+      ), modifier = Modifier.fillMaxSize(), onItemClick = {}, onRetry = {}, onRefresh = {}
+    )
   }
 }

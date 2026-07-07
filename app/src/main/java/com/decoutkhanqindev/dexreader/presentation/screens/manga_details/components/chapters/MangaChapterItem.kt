@@ -28,150 +28,151 @@ import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun MangaChapterItem(
-  lastChapter: String,
-  chapter: ChapterModel,
-  readingHistory: ReadingHistoryModel? = null,
-  modifier: Modifier = Modifier,
-  shape: Shape = RectangleShape,
-  onChapterClick: (
-    chapterId: String,
-    lastReadPage: Int,
-    mangaId: String,
-  ) -> Unit,
+    lastChapter: String,
+    chapter: ChapterModel,
+    readingHistory: ReadingHistoryModel? = null,
+    modifier: Modifier = Modifier,
+    shape: Shape = RectangleShape,
+    onChapterClick: (
+        chapterId: String,
+        lastReadPage: Int,
+        mangaId: String,
+    ) -> Unit,
 ) {
-  val volume = chapter.volume
-  val number = chapter.number
-  val onChapterClick = remember(chapter.id, readingHistory?.lastReadPage) {
-    { onChapterClick(chapter.id, readingHistory?.lastReadPage ?: 0, chapter.mangaId) }
-  }
-
-  Surface(
-    modifier = modifier
-      .animateItemOnAppear()
-      .onScalableClick(shape = shape) { onChapterClick() },
-    shape = shape,
-    color = MaterialTheme.colorScheme.surface,
-  ) {
-    Column(
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(16.dp),
-      verticalArrangement = Arrangement.spacedBy(4.dp),
-      horizontalAlignment = Alignment.Start,
-    ) {
-      Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-      ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-          Text(
-            text = "Ch. $number",
-            color = MaterialTheme.colorScheme.primary,
-            fontWeight = FontWeight.Bold,
-            style = MaterialTheme.typography.titleLarge,
-          )
-          if (volume != "null" && volume.isNotEmpty()) {
-            Text(
-              text = " • Vol. $volume",
-              color = MaterialTheme.colorScheme.onSurfaceVariant,
-              style = MaterialTheme.typography.bodyMedium,
-              modifier = Modifier.padding(start = 4.dp)
-            )
-          }
-        }
-
-        if (readingHistory != null) {
-          val progress = (readingHistory.lastReadPage.toFloat() / readingHistory.pageCount.toFloat())
-          Text(
-            text = "${(progress * 100).toInt()}%",
-            color = MaterialTheme.colorScheme.secondary,
-            fontWeight = FontWeight.Bold,
-            style = MaterialTheme.typography.labelLarge,
-          )
-        }
-      }
-
-      Text(
-        text = chapter.title,
-        color = MaterialTheme.colorScheme.onSurface,
-        fontWeight = FontWeight.Medium,
-        overflow = TextOverflow.Ellipsis,
-        maxLines = 1,
-        style = MaterialTheme.typography.bodyLarge,
-      )
-
-      Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-      ) {
-        if (lastChapter == number) {
-          Text(
-            text = "NEWEST",
-            color = MaterialTheme.colorScheme.tertiary,
-            fontWeight = FontWeight.Black,
-            style = MaterialTheme.typography.labelSmall,
-          )
-        } else {
-          Spacer(modifier = Modifier.width(1.dp))
-        }
-
-        Text(
-          text = chapter.publishedAt,
-          color = MaterialTheme.colorScheme.onSurfaceVariant,
-          style = MaterialTheme.typography.labelSmall,
-        )
-      }
+    val volume = chapter.volume
+    val number = chapter.number
+    val onChapterClick = remember(chapter.id, readingHistory?.lastReadPage) {
+        { onChapterClick(chapter.id, readingHistory?.lastReadPage ?: 0, chapter.mangaId) }
     }
-  }
+
+    Surface(
+        modifier = modifier
+            .animateItemOnAppear()
+            .onScalableClick(shape = shape) { onChapterClick() },
+        shape = shape,
+        color = MaterialTheme.colorScheme.surface,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalAlignment = Alignment.Start,
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "Ch. $number",
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.titleLarge,
+                    )
+                    if (volume != "null" && volume.isNotEmpty()) {
+                        Text(
+                            text = " • Vol. $volume",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(start = 4.dp)
+                        )
+                    }
+                }
+
+                if (readingHistory != null) {
+                    val progress =
+                        (readingHistory.lastReadPage.toFloat() / readingHistory.pageCount.toFloat())
+                    Text(
+                        text = "${(progress * 100).toInt()}%",
+                        color = MaterialTheme.colorScheme.secondary,
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.labelLarge,
+                    )
+                }
+            }
+
+            Text(
+                text = chapter.title,
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.Medium,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                if (lastChapter == number) {
+                    Text(
+                        text = "NEWEST",
+                        color = MaterialTheme.colorScheme.tertiary,
+                        fontWeight = FontWeight.Black,
+                        style = MaterialTheme.typography.labelSmall,
+                    )
+                } else {
+                    Spacer(modifier = Modifier.width(1.dp))
+                }
+
+                Text(
+                    text = chapter.publishedAt,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.labelSmall,
+                )
+            }
+        }
+    }
 }
 
 private val previewChapter = ChapterModel(
-  id = "c-001",
-  mangaId = "m-001",
-  title = "Romance Dawn",
-  number = "1",
-  volume = "1",
-  publishedAt = "2024-01-01",
+    id = "c-001",
+    mangaId = "m-001",
+    title = "Romance Dawn",
+    number = "1",
+    volume = "1",
+    publishedAt = "2024-01-01",
 )
 
 @Preview
 @Composable
 private fun MangaChapterItemNoHistoryPreview() {
-  DexReaderTheme {
-    MangaChapterItem(
-      lastChapter = "1110",
-      chapter = previewChapter,
-      readingHistory = null,
-      modifier = Modifier.fillMaxWidth(),
-      onChapterClick = { _, _, _ -> }
-    )
-  }
+    DexReaderTheme {
+        MangaChapterItem(
+            lastChapter = "1110",
+            chapter = previewChapter,
+            readingHistory = null,
+            modifier = Modifier.fillMaxWidth(),
+            onChapterClick = { _, _, _ -> }
+        )
+    }
 }
 
 @Preview
 @Composable
 private fun MangaChapterItemWithHistoryPreview() {
-  DexReaderTheme {
-    MangaChapterItem(
-      lastChapter = "1110",
-      chapter = previewChapter,
-      readingHistory = ReadingHistoryModel(
-        id = "rh-001",
-        mangaId = "m-001",
-        mangaTitle = "One Piece",
-        mangaCoverUrl = "",
-        chapterId = "c-001",
-        chapterTitle = "Romance Dawn",
-        chapterNumber = "1",
-        chapterVolume = "1",
-        lastReadPage = 12,
-        pageCount = 46,
-        lastReadAt = "2 hours ago",
-      ),
-      modifier = Modifier.fillMaxWidth(),
-      onChapterClick = { _, _, _ -> }
-    )
-  }
+    DexReaderTheme {
+        MangaChapterItem(
+            lastChapter = "1110",
+            chapter = previewChapter,
+            readingHistory = ReadingHistoryModel(
+                id = "rh-001",
+                mangaId = "m-001",
+                mangaTitle = "One Piece",
+                mangaCoverUrl = "",
+                chapterId = "c-001",
+                chapterTitle = "Romance Dawn",
+                chapterNumber = "1",
+                chapterVolume = "1",
+                lastReadPage = 12,
+                pageCount = 46,
+                lastReadAt = "2 hours ago",
+            ),
+            modifier = Modifier.fillMaxWidth(),
+            onChapterClick = { _, _, _ -> }
+        )
+    }
 }

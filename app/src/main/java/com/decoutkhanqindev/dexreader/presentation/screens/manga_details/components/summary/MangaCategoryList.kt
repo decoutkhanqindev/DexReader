@@ -28,15 +28,13 @@ fun MangaCategoryList(
 ) {
   LazyRow(
     modifier = modifier,
-    horizontalArrangement = Arrangement.spacedBy(2.dp),
+    horizontalArrangement = Arrangement.spacedBy(4.dp),
     verticalAlignment = Alignment.CenterVertically,
   ) {
     items(items, key = CategoryModel::id) { category ->
       MangaCategoryItem(
         item = category,
-        modifier = Modifier
-          .fillMaxSize()
-          .padding(horizontal = 4.dp),
+        modifier = Modifier.fillMaxSize(),
         onClick = onItemClick
       )
     }

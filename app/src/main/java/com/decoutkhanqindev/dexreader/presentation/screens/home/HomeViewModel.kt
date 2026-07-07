@@ -10,6 +10,7 @@ import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -34,7 +35,7 @@ class HomeViewModel @Inject constructor(
     fetchMangaLists()
   }
 
-  private fun fetchMangaLists() {
+  fun fetchMangaLists() {
     viewModelScope.launch {
       _uiState.value = HomeUiState.Loading
 
@@ -59,12 +60,18 @@ class HomeViewModel @Inject constructor(
           results[2].getOrThrow().map { it.toMangaModel() }.toPersistentList()
         val topRatedMangaList =
           results[3].getOrThrow().map { it.toMangaModel() }.toPersistentList()
+        val bannerMangaList =
+              (latestUpdatesMangaList + trendingMangaList + newReleaseMangaList + topRatedMangaList)
+                  .distinctBy { it.id }
+                  .shuffled()
+                  .toImmutableList()
 
         _uiState.value = HomeUiState.Success(
           latestUpdatesMangaList = latestUpdatesMangaList,
           trendingMangaList = trendingMangaList,
           newReleaseMangaList = newReleaseMangaList,
-          topRatedMangaList = topRatedMangaList
+          topRatedMangaList = topRatedMangaList,
+          bannerMangaList = bannerMangaList
         )
       } else {
         val throwable = results.firstOrNull { it.isFailure }?.exceptionOrNull()
@@ -76,8 +83,7 @@ class HomeViewModel @Inject constructor(
   }
 
   fun retry() {
-    fetchMangaLists()
+    if (_uiState.value is HomeUiState.Error) fetchMangaLists()
   }
-
 }
 

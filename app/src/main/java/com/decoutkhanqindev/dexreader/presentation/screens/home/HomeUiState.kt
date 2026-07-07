@@ -21,5 +21,6 @@ sealed interface HomeUiState {
     val trendingMangaList: ImmutableList<MangaModel> = persistentListOf(),
     val newReleaseMangaList: ImmutableList<MangaModel> = persistentListOf(),
     val topRatedMangaList: ImmutableList<MangaModel> = persistentListOf(),
+    val bannerMangaList: ImmutableList<MangaModel> = persistentListOf(),
   ) : HomeUiState
 }
