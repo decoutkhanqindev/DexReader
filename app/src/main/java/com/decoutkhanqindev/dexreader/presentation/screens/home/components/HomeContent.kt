@@ -37,6 +37,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.states.Loading
 import com.decoutkhanqindev.dexreader.presentation.screens.home.HomeUiState
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,9 +72,16 @@ fun HomeContent(
           horizontalAlignment = Alignment.CenterHorizontally
         ) {
           // Featured Section (Auto-sliding Banner)
-          if (uiState.trendingMangaList.isNotEmpty()) {
+          val featuredMangaList = remember(uiState) {
+            (uiState.trendingMangaList + uiState.latestUpdatesMangaList + uiState.newReleaseMangaList + uiState.topRatedMangaList)
+              .distinctBy { it.id }
+              .shuffled()
+              .toImmutableList()
+          }
+
+          if (featuredMangaList.isNotEmpty()) {
             FeaturedMangaBanner(
-              mangaList = uiState.trendingMangaList,
+              mangaList = featuredMangaList,
               modifier = Modifier
                 .fillMaxWidth()
                 .height(300.dp),

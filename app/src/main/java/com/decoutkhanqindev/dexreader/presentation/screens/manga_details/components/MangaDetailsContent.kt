@@ -96,8 +96,8 @@ fun MangaDetailsContent(
     val coroutineScope = rememberCoroutineScope()
     var isShowErrorDialog by remember(mangaDetailsUiState) { mutableStateOf(mangaDetailsUiState is MangaDetailsUiState.Error) }
 
-    val topCardShape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)
-    val bottomCardShape = RoundedCornerShape(bottomStart = 28.dp, bottomEnd = 28.dp)
+    val topCardShape = remember { RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp) }
+    val bottomCardShape = remember { RoundedCornerShape(bottomStart = 28.dp, bottomEnd = 28.dp) }
 
     Box(modifier = modifier) {
         when (mangaDetailsUiState) {
