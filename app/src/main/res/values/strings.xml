@@ -161,6 +161,7 @@
   <string name="view_details_or_continue">View Details or Continue?</string>
 
   <!-- Statistics Screen -->
+  <string name="please_sign_in_to_view_your_statistics">Please sign in to view your statistics.</string>
   <string name="daily_reading_time">Daily Reading Time</string>
   <string name="weekly_reading_time">Weekly Reading Time</string>
   <string name="total_reading_time">Total Reading Time</string>

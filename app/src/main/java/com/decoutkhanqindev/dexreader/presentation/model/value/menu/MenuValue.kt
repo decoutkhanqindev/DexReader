@@ -28,7 +28,7 @@ enum class MenuValue(
 
   companion object {
     val bottomBarItems by lazy {
-      listOf(HOME, CATEGORIES, FAVORITES, HISTORY, PROFILE)
+      listOf(HOME, CATEGORIES, SETTINGS)
     }
   }
 }

@@ -30,6 +30,7 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.manga.FavoriteMangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
+import com.decoutkhanqindev.dexreader.presentation.screens.common.animateItemOnAppear
 import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmer
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
@@ -42,7 +43,9 @@ fun FavoriteMangaItem(
   var isImageLoaded by remember { mutableStateOf(false) }
 
   Card(
-    modifier = modifier.shimmer(isEnable = !isImageLoaded),
+    modifier = modifier
+      .animateItemOnAppear()
+      .shimmer(isEnable = !isImageLoaded),
     onClick = remember(manga.id) { { onSelectedManga(manga.id) } },
     elevation = CardDefaults.cardElevation(8.dp),
     shape = MaterialTheme.shapes.large,
