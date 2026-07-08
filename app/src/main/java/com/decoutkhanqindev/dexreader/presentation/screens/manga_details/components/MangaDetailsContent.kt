@@ -1,8 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components
 
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -26,7 +24,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -133,11 +130,10 @@ fun MangaDetailsContent(
                         modifier = Modifier
                             .fillMaxSize()
                             .blurBackground(
-                                topAlpha = 0.5f,
+                                topAlpha = 0.7f,
                                 bottomAlpha = 1f,
                             ),
                         state = lazyListState,
-                        verticalArrangement = Arrangement.Top,
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         item {
@@ -159,8 +155,7 @@ fun MangaDetailsContent(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(16.dp),
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                                    horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
                                     MangaInfoSection(
                                         manga = manga,
@@ -169,7 +164,9 @@ fun MangaDetailsContent(
 
                                     MangaSummarySection(
                                         manga = manga,
-                                        modifier = Modifier.fillMaxWidth(),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(top = 16.dp),
                                         onCategoryItemClick = onCategoryItemClick
                                     )
 
@@ -178,8 +175,14 @@ fun MangaDetailsContent(
                                         languageList = availableLanguageList,
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .padding(top = 8.dp),
+                                            .padding(top = 24.dp, bottom = 12.dp),
                                         onLanguageItemClick = onLanguageItemClick
+                                    )
+
+                                    HorizontalDivider(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        thickness = 1.dp,
+                                        color = MaterialTheme.colorScheme.outlineVariant
                                     )
                                 }
                             }
@@ -238,66 +241,69 @@ fun MangaDetailsContent(
                                     }
                                 } else {
                                     items(chapterList, key = { it.id }) { chapter ->
-                                        val isLast =
-                                            chapterList.last().id == chapter.id && nextPageState == BaseNextPageState.NO_MORE_ITEMS
-                                        MangaChapterItem(
-                                            lastChapter = latestChapter,
-                                            chapter = chapter,
-                                            readingHistory = historyByChapterId[chapter.id],
-                                            modifier = Modifier.fillMaxWidth(),
-                                            shape = if (isLast) bottomCardShape else RectangleShape,
-                                            onChapterClick = onChapterItemClick,
-                                        )
-                                        if (!isLast) {
-                                            HorizontalDivider(
+                                        Surface(
+                                            modifier = Modifier.fillMaxWidth().animateItem(),
+                                            color = MaterialTheme.colorScheme.surface,
+                                            tonalElevation = 4.dp
+                                        ) {
+                                            MangaChapterItem(
+                                                lastChapter = latestChapter,
+                                                chapter = chapter,
+                                                readingHistory = historyByChapterId[chapter.id],
                                                 modifier = Modifier
                                                     .fillMaxWidth()
-                                                    .background(MaterialTheme.colorScheme.surface)
-                                                    .padding(horizontal = 16.dp),
-                                                thickness = 0.5.dp,
-                                                color = MaterialTheme.colorScheme.outlineVariant
+                                                    .padding(horizontal = 16.dp, vertical = 6.dp),
+                                                shape = RoundedCornerShape(12.dp),
+                                                onChapterClick = onChapterItemClick,
                                             )
                                         }
                                     }
 
                                     item {
+                                        val isLast = nextPageState == BaseNextPageState.NO_MORE_ITEMS
                                         Surface(
                                             modifier = Modifier.fillMaxWidth(),
-                                            shape = if (nextPageState == BaseNextPageState.NO_MORE_ITEMS) bottomCardShape else RectangleShape,
+                                            shape = if (isLast) bottomCardShape else RoundedCornerShape(0.dp),
                                             color = MaterialTheme.colorScheme.surface,
                                             tonalElevation = 4.dp
                                         ) {
-                                            Box(modifier = Modifier.fillMaxWidth()) {
-                                                when (nextPageState) {
-                                                    BaseNextPageState.LOADING -> ListLoadingIndicator(
-                                                        modifier = Modifier
-                                                            .fillMaxWidth()
-                                                            .padding(vertical = 12.dp)
-                                                    )
+                                            Surface(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(horizontal = 16.dp, vertical = 6.dp),
+                                                shape = RoundedCornerShape(12.dp),
+                                                color = MaterialTheme.colorScheme.surfaceVariant,
+                                            ) {
+                                                Box(modifier = Modifier.fillMaxWidth()) {
+                                                    when (nextPageState) {
+                                                        BaseNextPageState.LOADING -> ListLoadingIndicator(
+                                                            modifier = Modifier
+                                                                .fillMaxWidth()
+                                                                .padding(vertical = 12.dp)
+                                                        )
 
-                                                    BaseNextPageState.ERROR -> LoadPageErrorMessage(
-                                                        message = stringResource(R.string.can_t_load_next_chapter_page_please_try_again),
-                                                        modifier = Modifier
-                                                            .fillMaxWidth()
-                                                            .padding(vertical = 8.dp),
-                                                        onRetryClick = onRetryFetchChapterListNextPage
-                                                    )
+                                                        BaseNextPageState.ERROR -> LoadPageErrorMessage(
+                                                            message = stringResource(R.string.can_t_load_next_chapter_page_please_try_again),
+                                                            modifier = Modifier
+                                                                .fillMaxWidth()
+                                                                .padding(vertical = 8.dp),
+                                                            onRetryClick = onRetryFetchChapterListNextPage
+                                                        )
 
-                                                    BaseNextPageState.IDLE -> LoadMoreMessage(
-                                                        modifier = Modifier
-                                                            .fillMaxWidth()
-                                                            .padding(horizontal = 8.dp)
-                                                            .padding(vertical = 12.dp),
-                                                        onClick = onFetchChapterListNextPage
-                                                    )
+                                                        BaseNextPageState.IDLE -> LoadMoreMessage(
+                                                            modifier = Modifier
+                                                                .fillMaxWidth()
+                                                                .padding(vertical = 12.dp),
+                                                            onClick = onFetchChapterListNextPage
+                                                        )
 
-                                                    BaseNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
-                                                        title = stringResource(R.string.all_chapters_loaded),
-                                                        modifier = Modifier
-                                                            .fillMaxWidth()
-                                                            .padding(horizontal = 8.dp)
-                                                            .padding(vertical = 12.dp)
-                                                    )
+                                                        BaseNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
+                                                            title = stringResource(R.string.all_chapters_loaded),
+                                                            modifier = Modifier
+                                                                .fillMaxWidth()
+                                                                .padding(vertical = 12.dp)
+                                                        )
+                                                    }
                                                 }
                                             }
                                         }

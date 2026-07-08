@@ -3,7 +3,6 @@ package com.decoutkhanqindev.dexreader.presentation.screens.manga_details.compon
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -50,7 +49,7 @@ fun MangaChapterItem(
             .animateItemOnAppear()
             .onScalableClick(shape = shape) { onChapterClick() },
         shape = shape,
-        color = MaterialTheme.colorScheme.surface,
+        color = MaterialTheme.colorScheme.surfaceVariant,
     ) {
         Column(
             modifier = Modifier
@@ -82,8 +81,7 @@ fun MangaChapterItem(
                 }
 
                 if (readingHistory != null) {
-                    val progress =
-                        (readingHistory.lastReadPage.toFloat() / readingHistory.pageCount.toFloat())
+                    val progress = (readingHistory.lastReadPage.toFloat() / readingHistory.pageCount.toFloat())
                     Text(
                         text = "${(progress * 100).toInt()}%",
                         color = MaterialTheme.colorScheme.secondary,
@@ -93,36 +91,40 @@ fun MangaChapterItem(
                 }
             }
 
-            Text(
-                text = chapter.title,
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.Medium,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1,
-                style = MaterialTheme.typography.bodyLarge,
-            )
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                if (lastChapter == number) {
+                Text(
+                    text = chapter.title,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Medium,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.weight(1f)
+                )
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    if (lastChapter == number) {
+                        Text(
+                            text = "NEWEST",
+                            color = MaterialTheme.colorScheme.tertiary,
+                            fontWeight = FontWeight.Black,
+                            style = MaterialTheme.typography.labelSmall,
+                        )
+                    }
+
                     Text(
-                        text = "NEWEST",
-                        color = MaterialTheme.colorScheme.tertiary,
-                        fontWeight = FontWeight.Black,
+                        text = chapter.publishedAt,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.labelSmall,
                     )
-                } else {
-                    Spacer(modifier = Modifier.width(1.dp))
                 }
-
-                Text(
-                    text = chapter.publishedAt,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    style = MaterialTheme.typography.labelSmall,
-                )
             }
         }
     }
