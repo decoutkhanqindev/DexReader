@@ -18,12 +18,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
+import androidx.compose.runtime.LaunchedEffect
 
 @Composable
 fun LoadMoreMessage(
   modifier: Modifier = Modifier,
   onClick: () -> Unit,
 ) {
+  LaunchedEffect(Unit) {
+    onClick()
+  }
+
   Row(
     modifier = modifier.clickable { onClick() },
     horizontalArrangement = Arrangement.SpaceAround,
