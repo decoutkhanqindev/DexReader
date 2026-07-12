@@ -4,13 +4,15 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -23,18 +25,28 @@ import androidx.compose.runtime.LaunchedEffect
 @Composable
 fun LoadMoreMessage(
   modifier: Modifier = Modifier,
+  autoLoad: Boolean = true,
   onClick: () -> Unit,
 ) {
-  LaunchedEffect(Unit) {
-    onClick()
+  LaunchedEffect(autoLoad) {
+    if (autoLoad) {
+      onClick()
+    }
   }
 
   Row(
-    modifier = modifier.clickable { onClick() },
+    modifier = modifier
+      .clickable { onClick() }
+      .padding(horizontal = 24.dp),
     horizontalArrangement = Arrangement.SpaceAround,
     verticalAlignment = Alignment.CenterVertically
   ) {
-    HorizontalDivider(modifier = Modifier.width(125.dp))
+    LinearProgressIndicator(
+      progress = { 0f },
+      modifier = Modifier.width(100.dp),
+      color = Color.Transparent,
+      trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+    )
 
     Text(
       text = stringResource(R.string.load_more),
@@ -43,7 +55,12 @@ fun LoadMoreMessage(
       style = MaterialTheme.typography.titleMedium,
     )
 
-    HorizontalDivider(modifier = Modifier.width(125.dp))
+    LinearProgressIndicator(
+      progress = { 0f },
+      modifier = Modifier.width(100.dp),
+      color = Color.Transparent,
+      trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+    )
   }
 }
 

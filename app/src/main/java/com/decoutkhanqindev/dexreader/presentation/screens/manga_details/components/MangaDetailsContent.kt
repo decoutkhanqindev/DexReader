@@ -294,6 +294,7 @@ fun MangaDetailsContent(
                                                             modifier = Modifier
                                                                 .fillMaxWidth()
                                                                 .padding(vertical = 12.dp),
+                                                            autoLoad = false,
                                                             onClick = onFetchChapterListNextPage
                                                         )
 
