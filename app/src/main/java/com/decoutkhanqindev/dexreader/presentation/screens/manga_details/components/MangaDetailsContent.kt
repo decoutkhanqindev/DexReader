@@ -260,50 +260,54 @@ fun MangaDetailsContent(
                                     }
 
                                     item {
-                                        val isLast = nextPageState == BaseNextPageState.NO_MORE_ITEMS
-                                        Surface(
-                                            modifier = Modifier.fillMaxWidth(),
-                                            shape = if (isLast) bottomCardShape else RoundedCornerShape(0.dp),
-                                            color = MaterialTheme.colorScheme.surface,
-                                            tonalElevation = 4.dp
-                                        ) {
-                                            Surface(
+                                        if (nextPageState == BaseNextPageState.IDLE) {
+                                            LoadMoreMessage(
                                                 modifier = Modifier
                                                     .fillMaxWidth()
-                                                    .padding(horizontal = 16.dp, vertical = 6.dp),
-                                                shape = RoundedCornerShape(12.dp),
-                                                color = MaterialTheme.colorScheme.surfaceVariant,
+                                                    .padding(vertical = 12.dp),
+                                                autoLoad = false,
+                                                onClick = onFetchChapterListNextPage
+                                            )
+                                        } else {
+                                            val isLast = nextPageState == BaseNextPageState.NO_MORE_ITEMS
+                                            Surface(
+                                                modifier = Modifier.fillMaxWidth(),
+                                                shape = if (isLast) bottomCardShape else RoundedCornerShape(0.dp),
+                                                color = MaterialTheme.colorScheme.surface,
+                                                tonalElevation = 4.dp
                                             ) {
-                                                Box(modifier = Modifier.fillMaxWidth()) {
-                                                    when (nextPageState) {
-                                                        BaseNextPageState.LOADING -> ListLoadingIndicator(
-                                                            modifier = Modifier
-                                                                .fillMaxWidth()
-                                                                .padding(vertical = 12.dp)
-                                                        )
+                                                Surface(
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .padding(horizontal = 16.dp, vertical = 6.dp),
+                                                    shape = RoundedCornerShape(12.dp),
+                                                    color = MaterialTheme.colorScheme.surfaceVariant,
+                                                ) {
+                                                    Box(modifier = Modifier.fillMaxWidth()) {
+                                                        when (nextPageState) {
+                                                            BaseNextPageState.LOADING -> ListLoadingIndicator(
+                                                                modifier = Modifier
+                                                                    .fillMaxWidth()
+                                                                    .padding(vertical = 12.dp)
+                                                            )
 
-                                                        BaseNextPageState.ERROR -> LoadPageErrorMessage(
-                                                            message = stringResource(R.string.can_t_load_next_chapter_page_please_try_again),
-                                                            modifier = Modifier
-                                                                .fillMaxWidth()
-                                                                .padding(vertical = 8.dp),
-                                                            onRetryClick = onRetryFetchChapterListNextPage
-                                                        )
+                                                            BaseNextPageState.ERROR -> LoadPageErrorMessage(
+                                                                message = stringResource(R.string.can_t_load_next_chapter_page_please_try_again),
+                                                                modifier = Modifier
+                                                                    .fillMaxWidth()
+                                                                    .padding(vertical = 8.dp),
+                                                                onRetryClick = onRetryFetchChapterListNextPage
+                                                            )
 
-                                                        BaseNextPageState.IDLE -> LoadMoreMessage(
-                                                            modifier = Modifier
-                                                                .fillMaxWidth()
-                                                                .padding(vertical = 12.dp),
-                                                            autoLoad = false,
-                                                            onClick = onFetchChapterListNextPage
-                                                        )
+                                                            BaseNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
+                                                                title = stringResource(R.string.all_chapters_loaded),
+                                                                modifier = Modifier
+                                                                    .fillMaxWidth()
+                                                                    .padding(vertical = 12.dp)
+                                                            )
 
-                                                        BaseNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
-                                                            title = stringResource(R.string.all_chapters_loaded),
-                                                            modifier = Modifier
-                                                                .fillMaxWidth()
-                                                                .padding(vertical = 12.dp)
-                                                        )
+                                                            BaseNextPageState.IDLE -> {}
+                                                        }
                                                     }
                                                 }
                                             }
