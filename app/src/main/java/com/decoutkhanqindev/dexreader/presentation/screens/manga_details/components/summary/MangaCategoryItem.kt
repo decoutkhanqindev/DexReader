@@ -14,7 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
-import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
+import com.decoutkhanqindev.dexreader.presentation.screens.common.onClick
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import java.util.Locale
 
@@ -32,7 +32,7 @@ fun MangaCategoryItem(
   }
 
   Card(
-    modifier = modifier.onScalableClick(shape = MaterialTheme.shapes.large) { onClick() },
+    modifier = modifier.onClick(shape = MaterialTheme.shapes.large) { onClick() },
     shape = MaterialTheme.shapes.large,
   ) {
     Text(

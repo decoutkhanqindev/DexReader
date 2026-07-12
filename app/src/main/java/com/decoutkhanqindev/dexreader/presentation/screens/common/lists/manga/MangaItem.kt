@@ -1,6 +1,5 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.common.lists.manga
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -31,9 +29,10 @@ import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.animateItemOnAppear
+import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
-import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
-import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmer
+import com.decoutkhanqindev.dexreader.presentation.screens.common.onClick
+import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmerLoading
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.persistentListOf
 
@@ -49,7 +48,7 @@ fun MangaItem(
   Card(
     modifier = modifier
       .animateItemOnAppear()
-      .onScalableClick(shape = MaterialTheme.shapes.medium) { onClick() },
+      .onClick(shape = MaterialTheme.shapes.medium) { onClick() },
     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     shape = MaterialTheme.shapes.medium,
     colors = CardDefaults.cardColors(
@@ -59,7 +58,7 @@ fun MangaItem(
     Box(
       modifier = Modifier
         .fillMaxWidth()
-        .shimmer(isEnable = !isImageLoaded)
+        .shimmerLoading(isEnable = !isImageLoaded)
     ) {
       MangaCoverArt(
         url = item.coverUrl,
@@ -72,16 +71,13 @@ fun MangaItem(
       Box(
         modifier = Modifier
           .fillMaxSize()
-          .background(
-            brush = Brush.verticalGradient(
-              colors = listOf(
-                Color.Transparent,
-                Color.Black.copy(alpha = 0.1f),
-                Color.Black.copy(alpha = 0.8f),
-                Color.Black
-              ),
-              startY = 350f
-            )
+          .blurBackground(
+            color = Color.Black,
+            topAlpha = 0f,
+            topCenterAlpha = 0.1f,
+            bottomCenterAlpha = 0.8f,
+            bottomAlpha = 1f,
+            startY = 350f,
           )
       )
 

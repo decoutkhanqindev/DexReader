@@ -31,7 +31,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.manga.FavoriteMangaMode
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.animateItemOnAppear
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
-import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmer
+import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmerLoading
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
@@ -45,7 +45,7 @@ fun FavoriteMangaItem(
   Card(
     modifier = modifier
       .animateItemOnAppear()
-      .shimmer(isEnable = !isImageLoaded),
+      .shimmerLoading(isEnable = !isImageLoaded),
     onClick = remember(manga.id) { { onSelectedManga(manga.id) } },
     elevation = CardDefaults.cardElevation(8.dp),
     shape = MaterialTheme.shapes.large,

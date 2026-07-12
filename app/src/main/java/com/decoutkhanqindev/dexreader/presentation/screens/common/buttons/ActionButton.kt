@@ -16,12 +16,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
+import com.decoutkhanqindev.dexreader.presentation.screens.common.onClick
+import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmerHighlight
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun ActionButton(
   isEnabled: Boolean = true,
+  isHighlighted: Boolean = false,
   backgroundColor: Color = MaterialTheme.colorScheme.surfaceContainer,
   elevation: Dp = 8.dp,
   modifier: Modifier = Modifier,
@@ -38,12 +40,21 @@ fun ActionButton(
       .alpha(if (isEnabled) 1f else 0.38f)
       .then(
         if (isEnabled) {
-          Modifier.onScalableClick(shape = MaterialTheme.shapes.large) { onClick() }
+          Modifier.onClick(shape = MaterialTheme.shapes.large) { onClick() }
         } else Modifier
       )
       .background(
         color = backgroundColor,
         shape = MaterialTheme.shapes.large
+      )
+      .then(
+        if (isHighlighted) {
+          Modifier.shimmerHighlight(
+            backgroundColor = Color.Transparent,
+            shimmerColor = Color.White.copy(alpha = 0.5f),
+            shape = MaterialTheme.shapes.large,
+          )
+        } else Modifier
       )
       .padding(horizontal = 16.dp, vertical = 16.dp),
     horizontalArrangement = Arrangement.Center,

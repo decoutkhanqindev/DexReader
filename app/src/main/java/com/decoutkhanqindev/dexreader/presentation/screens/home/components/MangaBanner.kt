@@ -10,6 +10,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -28,9 +28,10 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
+import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
-import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
-import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmer
+import com.decoutkhanqindev.dexreader.presentation.screens.common.onClick
+import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmerLoading
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.delay
 
@@ -60,10 +61,9 @@ fun MangaBanner(
     Box(
       modifier = Modifier
         .fillMaxSize()
-        .shimmer(isEnable = !isImageLoaded)
+        .shimmerLoading(shape = MaterialTheme.shapes.medium, isEnable = !isImageLoaded)
         .padding(horizontal = 8.dp)
-        .clip(MaterialTheme.shapes.medium)
-        .onScalableClick(MaterialTheme.shapes.medium) { onItemClick(manga.id) }
+        .onClick(MaterialTheme.shapes.medium) { onItemClick(manga.id) }
     ) {
       MangaCoverArt(
         url = manga.coverUrl,
@@ -77,10 +77,32 @@ fun MangaBanner(
         modifier = Modifier
           .fillMaxSize()
           .blurBackground(
-            topAlpha = 0.0f,
+            color = Color.Black,
+            topAlpha = 0f,
+            topCenterAlpha = 0.1f,
+            bottomCenterAlpha = 0.8f,
             bottomAlpha = 1f,
-          ),
+            startY = 350f,
+          )
       )
+
+      // Status Badge
+      Surface(
+        modifier = Modifier
+          .align(Alignment.TopEnd)
+          .padding(8.dp),
+        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.9f),
+        shape = MaterialTheme.shapes.small,
+        tonalElevation = 4.dp
+      ) {
+        Text(
+          text = stringResource(manga.status.nameRes).uppercase(),
+          modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+          style = MaterialTheme.typography.labelSmall,
+          fontWeight = FontWeight.Black,
+          color = MaterialTheme.colorScheme.onPrimaryContainer
+        )
+      }
 
       Column(
         modifier = Modifier
@@ -103,14 +125,17 @@ fun MangaBanner(
           maxLines = 2,
           overflow = TextOverflow.Ellipsis
         )
-        Button(
-          onClick = { onItemClick(manga.id) },
-          colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary
-          ),
-          shape = MaterialTheme.shapes.medium
+        ActionButton(
+          isHighlighted = true,
+          backgroundColor = MaterialTheme.colorScheme.primary,
+          onClick = remember(manga.id) { { onItemClick(manga.id) } }
         ) {
-          Text(text = stringResource(id = R.string.read_now), fontWeight = FontWeight.Bold)
+          Text(
+            text = stringResource(id = R.string.read_now),
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onPrimary,
+            style = MaterialTheme.typography.labelLarge,
+          )
         }
       }
     }

@@ -29,7 +29,7 @@ import com.decoutkhanqindev.dexreader.presentation.error.UserError
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.components.EmailInputField
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.components.PasswordInputField
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
-import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
+import com.decoutkhanqindev.dexreader.presentation.screens.common.onClick
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
@@ -93,7 +93,7 @@ fun LoginForm(
           modifier = Modifier
             .align(Alignment.End)
             .minimumInteractiveComponentSize()
-            .onScalableClick { onForgotPasswordClick() },
+            .onClick { onForgotPasswordClick() },
           color = MaterialTheme.colorScheme.onPrimaryContainer,
           fontWeight = FontWeight.Bold,
           fontStyle = FontStyle.Italic,
@@ -132,7 +132,7 @@ fun LoginForm(
           text = stringResource(R.string.sign_up),
           modifier = Modifier
             .minimumInteractiveComponentSize()
-            .onScalableClick { onRegisterClick() },
+            .onClick { onRegisterClick() },
           color = MaterialTheme.colorScheme.onPrimaryContainer,
           fontWeight = FontWeight.Bold,
           fontStyle = FontStyle.Italic,

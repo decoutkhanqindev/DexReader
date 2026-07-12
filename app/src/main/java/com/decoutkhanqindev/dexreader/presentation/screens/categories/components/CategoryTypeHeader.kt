@@ -25,7 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.value.category.CategoryTypeValue
-import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
+import com.decoutkhanqindev.dexreader.presentation.screens.common.onClick
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
@@ -39,7 +39,7 @@ fun CategoryTypeHeader(
     Row(
       modifier = Modifier
         .fillMaxWidth()
-        .onScalableClick { onExpandClick() }
+        .onClick { onExpandClick() }
         .padding(horizontal = 12.dp)
     ) {
       Text(

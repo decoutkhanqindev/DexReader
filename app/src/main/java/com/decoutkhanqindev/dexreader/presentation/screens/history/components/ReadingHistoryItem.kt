@@ -25,8 +25,8 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.animateItemOnAppear
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
-import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
-import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmer
+import com.decoutkhanqindev.dexreader.presentation.screens.common.onClick
+import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmerLoading
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
@@ -83,7 +83,7 @@ fun ReadingHistoryItem(
     Card(
       modifier = Modifier
         .fillMaxSize()
-        .shimmer(isEnable = !isImageLoaded),
+        .shimmerLoading(isEnable = !isImageLoaded),
       shape = RectangleShape,
       colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
       elevation = CardDefaults.cardElevation(8.dp),
@@ -93,7 +93,7 @@ fun ReadingHistoryItem(
         modifier = Modifier
           .fillMaxWidth()
           .padding(8.dp)
-          .onScalableClick(shape = RectangleShape) {
+          .onClick {
             onSelectedReadingHistory()
           }
       ) {

@@ -271,10 +271,12 @@ state object, so unrelated field changes (e.g. text input) don't re-arm the dial
   one instance across every page/item (`MangaBanner` bug: one shared flag turned off shimmer on every
   banner page as soon as a single image finished loading, and re-triggered recomposition of every
   composed page on each toggle)
-- Custom `graphicsLayer`-driven animation modifiers (`animateItemOnAppear`, `onScalableClick` in
-  `common/Modifier.kt`) must read the animated `State<Float>` via `.value` **inside** the
-  `graphicsLayer { }` block — never destructure via `by` at the top of the function. A `by` read
-  there re-triggers full recomposition on every animation frame instead of a cheap redraw-only pass
+- Custom animation modifiers that drive `graphicsLayer { }` or `drawWithContent { }` must read the
+  animated `State<Float>` via `.value` **inside** that deferred block — never destructure via `by`
+  at the top of the function. A `by` read there re-triggers full recomposition on every animation
+  frame instead of a cheap redraw/relayout-only pass. `onClick`, `shimmerLoading`, `shimmerHighlight`,
+  and `animateItemOnAppear` in `common/Modifiers.kt` all follow this correctly — use them as the
+  reference pattern for any new animated modifier
 
 ---
 

@@ -18,7 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
-import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
+import com.decoutkhanqindev.dexreader.presentation.screens.common.onClick
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -58,7 +58,7 @@ fun MangaChaptersHeader(
     )
     Text(
       text = stringResource(selectedLanguage.value),
-      modifier = Modifier.onScalableClick { isShowLanguageBottomSheet = true },
+      modifier = Modifier.onClick { isShowLanguageBottomSheet = true },
       fontWeight = FontWeight.Bold,
       style = MaterialTheme.typography.titleMedium,
     )

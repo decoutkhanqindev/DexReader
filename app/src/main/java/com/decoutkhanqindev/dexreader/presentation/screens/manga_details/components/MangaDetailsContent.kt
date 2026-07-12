@@ -270,23 +270,21 @@ fun MangaDetailsContent(
                   }
 
                   item {
-                    if (nextPageState == BaseNextPageState.IDLE) {
-                      LoadMoreMessage(
-                        modifier = Modifier
-                          .fillMaxWidth()
-                          .padding(horizontal = 16.dp, vertical = 12.dp),
-                        onClick = onFetchChapterListNextPage
-                      )
-                    } else {
-                      val allLoaded = nextPageState == BaseNextPageState.NO_MORE_ITEMS
-                      Surface(
-                        modifier = Modifier
-                          .fillMaxWidth()
-                          .padding(vertical = 6.dp),
-                        shape = if (allLoaded) BottomCardShape else RectangleShape,
-                        color = MaterialTheme.colorScheme.surface,
-                        tonalElevation = 4.dp
-                      ) {
+                    Surface(
+                      modifier = Modifier
+                        .fillMaxWidth(),
+                      shape =BottomCardShape,
+                      color = MaterialTheme.colorScheme.surface,
+                      tonalElevation = 4.dp
+                    ) {
+                      if (nextPageState == BaseNextPageState.IDLE) {
+                        LoadMoreMessage(
+                          modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                          onClick = onFetchChapterListNextPage
+                        )
+                      } else {
                         when (nextPageState) {
                           BaseNextPageState.LOADING -> ListLoadingIndicator(
                             modifier = Modifier

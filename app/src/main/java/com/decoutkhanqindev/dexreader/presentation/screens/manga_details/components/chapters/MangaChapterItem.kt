@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterModel
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.animateItemOnAppear
-import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
+import com.decoutkhanqindev.dexreader.presentation.screens.common.onClick
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
@@ -47,7 +47,7 @@ fun MangaChapterItem(
   Surface(
     modifier = modifier
       .animateItemOnAppear()
-      .onScalableClick(shape = shape) { onChapterClick() },
+      .onClick(shape = shape) { onChapterClick() },
     shape = shape,
     color = MaterialTheme.colorScheme.surfaceVariant,
   ) {

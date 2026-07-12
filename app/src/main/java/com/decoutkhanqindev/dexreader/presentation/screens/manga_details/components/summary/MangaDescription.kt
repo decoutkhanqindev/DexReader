@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
+import com.decoutkhanqindev.dexreader.presentation.screens.common.onClick
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
@@ -23,7 +23,7 @@ fun MangaDescription(
 ) {
   var isExpanded by remember { mutableStateOf(false) }
 
-  Column(modifier = modifier.onScalableClick { isExpanded = !isExpanded }) {
+  Column(modifier = modifier.onClick { isExpanded = !isExpanded }) {
     Text(
       text = description,
       modifier = Modifier.fillMaxWidth(),

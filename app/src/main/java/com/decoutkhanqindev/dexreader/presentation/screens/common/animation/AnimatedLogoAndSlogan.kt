@@ -5,9 +5,12 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,6 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -23,7 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmer
+import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmerHighlight
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -64,13 +68,24 @@ fun AnimatedLogoAndSlogan(modifier: Modifier = Modifier.Companion) {
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.spacedBy(12.dp),
   ) {
-    Image(
-      painter = painterResource(R.drawable.app_icon),
-      contentDescription = null,
+    Box(
       modifier = Modifier
-        .size(100.dp)
-        .shimmer(true),
-    )
+        .size(120.dp)
+        .shimmerHighlight(
+          backgroundColor = Color.Transparent,
+          shimmerColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f),
+          shape = CircleShape,
+        ),
+      contentAlignment = Alignment.Center,
+    ) {
+      Image(
+        painter = painterResource(R.drawable.app_icon),
+        contentDescription = null,
+        modifier = Modifier
+          .fillMaxSize()
+          .padding(8.dp),
+      )
+    }
 
     Text(
       text = stringResource(R.string.app_name),
