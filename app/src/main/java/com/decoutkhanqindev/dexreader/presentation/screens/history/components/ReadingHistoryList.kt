@@ -86,7 +86,7 @@ fun ReadingHistoryList(
           BaseNextPageState.LOADING -> ListLoadingIndicator(
             modifier = Modifier
               .fillMaxWidth()
-              .padding(bottom = 12.dp)
+              .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 12.dp)
           )
 
           BaseNextPageState.ERROR -> LoadPageErrorMessage(
@@ -94,23 +94,21 @@ fun ReadingHistoryList(
             onRetryClick = onRetryObserveHistoryNextPage,
             modifier = Modifier
               .fillMaxWidth()
-              .padding(top = 8.dp)
+              .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 12.dp)
           )
 
           BaseNextPageState.IDLE -> LoadMoreMessage(
             onClick = onObserveHistoryNextPage,
             modifier = Modifier
               .fillMaxWidth()
-              .padding(horizontal = 8.dp)
-              .padding(bottom = 12.dp, top = 8.dp)
+              .padding(start = 8.dp, top = 12.dp, end = 8.dp, bottom = 12.dp)
           )
 
           BaseNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
             title = "All reading histories loaded.",
             modifier = Modifier
               .fillMaxWidth()
-              .padding(horizontal = 8.dp)
-              .padding(bottom = 12.dp, top = 8.dp)
+              .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 12.dp)
           )
         }
       }
@@ -118,7 +116,7 @@ fun ReadingHistoryList(
 
     MoveToTopButton(
       itemsSize = readingHistoryList.size,
-      listState = lazyListState,
+      listState = { lazyListState },
       modifier = Modifier
         .align(Alignment.BottomEnd)
         .padding(16.dp)

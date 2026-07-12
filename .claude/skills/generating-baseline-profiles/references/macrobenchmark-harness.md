@@ -1,6 +1,7 @@
 # Macrobenchmark harness reference
 
-Full Gradle, manifest, and metric setup for the `:baselineprofile` module. Pulled out of the parent `SKILL.md` so the skill body stays under the 500-line ceiling.
+Full Gradle, manifest, and metric setup for the `:baselineprofile` module. Pulled out of the parent
+`SKILL.md` so the skill body stays under the 500-line ceiling.
 
 ---
 
@@ -114,7 +115,8 @@ androidx-baselineprofile = { id = "androidx.baselineprofile", version.ref = "bas
 
 ## 2. Manifest — `<profileable android:shell="true"/>`
 
-Macrobenchmark attaches `simpleperf` and `perfetto` to the target app process. That requires the app to opt in via `<profileable>` under `<application>`:
+Macrobenchmark attaches `simpleperf` and `perfetto` to the target app process. That requires the app
+to opt in via `<profileable>` under `<application>`:
 
 ```xml
 <!-- :app/src/main/AndroidManifest.xml -->
@@ -128,7 +130,8 @@ Macrobenchmark attaches `simpleperf` and `perfetto` to the target app process. T
 </manifest>
 ```
 
-Required on API 29+ to expose perf counters to non-system processes. Without this the Macrobench JSON is missing trace sections and `FrameTimingMetric` values come back empty.
+Required on API 29+ to expose perf counters to non-system processes. Without this the Macrobench
+JSON is missing trace sections and `FrameTimingMetric` values come back empty.
 
 ---
 
@@ -136,27 +139,31 @@ Required on API 29+ to expose perf counters to non-system processes. Without thi
 
 `androidx.benchmark:benchmark-junit4` ships **two** rule classes; do not confuse them:
 
-| Rule | Module | Scope | Use it for |
-|---|---|---|---|
-| `BenchmarkRule` | `benchmark-junit4` (microbenchmark) | In-process, single JVM | Pure-Kotlin / pure-Compose-runtime hot loops (e.g. measuring a `derivedStateOf` calculation) where there is no Activity. |
-| `MacrobenchmarkRule` | `benchmark-macro-junit4` | Out-of-process, instruments a real APK | Cold/warm/hot startup, scroll, navigation — anything user-perceived. |
+| Rule                 | Module                              | Scope                                  | Use it for                                                                                                               |
+|----------------------|-------------------------------------|----------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
+| `BenchmarkRule`      | `benchmark-junit4` (microbenchmark) | In-process, single JVM                 | Pure-Kotlin / pure-Compose-runtime hot loops (e.g. measuring a `derivedStateOf` calculation) where there is no Activity. |
+| `MacrobenchmarkRule` | `benchmark-macro-junit4`            | Out-of-process, instruments a real APK | Cold/warm/hot startup, scroll, navigation — anything user-perceived.                                                     |
 
-Baseline Profiles only make sense with `MacrobenchmarkRule`. `BenchmarkRule` is for surgical microbenchmarks of an isolated function and never measures startup or AOT compilation effects.
+Baseline Profiles only make sense with `MacrobenchmarkRule`. `BenchmarkRule` is for surgical
+microbenchmarks of an isolated function and never measures startup or AOT compilation effects.
 
 ---
 
 ## 4. Metric catalogue
 
-`metrics = listOf(...)` accepts any combination of these. Pick the smallest set that answers the question — every extra metric adds trace overhead.
+`metrics = listOf(...)` accepts any combination of these. Pick the smallest set that answers the
+question — every extra metric adds trace overhead.
 
 ### 4.1 `StartupTimingMetric`
 
 Reports cold/warm/hot startup. Two values per iteration:
 
 - **`timeToInitialDisplay`** — first frame drawn after process start. Always reported.
-- **`timeToFullDisplay`** — fires when the app calls `ReportDrawn` / `ReportDrawnWhen` / `ReportDrawnAfter`. Falls back to `timeToInitialDisplay` if the app never calls it.
+- **`timeToFullDisplay`** — fires when the app calls `ReportDrawn` / `ReportDrawnWhen` /
+  `ReportDrawnAfter`. Falls back to `timeToInitialDisplay` if the app never calls it.
 
-Pair with `startupMode = StartupMode.COLD` for the cold-start number; `WARM` and `HOT` exist but cold is the public-facing one.
+Pair with `startupMode = StartupMode.COLD` for the cold-start number; `WARM` and `HOT` exist but
+cold is the public-facing one.
 
 ```kotlin
 metrics = listOf(StartupTimingMetric())
@@ -180,7 +187,8 @@ metrics = listOf(FrameTimingMetric())
 
 ### 4.3 `TraceSectionMetric`
 
-Surgical: measures a single named `Trace.beginSection` block in the app code. Use when an animation tick or a specific composable's first composition needs measurement.
+Surgical: measures a single named `Trace.beginSection` block in the app code. Use when an animation
+tick or a specific composable's first composition needs measurement.
 
 ```kotlin
 metrics = listOf(
@@ -201,11 +209,13 @@ fun Feed(state: FeedState) {
 }
 ```
 
-Modes: `First` (first occurrence only; reports nothing if the section is absent), `Sum` (total time across all matches), `Min`, `Max`, `Count` (number of times the section ran), `Average`.
+Modes: `First` (first occurrence only; reports nothing if the section is absent), `Sum` (total time
+across all matches), `Min`, `Max`, `Count` (number of times the section ran), `Average`.
 
 ### 4.4 `MemoryUsageMetric`
 
-Heap and native memory snapshots at end-of-iteration. Useful for catching leak regressions but noisy iteration-to-iteration; report only over many iterations.
+Heap and native memory snapshots at end-of-iteration. Useful for catching leak regressions but noisy
+iteration-to-iteration; report only over many iterations.
 
 ```kotlin
 metrics = listOf(MemoryUsageMetric(MemoryUsageMetric.Mode.Last))
@@ -215,7 +225,8 @@ Modes: `Last` (snapshot after the block), `Max` (max during the block).
 
 ### 4.5 `PowerMetric`
 
-CPU / GPU / display power draw. Requires a Pixel 6 or later for the on-device power monitor; emulators report nothing. Use for battery-regression dashboards, not for one-off measurement.
+CPU / GPU / display power draw. Requires a Pixel 6 or later for the on-device power monitor;
+emulators report nothing. Use for battery-regression dashboards, not for one-off measurement.
 
 ```kotlin
 metrics = listOf(
@@ -227,16 +238,17 @@ metrics = listOf(
 
 ## 5. CompilationMode matrix
 
-| Mode | What it does | When |
-|---|---|---|
-| `CompilationMode.None` | Wipes any AOT/JIT compiled code; runs interpreted. | A/B sibling against a profiled run, to prove the profile moved the number. |
-| `CompilationMode.Partial(BaselineProfileMode.Require)` | Installs the profile from `assets/dexopt/baseline.prof` and **fails the test** if the profile is missing. | Default for measurement. |
-| `CompilationMode.Partial(BaselineProfileMode.UseIfAvailable)` | Installs the profile if present, falls back to none silently. | Avoid — silent fallback hides bugs. |
-| `CompilationMode.Partial(warmupIterations = N)` | Runs the test `N` times to let JIT warm up before measuring. | Approximating "what does this look like after the user has used the app for a while". |
-| `CompilationMode.Full` | Compiles every method. | Upper-bound reference number. Not what the user actually experiences. |
-| `CompilationMode.Ignore` | Don't touch compilation state between iterations. | Almost never. |
+| Mode                                                          | What it does                                                                                              | When                                                                                  |
+|---------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|
+| `CompilationMode.None`                                        | Wipes any AOT/JIT compiled code; runs interpreted.                                                        | A/B sibling against a profiled run, to prove the profile moved the number.            |
+| `CompilationMode.Partial(BaselineProfileMode.Require)`        | Installs the profile from `assets/dexopt/baseline.prof` and **fails the test** if the profile is missing. | Default for measurement.                                                              |
+| `CompilationMode.Partial(BaselineProfileMode.UseIfAvailable)` | Installs the profile if present, falls back to none silently.                                             | Avoid — silent fallback hides bugs.                                                   |
+| `CompilationMode.Partial(warmupIterations = N)`               | Runs the test `N` times to let JIT warm up before measuring.                                              | Approximating "what does this look like after the user has used the app for a while". |
+| `CompilationMode.Full`                                        | Compiles every method.                                                                                    | Upper-bound reference number. Not what the user actually experiences.                 |
+| `CompilationMode.Ignore`                                      | Don't touch compilation state between iterations.                                                         | Almost never.                                                                         |
 
-For Baseline-Profile work, only `Partial(BaselineProfileMode.Require)` and `None` matter. The first measures the shipped behaviour; the second proves the delta.
+For Baseline-Profile work, only `Partial(BaselineProfileMode.Require)` and `None` matter. The first
+measures the shipped behaviour; the second proves the delta.
 
 ---
 
@@ -297,16 +309,29 @@ echo "median timeToInitialDisplayMs = ${median}"
 awk -v m="$median" -v t="$THRESHOLD_MS" 'BEGIN { exit (m <= t) ? 0 : 1 }'
 ```
 
-For tracking deltas across PRs, store the JSON as a CI artifact and diff `median` values across the base ref and the PR ref. The point is not the absolute number; the point is whether the PR moved the median outside the noise band of past runs (typically ±5%).
+For tracking deltas across PRs, store the JSON as a CI artifact and diff `median` values across the
+base ref and the PR ref. The point is not the absolute number; the point is whether the PR moved the
+median outside the noise band of past runs (typically ±5%).
 
 ---
 
 ## 7. Common harness mistakes
 
-- **`<profileable>` missing** — Macrobench reports "Trace section not found" or empty `FrameTimingMetric`. Fix: add the manifest tag.
-- **Both `:app` and `:baselineprofile` missing the `androidx.baselineprofile` plugin** — `./gradlew :app:generateBaselineProfile` is not registered. Fix: apply the plugin in both modules.
-- **Test run on a debug variant** — `BaselineProfileMode.Require` fails because no profile was packaged. Fix: run against the `benchmark` (release-equivalent) variant.
-- **`baselineProfile(project(":baselineprofile"))` missing on `:app`** — generation runs but the profile never ships in the APK. Fix: add the dependency.
-- **Profile generated against the wrong package** — `BaselineProfileRule.collect(packageName = "...")` and `MacrobenchmarkRule.measureRepeated(packageName = "...")` must match the **release** application ID, including `applicationIdSuffix` if any.
-- **`device.findObject(...)` returns null** — the test tag is on a debug-only composable, or `.testTag(...)` was added inside a `BasicText` whose semantics get merged with the parent. Fix: add `Modifier.semantics { testTagsAsResourceId = true }` on the root `LazyColumn` if needed, and verify `By.res(...)` resolves with `device.dumpWindowHierarchy(System.out)` once.
-- **Flings eaten by gesture nav** — `feed.setGestureMargin(device.displayWidth / 5)` before `fling()`.
+- **`<profileable>` missing** — Macrobench reports "Trace section not found" or empty
+  `FrameTimingMetric`. Fix: add the manifest tag.
+- **Both `:app` and `:baselineprofile` missing the `androidx.baselineprofile` plugin** —
+  `./gradlew :app:generateBaselineProfile` is not registered. Fix: apply the plugin in both modules.
+- **Test run on a debug variant** — `BaselineProfileMode.Require` fails because no profile was
+  packaged. Fix: run against the `benchmark` (release-equivalent) variant.
+- **`baselineProfile(project(":baselineprofile"))` missing on `:app`** — generation runs but the
+  profile never ships in the APK. Fix: add the dependency.
+- **Profile generated against the wrong package** —
+  `BaselineProfileRule.collect(packageName = "...")` and
+  `MacrobenchmarkRule.measureRepeated(packageName = "...")` must match the **release** application
+  ID, including `applicationIdSuffix` if any.
+- **`device.findObject(...)` returns null** — the test tag is on a debug-only composable, or
+  `.testTag(...)` was added inside a `BasicText` whose semantics get merged with the parent. Fix:
+  add `Modifier.semantics { testTagsAsResourceId = true }` on the root `LazyColumn` if needed, and
+  verify `By.res(...)` resolves with `device.dumpWindowHierarchy(System.out)` once.
+- **Flings eaten by gesture nav** — `feed.setGestureMargin(device.displayWidth / 5)` before
+  `fling()`.

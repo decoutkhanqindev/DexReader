@@ -2,7 +2,6 @@ package com.decoutkhanqindev.dexreader.presentation.screens.home.components
 
 import androidx.activity.compose.ReportDrawnWhen
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +13,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,16 +45,20 @@ fun HomeContent(
   modifier: Modifier = Modifier,
   onItemClick: (String) -> Unit,
   onRetry: () -> Unit,
-  onRefresh: () -> Unit ,
+  onRefresh: () -> Unit,
 ) {
-  var isShowErrorDialog by remember(uiState) { mutableStateOf(uiState is HomeUiState.Error) }
+  var isShowErrorDialog by remember { mutableStateOf(false) }
   val pullToRefreshState = rememberPullToRefreshState()
+
+  LaunchedEffect(uiState) {
+    if (uiState is HomeUiState.Error) isShowErrorDialog = true
+  }
 
   ReportDrawnWhen { uiState is HomeUiState.Success }
 
   PullToRefreshBox(
     state = pullToRefreshState,
-    isRefreshing = uiState is HomeUiState.Loading,
+    isRefreshing = false,
     onRefresh = onRefresh,
     modifier = modifier
   ) {
@@ -71,7 +75,7 @@ fun HomeContent(
           horizontalAlignment = Alignment.CenterHorizontally
         ) {
           if (uiState.bannerMangaList.isNotEmpty()) {
-            FeaturedMangaBanner(
+            MangaBanner(
               mangaList = uiState.bannerMangaList,
               modifier = Modifier
                 .fillMaxWidth()

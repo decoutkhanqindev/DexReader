@@ -36,9 +36,7 @@ fun SortOrderOptions(
           .weight(1f)
           .selectable(
             selected = selectedItem == option,
-            onClick = remember(option) {
-              { onItemClick(option) }
-            },
+            onClick = remember(option) { { onItemClick(option) } },
             role = Role.RadioButton
           ),
         verticalAlignment = Alignment.CenterVertically,

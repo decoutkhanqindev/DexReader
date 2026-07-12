@@ -17,14 +17,19 @@ class FirebaseStatisticsFirestoreSourceImpl @Inject constructor(
   private val firebaseFirestore: FirebaseFirestore,
 ) : FirebaseStatisticsFirestoreSource {
 
-  override suspend fun incrementReadingDuration(userId: String, date: String, durationMillis: Long) {
+  override suspend fun incrementReadingDuration(
+    userId: String,
+    date: String,
+    durationMillis: Long,
+  ) {
     val statsId = ReadingStats.generateId(userId, date)
     val data = mapOf(
       "user_id" to userId,
       "date" to date,
       "duration_millis" to FieldValue.increment(durationMillis)
     )
-    Timber.tag("StatisticsDebug").d("Incrementing duration: $durationMillis for user: $userId on date: $date")
+    Timber.tag("StatisticsDebug")
+      .d("Incrementing duration: $durationMillis for user: $userId on date: $date")
     firebaseFirestore.collection(FirestoreCollections.STATISTICS)
       .document(statsId)
       .set(data, SetOptions.merge())

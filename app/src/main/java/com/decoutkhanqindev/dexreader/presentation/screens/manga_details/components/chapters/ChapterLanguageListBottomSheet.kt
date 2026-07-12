@@ -1,7 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.chapters
 
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
+import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -73,7 +73,7 @@ fun ChapterLanguageListBottomSheet(
             text = stringResource(it.value),
             modifier = Modifier
               .padding(bottom = 8.dp)
-              .clickable {
+              .onScalableClick {
                 onClick()
                 onDismissClick()
               },

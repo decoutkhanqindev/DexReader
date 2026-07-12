@@ -13,11 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.screens.common.animation.AnimatedLogoAndSlogan
 
 @Composable
 fun SplashContent(modifier: Modifier = Modifier) {
   Box(modifier = modifier) {
-    SplashLogoAndSlogan(modifier = Modifier.align(Alignment.Center))
+    AnimatedLogoAndSlogan(modifier = Modifier.align(Alignment.Center))
 
     Column(
       modifier = Modifier

@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.screens.splash.components
+package com.decoutkhanqindev.dexreader.presentation.screens.common.animation
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -28,9 +28,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun SplashLogoAndSlogan(modifier: Modifier = Modifier) {
-  val enterSpec = tween<Float>(durationMillis = 900, easing = FastOutSlowInEasing)
-  val exitSpec = tween<Float>(durationMillis = 700, easing = FastOutSlowInEasing)
+fun AnimatedLogoAndSlogan(modifier: Modifier = Modifier.Companion) {
+  val enterSpec = remember { tween<Float>(durationMillis = 900, easing = FastOutSlowInEasing) }
+  val exitSpec = remember { tween<Float>(durationMillis = 700, easing = FastOutSlowInEasing) }
   val visiblePauseMs = 800L
   val cycleGapMs = 300L
   val offsetY = -80f
@@ -68,7 +68,7 @@ fun SplashLogoAndSlogan(modifier: Modifier = Modifier) {
       painter = painterResource(R.drawable.app_icon),
       contentDescription = null,
       modifier = Modifier
-        .size(96.dp)
+        .size(100.dp)
         .shimmer(true),
     )
 
@@ -77,10 +77,10 @@ fun SplashLogoAndSlogan(modifier: Modifier = Modifier) {
       style = MaterialTheme.typography.headlineLarge,
       fontWeight = FontWeight.Bold,
       color = MaterialTheme.colorScheme.onBackground,
-      modifier = Modifier.graphicsLayer(
-        alpha = appNameAlpha.value,
-        translationY = appNameOffsetY.value,
-      ),
+      modifier = Modifier.graphicsLayer {
+        alpha = appNameAlpha.value
+        translationY = appNameOffsetY.value
+      },
     )
 
     Text(
@@ -91,10 +91,10 @@ fun SplashLogoAndSlogan(modifier: Modifier = Modifier) {
       textAlign = TextAlign.Center,
       modifier = Modifier
         .padding(horizontal = 32.dp)
-        .graphicsLayer(
-          alpha = sloganAlpha.value,
-          translationY = sloganOffsetY.value,
-        ),
+        .graphicsLayer {
+          alpha = sloganAlpha.value
+          translationY = sloganOffsetY.value
+        },
     )
   }
 }

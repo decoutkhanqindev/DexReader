@@ -15,7 +15,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.MoveTo
 @Composable
 fun SortAndFilterSection(
   itemsSize: Int,
-  gridState: LazyGridState,
+  gridState: () -> LazyGridState,
   modifier: Modifier = Modifier,
   onMoveToTopClick: () -> Unit,
   onSortClick: () -> Unit,

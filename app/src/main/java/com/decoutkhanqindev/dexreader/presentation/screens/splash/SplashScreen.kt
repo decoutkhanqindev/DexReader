@@ -2,6 +2,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.splash
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -18,9 +19,8 @@ fun SplashScreen(
   modifier: Modifier = Modifier,
   onNavigateToHome: () -> Unit,
 ) {
-  val splashDurationMs = 3000L
   LaunchedEffect(Unit) {
-    delay(splashDurationMs)
+    delay(3000L)
     onNavigateToHome()
   }
 
@@ -29,6 +29,7 @@ fun SplashScreen(
       .fillMaxSize()
       .background(MaterialTheme.colorScheme.background)
       .padding(32.dp)
+      .navigationBarsPadding()
   )
 }
 

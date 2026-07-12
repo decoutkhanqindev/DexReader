@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
@@ -21,7 +22,7 @@ fun AllItemLoadedMessage(
 ) {
   Row(
     modifier = modifier,
-    horizontalArrangement = Arrangement.Center,
+    horizontalArrangement = Arrangement.spacedBy(12.dp),
     verticalAlignment = Alignment.CenterVertically
   ) {
     HorizontalDivider(modifier = Modifier.weight(0.8f))
@@ -43,8 +44,7 @@ fun AllItemLoadedMessage(
 private fun AllItemLoadedMessagePreview() {
   DexReaderTheme {
     AllItemLoadedMessage(
-      title = "All mangas loaded",
-      modifier = Modifier.fillMaxWidth()
+      title = "All mangas loaded", modifier = Modifier.fillMaxWidth()
     )
   }
 }

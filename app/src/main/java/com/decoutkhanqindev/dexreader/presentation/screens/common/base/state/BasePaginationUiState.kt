@@ -8,7 +8,6 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Immutable
 sealed interface BasePaginationUiState<out T> {
-  @Immutable
   data object FirstPageLoading : BasePaginationUiState<Nothing>
 
   @Immutable

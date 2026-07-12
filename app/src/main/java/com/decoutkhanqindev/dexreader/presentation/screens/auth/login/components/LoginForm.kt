@@ -1,6 +1,5 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.auth.login.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -30,7 +28,8 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.error.UserError
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.components.EmailInputField
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.components.PasswordInputField
-import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
+import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
+import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
@@ -48,7 +47,7 @@ fun LoginForm(
 ) {
   Card(
     modifier = modifier.verticalScroll(rememberScrollState()),
-    shape = RoundedCornerShape(16.dp),
+    shape = MaterialTheme.shapes.medium,
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh)
   ) {
     Column(
@@ -94,7 +93,7 @@ fun LoginForm(
           modifier = Modifier
             .align(Alignment.End)
             .minimumInteractiveComponentSize()
-            .clickable(onClick = onForgotPasswordClick),
+            .onScalableClick { onForgotPasswordClick() },
           color = MaterialTheme.colorScheme.onPrimaryContainer,
           fontWeight = FontWeight.Bold,
           fontStyle = FontStyle.Italic,
@@ -102,13 +101,20 @@ fun LoginForm(
         )
       }
 
-      SubmitButton(
-        title = stringResource(R.string.sign_in),
+      ActionButton(
+        backgroundColor = MaterialTheme.colorScheme.primary,
         modifier = Modifier
           .fillMaxWidth()
           .padding(bottom = 8.dp),
         onClick = onSubmitClick,
-      )
+      ) {
+        Text(
+          text = stringResource(R.string.sign_in),
+          color = MaterialTheme.colorScheme.onPrimary,
+          fontWeight = FontWeight.ExtraBold,
+          style = MaterialTheme.typography.titleMedium,
+        )
+      }
 
       Row(
         modifier = Modifier.fillMaxWidth(),
@@ -126,7 +132,7 @@ fun LoginForm(
           text = stringResource(R.string.sign_up),
           modifier = Modifier
             .minimumInteractiveComponentSize()
-            .clickable(onClick = onRegisterClick),
+            .onScalableClick { onRegisterClick() },
           color = MaterialTheme.colorScheme.onPrimaryContainer,
           fontWeight = FontWeight.Bold,
           fontStyle = FontStyle.Italic,

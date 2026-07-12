@@ -16,7 +16,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.MoveTo
 @Composable
 fun ReadingAndFavoriteSection(
   itemsSize: Int,
-  listState: LazyListState,
+  listState: () -> LazyListState,
   isFavorite: Boolean,
   startedChapterId: String?,
   mangaId: String,

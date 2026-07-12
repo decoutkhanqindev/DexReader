@@ -5,7 +5,6 @@ import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 
 @Immutable
 sealed interface SuggestionsUiState {
-  @Immutable
   data object Loading : SuggestionsUiState
 
   @Immutable

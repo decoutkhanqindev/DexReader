@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,7 +50,11 @@ fun FavoritesContent(
   onRetry: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  var isShowErrorDialog by remember(uiState) { mutableStateOf(uiState is BasePaginationUiState.FirstPageError) }
+  var isShowErrorDialog by remember { mutableStateOf(false) }
+
+  LaunchedEffect(uiState) {
+    if (uiState is BasePaginationUiState.FirstPageError) isShowErrorDialog = true
+  }
 
   when (uiState) {
     BasePaginationUiState.FirstPageLoading -> LoadingScreen(modifier = modifier)
@@ -110,7 +115,7 @@ fun FavoritesContent(
                   BaseNextPageState.LOADING -> ListLoadingIndicator(
                     modifier = Modifier
                       .fillMaxWidth()
-                      .padding(bottom = 12.dp)
+                      .padding(start = 4.dp, end = 4.dp, bottom = 12.dp)
                   )
 
                   BaseNextPageState.ERROR -> LoadPageErrorMessage(
@@ -118,23 +123,21 @@ fun FavoritesContent(
                     onRetryClick = onRetryObserveFavoriteMangaListNextPage,
                     modifier = Modifier
                       .fillMaxWidth()
-                      .padding(top = 8.dp)
+                      .padding(start = 4.dp, end = 4.dp, bottom = 12.dp)
                   )
 
                   BaseNextPageState.IDLE -> LoadMoreMessage(
                     onClick = onObserveFavoriteMangaListNextPage,
                     modifier = Modifier
                       .fillMaxWidth()
-                      .padding(horizontal = 8.dp)
-                      .padding(bottom = 12.dp)
+                      .padding(start = 4.dp, top = 12.dp, end = 4.dp, bottom = 12.dp)
                   )
 
                   BaseNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
                     title = stringResource(R.string.all_mangas_loaded),
                     modifier = Modifier
                       .fillMaxWidth()
-                      .padding(horizontal = 8.dp)
-                      .padding(bottom = 12.dp)
+                      .padding(start = 4.dp, end = 4.dp, bottom = 12.dp)
                   )
                 }
               }
@@ -143,7 +146,7 @@ fun FavoritesContent(
 
           MoveToTopButton(
             itemsSize = favoriteMangaList.size,
-            gridState = lazyGridState,
+            gridState = { lazyGridState },
             modifier = Modifier
               .align(Alignment.BottomEnd)
               .padding(16.dp)

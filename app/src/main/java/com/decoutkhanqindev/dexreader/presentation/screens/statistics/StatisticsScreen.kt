@@ -101,7 +101,10 @@ fun StatCard(label: String, millis: Long) {
       Text(text = label, style = MaterialTheme.typography.titleMedium)
       Text(
         text = if (hours > 0) {
-          stringResource(R.string.hours_suffix, hours) + " " + stringResource(R.string.minutes_suffix, remainingMinutes)
+          stringResource(
+            R.string.hours_suffix,
+            hours
+          ) + " " + stringResource(R.string.minutes_suffix, remainingMinutes)
         } else {
           stringResource(R.string.minutes_suffix, minutes)
         },

@@ -1,7 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.chapters
 
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -19,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
+import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -58,7 +58,7 @@ fun MangaChaptersHeader(
     )
     Text(
       text = stringResource(selectedLanguage.value),
-      modifier = Modifier.clickable { isShowLanguageBottomSheet = true },
+      modifier = Modifier.onScalableClick { isShowLanguageBottomSheet = true },
       fontWeight = FontWeight.Bold,
       style = MaterialTheme.typography.titleMedium,
     )

@@ -44,7 +44,7 @@ s) the user provided as production-ready Compose code using generated tokens.
 3. **Map Figma concepts to Compose**:
 
    | Figma | Compose |
-                           |-------|---------|
+                              |-------|---------|
    | Frame with auto layout (vertical) | `Column(verticalArrangement = ...)` |
    | Frame with auto layout (horizontal) | `Row(horizontalArrangement = ...)` |
    | Fixed size frame | `Box(modifier = Modifier.size(w, h))` |
@@ -66,7 +66,7 @@ s) the user provided as production-ready Compose code using generated tokens.
 3. **Translate HTML/CSS → Compose**:
 
    | HTML/CSS | Compose |
-                           |----------|---------|
+                              |----------|---------|
    | `<div style="display: flex; flex-direction: column">` | `Column` |
    | `<div style="display: flex; flex-direction: row">` | `Row` |
    | `<div style="display: grid">` | `LazyVerticalGrid` or nested Row/Column |

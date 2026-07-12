@@ -19,7 +19,7 @@ fun SuggestionList(
   onSelectedSuggestion: (String) -> Unit,
 ) {
   LazyColumn(modifier = modifier) {
-    items(items = suggestionList, key = { it.hashCode() }) { suggestion ->
+    items(items = suggestionList) { suggestion ->
       SuggestionItem(
         suggestion = suggestion,
         modifier = Modifier.fillMaxWidth(),

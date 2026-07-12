@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.decoutkhanqindev.dexreader.presentation.screens.common.animation.AnimatedLogoAndSlogan
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
@@ -26,16 +28,17 @@ fun AuthContent(
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = modifier.background(MaterialTheme.colorScheme.surface)
   ) {
-    AuthHeader(
+    AnimatedLogoAndSlogan(
       modifier = Modifier
-        .weight(0.25f)
+        .weight(0.3f)
         .fillMaxWidth()
-        .padding(horizontal = 16.dp)
+        .padding(16.dp)
+        .statusBarsPadding()
     )
 
     Box(
       modifier = Modifier
-        .weight(0.75f)
+        .weight(0.7f)
         .fillMaxWidth()
     ) { content() }
   }

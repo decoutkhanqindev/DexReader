@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -28,7 +27,6 @@ import com.decoutkhanqindev.dexreader.presentation.screens.auth.components.Email
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.components.NameInputField
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.components.PasswordInputField
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
-import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
@@ -51,7 +49,7 @@ fun RegisterForm(
 ) {
   Card(
     modifier = modifier.verticalScroll(rememberScrollState()),
-    shape = RoundedCornerShape(16.dp),
+    shape = MaterialTheme.shapes.medium,
     colors =
       CardDefaults.cardColors(
         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
@@ -108,13 +106,20 @@ fun RegisterForm(
         onValueChange = onNameChange,
       )
 
-      SubmitButton(
-        title = stringResource(R.string.sign_up),
+      ActionButton(
+        backgroundColor = MaterialTheme.colorScheme.primary,
         modifier = Modifier
           .fillMaxWidth()
           .padding(bottom = 8.dp),
         onClick = onSubmitClick,
-      )
+      ) {
+        Text(
+          text = stringResource(R.string.sign_up),
+          color = MaterialTheme.colorScheme.onPrimary,
+          fontWeight = FontWeight.ExtraBold,
+          style = MaterialTheme.typography.titleMedium,
+        )
+      }
 
       ActionButton(
         modifier = Modifier.fillMaxWidth(),

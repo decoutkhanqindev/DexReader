@@ -38,21 +38,11 @@ fun PasswordInputField(
   modifier: Modifier = Modifier,
   onValueChange: (String) -> Unit,
 ) {
-  val keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next)
+  val keyboardOptions = remember {
+    KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next)
+  }
   val passwordTransformation = remember { PasswordVisualTransformation() }
   var isShowPassword by remember { mutableStateOf(false) }
-  val colorScheme = MaterialTheme.colorScheme
-  val colors = OutlinedTextFieldDefaults.colors(
-    focusedContainerColor = colorScheme.surfaceContainer,
-    unfocusedContainerColor = colorScheme.surfaceContainer,
-    focusedBorderColor = colorScheme.onPrimaryContainer,
-    unfocusedBorderColor = colorScheme.onPrimaryContainer,
-    cursorColor = colorScheme.onPrimaryContainer,
-    focusedTextColor = colorScheme.onSurface,
-    unfocusedTextColor = colorScheme.onSurface,
-    focusedLabelColor = colorScheme.onPrimaryContainer,
-    unfocusedLabelColor = colorScheme.onPrimaryContainer,
-  )
 
   OutlinedTextField(
     value = value,
@@ -65,7 +55,7 @@ fun PasswordInputField(
           if (isConfirmed) stringResource(R.string.confirm_password)
           else stringResource(R.string.password),
         modifier = Modifier.size(24.dp),
-        tint = colorScheme.onPrimaryContainer,
+        tint = MaterialTheme.colorScheme.onPrimaryContainer,
       )
     },
     label = {
@@ -86,7 +76,7 @@ fun PasswordInputField(
             if (isShowPassword) stringResource(R.string.hide_password)
             else stringResource(R.string.show_password),
           modifier = Modifier.size(24.dp),
-          tint = colorScheme.onPrimaryContainer,
+          tint = MaterialTheme.colorScheme.onPrimaryContainer,
         )
       }
     },
@@ -96,7 +86,7 @@ fun PasswordInputField(
       error?.let {
         Text(
           text = stringResource(it.messageRes),
-          color = colorScheme.error
+          color = MaterialTheme.colorScheme.error
         )
       }
     },
@@ -105,7 +95,17 @@ fun PasswordInputField(
       if (isShowPassword) VisualTransformation.None
       else passwordTransformation,
     keyboardOptions = keyboardOptions,
-    colors = colors,
+    colors = OutlinedTextFieldDefaults.colors(
+      focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+      unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+      focusedBorderColor = MaterialTheme.colorScheme.onPrimaryContainer,
+      unfocusedBorderColor = MaterialTheme.colorScheme.onPrimaryContainer,
+      cursorColor = MaterialTheme.colorScheme.onPrimaryContainer,
+      focusedTextColor = MaterialTheme.colorScheme.onSurface,
+      unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+      focusedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
+      unfocusedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
+    ),
   )
 }
 

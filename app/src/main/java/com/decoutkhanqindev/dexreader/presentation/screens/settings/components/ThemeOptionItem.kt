@@ -1,6 +1,5 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.settings.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -17,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.value.settings.ThemeModeValue
+import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
@@ -29,7 +29,7 @@ fun ThemeOptionItem(
   val onClick = remember(item.name) { { onClick(item) } }
 
   Row(
-    modifier = modifier.clickable(onClick = onClick),
+    modifier = modifier.onScalableClick(block = onClick),
     verticalAlignment = Alignment.CenterVertically,
   ) {
     RadioButton(

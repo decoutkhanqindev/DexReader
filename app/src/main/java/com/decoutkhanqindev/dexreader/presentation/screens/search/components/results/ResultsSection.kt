@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,7 +48,11 @@ fun ResultsSection(
   val gridState = rememberLazyGridState()
   val coroutineScope = rememberCoroutineScope()
   val mangaListSize = (resultsUiState as? BasePaginationUiState.Content)?.currentList?.size ?: 0
-  var isShowErrorDialog by remember(resultsUiState) { mutableStateOf(resultsUiState is BasePaginationUiState.FirstPageError) }
+  var isShowErrorDialog by remember { mutableStateOf(false) }
+
+  LaunchedEffect(resultsUiState) {
+    if (resultsUiState is BasePaginationUiState.FirstPageError) isShowErrorDialog = true
+  }
 
   Box(
     modifier = modifier,
@@ -80,7 +85,7 @@ fun ResultsSection(
           )
         } else {
           VerticalGridMangaList(
-            lazyGridState = gridState,
+            gridState = { gridState },
             items = mangaList,
             modifier = Modifier.fillMaxSize(),
             onItemClick = onSelectedManga,
@@ -89,29 +94,27 @@ fun ResultsSection(
               BaseNextPageState.LOADING -> ListLoadingIndicator(
                 modifier = Modifier
                   .fillMaxWidth()
-                  .padding(bottom = 12.dp)
+                  .padding(start = 4.dp, end = 4.dp, bottom = 12.dp)
               )
 
               BaseNextPageState.ERROR -> LoadPageErrorMessage(
                 message = stringResource(R.string.can_t_load_next_manga_page_please_try_again),
                 modifier = Modifier
                   .fillMaxWidth()
-                  .padding(top = 8.dp),
+                  .padding(start = 4.dp, end = 4.dp, bottom = 12.dp),
               ) { onRetryFetchMangaListNextPage() }
 
               BaseNextPageState.IDLE -> LoadMoreMessage(
                 modifier = Modifier
                   .fillMaxWidth()
-                  .padding(horizontal = 8.dp)
-                  .padding(bottom = 12.dp),
+                  .padding(start = 4.dp, top = 12.dp, end = 4.dp, bottom = 12.dp),
               ) { onFetchMangaListNextPage() }
 
               BaseNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
                 title = stringResource(R.string.all_mangas_loaded),
                 modifier = Modifier
                   .fillMaxWidth()
-                  .padding(horizontal = 8.dp)
-                  .padding(bottom = 12.dp)
+                  .padding(start = 4.dp, end = 4.dp, bottom = 12.dp)
               )
             }
           }
@@ -121,7 +124,7 @@ fun ResultsSection(
 
     MoveToTopButton(
       itemsSize = mangaListSize,
-      gridState = gridState,
+      gridState = { gridState },
       modifier = Modifier
         .align(Alignment.BottomEnd)
         .padding(16.dp)

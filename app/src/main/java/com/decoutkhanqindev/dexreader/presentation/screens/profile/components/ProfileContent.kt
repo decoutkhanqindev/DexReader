@@ -3,12 +3,19 @@ package com.decoutkhanqindev.dexreader.presentation.screens.profile.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,29 +25,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
+import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.ProfileUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.components.actions.ProfileNameEdit
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.components.actions.ProfilePicturePicker
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
-
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Surface
 
 @Composable
 fun ProfileContent(
@@ -52,17 +49,35 @@ fun ProfileContent(
   onRetryUpdate: () -> Unit,
   onRetryLogout: () -> Unit,
 ) {
-  var isShowUpdateUserSuccessDialog by remember { mutableStateOf(false) } // Fixed initial state
-  var isShowUpdateUserErrorDialog by remember { mutableStateOf(false) } // Fixed initial state
-  var isShowLogoutUserSuccessDialog by remember { mutableStateOf(false) } // Fixed initial state
-  var isShowLogoutUserErrorDialog by remember { mutableStateOf(false) } // Fixed initial state
+  var isShowUpdateUserSuccessDialog by remember() { mutableStateOf(false) }
+  var isShowUpdateUserErrorDialog by remember { mutableStateOf(false) }
+  var isShowLogoutUserSuccessDialog by remember { mutableStateOf(false) }
+  var isShowLogoutUserErrorDialog by remember { mutableStateOf(false) }
   val currentUser = uiState.currentUser
 
-  // ... (LaunchedEffects remain same)
+  LaunchedEffect(uiState.isUpdateUserSuccess) {
+    if (uiState.isUpdateUserSuccess) isShowUpdateUserSuccessDialog = true
+  }
+
+  LaunchedEffect(uiState.isUpdateUserError) {
+    if (uiState.isUpdateUserError) isShowUpdateUserErrorDialog = true
+  }
+
+  LaunchedEffect(uiState.isLogoutUserSuccess) {
+    if (uiState.isLogoutUserSuccess) isShowLogoutUserSuccessDialog = true
+  }
+
+  LaunchedEffect(uiState.isLogoutUserError) {
+    if (uiState.isLogoutUserError) isShowLogoutUserErrorDialog = true
+  }
 
   Box(
-    modifier = if (uiState.isLoading) modifier.blur(8.dp)
-    else modifier
+    modifier = if (uiState.isLoading) {
+      modifier.blurBackground(
+        topAlpha = 0.7f,
+        bottomAlpha = 0.7f,
+      )
+    } else modifier
   ) {
     Column(
       modifier = Modifier
@@ -100,13 +115,13 @@ fun ProfileContent(
       )
 
       Spacer(modifier = Modifier.height(32.dp))
-      
+
       HorizontalDivider(
-          modifier = Modifier.fillMaxWidth(),
-          thickness = 1.dp,
-          color = MaterialTheme.colorScheme.outlineVariant
+        modifier = Modifier.fillMaxWidth(),
+        thickness = 1.dp,
+        color = MaterialTheme.colorScheme.outlineVariant
       )
-      
+
       // We could add more profile options here (like Reading History link, Settings, etc.)
     }
   }

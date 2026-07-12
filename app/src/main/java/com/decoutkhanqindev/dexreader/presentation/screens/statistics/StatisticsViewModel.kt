@@ -37,13 +37,20 @@ class StatisticsViewModel @Inject constructor(
       _userId.collectLatest { userId ->
         Timber.tag("StatisticsDebug").d("ViewModel user changed: $userId")
         if (userId == null) {
-          _uiState.update { it.copy(dailyTimeMillis = 0, weeklyTimeMillis = 0, totalTimeMillis = 0) }
+          _uiState.update {
+            it.copy(
+              dailyTimeMillis = 0,
+              weeklyTimeMillis = 0,
+              totalTimeMillis = 0
+            )
+          }
           return@collectLatest
         }
 
         observeStatisticsUseCase(userId).collect { result ->
           result.onSuccess { statsList ->
-            Timber.tag("StatisticsDebug").d("ViewModel received stats list: ${statsList.size} items")
+            Timber.tag("StatisticsDebug")
+              .d("ViewModel received stats list: ${statsList.size} items")
             calculateStats(statsList)
           }
           result.onFailure {
@@ -57,13 +64,13 @@ class StatisticsViewModel @Inject constructor(
   private fun calculateStats(statsList: List<ReadingStats>) {
     val today = ReadingStats.getCurrentDate()
     Timber.tag("StatisticsDebug").d("Calculating stats. Today is: $today")
-    
+
     val dailyTime = statsList.find { it.date == today }?.durationMillis ?: 0L
     Timber.tag("StatisticsDebug").d("Found daily time: $dailyTime")
-    
+
     val totalTime = statsList.sumOf { it.durationMillis }
     Timber.tag("StatisticsDebug").d("Total time sum: $totalTime")
-    
+
     _uiState.update {
       it.copy(
         dailyTimeMillis = dailyTime,
@@ -74,9 +81,3 @@ class StatisticsViewModel @Inject constructor(
   }
 }
 
-data class StatisticsUiState(
-  val dailyTimeMillis: Long = 0,
-  val weeklyTimeMillis: Long = 0,
-  val totalTimeMillis: Long = 0,
-  val isLoading: Boolean = false,
-)

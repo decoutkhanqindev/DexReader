@@ -1,11 +1,9 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.home.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -15,24 +13,29 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
-import kotlinx.coroutines.delay
+import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
+import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
+import com.decoutkhanqindev.dexreader.presentation.screens.common.onScalableClick
+import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmer
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.coroutines.delay
 
 @Composable
-fun FeaturedMangaBanner(
+fun MangaBanner(
   mangaList: ImmutableList<MangaModel>,
   modifier: Modifier = Modifier,
   onItemClick: (String) -> Unit,
@@ -41,11 +44,9 @@ fun FeaturedMangaBanner(
 
   LaunchedEffect(Unit) {
     while (true) {
-      delay(5000)
-      if (mangaList.isNotEmpty()) {
-        val nextPage = (pagerState.currentPage + 1) % mangaList.size
-        pagerState.animateScrollToPage(nextPage)
-      }
+      delay(3000)
+      val nextPage = (pagerState.currentPage + 1) % mangaList.size
+      pagerState.animateScrollToPage(nextPage)
     }
   }
 
@@ -54,42 +55,39 @@ fun FeaturedMangaBanner(
     modifier = modifier
   ) { page ->
     val manga = mangaList[page]
-    Box(modifier = Modifier.fillMaxSize()) {
-      AsyncImage(
-        model = manga.coverUrl,
-        contentDescription = manga.title,
+    var isImageLoaded by remember(manga.id) { mutableStateOf(false) }
+
+    Box(
+      modifier = Modifier
+        .fillMaxSize()
+        .shimmer(isEnable = !isImageLoaded)
+        .padding(horizontal = 8.dp)
+        .clip(MaterialTheme.shapes.medium)
+        .onScalableClick(MaterialTheme.shapes.medium) { onItemClick(manga.id) }
+    ) {
+      MangaCoverArt(
+        url = manga.coverUrl,
+        title = manga.title,
         modifier = Modifier.fillMaxSize(),
-        contentScale = ContentScale.Crop
+        onImageLoaded = { isImageLoaded = true }
       )
 
       // Gradient Overlay
       Box(
         modifier = Modifier
           .fillMaxSize()
-          .background(
-            brush = Brush.verticalGradient(
-              colors = listOf(
-                Color.Transparent,
-                Color.Black.copy(alpha = 0.5f),
-                Color.Black
-              )
-            )
-          )
+          .blurBackground(
+            topAlpha = 0.0f,
+            bottomAlpha = 1f,
+          ),
       )
 
       Column(
         modifier = Modifier
           .align(Alignment.BottomStart)
-          .padding(24.dp),
+          .padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
       ) {
-        Text(
-          text = stringResource(id = R.string.featured),
-          style = MaterialTheme.typography.labelLarge,
-          color = MaterialTheme.colorScheme.primaryContainer,
-          fontWeight = FontWeight.Bold,
-          letterSpacing = 2.sp
-        )
         Text(
           text = manga.title,
           style = MaterialTheme.typography.headlineLarge,

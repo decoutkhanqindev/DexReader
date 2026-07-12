@@ -10,6 +10,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -30,31 +31,37 @@ fun <T> FilterValueOptions(
   onItemsSelect: (ImmutableList<T>) -> Unit,
   modifier: Modifier = Modifier,
 ) {
+  val selectedItems = remember(selectedItems) { selectedItems.toPersistentList() }
+
   Column(
     modifier = modifier,
     verticalArrangement = Arrangement.spacedBy(space = 16.dp),
   ) {
     options.forEach { option ->
+      val onClick = remember(option, selectedItems) {
+        {
+          if (selectedItems.contains(option)) {
+            onItemsSelect(
+              selectedItems
+                .toPersistentList()
+                .remove(option)
+            )
+          } else {
+            onItemsSelect(
+              selectedItems
+                .toPersistentList()
+                .add(option)
+            )
+          }
+        }
+      }
+
       Row(
         modifier = Modifier
           .fillMaxWidth()
           .selectable(
             selected = selectedItems.contains(option),
-            onClick = {
-              if (selectedItems.contains(option)) {
-                onItemsSelect(
-                  selectedItems
-                    .toPersistentList()
-                    .remove(option)
-                )
-              } else {
-                onItemsSelect(
-                  selectedItems
-                    .toPersistentList()
-                    .add(option)
-                )
-              }
-            },
+            onClick = onClick,
             role = Role.Checkbox
           ),
         horizontalArrangement = Arrangement.spacedBy(space = 8.dp)

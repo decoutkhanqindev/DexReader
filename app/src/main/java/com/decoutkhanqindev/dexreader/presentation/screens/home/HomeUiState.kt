@@ -9,7 +9,6 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Immutable
 sealed interface HomeUiState {
-  @Immutable
   data object Loading : HomeUiState
 
   @Immutable

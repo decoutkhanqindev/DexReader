@@ -1,12 +1,17 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.common.menu
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Login
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,7 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
-import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
+import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.PersonPicture
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.ProfilePicture
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
@@ -71,10 +76,32 @@ fun MenuHeader(
       }
     }
   } else {
-    SubmitButton(
-      title = stringResource(R.string.sign_in),
-      modifier = modifier.wrapContentSize(),
-    ) { onSignInClick() }
+    Box(
+      modifier = modifier,
+      contentAlignment = Alignment.Center
+    ) {
+      ActionButton(
+        backgroundColor = MaterialTheme.colorScheme.primary,
+        modifier = Modifier.wrapContentSize(),
+        onClick = onSignInClick,
+      ) {
+        Text(
+          text = stringResource(R.string.sign_in),
+          color = MaterialTheme.colorScheme.onPrimary,
+          fontWeight = FontWeight.ExtraBold,
+          style = MaterialTheme.typography.titleMedium,
+        )
+
+        Icon(
+          imageVector = Icons.AutoMirrored.Filled.Login,
+          contentDescription = stringResource(R.string.sign_in),
+          tint = MaterialTheme.colorScheme.onPrimary,
+          modifier = Modifier
+            .size(24.dp)
+            .padding(start = 8.dp)
+        )
+      }
+    }
   }
 }
 

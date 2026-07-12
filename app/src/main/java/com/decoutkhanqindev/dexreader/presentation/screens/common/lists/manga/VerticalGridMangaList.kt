@@ -26,7 +26,7 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun VerticalGridMangaList(
-  lazyGridState: LazyGridState,
+  gridState: (() -> LazyGridState),
   items: ImmutableList<MangaModel>,
   modifier: Modifier = Modifier,
   onItemClick: (String) -> Unit,
@@ -35,7 +35,7 @@ fun VerticalGridMangaList(
   LazyVerticalGrid(
     columns = GridCells.Fixed(2),
     modifier = modifier,
-    state = lazyGridState,
+    state = gridState(),
     verticalArrangement = Arrangement.spacedBy(2.dp),
     horizontalArrangement = Arrangement.spacedBy(2.dp),
   ) {
@@ -63,8 +63,10 @@ fun VerticalGridMangaList(
 @Composable
 private fun VerticalGridMangaListPreview() {
   DexReaderTheme {
+    val lazyGridState = rememberLazyGridState()
+
     VerticalGridMangaList(
-      lazyGridState = rememberLazyGridState(),
+      gridState = { lazyGridState },
       items = persistentListOf(
         MangaModel(
           id = "manga-001",

@@ -25,74 +25,74 @@ import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun MainTopBar(
-    title: String,
-    isSearchEnabled: Boolean = true,
-    modifier: Modifier = Modifier,
-    onNavigateToMenuItemScreen: () -> Unit,
-    onNavigateToSignInScreen: () -> Unit = {},
+  title: String,
+  isSearchEnabled: Boolean = true,
+  modifier: Modifier = Modifier,
+  onNavigateToMenuItemScreen: () -> Unit,
+  onNavigateToSignInScreen: () -> Unit = {},
 ) {
-    Surface(
-        modifier = modifier,
-        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f),
-        tonalElevation = 3.dp,
-        shadowElevation = 0.dp // We can add a custom shadow if we want
-    ) {
-        CenterAlignedTopAppBar(
-            title = {
-                Text(
-                    text = title,
-                    fontWeight = FontWeight.ExtraBold,
-                    style = MaterialTheme.typography.titleLarge,
-                    letterSpacing = 1.sp
-                )
-            },
-            navigationIcon = {
-                IconButton(onClick = onNavigateToMenuItemScreen) {
-                    Icon(
-                        imageVector = Icons.Default.Menu,
-                        contentDescription = stringResource(R.string.menu),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
-            },
-            actions = {
-                if (isSearchEnabled) {
-                    IconButton(onClick = onNavigateToSignInScreen) {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = stringResource(R.string.search),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                }
-            },
-            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                containerColor = Color.Transparent,
-                titleContentColor = MaterialTheme.colorScheme.onSurface,
-            ),
+  Surface(
+    modifier = modifier,
+    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f),
+    tonalElevation = 3.dp,
+    shadowElevation = 0.dp
+  ) {
+    CenterAlignedTopAppBar(
+      title = {
+        Text(
+          text = title,
+          fontWeight = FontWeight.ExtraBold,
+          style = MaterialTheme.typography.titleLarge,
+          letterSpacing = 1.sp
         )
-    }
+      },
+      navigationIcon = {
+        IconButton(onClick = onNavigateToMenuItemScreen) {
+          Icon(
+            imageVector = Icons.Default.Menu,
+            contentDescription = stringResource(R.string.menu),
+            tint = MaterialTheme.colorScheme.primary
+          )
+        }
+      },
+      actions = {
+        if (isSearchEnabled) {
+          IconButton(onClick = onNavigateToSignInScreen) {
+            Icon(
+              imageVector = Icons.Default.Search,
+              contentDescription = stringResource(R.string.search),
+              tint = MaterialTheme.colorScheme.primary
+            )
+          }
+        }
+      },
+      colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+        containerColor = Color.Transparent,
+        titleContentColor = MaterialTheme.colorScheme.onSurface,
+      ),
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun MainTopBarPreview() {
-    DexReaderTheme {
-        MainTopBar(
-            title = "DexReader",
-            onNavigateToMenuItemScreen = {}
-        )
-    }
+  DexReaderTheme {
+    MainTopBar(
+      title = "DexReader",
+      onNavigateToMenuItemScreen = {}
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun MainTopBarNoSearchPreview() {
-    DexReaderTheme {
-        MainTopBar(
-            title = "DexReader",
-            isSearchEnabled = false,
-            onNavigateToMenuItemScreen = {}
-        )
-    }
+  DexReaderTheme {
+    MainTopBar(
+      title = "DexReader",
+      isSearchEnabled = false,
+      onNavigateToMenuItemScreen = {}
+    )
+  }
 }

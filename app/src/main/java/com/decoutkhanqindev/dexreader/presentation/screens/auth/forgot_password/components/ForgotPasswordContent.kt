@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,8 +31,16 @@ fun ForgotPasswordContent(
   onNavigateBack: () -> Unit,
   onRetry: () -> Unit,
 ) {
-  var isShowErrorDialog by remember(uiState.isError) { mutableStateOf(uiState.isError) }
-  var isShowSuccessDialog by remember(uiState.isSuccess) { mutableStateOf(uiState.isSuccess) }
+  var isShowErrorDialog by remember { mutableStateOf(false) }
+  var isShowSuccessDialog by remember { mutableStateOf(false) }
+
+  LaunchedEffect(uiState.isError) {
+    if (uiState.isError) isShowErrorDialog = true
+  }
+
+  LaunchedEffect(uiState.isSuccess) {
+    if (uiState.isSuccess) isShowSuccessDialog = true
+  }
 
   Box(modifier = modifier) {
     AuthContent(
@@ -63,7 +72,10 @@ fun ForgotPasswordContent(
         if (isShowErrorDialog) {
           AlertDialog(
             title = stringResource(R.string.submit_reset_password_failed_please_try_again),
-            onConfirmClick = onRetry,
+            onConfirmClick = {
+              isShowErrorDialog = false
+              onRetry()
+            },
             onDismissClick = { isShowErrorDialog = false },
           )
         }

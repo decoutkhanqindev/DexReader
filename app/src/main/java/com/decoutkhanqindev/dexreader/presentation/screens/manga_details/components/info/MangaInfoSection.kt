@@ -28,94 +28,96 @@ import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun MangaInfoSection(
-    manga: MangaModel,
-    modifier: Modifier = Modifier,
+  manga: MangaModel,
+  modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+  Column(
+    modifier = modifier,
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    MangaCoverArt(
+      url = manga.coverUrl,
+      title = manga.title,
+      modifier = Modifier
+        .width(180.dp)
+        .height(260.dp)
+    )
+
+    Spacer(modifier = Modifier.height(24.dp))
+
+    Text(
+      text = manga.title,
+      style = MaterialTheme.typography.headlineSmall,
+      fontWeight = FontWeight.Black,
+      color = MaterialTheme.colorScheme.onSurface,
+      textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+      modifier = Modifier.padding(horizontal = 16.dp)
+    )
+
+    Text(
+      text = manga.author,
+      style = MaterialTheme.typography.bodyLarge,
+      color = MaterialTheme.colorScheme.onSurfaceVariant,
+      modifier = Modifier.padding(top = 4.dp)
+    )
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    Row(
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.Center,
+      modifier = Modifier.fillMaxWidth()
     ) {
-        MangaCoverArt(
-            url = manga.coverUrl,
-            title = manga.title,
-            modifier = Modifier
-                .width(180.dp)
-                .height(260.dp)
+      InfoChip(label = manga.year)
+      Spacer(modifier = Modifier.width(12.dp))
+      InfoChip(
+        label = stringResource(manga.status.nameRes),
+        isHighlight = true
+      )
+      Spacer(modifier = Modifier.width(12.dp))
+      Row(verticalAlignment = Alignment.CenterVertically) {
+        Icon(
+          imageVector = Icons.Default.Star,
+          contentDescription = null,
+          tint = Color(0xFFFFD700),
+          modifier = Modifier.size(16.dp)
         )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
         Text(
-            text = manga.title,
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Black,
-            color = MaterialTheme.colorScheme.onSurface,
-            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 16.dp)
+          text = manga.rating, // Static for now
+          style = MaterialTheme.typography.labelLarge,
+          fontWeight = FontWeight.Bold,
+          modifier = Modifier.padding(start = 4.dp)
         )
-
-        Text(
-            text = manga.author,
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(top = 4.dp)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            InfoChip(label = manga.year)
-            Spacer(modifier = Modifier.width(12.dp))
-            InfoChip(
-                label = stringResource(manga.status.nameRes),
-                isHighlight = true
-            )
-            Spacer(modifier = Modifier.width(12.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = Icons.Default.Star,
-                    contentDescription = null,
-                    tint = Color(0xFFFFD700),
-                    modifier = Modifier.size(16.dp)
-                )
-                Text(
-                    text = manga.rating, // Static for now
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(start = 4.dp)
-                )
-            }
-        }
+      }
     }
+  }
 }
 
 @Composable
 private fun InfoChip(label: String, isHighlight: Boolean = false) {
-    androidx.compose.material3.Surface(
-        color = if (isHighlight) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-        shape = MaterialTheme.shapes.small
-    ) {
-        Text(
-            text = label.uppercase(),
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-            style = MaterialTheme.typography.labelSmall,
-            fontWeight = FontWeight.Bold,
-            color = if (isHighlight) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
+  androidx.compose.material3.Surface(
+    color = if (isHighlight) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant.copy(
+      alpha = 0.5f
+    ),
+    shape = MaterialTheme.shapes.small
+  ) {
+    Text(
+      text = label.uppercase(),
+      modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+      style = MaterialTheme.typography.labelSmall,
+      fontWeight = FontWeight.Bold,
+      color = if (isHighlight) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun MangaInfoSectionPreview() {
-    DexReaderTheme {
-        MangaInfoSection(
-            manga = previewManga,
-            modifier = Modifier.fillMaxWidth()
-        )
-    }
+  DexReaderTheme {
+    MangaInfoSection(
+      manga = previewManga,
+      modifier = Modifier.fillMaxWidth()
+    )
+  }
 }

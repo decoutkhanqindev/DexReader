@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -64,9 +65,13 @@ fun CategoryDetailsContent(
 ) {
   val gridState = rememberLazyGridState()
   val coroutineScope = rememberCoroutineScope()
-  var isShowErrorDialog by remember(detailsUiState) { mutableStateOf(detailsUiState is BasePaginationUiState.FirstPageError) }
+  var isShowErrorDialog by remember { mutableStateOf(false) }
   var isShowSortBottomSheet by remember { mutableStateOf(false) }
   var isShowFilterBottomSheet by remember { mutableStateOf(false) }
+
+  LaunchedEffect(detailsUiState) {
+    if (detailsUiState is BasePaginationUiState.FirstPageError) isShowErrorDialog = true
+  }
 
   Box(modifier = modifier) {
     when (detailsUiState) {
@@ -91,7 +96,7 @@ fun CategoryDetailsContent(
 
         Box(modifier = Modifier.fillMaxSize()) {
           VerticalGridMangaList(
-            lazyGridState = gridState,
+            gridState = { gridState },
             items = mangaList,
             onItemClick = onMangaClick,
             loadMoreContent = {
@@ -99,7 +104,7 @@ fun CategoryDetailsContent(
                 BaseNextPageState.LOADING -> ListLoadingIndicator(
                   modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 82.dp)
+                    .padding(start = 4.dp, end = 4.dp, bottom = 82.dp)
                 )
 
                 BaseNextPageState.ERROR -> LoadPageErrorMessage(
@@ -107,24 +112,21 @@ fun CategoryDetailsContent(
                   onRetryClick = onRetryFetchMangaListNextPage,
                   modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 8.dp)
-                    .padding(bottom = 82.dp)
+                    .padding(start = 4.dp, end = 4.dp, bottom = 82.dp)
                 )
 
                 BaseNextPageState.IDLE -> LoadMoreMessage(
                   onClick = onFetchMangaListNextPage,
                   modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
-                    .padding(bottom = 82.dp)
+                    .padding(start = 4.dp, top = 12.dp, end = 4.dp, bottom = 82.dp)
                 )
 
                 BaseNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
                   title = stringResource(R.string.all_mangas_loaded),
                   modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
-                    .padding(bottom = 82.dp)
+                    .padding(start = 4.dp, end = 4.dp, bottom = 82.dp)
                 )
               }
             },
@@ -133,7 +135,7 @@ fun CategoryDetailsContent(
 
           SortAndFilterSection(
             itemsSize = mangaList.size,
-            gridState = gridState,
+            gridState = { gridState },
             modifier = Modifier.align(Alignment.BottomCenter),
             onMoveToTopClick = {
               coroutineScope.launch {

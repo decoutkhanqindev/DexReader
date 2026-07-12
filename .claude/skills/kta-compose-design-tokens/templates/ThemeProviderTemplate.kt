@@ -125,26 +125,26 @@ onError            = onError,
 // ---------------------------------------------------------------------------
 @Composable
 fun {
-    Prefix
+  Prefix
 }Theme(
 darkTheme: Boolean = isSystemInDarkTheme(),
 content: @Composable() -> Unit,
 ) {
-    val colors = if (darkTheme) dark { Prefix } Colors else light { Prefix } Colors
-            CompositionLocalProvider(
-                Local { Prefix } Colors provides colors,
-                Local { Prefix } Spacing provides default { Prefix } Spacing,
-                Local { Prefix } Shapes provides default { Prefix } Shapes,
-                Local { Prefix } Elevation provides default { Prefix } Elevation,
-                Local { Prefix } Typography provides default { Prefix } Typography,
-                Local { Prefix } Motion provides default { Prefix } Motion,
-                Local { Prefix } Opacity provides default { Prefix } Opacity,
-            ) {
-                MaterialTheme(
-                    colorScheme = colors.toMaterial3ColorScheme(darkTheme),
-                    content = content,
-                )
-            }
+  val colors = if (darkTheme) dark { Prefix } Colors else light { Prefix } Colors
+      CompositionLocalProvider(
+        Local { Prefix } Colors provides colors,
+        Local { Prefix } Spacing provides default { Prefix } Spacing,
+        Local { Prefix } Shapes provides default { Prefix } Shapes,
+        Local { Prefix } Elevation provides default { Prefix } Elevation,
+        Local { Prefix } Typography provides default { Prefix } Typography,
+        Local { Prefix } Motion provides default { Prefix } Motion,
+        Local { Prefix } Opacity provides default { Prefix } Opacity,
+      ) {
+        MaterialTheme(
+          colorScheme = colors.toMaterial3ColorScheme(darkTheme),
+          content = content,
+        )
+      }
 }
 
 // ---------------------------------------------------------------------------
@@ -152,24 +152,24 @@ content: @Composable() -> Unit,
 // (locals may be overridden in subtrees via CompositionLocalProvider)
 // ---------------------------------------------------------------------------
 object {Prefix }Theme {
-    val colors: { Prefix } ColorTokens
-            @Composable get() = Local { Prefix } Colors . current
+  val colors: { Prefix } ColorTokens
+      @Composable get() = Local { Prefix } Colors . current
 
-    val spacing: { Prefix } SpacingTokens
-            @Composable get() = Local { Prefix } Spacing . current
+  val spacing: { Prefix } SpacingTokens
+      @Composable get() = Local { Prefix } Spacing . current
 
-    val shapes: { Prefix } ShapeTokens
-            @Composable get() = Local { Prefix } Shapes . current
+  val shapes: { Prefix } ShapeTokens
+      @Composable get() = Local { Prefix } Shapes . current
 
-    val elevation: { Prefix } ElevationTokens
-            @Composable get() = Local { Prefix } Elevation . current
+  val elevation: { Prefix } ElevationTokens
+      @Composable get() = Local { Prefix } Elevation . current
 
-    val typography: { Prefix } TypographyTokens
-            @Composable get() = Local { Prefix } Typography . current
+  val typography: { Prefix } TypographyTokens
+      @Composable get() = Local { Prefix } Typography . current
 
-    val motion: { Prefix } MotionTokens
-            @Composable get() = Local { Prefix } Motion . current
+  val motion: { Prefix } MotionTokens
+      @Composable get() = Local { Prefix } Motion . current
 
-    val opacity: { Prefix } OpacityTokens
-            @Composable get() = Local { Prefix } Opacity . current
+  val opacity: { Prefix } OpacityTokens
+      @Composable get() = Local { Prefix } Opacity . current
 }

@@ -26,17 +26,17 @@ import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 @Composable
 fun MoveToTopButton(
   itemsSize: Int,
-  listState: LazyListState? = null,
-  gridState: LazyGridState? = null,
+  listState: (() -> LazyListState)?= null,
+  gridState: (() -> LazyGridState)?= null,
   modifier: Modifier = Modifier,
   onClick: () -> Unit,
 ) {
   val isVisible by remember(itemsSize) {
     derivedStateOf {
       if (listState != null) {
-        listState.firstVisibleItemIndex > 0 && itemsSize > 15
+        listState().firstVisibleItemIndex > 0 && itemsSize > 15
       } else if (gridState != null) {
-        gridState.firstVisibleItemIndex > 0 && itemsSize > 15
+        gridState().firstVisibleItemIndex > 0 && itemsSize > 15
       } else {
         false
       }

@@ -21,9 +21,7 @@ import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
 
 @HiltViewModel
-class FavoritesViewModel
-@Inject
-constructor(
+class FavoritesViewModel @Inject constructor(
   private val observeFavoritesUseCase: ObserveFavoritesUseCase,
 ) : ViewModel() {
   private val _uiState =

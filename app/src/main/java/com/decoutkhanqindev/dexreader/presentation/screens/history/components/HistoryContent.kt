@@ -11,15 +11,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
+import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
@@ -50,9 +49,9 @@ fun HistoryContent(
   var selectedLastReadPage by remember { mutableStateOf<Int?>(null) }
   var isShowNavigateDialog by remember { mutableStateOf(false) }
   var isShowRemoveFromHistoryDialog by remember { mutableStateOf(false) }
-  var isShowRemoveFromHistoryErrorDialog by remember { mutableStateOf(true) }
-  var isShowRemoveFromHistorySuccessDialog by remember { mutableStateOf(true) }
-  var isShowHistoryErrorDialog by remember { mutableStateOf(true) }
+  var isShowRemoveFromHistoryErrorDialog by remember { mutableStateOf(false) }
+  var isShowRemoveFromHistorySuccessDialog by remember { mutableStateOf(false) }
+  var isShowHistoryErrorDialog by remember { mutableStateOf(false) }
 
   LaunchedEffect(removeFromHistoryUiState.isError) {
     if (removeFromHistoryUiState.isError) isShowRemoveFromHistoryErrorDialog = true
@@ -112,7 +111,10 @@ fun HistoryContent(
               if (removeFromHistoryUiState.isLoading) {
                 Modifier
                   .fillMaxSize()
-                  .blur(8.dp)
+                  .blurBackground(
+                    topAlpha = 0.7f,
+                    bottomAlpha = 0.7f,
+                  )
               } else Modifier.fillMaxSize()
           )
         }

@@ -2,7 +2,6 @@ package com.decoutkhanqindev.dexreader.presentation.screens.common.buttons
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -34,7 +33,7 @@ fun ActionButton(
       .shadow(
         elevation = elevation,
         shape = MaterialTheme.shapes.large,
-        clip = false // Don't clip the shadow to allow it to be visible even when the button is disabled
+        clip = false
       )
       .alpha(if (isEnabled) 1f else 0.38f)
       .then(
@@ -49,12 +48,7 @@ fun ActionButton(
       .padding(horizontal = 16.dp, vertical = 16.dp),
     horizontalArrangement = Arrangement.Center,
     verticalAlignment = Alignment.CenterVertically
-  ) {
-    Box(
-      modifier = Modifier.fillMaxWidth(),
-      contentAlignment = Alignment.Center
-    ) { content() }
-  }
+  ) { content() }
 }
 
 @Preview

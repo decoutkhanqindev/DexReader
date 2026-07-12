@@ -5,12 +5,17 @@
   <i>Read to enjoy - Save to remember</i>
 </p>
 
-## 📜 Description  
-**Dex Reader** is a modern manga reading application designed for a smooth and intuitive experience.  
-Built with **Jetpack Compose** and **Material 3**, the app follows **Clean Architecture** and **MVVM pattern** to ensure high performance, scalability, and maintainability.  
-Powered by the **MangaDex API**, it provides a vast collection of manga with seamless reading and synchronization via **Firebase**.
+## 📜 Description
+
+**Dex Reader** is a modern manga reading application designed for a smooth and intuitive
+experience.  
+Built with **Jetpack Compose** and **Material 3**, the app follows **Clean Architecture** and **MVVM
+pattern** to ensure high performance, scalability, and maintainability.  
+Powered by the **MangaDex API**, it provides a vast collection of manga with seamless reading and
+synchronization via **Firebase**.
 
 ## Features
+
 - **Modern UI**: Built entirely with Jetpack Compose and Material 3.
 - **Manga Explorer**: Browse latest updates, trending series, and new releases.
 - **Optimized Reader**: High-performance reader with zoom, fullscreen, and pre-fetching.
@@ -21,18 +26,19 @@ Powered by the **MangaDex API**, it provides a vast collection of manga with sea
 
 ## 🛠 Built With
 
-| Category                  | Technology                     |
-|---------------------------|---------------------------------|
-| 🏛 Architecture            | Clean Architecture & MVVM       |
-| 🖼️ UI Framework            | [Jetpack Compose](https://developer.android.com/jetpack/compose) |
-| 🛠️ Dependency Injection    | [Dagger-Hilt](https://dagger.dev/hilt/) |
-| 🗄️ Local Database          | [Room Database](https://developer.android.com/jetpack/androidx/releases/room) |
-| 🖼️ Image Loading           | [Coil](https://coil-kt.github.io/coil/) |
-| 🌐 Navigation              | [Compose Navigation](https://developer.android.com/jetpack/compose/navigation) |
-| 🔥 Backend & Auth          | [Firebase (Auth & Firestore)](https://firebase.google.com/) |
-| 📡 Networking              | [Retrofit & Moshi](https://square.github.io/retrofit/) |
+| Category                 | Technology                                                                     |
+|--------------------------|--------------------------------------------------------------------------------|
+| 🏛 Architecture          | Clean Architecture & MVVM                                                      |
+| 🖼️ UI Framework         | [Jetpack Compose](https://developer.android.com/jetpack/compose)               |
+| 🛠️ Dependency Injection | [Dagger-Hilt](https://dagger.dev/hilt/)                                        |
+| 🗄️ Local Database       | [Room Database](https://developer.android.com/jetpack/androidx/releases/room)  |
+| 🖼️ Image Loading        | [Coil](https://coil-kt.github.io/coil/)                                        |
+| 🌐 Navigation            | [Compose Navigation](https://developer.android.com/jetpack/compose/navigation) |
+| 🔥 Backend & Auth        | [Firebase (Auth & Firestore)](https://firebase.google.com/)                    |
+| 📡 Networking            | [Retrofit & Moshi](https://square.github.io/retrofit/)                         |
 
 ## 📱 Screenshots
+
 <table style="width:100%">
   <tr>
     <th>Home Screen</th>
@@ -67,14 +73,17 @@ Powered by the **MangaDex API**, it provides a vast collection of manga with sea
    git clone https://github.com/decoutkhanqindev/DexReader.git
    ```
 2. **Setup Firebase**:
-   - Add `google-services.json` to the `app/` directory.
+    - Add `google-services.json` to the `app/` directory.
 3. **Configure API**:
-   - Add `BASE_URL` and `UPLOAD_URL` to `local.properties`.
+    - Add `BASE_URL` and `UPLOAD_URL` to `local.properties`.
 4. **Build & Run**:
-   - Use Android Studio Hedgehog or newer.
+    - Use Android Studio Hedgehog or newer.
 
 ## 🤝 Contributing
-Contributions are welcome! Feel free to open issues or submit pull requests to help improve **Dex Reader**.
+
+Contributions are welcome! Feel free to open issues or submit pull requests to help improve **Dex
+Reader**.
 
 ## 📝 License
+
 This project is developed for educational and personal purposes.

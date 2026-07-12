@@ -3,7 +3,6 @@ package com.decoutkhanqindev.dexreader.presentation.screens.manga_details.compon
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,42 +19,42 @@ import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun MangaSummarySection(
-    manga: MangaModel,
-    modifier: Modifier = Modifier,
-    onCategoryItemClick: (
-        categoryId: String,
-        categoryTitle: String,
-    ) -> Unit,
+  manga: MangaModel,
+  modifier: Modifier = Modifier,
+  onCategoryItemClick: (
+    categoryId: String,
+    categoryTitle: String,
+  ) -> Unit,
 ) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Text(
-            text = stringResource(R.string.summary),
-            fontWeight = FontWeight.ExtraBold,
-            style = MaterialTheme.typography.titleLarge,
-        )
-        MangaDescription(
-            description = manga.description,
-            modifier = Modifier.fillMaxWidth()
-        )
-        MangaCategoryList(
-            items = manga.categories,
-            modifier = Modifier.fillMaxWidth(),
-            onItemClick = onCategoryItemClick
-        )
-    }
+  Column(
+    modifier = modifier,
+    verticalArrangement = Arrangement.spacedBy(16.dp)
+  ) {
+    Text(
+      text = stringResource(R.string.summary),
+      fontWeight = FontWeight.ExtraBold,
+      style = MaterialTheme.typography.titleLarge,
+    )
+    MangaDescription(
+      description = manga.description,
+      modifier = Modifier.fillMaxWidth()
+    )
+    MangaCategoryList(
+      items = manga.categories,
+      modifier = Modifier.fillMaxWidth(),
+      onItemClick = onCategoryItemClick
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun MangaSummarySectionPreview() {
-    DexReaderTheme {
-        MangaSummarySection(
-            manga = previewManga,
-            modifier = Modifier.fillMaxWidth(),
-            onCategoryItemClick = { _, _ -> }
-        )
-    }
+  DexReaderTheme {
+    MangaSummarySection(
+      manga = previewManga,
+      modifier = Modifier.fillMaxWidth(),
+      onCategoryItemClick = { _, _ -> }
+    )
+  }
 }

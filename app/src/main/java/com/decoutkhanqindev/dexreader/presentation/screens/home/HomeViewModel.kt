@@ -61,10 +61,10 @@ class HomeViewModel @Inject constructor(
         val topRatedMangaList =
           results[3].getOrThrow().map { it.toMangaModel() }.toPersistentList()
         val bannerMangaList =
-              (latestUpdatesMangaList + trendingMangaList + newReleaseMangaList + topRatedMangaList)
-                  .distinctBy { it.id }
-                  .shuffled()
-                  .toImmutableList()
+          (latestUpdatesMangaList + trendingMangaList + newReleaseMangaList + topRatedMangaList)
+            .distinctBy { it.id }
+            .shuffled()
+            .toImmutableList()
 
         _uiState.value = HomeUiState.Success(
           latestUpdatesMangaList = latestUpdatesMangaList,

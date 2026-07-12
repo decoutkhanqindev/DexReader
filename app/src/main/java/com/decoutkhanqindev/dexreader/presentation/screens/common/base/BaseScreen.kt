@@ -1,7 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.common.base
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue
-import com.decoutkhanqindev.dexreader.presentation.screens.common.bottom_bars.MainBottomBar
 import com.decoutkhanqindev.dexreader.presentation.screens.common.menu.MenuDrawer
 import com.decoutkhanqindev.dexreader.presentation.screens.common.top_bars.MainTopBar
 import kotlinx.coroutines.launch
@@ -64,15 +62,7 @@ fun BaseScreen(
           onNavigateToSignInScreen = onNavigateToSearchScreen
         )
       },
-      bottomBar = {
-        Column {
-          bottomBar()
-          MainBottomBar(
-            selectedItem = selectedMenuItem,
-            onItemClick = onNavigateToMenuItemScreen
-          )
-        }
-      }
+      bottomBar = bottomBar
     ) { paddingValues ->
       Box(
         modifier = Modifier

@@ -16,7 +16,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import com.decoutkhanqindev.dexreader.presentation.model.value.settings.ThemeModeValue
 
-private val lightScheme =
+private val lightScheme by lazy {
   lightColorScheme(
     primary = primaryLight,
     onPrimary = onPrimaryLight,
@@ -54,8 +54,9 @@ private val lightScheme =
     surfaceContainerHigh = surfaceContainerHighLight,
     surfaceContainerHighest = surfaceContainerHighestLight,
   )
+}
 
-private val darkScheme =
+private val darkScheme by lazy {
   darkColorScheme(
     primary = primaryDark,
     onPrimary = onPrimaryDark,
@@ -93,8 +94,9 @@ private val darkScheme =
     surfaceContainerHigh = surfaceContainerHighDark,
     surfaceContainerHighest = surfaceContainerHighestDark,
   )
+}
 
-private val mediumContrastLightColorScheme =
+private val mediumContrastLightColorScheme by lazy {
   lightColorScheme(
     primary = primaryLightMediumContrast,
     onPrimary = onPrimaryLightMediumContrast,
@@ -132,8 +134,9 @@ private val mediumContrastLightColorScheme =
     surfaceContainerHigh = surfaceContainerHighLightMediumContrast,
     surfaceContainerHighest = surfaceContainerHighestLightMediumContrast,
   )
+}
 
-private val highContrastLightColorScheme =
+private val highContrastLightColorScheme by lazy {
   lightColorScheme(
     primary = primaryLightHighContrast,
     onPrimary = onPrimaryLightHighContrast,
@@ -171,8 +174,9 @@ private val highContrastLightColorScheme =
     surfaceContainerHigh = surfaceContainerHighLightHighContrast,
     surfaceContainerHighest = surfaceContainerHighestLightHighContrast,
   )
+}
 
-private val mediumContrastDarkColorScheme =
+private val mediumContrastDarkColorScheme by lazy {
   darkColorScheme(
     primary = primaryDarkMediumContrast,
     onPrimary = onPrimaryDarkMediumContrast,
@@ -210,8 +214,9 @@ private val mediumContrastDarkColorScheme =
     surfaceContainerHigh = surfaceContainerHighDarkMediumContrast,
     surfaceContainerHighest = surfaceContainerHighestDarkMediumContrast,
   )
+}
 
-private val highContrastDarkColorScheme =
+private val highContrastDarkColorScheme by lazy {
   darkColorScheme(
     primary = primaryDarkHighContrast,
     onPrimary = onPrimaryDarkHighContrast,
@@ -249,6 +254,7 @@ private val highContrastDarkColorScheme =
     surfaceContainerHigh = surfaceContainerHighDarkHighContrast,
     surfaceContainerHighest = surfaceContainerHighestDarkHighContrast,
   )
+}
 
 @Composable
 fun DexReaderTheme(

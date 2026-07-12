@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -20,6 +19,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
@@ -84,7 +84,7 @@ fun ReadingHistoryItem(
       modifier = Modifier
         .fillMaxSize()
         .shimmer(isEnable = !isImageLoaded),
-      shape = RoundedCornerShape(0.dp),
+      shape = RectangleShape,
       colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
       elevation = CardDefaults.cardElevation(8.dp),
     ) {
@@ -93,7 +93,7 @@ fun ReadingHistoryItem(
         modifier = Modifier
           .fillMaxWidth()
           .padding(8.dp)
-          .onScalableClick(shape = RoundedCornerShape(0.dp)) {
+          .onScalableClick(shape = RectangleShape) {
             onSelectedReadingHistory()
           }
       ) {

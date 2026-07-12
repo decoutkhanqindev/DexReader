@@ -4,10 +4,10 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue.CATEGORIES
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue.FAVORITES
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue.HISTORY
-import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue.STATISTICS
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue.HOME
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue.PROFILE
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue.SETTINGS
+import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue.STATISTICS
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 
 object MenuMapper {

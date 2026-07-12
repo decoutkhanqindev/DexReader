@@ -34,6 +34,7 @@ fun LoadPageErrorMessage(
   ) {
     Text(
       text = message,
+      modifier = Modifier.weight(1f),
       fontWeight = FontWeight.Light,
       fontStyle = FontStyle.Italic,
       textAlign = TextAlign.Center,

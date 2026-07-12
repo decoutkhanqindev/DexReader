@@ -10,9 +10,9 @@
               <option name="connection">
                 <ConnectionSetting>
                   <option name="appId" value="com.decoutkhanqindev.dexreader" />
-                  <option name="mobileSdkAppId" value="1:1082404680760:android:715c2a2be7b06f1caee2cd" />
-                  <option name="projectId" value="dexreader-dev" />
-                  <option name="projectNumber" value="1082404680760" />
+                  <option name="mobileSdkAppId" value="1:509514457980:android:63721cf8aec4e56b697af9" />
+                  <option name="projectId" value="dexreader-dd764" />
+                  <option name="projectNumber" value="509514457980" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

@@ -23,7 +23,7 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailsCriteriaUiState
-import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.SubmitButton
+import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.ImmutableList
 
@@ -70,8 +70,8 @@ fun FilterBottomSheet(
         .padding(bottom = 24.dp)
     )
 
-    SubmitButton(
-      title = stringResource(R.string.apply),
+    ActionButton(
+      backgroundColor = MaterialTheme.colorScheme.primary,
       onClick = {
         onApplyClick(selectedStatusOptions, selectedContentRatingOptions)
         onDismiss()
@@ -80,7 +80,14 @@ fun FilterBottomSheet(
         .fillMaxWidth()
         .padding(horizontal = 4.dp)
         .padding(bottom = 8.dp)
-    )
+    ) {
+      Text(
+        text = stringResource(R.string.apply),
+        color = MaterialTheme.colorScheme.onPrimary,
+        fontWeight = FontWeight.ExtraBold,
+        style = MaterialTheme.typography.titleMedium,
+      )
+    }
   }
 }
 

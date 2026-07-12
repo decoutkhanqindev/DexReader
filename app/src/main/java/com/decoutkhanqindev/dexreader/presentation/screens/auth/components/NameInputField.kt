@@ -11,6 +11,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -28,19 +29,9 @@ fun NameInputField(
   modifier: Modifier = Modifier,
   onValueChange: (String) -> Unit,
 ) {
-  val keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next)
-  val colorScheme = MaterialTheme.colorScheme
-  val colors = OutlinedTextFieldDefaults.colors(
-    focusedContainerColor = colorScheme.surfaceContainer,
-    unfocusedContainerColor = colorScheme.surfaceContainer,
-    focusedBorderColor = colorScheme.onPrimaryContainer,
-    unfocusedBorderColor = colorScheme.onPrimaryContainer,
-    cursorColor = colorScheme.onPrimaryContainer,
-    focusedTextColor = colorScheme.onSurface,
-    unfocusedTextColor = colorScheme.onSurface,
-    focusedLabelColor = colorScheme.onPrimaryContainer,
-    unfocusedLabelColor = colorScheme.onPrimaryContainer,
-  )
+  val keyboardOptions = remember {
+    KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next)
+  }
 
   OutlinedTextField(
     value = value,
@@ -51,7 +42,7 @@ fun NameInputField(
         imageVector = Icons.Default.Person,
         contentDescription = stringResource(R.string.name),
         modifier = Modifier.size(24.dp),
-        tint = colorScheme.onPrimaryContainer,
+        tint = MaterialTheme.colorScheme.onPrimaryContainer,
       )
     },
     label = {
@@ -66,13 +57,23 @@ fun NameInputField(
       error?.let {
         Text(
           text = stringResource(it.messageRes),
-          color = colorScheme.error
+          color = MaterialTheme.colorScheme.error
         )
       }
     },
     textStyle = MaterialTheme.typography.bodyLarge,
     keyboardOptions = keyboardOptions,
-    colors = colors,
+    colors =  OutlinedTextFieldDefaults.colors(
+      focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+      unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+      focusedBorderColor = MaterialTheme.colorScheme.onPrimaryContainer,
+      unfocusedBorderColor = MaterialTheme.colorScheme.onPrimaryContainer,
+      cursorColor = MaterialTheme.colorScheme.onPrimaryContainer,
+      focusedTextColor = MaterialTheme.colorScheme.onSurface,
+      unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+      focusedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
+      unfocusedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
+    ),
   )
 }
 
