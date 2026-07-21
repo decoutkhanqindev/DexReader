@@ -4,10 +4,13 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -32,7 +35,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun AnimatedLogoAndSlogan(modifier: Modifier = Modifier.Companion) {
+fun AnimatedLogoAndSlogan(modifier: Modifier = Modifier) {
   val enterSpec = remember { tween<Float>(durationMillis = 900, easing = FastOutSlowInEasing) }
   val exitSpec = remember { tween<Float>(durationMillis = 700, easing = FastOutSlowInEasing) }
   val visiblePauseMs = 800L
@@ -70,10 +73,14 @@ fun AnimatedLogoAndSlogan(modifier: Modifier = Modifier.Companion) {
   ) {
     Box(
       modifier = Modifier
-        .size(120.dp)
+        .size(100.dp)
+        .background(
+          color = MaterialTheme.colorScheme.primary,
+          shape = CircleShape
+        )
         .shimmerHighlight(
           backgroundColor = Color.Transparent,
-          shimmerColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f),
+          shimmerColor = Color.White.copy(alpha = 0.5f),
           shape = CircleShape,
         ),
       contentAlignment = Alignment.Center,
@@ -83,9 +90,11 @@ fun AnimatedLogoAndSlogan(modifier: Modifier = Modifier.Companion) {
         contentDescription = null,
         modifier = Modifier
           .fillMaxSize()
-          .padding(8.dp),
+          .padding(8.dp)
       )
     }
+
+    Spacer(modifier = Modifier.height(16.dp))
 
     Text(
       text = stringResource(R.string.app_name),

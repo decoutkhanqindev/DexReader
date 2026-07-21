@@ -48,7 +48,7 @@ fun Modifier.onClick(
   var isPressed by remember { mutableStateOf(false) }
   val interactionSource = remember { MutableInteractionSource() }
   val scale = animateFloatAsState(
-    targetValue = if (isPressed) 0.85f else 1f,
+    targetValue = if (isPressed) 0.95f else 1f,
     animationSpec = tween(durationMillis = 100),
     label = "OnScalableClickScaleAnimation"
   )

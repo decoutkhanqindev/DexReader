@@ -1,13 +1,19 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.home.components
 
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -15,6 +21,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaSectionValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.lists.manga.HorizontalMangaList
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
@@ -24,22 +31,33 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun MangaListSection(
-  title: String,
+  section: MangaSectionValue,
   items: ImmutableList<MangaModel>,
   modifier: Modifier = Modifier,
   onItemClick: (String) -> Unit,
 ) {
   Column(modifier = modifier) {
-    Text(
-      text = title,
-      fontWeight = FontWeight.ExtraBold,
+    Row(
       modifier = Modifier.padding(
         start = 16.dp,
         top = 8.dp,
         bottom = 4.dp
       ),
-      style = MaterialTheme.typography.titleLarge,
-    )
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+      Icon(
+        imageVector = section.icon,
+        contentDescription = null,
+        tint = MaterialTheme.colorScheme.primary,
+        modifier = Modifier.size(24.dp)
+      )
+      Text(
+        text = stringResource(section.nameRes),
+        fontWeight = FontWeight.ExtraBold,
+        style = MaterialTheme.typography.titleLarge,
+      )
+    }
     HorizontalMangaList(
       items = items,
       modifier = Modifier.fillMaxWidth(),
@@ -107,7 +125,7 @@ private val previewMangaSection = persistentListOf(
 private fun MangaListSectionPreview() {
   DexReaderTheme {
     MangaListSection(
-      title = "Latest Updates",
+      section = MangaSectionValue.LATEST_UPDATE,
       items = previewMangaSection,
       modifier = Modifier.fillMaxWidth(),
       onItemClick = {}

@@ -4,8 +4,11 @@ package com.decoutkhanqindev.dexreader.presentation.screens.home
 import androidx.compose.runtime.Immutable
 import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaSectionValue
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentMapOf
 
 @Immutable
 sealed interface HomeUiState {
@@ -16,10 +19,7 @@ sealed interface HomeUiState {
 
   @Immutable
   data class Success(
-    val latestUpdatesMangaList: ImmutableList<MangaModel> = persistentListOf(),
-    val trendingMangaList: ImmutableList<MangaModel> = persistentListOf(),
-    val newReleaseMangaList: ImmutableList<MangaModel> = persistentListOf(),
-    val topRatedMangaList: ImmutableList<MangaModel> = persistentListOf(),
-    val bannerMangaList: ImmutableList<MangaModel> = persistentListOf(),
+    val bannerList: ImmutableList<MangaModel> = persistentListOf(),
+    val mainSections: ImmutableMap<MangaSectionValue, ImmutableList<MangaModel>> = persistentMapOf(),
   ) : HomeUiState
 }

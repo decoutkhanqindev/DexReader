@@ -17,7 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
+import com.decoutkhanqindev.dexreader.presentation.theme.RatingStarGold
 
 @Composable
 fun MangaInfoSection(
@@ -72,6 +73,7 @@ fun MangaInfoSection(
       Spacer(modifier = Modifier.width(12.dp))
       InfoChip(
         label = stringResource(manga.status.nameRes),
+        icon = manga.status.icon,
         isHighlight = true
       )
       Spacer(modifier = Modifier.width(12.dp))
@@ -79,7 +81,7 @@ fun MangaInfoSection(
         Icon(
           imageVector = Icons.Default.Star,
           contentDescription = null,
-          tint = Color(0xFFFFD700),
+          tint = RatingStarGold,
           modifier = Modifier.size(16.dp)
         )
         Text(
@@ -94,20 +96,36 @@ fun MangaInfoSection(
 }
 
 @Composable
-private fun InfoChip(label: String, isHighlight: Boolean = false) {
+private fun InfoChip(label: String, icon: ImageVector? = null, isHighlight: Boolean = false) {
+  val contentColor =
+    if (isHighlight) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+
   androidx.compose.material3.Surface(
     color = if (isHighlight) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant.copy(
       alpha = 0.5f
     ),
     shape = MaterialTheme.shapes.small
   ) {
-    Text(
-      text = label.uppercase(),
+    Row(
       modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-      style = MaterialTheme.typography.labelSmall,
-      fontWeight = FontWeight.Bold,
-      color = if (isHighlight) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
-    )
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+      if (icon != null) {
+        Icon(
+          imageVector = icon,
+          contentDescription = null,
+          tint = contentColor,
+          modifier = Modifier.size(12.dp)
+        )
+      }
+      Text(
+        text = label.uppercase(),
+        style = MaterialTheme.typography.labelSmall,
+        fontWeight = FontWeight.Bold,
+        color = contentColor
+      )
+    }
   }
 }
 

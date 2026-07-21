@@ -217,3 +217,6 @@ val surfaceContainerLowDarkHighContrast by lazy { Color(0xFF1D2025) }
 val surfaceContainerDarkHighContrast by lazy { Color(0xFF2E3136) }
 val surfaceContainerHighDarkHighContrast by lazy { Color(0xFF393C41) }
 val surfaceContainerHighestDarkHighContrast by lazy { Color(0xFF44474C) }
+
+val OnScrim by lazy { Color(0xFFFFFFFF) }
+val RatingStarGold by lazy { Color(0xFFFFD700) }

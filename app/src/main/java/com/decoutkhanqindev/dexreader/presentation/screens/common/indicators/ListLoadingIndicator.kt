@@ -38,19 +38,11 @@ fun ListLoadingIndicator(modifier: Modifier = Modifier) {
         color = MaterialTheme.colorScheme.onPrimaryContainer,
         trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
       )
-
       Icon(
         painter = painterResource(R.drawable.app_icon),
         contentDescription = stringResource(R.string.app_name),
         tint = MaterialTheme.colorScheme.onPrimaryContainer,
-        modifier = Modifier
-          .size(36.dp)
-          .padding(16.dp)
-          .shimmerLoading(
-            backgroundColor = Color.Transparent,
-            shimmerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
-            shape = CircleShape,
-          ),
+        modifier = Modifier.size(36.dp)
       )
       LinearProgressIndicator(
         modifier = Modifier.weight(1f),

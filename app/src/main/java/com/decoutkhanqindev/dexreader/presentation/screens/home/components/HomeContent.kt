@@ -25,18 +25,19 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaSectionValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.home.HomeUiState
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentMapOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,12 +75,12 @@ fun HomeContent(
           verticalArrangement = Arrangement.Top,
           horizontalAlignment = Alignment.CenterHorizontally
         ) {
-          if (uiState.bannerMangaList.isNotEmpty()) {
+          if (uiState.bannerList.isNotEmpty()) {
             MangaBanner(
-              mangaList = uiState.bannerMangaList,
+              items = uiState.bannerList,
               modifier = Modifier
                 .fillMaxWidth()
-                .height(300.dp),
+                .height(365.dp),
               onItemClick = onItemClick
             )
           }
@@ -88,33 +89,14 @@ fun HomeContent(
             modifier = Modifier.padding(vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)
           ) {
-            MangaListSection(
-              title = stringResource(R.string.trending),
-              items = uiState.trendingMangaList,
-              modifier = Modifier.fillMaxWidth(),
-              onItemClick = onItemClick,
-            )
-
-            MangaListSection(
-              title = stringResource(R.string.latest_update),
-              items = uiState.latestUpdatesMangaList,
-              modifier = Modifier.fillMaxWidth(),
-              onItemClick = onItemClick,
-            )
-
-            MangaListSection(
-              title = stringResource(R.string.new_releases),
-              items = uiState.newReleaseMangaList,
-              modifier = Modifier.fillMaxWidth(),
-              onItemClick = onItemClick,
-            )
-
-            MangaListSection(
-              title = stringResource(R.string.top_rated),
-              items = uiState.topRatedMangaList,
-              modifier = Modifier.fillMaxWidth(),
-              onItemClick = onItemClick,
-            )
+            MangaSectionValue.entries.forEach { section ->
+              MangaListSection(
+                section = section,
+                items = uiState.mainSections[section] ?: persistentListOf(),
+                modifier = Modifier.fillMaxWidth(),
+                onItemClick = onItemClick,
+              )
+            }
           }
         }
       }
@@ -223,10 +205,13 @@ private fun HomeContentSuccessPreview() {
   DexReaderTheme {
     HomeContent(
       uiState = HomeUiState.Success(
-        latestUpdatesMangaList = previewMangaList,
-        trendingMangaList = previewMangaList,
-        newReleaseMangaList = previewMangaList,
-        topRatedMangaList = previewMangaList,
+        bannerList = previewMangaList,
+        mainSections = persistentMapOf(
+          MangaSectionValue.TRENDING to previewMangaList,
+          MangaSectionValue.LATEST_UPDATE to previewMangaList,
+          MangaSectionValue.NEW_RELEASE to previewMangaList,
+          MangaSectionValue.TOP_RATED to previewMangaList,
+        ),
       ), modifier = Modifier.fillMaxSize(), onItemClick = {}, onRetry = {}, onRefresh = {}
     )
   }

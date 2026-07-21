@@ -36,13 +36,7 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
       Box(
-        modifier = Modifier
-          .size(120.dp)
-          .shimmerLoading(
-            backgroundColor = Color.Transparent,
-            shimmerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
-            shape = CircleShape,
-          ),
+        modifier = Modifier.size(120.dp),
         contentAlignment = Alignment.Center,
       ) {
         Icon(

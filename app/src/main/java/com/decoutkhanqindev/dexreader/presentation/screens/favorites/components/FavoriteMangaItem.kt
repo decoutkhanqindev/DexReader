@@ -4,12 +4,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -90,15 +93,25 @@ fun FavoriteMangaItem(
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.padding(bottom = 4.dp)
           )
-          Text(
-            text = stringResource(manga.status.nameRes),
-            fontWeight = FontWeight.Bold,
-            fontStyle = FontStyle.Italic,
-            style = MaterialTheme.typography.bodyMedium,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
+          Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
             modifier = Modifier.padding(bottom = 4.dp)
-          )
+          ) {
+            Icon(
+              imageVector = manga.status.icon,
+              contentDescription = null,
+              modifier = Modifier.size(14.dp)
+            )
+            Text(
+              text = stringResource(manga.status.nameRes),
+              fontWeight = FontWeight.Bold,
+              fontStyle = FontStyle.Italic,
+              style = MaterialTheme.typography.bodyMedium,
+              maxLines = 1,
+              overflow = TextOverflow.Ellipsis
+            )
+          }
           if (manga.rating.isNotEmpty()) {
             Text(
               text = stringResource(R.string.rating_compact, manga.rating),

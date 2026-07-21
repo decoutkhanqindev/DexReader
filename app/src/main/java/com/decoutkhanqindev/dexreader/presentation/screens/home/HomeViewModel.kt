@@ -9,8 +9,9 @@ import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetTrendingMangaListU
 import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaModel
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaSectionValue
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -64,14 +65,17 @@ class HomeViewModel @Inject constructor(
           (latestUpdatesMangaList + trendingMangaList + newReleaseMangaList + topRatedMangaList)
             .distinctBy { it.id }
             .shuffled()
-            .toImmutableList()
+            .take(10)
+            .toPersistentList()
 
         _uiState.value = HomeUiState.Success(
-          latestUpdatesMangaList = latestUpdatesMangaList,
-          trendingMangaList = trendingMangaList,
-          newReleaseMangaList = newReleaseMangaList,
-          topRatedMangaList = topRatedMangaList,
-          bannerMangaList = bannerMangaList
+          bannerList = bannerMangaList,
+          mainSections = persistentMapOf(
+            MangaSectionValue.TRENDING to trendingMangaList,
+            MangaSectionValue.LATEST_UPDATE to latestUpdatesMangaList,
+            MangaSectionValue.NEW_RELEASE to newReleaseMangaList,
+            MangaSectionValue.TOP_RATED to topRatedMangaList,
+          )
         )
       } else {
         val throwable = results.firstOrNull { it.isFailure }?.exceptionOrNull()
