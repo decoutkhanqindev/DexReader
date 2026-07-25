@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.splash.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
@@ -17,8 +20,20 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.animation.Anim
 
 @Composable
 fun SplashContent(modifier: Modifier = Modifier) {
-  Box(modifier = modifier) {
-    AnimatedLogoAndSlogan(modifier = Modifier.align(Alignment.Center))
+  Box(
+    modifier = modifier.background(
+      Brush.radialGradient(
+        colors = listOf(
+          MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+          Color.Transparent,
+        )
+      )
+    )
+  ) {
+    AnimatedLogoAndSlogan(
+      modifier = Modifier.align(Alignment.Center),
+      logoSize = 120.dp,
+    )
 
     Column(
       modifier = Modifier

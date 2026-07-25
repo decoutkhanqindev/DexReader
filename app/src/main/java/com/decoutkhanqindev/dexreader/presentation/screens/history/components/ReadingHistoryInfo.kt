@@ -2,13 +2,12 @@ package com.decoutkhanqindev.dexreader.presentation.screens.history.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -19,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
+import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.ReadingProgressBar
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
@@ -30,61 +30,46 @@ fun ReadingHistoryInfo(
     modifier = modifier,
     verticalArrangement = Arrangement.spacedBy(4.dp),
   ) {
-    Row(
-      modifier = Modifier.fillMaxWidth(),
-      verticalAlignment = Alignment.CenterVertically,
-    ) {
-      Text(
-        text = stringResource(
-          R.string.volume_chapter,
-          readingHistory.chapterVolume,
-          readingHistory.chapterNumber
-        ),
-        style = MaterialTheme.typography.titleMedium,
-        fontWeight = FontWeight.ExtraBold,
-        modifier = Modifier
-          .weight(0.7f)
-          .fillMaxWidth()
-      )
-      Text(
-        text = stringResource(
-          R.string.reader_title,
-          readingHistory.lastReadPage,
-          readingHistory.pageCount
-        ),
-        style = MaterialTheme.typography.titleMedium,
-        fontWeight = FontWeight.ExtraBold,
-        textAlign = TextAlign.End,
-        modifier = Modifier
-          .weight(0.3f)
-          .fillMaxWidth()
-      )
-    }
     Text(
-      text = readingHistory.chapterTitle,
-      fontWeight = FontWeight.Bold,
-      fontStyle = FontStyle.Italic,
-      maxLines = 2,
-      overflow = TextOverflow.Ellipsis,
-      style = MaterialTheme.typography.bodyLarge,
+      text = stringResource(
+        R.string.volume_chapter,
+        readingHistory.chapterVolume,
+        readingHistory.chapterNumber
+      ),
+      style = MaterialTheme.typography.titleMedium,
+      fontWeight = FontWeight.ExtraBold,
       modifier = Modifier.fillMaxWidth()
     )
     Text(
-      text = "(${readingHistory.mangaTitle})",
-      fontWeight = FontWeight.Light,
-      maxLines = 2,
+      text = readingHistory.chapterTitle,
+      fontWeight = FontWeight.Medium,
+      fontStyle = FontStyle.Italic,
+      maxLines = 1,
       overflow = TextOverflow.Ellipsis,
-      style = MaterialTheme.typography.bodyLarge,
+      style = MaterialTheme.typography.labelMedium,
+      modifier = Modifier.fillMaxWidth()
+    )
+    Text(
+      text = readingHistory.mangaTitle,
+      fontWeight = FontWeight.Light,
+      maxLines = 1,
+      overflow = TextOverflow.Ellipsis,
+      style = MaterialTheme.typography.labelMedium,
       modifier = Modifier.fillMaxWidth()
     )
     Spacer(modifier = Modifier.weight(1f))
+    ReadingProgressBar(
+      lastReadPage = readingHistory.lastReadPage,
+      pageCount = readingHistory.pageCount,
+      modifier = Modifier.fillMaxWidth()
+    )
     Text(
       text = readingHistory.lastReadAt,
-      style = MaterialTheme.typography.bodyLarge,
-      fontWeight = FontWeight.Bold,
-      fontStyle = FontStyle.Italic,
+      style = MaterialTheme.typography.labelMedium,
       textAlign = TextAlign.End,
-      modifier = Modifier.fillMaxWidth()
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 4.dp)
     )
   }
 }

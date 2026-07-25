@@ -28,13 +28,16 @@ fun AuthContent(
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = modifier.background(MaterialTheme.colorScheme.surface)
   ) {
-    AnimatedLogoAndSlogan(
+    Box(
+      contentAlignment = Alignment.Center,
       modifier = Modifier
         .weight(0.3f)
         .fillMaxWidth()
-        .padding(16.dp)
+        .padding(top = 16.dp, start = 16.dp, end = 16.dp)
         .statusBarsPadding()
-    )
+    ) {
+      AnimatedLogoAndSlogan()
+    }
 
     Box(
       modifier = Modifier

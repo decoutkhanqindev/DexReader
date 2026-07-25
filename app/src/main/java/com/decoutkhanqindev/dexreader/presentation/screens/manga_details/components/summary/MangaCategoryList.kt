@@ -2,16 +2,17 @@ package com.decoutkhanqindev.dexreader.presentation.screens.manga_details.compon
 
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
+import com.decoutkhanqindev.dexreader.presentation.screens.common.badges.MangaGenreChip
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -27,15 +28,12 @@ fun MangaCategoryList(
 ) {
   LazyRow(
     modifier = modifier,
-    horizontalArrangement = Arrangement.spacedBy(4.dp),
+    horizontalArrangement = Arrangement.spacedBy(8.dp),
     verticalAlignment = Alignment.CenterVertically,
   ) {
     items(items, key = CategoryModel::id) { category ->
-      MangaCategoryItem(
-        item = category,
-        modifier = Modifier.fillMaxSize(),
-        onClick = onItemClick
-      )
+      val onClick = remember(category.id) { { onItemClick(category.id, category.title) } }
+      MangaGenreChip(label = category.title, onClick = onClick)
     }
   }
 }

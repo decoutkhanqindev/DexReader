@@ -1,20 +1,15 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.favorites.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,18 +17,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.manga.FavoriteMangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.animateItemOnAppear
+import com.decoutkhanqindev.dexreader.presentation.screens.common.badges.MangaRatingChip
+import com.decoutkhanqindev.dexreader.presentation.screens.common.badges.MangaStatusBadge
+import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
+import com.decoutkhanqindev.dexreader.presentation.screens.common.lists.manga.MangaInfo
+import com.decoutkhanqindev.dexreader.presentation.screens.common.onClick
 import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmerLoading
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
@@ -43,84 +37,71 @@ fun FavoriteMangaItem(
   onSelectedManga: (String) -> Unit,
   modifier: Modifier = Modifier,
 ) {
+  val onClick = remember(manga.id) { { onSelectedManga(manga.id) } }
   var isImageLoaded by remember { mutableStateOf(false) }
 
   Card(
     modifier = modifier
       .animateItemOnAppear()
-      .shimmerLoading(isEnable = !isImageLoaded),
-    onClick = remember(manga.id) { { onSelectedManga(manga.id) } },
-    elevation = CardDefaults.cardElevation(8.dp),
-    shape = MaterialTheme.shapes.large,
+      .onClick(shape = MaterialTheme.shapes.medium) { onClick() },
+    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+    shape = MaterialTheme.shapes.medium,
+    colors = CardDefaults.cardColors(
+      containerColor = MaterialTheme.colorScheme.surfaceVariant
+    )
   ) {
     Box(modifier = Modifier.fillMaxWidth()) {
       MangaCoverArt(
         url = manga.coverUrl,
         title = manga.title,
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+          .fillMaxSize()
+          .shimmerLoading(isEnable = !isImageLoaded),
         onImageLoaded = { isImageLoaded = true }
+      )
+
+      // Modern Gradient Overlay
+      Box(
+        modifier = Modifier
+          .fillMaxSize()
+          .blurBackground(
+            color = MaterialTheme.colorScheme.scrim,
+            topAlpha = 0f,
+            topCenterAlpha = 0.1f,
+            bottomCenterAlpha = 0.8f,
+            bottomAlpha = 1f,
+            startY = 350f,
+          )
+      )
+
+      if (manga.rating.isNotEmpty()) {
+        MangaRatingChip(
+          rating = manga.rating,
+          modifier = Modifier
+            .align(Alignment.TopStart)
+            .padding(8.dp)
+        )
+      }
+
+      MangaStatusBadge(
+        status = manga.status,
+        modifier = Modifier
+          .align(Alignment.TopEnd)
+          .padding(8.dp)
       )
 
       Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Bottom,
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.Start,
       ) {
-        Column(
+        MangaInfo(
+          title = manga.title,
+          author = manga.author,
           modifier = Modifier
             .fillMaxWidth()
-            .height(100.dp)
-            .background(MaterialTheme.colorScheme.surface.copy(0.8f))
-            .padding(horizontal = 4.dp),
-          verticalArrangement = Arrangement.Center,
-          horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-          Text(
-            text = manga.title,
-            fontWeight = FontWeight.ExtraBold,
-            style = MaterialTheme.typography.titleMedium,
-            textAlign = TextAlign.Center,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.padding(bottom = 4.dp)
-          )
-          Text(
-            text = stringResource(R.string.by_author, manga.author),
-            fontWeight = FontWeight.Bold,
-            fontStyle = FontStyle.Italic,
-            style = MaterialTheme.typography.bodyMedium,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.padding(bottom = 4.dp)
-          )
-          Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            modifier = Modifier.padding(bottom = 4.dp)
-          ) {
-            Icon(
-              imageVector = manga.status.icon,
-              contentDescription = null,
-              modifier = Modifier.size(14.dp)
-            )
-            Text(
-              text = stringResource(manga.status.nameRes),
-              fontWeight = FontWeight.Bold,
-              fontStyle = FontStyle.Italic,
-              style = MaterialTheme.typography.bodyMedium,
-              maxLines = 1,
-              overflow = TextOverflow.Ellipsis
-            )
-          }
-          if (manga.rating.isNotEmpty()) {
-            Text(
-              text = stringResource(R.string.rating_compact, manga.rating),
-              fontWeight = FontWeight.Bold,
-              maxLines = 1,
-              style = MaterialTheme.typography.bodyMedium,
-            )
-          }
-        }
+            .padding(12.dp),
+        )
       }
     }
   }

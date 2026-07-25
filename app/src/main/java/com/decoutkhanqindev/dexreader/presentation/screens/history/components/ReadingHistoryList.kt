@@ -69,7 +69,7 @@ fun ReadingHistoryList(
           modifier = Modifier
             .animateItem() // animate item placement when the list changes
             .fillMaxWidth()
-            .height(160.dp)
+            .height(184.dp)
         )
 
         if (readingHistory != lastHistory) {

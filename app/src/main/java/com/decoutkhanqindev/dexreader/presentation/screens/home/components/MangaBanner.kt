@@ -3,7 +3,6 @@ package com.decoutkhanqindev.dexreader.presentation.screens.home.components
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,10 +20,8 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -51,6 +48,9 @@ import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
+import com.decoutkhanqindev.dexreader.presentation.screens.common.badges.MangaGenreChip
+import com.decoutkhanqindev.dexreader.presentation.screens.common.badges.MangaRatingChip
+import com.decoutkhanqindev.dexreader.presentation.screens.common.badges.MangaStatusBadge
 import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
@@ -58,7 +58,6 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.onClick
 import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmerLoading
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import com.decoutkhanqindev.dexreader.presentation.theme.OnScrim
-import com.decoutkhanqindev.dexreader.presentation.theme.RatingStarGold
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.delay
@@ -111,13 +110,14 @@ fun MangaBanner(
         }
         .fillMaxSize()
         .padding(horizontal = 8.dp)
-        .shimmerLoading(shape = MaterialTheme.shapes.medium, isEnable = !isImageLoaded)
         .onClick(MaterialTheme.shapes.medium) { onItemClick(manga.id) }
     ) {
       MangaCoverArt(
         url = manga.coverUrl,
         title = manga.title,
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+          .fillMaxSize()
+          .shimmerLoading(shape = MaterialTheme.shapes.medium, isEnable = !isImageLoaded),
         onImageLoaded = { isImageLoaded = true }
       )
 
@@ -166,67 +166,20 @@ fun MangaBanner(
           horizontalArrangement = Arrangement.SpaceBetween,
           verticalAlignment = Alignment.CenterVertically
         ) {
-          Surface(
-            color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.9f),
-            shape = MaterialTheme.shapes.small,
-            shadowElevation = 4.dp
-          ) {
-            Row(
-              modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
-              verticalAlignment = Alignment.CenterVertically,
-              horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-              Icon(
-                imageVector = Icons.Default.Star,
-                contentDescription = null,
-                tint = RatingStarGold,
-                modifier = Modifier.size(12.dp)
-              )
-              Text(
-                text = manga.rating,
-                style = MaterialTheme.typography.labelSmall,
-                fontWeight = FontWeight.Black,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
-              )
-            }
-          }
-
-          Surface(
-            color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.9f),
-            shape = MaterialTheme.shapes.small,
-            tonalElevation = 4.dp
-          ) {
-            Row(
-              modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
-              verticalAlignment = Alignment.CenterVertically,
-              horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-              Icon(
-                imageVector = manga.status.icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                modifier = Modifier.size(12.dp)
-              )
-              Text(
-                text = stringResource(manga.status.nameRes).uppercase(),
-                style = MaterialTheme.typography.labelSmall,
-                fontWeight = FontWeight.Black,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
-              )
-            }
-          }
+          MangaRatingChip(rating = manga.rating)
+          MangaStatusBadge(status = manga.status)
         }
 
         Spacer(modifier = Modifier.weight(1f))
 
         if (manga.categories.isNotEmpty()) {
-          Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+          Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             manga.categories.take(2).forEach { category ->
-              GenreTag(label = category.title)
+              MangaGenreChip(label = category.title)
             }
           }
 
-          Spacer(modifier = Modifier.height(6.dp))
+          Spacer(modifier = Modifier.height(8.dp))
         }
 
         Text(
@@ -240,7 +193,7 @@ fun MangaBanner(
           ),
           color = OnScrim,
           fontWeight = FontWeight.ExtraBold,
-          maxLines = 1,
+          maxLines = 2,
           overflow = TextOverflow.Ellipsis
         )
         Text(
@@ -307,24 +260,6 @@ private fun AutoScrollProgressIndicator(
           }
       )
     }
-  }
-}
-
-@Composable
-private fun GenreTag(label: String, modifier: Modifier = Modifier) {
-  Surface(
-    modifier = modifier,
-    color = OnScrim.copy(alpha = 0.16f),
-    contentColor = OnScrim,
-    shape = MaterialTheme.shapes.small,
-    border = BorderStroke(1.dp, OnScrim.copy(alpha = 0.35f))
-  ) {
-    Text(
-      text = label,
-      style = MaterialTheme.typography.labelSmall,
-      fontWeight = FontWeight.SemiBold,
-      modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
-    )
   }
 }
 

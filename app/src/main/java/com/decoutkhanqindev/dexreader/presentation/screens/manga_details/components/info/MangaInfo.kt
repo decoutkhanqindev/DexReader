@@ -2,10 +2,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.manga_details.compon
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +20,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
+import com.decoutkhanqindev.dexreader.presentation.screens.common.badges.MangaStatusBadge
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.persistentListOf
 
@@ -64,23 +62,10 @@ fun MangaInfo(
       fontWeight = FontWeight.Bold,
       style = MaterialTheme.typography.bodyLarge,
     )
-    Row(
-      modifier = Modifier.padding(bottom = 4.dp),
-      verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-      Icon(
-        imageVector = manga.status.icon,
-        contentDescription = null,
-        modifier = Modifier.size(16.dp)
-      )
-      Text(
-        text = stringResource(R.string.status, stringResource(manga.status.nameRes)),
-        fontStyle = FontStyle.Italic,
-        fontWeight = FontWeight.Bold,
-        style = MaterialTheme.typography.bodyLarge,
-      )
-    }
+    MangaStatusBadge(
+      status = manga.status,
+      modifier = Modifier.padding(bottom = 4.dp)
+    )
     Text(
       text = stringResource(R.string.content_rating, stringResource(manga.contentRating.nameRes)),
       modifier = Modifier.padding(bottom = 4.dp),

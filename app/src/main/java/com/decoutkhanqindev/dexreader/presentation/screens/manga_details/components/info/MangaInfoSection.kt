@@ -7,25 +7,20 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
+import com.decoutkhanqindev.dexreader.presentation.screens.common.badges.MangaRatingChip
+import com.decoutkhanqindev.dexreader.presentation.screens.common.badges.MangaStatusBadge
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
-import com.decoutkhanqindev.dexreader.presentation.theme.RatingStarGold
 
 @Composable
 fun MangaInfoSection(
@@ -71,61 +66,28 @@ fun MangaInfoSection(
     ) {
       InfoChip(label = manga.year)
       Spacer(modifier = Modifier.width(12.dp))
-      InfoChip(
-        label = stringResource(manga.status.nameRes),
-        icon = manga.status.icon,
-        isHighlight = true
-      )
+      MangaStatusBadge(status = manga.status)
       Spacer(modifier = Modifier.width(12.dp))
-      Row(verticalAlignment = Alignment.CenterVertically) {
-        Icon(
-          imageVector = Icons.Default.Star,
-          contentDescription = null,
-          tint = RatingStarGold,
-          modifier = Modifier.size(16.dp)
-        )
-        Text(
-          text = manga.rating, // Static for now
-          style = MaterialTheme.typography.labelLarge,
-          fontWeight = FontWeight.Bold,
-          modifier = Modifier.padding(start = 4.dp)
-        )
-      }
+      MangaRatingChip(rating = manga.rating)
     }
   }
 }
 
 @Composable
-private fun InfoChip(label: String, icon: ImageVector? = null, isHighlight: Boolean = false) {
-  val contentColor =
-    if (isHighlight) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
-
+private fun InfoChip(label: String) {
   androidx.compose.material3.Surface(
-    color = if (isHighlight) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant.copy(
-      alpha = 0.5f
-    ),
-    shape = MaterialTheme.shapes.small
+    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+    shape = MaterialTheme.shapes.small,
+    tonalElevation = 4.dp,
+    shadowElevation = 4.dp
   ) {
-    Row(
+    Text(
+      text = label.uppercase(),
       modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-      verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-      if (icon != null) {
-        Icon(
-          imageVector = icon,
-          contentDescription = null,
-          tint = contentColor,
-          modifier = Modifier.size(12.dp)
-        )
-      }
-      Text(
-        text = label.uppercase(),
-        style = MaterialTheme.typography.labelSmall,
-        fontWeight = FontWeight.Bold,
-        color = contentColor
-      )
-    }
+      style = MaterialTheme.typography.labelSmall,
+      fontWeight = FontWeight.Bold,
+      color = MaterialTheme.colorScheme.onSurfaceVariant
+    )
   }
 }
 

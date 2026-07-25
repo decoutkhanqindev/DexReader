@@ -21,6 +21,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
@@ -28,54 +30,42 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmerHighlight
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun AnimatedLogoAndSlogan(modifier: Modifier = Modifier) {
+fun AnimatedLogoAndSlogan(
+  modifier: Modifier = Modifier,
+  logoSize: Dp = 100.dp,
+) {
   val enterSpec = remember { tween<Float>(durationMillis = 900, easing = FastOutSlowInEasing) }
-  val exitSpec = remember { tween<Float>(durationMillis = 700, easing = FastOutSlowInEasing) }
-  val visiblePauseMs = 800L
-  val cycleGapMs = 300L
-  val offsetY = -80f
+  val offsetY = -40f
   val appNameAlpha = remember { Animatable(0f) }
   val appNameOffsetY = remember { Animatable(offsetY) }
   val sloganAlpha = remember { Animatable(0f) }
   val sloganOffsetY = remember { Animatable(offsetY) }
 
   LaunchedEffect(Unit) {
-    while (true) {
-      launch { appNameOffsetY.animateTo(0f, enterSpec) }
-      appNameAlpha.animateTo(1f, enterSpec)
+    launch { appNameOffsetY.animateTo(0f, enterSpec) }
+    appNameAlpha.animateTo(1f, enterSpec)
 
-      launch { sloganOffsetY.animateTo(0f, enterSpec) }
-      sloganAlpha.animateTo(1f, enterSpec)
-
-      delay(visiblePauseMs)
-
-      launch { appNameOffsetY.animateTo(offsetY, exitSpec) }
-      appNameAlpha.animateTo(0f, exitSpec)
-
-      launch { sloganOffsetY.animateTo(offsetY, exitSpec) }
-      sloganAlpha.animateTo(0f, exitSpec)
-
-      delay(cycleGapMs)
-    }
+    launch { sloganOffsetY.animateTo(0f, enterSpec) }
+    sloganAlpha.animateTo(1f, enterSpec)
   }
 
   Column(
     modifier = modifier,
     horizontalAlignment = Alignment.CenterHorizontally,
-    verticalArrangement = Arrangement.spacedBy(12.dp),
+    verticalArrangement = Arrangement.spacedBy(8.dp),
   ) {
     Box(
       modifier = Modifier
-        .size(100.dp)
+        .size(logoSize)
         .background(
-          color = MaterialTheme.colorScheme.primary,
+          color =  MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
           shape = CircleShape
         )
         .shimmerHighlight(
@@ -90,11 +80,9 @@ fun AnimatedLogoAndSlogan(modifier: Modifier = Modifier) {
         contentDescription = null,
         modifier = Modifier
           .fillMaxSize()
-          .padding(8.dp)
+          .padding(logoSize * 0.08f)
       )
     }
-
-    Spacer(modifier = Modifier.height(16.dp))
 
     Text(
       text = stringResource(R.string.app_name),
@@ -113,9 +101,7 @@ fun AnimatedLogoAndSlogan(modifier: Modifier = Modifier) {
       fontStyle = FontStyle.Italic,
       color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
       textAlign = TextAlign.Center,
-      modifier = Modifier
-        .padding(horizontal = 32.dp)
-        .graphicsLayer {
+      modifier = Modifier.graphicsLayer {
           alpha = sloganAlpha.value
           translationY = sloganOffsetY.value
         },

@@ -81,9 +81,7 @@ fun ReadingHistoryItem(
     modifier = modifier.animateItemOnAppear(),
   ) {
     Card(
-      modifier = Modifier
-        .fillMaxSize()
-        .shimmerLoading(isEnable = !isImageLoaded),
+      modifier = Modifier.fillMaxSize(),
       shape = RectangleShape,
       colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
       elevation = CardDefaults.cardElevation(8.dp),
@@ -93,20 +91,20 @@ fun ReadingHistoryItem(
         modifier = Modifier
           .fillMaxWidth()
           .padding(8.dp)
-          .onClick {
-            onSelectedReadingHistory()
-          }
+          .onClick { onSelectedReadingHistory() }
       ) {
         MangaCoverArt(
           url = readingHistory.mangaCoverUrl,
           title = readingHistory.mangaTitle,
-          modifier = Modifier.weight(0.25f),
+          modifier = Modifier
+            .weight(0.3f)
+            .shimmerLoading(isEnable = !isImageLoaded),
           onImageLoaded = { isImageLoaded = true }
         )
 
         ReadingHistoryInfo(
           readingHistory = readingHistory,
-          modifier = Modifier.weight(0.75f)
+          modifier = Modifier.weight(0.7f)
         )
       }
     }
@@ -135,7 +133,7 @@ private fun ReadingHistoryItemPreview() {
       onRemoveFromHistory = {},
       modifier = Modifier
         .fillMaxWidth()
-        .height(160.dp)
+        .height(184.dp)
     )
   }
 }

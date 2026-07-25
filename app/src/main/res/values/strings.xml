@@ -108,7 +108,6 @@
   <string name="chapter_not_available">This chapter is no longer available.</string>
   <string name="author">Author: %s</string>
   <string name="artist">Artist: %s</string>
-  <string name="status">Status: %s</string>
   <string name="year">Year: %s</string>
   <string name="last_updated">Last updated: %s</string>
   <string name="content_rating">Content Rating: %s</string>

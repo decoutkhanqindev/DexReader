@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterModel
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.animateItemOnAppear
+import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.ReadingProgressBar
 import com.decoutkhanqindev.dexreader.presentation.screens.common.onClick
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
@@ -58,47 +59,27 @@ fun MangaChapterItem(
       verticalArrangement = Arrangement.spacedBy(8.dp),
       horizontalAlignment = Alignment.Start,
     ) {
-      Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-      ) {
-        Row(
-          modifier = Modifier.padding(end = 16.dp),
-          verticalAlignment = Alignment.CenterVertically,
-        ) {
+      Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(
+          text = "Ch. $number",
+          color = MaterialTheme.colorScheme.primary,
+          fontWeight = FontWeight.Bold,
+          style = MaterialTheme.typography.titleMedium,
+        )
+        if (volume != "null" && volume.isNotEmpty()) {
           Text(
-            text = "Ch. $number",
-            color = MaterialTheme.colorScheme.primary,
-            fontWeight = FontWeight.Bold,
+            text = " • ",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             style = MaterialTheme.typography.titleMedium,
+            fontStyle = FontStyle.Italic,
+            modifier = Modifier.padding(start = 4.dp)
           )
-          if (volume != "null" && volume.isNotEmpty()) {
-            Text(
-              text = " • ",
-              color = MaterialTheme.colorScheme.onSurfaceVariant,
-              style = MaterialTheme.typography.titleMedium,
-              fontStyle = FontStyle.Italic,
-              modifier = Modifier.padding(start = 4.dp)
-            )
 
-            Text(
-              text = "Vol. $volume",
-              color = MaterialTheme.colorScheme.onSurfaceVariant,
-              style = MaterialTheme.typography.titleMedium,
-              modifier = Modifier.padding(start = 4.dp)
-            )
-          }
-        }
-
-        if (readingHistory != null) {
-          val progress =
-            (readingHistory.lastReadPage.toFloat() / readingHistory.pageCount.toFloat())
           Text(
-            text = "${(progress * 100).toInt()}%",
-            color = MaterialTheme.colorScheme.secondary,
-            fontWeight = FontWeight.Bold,
+            text = "Vol. $volume",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 4.dp)
           )
         }
       }
@@ -138,6 +119,16 @@ fun MangaChapterItem(
             style = MaterialTheme.typography.labelMedium,
           )
         }
+      }
+
+      if (readingHistory != null) {
+        ReadingProgressBar(
+          lastReadPage = readingHistory.lastReadPage,
+          pageCount = readingHistory.pageCount,
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp)
+        )
       }
     }
   }

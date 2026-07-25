@@ -250,6 +250,37 @@ state object, so unrelated field changes (e.g. text input) don't re-arm the dial
 - Coil `ImageRequest` passed to `AsyncImage` / `ZoomableAsyncImage` must be
   `remember(url) { ImageRequest.Builder(...).build() }` — never built inline in the call site.
   Established in `MangaCoverArt`, `ChapterPageImage`, `MangaDetailsBackground`, `ProfilePicture`
+- Shared manga-info atoms live in `presentation/screens/common/badges/`: `MangaStatusBadge` (icon +
+  label from `MangaStatusValue`), `MangaRatingChip` (star + rating), `MangaGenreChip` (label +
+  optional `onClick`). All three share one visual family — `primaryContainer.copy(alpha = 0.9f)`
+  pill, `shapes.small`, `tonalElevation = 4.dp` + `shadowElevation = 4.dp` — so badges/chips shown
+  together never end up with mismatched elevation. Reuse these wherever manga status/rating/genre is
+  shown instead of hand-rolling a new `Surface` or `Card` — established in `MangaItem`,
+  `FavoriteMangaItem`, `MangaBanner`, `MangaInfoSection`, `MangaCategoryList` (Manga Details),
+  `CategoryList` (Categories screen)
+- `AnimatedLogoAndSlogan` (`presentation/screens/common/animation/`) — shared hero logo used by both
+  `SplashContent` and `AuthContent` (Login/Register/ForgotPassword). Takes `logoSize: Dp = 100.dp`
+  (Splash passes `120.dp`; `AuthContent` uses the default, centered inside its own
+  `Box(contentAlignment = Alignment.Center)` rather than passing a size override). Entrance is a
+  **one-shot** fade+slide-in (`LaunchedEffect(Unit)`, runs once) — never make this loop/repeat: Auth
+  screens keep this composable on-screen indefinitely while the user fills out a form, so a
+  repeating fade in/out is a permanent distraction, and on Splash a repeating loop risks navigating
+  away mid-fade-out, reading as a UI glitch. The icon circle itself is translucent —
+  `primary.copy(alpha = 0.3f)` background + `shimmerHighlight` sweep, not a solid fill. This
+  composable does **not** draw its own glow/halo; the ambient glow look on Splash comes from
+  `SplashContent`'s own screen-level background (`Brush.radialGradient(primary.copy(alpha = 0.3f) →
+  Color.Transparent)`, sitting behind the whole `Box`). `AuthContent` has no equivalent gradient
+  (plain `colorScheme.surface`), so Login/Register/ForgotPassword show the translucent circle without
+  the glow — if the auth screens need the same glow, add the gradient to `AuthContent`'s background
+  too, not to `AnimatedLogoAndSlogan` (keeps the glow a per-screen background choice, not baked into
+  the shared logo component).
+- `ReadingProgressBar` (`presentation/screens/common/indicators/`) — shared page-count + percent +
+  animated `LinearProgressIndicator` for reading progress, used by `MangaChapterItem` (manga details
+  chapter list) and `ReadingHistoryInfo` (history list) so both show identical progress info instead
+  of one being percent-only and the other page-count-only. M3 1.4's `LinearProgressIndicator`
+  defaults to the "expressive" style (a gap near the end + a small stop-indicator dot) — pass
+  `gapSize = 0.dp` and `drawStopIndicator = {}` to get the classic continuous bar needed for a
+  compact list-row indicator
 
 ### Compose Performance
 
