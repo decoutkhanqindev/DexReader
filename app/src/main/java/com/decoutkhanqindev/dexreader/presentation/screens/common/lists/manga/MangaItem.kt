@@ -58,7 +58,10 @@ fun MangaItem(
         title = item.title,
         modifier = Modifier
           .fillMaxSize()
-          .shimmerLoading(isEnable = !isImageLoaded),
+          .shimmerLoading(
+            shape = MaterialTheme.shapes.medium,
+            isEnable = !isImageLoaded
+          ),
         onImageLoaded = { isImageLoaded = true }
       )
 

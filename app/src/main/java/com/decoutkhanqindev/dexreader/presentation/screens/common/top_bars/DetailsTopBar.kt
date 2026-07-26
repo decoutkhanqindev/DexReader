@@ -1,5 +1,7 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.common.top_bars
 
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
@@ -17,21 +19,25 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.ReadingProgressBar
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsTopBar(
-  title: String,
+  title: String = "",
+  titleContent: (@Composable () -> Unit)? = null,
   isSearchEnabled: Boolean = true,
   modifier: Modifier = Modifier,
+  actionsContent: (@Composable RowScope.() -> Unit)? = null,
   onNavigateBack: () -> Unit,
   onNavigateToSearchScreen: () -> Unit = {},
 ) {
   CenterAlignedTopAppBar(
     title = {
-      Text(
+      if (titleContent != null) titleContent()
+      else Text(
         text = title,
         fontWeight = FontWeight.ExtraBold,
         style = MaterialTheme.typography.titleLarge,
@@ -47,7 +53,8 @@ fun DetailsTopBar(
       }
     },
     actions = {
-      if (isSearchEnabled) {
+      if (actionsContent != null) actionsContent()
+      else if (isSearchEnabled) {
         IconButton(onClick = onNavigateToSearchScreen) {
           Icon(
             imageVector = Icons.Default.Search,
@@ -84,6 +91,23 @@ private fun DetailsTopBarNoSearchPreview() {
     DetailsTopBar(
       title = "One Piece",
       isSearchEnabled = false,
+      onNavigateBack = {}
+    )
+  }
+}
+
+@Preview
+@Composable
+private fun DetailsTopBarWithProgressPreview() {
+  DexReaderTheme {
+    DetailsTopBar(
+      titleContent = {
+        ReadingProgressBar(
+          lastReadPage = 12,
+          pageCount = 46,
+          modifier = Modifier.fillMaxWidth()
+        )
+      },
       onNavigateBack = {}
     )
   }

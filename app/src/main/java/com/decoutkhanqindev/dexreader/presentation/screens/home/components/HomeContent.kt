@@ -80,7 +80,7 @@ fun HomeContent(
               items = uiState.bannerList,
               modifier = Modifier
                 .fillMaxWidth()
-                .height(365.dp),
+                .height(300.dp),
               onItemClick = onItemClick
             )
           }

@@ -68,7 +68,7 @@ fun Modifier.onClick(
       scaleX = scale.value
       scaleY = scale.value
     }
-    .then(if (shape != null) this.clip(shape) else this)
+    .then(if (shape != null) Modifier.clip(shape) else Modifier)
     .pointerInput(Unit) {
       awaitEachGesture {
         awaitFirstDown(requireUnconsumed = false)
@@ -79,13 +79,13 @@ fun Modifier.onClick(
     }
     .then(
       if (ripple) {
-        this.clickable(
+        Modifier.clickable(
           interactionSource = interactionSource,
           indication = ripple(),
           onClick = tryClick,
         )
       } else {
-        this.clickable(
+        Modifier.clickable(
           interactionSource = null,
           indication = null,
           onClick = tryClick,
@@ -206,16 +206,6 @@ fun Modifier.animateItemOnAppear(): Modifier {
     label = "Alpha"
   ) { if (it) 1f else 0f }
 
-  val scale = transition.animateFloat(
-    transitionSpec = {
-      spring(
-        dampingRatio = Spring.DampingRatioMediumBouncy,
-        stiffness = Spring.StiffnessLow
-      )
-    },
-    label = "Scale"
-  ) { if (it) 1f else 0.8f }
-
   val translationY = transition.animateFloat(
     transitionSpec = { spring(stiffness = Spring.StiffnessLow) },
     label = "TranslationY"
@@ -223,8 +213,6 @@ fun Modifier.animateItemOnAppear(): Modifier {
 
   return this.graphicsLayer {
     this.alpha = alpha.value
-    this.scaleX = scale.value
-    this.scaleY = scale.value
     this.translationY = translationY.value
   }
 }

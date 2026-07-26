@@ -117,7 +117,10 @@ fun MangaBanner(
         title = manga.title,
         modifier = Modifier
           .fillMaxSize()
-          .shimmerLoading(shape = MaterialTheme.shapes.medium, isEnable = !isImageLoaded),
+          .shimmerLoading(
+            shape = MaterialTheme.shapes.medium,
+            isEnable = !isImageLoaded
+          ),
         onImageLoaded = { isImageLoaded = true }
       )
 

@@ -137,6 +137,11 @@
   <string name="next_chapter">next chapter</string>
   <string name="no_chapter_pages_available">No chapter pages available.</string>
   <string name="reader_title">%1$s/%2$s</string>
+  <string name="reset_chapter_progress">reset chapter progress</string>
+  <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">Are you sure you want to reset this chapter\'s progress? It will be removed from your reading history.</string>
+  <string name="reset">Reset</string>
+  <string name="you_have_reset_this_chapter_s_progress_successfully">You have reset this chapter\'s progress successfully.</string>
+  <string name="reset_chapter_progress_failed">Reset chapter progress failed. Please try again.</string>
 
   <!-- Search Screen -->
   <string name="search_manga_placeholder">Enter manga title …</string>

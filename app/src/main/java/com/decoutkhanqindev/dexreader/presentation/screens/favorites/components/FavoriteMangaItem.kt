@@ -56,7 +56,10 @@ fun FavoriteMangaItem(
         title = manga.title,
         modifier = Modifier
           .fillMaxSize()
-          .shimmerLoading(isEnable = !isImageLoaded),
+          .shimmerLoading(
+            shape = MaterialTheme.shapes.medium,
+            isEnable = !isImageLoaded
+          ),
         onImageLoaded = { isImageLoaded = true }
       )
 

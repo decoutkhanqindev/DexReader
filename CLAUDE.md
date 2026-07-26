@@ -275,6 +275,28 @@ app-wide theme doesn't move until `saveThemeOption()` succeeds and copies the st
 `selectedThemeOption` back to `appliedThemeOption`, so a cancelled change doesn't leave a stale
 selection highlighted.
 
+**Forcing a same-screen `HorizontalPager` jump from the ViewModel**:
+`rememberPagerState(initialPage = ...)` only reads `initialPage` once — there's no built-in channel
+for the ViewModel to move the pager afterward. `ChapterPagesSection` (Reader) reports the pager's
+position outward via `LaunchedEffect(pagerState.currentPage) { onUpdateChapterPage(...) }` but has no
+listener for external page changes. To force a jump within the same chapter (e.g.
+`ReaderViewModel.resetChapterProgress()` snapping back to page 1), reuse the same unmount/remount
+trick `navigateToPreviousChapter()`/`navigateToNextChapter()` already rely on: set
+`_chapterPagesUiState.value = ChapterPagesUiState.Loading` (unmounts `ChapterPagesSection` —
+`ReaderContent`'s `when` branch doesn't call it during `Loading`), then immediately set a new
+`Success` with the target page — `rememberPagerState` re-reads `initialPage` fresh on remount.
+`updateChapterPage()` alone cannot do this: it only `.copy()`s an existing `Success` and never assigns
+`Loading`, so it never triggers the remount.
+
+**Cancel in-flight mutation jobs before navigating away**: any `viewModelScope.launch` that captures a
+`ChapterPagesUiState.Success` snapshot before a suspension point (e.g. a Firestore call) must be
+tracked as a cancellable `Job` and cancelled at the top of any function that can change
+`currentChapterId` mid-flight — otherwise the mutation's `.onSuccess` can fire later using the stale
+snapshot, unmounting the *new* chapter's pager and resurrecting the *old* chapter's pages under the
+new chapter's id. `ReaderViewModel.resetProgressJob` (cancelled, with `_resetProgressUiState` reset to
+idle, at the top of both `navigateToPreviousChapter()`/`navigateToNextChapter()`) follows the same
+established shape as `observeHistoryJob`/`cancelObserveHistoryJob()`.
+
 ### Compose Conventions
 
 - No top-level `private val` in composable files — define variables directly inside the composable.
@@ -323,11 +345,19 @@ selection highlighted.
   need a different glow extent.
 - `ReadingProgressBar` (`presentation/screens/common/indicators/`) — shared page-count + percent +
   animated `LinearProgressIndicator` for reading progress, used by `MangaChapterItem` (manga details
-  chapter list) and `ReadingHistoryInfo` (history list) so both show identical progress info instead
-  of one being percent-only and the other page-count-only. M3 1.4's `LinearProgressIndicator`
-  defaults to the "expressive" style (a gap near the end + a small stop-indicator dot) — pass
-  `gapSize = 0.dp` and `drawStopIndicator = {}` to get the classic continuous bar needed for a
-  compact list-row indicator
+  chapter list), `ReadingHistoryInfo` (history list), and `ReaderScreen` (top bar, via
+  `DetailsTopBar`'s `titleContent` slot below) so all three show identical progress info instead of
+  some being percent-only and others page-count-only. M3 1.4's `LinearProgressIndicator` defaults to
+  the "expressive" style (a gap near the end + a small stop-indicator dot) — pass `gapSize = 0.dp` and
+  `drawStopIndicator = {}` to get the classic continuous bar needed for a compact list-row indicator
+- `DetailsTopBar` (`presentation/screens/common/top_bars/`) — `title: String = ""` has an optional
+  `titleContent: (@Composable () -> Unit)? = null` override (falls back to the default `Text` when
+  null) and `actionsContent: (@Composable RowScope.() -> Unit)? = null` override for the actions row
+  (falls back to the `isSearchEnabled`-gated search icon when null). Both default to `null`, so the
+  four screens behind `BaseDetailsScreen` (MangaDetails/CategoryDetails/ForgotPassword/Register) need
+  no changes. `ReaderScreen` is the only current consumer of both: `titleContent` renders
+  `ReadingProgressBar` instead of "page X/Y" text, `actionsContent` renders the reset-chapter-progress
+  icon (gated on `isUserLoggedIn && chapterPagesUiState is Success`) instead of the search icon
 
 ### Compose Performance
 
@@ -358,6 +388,33 @@ selection highlighted.
 - `Modifier.onClick(...)` is a plain `@Composable fun Modifier.onClick(...): Modifier` (not
   `composed { }`) — matches the other three modifiers above; avoid `composed { }` for new modifiers
   in this file, it adds a subcomposition per usage that a direct `@Composable` function doesn't need
+- **Inside a plain `@Composable fun Modifier.foo(): Modifier`, `this` is the caller's entire
+  incoming chain — never hand `this` to `.then(...)`.** Always build the appended segment from the
+  `Modifier` companion: `.then(if (shape != null) Modifier.clip(shape) else Modifier)`, never
+  `.then(if (shape != null) this.clip(shape) else this)`. The wrong form re-appends the whole caller
+  chain, so every layout modifier the caller passed is applied *again* per `.then()`.
+  **This is the exact migration hazard of dropping `composed { }`**: inside `composed { }` the
+  factory receiver is the *empty* `Modifier` (materialization calls `factory(Modifier, …)`), so
+  `this.clip(...)` was correct there; converting to a plain `@Composable` extension silently
+  reinterprets every `this` without any compile error. `onClick` shipped this bug in `a80f140` and
+  its two `.then(this…)` calls tripled the caller's chain — `MangaChapterItem`'s
+  `padding(horizontal = 16.dp, vertical = 6.dp)` rendered as 48dp/18dp, `MangaItem`'s `padding(4.dp)`
+  as 12dp — which is what the "UI bị padding thêm" reports across Home/Favorites/History/Search/
+  CategoryDetails/MangaDetails actually were. `shimmerLoading`/`shimmerHighlight` always used the
+  `Modifier` companion and were never affected. When a shared modifier is suspected, read its
+  `.then()` receivers first — no padding literal changes, so grepping diffs for `padding`/`spacedBy`
+  will not find it.
+- **Never animate `scaleX`/`scaleY` in a list/grid item's entrance animation.** A `graphicsLayer`
+  scale does not shrink the layout slot — only the drawn content — so a mid-animation item renders
+  small inside a full-size slot and reads as extra padding around every item. `animateItemOnAppear()`
+  animates only `alpha` + `translationY` for this reason. The entrance also replays whenever a
+  LazyList item is re-composed (i.e. every time it scrolls back into view), so any such artifact
+  shows during normal scrolling, not just on first load — `remember { }` inside the modifier cannot
+  survive that. Transient scale is fine for press feedback (`onClick`), where the element is not one
+  of many in a list.
+- `MangaBanner`'s pager applies `scale`/`alpha` = `lerp(0.92f/0.6f, 1f, 1f - pageOffset)` per page
+  in `graphicsLayer` — a banner screenshotted mid-auto-scroll is legitimately ~0.92× size and dimmer.
+  Same caveat as above: judge banner spacing only from a settled pager, never mid-transition
 
 ---
 

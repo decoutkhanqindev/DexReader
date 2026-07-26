@@ -18,6 +18,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.manga.cache.AddChapterCache
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.cache.ClearExpiredCacheUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.cache.GetChapterCacheUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.history.ObserveHistoryUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.user.history.RemoveFromHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.history.UpsertHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.statistics.IncrementReadingDurationUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.ChapterPagesMapper.toChapterPagesModel
@@ -52,6 +53,7 @@ class ReaderViewModel @Inject constructor(
   private val getMangaDetailsUseCase: GetMangaDetailsUseCase,
   private val observeHistoryUseCase: ObserveHistoryUseCase,
   private val upsertHistoryUseCase: UpsertHistoryUseCase,
+  private val removeFromHistoryUseCase: RemoveFromHistoryUseCase,
   private val incrementReadingDurationUseCase: IncrementReadingDurationUseCase,
 ) : ViewModel() {
   private val route: NavRoute.Reader = savedStateHandle.toRoute()
@@ -72,6 +74,9 @@ class ReaderViewModel @Inject constructor(
     MutableStateFlow(ChapterNavigationUiState(currentChapterId = currentChapterId))
   val chapterNavUiState: StateFlow<ChapterNavigationUiState> = _chapterNavUiState.asStateFlow()
 
+  private val _resetProgressUiState = MutableStateFlow(ResetProgressUiState())
+  val resetProgressUiState: StateFlow<ResetProgressUiState> = _resetProgressUiState.asStateFlow()
+
   private val _userId = MutableStateFlow<String?>(null)
 
   private var mangaTitle: String? = null
@@ -87,6 +92,7 @@ class ReaderViewModel @Inject constructor(
   private var isObservingReadingHistoryList = false
   private var currentReadingHistory: ReadingHistory? = null
   private var observeHistoryJob: Job? = null
+  private var resetProgressJob: Job? = null
   private var readingTimerJob: Job? = null
   private var lastUpdateTime: Long = System.currentTimeMillis()
 
@@ -362,6 +368,7 @@ class ReaderViewModel @Inject constructor(
 
   fun navigateToPreviousChapter() {
     _chapterNavUiState.value.previousChapterId?.let { previousId ->
+      cancelResetProgressJob()
       currentChapterId = previousId
       updateChapterNavState()
       _chapterPagesUiState.value = ChapterPagesUiState.Loading
@@ -374,6 +381,7 @@ class ReaderViewModel @Inject constructor(
 
   fun navigateToNextChapter() {
     _chapterNavUiState.value.nextChapterId?.let { nextId ->
+      cancelResetProgressJob()
       currentChapterId = nextId
       updateChapterNavState()
       _chapterPagesUiState.value = ChapterPagesUiState.Loading
@@ -610,15 +618,65 @@ class ReaderViewModel @Inject constructor(
     }
   }
 
+  fun resetChapterProgress() {
+    if (_resetProgressUiState.value.isLoading) return
+    val currentPagesState = _chapterPagesUiState.value
+    if (currentPagesState !is ChapterPagesUiState.Success) return
+    val chapterIdAtResetStart = currentChapterId
+
+    resetProgressJob = viewModelScope.launch {
+      _resetProgressUiState.update { it.copy(isLoading = true, isSuccess = false, isError = false) }
+
+      val userId = _userId.value
+      val removeResult = userId?.let {
+        removeFromHistoryUseCase(
+          userId = it,
+          readingHistoryId = ReadingHistory.generateId(mangaIdFromArg, chapterIdAtResetStart)
+        )
+      } ?: Result.success(Unit)
+
+      removeResult
+        .onSuccess {
+          if (currentChapterId == chapterIdAtResetStart) {
+            currentReadingHistory = null
+            _chapterPagesUiState.value = ChapterPagesUiState.Loading
+            _chapterPagesUiState.value = currentPagesState.copy(currentChapterPage = 1)
+          }
+          _resetProgressUiState.update { it.copy(isLoading = false, isSuccess = true, isError = false) }
+        }
+        .onFailure { throwable ->
+          _resetProgressUiState.update { it.copy(isLoading = false, isSuccess = false, isError = true) }
+          Timber.tag(this::class.java.simpleName)
+            .e("resetChapterProgress have error: ${throwable.stackTraceToString()}")
+        }
+    }
+  }
+
+  fun retryResetChapterProgress() {
+    if (_resetProgressUiState.value.isError) resetChapterProgress()
+  }
+
   private fun cancelObserveHistoryJob() {
     observeHistoryJob?.cancel()
     observeHistoryJob = null
   }
 
+  private fun cancelReadingTimerJob() {
+    readingTimerJob?.cancel()
+    readingTimerJob = null
+  }
+
+  private fun cancelResetProgressJob() {
+    resetProgressJob?.cancel()
+    resetProgressJob = null
+    _resetProgressUiState.value = ResetProgressUiState()
+  }
+
   override fun onCleared() {
     updateReadingDuration()
     cancelObserveHistoryJob()
-    readingTimerJob?.cancel()
+    cancelReadingTimerJob()
+    cancelResetProgressJob()
     super.onCleared()
   }
 

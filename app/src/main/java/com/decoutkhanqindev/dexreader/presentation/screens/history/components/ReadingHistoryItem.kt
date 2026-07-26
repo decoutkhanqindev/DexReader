@@ -98,7 +98,10 @@ fun ReadingHistoryItem(
           title = readingHistory.mangaTitle,
           modifier = Modifier
             .weight(0.3f)
-            .shimmerLoading(isEnable = !isImageLoaded),
+            .shimmerLoading(
+              shape = MaterialTheme.shapes.medium,
+              isEnable = !isImageLoaded
+            ),
           onImageLoaded = { isImageLoaded = true }
         )
 
