@@ -21,7 +21,6 @@ import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 @Composable
 fun ProfilePicture(
   url: String,
-  name: String,
   modifier: Modifier = Modifier,
 ) {
   val context = LocalContext.current
@@ -36,7 +35,7 @@ fun ProfilePicture(
 
   AsyncImage(
     model = model,
-    contentDescription = name,
+    contentDescription = null,
     contentScale = ContentScale.Crop,
     modifier = modifier
       .clip(CircleShape)
@@ -50,8 +49,7 @@ fun ProfilePicture(
 private fun ProfilePicturePreview() {
   DexReaderTheme {
     ProfilePicture(
-      url = "",
-      name = "Nguyen Van A"
+      url = ""
     )
   }
 }

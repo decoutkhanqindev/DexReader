@@ -40,7 +40,7 @@ fun EmailInputField(
     leadingIcon = {
       Icon(
         imageVector = Icons.Default.Email,
-        contentDescription = stringResource(R.string.email),
+        contentDescription = null,
         modifier = Modifier.size(24.dp),
         tint = MaterialTheme.colorScheme.onPrimaryContainer,
       )

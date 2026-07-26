@@ -40,7 +40,7 @@ fun NameInputField(
     leadingIcon = {
       Icon(
         imageVector = Icons.Default.Person,
-        contentDescription = stringResource(R.string.name),
+        contentDescription = null,
         modifier = Modifier.size(24.dp),
         tint = MaterialTheme.colorScheme.onPrimaryContainer,
       )

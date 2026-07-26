@@ -95,7 +95,6 @@ fun ReadingHistoryItem(
       ) {
         MangaCoverArt(
           url = readingHistory.mangaCoverUrl,
-          title = readingHistory.mangaTitle,
           modifier = Modifier
             .weight(0.3f)
             .shimmerLoading(

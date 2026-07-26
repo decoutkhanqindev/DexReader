@@ -10,9 +10,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.ReadingProgressBar
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
@@ -38,7 +36,7 @@ fun NavigateChapterBottomBar(
     ) {
       Icon(
         imageVector = Icons.Default.ChevronLeft,
-        contentDescription = stringResource(R.string.pre_chapter)
+        contentDescription = null
       )
     }
     ReadingProgressBar(
@@ -55,7 +53,7 @@ fun NavigateChapterBottomBar(
     ) {
       Icon(
         imageVector = Icons.Default.ChevronRight,
-        contentDescription = stringResource(R.string.next_chapter)
+        contentDescription = null
       )
     }
   }

@@ -63,7 +63,7 @@ fun SearchBar(
       IconButton(onClick = onNavigateBack) {
         Icon(
           imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-          contentDescription = stringResource(R.string.back)
+          contentDescription = null
         )
       }
     },
@@ -72,7 +72,7 @@ fun SearchBar(
         IconButton(onClick = { onQueryChange("") }) {
           Icon(
             imageVector = Icons.Default.Clear,
-            contentDescription = stringResource(R.string.clear)
+            contentDescription = null
           )
         }
       }

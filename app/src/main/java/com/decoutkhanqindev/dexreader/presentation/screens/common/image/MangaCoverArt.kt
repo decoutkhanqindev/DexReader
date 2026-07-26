@@ -25,7 +25,6 @@ import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 @Composable
 fun MangaCoverArt(
   url: String,
-  title: String,
   modifier: Modifier = Modifier,
   onImageLoaded: () -> Unit = {},
 ) {
@@ -50,7 +49,7 @@ fun MangaCoverArt(
   ) {
     AsyncImage(
       model = model,
-      contentDescription = title,
+      contentDescription = null,
       contentScale = ContentScale.Crop,
       modifier = Modifier
         .fillMaxSize()
@@ -69,7 +68,6 @@ private fun MangaCoverArtPreview() {
   DexReaderTheme {
     MangaCoverArt(
       url = "",
-      title = "One Piece",
       modifier = Modifier
         .width(194.dp)
         .height(250.dp),

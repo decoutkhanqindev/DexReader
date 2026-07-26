@@ -53,7 +53,6 @@ fun FavoriteMangaItem(
     Box(modifier = Modifier.fillMaxWidth()) {
       MangaCoverArt(
         url = manga.coverUrl,
-        title = manga.title,
         modifier = Modifier
           .fillMaxSize()
           .shimmerLoading(

@@ -22,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.value.category.CategoryTypeValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.onClick
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
@@ -54,7 +53,7 @@ fun CategoryTypeHeader(
       ) {
         Icon(
           imageVector = if (isExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-          contentDescription = if (isExpanded) stringResource(R.string.icon_expand_less) else stringResource(R.string.icon_expand_more)
+          contentDescription = null
         )
       }
     }

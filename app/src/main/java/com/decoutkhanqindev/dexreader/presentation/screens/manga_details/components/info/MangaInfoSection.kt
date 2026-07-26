@@ -38,7 +38,6 @@ fun MangaInfoSection(
   ) {
     MangaCoverArt(
       url = manga.coverUrl,
-      title = manga.title,
       modifier = Modifier
         .width(180.dp)
         .height(260.dp)

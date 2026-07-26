@@ -116,7 +116,6 @@ fun MangaBanner(
     ) {
       MangaCoverArt(
         url = manga.coverUrl,
-        title = manga.title,
         modifier = Modifier
           .fillMaxSize()
           .shimmerLoading(

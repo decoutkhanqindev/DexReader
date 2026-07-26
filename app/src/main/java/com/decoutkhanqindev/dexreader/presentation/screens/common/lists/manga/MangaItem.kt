@@ -55,7 +55,6 @@ fun MangaItem(
     Box(modifier = Modifier.fillMaxWidth()) {
       MangaCoverArt(
         url = item.coverUrl,
-        title = item.title,
         modifier = Modifier
           .fillMaxSize()
           .shimmerLoading(

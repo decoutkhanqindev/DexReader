@@ -29,7 +29,6 @@ import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 @Composable
 fun ProfilePicturePicker(
   url: String?,
-  name: String,
   modifier: Modifier = Modifier,
   onSelectedImageUrl: (String) -> Unit,
 ) {
@@ -42,12 +41,8 @@ fun ProfilePicturePicker(
     modifier = modifier.clip(CircleShape),
     contentAlignment = Alignment.Center
   ) {
-    if (url != null) {
-      ProfilePicture(
-        url = url,
-        name = name,
-      )
-    } else PersonPicture()
+    if (url != null) ProfilePicture(url = url)
+    else PersonPicture()
     Row(
       modifier = Modifier
         .width(80.dp)
@@ -59,11 +54,7 @@ fun ProfilePicturePicker(
     ) {
       IconButton(
         onClick = {
-          singlePhotoPickerLauncher.launch(
-            PickVisualMediaRequest(
-              ActivityResultContracts.PickVisualMedia.ImageOnly
-            )
-          )
+          singlePhotoPickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         },
       ) {
         Icon(
@@ -83,7 +74,6 @@ private fun ProfilePicturePickerWithUrlPreview() {
   DexReaderTheme {
     ProfilePicturePicker(
       url = "",
-      name = "Nguyen Van A",
       onSelectedImageUrl = {}
     )
   }
@@ -95,7 +85,6 @@ private fun ProfilePicturePickerNoUrlPreview() {
   DexReaderTheme {
     ProfilePicturePicker(
       url = null,
-      name = "Nguyen Van A",
       onSelectedImageUrl = {}
     )
   }

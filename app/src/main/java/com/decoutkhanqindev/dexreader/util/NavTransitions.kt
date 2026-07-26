@@ -10,9 +10,7 @@ object NavTransitions {
 
   inline fun <reified Root : Any> NavHostController.navigatePreserveState(route: Any) {
     this.navigateTo(route) {
-      popUpTo<Root> {
-        saveState = true
-      }
+      popUpTo<Root> { saveState = true }
       launchSingleTop = true
       restoreState = true
     }
@@ -20,9 +18,7 @@ object NavTransitions {
 
   inline fun <reified T : Any> NavHostController.navigateClearStack(route: Any) {
     this.navigateTo(route) {
-      popUpTo<T> {
-        inclusive = true
-      }
+      popUpTo<T> { inclusive = true }
       launchSingleTop = true
     }
   }

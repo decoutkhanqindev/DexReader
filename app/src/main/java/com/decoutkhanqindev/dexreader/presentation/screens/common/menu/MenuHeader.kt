@@ -45,7 +45,6 @@ fun MenuHeader(
       if (currentUser?.avatarUrl != null) {
         ProfilePicture(
           url = currentUser.avatarUrl,
-          name = currentUser.name,
           modifier = Modifier.weight(0.25f)
         )
       } else {
@@ -94,7 +93,7 @@ fun MenuHeader(
 
         Icon(
           imageVector = Icons.AutoMirrored.Filled.Login,
-          contentDescription = stringResource(R.string.sign_in),
+          contentDescription = null,
           tint = MaterialTheme.colorScheme.onPrimary,
           modifier = Modifier
             .size(24.dp)

@@ -10,10 +10,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
@@ -34,7 +32,7 @@ fun SortAndFilterButtons(
     ) {
       Icon(
         imageVector = Icons.AutoMirrored.Filled.Sort,
-        contentDescription = stringResource(R.string.sort),
+        contentDescription = null,
         tint = MaterialTheme.colorScheme.onPrimaryContainer,
       )
     }
@@ -45,7 +43,7 @@ fun SortAndFilterButtons(
     ) {
       Icon(
         imageVector = Icons.Default.FilterAlt,
-        contentDescription = stringResource(R.string.filter),
+        contentDescription = null,
         tint = MaterialTheme.colorScheme.onPrimaryContainer,
       )
     }

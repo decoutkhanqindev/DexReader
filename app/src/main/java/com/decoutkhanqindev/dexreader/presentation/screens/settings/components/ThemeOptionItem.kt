@@ -42,7 +42,11 @@ fun ThemeOptionItem(
       fontWeight = FontWeight.Bold,
       style = MaterialTheme.typography.bodyLarge,
     )
-    Icon(imageVector = item.icon, contentDescription = item.name, modifier = Modifier.size(24.dp))
+    Icon(
+      imageVector = item.icon,
+      contentDescription = null,
+      modifier = Modifier.size(24.dp)
+    )
   }
 }
 

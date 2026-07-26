@@ -58,7 +58,7 @@ fun UpdateAndLogoutUserBottomBar(
 
       Icon(
         imageVector = Icons.AutoMirrored.Filled.Logout,
-        contentDescription = stringResource(R.string.logout),
+        contentDescription = null,
         tint = MaterialTheme.colorScheme.onErrorContainer,
         modifier = Modifier
           .size(24.dp)
