@@ -4,7 +4,7 @@ import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirebaseFire
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.statistics.FirebaseStatisticsFirestoreSource
 import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingStats
 import com.decoutkhanqindev.dexreader.domain.repository.user.StatisticsRepository
-import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendResultCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -19,9 +19,13 @@ class StatisticsRepositoryImpl @Inject constructor(
     userId: String,
     date: String,
     durationMillis: Long,
-  ): Result<Unit> = runSuspendResultCatching {
-    firestoreSource.incrementReadingDuration(userId, date, durationMillis)
-  }
+  ) = runSuspendCatching(
+    context = Dispatchers.IO,
+    block = {
+      firestoreSource.incrementReadingDuration(userId, date, durationMillis)
+    },
+    catch = { it.toFirebaseFirestoreFlowException() }
+  )
 
   override fun observeStatistics(userId: String): Flow<List<ReadingStats>> =
     firestoreSource.observeStatistics(userId)

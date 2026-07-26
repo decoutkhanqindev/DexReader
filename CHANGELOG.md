@@ -4,6 +4,41 @@ Dated log of notable multi-file / cross-cutting work sessions. Newest entry firs
 
 ---
 
+## 2026-07-26 — Merge MainTopBar + DetailsTopBar into one generic AppTopBar
+
+`MainTopBar` (used by `BaseScreen`'s 7 tab-root screens) and `DetailsTopBar` (used by
+`BaseDetailsScreen`'s 2 screens + `ReaderScreen` directly) were near-twin composables — both wrapped
+a `CenterAlignedTopAppBar` with a title, one left icon, and one optional right icon — but took
+different-shaped params. Replaced both with a single `AppTopBar`
+(`presentation/screens/common/top_bars/`): `leftIcon`/`rightIcon` are `ImageVector?` (presence is
+the only visibility switch, no `isEnabled`-style boolean), no content-description param (both icons
+render `contentDescription = null`), colors are 4 flat `Color` params instead of a bundled
+`TopAppBarColors`, and the `actionsContent` custom-slot escape hatch is gone entirely —
+`ReaderScreen`'s conditional reset-progress icon is now just `rightIcon = if (...)
+Icons.Default.RestartAlt else null`.
+
+**Verified via decompiled M3 1.4.0 sources** (not just inference) that dropping the manual
+`tint = MaterialTheme.colorScheme.primary` on `MainTopBar`'s icons in favor of baking
+`leftIconContentColor`/`rightIconContentColor` into the merged component's `colors` argument
+reproduces identical rendering — `IconButton`'s default colors and `Icon`'s default `tint` both
+resolve through `LocalContentColor`, which `CenterAlignedTopAppBar` provides from exactly those
+`colors` fields (`DetailsTopBar`'s shipping code already relied on this same mechanism).
+
+**Fix:** created `AppTopBar.kt` + 5 previews; migrated `BaseDetailsScreen.kt`, `ReaderScreen.kt`,
+`BaseScreen.kt` (Menu variant now wraps its own `AppTopBar(...)` call in a local translucent
+`Surface`, since that wrapping was only ever needed by this one caller); deleted `MainTopBar.kt`/
+`DetailsTopBar.kt`. Kept `BaseScreen`/`BaseDetailsScreen` as two separate composables — their only
+real difference is `BaseScreen`'s `MenuDrawer` wrapper, a genuine compositional fork, not a
+parameter to generalize. Also fixed a pre-existing stale CLAUDE.md claim in the same section: only
+2 screens (`MangaDetailsScreen`, `CategoryDetailsScreen`) sit behind `BaseDetailsScreen`, not 4 —
+`ForgotPasswordScreen`/`RegisterScreen` have no top bar at all.
+
+**Verified:** `./gradlew compileDebugKotlin` → BUILD SUCCESSFUL after every step (per-file
+migration order: create `AppTopBar.kt` → `BaseDetailsScreen.kt` → `ReaderScreen.kt` →
+`BaseScreen.kt` → delete old files).
+
+---
+
 ## 2026-07-12 — Fix shimmer bleeding into a square instead of following its shape
 
 `shimmerLoading`/`shimmerHighlight` (from the migration below) draw their gradient sweep with

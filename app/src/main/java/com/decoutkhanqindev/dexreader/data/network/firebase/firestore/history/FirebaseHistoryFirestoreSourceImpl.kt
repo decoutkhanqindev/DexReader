@@ -17,7 +17,9 @@ import javax.inject.Inject
 class FirebaseHistoryFirestoreSourceImpl @Inject constructor(
   firebaseFirestore: FirebaseFirestore,
 ) : FirebaseHistoryFirestoreSource {
-  private val usersCollectionRef = firebaseFirestore.collection(FirestoreCollections.USERS)
+  private val usersCollectionRef by lazy {
+    firebaseFirestore.collection(FirestoreCollections.USERS)
+  }
 
   override fun observeHistory(
     userId: String,

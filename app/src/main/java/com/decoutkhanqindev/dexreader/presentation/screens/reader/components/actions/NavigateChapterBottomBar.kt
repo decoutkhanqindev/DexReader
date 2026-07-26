@@ -1,7 +1,5 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.reader.components.actions
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronLeft
@@ -10,24 +8,18 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.ReadingProgressBar
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun NavigateChapterBottomBar(
-  volume: String,
-  chapterNumber: String,
-  title: String,
+  lastReadPage: Int,
+  pageCount: Int,
   canNavigatePrevious: Boolean,
   canNavigateNext: Boolean,
   modifier: Modifier = Modifier,
@@ -49,28 +41,13 @@ fun NavigateChapterBottomBar(
         contentDescription = stringResource(R.string.pre_chapter)
       )
     }
-    Column(
+    ReadingProgressBar(
+      lastReadPage = lastReadPage,
+      pageCount = pageCount,
       modifier = Modifier
         .weight(2f)
-        .fillMaxWidth(),
-      verticalArrangement = Arrangement.spacedBy(4.dp),
-      horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-      Text(
-        text = stringResource(R.string.volume_chapter, volume, chapterNumber),
-        fontWeight = FontWeight.ExtraBold,
-        style = MaterialTheme.typography.titleLarge,
-      )
-      if (title.isNotBlank()) {
-        Text(
-          text = title,
-          fontStyle = FontStyle.Italic,
-          fontWeight = FontWeight.Bold,
-          textAlign = TextAlign.Center,
-          style = MaterialTheme.typography.bodyMedium,
-        )
-      }
-    }
+        .fillMaxWidth()
+    )
     IconButton(
       onClick = onNavigateNext,
       modifier = Modifier.weight(0.5f),
@@ -89,9 +66,8 @@ fun NavigateChapterBottomBar(
 private fun NavigateChapterBottomBarBothEnabledPreview() {
   DexReaderTheme {
     NavigateChapterBottomBar(
-      volume = "1",
-      chapterNumber = "5",
-      title = "Romance Dawn",
+      lastReadPage = 12,
+      pageCount = 46,
       canNavigatePrevious = true,
       canNavigateNext = true,
       onNavigatePrevious = {},
@@ -105,9 +81,8 @@ private fun NavigateChapterBottomBarBothEnabledPreview() {
 private fun NavigateChapterBottomBarNextOnlyPreview() {
   DexReaderTheme {
     NavigateChapterBottomBar(
-      volume = "1",
-      chapterNumber = "1",
-      title = "Romance Dawn",
+      lastReadPage = 1,
+      pageCount = 20,
       canNavigatePrevious = false,
       canNavigateNext = true,
       onNavigatePrevious = {},
@@ -121,9 +96,8 @@ private fun NavigateChapterBottomBarNextOnlyPreview() {
 private fun NavigateChapterBottomBarPreviousOnlyPreview() {
   DexReaderTheme {
     NavigateChapterBottomBar(
-      volume = "20",
-      chapterNumber = "1110",
-      title = "",
+      lastReadPage = 46,
+      pageCount = 46,
       canNavigatePrevious = true,
       canNavigateNext = false,
       onNavigatePrevious = {},

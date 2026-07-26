@@ -683,7 +683,7 @@ class ReaderViewModel @Inject constructor(
   companion object {
     private const val CHAPTER_LIST_PER_PAGE_SIZE = 20
     private const val READING_HISTORY_LIST_PER_PAGE_SIZE = 50
-    private const val STATS_UPDATE_INTERVAL_MS = 30_000L // 30 seconds
+    private const val STATS_UPDATE_INTERVAL_MS = 15_000L
     private const val MIN_DURATION_TO_SAVE_MS = 1_000L
     private const val TAG = "ReaderViewModel"
   }

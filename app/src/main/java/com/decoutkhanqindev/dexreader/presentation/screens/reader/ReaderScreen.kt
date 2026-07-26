@@ -6,33 +6,38 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.RestartAlt
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
-import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.ReadingProgressBar
-import com.decoutkhanqindev.dexreader.presentation.screens.common.top_bars.DetailsTopBar
+import com.decoutkhanqindev.dexreader.presentation.screens.common.top_bars.AppTopBar
 import com.decoutkhanqindev.dexreader.presentation.screens.reader.components.ReaderContent
 import com.decoutkhanqindev.dexreader.presentation.screens.reader.components.actions.NavigateChapterBottomBar
 import com.decoutkhanqindev.dexreader.presentation.screens.reader.components.actions.ZoomPageButton
@@ -58,9 +63,6 @@ fun ReaderScreen(
 
       else -> 0 to 0
     }
-  }
-  val canResetProgress by remember(isUserLoggedIn) {
-    derivedStateOf { isUserLoggedIn && chapterPagesUiState is ChapterPagesUiState.Success }
   }
   var isFullScreen by remember { mutableStateOf(false) }
   var isShowResetConfirmDialog by remember { mutableStateOf(false) }
@@ -89,29 +91,38 @@ fun ReaderScreen(
         enter = expandVertically() + fadeIn(),
         exit = shrinkVertically() + fadeOut()
       ) {
-        DetailsTopBar(
-          titleContent = {
-            ReadingProgressBar(
-              lastReadPage = currentPage,
-              pageCount = totalPages,
-              modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-            )
-          },
-          isSearchEnabled = false,
-          modifier = Modifier.fillMaxWidth(),
-          actionsContent = {
-            if (canResetProgress) {
-              IconButton(onClick = { isShowResetConfirmDialog = true }) {
-                Icon(
-                  imageVector = Icons.Default.RestartAlt,
-                  contentDescription = stringResource(R.string.reset_chapter_progress)
+        AppTopBar(
+          leftIcon = Icons.AutoMirrored.Filled.ArrowBack,
+          onLeftClick = onNavigateBack,
+          centerContent = {
+            Column(
+              modifier = Modifier.fillMaxWidth(),
+              verticalArrangement = Arrangement.spacedBy(4.dp),
+              horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+              Text(
+                text = stringResource(
+                  R.string.volume_chapter,
+                  chapterDetailsUiState.volume,
+                  chapterDetailsUiState.chapterNumber
+                ),
+                fontWeight = FontWeight.ExtraBold,
+                style = MaterialTheme.typography.titleLarge,
+              )
+              if (chapterDetailsUiState.title.isNotEmpty()) {
+                Text(
+                  text = chapterDetailsUiState.title,
+                  fontStyle = FontStyle.Italic,
+                  fontWeight = FontWeight.Bold,
+                  textAlign = TextAlign.Center,
+                  style = MaterialTheme.typography.bodyMedium,
                 )
               }
             }
           },
-          onNavigateBack = onNavigateBack,
+          rightIcon = Icons.Default.RestartAlt,
+          onRightClick = { isShowResetConfirmDialog = true },
+          modifier = Modifier.fillMaxWidth(),
         )
       }
     },
@@ -122,9 +133,8 @@ fun ReaderScreen(
         exit = shrinkVertically() + fadeOut()
       ) {
         NavigateChapterBottomBar(
-          volume = chapterDetailsUiState.volume,
-          chapterNumber = chapterDetailsUiState.chapterNumber,
-          title = chapterDetailsUiState.title,
+          lastReadPage = currentPage,
+          pageCount = totalPages,
           canNavigatePrevious = chapterNavUiState.canNavigatePrevious,
           canNavigateNext = chapterNavUiState.canNavigateNext,
           modifier = Modifier.fillMaxWidth(),

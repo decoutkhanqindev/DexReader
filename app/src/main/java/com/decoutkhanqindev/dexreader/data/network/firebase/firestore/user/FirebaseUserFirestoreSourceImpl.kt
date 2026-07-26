@@ -13,7 +13,9 @@ import javax.inject.Inject
 class FirebaseUserFirestoreSourceImpl @Inject constructor(
   firebaseFirestore: FirebaseFirestore,
 ) : FirebaseUserFirestoreSource {
-  private val usersCollectionRef = firebaseFirestore.collection(FirestoreCollections.USERS)
+  private val usersCollectionRef by lazy {
+    firebaseFirestore.collection(FirestoreCollections.USERS)
+  }
 
   override suspend fun upsertUserProfile(userProfile: UserProfileRequest) {
     usersCollectionRef

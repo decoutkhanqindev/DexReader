@@ -16,21 +16,12 @@ class FirebaseAuthSourceImpl @Inject constructor(
     email: String,
     password: String,
   ): User? {
-    val result = firebaseAuth.createUserWithEmailAndPassword(
-      email,
-      password
-    ).await()
+    val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
     return result.user?.toUser()
   }
 
-  override suspend fun login(
-    email: String,
-    password: String,
-  ) {
-    firebaseAuth.signInWithEmailAndPassword(
-      email,
-      password
-    ).await()
+  override suspend fun login(email: String, password: String) {
+    firebaseAuth.signInWithEmailAndPassword(email, password).await()
   }
 
   override suspend fun logout() = firebaseAuth.signOut()

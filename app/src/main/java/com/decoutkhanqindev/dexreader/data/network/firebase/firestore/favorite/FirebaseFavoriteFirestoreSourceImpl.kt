@@ -17,7 +17,9 @@ import javax.inject.Inject
 class FirebaseFavoriteFirestoreSourceImpl @Inject constructor(
   firebaseFirestore: FirebaseFirestore,
 ) : FirebaseFavoriteFirestoreSource {
-  private val usersCollectionRef = firebaseFirestore.collection(FirestoreCollections.USERS)
+  private val usersCollectionRef by lazy {
+    firebaseFirestore.collection(FirestoreCollections.USERS)
+  }
 
   override fun observeFavorites(
     userId: String,

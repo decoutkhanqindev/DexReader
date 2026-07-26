@@ -48,6 +48,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
+import com.decoutkhanqindev.dexreader.presentation.screens.common.animateItemOnAppear
 import com.decoutkhanqindev.dexreader.presentation.screens.common.badges.MangaGenreChip
 import com.decoutkhanqindev.dexreader.presentation.screens.common.badges.MangaRatingChip
 import com.decoutkhanqindev.dexreader.presentation.screens.common.badges.MangaStatusBadge
@@ -110,6 +111,7 @@ fun MangaBanner(
         }
         .fillMaxSize()
         .padding(horizontal = 8.dp)
+        .animateItemOnAppear()
         .onClick(MaterialTheme.shapes.medium) { onItemClick(manga.id) }
     ) {
       MangaCoverArt(

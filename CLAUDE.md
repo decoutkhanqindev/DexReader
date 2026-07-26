@@ -194,7 +194,7 @@ every switch. `navigateClearStack<T>(route)` for auth flows — `T` is the route
 `navigateClearStack<NavRoute.Login>(NavRoute.Home)`). `navigateTo`/`navigateBack` debounce internally
 (500ms, one shared timer for the whole app) as a safety net against rapid double-navigation — kept
 even though `Modifier.onClick` (see Compose Conventions) *also* debounces per click-instance, because
-several navigation triggers (`DetailsTopBar`/`SearchBar` back and search icons, `MenuItemRow`'s drawer
+several navigation triggers (`AppTopBar`/`SearchBar` back and search icons, `MenuItemRow`'s drawer
 items) go through raw Material3 `IconButton`/`NavigationDrawerItem` rather than `Modifier.onClick`,
 and would otherwise have no protection at all.
 
@@ -345,19 +345,36 @@ established shape as `observeHistoryJob`/`cancelObserveHistoryJob()`.
   need a different glow extent.
 - `ReadingProgressBar` (`presentation/screens/common/indicators/`) — shared page-count + percent +
   animated `LinearProgressIndicator` for reading progress, used by `MangaChapterItem` (manga details
-  chapter list), `ReadingHistoryInfo` (history list), and `ReaderScreen` (top bar, via
-  `DetailsTopBar`'s `titleContent` slot below) so all three show identical progress info instead of
-  some being percent-only and others page-count-only. M3 1.4's `LinearProgressIndicator` defaults to
-  the "expressive" style (a gap near the end + a small stop-indicator dot) — pass `gapSize = 0.dp` and
-  `drawStopIndicator = {}` to get the classic continuous bar needed for a compact list-row indicator
-- `DetailsTopBar` (`presentation/screens/common/top_bars/`) — `title: String = ""` has an optional
-  `titleContent: (@Composable () -> Unit)? = null` override (falls back to the default `Text` when
-  null) and `actionsContent: (@Composable RowScope.() -> Unit)? = null` override for the actions row
-  (falls back to the `isSearchEnabled`-gated search icon when null). Both default to `null`, so the
-  four screens behind `BaseDetailsScreen` (MangaDetails/CategoryDetails/ForgotPassword/Register) need
-  no changes. `ReaderScreen` is the only current consumer of both: `titleContent` renders
-  `ReadingProgressBar` instead of "page X/Y" text, `actionsContent` renders the reset-chapter-progress
-  icon (gated on `isUserLoggedIn && chapterPagesUiState is Success`) instead of the search icon
+  chapter list), `ReadingHistoryInfo` (history list), and `NavigateChapterBottomBar` (Reader's bottom
+  bar center slot, between the prev/next chapter `IconButton`s, via `Modifier.weight(2f)`) so all
+  three show identical progress info instead of some being percent-only and others page-count-only.
+  M3 1.4's `LinearProgressIndicator` defaults to the "expressive" style (a gap near the end + a small
+  stop-indicator dot) — pass `gapSize = 0.dp` and `drawStopIndicator = {}` to get the classic
+  continuous bar needed for a compact list-row indicator
+- `AppTopBar` (`presentation/screens/common/top_bars/`) — single composable replacing the former
+  `MainTopBar`/`DetailsTopBar` pair; serves both `BaseScreen`'s Menu/drawer variant and
+  `BaseDetailsScreen`'s/`ReaderScreen`'s Back variant. `leftIcon`/`rightIcon` are `ImageVector?`
+  (default `null`) — the icon's presence is the only visibility switch, no separate
+  `isEnabled`-style boolean (e.g. `rightIcon = if (isSearchEnabled) Icons.Default.Search else null`).
+  Both `Icon(...)` calls hardcode `contentDescription = null` — there is no content-description
+  param. `title: String = ""` has an optional `titleContent: (@Composable () -> Unit)? = null`
+  override (falls back to the default `Text` when null); there is no `actionsContent`/custom-slot
+  escape hatch for the action row — every real call site needs at most one right-side icon, so
+  `rightIcon`'s nullability covers conditional visibility directly (e.g. `ReaderScreen`'s
+  reset-chapter-progress icon). Colors are 4 flat `Color` params (`containerColor`,
+  `titleContentColor`, `leftIconContentColor`, `rightIconContentColor`) instead of a bundled
+  `TopAppBarColors`, defaulting to the Back-variant look (`surfaceContainer`/`onPrimaryContainer`);
+  `BaseScreen`'s Menu variant overrides all four plus wraps its own `AppTopBar(...)` call in a local
+  `Surface(alpha = 0.95f, tonalElevation = 3.dp)` for the translucent tab-root look (`AppTopBar`
+  itself has no alpha/elevation param — that wrapping is a call-site concern, not shared). Only 2
+  screens sit behind `BaseDetailsScreen` (`MangaDetailsScreen`, `CategoryDetailsScreen`) —
+  `ForgotPasswordScreen`/`RegisterScreen` have no top bar at all (just `BackHandler` + a `*Content`
+  call), despite what an earlier version of this doc claimed. `ReaderScreen` calls `AppTopBar`
+  directly (not through `BaseDetailsScreen`, since it also needs a `bottomBar`/FAB/full-screen
+  `AnimatedVisibility` toggle that `BaseDetailsScreen` doesn't expose): `titleContent` renders the
+  volume/chapter number + chapter title (moved here from `NavigateChapterBottomBar`'s center slot —
+  see `ReadingProgressBar` above for where the swap sends the progress bar) instead of a plain
+  title string, `rightIcon` renders the reset-chapter-progress icon instead of the search icon.
 
 ### Compose Performance
 

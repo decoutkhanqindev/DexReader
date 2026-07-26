@@ -4,10 +4,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.decoutkhanqindev.dexreader.presentation.screens.common.top_bars.DetailsTopBar
+import com.decoutkhanqindev.dexreader.presentation.screens.common.top_bars.AppTopBar
 
 @Composable
 fun BaseDetailsScreen(
@@ -22,12 +25,13 @@ fun BaseDetailsScreen(
   Scaffold(
     modifier = modifier,
     topBar = {
-      DetailsTopBar(
-        title = title,
-        isSearchEnabled = isSearchEnabled,
+      AppTopBar(
+        leftIcon = Icons.AutoMirrored.Filled.ArrowBack,
+        onLeftClick = onNavigateBack,
+        centerTitle = title,
+        rightIcon = if (isSearchEnabled) Icons.Default.Search else null,
+        onRightClick = onNavigateToSearchScreen,
         modifier = Modifier.fillMaxWidth(),
-        onNavigateBack = onNavigateBack,
-        onNavigateToSearchScreen = onNavigateToSearchScreen
       )
     },
     bottomBar = bottomBar,
