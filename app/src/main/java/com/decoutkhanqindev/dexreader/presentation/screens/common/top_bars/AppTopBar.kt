@@ -77,7 +77,6 @@ fun AppTopBar(
             Text(
               modifier = Modifier.padding(8.dp),
               text = centerTitle,
-              fontWeight = FontWeight.ExtraBold,
               style = MaterialTheme.typography.titleLarge,
             )
           }

@@ -6,12 +6,12 @@ import java.util.Locale
 
 object DataTypeFormatter {
 
-  private val displayFormat = ThreadLocal.withInitial {
-    SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+  private val displayFormat by lazy {
+    ThreadLocal.withInitial { SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()) }
   }
 
-  private val iso8601Format = ThreadLocal.withInitial {
-    SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.US)
+  private val iso8601Format by lazy {
+    ThreadLocal.withInitial { SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.US) }
   }
 
   fun String?.parseIso8601ToEpoch(): Long? {

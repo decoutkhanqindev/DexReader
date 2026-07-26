@@ -16,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
@@ -73,7 +72,6 @@ fun ReaderContent(
             text = stringResource(R.string.no_chapter_pages_available),
             modifier = Modifier.fillMaxWidth(),
             fontStyle = FontStyle.Italic,
-            fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleMedium,
           )

@@ -74,3 +74,4 @@ val surfaceContainerHighDark by lazy { Color(0xFF282B30) }
 val surfaceContainerHighestDark by lazy { Color(0xFF32353A) }
 val OnScrim by lazy { Color(0xFFFFFFFF) }
 val RatingStarGold by lazy { Color(0xFFFFD700) }
+val FavoriteRed by lazy { Color(0xFFE0245E) }

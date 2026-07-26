@@ -16,11 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.badges.MangaRatingChip
 import com.decoutkhanqindev.dexreader.presentation.screens.common.badges.MangaStatusBadge
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun MangaInfoSection(
@@ -43,8 +48,7 @@ fun MangaInfoSection(
 
     Text(
       text = manga.title,
-      style = MaterialTheme.typography.headlineSmall,
-      fontWeight = FontWeight.Black,
+      style = MaterialTheme.typography.titleLarge,
       color = MaterialTheme.colorScheme.onSurface,
       textAlign = androidx.compose.ui.text.style.TextAlign.Center,
       modifier = Modifier.padding(horizontal = 16.dp)
@@ -85,11 +89,33 @@ private fun InfoChip(label: String) {
       text = label.uppercase(),
       modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
       style = MaterialTheme.typography.labelSmall,
-      fontWeight = FontWeight.Bold,
+      fontWeight = FontWeight.Black,
       color = MaterialTheme.colorScheme.onSurfaceVariant
     )
   }
 }
+
+internal val previewManga = MangaModel(
+  id = "m-001",
+  title = "One Piece",
+  coverUrl = "",
+  description = "Monkey D. Luffy sets off on an adventure to find the legendary treasure known as the One Piece and become the Pirate King.",
+  author = "Eiichiro Oda",
+  artist = "Eiichiro Oda",
+  categories = persistentListOf(
+    CategoryModel(id = "g1", title = "Action"),
+    CategoryModel(id = "g2", title = "Adventure"),
+    CategoryModel(id = "g3", title = "Comedy"),
+  ),
+  status = MangaStatusValue.ON_GOING,
+  contentRating = MangaContentRatingValue.SAFE,
+  year = "1997",
+  availableLanguages = persistentListOf(MangaLanguageValue.ENGLISH, MangaLanguageValue.JAPANESE),
+  latestChapter = "1110",
+  updatedAt = "2024-01-01",
+  rating = "9.1",
+  follows = "2.3M",
+)
 
 @Preview
 @Composable

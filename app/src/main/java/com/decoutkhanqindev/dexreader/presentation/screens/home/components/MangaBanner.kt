@@ -219,9 +219,9 @@ fun MangaBanner(
         ) {
           Text(
             text = stringResource(id = R.string.read_now),
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.ExtraBold,
             color = MaterialTheme.colorScheme.onPrimary,
-            style = MaterialTheme.typography.labelLarge,
+            style = MaterialTheme.typography.titleMedium,
           )
           Spacer(modifier = Modifier.width(8.dp))
           Icon(

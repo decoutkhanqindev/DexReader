@@ -40,7 +40,6 @@ fun MangaInfo(
     Text(
       text = author,
       color = OnScrim.copy(alpha = 0.8f),
-      fontWeight = FontWeight.Medium,
       overflow = TextOverflow.Ellipsis,
       maxLines = 1,
       style = MaterialTheme.typography.labelMedium,

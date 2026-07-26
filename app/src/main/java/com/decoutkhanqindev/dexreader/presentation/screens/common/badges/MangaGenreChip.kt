@@ -38,7 +38,7 @@ fun MangaGenreChip(
     Text(
       text = label,
       style = MaterialTheme.typography.labelSmall,
-      fontWeight = FontWeight.Bold,
+      fontWeight = FontWeight.Black,
       color = contentColor,
       modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
     )

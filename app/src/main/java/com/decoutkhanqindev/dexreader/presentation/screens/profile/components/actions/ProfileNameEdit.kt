@@ -26,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,7 +54,6 @@ fun ProfileNameEdit(
     if (!isEdit) {
       Text(
         text = name,
-        fontWeight = FontWeight.ExtraBold,
         textAlign = TextAlign.Center,
         style = MaterialTheme.typography.titleLarge,
       )

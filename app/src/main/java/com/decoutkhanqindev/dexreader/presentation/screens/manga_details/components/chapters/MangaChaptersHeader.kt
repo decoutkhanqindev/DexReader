@@ -53,7 +53,6 @@ fun MangaChaptersHeader(
       modifier = Modifier
         .weight(0.5f)
         .fillMaxWidth(),
-      fontWeight = FontWeight.ExtraBold,
       style = MaterialTheme.typography.titleLarge,
     )
     Text(

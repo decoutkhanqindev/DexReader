@@ -53,7 +53,6 @@ fun FilterBottomSheet(
     Text(
       text = stringResource(R.string.filter_options),
       style = MaterialTheme.typography.titleLarge,
-      fontWeight = FontWeight.ExtraBold,
       textAlign = TextAlign.Center,
       modifier = Modifier
         .fillMaxWidth()

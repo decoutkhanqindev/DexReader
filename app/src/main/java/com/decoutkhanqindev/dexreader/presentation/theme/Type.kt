@@ -41,7 +41,6 @@ val Typography by lazy {
       lineHeight = 24.sp,
       letterSpacing = 0.5.sp
     ),
-
     labelSmall = TextStyle(
       fontFamily = JsFont,
       fontWeight = FontWeight.Medium,
@@ -63,7 +62,6 @@ val Typography by lazy {
       lineHeight = 20.sp,
       letterSpacing = 0.1.sp
     ),
-
     titleSmall = TextStyle(
       fontFamily = JsFont,
       fontWeight = FontWeight.Medium,
@@ -80,9 +78,23 @@ val Typography by lazy {
     ),
     titleLarge = TextStyle(
       fontFamily = JsFont,
-      fontWeight = FontWeight.Bold,
+      fontWeight = FontWeight.ExtraBold,
       fontSize = 22.sp,
       lineHeight = 28.sp,
+      letterSpacing = 0.sp
+    ),
+    headlineMedium = TextStyle(
+      fontFamily = JsFont,
+      fontWeight = FontWeight.ExtraBold,
+      fontSize = 28.sp,
+      lineHeight = 36.sp,
+      letterSpacing = 0.sp
+    ),
+    headlineLarge = TextStyle(
+      fontFamily = JsFont,
+      fontWeight = FontWeight.Bold,
+      fontSize = 32.sp,
+      lineHeight = 40.sp,
       letterSpacing = 0.sp
     )
   )

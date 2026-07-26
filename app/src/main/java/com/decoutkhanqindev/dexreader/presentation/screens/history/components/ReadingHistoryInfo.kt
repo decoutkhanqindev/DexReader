@@ -37,12 +37,12 @@ fun ReadingHistoryInfo(
         readingHistory.chapterNumber
       ),
       style = MaterialTheme.typography.titleMedium,
-      fontWeight = FontWeight.ExtraBold,
+      fontWeight = FontWeight.Bold,
+      color = MaterialTheme.colorScheme.primary,
       modifier = Modifier.fillMaxWidth()
     )
     Text(
       text = readingHistory.chapterTitle,
-      fontWeight = FontWeight.Medium,
       fontStyle = FontStyle.Italic,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,

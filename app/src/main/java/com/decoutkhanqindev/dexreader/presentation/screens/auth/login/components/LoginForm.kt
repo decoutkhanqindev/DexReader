@@ -63,7 +63,6 @@ fun LoginForm(
           .fillMaxWidth()
           .padding(top = 16.dp),
         color = MaterialTheme.colorScheme.onSurface,
-        fontWeight = FontWeight.ExtraBold,
         textAlign = TextAlign.Center,
         style = MaterialTheme.typography.headlineMedium,
       )
@@ -124,8 +123,8 @@ fun LoginForm(
         Text(
           text = stringResource(R.string.don_t_have_an_account),
           modifier = Modifier.padding(end = 4.dp),
-          color = MaterialTheme.colorScheme.onSurface,
-          fontWeight = FontWeight.Light,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
+          fontStyle = FontStyle.Italic,
           style = MaterialTheme.typography.titleMedium,
         )
         Text(

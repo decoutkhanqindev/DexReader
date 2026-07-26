@@ -70,7 +70,7 @@ fun MangaChapterItem(
           Text(
             text = " • ",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.labelMedium,
             fontStyle = FontStyle.Italic,
             modifier = Modifier.padding(start = 4.dp)
           )
@@ -92,7 +92,6 @@ fun MangaChapterItem(
         Text(
           text = chapter.title,
           color = MaterialTheme.colorScheme.onSurface,
-          fontWeight = FontWeight.Medium,
           overflow = TextOverflow.Ellipsis,
           maxLines = 1,
           style = MaterialTheme.typography.labelMedium,

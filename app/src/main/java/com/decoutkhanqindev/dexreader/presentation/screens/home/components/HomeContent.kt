@@ -55,8 +55,6 @@ fun HomeContent(
     if (uiState is MangaSectionUiState.Error) isShowErrorDialog = true
   }
 
-  ReportDrawnWhen { uiState is MangaSectionUiState.Success }
-
   PullToRefreshBox(
     state = pullToRefreshState,
     isRefreshing = false,
@@ -70,7 +68,6 @@ fun HomeContent(
         Column(
           modifier = Modifier
             .fillMaxSize()
-            .semantics { contentDescription = "home_feed" }
             .verticalScroll(rememberScrollState()),
           verticalArrangement = Arrangement.Top,
           horizontalAlignment = Alignment.CenterHorizontally

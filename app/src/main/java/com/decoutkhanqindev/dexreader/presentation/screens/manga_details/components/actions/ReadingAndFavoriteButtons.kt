@@ -18,6 +18,7 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
+import com.decoutkhanqindev.dexreader.presentation.theme.FavoriteRed
 
 @Composable
 fun ReadingAndFavoriteButtons(
@@ -71,7 +72,7 @@ fun ReadingAndFavoriteButtons(
 
     ActionButton(
       onClick = onFavoriteClick,
-      backgroundColor = Color(0xFFE0245E),
+      backgroundColor = FavoriteRed,
       modifier = Modifier
         .weight(1f)
         .fillMaxWidth()

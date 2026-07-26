@@ -47,7 +47,6 @@ fun SortBottomSheet(
     Text(
       text = stringResource(R.string.sort_options),
       style = MaterialTheme.typography.titleLarge,
-      fontWeight = FontWeight.ExtraBold,
       textAlign = TextAlign.Center,
       modifier = Modifier
         .fillMaxWidth()

@@ -4,6 +4,47 @@ Dated log of notable multi-file / cross-cutting work sessions. Newest entry firs
 
 ---
 
+## 2026-07-26 — Unify text styling (size/style/weight/color) across the whole app
+
+A full-codebase audit of every `Text(...)` call in `presentation/screens/` (101 sites, 54 files)
+found the same semantic role styled 2-5 different ways depending on which file's author wrote it,
+plus 8 call sites across 7 files using Material3's `headlineX`/`displayX` styles, which were never
+customized in `Type.kt` and silently rendered in the wrong font family (stock Android default
+instead of the app's custom `JsFont`) — a real bug, not just an inconsistency.
+
+**Fix, by category:**
+- `Type.kt`: promoted `titleLarge`'s baked-in weight `Bold` → `ExtraBold` (every real call site
+  already overrode it to ExtraBold anyway, so this is the single canonical "header" style now with
+  no per-call override needed) and newly customized `headlineLarge`/`headlineMedium` with `JsFont`
+  at Material3's own stock sizes (32sp/40sp and 28sp/36sp respectively, verified against the actual
+  M3 1.4.0 default type scale rather than assumed) — these two stay reserved for hero/branding text
+  that should render bigger than an ordinary header, confirmed with the user before implementing
+  (the alternative of collapsing everything to `titleLarge`'s 22sp was explicitly rejected).
+- Deleted ~15 now-redundant `fontWeight = FontWeight.ExtraBold` overrides made unnecessary by the
+  `titleLarge` promotion, plus 3 no-op `fontWeight = FontWeight.Medium` overrides on `labelMedium`
+  (already the token's own default).
+- Deleted dead code: `manga_details/components/info/MangaInfo.kt` (unreferenced outside its own
+  `@Preview`) — its `previewManga` fixture, which 3 *other* files' previews actually depended on via
+  an `internal val` cross-package import, was moved into `MangaInfoSection.kt` (same package) first.
+- Converged: chip/badge label weight (`MangaGenreChip`, `MangaInfoSection`'s `InfoChip`, Bold→Black
+  to match their siblings); the Favorite button's hardcoded `Color(0xFFE0245E)` formalized as a named
+  `FavoriteRed` constant in `Color.kt` (kept as a deliberate non-theme-adaptive brand color, per the
+  user's choice, not switched to `colorScheme.error`); `MangaBanner`'s "Read Now" CTA (was
+  `labelLarge`+Bold, now matches every other button's `titleMedium`+ExtraBold); 5 empty-state/
+  pagination/not-found messages onto `titleMedium + Italic + Center` with no weight override;
+  chapter/volume identifier + chapter-row subtitle text across `MangaChapterItem`/
+  `ReadingHistoryInfo`/`ReaderScreen`; `MangaInfoSection`'s hero title and `StatisticsScreen`'s stat
+  number off the uncustomized `headlineSmall` onto `titleLarge`; footer/quiet-caption text (menu
+  drawer email, app-credit line, Login's "Don't have an account?") onto `Italic + onSurfaceVariant`,
+  explicitly leaving `LoginForm`'s clickable "Forgot Password?"/"Sign Up" links alone since their
+  color signals tappability rather than de-emphasis.
+
+**Verified:** `./gradlew compileDebugKotlin` after each of the 11 change batches (BUILD SUCCESSFUL
+throughout, including recovering from the `previewManga` cross-file dependency the initial dead-code
+audit missed).
+
+---
+
 ## 2026-07-26 — Merge MainTopBar + DetailsTopBar into one generic AppTopBar
 
 `MainTopBar` (used by `BaseScreen`'s 7 tab-root screens) and `DetailsTopBar` (used by

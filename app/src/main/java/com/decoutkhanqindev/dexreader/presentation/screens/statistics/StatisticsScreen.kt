@@ -108,7 +108,7 @@ fun StatCard(label: String, millis: Long) {
         } else {
           stringResource(R.string.minutes_suffix, minutes)
         },
-        style = MaterialTheme.typography.headlineSmall,
+        style = MaterialTheme.typography.titleLarge,
         color = MaterialTheme.colorScheme.primary
       )
     }

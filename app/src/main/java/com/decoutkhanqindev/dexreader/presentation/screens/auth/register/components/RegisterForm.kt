@@ -68,7 +68,6 @@ fun RegisterForm(
           .fillMaxWidth()
           .padding(top = 16.dp),
         color = MaterialTheme.colorScheme.onSurface,
-        fontWeight = FontWeight.ExtraBold,
         textAlign = TextAlign.Center,
         style = MaterialTheme.typography.headlineMedium,
       )

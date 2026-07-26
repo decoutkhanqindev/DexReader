@@ -45,7 +45,6 @@ fun ChapterLanguageListBottomSheet(
       modifier = Modifier
         .fillMaxWidth()
         .padding(bottom = 16.dp),
-      fontWeight = FontWeight.ExtraBold,
       textAlign = TextAlign.Center,
       style = MaterialTheme.typography.titleLarge,
     )

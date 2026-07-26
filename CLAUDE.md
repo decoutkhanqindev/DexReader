@@ -353,16 +353,20 @@ established shape as `observeHistoryJob`/`cancelObserveHistoryJob()`.
   continuous bar needed for a compact list-row indicator
 - `AppTopBar` (`presentation/screens/common/top_bars/`) — single composable replacing the former
   `MainTopBar`/`DetailsTopBar` pair; serves both `BaseScreen`'s Menu/drawer variant and
-  `BaseDetailsScreen`'s/`ReaderScreen`'s Back variant. `leftIcon`/`rightIcon` are `ImageVector?`
-  (default `null`) — the icon's presence is the only visibility switch, no separate
-  `isEnabled`-style boolean (e.g. `rightIcon = if (isSearchEnabled) Icons.Default.Search else null`).
-  Both `Icon(...)` calls hardcode `contentDescription = null` — there is no content-description
-  param. `title: String = ""` has an optional `titleContent: (@Composable () -> Unit)? = null`
-  override (falls back to the default `Text` when null); there is no `actionsContent`/custom-slot
-  escape hatch for the action row — every real call site needs at most one right-side icon, so
-  `rightIcon`'s nullability covers conditional visibility directly (e.g. `ReaderScreen`'s
-  reset-chapter-progress icon). Colors are 4 flat `Color` params (`containerColor`,
-  `titleContentColor`, `leftIconContentColor`, `rightIconContentColor`) instead of a bundled
+  `BaseDetailsScreen`'s/`ReaderScreen`'s Back variant. Three independent slots — `center`/`left`/
+  `right` — each resolved via `when { xContent != null -> xContent(); xIcon != null -> ...; xTitle
+  != null -> ... }`: `xContent: (@Composable () -> Unit)?` wins if set (`ReaderScreen`'s
+  volume/chapter/title `centerContent`), else `xIcon: ImageVector?` renders as a `Box(Modifier.
+  onClick(shape = CircleShape) { ... }) { Icon(...) }` (not a plain `IconButton`), else `xTitle:
+  String?` renders as `Box(Modifier.onClick { onXClick() }) { Text(...) }` — `centerTitle` uses
+  `titleLarge` (no weight override needed, see the typography-system bullet below), `leftTitle`/
+  `rightTitle` use `bodyMedium + ExtraBold` but currently have no real caller (every screen only ever
+  passes `leftIcon`/`rightIcon`/`centerContent`, never `leftTitle`/`rightTitle` — a dead-but-harmless
+  path, not urgent to remove). All three slots default to `null`/no-op — a slot's presence is its
+  own visibility switch, no separate `isEnabled`-style boolean (e.g. `rightIcon = if
+  (isSearchEnabled) Icons.Default.Search else null`). Both `Icon(...)` calls hardcode
+  `contentDescription = null`. Colors are 4 flat `Color` params (`containerColor`,
+  `centerContentColor`, `leftContentColor`, `rightContentColor`) instead of a bundled
   `TopAppBarColors`, defaulting to the Back-variant look (`surfaceContainer`/`onPrimaryContainer`);
   `BaseScreen`'s Menu variant overrides all four plus wraps its own `AppTopBar(...)` call in a local
   `Surface(alpha = 0.95f, tonalElevation = 3.dp)` for the translucent tab-root look (`AppTopBar`
@@ -371,10 +375,35 @@ established shape as `observeHistoryJob`/`cancelObserveHistoryJob()`.
   `ForgotPasswordScreen`/`RegisterScreen` have no top bar at all (just `BackHandler` + a `*Content`
   call), despite what an earlier version of this doc claimed. `ReaderScreen` calls `AppTopBar`
   directly (not through `BaseDetailsScreen`, since it also needs a `bottomBar`/FAB/full-screen
-  `AnimatedVisibility` toggle that `BaseDetailsScreen` doesn't expose): `titleContent` renders the
+  `AnimatedVisibility` toggle that `BaseDetailsScreen` doesn't expose): `centerContent` renders the
   volume/chapter number + chapter title (moved here from `NavigateChapterBottomBar`'s center slot —
   see `ReadingProgressBar` above for where the swap sends the progress bar) instead of a plain
   title string, `rightIcon` renders the reset-chapter-progress icon instead of the search icon.
+- **Unified text-styling system** (audited and converged across all ~101 `Text()` call sites in
+  `presentation/screens/` in one session): `presentation/theme/Type.kt` now customizes 11 Material3
+  tokens with the custom `JsFont` family (was 9) — `titleLarge` carries `FontWeight.ExtraBold` baked
+  directly into the token (was `Bold` + a `fontWeight = FontWeight.ExtraBold` override repeated at
+  every call site — the override is gone everywhere now, `style = MaterialTheme.typography.
+  titleLarge` alone is the complete "screen/section/dialog/bottom-sheet header" style). `
+  headlineLarge` (32sp/40sp) and `headlineMedium` (28sp/36sp) are now also customized with `JsFont`
+  (previously left at Material3's stock, uncustomized scale, which silently rendered in the wrong
+  font family) — these two are reserved for hero/branding text that deliberately stays bigger than
+  an ordinary `titleLarge` header (`AnimatedLogoAndSlogan`'s app name, `MangaBanner`'s hero manga
+  title, the 3 auth screens' own titles, `StatisticsScreen`'s title) — don't use `headlineSmall`/
+  `displayX` anywhere; they remain uncustomized and will silently break the font, exactly the bug
+  this pass fixed. Established per-role conventions going forward: chip/badge labels
+  (`MangaGenreChip`/`MangaStatusBadge`/`MangaRatingChip`/`MangaInfoSection`'s `InfoChip`) use
+  `labelSmall + FontWeight.Black`; empty-state/pagination/not-found messages use `titleMedium +
+  fontStyle = Italic + textAlign = Center` with no weight override (inherits the token's own
+  SemiBold); chapter-row flavor text (the separator dot, chapter title in list rows, `ReaderScreen`'s
+  top-bar subtitle) uses `labelMedium + fontStyle = Italic`; footer/quiet-caption text (menu drawer
+  email, app-credit line, "Don't have an account?") uses its own base style + `fontStyle = Italic` +
+  `color = onSurfaceVariant`, no weight override — this is distinct from a *clickable* inline link
+  (`LoginForm`'s "Forgot Password?"/"Sign Up", `titleMedium + Bold + Italic + onPrimaryContainer`),
+  which signals tappability via color and must not be folded into the quiet-caption convention. The
+  Favorite/Unfavorite button's background is `FavoriteRed` (`presentation/theme/Color.kt`, alongside
+  the existing `RatingStarGold`) — a deliberate brand color, not theme-adaptive by design, formalized
+  from an inline hex literal rather than switched to `colorScheme.error`.
 
 ### Compose Performance
 

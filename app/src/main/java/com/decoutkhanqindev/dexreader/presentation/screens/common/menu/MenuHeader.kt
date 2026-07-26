@@ -63,14 +63,13 @@ fun MenuHeader(
           modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 4.dp),
-          fontWeight = FontWeight.ExtraBold,
           style = MaterialTheme.typography.titleLarge,
         )
         Text(
           text = currentUser?.email?.substringBefore("@gmail.com") ?: "",
           modifier = Modifier.fillMaxWidth(),
           fontStyle = FontStyle.Italic,
-          fontWeight = FontWeight.Light,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
           style = MaterialTheme.typography.bodyLarge,
         )
       }

@@ -29,7 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -106,16 +105,14 @@ fun ReaderScreen(
                   chapterDetailsUiState.volume,
                   chapterDetailsUiState.chapterNumber
                 ),
-                fontWeight = FontWeight.ExtraBold,
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
               )
               if (chapterDetailsUiState.title.isNotEmpty()) {
                 Text(
                   text = chapterDetailsUiState.title,
                   fontStyle = FontStyle.Italic,
-                  fontWeight = FontWeight.Bold,
                   textAlign = TextAlign.Center,
-                  style = MaterialTheme.typography.bodyMedium,
+                  style = MaterialTheme.typography.labelMedium,
                 )
               }
             }
