@@ -7,7 +7,7 @@ import com.decoutkhanqindev.dexreader.data.mapper.ReadingHistoryMapper.toReading
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.history.FirebaseHistoryFirestoreSource
 import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.repository.user.HistoryRepository
-import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch

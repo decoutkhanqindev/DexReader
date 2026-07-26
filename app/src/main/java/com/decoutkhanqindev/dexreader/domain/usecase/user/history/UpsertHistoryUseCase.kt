@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.domain.usecase.user.history
 
 import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.repository.user.HistoryRepository
-import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendResultCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendResultCatching
 import javax.inject.Inject
 
 class UpsertHistoryUseCase @Inject constructor(

@@ -8,7 +8,7 @@ import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaContentRati
 import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaStatus
 import com.decoutkhanqindev.dexreader.domain.repository.category.CategoryRepository
 import com.decoutkhanqindev.dexreader.domain.repository.manga.MangaStatsRepository
-import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendResultCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendResultCatching
 import javax.inject.Inject
 
 class GetMangaListByCategoryUseCase @Inject constructor(

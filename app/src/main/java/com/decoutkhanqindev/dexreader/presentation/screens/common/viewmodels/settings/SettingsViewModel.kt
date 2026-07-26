@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.screens.settings
+package com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -35,10 +35,12 @@ class SettingsViewModel @Inject constructor(
       observeThemeModeUseCase().collect { result ->
         result
           .onSuccess { mode ->
+            val value = mode.toThemeModeValue()
             _uiState.update {
               it.copy(
                 isLoading = false,
-                themeOption = mode.toThemeModeValue(),
+                appliedThemeOption = value,
+                selectedThemeOption = value,
               )
             }
           }
@@ -46,7 +48,8 @@ class SettingsViewModel @Inject constructor(
             _uiState.update {
               it.copy(
                 isLoading = false,
-                themeOption = ThemeModeValue.SYSTEM,
+                appliedThemeOption = ThemeModeValue.SYSTEM,
+                selectedThemeOption = ThemeModeValue.SYSTEM,
               )
             }
 
@@ -70,11 +73,12 @@ class SettingsViewModel @Inject constructor(
         )
       }
 
-      saveThemeModeUseCase(currentUiState.themeOption.toThemeMode())
+      saveThemeModeUseCase(currentUiState.selectedThemeOption.toThemeMode())
         .onSuccess {
           _uiState.update {
             it.copy(
               isLoading = false,
+              appliedThemeOption = currentUiState.selectedThemeOption,
               isSuccess = true,
               isError = false
             )
@@ -95,19 +99,22 @@ class SettingsViewModel @Inject constructor(
   }
 
   fun updateThemeOption(value: ThemeModeValue) {
-    if (_uiState.value.themeOption == value) return
+    if (_uiState.value.selectedThemeOption == value) return
     _uiState.update {
       it.copy(
         isLoading = false,
-        themeOption = value,
+        selectedThemeOption = value,
         isSuccess = false,
         isError = false,
       )
     }
   }
 
+  fun resetThemeOption() {
+    _uiState.update { it.copy(selectedThemeOption = it.appliedThemeOption) }
+  }
+
   fun retry() {
     if (_uiState.value.isError) saveThemeOption()
   }
-
 }

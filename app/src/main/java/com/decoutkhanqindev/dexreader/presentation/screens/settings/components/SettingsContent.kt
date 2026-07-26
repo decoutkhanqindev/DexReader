@@ -21,7 +21,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.settings.ThemeMod
 import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
-import com.decoutkhanqindev.dexreader.presentation.screens.settings.SettingsUiState
+import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.settings.SettingsUiState
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
@@ -30,6 +30,7 @@ fun SettingsContent(
   modifier: Modifier = Modifier,
   onThemeOptionClick: (ThemeModeValue) -> Unit,
   onSaveThemeOption: () -> Unit,
+  onCancelThemeOption: () -> Unit,
   onRetry: () -> Unit,
 ) {
   var isShowSaveDialog by remember { mutableStateOf(false) }
@@ -63,7 +64,7 @@ fun SettingsContent(
       horizontalAlignment = Alignment.CenterHorizontally,
     ) {
       ThemeOptionList(
-        selectedItem = uiState.themeOption,
+        selectedItem = uiState.selectedThemeOption,
         modifier = Modifier,
       ) {
         isShowSaveDialog = true
@@ -107,7 +108,10 @@ fun SettingsContent(
           isShowSaveDialog = false
           onSaveThemeOption()
         },
-        onDismissClick = { isShowSaveDialog = false },
+        onDismissClick = {
+          isShowSaveDialog = false
+          onCancelThemeOption()
+        },
       )
     }
   }
@@ -118,10 +122,14 @@ fun SettingsContent(
 private fun SettingsContentDefaultPreview() {
   DexReaderTheme {
     SettingsContent(
-      uiState = SettingsUiState(themeOption = ThemeModeValue.SYSTEM),
+      uiState = SettingsUiState(
+        appliedThemeOption = ThemeModeValue.SYSTEM,
+        selectedThemeOption = ThemeModeValue.SYSTEM,
+      ),
       modifier = Modifier.fillMaxSize(),
       onThemeOptionClick = {},
       onSaveThemeOption = {},
+      onCancelThemeOption = {},
       onRetry = {},
     )
   }
@@ -132,10 +140,15 @@ private fun SettingsContentDefaultPreview() {
 private fun SettingsContentLoadingPreview() {
   DexReaderTheme {
     SettingsContent(
-      uiState = SettingsUiState(isLoading = true, themeOption = ThemeModeValue.DARK),
+      uiState = SettingsUiState(
+        isLoading = true,
+        appliedThemeOption = ThemeModeValue.DARK,
+        selectedThemeOption = ThemeModeValue.DARK,
+      ),
       modifier = Modifier.fillMaxSize(),
       onThemeOptionClick = {},
       onSaveThemeOption = {},
+      onCancelThemeOption = {},
       onRetry = {},
     )
   }
@@ -146,10 +159,15 @@ private fun SettingsContentLoadingPreview() {
 private fun SettingsContentSuccessPreview() {
   DexReaderTheme {
     SettingsContent(
-      uiState = SettingsUiState(isSuccess = true, themeOption = ThemeModeValue.LIGHT),
+      uiState = SettingsUiState(
+        isSuccess = true,
+        appliedThemeOption = ThemeModeValue.LIGHT,
+        selectedThemeOption = ThemeModeValue.LIGHT,
+      ),
       modifier = Modifier.fillMaxSize(),
       onThemeOptionClick = {},
       onSaveThemeOption = {},
+      onCancelThemeOption = {},
       onRetry = {},
     )
   }
@@ -160,10 +178,15 @@ private fun SettingsContentSuccessPreview() {
 private fun SettingsContentErrorPreview() {
   DexReaderTheme {
     SettingsContent(
-      uiState = SettingsUiState(isError = true, themeOption = ThemeModeValue.SYSTEM),
+      uiState = SettingsUiState(
+        isError = true,
+        appliedThemeOption = ThemeModeValue.SYSTEM,
+        selectedThemeOption = ThemeModeValue.SYSTEM,
+      ),
       modifier = Modifier.fillMaxSize(),
       onThemeOptionClick = {},
       onSaveThemeOption = {},
+      onCancelThemeOption = {},
       onRetry = {},
     )
   }

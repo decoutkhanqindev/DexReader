@@ -4,7 +4,7 @@ import com.decoutkhanqindev.dexreader.domain.entity.manga.FavoriteManga
 import com.decoutkhanqindev.dexreader.domain.entity.manga.MangaStats
 import com.decoutkhanqindev.dexreader.domain.repository.manga.MangaStatsRepository
 import com.decoutkhanqindev.dexreader.domain.repository.user.FavoritesRepository
-import com.decoutkhanqindev.dexreader.util.AsyncHandler.toFlowResult
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.toFlowResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

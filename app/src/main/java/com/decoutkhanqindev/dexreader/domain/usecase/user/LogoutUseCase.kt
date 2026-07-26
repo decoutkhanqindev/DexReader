@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.domain.usecase.user
 
 import com.decoutkhanqindev.dexreader.domain.repository.user.UserRepository
-import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendResultCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendResultCatching
 import javax.inject.Inject
 
 class LogoutUseCase @Inject constructor(

@@ -4,7 +4,7 @@ import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toFirebaseFire
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.statistics.FirebaseStatisticsFirestoreSource
 import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingStats
 import com.decoutkhanqindev.dexreader.domain.repository.user.StatisticsRepository
-import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendResultCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendResultCatching
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -28,6 +28,6 @@ class StatisticsRepositoryImpl @Inject constructor(
       .map { list ->
         list.map { ReadingStats(date = it.date, durationMillis = it.durationMillis) }
       }
-      .catch { e -> throw e.toFirebaseFirestoreFlowException() }
+      .catch { e -> e.toFirebaseFirestoreFlowException() }
       .flowOn(Dispatchers.IO)
 }

@@ -8,7 +8,7 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.coroutines.cancellation.CancellationException
 
-object AsyncHandler {
+object CoroutineHandler {
 
   suspend inline fun <T> runSuspendResultCatching(
     crossinline block: suspend () -> T,

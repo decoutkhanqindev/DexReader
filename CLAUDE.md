@@ -57,7 +57,7 @@ domain/       Pure Kotlin. Entities, exceptions, repository interfaces, use case
 data/         Implements domain interfaces. Retrofit, Room, Firebase, DataStore.
 presentation/ Jetpack Compose UI, ViewModels, NavGraph.
 di/           4 Hilt modules: LocalModule, RepositoryModule, ApiModule, FirebaseModule.
-util/         AsyncHandler, DateTimeHandler, NavTransitions.
+util/         CoroutineHandler, DateTimeHandler, NavTransitions.
 ```
 
 ---
@@ -97,7 +97,7 @@ One-shot:
 
 ```kotlin
 suspend operator fun invoke(id: String): Result<T> =
-  AsyncHandler.runSuspendResultCatching { repository.method(id) }
+  CoroutineHandler.runSuspendResultCatching { repository.method(id) }
 ```
 
 Reactive:
@@ -171,7 +171,7 @@ is the only bidirectional mapper (needed by `UpdateUserProfileUseCase`).
 
 ## Util
 
-**`AsyncHandler`** — function selection:
+**`CoroutineHandler`** — function selection:
 
 - `runSuspendResultCatching { }` → `Result<T>`, catches `Throwable` — use in **use cases**
 - `runSuspendCatching(context, block, catch)` → `T` directly, catches `Exception` only — use in *
@@ -191,7 +191,12 @@ destination that stays on the back stack forever (`NavRoute.Home`), never the `N
 `startDestination` (`NavRoute.Splash`) — Splash is popped inclusively right after login, so a
 `popUpTo` targeting it can never match again and save/restore silently no-ops, losing tab state on
 every switch. `navigateClearStack<T>(route)` for auth flows — `T` is the route to pop inclusive (e.g.
-`navigateClearStack<NavRoute.Login>(NavRoute.Home)`).
+`navigateClearStack<NavRoute.Login>(NavRoute.Home)`). `navigateTo`/`navigateBack` debounce internally
+(500ms, one shared timer for the whole app) as a safety net against rapid double-navigation — kept
+even though `Modifier.onClick` (see Compose Conventions) *also* debounces per click-instance, because
+several navigation triggers (`DetailsTopBar`/`SearchBar` back and search icons, `MenuItemRow`'s drawer
+items) go through raw Material3 `IconButton`/`NavigationDrawerItem` rather than `Modifier.onClick`,
+and would otherwise have no protection at all.
 
 ---
 
@@ -204,7 +209,7 @@ boundary.
 
 | Pattern                    | When                       | Used by                                                   |
 |----------------------------|----------------------------|-----------------------------------------------------------|
-| Sealed interface           | Primary resource load      | `HomeUiState`, `MangaDetailsUiState`, `CategoriesUiState` |
+| Sealed interface           | Primary resource load      | `MangaSectionUiState`, `MangaDetailsUiState`, `CategoriesUiState` |
 | Data class                 | Form / fine-grained errors | `LoginUiState`, `RegisterUiState`, `ProfileUiState`       |
 | `BasePaginationUiState<T>` | Infinite scroll            | CategoryDetails, Favorites, History, Search               |
 
@@ -215,6 +220,35 @@ All UiState/UiModel: `@Immutable`. Lists: `ImmutableList<T>` / `persistentListOf
 **Screen split**: `*Screen.kt` (VM injection, `collectAsStateWithLifecycle`) | `*Content.kt` (pure
 composable, no VM) | `*ViewModel.kt` (business logic). `*Content` never calls `NavController`
 directly.
+
+**Shared ViewModels** (`presentation/screens/common/viewmodels/`): a ViewModel whose instance must
+outlive a single screen lives here instead of under its owning screen's package. `NavGraph()` (zero
+params, called as `setContent { NavGraph() }` from `MainActivity` — there is no `DexReaderApp.kt`
+composable anymore) is the single composition root that instantiates every shared ViewModel via
+`hiltViewModel()` and threads it down as a param — a screen never calls `hiltViewModel()` for one of
+these itself. `UserViewModel` (moved from top-level `presentation/`) exposes `isUserLoggedIn`/
+`userProfile`, read by `NavGraph` and passed down as plain `isUserLoggedIn`/`currentUser` params to
+every screen. `viewmodels/settings/SettingsViewModel` + `SettingsUiState` (moved from
+`screens/settings/`, grouped under their own subpackage like `manga_section/` below) is read by
+`NavGraph` to drive the app-wide `DexReaderTheme(themeOption = ...)` wrapping the whole `NavHost`, and
+that same instance is passed into `SettingsScreen(viewModel = ...)` — both consumers share one
+instance instead of each calling its own `hiltViewModel()` (the previous bug: `MainActivity` and
+`SettingsScreen` each created an independent instance, so the two could desync).
+`viewmodels/manga_section/MangaSectionViewModel` + `MangaSectionUiState` (renamed from
+`HomeViewModel`/`HomeUiState`, moved out of `screens/home/`) is instantiated once in `NavGraph` and
+passed into `HomeScreen(viewModel = ...)` as a required param (no `= hiltViewModel()` default) — the
+rename drops the Home-specific name so the same instance/type can be reused by other manga-listing
+screens later.
+
+**Full `uiState` vs. narrow flow at a wide-reach call site**: `NavGraph` collects
+`settingsViewModel.uiState` directly (not a dedicated per-field flow) and reads `.appliedThemeOption`
+off it for `DexReaderTheme` — kept simple on purpose, since `isLoading`/`isSuccess`/`isError` only
+churn while the user is already on the Settings screen (which is recomposing for that anyway), so a
+narrow slice would avoid recomposition that has no real-world payoff here. `UserViewModel` still
+exposes `isUserLoggedIn`/`userProfile` as two separate flows instead of one bundled state — that split
+earns its keep because those fields are read broadly across every screen, not just at `NavGraph`. Only
+reach for a narrow slice when the wide-reach call site's own churn is otherwise wasted; don't add one
+by default.
 
 **Navigation**: `NavRoute` sealed interface with `@Serializable` members. `navigateClearStack()` for
 auth flows; `navigatePreserveState()` for tab/drawer navigation.
@@ -227,6 +261,19 @@ auth flows; `navigatePreserveState()` for tab/drawer navigation.
 `true`, so dismiss stays dismissed until the tracked condition flips again. For bundled (non-sealed)
 UiState, key the `LaunchedEffect` on the specific boolean field (`uiState.isError`), not the whole
 state object, so unrelated field changes (e.g. text input) don't re-arm the dialog.
+
+**Stage-then-confirm value with a wide-reach effect**: when a field is both (a) displayed/edited
+immediately in a screen's own UI and (b) drives a wider-reach effect gated behind a confirm dialog
+(e.g. Save), split it into a staged field (updates immediately on user input, for in-screen feedback
+only) and an applied field (updates only once the action is confirmed and persisted) — never let one
+field serve both roles. `SettingsUiState.selectedThemeOption` (tapped option, drives the
+`ThemeOptionList` highlight) vs. `appliedThemeOption` (persisted value, read by `NavGraph` to drive
+`DexReaderTheme` — see Screen Structure) is the established example: tapping an option only calls
+`updateThemeOption()` (stages `selectedThemeOption`); the
+app-wide theme doesn't move until `saveThemeOption()` succeeds and copies the staged value into
+`appliedThemeOption`. Dismissing the confirm dialog calls `resetThemeOption()` to snap
+`selectedThemeOption` back to `appliedThemeOption`, so a cancelled change doesn't leave a stale
+selection highlighted.
 
 ### Compose Conventions
 
@@ -267,13 +314,13 @@ state object, so unrelated field changes (e.g. text input) don't re-arm the dial
   repeating fade in/out is a permanent distraction, and on Splash a repeating loop risks navigating
   away mid-fade-out, reading as a UI glitch. The icon circle itself is translucent —
   `primary.copy(alpha = 0.3f)` background + `shimmerHighlight` sweep, not a solid fill. This
-  composable does **not** draw its own glow/halo; the ambient glow look on Splash comes from
-  `SplashContent`'s own screen-level background (`Brush.radialGradient(primary.copy(alpha = 0.3f) →
-  Color.Transparent)`, sitting behind the whole `Box`). `AuthContent` has no equivalent gradient
-  (plain `colorScheme.surface`), so Login/Register/ForgotPassword show the translucent circle without
-  the glow — if the auth screens need the same glow, add the gradient to `AuthContent`'s background
-  too, not to `AnimatedLogoAndSlogan` (keeps the glow a per-screen background choice, not baked into
-  the shared logo component).
+  composable does **not** draw its own glow/halo — each host screen paints its own copy of
+  `Brush.radialGradient(primary.copy(alpha = 0.3f) → Color.Transparent)` behind it instead:
+  `SplashContent` applies it to its full-screen root `Box` (logo + loading bar both sit inside the
+  glow), `AuthContent` scopes it to just its header `Box` (the `weight(0.3f)` region the logo lives
+  in — the form region below keeps a plain `colorScheme.surface`, no gradient). Keep the gradient a
+  per-screen background choice, not baked into `AnimatedLogoAndSlogan` itself, since each host may
+  need a different glow extent.
 - `ReadingProgressBar` (`presentation/screens/common/indicators/`) — shared page-count + percent +
   animated `LinearProgressIndicator` for reading progress, used by `MangaChapterItem` (manga details
   chapter list) and `ReadingHistoryInfo` (history list) so both show identical progress info instead
@@ -308,6 +355,9 @@ state object, so unrelated field changes (e.g. text input) don't re-arm the dial
   frame instead of a cheap redraw/relayout-only pass. `onClick`, `shimmerLoading`, `shimmerHighlight`,
   and `animateItemOnAppear` in `common/Modifiers.kt` all follow this correctly — use them as the
   reference pattern for any new animated modifier
+- `Modifier.onClick(...)` is a plain `@Composable fun Modifier.onClick(...): Modifier` (not
+  `composed { }`) — matches the other three modifiers above; avoid `composed { }` for new modifiers
+  in this file, it adds a subcomposition per usage that a direct `@Composable` function doesn't need
 
 ---
 

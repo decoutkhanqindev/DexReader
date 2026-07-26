@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.domain.usecase.manga
 
 import com.decoutkhanqindev.dexreader.domain.entity.manga.ChapterPages
 import com.decoutkhanqindev.dexreader.domain.repository.manga.ChapterRepository
-import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendResultCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendResultCatching
 import javax.inject.Inject
 
 class GetChapterPagesUseCase @Inject constructor(

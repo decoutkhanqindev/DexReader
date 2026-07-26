@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation
+package com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

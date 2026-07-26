@@ -7,7 +7,7 @@ import com.decoutkhanqindev.dexreader.data.mapper.FavoriteMangaMapper.toFavorite
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.favorite.FirebaseFavoriteFirestoreSource
 import com.decoutkhanqindev.dexreader.domain.entity.manga.FavoriteManga
 import com.decoutkhanqindev.dexreader.domain.repository.user.FavoritesRepository
-import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch

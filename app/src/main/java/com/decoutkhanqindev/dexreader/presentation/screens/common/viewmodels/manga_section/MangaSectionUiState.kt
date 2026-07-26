@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.screens.home
+package com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.manga_section
 
 
 import androidx.compose.runtime.Immutable
@@ -11,15 +11,15 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 
 @Immutable
-sealed interface HomeUiState {
-  data object Loading : HomeUiState
+sealed interface MangaSectionUiState {
+  data object Loading : MangaSectionUiState
 
   @Immutable
-  data class Error(val error: FeatureError = FeatureError.Generic) : HomeUiState
+  data class Error(val error: FeatureError = FeatureError.Generic) : MangaSectionUiState
 
   @Immutable
   data class Success(
     val bannerList: ImmutableList<MangaModel> = persistentListOf(),
     val mainSections: ImmutableMap<MangaSectionValue, ImmutableList<MangaModel>> = persistentMapOf(),
-  ) : HomeUiState
+  ) : MangaSectionUiState
 }

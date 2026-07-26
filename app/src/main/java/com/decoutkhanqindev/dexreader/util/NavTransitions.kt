@@ -1,12 +1,12 @@
 package com.decoutkhanqindev.dexreader.util
 
-import android.os.SystemClock
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 
 object NavTransitions {
 
-  private const val NAVIGATION_DEBOUNCE_TIME = 500L
+  private const val NAVIGATION_DEBOUNCE_TIME = 300L
+  private var lastNavigateTime = 0L
 
   inline fun <reified Root : Any> NavHostController.navigatePreserveState(route: Any) {
     this.navigateTo(route) {
@@ -38,16 +38,11 @@ object NavTransitions {
     tryNavigate { this.popBackStack() }
   }
 
-  private var lastClickTime = 0L
-
-  private fun tryNavigate(
-    debounceTime: Long = NAVIGATION_DEBOUNCE_TIME,
-    action: () -> Unit,
-  ) {
-    val currentTime = SystemClock.uptimeMillis()
-    if (currentTime - lastClickTime >= debounceTime) {
+  private fun tryNavigate(action: () -> Unit) {
+    val currentTime = System.currentTimeMillis()
+    if (currentTime - lastNavigateTime >= NAVIGATION_DEBOUNCE_TIME) {
       action()
-      lastClickTime = currentTime
+      lastNavigateTime = currentTime
     }
   }
 }

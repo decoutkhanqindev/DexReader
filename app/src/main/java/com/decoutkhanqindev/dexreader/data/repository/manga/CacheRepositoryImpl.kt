@@ -7,7 +7,7 @@ import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toUnexpectedEx
 import com.decoutkhanqindev.dexreader.domain.entity.manga.ChapterPages
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.repository.manga.CacheRepository
-import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 

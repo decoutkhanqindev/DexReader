@@ -5,15 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.decoutkhanqindev.dexreader.presentation.screens.settings.SettingsViewModel
-import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavGraph
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -24,18 +16,7 @@ class MainActivity : ComponentActivity() {
     Timber.tag(this::class.java.simpleName).d("onCreate: initializing UI")
     requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     enableEdgeToEdge()
-    setContent {
-      val settingsViewModel = hiltViewModel<SettingsViewModel>()
-      val settingsUiState by settingsViewModel.uiState.collectAsStateWithLifecycle()
-
-      DexReaderTheme(themeOption = settingsUiState.themeOption) {
-        DexReaderApp(
-          modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.background)
-        )
-      }
-    }
+    setContent { NavGraph() }
   }
 
   override fun onStart() {

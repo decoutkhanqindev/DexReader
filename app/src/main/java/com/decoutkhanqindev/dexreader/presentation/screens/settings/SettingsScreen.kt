@@ -6,16 +6,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseScreen
+import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.settings.SettingsViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.settings.components.SettingsContent
 
 @Composable
 fun SettingsScreen(
-  viewModel: SettingsViewModel = hiltViewModel(),
+  viewModel: SettingsViewModel,
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
   modifier: Modifier = Modifier,
@@ -38,6 +38,7 @@ fun SettingsScreen(
       modifier = Modifier.fillMaxSize(),
       onThemeOptionClick = remember { viewModel::updateThemeOption },
       onSaveThemeOption = remember { viewModel::saveThemeOption },
+      onCancelThemeOption = remember { viewModel::resetThemeOption },
       onRetry = remember { viewModel::retry },
     )
   }

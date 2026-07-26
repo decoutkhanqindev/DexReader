@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.domain.usecase.user.history
 
 import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.repository.user.HistoryRepository
-import com.decoutkhanqindev.dexreader.util.AsyncHandler.toFlowResult
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.toFlowResult
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

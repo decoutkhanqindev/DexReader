@@ -13,6 +13,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.screens.common.animation.AnimatedLogoAndSlogan
@@ -33,6 +35,14 @@ fun AuthContent(
       modifier = Modifier
         .weight(0.3f)
         .fillMaxWidth()
+        .background(
+          Brush.radialGradient(
+            colors = listOf(
+              MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+              Color.Transparent,
+            )
+          )
+        )
         .padding(top = 16.dp, start = 16.dp, end = 16.dp)
         .statusBarsPadding()
     ) {

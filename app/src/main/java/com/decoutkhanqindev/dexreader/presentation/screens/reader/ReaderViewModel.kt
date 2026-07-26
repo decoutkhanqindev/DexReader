@@ -28,6 +28,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -106,7 +107,7 @@ class ReaderViewModel @Inject constructor(
     lastUpdateTime = System.currentTimeMillis()
     readingTimerJob = viewModelScope.launch {
       while (true) {
-        kotlinx.coroutines.delay(STATS_UPDATE_INTERVAL_MS)
+        delay(STATS_UPDATE_INTERVAL_MS)
         updateReadingDuration()
       }
     }

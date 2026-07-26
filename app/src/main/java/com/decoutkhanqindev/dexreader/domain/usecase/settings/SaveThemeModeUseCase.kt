@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.domain.usecase.settings
 
 import com.decoutkhanqindev.dexreader.domain.entity.value.settings.ThemeMode
 import com.decoutkhanqindev.dexreader.domain.repository.settings.SettingsRepository
-import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendResultCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendResultCatching
 import javax.inject.Inject
 
 class SaveThemeModeUseCase @Inject constructor(

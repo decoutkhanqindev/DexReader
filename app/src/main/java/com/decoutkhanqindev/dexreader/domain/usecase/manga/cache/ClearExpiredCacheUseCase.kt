@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.domain.usecase.manga.cache
 
 import com.decoutkhanqindev.dexreader.domain.repository.manga.CacheRepository
-import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendResultCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendResultCatching
 import javax.inject.Inject
 
 class ClearExpiredCacheUseCase @Inject constructor(

@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.screens.home
+package com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.manga_section
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,14 +23,14 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class MangaSectionViewModel @Inject constructor(
   private val getLatestUploadedMangaListUseCase: GetLatestUpdateMangaListUseCase,
   private val getTrendingMangaListUseCase: GetTrendingMangaListUseCase,
   private val getNewReleaseMangaListUseCase: GetNewReleaseMangaListUseCase,
   private val getCompletedMangaListUseCase: GetTopRatedMangaListUseCase,
 ) : ViewModel() {
-  private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
-  val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+  private val _uiState = MutableStateFlow<MangaSectionUiState>(MangaSectionUiState.Loading)
+  val uiState: StateFlow<MangaSectionUiState> = _uiState.asStateFlow()
 
   init {
     fetchMangaLists()
@@ -38,7 +38,7 @@ class HomeViewModel @Inject constructor(
 
   fun fetchMangaLists() {
     viewModelScope.launch {
-      _uiState.value = HomeUiState.Loading
+      _uiState.value = MangaSectionUiState.Loading
 
       val latestUpdatesMangaListDef = async { getLatestUploadedMangaListUseCase() }
       val trendingMangaListDef = async { getTrendingMangaListUseCase() }
@@ -68,7 +68,7 @@ class HomeViewModel @Inject constructor(
             .take(10)
             .toPersistentList()
 
-        _uiState.value = HomeUiState.Success(
+        _uiState.value = MangaSectionUiState.Success(
           bannerList = bannerMangaList,
           mainSections = persistentMapOf(
             MangaSectionValue.TRENDING to trendingMangaList,
@@ -79,7 +79,7 @@ class HomeViewModel @Inject constructor(
         )
       } else {
         val throwable = results.firstOrNull { it.isFailure }?.exceptionOrNull()
-        _uiState.value = HomeUiState.Error(throwable?.toFeatureError() ?: FeatureError.Generic)
+        _uiState.value = MangaSectionUiState.Error(throwable?.toFeatureError() ?: FeatureError.Generic)
         Timber.tag(this::class.java.simpleName)
           .e("fetchMangaLists have error: ${throwable?.stackTraceToString()}")
       }
@@ -87,7 +87,7 @@ class HomeViewModel @Inject constructor(
   }
 
   fun retry() {
-    if (_uiState.value is HomeUiState.Error) fetchMangaLists()
+    if (_uiState.value is MangaSectionUiState.Error) fetchMangaLists()
   }
 }
 

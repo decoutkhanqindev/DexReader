@@ -7,7 +7,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toUnexpectedException
 import com.decoutkhanqindev.dexreader.domain.entity.value.settings.ThemeMode
 import com.decoutkhanqindev.dexreader.domain.repository.settings.SettingsRepository
-import com.decoutkhanqindev.dexreader.util.AsyncHandler.runSuspendCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged

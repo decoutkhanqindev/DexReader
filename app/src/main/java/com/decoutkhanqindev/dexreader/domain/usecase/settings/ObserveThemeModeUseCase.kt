@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.domain.usecase.settings
 
 import com.decoutkhanqindev.dexreader.domain.entity.value.settings.ThemeMode
 import com.decoutkhanqindev.dexreader.domain.repository.settings.SettingsRepository
-import com.decoutkhanqindev.dexreader.util.AsyncHandler.toFlowResult
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.toFlowResult
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
