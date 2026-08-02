@@ -1,8 +1,12 @@
 package com.decoutkhanqindev.dexreader.data.network.firebase.dto.request
 
+import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.PropertyName
 
 data class ReadingStatsRequest(
+  @get:Exclude
+  val id: String,
+
   @get:PropertyName("user_id")
   val userId: String,
 

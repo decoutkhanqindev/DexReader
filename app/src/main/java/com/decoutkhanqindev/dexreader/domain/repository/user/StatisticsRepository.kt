@@ -4,7 +4,7 @@ import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingStats
 import kotlinx.coroutines.flow.Flow
 
 interface StatisticsRepository {
-  suspend fun incrementReadingDuration(userId: String, date: String, durationMillis: Long)
+  suspend fun incrementReadingDuration(userId: String, readingStats: ReadingStats)
 
   fun observeStatistics(userId: String): Flow<List<ReadingStats>>
 }

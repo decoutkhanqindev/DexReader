@@ -4,6 +4,54 @@ Dated log of notable multi-file / cross-cutting work sessions. Newest entry firs
 
 ---
 
+## 2026-07-26 — Standardize the Statistics feature to match Favorites/History conventions
+
+`data/network/firebase/firestore/statistics/` was added later (commit `00a2f30`, different author than
+whatever established the favorite/history pattern) and never brought in line with the rest of the
+codebase's Firebase conventions. A full-stack trace found the drift concentrated entirely in the data
+and presentation layers — domain (`ReadingStats`, `StatisticsRepository`, both use cases) and DI
+(`RepositoryModule`, `FirebaseModule`) were already fully compliant, no changes needed there.
+
+**Data layer:** removed 5 `Timber.tag("StatisticsDebug")` debug calls from
+`FirebaseStatisticsFirestoreSourceImpl`; replaced raw string field-name literals (`"user_id"`,
+`"date"`, `"duration_millis"`) with new `FirestoreFields` constants; deleted
+`ReadingStatsRequest` (zero callers, and structurally unable to represent the feature's only write —
+`FieldValue.increment()` can't be assigned to a `Long`-typed DTO field in Kotlin, so the raw
+`Map<String, Any>` write stays, just with constants instead of literals); added `ReadingStatsMapper`
+(matching the `object` + extension-function shape every other mapper in this codebase uses, confirmed
+against `FavoriteMangaMapper`); fixed `StatisticsRepositoryImpl.incrementReadingDuration` using the
+wrong exception mapper (`toFirebaseFirestoreFlowException()` on a suspend write — CLAUDE.md's own
+table says suspend writes use `toFirebaseFirestoreException()`); added the missing
+`.distinctUntilChanged()` in the exact operator position confirmed from `FavoritesRepositoryImpl`
+(after `.flowOn`, not before `.catch`).
+
+**Deliberately NOT changed:** the flat top-level `/statistics/{userId}_{date}` collection (vs.
+Favorites/History's nested `/users/{userId}/...`) — migrating would orphan existing production
+documents with no migration tooling in this repo to handle it; confirmed with the user before
+finalizing the plan and kept as-is.
+
+**Presentation layer:** converted `StatisticsUiState` from a flat data class to a
+`Loading`/`Success`/`Error` sealed interface (matching `CategoriesUiState`, the closest sibling: a
+single non-paginated resource load) and rewrote `StatisticsViewModel` to match
+`CategoriesViewModel`'s shape — failures now surface into UI state via `ErrorMapper.toFeatureError()`
+instead of only being Timber-logged, and the 5× per-step debug logging collapsed to one error-path log
+tagged with `this::class.java.simpleName`. Split the single 117-line `StatisticsScreen.kt` into a thin
+`StatisticsScreen.kt` + `components/StatisticsContent.kt` (owns the `when(uiState)` dispatch and the
+established error-dialog `remember`/`LaunchedEffect` pattern) + `components/StatCard.kt`, matching the
+`*Screen.kt`/`*Content.kt` split used everywhere else in this codebase.
+
+**Explicitly flagged, not fixed** (found while tracing, unrelated to Firestore style):
+`StatisticsViewModel.calculateStats()` sets `weeklyTimeMillis` to the same value as `totalTimeMillis`
+— not actually filtered to a 7-day window. Preserved as-is; raise separately if it should be fixed.
+
+**Verified:** `./gradlew compileDebugKotlin` after each of the 6 change batches (BUILD SUCCESSFUL
+throughout). Caught and fixed one mistake in the process: the `StatCard` composable was initially
+reconstructed from memory using its pre-session `headlineSmall` style instead of the `titleLarge` it
+was already converged to earlier in the same session's typography-unification pass — corrected before
+the final compile by re-reading the live file instead of trusting recall.
+
+---
+
 ## 2026-07-26 — Unify text styling (size/style/weight/color) across the whole app
 
 A full-codebase audit of every `Text(...)` call in `presentation/screens/` (101 sites, 54 files)

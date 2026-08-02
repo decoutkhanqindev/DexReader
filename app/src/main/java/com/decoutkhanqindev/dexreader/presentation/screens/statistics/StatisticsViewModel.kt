@@ -4,12 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingStats
 import com.decoutkhanqindev.dexreader.domain.usecase.user.statistics.ObserveStatisticsUseCase
+import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -19,7 +19,7 @@ class StatisticsViewModel @Inject constructor(
   private val observeStatisticsUseCase: ObserveStatisticsUseCase,
 ) : ViewModel() {
 
-  private val _uiState = MutableStateFlow(StatisticsUiState())
+  private val _uiState = MutableStateFlow<StatisticsUiState>(StatisticsUiState.Loading)
   val uiState: StateFlow<StatisticsUiState> = _uiState.asStateFlow()
 
   private val _userId = MutableStateFlow<String?>(null)
@@ -35,26 +35,19 @@ class StatisticsViewModel @Inject constructor(
   private fun observeStatistics() {
     viewModelScope.launch {
       _userId.collectLatest { userId ->
-        Timber.tag("StatisticsDebug").d("ViewModel user changed: $userId")
         if (userId == null) {
-          _uiState.update {
-            it.copy(
-              dailyTimeMillis = 0,
-              weeklyTimeMillis = 0,
-              totalTimeMillis = 0
-            )
-          }
+          _uiState.value = StatisticsUiState.Loading
           return@collectLatest
         }
 
+        _uiState.value = StatisticsUiState.Loading
+
         observeStatisticsUseCase(userId).collect { result ->
-          result.onSuccess { statsList ->
-            Timber.tag("StatisticsDebug")
-              .d("ViewModel received stats list: ${statsList.size} items")
-            calculateStats(statsList)
-          }
-          result.onFailure {
-            Timber.tag("StatisticsDebug").e(it, "UseCase failed")
+          result.onSuccess { statsList -> calculateStats(statsList) }
+          result.onFailure { throwable ->
+            _uiState.value = StatisticsUiState.Error(throwable.toFeatureError())
+            Timber.tag(this::class.java.simpleName)
+              .e("observeStatistics have error: ${throwable.stackTraceToString()}")
           }
         }
       }
@@ -63,21 +56,17 @@ class StatisticsViewModel @Inject constructor(
 
   private fun calculateStats(statsList: List<ReadingStats>) {
     val today = ReadingStats.getCurrentDate()
-    Timber.tag("StatisticsDebug").d("Calculating stats. Today is: $today")
-
     val dailyTime = statsList.find { it.date == today }?.durationMillis ?: 0L
-    Timber.tag("StatisticsDebug").d("Found daily time: $dailyTime")
-
     val totalTime = statsList.sumOf { it.durationMillis }
-    Timber.tag("StatisticsDebug").d("Total time sum: $totalTime")
 
-    _uiState.update {
-      it.copy(
-        dailyTimeMillis = dailyTime,
-        weeklyTimeMillis = totalTime,
-        totalTimeMillis = totalTime
-      )
-    }
+    _uiState.value = StatisticsUiState.Success(
+      dailyTimeMillis = dailyTime,
+      weeklyTimeMillis = totalTime,
+      totalTimeMillis = totalTime
+    )
+  }
+
+  fun retry() {
+    if (_uiState.value is StatisticsUiState.Error) observeStatistics()
   }
 }
-

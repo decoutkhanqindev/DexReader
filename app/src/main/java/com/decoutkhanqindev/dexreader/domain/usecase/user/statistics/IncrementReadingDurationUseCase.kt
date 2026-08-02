@@ -10,7 +10,7 @@ class IncrementReadingDurationUseCase @Inject constructor(
 ) {
   suspend operator fun invoke(userId: String, durationMillis: Long): Result<Unit> =
     runSuspendResultCatching {
-      val date = ReadingStats.getCurrentDate()
-      repository.incrementReadingDuration(userId, date, durationMillis)
+      val readingStats = ReadingStats(date = ReadingStats.getCurrentDate(), durationMillis = durationMillis)
+      repository.incrementReadingDuration(userId, readingStats)
     }
 }

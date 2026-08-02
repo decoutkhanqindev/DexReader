@@ -66,6 +66,6 @@ object ApiModule {
 
   @Provides
   @Singleton
-  fun provideMangaDexApiService(retrofit: Retrofit): ApiService =
+  fun provideApiService(retrofit: Retrofit): ApiService =
     retrofit.create(ApiService::class.java)
 }

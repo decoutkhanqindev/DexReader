@@ -131,7 +131,13 @@ All functions rethrow `DomainException` and `CancellationException` unchanged.
 `@get:Exclude @set:Exclude`, populated via `doc.toObject(...)?.copy(id = doc.id)`.
 
 **Firestore paths**: `/users/{userId}` | `/users/{userId}/favorites/{mangaId}` |
-`/users/{userId}/history/{historyId}`
+`/users/{userId}/history/{historyId}` | `/statistics/{userId}_{date}` (flat top-level collection, not
+nested under `/users/{userId}/...` like the other three — a deliberate exception, not an oversight:
+`incrementReadingDuration` needs `FieldValue.increment()` on a partial write, which requires a raw
+`Map<String, Any>` and a composite `"${userId}_${date}"` doc ID via `ReadingStats.generateId()`
+rather than a request DTO addressed by `.document(id)`. Map keys still go through `FirestoreFields`
+constants, not raw string literals, matching every other Firestore source in this codebase — only the
+collection shape is the exception, not the string-literal discipline.)
 
 **Cursor pagination**: all paginated Firestore queries use `startAfter(lastDocument).limit(n)` —
 `null` lastItemId = first page.
@@ -209,7 +215,7 @@ boundary.
 
 | Pattern                    | When                       | Used by                                                   |
 |----------------------------|----------------------------|-----------------------------------------------------------|
-| Sealed interface           | Primary resource load      | `MangaSectionUiState`, `MangaDetailsUiState`, `CategoriesUiState` |
+| Sealed interface           | Primary resource load      | `MangaSectionUiState`, `MangaDetailsUiState`, `CategoriesUiState`, `StatisticsUiState` |
 | Data class                 | Form / fine-grained errors | `LoginUiState`, `RegisterUiState`, `ProfileUiState`       |
 | `BasePaginationUiState<T>` | Infinite scroll            | CategoryDetails, Favorites, History, Search               |
 
