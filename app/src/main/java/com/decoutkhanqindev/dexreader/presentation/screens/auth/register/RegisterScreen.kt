@@ -3,7 +3,6 @@ package com.decoutkhanqindev.dexreader.presentation.screens.auth.register
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -23,13 +22,13 @@ fun RegisterScreen(
   RegisterContent(
     uiState = uiState,
     modifier = modifier,
-    onEmailChange = remember { viewModel::updateEmail },
-    onPasswordChange = remember { viewModel::updatePassword },
-    onConfirmPasswordChange = remember { viewModel::updateConfirmPassword },
-    onNameChange = remember { viewModel::updateName },
-    onSubmitClick = remember { viewModel::submit },
+    onEmailChange = { viewModel.updateEmail(it) },
+    onPasswordChange = { viewModel.updatePassword(it) },
+    onConfirmPasswordChange = { viewModel.updateConfirmPassword(it) },
+    onNameChange = { viewModel.updateName(it) },
+    onSubmitClick = { viewModel.submit() },
     onRegisterSuccess = onNavigateToLoginScreen,
     onNavigateBack = onNavigateBack,
-    onRetry = remember { viewModel::retry },
+    onRetry = { viewModel.retry() },
   )
 }

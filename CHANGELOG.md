@@ -4,6 +4,66 @@ Dated log of notable multi-file / cross-cutting work sessions. Newest entry firs
 
 ---
 
+## 2026-08-04 — Drop redundant `remember` around composable callbacks (strong skipping)
+
+The codebase wrapped every ViewModel callback passed into a `*Content` composable in
+`remember { viewModel::method }` — a convention from before strong skipping was default. On Kotlin
+2.3.21 strong skipping is on (nothing in `composeCompiler {}` disables it) and auto-memoizes lambdas
+& method references with unstable captures at a `@Composable` call site, so those wraps are redundant.
+
+Converted **51 keyless sites across all 14 `*Screen.kt`** (50 `remember { viewModel::method }` + 1
+`remember { { viewModel.updateChapterPage(it) } }`) to plain `{ viewModel.method() }` lambdas — the
+lambda-literal form is *unambiguously* memoized, so it sidesteps any method-reference uncertainty
+(chosen over bare `viewModel::method` for that reason). Removed the now-unused
+`import androidx.compose.runtime.remember` from the 10 screens that had no other `remember` usage.
+
+**Deliberately kept** (not lambda memoization / not in `@Composable` scope): all `remember(key) { … }`
+— per-item list callbacks inside `items { }` (`MangaItem`, `FavoriteMangaItem`, `ReadingHistoryItem`,
+`MangaChapterItem`, `CategoryList`, …), Coil `ImageRequest` builders, `associateBy` maps,
+`derivedStateOf`, `mutableStateOf`, and the keyed `remember(isUserLoggedIn, isFavorite)` /
+`remember(chapterPagesUiState)` in MangaDetails/Reader. Updated the stale CLAUDE.md rule
+(`viewModel::method` is NOT auto-memoized → the opposite is now true) with the scope caveats.
+`compileDebugKotlin` clean.
+
+---
+
+## 2026-08-04 — Home section "More »" → full CategoryDetails browse (generalized by optional tag)
+
+Each Home section (Trending / Latest Update / New Release / Top Rated) showed a fixed ~20-item
+horizontal row with no way to browse the full list. Added a per-section **"More »"** control that opens
+the existing `CategoryDetailsScreen` with its full feature set (infinite-scroll load-more, sort,
+filter), seeded to that section's sort.
+
+**Key realization:** a Home section is nothing but a preset sort criterion over the whole catalog with
+no tag filter — the four section endpoints and `getMangaListByTag` all hit the same `GET /manga`,
+differing only by `includedTags[]`, and Retrofit omits a null `@Query`. So instead of a parallel
+use case/screen, the browse was **generalized end-to-end on a nullable tag**:
+
+- **Data:** `ApiService.getMangaListByTag` → `getMangaList`, `tagId: String? = null` (non-null path
+  byte-identical); `CategoryRepositoryImpl` override renamed + nullable `categoryId`.
+- **Domain:** `CategoryRepository.getMangaList(categoryId: String? = null, …)`; moved/renamed
+  `GetMangaListByCategoryUseCase` (`usecase/category/`) → `GetMangaListUseCase` (`usecase/manga/`),
+  nullable `categoryId`.
+- **Navigation:** `NavRoute.CategoryDetails` gained `categoryId: String? = null` +
+  `initialSortCriteria: MangaSortCriteriaValue = LATEST_UPDATE` (enum now `@Serializable` for
+  type-safe nav); the two existing call sites (Categories, MangaDetails) switched to named args.
+- **Presentation:** new `MangaSectionValue.toSortCriteriaValue()` in `CriteriaMapper` (1:1, with
+  `NEW_RELEASE → MOST_VIEWED` since both are createdAt-ordered); `CategoryDetailsViewModel` seeds
+  criteria from the route + passes the nullable id; `MangaListSection` header became a `SpaceBetween`
+  row with a `Modifier.onClick` "More »" (label + auto-mirrored arrow), threaded through
+  `HomeContent` → `HomeScreen` → `NavGraph`; new `more` string.
+
+**Decisions (confirmed with user):** generalize the shared path rather than add a parallel use case.
+The section browse's **first page matches the Home row byte-for-byte**: the VM seeds criteria per entry
+point via `CategoryDetailsCriteriaUiState.forSection(sortCriteria)` when `categoryId == null`, which
+reproduces the section endpoint's exact query — no status + no content-rating filter (empty list ⇒
+Retrofit omits the `@Query` ⇒ server default), except `LATEST_UPDATE` (status = Ongoing). Category
+entry keeps the plain `CategoryDetailsCriteriaUiState()` Ongoing+Safe default. (First cut wrongly gave
+the section browse the category default, so its first page loaded 20 *different*, narrower items than
+the Home row — fixed by `forSection`.) `compileDebugKotlin` clean.
+
+---
+
 ## 2026-07-26 — Standardize the Statistics feature to match Favorites/History conventions
 
 `data/network/firebase/firestore/statistics/` was added later (commit `00a2f30`, different author than

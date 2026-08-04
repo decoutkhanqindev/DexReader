@@ -29,8 +29,8 @@ class CategoryRepositoryImpl @Inject constructor(
       catch = { it.toDomainException() }
     )
 
-  override suspend fun getMangaListByCategory(
-    categoryId: String,
+  override suspend fun getMangaList(
+    categoryId: String?,
     offset: Int,
     sortCriteria: MangaSortCriteria,
     sortOrder: MangaSortOrder,
@@ -76,7 +76,7 @@ class CategoryRepositoryImpl @Inject constructor(
           }
         }
 
-        apiService.getMangaListByTag(
+        apiService.getMangaList(
           tagId = categoryId,
           offset = offset,
           lastUpdated = lastUpdated,

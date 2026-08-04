@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.navigation
 
+import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortCriteriaValue
 import kotlinx.serialization.Serializable
 
 sealed interface NavRoute {
@@ -45,8 +46,9 @@ sealed interface NavRoute {
 
   @Serializable
   data class CategoryDetails(
-    val categoryId: String,
     val categoryTitle: String,
+    val categoryId: String? = null,
+    val initialSortCriteria: MangaSortCriteriaValue = MangaSortCriteriaValue.LATEST_UPDATE,
   ) : NavRoute
 
   @Serializable

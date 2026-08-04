@@ -66,6 +66,7 @@ fun FilterBottomSheet(
       onContentRatingOptionsSelect = { selectedContentRatingOptions = it },
       modifier = Modifier
         .fillMaxWidth()
+        .padding(horizontal = 4.dp)
         .padding(bottom = 24.dp)
     )
 

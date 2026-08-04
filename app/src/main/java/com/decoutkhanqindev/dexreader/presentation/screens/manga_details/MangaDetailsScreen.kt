@@ -91,13 +91,13 @@ fun MangaDetailsScreen(
           } else isShowFavoritesDialog = true
         }
       },
-      onLanguageItemClick = remember { viewModel::updateChapterLanguage },
+      onLanguageItemClick = { viewModel.updateChapterLanguage(it) },
       onCategoryItemClick = onNavigateCategoryDetailsScreen,
       onChapterItemClick = onNavigateToReaderScreen,
-      onFetchChapterListNextPage = remember { viewModel::fetchChapterListNextPage },
-      onRetryFetchChapterListNextPage = remember { viewModel::retryFetchChapterListNextPage },
-      onRetryFetchChapterListFirstPage = remember { viewModel::retryFetchChapterListFirstPage },
-      onRetry = remember { viewModel::retry },
+      onFetchChapterListNextPage = { viewModel.fetchChapterListNextPage() },
+      onRetryFetchChapterListNextPage = { viewModel.retryFetchChapterListNextPage() },
+      onRetryFetchChapterListFirstPage = { viewModel.retryFetchChapterListFirstPage() },
+      onRetry = { viewModel.retry() },
     )
   }
 }

@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -45,7 +44,7 @@ fun StatisticsScreen(
       StatisticsContent(
         uiState = uiState,
         modifier = Modifier.fillMaxSize(),
-        onRetry = remember { viewModel::retry },
+        onRetry = { viewModel.retry() },
       )
     } else {
       IdleScreen(

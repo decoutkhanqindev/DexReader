@@ -135,10 +135,10 @@ interface ApiService {
   suspend fun getTagList(): TagListResponse
 
   @GET(ApiEndpoints.MANGA)
-  suspend fun getMangaListByTag(
+  suspend fun getMangaList(
     @Query(ApiQueries.LIMIT) limit: Int = 20,
     @Query(ApiQueries.OFFSET) offset: Int = 0,
-    @Query(ApiQueries.INCLUDED_TAGS) tagId: String,
+    @Query(ApiQueries.INCLUDED_TAGS) tagId: String? = null,
     @Query(ApiQueries.ORDER_UPDATED_AT) lastUpdated: String? = null,
     @Query(ApiQueries.ORDER_FOLLOWED_COUNT) followedCount: String? = null,
     @Query(ApiQueries.ORDER_CREATED_AT) createdAt: String? = null,

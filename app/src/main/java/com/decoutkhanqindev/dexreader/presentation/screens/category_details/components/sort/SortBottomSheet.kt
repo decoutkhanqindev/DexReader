@@ -58,6 +58,7 @@ fun SortBottomSheet(
       onItemClick = { selectedCriteria = it },
       modifier = Modifier
         .fillMaxWidth()
+        .padding(horizontal = 4.dp)
         .padding(bottom = 12.dp)
     )
 
@@ -66,6 +67,7 @@ fun SortBottomSheet(
       onItemClick = { selectedOrder = it },
       modifier = Modifier
         .fillMaxWidth()
+        .padding(horizontal = 4.dp)
         .padding(bottom = 24.dp)
     )
 

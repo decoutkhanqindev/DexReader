@@ -5,7 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.decoutkhanqindev.dexreader.domain.usecase.category.GetMangaListByCategoryUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaListUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortCriteria
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortOrder
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
@@ -34,10 +34,10 @@ import javax.inject.Inject
 @HiltViewModel
 class CategoryDetailsViewModel @Inject constructor(
   savedStateHandle: SavedStateHandle,
-  private val getMangaListByCategoryUseCase: GetMangaListByCategoryUseCase,
+  private val getMangaListUseCase: GetMangaListUseCase,
 ) : ViewModel() {
   private val route: NavRoute.CategoryDetails = savedStateHandle.toRoute()
-  private val categoryIdFromArg: String = route.categoryId
+  private val categoryIdFromArg: String? = route.categoryId
   val categoryTitleFromArg: String = route.categoryTitle
 
   private val _categoryDetailsUiState =
@@ -45,7 +45,10 @@ class CategoryDetailsViewModel @Inject constructor(
   val categoryDetailsUiState: StateFlow<BasePaginationUiState<MangaModel>> =
     _categoryDetailsUiState.asStateFlow()
 
-  private val _categoryCriteriaUiState = MutableStateFlow(CategoryDetailsCriteriaUiState())
+  private val _categoryCriteriaUiState = MutableStateFlow(
+    if (categoryIdFromArg == null) CategoryDetailsCriteriaUiState.forSection(route.initialSortCriteria)
+    else CategoryDetailsCriteriaUiState(sortCriteria = route.initialSortCriteria)
+  )
   val categoryCriteriaUiState: StateFlow<CategoryDetailsCriteriaUiState> =
     _categoryCriteriaUiState.asStateFlow()
 
@@ -59,7 +62,7 @@ class CategoryDetailsViewModel @Inject constructor(
 
       val currentCriteriaUiState = _categoryCriteriaUiState.value
 
-      getMangaListByCategoryUseCase(
+      getMangaListUseCase(
         categoryId = categoryIdFromArg,
         sortCriteria = currentCriteriaUiState.sortCriteria.toMangaSortCriteria(),
         sortOrder = currentCriteriaUiState.sortOrder.toMangaSortOrder(),
@@ -115,7 +118,7 @@ class CategoryDetailsViewModel @Inject constructor(
       val currentMangaList = currentCategoryDetailsUiState.currentList
       val nextPage = currentCategoryDetailsUiState.currentPage + 1
 
-      getMangaListByCategoryUseCase(
+      getMangaListUseCase(
         categoryId = categoryIdFromArg,
         offset = currentMangaList.size,
         sortCriteria = currentCriteriaUiState.sortCriteria.toMangaSortCriteria(),

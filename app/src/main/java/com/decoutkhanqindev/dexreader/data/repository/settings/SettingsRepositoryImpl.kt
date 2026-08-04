@@ -18,7 +18,7 @@ import javax.inject.Inject
 class SettingsRepositoryImpl @Inject constructor(
   private val prefsManager: DataStore<Preferences>,
 ) : SettingsRepository {
-  private val themeModePrefsKey = stringPreferencesKey(THEME_MODE_KEY)
+  private val themeModePrefsKey by lazy { stringPreferencesKey(THEME_MODE_KEY) }
 
   override fun observeThemeMode(): Flow<ThemeMode> =
     prefsManager.data.map { prefs ->

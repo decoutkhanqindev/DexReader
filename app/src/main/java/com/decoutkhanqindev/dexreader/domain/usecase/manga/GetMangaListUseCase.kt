@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.domain.usecase.category
+package com.decoutkhanqindev.dexreader.domain.usecase.manga
 
 import com.decoutkhanqindev.dexreader.domain.entity.manga.Manga
 import com.decoutkhanqindev.dexreader.domain.entity.manga.MangaStats
@@ -11,19 +11,19 @@ import com.decoutkhanqindev.dexreader.domain.repository.manga.MangaStatsReposito
 import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendResultCatching
 import javax.inject.Inject
 
-class GetMangaListByCategoryUseCase @Inject constructor(
+class GetMangaListUseCase @Inject constructor(
   private val categoryRepository: CategoryRepository,
   private val statsRepository: MangaStatsRepository,
 ) {
   suspend operator fun invoke(
-    categoryId: String,
+    categoryId: String? = null,
     offset: Int = 0,
     sortCriteria: MangaSortCriteria = MangaSortCriteria.LATEST_UPDATE,
     sortOrder: MangaSortOrder = MangaSortOrder.DESC,
     statusFilter: List<MangaStatus> = listOf(MangaStatus.ON_GOING),
     contentRatingFilter: List<MangaContentRating> = listOf(MangaContentRating.SAFE),
   ): Result<List<Manga>> = runSuspendResultCatching {
-    val list: List<Manga> = categoryRepository.getMangaListByCategory(
+    val list: List<Manga> = categoryRepository.getMangaList(
       categoryId = categoryId,
       offset = offset,
       sortCriteria = sortCriteria,

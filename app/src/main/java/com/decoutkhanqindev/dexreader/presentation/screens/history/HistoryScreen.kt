@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -55,12 +54,12 @@ fun HistoryScreen(
         removeFromHistoryUiState = removeFromHistoryUiState,
         onContinueReadingClick = onNavigateToReaderScreen,
         onMangaDetailsClick = onNavigateToMangaDetailScreen,
-        onUpdateRemoveReadingHistoryId = remember { viewModel::updateRemoveReadingHistoryId },
-        onRemoveFromHistory = remember { viewModel::removeFromHistory },
-        onRetryRemoveFromHistory = remember { viewModel::retryRemoveFromHistory },
-        onObserveHistoryNextPage = remember { viewModel::observeHistoryNextPage },
-        onRetryObserveHistoryNextPage = remember { viewModel::retryObserveHistoryNextPage },
-        onRetryObserveHistoryFirstPage = remember { viewModel::retryObserveHistoryFirstPage },
+        onUpdateRemoveReadingHistoryId = { viewModel.updateRemoveReadingHistoryId(it) },
+        onRemoveFromHistory = { viewModel.removeFromHistory() },
+        onRetryRemoveFromHistory = { viewModel.retryRemoveFromHistory() },
+        onObserveHistoryNextPage = { viewModel.observeHistoryNextPage() },
+        onRetryObserveHistoryNextPage = { viewModel.retryObserveHistoryNextPage() },
+        onRetryObserveHistoryFirstPage = { viewModel.retryObserveHistoryFirstPage() },
         modifier = Modifier.fillMaxSize()
       )
     } else {

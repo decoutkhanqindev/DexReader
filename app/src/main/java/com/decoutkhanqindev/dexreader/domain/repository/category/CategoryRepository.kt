@@ -9,8 +9,8 @@ import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaStatus
 
 interface CategoryRepository {
   suspend fun getCategoryList(): List<Category>
-  suspend fun getMangaListByCategory(
-    categoryId: String,
+  suspend fun getMangaList(
+    categoryId: String? = null,
     offset: Int = 0,
     sortCriteria: MangaSortCriteria = MangaSortCriteria.LATEST_UPDATE,
     sortOrder: MangaSortOrder = MangaSortOrder.DESC,

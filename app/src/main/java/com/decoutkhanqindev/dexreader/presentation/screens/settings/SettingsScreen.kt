@@ -4,7 +4,6 @@ package com.decoutkhanqindev.dexreader.presentation.screens.settings
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
@@ -36,10 +35,10 @@ fun SettingsScreen(
     SettingsContent(
       uiState = uiState,
       modifier = Modifier.fillMaxSize(),
-      onThemeOptionClick = remember { viewModel::updateThemeOption },
-      onSaveThemeOption = remember { viewModel::saveThemeOption },
-      onCancelThemeOption = remember { viewModel::resetThemeOption },
-      onRetry = remember { viewModel::retry },
+      onThemeOptionClick = { viewModel.updateThemeOption(it) },
+      onSaveThemeOption = { viewModel.saveThemeOption() },
+      onCancelThemeOption = { viewModel.resetThemeOption() },
+      onRetry = { viewModel.retry() },
     )
   }
 }

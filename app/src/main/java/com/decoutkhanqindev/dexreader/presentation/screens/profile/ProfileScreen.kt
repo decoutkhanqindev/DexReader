@@ -65,8 +65,8 @@ fun ProfileScreen(
             .fillMaxWidth()
             .padding(16.dp)
             .navigationBarsPadding(),
-          onUpdateClick = remember { viewModel::updateUserProfile },
-          onLogoutClick = remember { viewModel::logoutUser },
+          onUpdateClick = { viewModel.updateUserProfile() },
+          onLogoutClick = { viewModel.logoutUser() },
         )
       }
     }
@@ -75,11 +75,11 @@ fun ProfileScreen(
       ProfileContent(
         uiState = uiState,
         modifier = Modifier.fillMaxSize(),
-        onUpdateNameChange = remember { viewModel::updateUserName },
-        onUpdatePicUrlChange = remember { viewModel::updateUserPicUrl },
+        onUpdateNameChange = { viewModel.updateUserName(it) },
+        onUpdatePicUrlChange = { viewModel.updateUserPicUrl(it) },
         onLogoutSuccess = onNavigateToHomeScreen,
-        onRetryUpdate = remember { viewModel::retryUpdateUserProfile },
-        onRetryLogout = remember { viewModel::retryLogoutUser },
+        onRetryUpdate = { viewModel.retryUpdateUserProfile() },
+        onRetryLogout = { viewModel.retryLogoutUser() },
       )
     } else {
       IdleScreen(

@@ -4,7 +4,6 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -34,16 +33,12 @@ fun CategoryDetailScreen(
     CategoryDetailsContent(
       detailsUiState = detailsUiState,
       criteriaUiState = criteriaUiState,
-      onSortApplyClick = remember {
-        { s, o -> viewModel.updateSortingCriteria(s, o) }
-      },
-      onFilterApplyClick = remember {
-        { s, c -> viewModel.updateFilteringCriteria(s, c) }
-      },
+      onSortApplyClick = { s, o -> viewModel.updateSortingCriteria(s, o) },
+      onFilterApplyClick = { s, c -> viewModel.updateFilteringCriteria(s, c) },
       onMangaClick = onNavigateToMangaDetailScreen,
-      onFetchMangaListNextPage = remember { viewModel::fetchMangaListByCategoryNextPage },
-      onRetryFetchMangaListNextPage = remember { viewModel::retryFetchMangaListByCategoryNextPage },
-      onRetry = remember { viewModel::retry },
+      onFetchMangaListNextPage = { viewModel.fetchMangaListByCategoryNextPage() },
+      onRetryFetchMangaListNextPage = { viewModel.retryFetchMangaListByCategoryNextPage() },
+      onRetry = { viewModel.retry() },
       modifier = Modifier.fillMaxSize()
     )
   }

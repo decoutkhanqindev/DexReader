@@ -257,7 +257,32 @@ reach for a narrow slice when the wide-reach call site's own churn is otherwise 
 by default.
 
 **Navigation**: `NavRoute` sealed interface with `@Serializable` members. `navigateClearStack()` for
-auth flows; `navigatePreserveState()` for tab/drawer navigation.
+auth flows; `navigatePreserveState()` for tab/drawer navigation. Value enums used as type-safe nav
+args must be `@Serializable` (e.g. `MangaSortCriteriaValue`, carried on `NavRoute.CategoryDetails`).
+
+**Generalized manga-list browse (one path, optional tag)**: a Home section (Trending / Latest Update /
+New Release / Top Rated) is *just a preset sort criterion over the whole catalog with no tag filter* —
+the four section endpoints and the tag endpoint all hit the same `GET /manga`, differing only by
+`includedTags[]`, and Retrofit drops a null `@Query`. So the browse is unified end-to-end on a
+**nullable** tag: `ApiService.getMangaList(tagId: String? = null, …)` →
+`CategoryRepository.getMangaList(categoryId: String? = null, …)` → `GetMangaListUseCase`
+(`domain/usecase/manga/`, not `category/` — it's no longer category-specific). `CategoryDetailsScreen`/
+`CategoryDetailsViewModel` serve **both** entry points off `NavRoute.CategoryDetails(categoryTitle,
+categoryId: String? = null, initialSortCriteria = LATEST_UPDATE)`: Categories/MangaDetails pass a
+non-null `categoryId` (byte-identical to before); Home's per-section **"More »"** passes
+`categoryId = null` + the section's mapped sort (`MangaSectionValue.toSortCriteriaValue()` in
+`CriteriaMapper` — section→criteria is 1:1, with `NEW_RELEASE → MOST_VIEWED` since both are
+createdAt-ordered). **The section browse's first page must match the Home row byte-for-byte**, so the
+VM seeds criteria differently per entry point: `categoryId == null` (section) →
+`CategoryDetailsCriteriaUiState.forSection(sortCriteria)`, which reproduces the section endpoint's exact
+query — **no status + no content-rating filter** (empty `ImmutableList` ⇒ repo passes `emptyList()` ⇒
+Retrofit omits the `@Query` ⇒ MangaDex server default), except `LATEST_UPDATE` which seeds
+`status = [ON_GOING]` (the one section endpoint that filters status). `categoryId != null` (category)
+keeps the plain `CategoryDetailsCriteriaUiState()` default (Ongoing + Safe). Do **not** give the section
+browse the category's Ongoing+Safe default — that was the original bug: it narrowed/reordered the first
+page so it no longer matched the Home row. Everything else (pagination/sort/filter machinery) is shared
+unchanged. When adding another "browse all manga sorted by X" surface, reuse this route — do **not** add
+a parallel use case/screen.
 
 ### State Management
 
@@ -413,7 +438,16 @@ established shape as `observeHistoryJob`/`cancelObserveHistoryJob()`.
 
 ### Compose Performance
 
-- `viewModel::method` is NOT auto-memoized — always `remember { viewModel::method }`
+- **Don't wrap composable callbacks in `remember`.** Strong skipping (Kotlin 2.3.x, default-on since
+  Compose compiler 2.0.20 — nothing in `app/build.gradle.kts`'s `composeCompiler {}` disables it)
+  auto-memoizes lambdas **and** method references with unstable captures (like a `viewModel`) at a
+  `@Composable` call site, so `remember { viewModel::method }` is redundant. Pass a plain
+  `{ viewModel.method() }` lambda instead (audited: all ~51 sites across every `*Screen.kt` use this
+  form, not `remember { viewModel::method }` — a lambda literal is *unambiguously* memoized, sidestepping
+  any lingering method-reference doubt). **Scope matters — two things this does NOT cover, which still
+  need `remember`:** (1) lambdas inside `LazyListScope.items { }` (non-`@Composable` — see the `items`
+  bullet below); (2) `remember(key) { expensiveComputation() }` / `remember { mutableStateOf(...) }` /
+  `remember { derivedStateOf { } }`, which are caching/state, not lambda memoization — always keep those.
 - LazyList keys: never include index — stable server-side ID only
 - Hoist `remember(list) { list.associateBy { it.id } }` before `items { }` — never `find { }` inside
 - No backwards writes: never write to `MutableState` already read in the same composition pass

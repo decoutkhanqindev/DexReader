@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
+import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortCriteriaValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaSectionValue
@@ -42,6 +43,7 @@ fun HomeContent(
   uiState: MangaSectionUiState,
   modifier: Modifier = Modifier,
   onItemClick: (String) -> Unit,
+  onMoreClick: (sectionTitle: String, sortCriteria: MangaSortCriteriaValue) -> Unit,
   onRetry: () -> Unit,
   onRefresh: () -> Unit,
 ) {
@@ -89,6 +91,7 @@ fun HomeContent(
                 items = uiState.mainSections[section] ?: persistentListOf(),
                 modifier = Modifier.fillMaxWidth(),
                 onItemClick = onItemClick,
+                onMoreClick = onMoreClick,
               )
             }
           }
@@ -173,6 +176,7 @@ private fun HomeContentLoadingPreview() {
       uiState = MangaSectionUiState.Loading,
       modifier = Modifier.fillMaxSize(),
       onItemClick = {},
+      onMoreClick = { _, _ -> },
       onRetry = {},
       onRefresh = {}
     )
@@ -187,6 +191,7 @@ private fun HomeContentErrorPreview() {
       uiState = MangaSectionUiState.Error(FeatureError.NetworkUnavailable),
       modifier = Modifier.fillMaxSize(),
       onItemClick = {},
+      onMoreClick = { _, _ -> },
       onRetry = {},
       onRefresh = {}
     )
@@ -206,7 +211,7 @@ private fun HomeContentSuccessPreview() {
           MangaSectionValue.NEW_RELEASE to previewMangaList,
           MangaSectionValue.TOP_RATED to previewMangaList,
         ),
-      ), modifier = Modifier.fillMaxSize(), onItemClick = {}, onRetry = {}, onRefresh = {}
+      ), modifier = Modifier.fillMaxSize(), onItemClick = {}, onMoreClick = { _, _ -> }, onRetry = {}, onRefresh = {}
     )
   }
 }

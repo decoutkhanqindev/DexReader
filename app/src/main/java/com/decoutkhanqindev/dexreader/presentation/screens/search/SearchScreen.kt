@@ -65,9 +65,9 @@ fun SearchScreen(
         isExpanded = false
       },
       onSelectedManga = onNavigateToManDetailScreen,
-      onFetchMangaListNextPage = remember { viewModel::fetchMangaListNextPage },
-      onRetryFetchMangaListNextPage = remember { viewModel::retryFetchMangaListNextPage },
-      onRetry = remember { viewModel::retry },
+      onFetchMangaListNextPage = { viewModel.fetchMangaListNextPage() },
+      onRetryFetchMangaListNextPage = { viewModel.retryFetchMangaListNextPage() },
+      onRetry = { viewModel.retry() },
     )
   }
 }
