@@ -20,9 +20,10 @@ fun CategoriesScreen(
   onNavigateToLoginScreen: () -> Unit,
   onNavigateToMenuItemScreen: (MenuValue) -> Unit,
   onNavigateToSearchScreen: () -> Unit,
-  onNavigateCategoryDetailScreen: (String, String) -> Unit,
+  onNavigateToCategoryScreen: (categoryId: String, title: String) -> Unit,
 ) {
-  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  val categoryListUiState by viewModel.categoryListUiState.collectAsStateWithLifecycle()
+  val categoryCoverStates by viewModel.categoryCoverStates.collectAsStateWithLifecycle()
 
   BaseScreen(
     isUserLoggedIn = isUserLoggedIn,
@@ -34,9 +35,11 @@ fun CategoriesScreen(
     onNavigateToSearchScreen = onNavigateToSearchScreen
   ) {
     CategoriesContent(
-      uiState = uiState,
+      categoryListUiState = categoryListUiState,
+      categoryCoverUiState = categoryCoverStates,
       modifier = Modifier.fillMaxSize(),
-      onItemClick = onNavigateCategoryDetailScreen,
+      onCategoryClick = onNavigateToCategoryScreen,
+      onLoadCover = { viewModel.loadCategoryCover(it) },
       onRetry = { viewModel.retry() },
     )
   }

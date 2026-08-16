@@ -11,6 +11,7 @@ interface CategoryRepository {
   suspend fun getCategoryList(): List<Category>
   suspend fun getMangaList(
     categoryId: String? = null,
+    limit: Int = 20,
     offset: Int = 0,
     sortCriteria: MangaSortCriteria = MangaSortCriteria.LATEST_UPDATE,
     sortOrder: MangaSortOrder = MangaSortOrder.DESC,

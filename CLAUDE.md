@@ -215,7 +215,7 @@ boundary.
 
 | Pattern                    | When                       | Used by                                                   |
 |----------------------------|----------------------------|-----------------------------------------------------------|
-| Sealed interface           | Primary resource load      | `MangaSectionUiState`, `MangaDetailsUiState`, `CategoriesUiState`, `StatisticsUiState` |
+| Sealed interface           | Primary resource load      | `MangaSectionUiState`, `MangaDetailsUiState`, `CategoryListUiState`, `StatisticsUiState` |
 | Data class                 | Form / fine-grained errors | `LoginUiState`, `RegisterUiState`, `ProfileUiState`       |
 | `BasePaginationUiState<T>` | Infinite scroll            | CategoryDetails, Favorites, History, Search               |
 
@@ -283,6 +283,31 @@ browse the category's Ongoing+Safe default — that was the original bug: it nar
 page so it no longer matched the Home row. Everything else (pagination/sort/filter machinery) is shared
 unchanged. When adding another "browse all manga sorted by X" surface, reuse this route — do **not** add
 a parallel use case/screen.
+
+**Categories screen — genre cover-card grid**: `CategoriesContent` is a `LazyVerticalGrid`
+(`GridCells.Fixed(2)`, full-span type headers via `item(span = { GridItemSpan(maxLineSpan) })` — the
+`VerticalGridMangaList` pattern) grouped by `CategoryTypeValue` (Genre/Theme/Format/Content). Every
+category is a `CategoryCard` built to match the **manga card** for app-wide consistency — same `Card`
+(`shapes.medium`, elevation 2, `surfaceVariant`) + `MangaCoverArt` (so the same `R.drawable.placeholder`
+shows on load/error) + `blurBackground` scrim, sized `fillMaxWidth × 250dp` like `MangaItem` — using its
+**#1 TRENDING cover** as a cropped background + name overlay (the Netflix/Webtoon "genre tile"). Do not
+re-hand-roll the cover/placeholder; reuse `MangaCoverArt`. The screen is for **browsing
+many categories and picking one**, not consuming one — the single-category deep-dive is
+`CategoryDetailsScreen`. (An earlier v1 stacked per-genre carousels/`HorizontalMangaList` here and was
+reverted precisely because each carousel was a mini-CategoryDetails, i.e. it focused on one category at a
+time; if tempted to add manga rows here again, don't — that's what CategoryDetails is for.) Each card
+**lazily** loads its cover when it composes (`LaunchedEffect(category.id) { onLoadCover(id) }`); the VM
+dedups (no-op if Loading/Success, re-fetch on Error). The cover fetch **reuses**
+`GetMangaListUseCase(categoryId, limit = 1, sortCriteria = TRENDING, includeStats = false)` and takes
+`.firstOrNull()?.coverUrl` in the VM — `includeStats = false` skips the `MangaStatsRepository` merge and
+`limit = 1` fetches only the top-trending cover, so it's **one stats-less call, tiny payload** (no
+separate cover use case — `GetMangaListUseCase` grew `limit`/`includeStats` params, defaulting to the
+old behavior so the browse callers are byte-identical). Covers live in a **separate** `categoryCoverStates:
+StateFlow<ImmutableMap<String, CategoryCoverUiState>>` (Loading/not-yet-loaded → `shimmerLoading` over the
+`MangaCoverArt` placeholder; Success(coverUrl) → cropped cover; empty coverUrl or Error → the same
+`R.drawable.placeholder` — a category is **never hidden**, always named + tappable). A card tap → `NavRoute.CategoryDetails(…, initialSortCriteria =
+TRENDING)` so the detail's first item matches the card's cover. `CategoryRepository.getMangaList` gained a
+`limit: Int = 20` param, and `GetMangaListUseCase` gained `limit`/`includeStats` params, for this.
 
 ### State Management
 

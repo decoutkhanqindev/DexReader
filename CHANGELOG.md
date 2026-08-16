@@ -4,6 +4,58 @@ Dated log of notable multi-file / cross-cutting work sessions. Newest entry firs
 
 ---
 
+## 2026-08-04 — Categories redesign v2: genre cover-card grid (supersedes v1 carousels)
+
+v1's per-genre carousels (below) were rejected: each carousel is really "one category + its list" (a
+mini-CategoryDetails), so the screen focused on one category at a time. The Categories screen's job is to
+let users **scan many categories and pick one** — the deep-dive is `CategoryDetailsScreen`. Web research
+(Webtoon's Genres grid, Crunchyroll Manga) + a user pick settled on the **Netflix/Webtoon genre-tile**
+pattern.
+
+`CategoriesContent` is now a **`LazyVerticalGrid`** (2 columns, full-span type headers) grouped by
+Genre/Theme/Format/Content. Every category is a **`CategoryCard`** — a ~3:4 tile with its #1 TRENDING
+cover as a cropped background + scrim + name overlay; tap → `CategoryDetails(TRENDING)` (so the detail's
+first item matches the card). Covers load **lazily per card** (`LaunchedEffect`), VM-deduped, held in a
+separate `categoryCoverStates` flow; empty/error → a named, tappable fallback tile (a category is never
+hidden).
+
+**Efficiency:** a card needs one cover, so `GetMangaListUseCase` gained `limit` + `includeStats` params
+(defaulting to the old behavior, so browse callers are unchanged); the cover fetch calls it with
+`limit = 1, sortCriteria = TRENDING, includeStats = false` and takes the first cover — **1 stats-less
+call, tiny payload** (`includeStats = false` skips the `MangaStatsRepository` merge; also added a `limit`
+param to `CategoryRepository.getMangaList`). New `CategoryCoverUiState`; deleted v1's
+`FeaturedCategorySection`, `CategoryPreviewUiState`, and
+the old chip components (`CategoryTypeSection`/`CategoryTypeHeader`/`CategoryList`); consolidated the
+Categories nav to one card→CategoryDetails callback. Verified on emulator. `compileDebugKotlin` clean.
+
+## 2026-08-04 — Categories screen redesign: "Featured" genre preview rows
+
+The Categories screen was a flat list of chips grouped by type — you couldn't tell what a category held
+without tapping in. Added a **Featured** section at the top: ~12 popular-genre preview rows in the
+Home-section style (header + horizontal manga row + "More »"), over the existing chip browse (now
+labelled **All Categories**).
+
+**No new use case or API** — reuses `GetMangaListUseCase(categoryId, sortCriteria = TRENDING)` (the
+generalized browse from the prior feature) for each preview; `HorizontalMangaList`, `shimmerLoading`, and
+the `MangaListSection` header pattern are all reused. Featured genres are matched from a curated title
+list against the fetched Genre group in `CategoriesViewModel`.
+
+**Lazy + cached per row:** each `FeaturedCategorySection` fires its own fetch via
+`LaunchedEffect(category.id)` only when it scrolls into view; the VM dedups so a row never refetches —
+avoids a 12-call burst against MangaDex's rate limit. Previews are held in a separate
+`categoryPreviews: StateFlow<ImmutableMap<String, CategoryPreviewUiState>>` so one row resolving doesn't
+recopy the tag map. New `CategoryPreviewUiState` (Loading→shimmer skeleton / Success→`HorizontalMangaList`
+/ Error→inline retry; empty hides the row).
+
+**Preview matches its detail** (same lesson as the Home fix): previews sort by TRENDING and "More »" opens
+`CategoryDetails(…, initialSortCriteria = TRENDING)`, so the row's items equal the detail's first page —
+and TRENDING (most-followed) shows the recognizable hits, which is the whole point. Covers open
+MangaDetails (new `CategoriesScreen` nav callback). `CategoriesContent` became a `LazyColumn`; the chip
+components (`CategoryTypeSection`/`CategoryTypeHeader`/`CategoryList`) are unchanged. `compileDebugKotlin`
+clean.
+
+---
+
 ## 2026-08-04 — Drop redundant `remember` around composable callbacks (strong skipping)
 
 The codebase wrapped every ViewModel callback passed into a `*Content` composable in
@@ -91,7 +143,7 @@ documents with no migration tooling in this repo to handle it; confirmed with th
 finalizing the plan and kept as-is.
 
 **Presentation layer:** converted `StatisticsUiState` from a flat data class to a
-`Loading`/`Success`/`Error` sealed interface (matching `CategoriesUiState`, the closest sibling: a
+`Loading`/`Success`/`Error` sealed interface (matching `CategoryListUiState`, the closest sibling: a
 single non-paginated resource load) and rewrote `StatisticsViewModel` to match
 `CategoriesViewModel`'s shape — failures now surface into UI state via `ErrorMapper.toFeatureError()`
 instead of only being Timber-logged, and the 5× per-step debug logging collapsed to one error-path log

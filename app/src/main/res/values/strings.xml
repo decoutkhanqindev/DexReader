@@ -5,7 +5,6 @@
 
   <!-- Navigation / Menu -->
   <string name="back">Back</string>
-  <string name="menu">menu</string>
   <string name="home_menu_item">Home</string>
   <string name="category_menu_item">Categories</string>
   <string name="favorite_menu_item">Favorites</string>
@@ -15,18 +14,10 @@
   <string name="settings_menu_item">Settings</string>
 
   <!-- Common / Shared -->
-  <string name="search">search</string>
-  <string name="clear">clear</string>
-  <string name="retry">Retry</string>
   <string name="ok">OK</string>
   <string name="cancel">Cancel</string>
   <string name="load_more">Load More</string>
-  <string name="move_to_top">move to top</string>
-  <string name="by_author">by %s</string>
   <string name="all_mangas_loaded">All mangas loaded</string>
-  <string name="warning_icon">warning icon</string>
-  <string name="icon_expand_more">icon expand-more</string>
-  <string name="icon_expand_less">icon expand-less</string>
   <string name="decoutkhanqindev">decoutkhanqindev</string>
   <string name="oops_something_went_wrong_please_try_again">Oops, something went wrong. Please try again.</string>
   <string name="no_internet_connection">No internet connection. Please check your connection and try again.</string>
@@ -62,8 +53,6 @@
   <string name="error_email_already_in_use">Email already in use.</string>
   <string name="error_incorrect_password">Incorrect password.</string>
   <string name="error_user_not_found">User not found.</string>
-  <string name="error_unknown">An unexpected error occurred.</string>
-  <string name="error_send_reset_password">Error sending reset password email.</string>
 
   <!-- Splash Screen -->
   <string name="loading">Loading …</string>
@@ -84,11 +73,9 @@
   <string name="category_type_unknown">Unknown</string>
 
   <!-- Category Details Screen -->
-  <string name="sort">Sort</string>
   <string name="sort_options">Sort Options</string>
   <string name="sort_order_ascending">Ascending</string>
   <string name="sort_order_descending">Descending</string>
-  <string name="filter">Filter</string>
   <string name="filter_options">Filter Options</string>
   <string name="filter_status">Status</string>
   <string name="filter_content_rating">Content Rating</string>
@@ -107,14 +94,6 @@
   <string name="manga_details">Manga Details</string>
   <string name="manga_not_available">This manga is no longer available.</string>
   <string name="chapter_not_available">This chapter is no longer available.</string>
-  <string name="author">Author: %s</string>
-  <string name="artist">Artist: %s</string>
-  <string name="year">Year: %s</string>
-  <string name="last_updated">Last updated: %s</string>
-  <string name="content_rating">Content Rating: %s</string>
-  <string name="rating">Rating: ★ %s/10</string>
-  <string name="rating_compact">★ %s</string>
-  <string name="follows">Follows: %s</string>
   <string name="summary">Summary</string>
   <string name="chapters">Chapters</string>
   <string name="all_chapters_loaded">All chapters loaded</string>
@@ -123,7 +102,6 @@
   <string name="can_t_load_next_chapter_page_please_try_again">Can\'t load next chapter page.\nPlease try again.</string>
   <string name="no_languages_available">No languages available</string>
   <string name="language_options">Language Options</string>
-  <string name="last_chapter">(Last chapter)</string>
   <string name="volume_chapter">Vol %1$s - Ch %2$s</string>
   <string name="start_reading">Start Reading</string>
   <string name="continue_reading">Continue Reading</string>
@@ -132,13 +110,8 @@
   <string name="you_must_sign_in_to_favorite_this_manga">You must sign in to favorite this manga.</string>
 
   <!-- Reader Screen -->
-  <string name="exit_fullscreen">exit fullscreen</string>
-  <string name="fullscreen">fullscreen</string>
-  <string name="pre_chapter">pre chapter</string>
-  <string name="next_chapter">next chapter</string>
   <string name="no_chapter_pages_available">No chapter pages available.</string>
   <string name="reader_title">%1$s/%2$s</string>
-  <string name="reset_chapter_progress">reset chapter progress</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">Are you sure you want to reset this chapter\'s progress? It will be removed from your reading history.</string>
   <string name="reset">Reset</string>
   <string name="you_have_reset_this_chapter_s_progress_successfully">You have reset this chapter\'s progress successfully.</string>
@@ -148,7 +121,6 @@
   <string name="search_manga_placeholder">Enter manga title …</string>
   <string name="search_your_manga_here">Search your manga here.</string>
   <string name="sorry_no_manga_found_with_title">Sorry, no manga with title %s was found.\nPlease try again with a different title.</string>
-  <string name="not_found">not found</string>
 
   <!-- Favorites Screen -->
   <string name="please_sign_in_to_view_your_favorites">Please sign in to view your favorites.</string>
@@ -188,9 +160,7 @@
   <string name="dark">Dark Mode</string>
   <string name="light">Light Mode</string>
   <string name="theme">Theme Options</string>
-  <string name="dynamic_color">Dynamic Color</string>
   <string name="are_you_sure_you_want_to_change_the_theme">Are you sure you want to change the theme?</string>
-  <string name="are_you_sure_you_want_to_enable_dynamic_color_theme">Are you sure you want to enable dynamic color theme?</string>
   <string name="change">Change</string>
   <string name="change_theme_failed">Change theme failed. Please try again.</string>
   <string name="theme_change_successful">Theme change successful.</string>

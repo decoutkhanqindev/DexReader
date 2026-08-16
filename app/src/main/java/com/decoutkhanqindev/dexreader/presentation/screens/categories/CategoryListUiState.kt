@@ -10,14 +10,14 @@ import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
 
 @Immutable
-sealed interface CategoriesUiState {
-  data object Loading : CategoriesUiState
+sealed interface CategoryListUiState {
+  data object Loading : CategoryListUiState
 
   @Immutable
-  data class Error(val error: FeatureError = FeatureError.Generic) : CategoriesUiState
+  data class Error(val error: FeatureError = FeatureError.Generic) : CategoryListUiState
 
   @Immutable
   data class Success(
     val categoryMap: ImmutableMap<CategoryTypeValue, ImmutableList<CategoryModel>> = persistentMapOf(),
-  ) : CategoriesUiState
+  ) : CategoryListUiState
 }

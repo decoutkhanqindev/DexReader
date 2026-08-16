@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.decoutkhanqindev.dexreader.presentation.mapper.MenuMapper.toNavRoute
+import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortCriteriaValue
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.forgot_password.ForgotPasswordScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.login.LoginScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.register.RegisterScreen
@@ -110,9 +111,13 @@ fun NavGraph() {
           onNavigateToSearchScreen = {
             navController.navigateTo(NavRoute.Search)
           },
-          onNavigateCategoryDetailScreen = { categoryId, categoryTitle ->
+          onNavigateToCategoryScreen = { categoryId, categoryTitle ->
             navController.navigateTo(
-              NavRoute.CategoryDetails(categoryTitle = categoryTitle, categoryId = categoryId)
+              NavRoute.CategoryDetails(
+                categoryTitle = categoryTitle,
+                categoryId = categoryId,
+                initialSortCriteria = MangaSortCriteriaValue.TRENDING,
+              )
             )
           },
         )

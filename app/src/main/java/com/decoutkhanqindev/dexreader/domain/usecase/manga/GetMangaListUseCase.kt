@@ -17,22 +17,29 @@ class GetMangaListUseCase @Inject constructor(
 ) {
   suspend operator fun invoke(
     categoryId: String? = null,
+    limit: Int = 20,
     offset: Int = 0,
     sortCriteria: MangaSortCriteria = MangaSortCriteria.LATEST_UPDATE,
     sortOrder: MangaSortOrder = MangaSortOrder.DESC,
     statusFilter: List<MangaStatus> = listOf(MangaStatus.ON_GOING),
     contentRatingFilter: List<MangaContentRating> = listOf(MangaContentRating.SAFE),
+    includeStats: Boolean = true,
   ): Result<List<Manga>> = runSuspendResultCatching {
     val list: List<Manga> = categoryRepository.getMangaList(
       categoryId = categoryId,
+      limit = limit,
       offset = offset,
       sortCriteria = sortCriteria,
       sortOrder = sortOrder,
       statusFilter = statusFilter,
       contentRatingFilter = contentRatingFilter,
     )
-    val listIds: List<String> = list.map { it.id }
-    val stats: List<MangaStats> = statsRepository.getMangaStats(listIds)
-    Manga.mergeStats(list, stats)
+    if (!includeStats) {
+      list
+    } else {
+      val listIds: List<String> = list.map { it.id }
+      val stats: List<MangaStats> = statsRepository.getMangaStats(listIds)
+      Manga.mergeStats(list, stats)
+    }
   }
 }
