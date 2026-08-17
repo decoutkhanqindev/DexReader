@@ -2,6 +2,9 @@ package com.decoutkhanqindev.dexreader.presentation.screens.categories.component
 
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -23,6 +26,7 @@ import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoriesContent(
   categoryListUiState: CategoryListUiState,
@@ -30,38 +34,47 @@ fun CategoriesContent(
   modifier: Modifier = Modifier,
   onCategoryClick: (categoryId: String, title: String) -> Unit,
   onLoadCover: (String) -> Unit,
+  onRefresh: () -> Unit,
   onRetry: () -> Unit,
 ) {
   var isShowErrorDialog by remember { mutableStateOf(false) }
+  val pullToRefreshState = rememberPullToRefreshState()
 
   LaunchedEffect(categoryListUiState) {
     if (categoryListUiState is CategoryListUiState.Error) isShowErrorDialog = true
   }
 
-  when (categoryListUiState) {
-    CategoryListUiState.Loading -> LoadingScreen(modifier = modifier)
+  PullToRefreshBox(
+    state = pullToRefreshState,
+    isRefreshing = false,
+    onRefresh = onRefresh,
+    modifier = modifier,
+  ) {
+    when (categoryListUiState) {
+      CategoryListUiState.Loading -> LoadingScreen(modifier = Modifier.fillMaxSize())
 
-    is CategoryListUiState.Error -> {
-      if (isShowErrorDialog) {
-        AlertDialog(
-          title = stringResource(categoryListUiState.error.messageRes),
-          onConfirmClick = {
-            isShowErrorDialog = false
-            onRetry()
-          },
-          onDismissClick = { isShowErrorDialog = false },
+      is CategoryListUiState.Error -> {
+        if (isShowErrorDialog) {
+          AlertDialog(
+            title = stringResource(categoryListUiState.error.messageRes),
+            onConfirmClick = {
+              isShowErrorDialog = false
+              onRetry()
+            },
+            onDismissClick = { isShowErrorDialog = false },
+          )
+        }
+      }
+
+      is CategoryListUiState.Success -> {
+        CategoriesGrid(
+          categoryMap = categoryListUiState.categoryMap,
+          categoryCoverUiState = categoryCoverUiState,
+          modifier = Modifier.fillMaxSize(),
+          onCategoryClick = onCategoryClick,
+          onLoadCover = onLoadCover,
         )
       }
-    }
-
-    is CategoryListUiState.Success -> {
-      CategoriesGrid(
-        categoryMap = categoryListUiState.categoryMap,
-        categoryCoverUiState = categoryCoverUiState,
-        modifier = modifier,
-        onCategoryClick = onCategoryClick,
-        onLoadCover = onLoadCover,
-      )
     }
   }
 }
@@ -93,6 +106,7 @@ private fun CategoriesContentSuccessPreview() {
       modifier = Modifier.fillMaxSize(),
       onCategoryClick = { _, _ -> },
       onLoadCover = {},
+      onRefresh = {},
       onRetry = {},
     )
   }
@@ -108,6 +122,7 @@ private fun CategoriesContentLoadingPreview() {
       modifier = Modifier.fillMaxSize(),
       onCategoryClick = { _, _ -> },
       onLoadCover = {},
+      onRefresh = {},
       onRetry = {},
     )
   }
@@ -123,6 +138,7 @@ private fun CategoriesContentErrorPreview() {
       modifier = Modifier.fillMaxSize(),
       onCategoryClick = { _, _ -> },
       onLoadCover = {},
+      onRefresh = {},
       onRetry = {},
     )
   }

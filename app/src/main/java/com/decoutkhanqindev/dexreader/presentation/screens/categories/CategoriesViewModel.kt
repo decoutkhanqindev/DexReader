@@ -95,6 +95,10 @@ class CategoriesViewModel @Inject constructor(
     }
   }
 
+  fun refresh() {
+    fetchTagList()
+  }
+
   fun retry() {
     if (_categoryListUiState.value is CategoryListUiState.Error) fetchTagList()
   }

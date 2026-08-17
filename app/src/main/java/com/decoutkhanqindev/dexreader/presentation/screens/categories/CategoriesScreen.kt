@@ -40,6 +40,7 @@ fun CategoriesScreen(
       modifier = Modifier.fillMaxSize(),
       onCategoryClick = onNavigateToCategoryScreen,
       onLoadCover = { viewModel.loadCategoryCover(it) },
+      onRefresh = { viewModel.refresh() },
       onRetry = { viewModel.retry() },
     )
   }
