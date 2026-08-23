@@ -4,5 +4,9 @@ import com.decoutkhanqindev.dexreader.domain.entity.category.Category
 import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 
 object CategoryMapper {
-  fun Category.toCategoryModel() = CategoryModel(id = id, title = title)
+  fun Category.toCategoryModel() = CategoryModel(
+    id = id,
+    title = title,
+    description = description ?: Category.DEFAULT_DESCRIPTION,
+  )
 }

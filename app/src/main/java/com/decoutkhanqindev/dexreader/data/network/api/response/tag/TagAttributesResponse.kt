@@ -6,5 +6,6 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class TagAttributesResponse(
   @field:Json(name = "name") val name: Map<String, String>? = null,
+  @field:Json(name = "description") val description: Map<String, String>? = null,
   @field:Json(name = "group") val group: String? = null,
 )

@@ -66,6 +66,11 @@
 -dontwarn kotlinx.serialization.**
 
 # -----------------------------------------------------------------------
+# Navigation Compose type-safe routes
+# -----------------------------------------------------------------------
+-keepnames @kotlinx.serialization.Serializable class com.decoutkhanqindev.dexreader.**
+
+# -----------------------------------------------------------------------
 # Hilt / Dagger — have bundled consumer rules; suppress generated warnings
 # -----------------------------------------------------------------------
 -dontwarn dagger.hilt.internal.**

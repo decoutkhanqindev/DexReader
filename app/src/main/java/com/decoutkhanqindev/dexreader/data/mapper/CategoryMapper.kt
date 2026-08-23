@@ -18,6 +18,8 @@ object CategoryMapper {
       id = id ?: return null,
       title = attributes?.name?.get(LANG_EN)
         ?: attributes?.name?.values?.firstOrNull() ?: Category.DEFAULT_TITLE,
+      description = attributes?.description?.get(LANG_EN)
+        ?: attributes?.description?.values?.firstOrNull(),
       type = attributes?.group?.toCategoryType() ?: Category.DEFAULT_TYPE
     )
 }

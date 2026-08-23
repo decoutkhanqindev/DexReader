@@ -6,4 +6,5 @@ import androidx.compose.runtime.Immutable
 data class CategoryModel(
   val id: String,
   val title: String,
+  val description: String = "No description",
 )
