@@ -1,23 +1,21 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.auth.forgot_password
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.user.SendResetPasswordUseCase
 import com.decoutkhanqindev.dexreader.presentation.error.UserError
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toUserError
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class ForgotPasswordViewModel @Inject constructor(
   private val sendResetPasswordUseCase: SendResetPasswordUseCase,
-) : ViewModel() {
+) : BaseViewModel() {
 
   private val _uiState = MutableStateFlow(ForgotPasswordUiState())
   val uiState: StateFlow<ForgotPasswordUiState> = _uiState.asStateFlow()
@@ -27,7 +25,7 @@ class ForgotPasswordViewModel @Inject constructor(
 
     if (currentUiState.isLoading) return
 
-    viewModelScope.launch {
+    vmLaunch {
       _uiState.update {
         it.copy(
           isLoading = true,

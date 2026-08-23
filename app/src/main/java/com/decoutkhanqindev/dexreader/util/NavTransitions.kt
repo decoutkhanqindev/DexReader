@@ -4,10 +4,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 
 object NavTransitions {
-
-  private const val NAVIGATION_DEBOUNCE_TIME = 300L
-  private var lastNavigateTime = 0L
-
   inline fun <reified Root : Any> NavHostController.navigatePreserveState(route: Any) {
     this.navigateTo(route) {
       popUpTo<Root> { saveState = true }
@@ -27,18 +23,10 @@ object NavTransitions {
     route: Any,
     builder: NavOptionsBuilder.() -> Unit = {},
   ) {
-    tryNavigate { this.navigate(route, builder) }
+    this.navigate(route, builder)
   }
 
   fun NavHostController.navigateBack() {
-    tryNavigate { this.popBackStack() }
-  }
-
-  private fun tryNavigate(action: () -> Unit) {
-    val currentTime = System.currentTimeMillis()
-    if (currentTime - lastNavigateTime >= NAVIGATION_DEBOUNCE_TIME) {
-      action()
-      lastNavigateTime = currentTime
-    }
+    this.popBackStack()
   }
 }

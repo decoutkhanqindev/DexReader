@@ -1,23 +1,21 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.auth.register
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.user.RegisterUseCase
 import com.decoutkhanqindev.dexreader.presentation.error.UserError
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toUserError
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
   private val useCase: RegisterUseCase,
-) : ViewModel() {
+) : BaseViewModel() {
 
   private val _uiState = MutableStateFlow(RegisterUiState())
   val uiState: StateFlow<RegisterUiState> = _uiState.asStateFlow()
@@ -32,7 +30,7 @@ class RegisterViewModel @Inject constructor(
     val currentConfirmPassword = currentUiState.confirmPassword.trim()
     val currentName = currentUiState.name.trim()
 
-    viewModelScope.launch {
+    vmLaunch {
       _uiState.update {
         it.copy(
           isLoading = true,

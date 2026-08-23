@@ -1,13 +1,13 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.search
 
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaSuggestionsUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.SearchMangaUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +25,6 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -33,7 +32,7 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
   private val searchMangaUseCase: SearchMangaUseCase,
   private val getMangaSuggestionsUseCase: GetMangaSuggestionsUseCase,
-) : ViewModel() {
+) : BaseViewModel() {
   private val _suggestionsUiState = MutableStateFlow<SuggestionsUiState>(SuggestionsUiState.Loading)
   val suggestionsUiState: StateFlow<SuggestionsUiState> = _suggestionsUiState.asStateFlow()
 
@@ -73,7 +72,7 @@ class SearchViewModel @Inject constructor(
       )
 
   fun fetchMangaListFirstPage() {
-    viewModelScope.launch {
+    vmLaunch {
       _resultsUiState.value = BasePaginationUiState.FirstPageLoading
 
       searchMangaUseCase(query.value)
@@ -114,7 +113,7 @@ class SearchViewModel @Inject constructor(
   private fun fetchMangaListNextPageInternal(
     currentResultsUiState: BasePaginationUiState.Content<MangaModel>,
   ) {
-    viewModelScope.launch {
+    vmLaunch {
       _resultsUiState.value = currentResultsUiState.copy(nextPageState = BaseNextPageState.LOADING)
 
       val currentMangaList = currentResultsUiState.currentList

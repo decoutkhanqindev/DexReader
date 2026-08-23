@@ -4,10 +4,7 @@ import androidx.compose.runtime.Immutable
 
 @Immutable
 enum class BaseNextPageState {
-  IDLE,
-  LOADING,
-  NO_MORE_ITEMS,
-  ERROR;
+  IDLE, LOADING, NO_MORE_ITEMS, ERROR;
 
   companion object {
     fun fromPageSize(resultSize: Int, pageSize: Int): BaseNextPageState =

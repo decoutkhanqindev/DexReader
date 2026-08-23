@@ -1,23 +1,21 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.statistics
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingStats
 import com.decoutkhanqindev.dexreader.domain.usecase.user.statistics.ObserveStatisticsUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class StatisticsViewModel @Inject constructor(
   private val observeStatisticsUseCase: ObserveStatisticsUseCase,
-) : ViewModel() {
+) : BaseViewModel() {
 
   private val _uiState = MutableStateFlow<StatisticsUiState>(StatisticsUiState.Loading)
   val uiState: StateFlow<StatisticsUiState> = _uiState.asStateFlow()
@@ -33,7 +31,7 @@ class StatisticsViewModel @Inject constructor(
   }
 
   private fun observeStatistics() {
-    viewModelScope.launch {
+    vmLaunch {
       _userId.collectLatest { userId ->
         if (userId == null) {
           _uiState.value = StatisticsUiState.Loading

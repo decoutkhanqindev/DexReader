@@ -1,8 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.categories
 
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.entity.value.category.CategoryType
 import com.decoutkhanqindev.dexreader.domain.entity.value.criteria.MangaSortCriteria
 import com.decoutkhanqindev.dexreader.domain.usecase.category.GetCategoryListUseCase
@@ -10,6 +8,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaListUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.CategoryMapper.toCategoryModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.value.category.CategoryTypeValue
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.PersistentMap
@@ -21,7 +20,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -29,7 +27,7 @@ import javax.inject.Inject
 class CategoriesViewModel @Inject constructor(
   private val getCategoryListUseCase: GetCategoryListUseCase,
   private val getMangaListUseCase: GetMangaListUseCase,
-) : ViewModel() {
+) : BaseViewModel() {
   private val _categoryListUiState = MutableStateFlow<CategoryListUiState>(CategoryListUiState.Loading)
   val categoryListUiState: StateFlow<CategoryListUiState> = _categoryListUiState.asStateFlow()
 
@@ -43,7 +41,7 @@ class CategoriesViewModel @Inject constructor(
   }
 
   private fun fetchTagList() {
-    viewModelScope.launch {
+    vmLaunch {
       _categoryListUiState.value = CategoryListUiState.Loading
 
       getCategoryListUseCase()
@@ -71,7 +69,7 @@ class CategoriesViewModel @Inject constructor(
     val current = _categoryCoverStates.value[categoryId]
     if (current is CategoryCoverUiState.Loading || current is CategoryCoverUiState.Success) return
 
-    viewModelScope.launch {
+    vmLaunch {
       _categoryCoverStates.update { it.put(categoryId, CategoryCoverUiState.Loading) }
 
       getMangaListUseCase(

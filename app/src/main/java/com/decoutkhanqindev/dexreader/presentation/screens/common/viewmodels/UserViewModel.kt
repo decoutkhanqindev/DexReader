@@ -1,12 +1,12 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.entity.user.User
 import com.decoutkhanqindev.dexreader.domain.usecase.user.profile.ObserveCurrentUserUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.profile.ObserveUserProfileUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.UserMapper.toUserModel
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -23,7 +22,7 @@ import javax.inject.Inject
 class UserViewModel @Inject constructor(
   private val observeCurrentUserUseCase: ObserveCurrentUserUseCase,
   private val observeUserProfileUseCase: ObserveUserProfileUseCase,
-) : ViewModel() {
+) : BaseViewModel() {
   private val _isUserLoggedIn = MutableStateFlow(false)
   val isUserLoggedIn: StateFlow<Boolean> = _isUserLoggedIn.asStateFlow()
 
@@ -43,7 +42,7 @@ class UserViewModel @Inject constructor(
   }
 
   private fun observeCurrentUser() {
-    viewModelScope.launch {
+    vmLaunch {
       observeCurrentUserUseCase().collect { result ->
         result
           .onSuccess {
@@ -65,7 +64,7 @@ class UserViewModel @Inject constructor(
 
   private fun observeUserProfile(userId: String) {
     cancelUserProfileJob()
-    userProfileJob = viewModelScope.launch {
+    userProfileJob = vmLaunch {
       observeUserProfileUseCase(userId).collect { result ->
         result
           .onSuccess { _domainUserProfile.value = it }

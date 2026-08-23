@@ -2,8 +2,6 @@ package com.decoutkhanqindev.dexreader.presentation.screens.category_details
 
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaListUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortCriteria
@@ -18,6 +16,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSor
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +26,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -35,7 +33,7 @@ import javax.inject.Inject
 class CategoryDetailsViewModel @Inject constructor(
   savedStateHandle: SavedStateHandle,
   private val getMangaListUseCase: GetMangaListUseCase,
-) : ViewModel() {
+) : BaseViewModel() {
   private val route: NavRoute.CategoryDetails = savedStateHandle.toRoute()
   private val categoryIdFromArg: String? = route.categoryId
   val categoryTitleFromArg: String = route.categoryTitle
@@ -57,7 +55,7 @@ class CategoryDetailsViewModel @Inject constructor(
   }
 
   private fun fetchMangaListByCategoryFirstPage() {
-    viewModelScope.launch {
+    vmLaunch {
       _categoryDetailsUiState.value = BasePaginationUiState.FirstPageLoading
 
       val currentCriteriaUiState = _categoryCriteriaUiState.value
@@ -110,7 +108,7 @@ class CategoryDetailsViewModel @Inject constructor(
   }
 
   private fun fetchMangaListByCategoryNextPageInternal(currentCategoryDetailsUiState: BasePaginationUiState.Content<MangaModel>) {
-    viewModelScope.launch {
+    vmLaunch {
       _categoryDetailsUiState.value =
         currentCategoryDetailsUiState.copy(nextPageState = BaseNextPageState.LOADING)
 

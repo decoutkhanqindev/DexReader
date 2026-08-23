@@ -1,7 +1,5 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.manga_section
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetLatestUpdateMangaListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetNewReleaseMangaListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetTopRatedMangaListUseCase
@@ -10,6 +8,7 @@ import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaSectionValue
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toPersistentList
@@ -18,7 +17,6 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -28,7 +26,7 @@ class MangaSectionViewModel @Inject constructor(
   private val getTrendingMangaListUseCase: GetTrendingMangaListUseCase,
   private val getNewReleaseMangaListUseCase: GetNewReleaseMangaListUseCase,
   private val getCompletedMangaListUseCase: GetTopRatedMangaListUseCase,
-) : ViewModel() {
+) : BaseViewModel() {
   private val _uiState = MutableStateFlow<MangaSectionUiState>(MangaSectionUiState.Loading)
   val uiState: StateFlow<MangaSectionUiState> = _uiState.asStateFlow()
 
@@ -37,7 +35,7 @@ class MangaSectionViewModel @Inject constructor(
   }
 
   fun fetchMangaLists() {
-    viewModelScope.launch {
+    vmLaunch {
       _uiState.value = MangaSectionUiState.Loading
 
       val latestUpdatesMangaListDef = async { getLatestUploadedMangaListUseCase() }

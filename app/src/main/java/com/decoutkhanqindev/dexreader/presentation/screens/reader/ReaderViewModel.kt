@@ -2,8 +2,6 @@ package com.decoutkhanqindev.dexreader.presentation.screens.reader
 
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.decoutkhanqindev.dexreader.domain.entity.manga.Chapter
 import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingHistory
@@ -24,6 +22,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.user.statistics.IncrementRe
 import com.decoutkhanqindev.dexreader.presentation.mapper.ChapterPagesMapper.toChapterPagesModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -36,7 +35,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
@@ -55,7 +53,7 @@ class ReaderViewModel @Inject constructor(
   private val upsertHistoryUseCase: UpsertHistoryUseCase,
   private val removeFromHistoryUseCase: RemoveFromHistoryUseCase,
   private val incrementReadingDurationUseCase: IncrementReadingDurationUseCase,
-) : ViewModel() {
+) : BaseViewModel() {
   private val route: NavRoute.Reader = savedStateHandle.toRoute()
   private val chapterIdFromArg: String = route.chapterId
   private val lastReadPageFromArg: Int = route.lastReadPage
@@ -111,7 +109,7 @@ class ReaderViewModel @Inject constructor(
   private fun startReadingTimer() {
     readingTimerJob?.cancel()
     lastUpdateTime = System.currentTimeMillis()
-    readingTimerJob = viewModelScope.launch {
+    readingTimerJob = vmLaunch {
       while (true) {
         delay(STATS_UPDATE_INTERVAL_MS)
         updateReadingDuration()
@@ -127,14 +125,14 @@ class ReaderViewModel @Inject constructor(
     val userId = _userId.value ?: return
     lastUpdateTime = currentTime
 
-    viewModelScope.launch {
+    vmLaunch {
       incrementReadingDurationUseCase(userId, duration)
         .onFailure { Timber.tag(TAG).e("Failed to update reading duration: ${it.message}") }
     }
   }
 
   private fun observeIsFetchDataDone() {
-    viewModelScope.launch {
+    vmLaunch {
       combine(
         _isFetchChapterDetailsDone,
         _isFetchMangaDetailsDone,
@@ -149,7 +147,7 @@ class ReaderViewModel @Inject constructor(
   }
 
   private fun fetchChapterDetails() {
-    viewModelScope.launch {
+    vmLaunch {
       getChapterDetailsUseCase(chapterId = currentChapterId)
         .onSuccess { chapter ->
           _chapterDetailsUiState.update {
@@ -182,7 +180,7 @@ class ReaderViewModel @Inject constructor(
   }
 
   private fun fetchMangaDetails() {
-    viewModelScope.launch {
+    vmLaunch {
       getMangaDetailsUseCase(mangaId = mangaIdFromArg)
         .onSuccess { manga ->
           mangaTitle = manga.title
@@ -204,7 +202,7 @@ class ReaderViewModel @Inject constructor(
 
     if (chapterIdToFetch.isBlank()) return
 
-    viewModelScope.launch {
+    vmLaunch {
       if (!isPrefetch) _chapterPagesUiState.value = ChapterPagesUiState.Loading
 
       getChapterCacheUseCase(chapterId = chapterIdToFetch)
@@ -224,7 +222,7 @@ class ReaderViewModel @Inject constructor(
               )
             prefetchNextChapterPages()
           }
-          return@launch
+          return@vmLaunch
         }
         .onFailure {
           Timber.tag(this::class.java.simpleName)
@@ -278,7 +276,7 @@ class ReaderViewModel @Inject constructor(
   private fun fetchChapterListFirstPage() {
     if (isFetchingChapterList || chapterLanguage == null) return
 
-    viewModelScope.launch {
+    vmLaunch {
       isFetchingChapterList = true
 
       getChapterListUseCase(
@@ -305,7 +303,7 @@ class ReaderViewModel @Inject constructor(
   private fun fetchChapterListNextPage() {
     if (!hasNextChapterListPage || isFetchingChapterList || chapterLanguage == null) return
 
-    viewModelScope.launch {
+    vmLaunch {
       isFetchingChapterList = true
       getChapterListUseCase(
         mangaId = mangaIdFromArg,
@@ -329,7 +327,7 @@ class ReaderViewModel @Inject constructor(
   }
 
   private fun updateChapterNavState() {
-    viewModelScope.launch {
+    vmLaunch {
       val nav =
         Chapter.determineNavPosition(
           currentChapterId = currentChapterId,
@@ -340,7 +338,7 @@ class ReaderViewModel @Inject constructor(
       if (nav.foundAtIndex == -1) {
         _chapterNavUiState.update { it.copy(canNavigateNext = hasNextChapterListPage) }
         if (hasNextChapterListPage) fetchChapterListNextPage()
-        return@launch
+        return@vmLaunch
       }
 
       _chapterNavUiState.update {
@@ -421,7 +419,7 @@ class ReaderViewModel @Inject constructor(
     )
       return
 
-    viewModelScope.launch {
+    vmLaunch {
       _userId.value?.let { userId ->
         upsertHistoryUseCase(
           userId = userId,
@@ -449,7 +447,7 @@ class ReaderViewModel @Inject constructor(
 
     cancelObserveHistoryJob()
     observeHistoryJob =
-      viewModelScope.launch {
+      vmLaunch {
         _isObserveHistoryDone.value = false
         isObservingReadingHistoryList = true
 
@@ -509,7 +507,7 @@ class ReaderViewModel @Inject constructor(
     if (!hasNextReadingHistoryListPage || isObservingReadingHistoryList) return
 
     observeHistoryJob =
-      viewModelScope.launch {
+      vmLaunch {
         val previousState = _isObserveHistoryDone.value
         _isObserveHistoryDone.value = false
         isObservingReadingHistoryList = true
@@ -577,7 +575,7 @@ class ReaderViewModel @Inject constructor(
         if (currentUiState is ChapterPagesUiState.Success &&
           currentUiState.currentChapterPage != readingHistory.lastReadPage
         ) {
-          viewModelScope.launch {
+          vmLaunch {
             updateChapterPage(
               chapterPage = readingHistory.lastReadPage,
               isFromHistory = isFromHistory
@@ -598,7 +596,7 @@ class ReaderViewModel @Inject constructor(
   }
 
   private fun clearExpiredCache() {
-    viewModelScope.launch {
+    vmLaunch {
       clearExpiredCacheUseCase().onSuccess {
         Timber.tag(this::class.java.simpleName).d("clearExpiredCache success.")
       }.onFailure {
@@ -624,7 +622,7 @@ class ReaderViewModel @Inject constructor(
     if (currentPagesState !is ChapterPagesUiState.Success) return
     val chapterIdAtResetStart = currentChapterId
 
-    resetProgressJob = viewModelScope.launch {
+    resetProgressJob = vmLaunch {
       _resetProgressUiState.update { it.copy(isLoading = true, isSuccess = false, isError = false) }
 
       val userId = _userId.value

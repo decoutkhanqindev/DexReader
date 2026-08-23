@@ -1,11 +1,10 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.favorites
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.ObserveFavoritesUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.FavoriteMangaMapper.toFavoriteMangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.FavoriteMangaModel
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +14,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
@@ -23,7 +21,7 @@ import kotlin.coroutines.cancellation.CancellationException
 @HiltViewModel
 class FavoritesViewModel @Inject constructor(
   private val observeFavoritesUseCase: ObserveFavoritesUseCase,
-) : ViewModel() {
+) : BaseViewModel() {
   private val _uiState =
     MutableStateFlow<BasePaginationUiState<FavoriteMangaModel>>(BasePaginationUiState.FirstPageLoading)
   val uiState: StateFlow<BasePaginationUiState<FavoriteMangaModel>> = _uiState.asStateFlow()
@@ -39,7 +37,7 @@ class FavoritesViewModel @Inject constructor(
   private fun observeFavoritesFirstPage() {
     cancelObserveFavoritesJob()
     observeFavoritesJob =
-      viewModelScope.launch {
+      vmLaunch {
         _uiState.value = BasePaginationUiState.FirstPageLoading
 
         _userId.collectLatest { userId ->
@@ -111,7 +109,7 @@ class FavoritesViewModel @Inject constructor(
     currentUiState: BasePaginationUiState.Content<FavoriteMangaModel>,
   ) {
     observeFavoritesJob =
-      viewModelScope.launch {
+      vmLaunch {
         _uiState.value = currentUiState.copy(nextPageState = BaseNextPageState.LOADING)
 
         val favoriteMangaList = currentUiState.currentList

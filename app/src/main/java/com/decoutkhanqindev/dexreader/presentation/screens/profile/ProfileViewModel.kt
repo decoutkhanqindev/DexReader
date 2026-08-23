@@ -1,18 +1,16 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.profile
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.entity.user.User
 import com.decoutkhanqindev.dexreader.domain.usecase.user.LogoutUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.profile.UpdateUserProfileUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.UserMapper.toUser
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -20,7 +18,7 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
   private val updateUserProfileUseCase: UpdateUserProfileUseCase,
   private val logoutUseCase: LogoutUseCase,
-) : ViewModel() {
+) : BaseViewModel() {
   private val _uiState = MutableStateFlow(ProfileUiState())
   val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
@@ -30,7 +28,7 @@ class ProfileViewModel @Inject constructor(
     val currentUiState = _uiState.value
     if (currentUiState.isLoading) return
 
-    viewModelScope.launch {
+    vmLaunch {
       _uiState.update {
         it.copy(
           isLoading = true,
@@ -77,7 +75,7 @@ class ProfileViewModel @Inject constructor(
   fun logoutUser() {
     if (_uiState.value.isLoading) return
 
-    viewModelScope.launch {
+    vmLaunch {
       _uiState.update {
         it.copy(
           isLoading = true,

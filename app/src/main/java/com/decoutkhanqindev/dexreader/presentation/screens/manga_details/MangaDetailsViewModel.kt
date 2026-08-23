@@ -2,7 +2,6 @@ package com.decoutkhanqindev.dexreader.presentation.screens.manga_details
 
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.decoutkhanqindev.dexreader.domain.entity.manga.Manga
@@ -24,6 +23,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterModel
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,7 +38,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
@@ -52,7 +51,7 @@ class MangaDetailsViewModel @Inject constructor(
   private val removeFromFavoritesUseCase: RemoveFromFavoritesUseCase,
   private val observeIsFavoriteUseCase: ObserveIsFavoriteUseCase,
   private val observeHistoryUseCase: ObserveHistoryUseCase,
-) : ViewModel() {
+) : BaseViewModel() {
   private val mangaIdFromArg: String =
     savedStateHandle.toRoute<NavRoute.MangaDetails>().mangaId
 
@@ -122,7 +121,7 @@ class MangaDetailsViewModel @Inject constructor(
   }
 
   private fun fetchMangaDetails() {
-    viewModelScope.launch {
+    vmLaunch {
       getMangaDetailsUseCase(mangaId = mangaIdFromArg)
         .onSuccess {
           _domainManga.value = it
@@ -137,7 +136,7 @@ class MangaDetailsViewModel @Inject constructor(
   }
 
   private fun fetchFirstChapter() {
-    viewModelScope.launch {
+    vmLaunch {
       getChapterListUseCase(
         mangaId = mangaIdFromArg,
         limit = 1,
@@ -157,7 +156,7 @@ class MangaDetailsViewModel @Inject constructor(
   }
 
   private fun fetchChapterListFirstPage() {
-    viewModelScope.launch {
+    vmLaunch {
       _mangaChaptersUiState.value = BasePaginationUiState.FirstPageLoading
 
       getChapterListUseCase(
@@ -201,7 +200,7 @@ class MangaDetailsViewModel @Inject constructor(
   private fun fetchChapterListNextPageInternal(
     currentMangaChaptersUiState: BasePaginationUiState.Content<ChapterModel>,
   ) {
-    viewModelScope.launch {
+    vmLaunch {
       _mangaChaptersUiState.value =
         currentMangaChaptersUiState.copy(nextPageState = BaseNextPageState.LOADING)
 
@@ -238,7 +237,7 @@ class MangaDetailsViewModel @Inject constructor(
   private fun observeIsFavorite() {
     cancelObserveIsFavoriteJob()
     observeIsFavoriteJob =
-      viewModelScope.launch {
+      vmLaunch {
         _mangaDetailsUiState.collect { currentUiState ->
           if (currentUiState !is MangaDetailsUiState.Success) return@collect
           val mangaId = currentUiState.manga.id
@@ -279,7 +278,7 @@ class MangaDetailsViewModel @Inject constructor(
   fun addToFavorites() {
     val domainManga = _domainManga.value ?: return
 
-    viewModelScope.launch {
+    vmLaunch {
       _userId.value?.let { userId ->
         addToFavoritesUseCase(userId = userId, manga = domainManga)
           .onSuccess { Timber.tag(this::class.java.simpleName).d("adResponseFavorites success") }
@@ -295,7 +294,7 @@ class MangaDetailsViewModel @Inject constructor(
     val currentUiState = _mangaDetailsUiState.value
     if (currentUiState !is MangaDetailsUiState.Success) return
 
-    viewModelScope.launch {
+    vmLaunch {
       val mangaId = currentUiState.manga.id
       _userId.value?.let { userId ->
         removeFromFavoritesUseCase(userId = userId, mangaId = mangaId)
@@ -313,7 +312,7 @@ class MangaDetailsViewModel @Inject constructor(
 
     cancelObserveHistoryJob()
     observeHistoryJob =
-      viewModelScope.launch {
+      vmLaunch {
         isObservingReadingHistoryList = true
 
         _userId.collectLatest { userId ->
@@ -368,7 +367,7 @@ class MangaDetailsViewModel @Inject constructor(
     if (!hasNextReadingHistoryListPage || isObservingReadingHistoryList) return
 
     observeHistoryJob =
-      viewModelScope.launch {
+      vmLaunch {
         isObservingReadingHistoryList = true
 
         _userId.collectLatest { userId ->

@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,10 +56,11 @@ fun Modifier.onClick(
   )
 
   var lastClickTime by remember { mutableLongStateOf(0L) }
+  val latestOnAction by rememberUpdatedState(action)
   val tryClick = {
     val currentTime = System.currentTimeMillis()
     if (currentTime - lastClickTime > 300L) {
-      action()
+      latestOnAction()
       lastClickTime = currentTime
     }
   }

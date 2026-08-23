@@ -1,18 +1,16 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.settings
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.settings.ObserveThemeModeUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.settings.SaveThemeModeUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.ThemeModeMapper.toThemeMode
 import com.decoutkhanqindev.dexreader.presentation.mapper.ThemeModeMapper.toThemeModeValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.settings.ThemeModeValue
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -20,7 +18,7 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
   private val observeThemeModeUseCase: ObserveThemeModeUseCase,
   private val saveThemeModeUseCase: SaveThemeModeUseCase,
-) : ViewModel() {
+) : BaseViewModel() {
   private val _uiState = MutableStateFlow(SettingsUiState())
   val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
 
@@ -29,7 +27,7 @@ class SettingsViewModel @Inject constructor(
   }
 
   private fun observeThemeOption() {
-    viewModelScope.launch {
+    vmLaunch {
       _uiState.update { it.copy(isLoading = true) }
 
       observeThemeModeUseCase().collect { result ->
@@ -64,7 +62,7 @@ class SettingsViewModel @Inject constructor(
     val currentUiState = _uiState.value
     if (currentUiState.isLoading) return
 
-    viewModelScope.launch {
+    vmLaunch {
       _uiState.update {
         it.copy(
           isLoading = true,

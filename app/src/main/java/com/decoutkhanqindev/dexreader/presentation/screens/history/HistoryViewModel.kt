@@ -1,12 +1,11 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.history
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.usecase.user.history.ObserveHistoryUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.history.RemoveFromHistoryUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.ReadingHistoryMapper.toReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +16,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
@@ -28,7 +26,7 @@ class HistoryViewModel
 constructor(
   private val observeHistoryUseCase: ObserveHistoryUseCase,
   private val removeFromHistoryUseCase: RemoveFromHistoryUseCase,
-) : ViewModel() {
+) : BaseViewModel() {
   private val _historyUiState =
     MutableStateFlow<BasePaginationUiState<ReadingHistoryModel>>(BasePaginationUiState.FirstPageLoading)
   val historyUiState: StateFlow<BasePaginationUiState<ReadingHistoryModel>> =
@@ -49,7 +47,7 @@ constructor(
   private fun observeHistoryFirstPage() {
     cancelObserveHistoryJob()
     observeHistoryJob =
-      viewModelScope.launch {
+      vmLaunch {
         _historyUiState.value = BasePaginationUiState.FirstPageLoading
 
         _userId.collectLatest { userId ->
@@ -119,7 +117,7 @@ constructor(
     currentUiState: BasePaginationUiState.Content<ReadingHistoryModel>,
   ) {
     observeHistoryJob =
-      viewModelScope.launch {
+      vmLaunch {
         _historyUiState.value = currentUiState.copy(nextPageState = BaseNextPageState.LOADING)
 
         val currentReadingHistoryList = currentUiState.currentList
@@ -188,7 +186,7 @@ constructor(
       _historyUiState.value !is BasePaginationUiState.Content
     ) return
 
-    viewModelScope.launch {
+    vmLaunch {
       _removeFromHistoryUiState.update {
         it.copy(
           isLoading = true,
