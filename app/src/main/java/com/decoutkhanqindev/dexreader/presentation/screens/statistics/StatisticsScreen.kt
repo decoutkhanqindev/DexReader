@@ -45,6 +45,7 @@ fun StatisticsScreen(
         uiState = uiState,
         modifier = Modifier.fillMaxSize(),
         onRetry = { viewModel.retry() },
+        onRefresh = { viewModel.refresh() },
       )
     } else {
       IdleScreen(

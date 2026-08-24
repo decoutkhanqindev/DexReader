@@ -432,6 +432,14 @@ class MangaDetailsViewModel @Inject constructor(
     fetchChapterListFirstPage()
   }
 
+  fun refresh() {
+    fetchMangaDetails()
+    fetchFirstChapter()
+    fetchChapterListFirstPage()
+    observeIsFavorite()
+    observeHistoryFirstPage()
+  }
+
   fun retry() {
     if (_mangaDetailsUiState.value is MangaDetailsUiState.Error) fetchMangaDetails()
     if (_startedChapterId.value == null) fetchFirstChapter()

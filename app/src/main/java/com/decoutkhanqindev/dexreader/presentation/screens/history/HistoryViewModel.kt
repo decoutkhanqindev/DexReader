@@ -241,6 +241,10 @@ constructor(
     }
   }
 
+  fun refresh() {
+    observeHistoryFirstPage()
+  }
+
   fun retryObserveHistoryFirstPage() {
     if (_historyUiState.value is BasePaginationUiState.FirstPageError) observeHistoryFirstPage()
   }

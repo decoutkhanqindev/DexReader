@@ -11,6 +11,9 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -41,6 +44,7 @@ import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoritesContent(
   uiState: BasePaginationUiState<FavoriteMangaModel>,
@@ -48,44 +52,52 @@ fun FavoritesContent(
   onObserveFavoriteMangaListNextPage: () -> Unit,
   onRetryObserveFavoriteMangaListNextPage: () -> Unit,
   onRetry: () -> Unit,
+  onRefresh: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   var isShowErrorDialog by remember { mutableStateOf(false) }
+  val pullToRefreshState = rememberPullToRefreshState()
 
   LaunchedEffect(uiState) {
     if (uiState is BasePaginationUiState.FirstPageError) isShowErrorDialog = true
   }
 
-  when (uiState) {
-    BasePaginationUiState.FirstPageLoading -> LoadingScreen(modifier = modifier)
+  PullToRefreshBox(
+    state = pullToRefreshState,
+    isRefreshing = false,
+    onRefresh = onRefresh,
+    modifier = modifier,
+  ) {
+    when (uiState) {
+      BasePaginationUiState.FirstPageLoading -> LoadingScreen(modifier = Modifier.fillMaxSize())
 
-    is BasePaginationUiState.FirstPageError -> {
-      if (isShowErrorDialog) {
-        AlertDialog(
-          onConfirmClick = {
-            isShowErrorDialog = false
-            onRetry()
-          },
-          title = stringResource(uiState.error.messageRes),
-          onDismissClick = { isShowErrorDialog = false },
-        )
+      is BasePaginationUiState.FirstPageError -> {
+        if (isShowErrorDialog) {
+          AlertDialog(
+            onConfirmClick = {
+              isShowErrorDialog = false
+              onRetry()
+            },
+            title = stringResource(uiState.error.messageRes),
+            onDismissClick = { isShowErrorDialog = false },
+          )
+        }
       }
-    }
 
-    is BasePaginationUiState.Content<FavoriteMangaModel> -> {
-      val favoriteMangaList = uiState.currentList
-      val nextPageState = uiState.nextPageState
-      val lazyGridState = rememberLazyGridState()
-      val coroutineScope = rememberCoroutineScope()
+      is BasePaginationUiState.Content<FavoriteMangaModel> -> {
+        val favoriteMangaList = uiState.currentList
+        val nextPageState = uiState.nextPageState
+        val lazyGridState = rememberLazyGridState()
+        val coroutineScope = rememberCoroutineScope()
 
-      if (favoriteMangaList.isEmpty()) {
-        IdleScreen(
-          message = stringResource(R.string.you_haven_t_added_any_favorite_manga_yet),
-          modifier = Modifier.fillMaxSize()
-        )
-      } else {
-        Box(modifier = modifier) {
-          LazyVerticalGrid(
+        if (favoriteMangaList.isEmpty()) {
+          IdleScreen(
+            message = stringResource(R.string.you_haven_t_added_any_favorite_manga_yet),
+            modifier = Modifier.fillMaxSize()
+          )
+        } else {
+          Box(modifier = Modifier.fillMaxSize()) {
+            LazyVerticalGrid(
             state = lazyGridState,
             modifier = Modifier.fillMaxSize(),
             columns = GridCells.Fixed(2),
@@ -160,6 +172,7 @@ fun FavoritesContent(
     }
   }
 }
+}
 
 private val previewFavoriteList = persistentListOf(
   FavoriteMangaModel(
@@ -210,6 +223,7 @@ private fun FavoritesContentFirstPageLoadingPreview() {
       onObserveFavoriteMangaListNextPage = {},
       onRetryObserveFavoriteMangaListNextPage = {},
       onRetry = {},
+      onRefresh = {},
       modifier = Modifier.fillMaxSize()
     )
   }
@@ -225,6 +239,7 @@ private fun FavoritesContentFirstPageErrorPreview() {
       onObserveFavoriteMangaListNextPage = {},
       onRetryObserveFavoriteMangaListNextPage = {},
       onRetry = {},
+      onRefresh = {},
       modifier = Modifier.fillMaxSize()
     )
   }
@@ -243,6 +258,7 @@ private fun FavoritesContentEmptyPreview() {
       onObserveFavoriteMangaListNextPage = {},
       onRetryObserveFavoriteMangaListNextPage = {},
       onRetry = {},
+      onRefresh = {},
       modifier = Modifier.fillMaxSize()
     )
   }
@@ -261,6 +277,7 @@ private fun FavoritesContentIdlePreview() {
       onObserveFavoriteMangaListNextPage = {},
       onRetryObserveFavoriteMangaListNextPage = {},
       onRetry = {},
+      onRefresh = {},
       modifier = Modifier.fillMaxSize()
     )
   }
@@ -279,6 +296,7 @@ private fun FavoritesContentNextPageLoadingPreview() {
       onObserveFavoriteMangaListNextPage = {},
       onRetryObserveFavoriteMangaListNextPage = {},
       onRetry = {},
+      onRefresh = {},
       modifier = Modifier.fillMaxSize()
     )
   }
@@ -297,6 +315,7 @@ private fun FavoritesContentNextPageErrorPreview() {
       onObserveFavoriteMangaListNextPage = {},
       onRetryObserveFavoriteMangaListNextPage = {},
       onRetry = {},
+      onRefresh = {},
       modifier = Modifier.fillMaxSize()
     )
   }
@@ -315,6 +334,7 @@ private fun FavoritesContentNoMoreItemsPreview() {
       onObserveFavoriteMangaListNextPage = {},
       onRetryObserveFavoriteMangaListNextPage = {},
       onRetry = {},
+      onRefresh = {},
       modifier = Modifier.fillMaxSize()
     )
   }

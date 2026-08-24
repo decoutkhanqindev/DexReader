@@ -60,6 +60,7 @@ fun HistoryScreen(
         onObserveHistoryNextPage = { viewModel.observeHistoryNextPage() },
         onRetryObserveHistoryNextPage = { viewModel.retryObserveHistoryNextPage() },
         onRetryObserveHistoryFirstPage = { viewModel.retryObserveHistoryFirstPage() },
+        onRefresh = { viewModel.refresh() },
         modifier = Modifier.fillMaxSize()
       )
     } else {

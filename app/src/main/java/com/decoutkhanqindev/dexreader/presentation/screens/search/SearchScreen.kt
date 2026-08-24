@@ -68,6 +68,7 @@ fun SearchScreen(
       onFetchMangaListNextPage = { viewModel.fetchMangaListNextPage() },
       onRetryFetchMangaListNextPage = { viewModel.retryFetchMangaListNextPage() },
       onRetry = { viewModel.retry() },
+      onRefresh = { viewModel.fetchMangaListFirstPage() },
     )
   }
 }

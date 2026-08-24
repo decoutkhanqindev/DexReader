@@ -99,6 +99,7 @@ fun MangaDetailsScreen(
       onRetryFetchChapterListNextPage = { viewModel.retryFetchChapterListNextPage() },
       onRetryFetchChapterListFirstPage = { viewModel.retryFetchChapterListFirstPage() },
       onRetry = { viewModel.retry() },
+      onRefresh = { viewModel.refresh() },
     )
   }
 }

@@ -221,6 +221,23 @@ boundary.
 
 All UiState/UiModel: `@Immutable`. Lists: `ImmutableList<T>` / `persistentListOf()`.
 
+**Pull-to-refresh**: every list/data screen (Home, Categories, CategoryDetails, Search results,
+Favorites, History, Statistics, MangaDetails) wraps its outermost `Box`/root in `*Content.kt` with
+`PullToRefreshBox` (`@OptIn(ExperimentalMaterial3Api::class)`,
+`rememberPullToRefreshState()`, `isRefreshing = false` **hard-coded** — the spinner auto-hides on
+recomposition, it is never wired to a real loading boolean). `onRefresh: () -> Unit` is a required
+(no-default) param threaded from the Screen: reuse the ViewModel's existing public first-page fetch if
+one exists (e.g. `SearchViewModel.fetchMangaListFirstPage()`), otherwise add a public
+`fun refresh() = xxxFirstPage()` wrapper around the private fetch (established by
+`CategoriesViewModel.refresh()`) — never call `retry()`/`retryXxx()` for this, those are conditional
+(only refetch on Error) and won't refresh already-successful data. `MangaDetailsViewModel.refresh()` is
+the one deliberate exception to the "flash to Loading" behavior every other screen inherits for free
+(their first-page fetchers already reset state to `Loading`/`FirstPageLoading` before fetching):
+`fetchMangaDetails()`/`fetchFirstChapter()` don't reset `mangaDetailsUiState`, so refreshing a manga's
+info/summary updates in place without wiping the page's cover-art background — correct for a heavy
+detail screen with a background image, wrong for a plain list. Don't copy MangaDetails' pattern
+elsewhere without the same reasoning.
+
 ### Screen Structure
 
 **Screen split**: `*Screen.kt` (VM injection, `collectAsStateWithLifecycle`) | `*Content.kt` (pure

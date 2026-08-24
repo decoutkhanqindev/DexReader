@@ -49,6 +49,7 @@ fun FavoritesScreen(
         onObserveFavoriteMangaListNextPage = { viewModel.observeFavoritesNextPage() },
         onRetryObserveFavoriteMangaListNextPage = { viewModel.retryObserveFavoritesNextPage() },
         onRetry = { viewModel.retry() },
+        onRefresh = { viewModel.refresh() },
         modifier = Modifier.fillMaxSize()
       )
     } else {

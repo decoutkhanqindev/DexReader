@@ -64,6 +64,10 @@ class StatisticsViewModel @Inject constructor(
     )
   }
 
+  fun refresh() {
+    observeStatistics()
+  }
+
   fun retry() {
     if (_uiState.value is StatisticsUiState.Error) observeStatistics()
   }

@@ -5,8 +5,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -25,61 +28,71 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.states.Loading
 import com.decoutkhanqindev.dexreader.presentation.screens.statistics.StatisticsUiState
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatisticsContent(
   uiState: StatisticsUiState,
   modifier: Modifier = Modifier,
   onRetry: () -> Unit,
+  onRefresh: () -> Unit,
 ) {
   var isShowErrorDialog by remember { mutableStateOf(false) }
+  val pullToRefreshState = rememberPullToRefreshState()
 
   LaunchedEffect(uiState) {
     if (uiState is StatisticsUiState.Error) isShowErrorDialog = true
   }
 
-  when (uiState) {
-    StatisticsUiState.Loading -> LoadingScreen(modifier = modifier)
+  PullToRefreshBox(
+    state = pullToRefreshState,
+    isRefreshing = false,
+    onRefresh = onRefresh,
+    modifier = modifier,
+  ) {
+    when (uiState) {
+      StatisticsUiState.Loading -> LoadingScreen(modifier = Modifier.fillMaxSize())
 
-    is StatisticsUiState.Error -> {
-      if (isShowErrorDialog) {
-        AlertDialog(
-          title = stringResource(uiState.error.messageRes),
-          onConfirmClick = {
-            isShowErrorDialog = false
-            onRetry()
-          },
-          onDismissClick = { isShowErrorDialog = false },
-        )
+      is StatisticsUiState.Error -> {
+        if (isShowErrorDialog) {
+          AlertDialog(
+            title = stringResource(uiState.error.messageRes),
+            onConfirmClick = {
+              isShowErrorDialog = false
+              onRetry()
+            },
+            onDismissClick = { isShowErrorDialog = false },
+          )
+        }
       }
-    }
 
-    is StatisticsUiState.Success -> {
-      Column(
-        modifier = modifier
-          .fillMaxSize()
-          .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-      ) {
-        Text(
-          text = stringResource(R.string.statistics_menu_item),
-          style = MaterialTheme.typography.headlineMedium
-        )
-        Spacer(modifier = Modifier.height(24.dp))
+      is StatisticsUiState.Success -> {
+        Column(
+          modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+          horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+          Text(
+            text = stringResource(R.string.statistics_menu_item),
+            style = MaterialTheme.typography.headlineMedium
+          )
+          Spacer(modifier = Modifier.height(24.dp))
 
-        StatCard(
-          label = stringResource(R.string.daily_reading_time),
-          millis = uiState.dailyTimeMillis
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        StatCard(
-          label = stringResource(R.string.weekly_reading_time),
-          millis = uiState.weeklyTimeMillis
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        StatCard(
-          label = stringResource(R.string.total_reading_time),
-          millis = uiState.totalTimeMillis
-        )
+          StatCard(
+            label = stringResource(R.string.daily_reading_time),
+            millis = uiState.dailyTimeMillis
+          )
+          Spacer(modifier = Modifier.height(16.dp))
+          StatCard(
+            label = stringResource(R.string.weekly_reading_time),
+            millis = uiState.weeklyTimeMillis
+          )
+          Spacer(modifier = Modifier.height(16.dp))
+          StatCard(
+            label = stringResource(R.string.total_reading_time),
+            millis = uiState.totalTimeMillis
+          )
+        }
       }
     }
   }
@@ -92,7 +105,8 @@ private fun StatisticsContentLoadingPreview() {
     StatisticsContent(
       uiState = StatisticsUiState.Loading,
       modifier = Modifier.fillMaxSize(),
-      onRetry = {}
+      onRetry = {},
+      onRefresh = {}
     )
   }
 }
@@ -104,7 +118,8 @@ private fun StatisticsContentErrorPreview() {
     StatisticsContent(
       uiState = StatisticsUiState.Error(FeatureError.NetworkUnavailable),
       modifier = Modifier.fillMaxSize(),
-      onRetry = {}
+      onRetry = {},
+      onRefresh = {}
     )
   }
 }
@@ -120,7 +135,8 @@ private fun StatisticsContentSuccessPreview() {
         totalTimeMillis = 108_000_000L,
       ),
       modifier = Modifier.fillMaxSize(),
-      onRetry = {}
+      onRetry = {},
+      onRefresh = {}
     )
   }
 }

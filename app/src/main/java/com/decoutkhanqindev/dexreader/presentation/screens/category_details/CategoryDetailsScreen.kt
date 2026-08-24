@@ -41,6 +41,7 @@ fun CategoryDetailScreen(
       onFetchMangaListNextPage = { viewModel.fetchMangaListByCategoryNextPage() },
       onRetryFetchMangaListNextPage = { viewModel.retryFetchMangaListByCategoryNextPage() },
       onRetry = { viewModel.retry() },
+      onRefresh = { viewModel.refresh() },
       modifier = Modifier.fillMaxSize()
     )
   }

@@ -4,6 +4,42 @@ Dated log of notable multi-file / cross-cutting work sessions. Newest entry firs
 
 ---
 
+## 2026-08-24 — Pull-to-refresh on every list/data screen
+
+Home and Categories already had `PullToRefreshBox`; added the same pattern to the 6 remaining
+list/data screens for consistency: Search (results only, not suggestions), Favorites, History,
+CategoryDetails, Statistics, MangaDetails (info + chapter list). `ProfileContent` was left alone — it's
+a form, not a list.
+
+Every `*Content.kt` now wraps its outermost root in `PullToRefreshBox` (`isRefreshing = false`
+hard-coded, matching Home/Categories — the spinner isn't wired to a real loading flag) and takes a new
+required `onRefresh: () -> Unit` param threaded from its Screen. Wiring reused each ViewModel's public
+first-page fetch where one existed (`SearchViewModel.fetchMangaListFirstPage()`); everywhere else added
+a public `fun refresh() = xxxFirstPage()` wrapper around the existing private fetch — never the
+existing conditional `retry()`/`retryXxx()` functions, since those only refetch on Error and would
+no-op on pull-to-refresh from a Success state.
+
+Two screens needed real restructuring, not just a wrap: **Favorites** had no outer `Box` around its
+`when`, so one was added; **Statistics** had no root container at all (`when` was function-root,
+each branch set its own `modifier`) — added `PullToRefreshBox` as the new root and normalized every
+branch to `Modifier.fillMaxSize()`.
+
+**Search** — `PullToRefreshBox` has no `contentAlignment` param (unlike the plain `Box` it replaced in
+`ResultsSection`), so the empty-results message needed its own `Box(fillMaxSize, contentAlignment =
+Center)` wrapper to keep its centered position.
+
+**MangaDetails** is the one deliberate exception: `refresh()` calls the same 5 fetches as the existing
+`retry()` but unconditionally, and — unlike every other screen — does *not* flash the page to a
+`LoadingScreen`, because `fetchMangaDetails()`/`fetchFirstChapter()` don't reset `mangaDetailsUiState`
+before fetching. This is correct here specifically: the page has a full-bleed cover-art background
+behind a `LazyColumn`, so wiping to a generic loading screen would hide it and cause a jarring flash on
+every pull-to-refresh. Every other screen's `refresh()` inherits the "flash to Loading" behavior for
+free, since their existing first-page fetchers already reset state before fetching.
+
+`compileDebugKotlin` clean (including a full `--rerun-tasks` pass, not just incremental).
+
+---
+
 ## 2026-08-04 — Categories redesign v2: genre cover-card grid (supersedes v1 carousels)
 
 v1's per-genre carousels (below) were rejected: each carousel is really "one category + its list" (a

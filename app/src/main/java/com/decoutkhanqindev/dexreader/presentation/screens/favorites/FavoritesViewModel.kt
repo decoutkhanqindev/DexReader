@@ -170,6 +170,10 @@ class FavoritesViewModel @Inject constructor(
     _userId.value = userId
   }
 
+  fun refresh() {
+    observeFavoritesFirstPage()
+  }
+
   fun retry() {
     if (_uiState.value is BasePaginationUiState.FirstPageError) observeFavoritesFirstPage()
   }

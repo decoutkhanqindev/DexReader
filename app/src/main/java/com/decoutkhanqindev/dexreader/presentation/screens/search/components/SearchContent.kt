@@ -31,6 +31,7 @@ fun SearchContent(
   onFetchMangaListNextPage: () -> Unit,
   onRetryFetchMangaListNextPage: () -> Unit,
   onRetry: () -> Unit,
+  onRefresh: () -> Unit,
 ) {
   if (query.isEmpty()) {
     IdleScreen(
@@ -57,6 +58,7 @@ fun SearchContent(
       onFetchMangaListNextPage = onFetchMangaListNextPage,
       onRetryFetchMangaListNextPage = onRetryFetchMangaListNextPage,
       onRetry = onRetry,
+      onRefresh = onRefresh,
     )
   }
 }
@@ -77,6 +79,7 @@ private fun SearchContentIdlePreview() {
       onFetchMangaListNextPage = {},
       onRetryFetchMangaListNextPage = {},
       onRetry = {},
+      onRefresh = {},
     )
   }
 }
@@ -101,6 +104,7 @@ private fun SearchContentSuggestionsPreview() {
       onFetchMangaListNextPage = {},
       onRetryFetchMangaListNextPage = {},
       onRetry = {},
+      onRefresh = {},
     )
   }
 }
@@ -121,6 +125,7 @@ private fun SearchContentResultsPreview() {
       onFetchMangaListNextPage = {},
       onRetryFetchMangaListNextPage = {},
       onRetry = {},
+      onRefresh = {},
     )
   }
 }

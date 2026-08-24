@@ -2,6 +2,9 @@ package com.decoutkhanqindev.dexreader.presentation.screens.history.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
@@ -26,6 +29,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.history.RemoveFromHis
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.persistentListOf
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryContent(
   historyUiState: BasePaginationUiState<ReadingHistoryModel>,
@@ -42,6 +46,7 @@ fun HistoryContent(
   onObserveHistoryNextPage: () -> Unit,
   onRetryObserveHistoryNextPage: () -> Unit,
   onRetryObserveHistoryFirstPage: () -> Unit,
+  onRefresh: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   var selectedMangaId by remember { mutableStateOf<String?>(null) }
@@ -52,6 +57,7 @@ fun HistoryContent(
   var isShowRemoveFromHistoryErrorDialog by remember { mutableStateOf(false) }
   var isShowRemoveFromHistorySuccessDialog by remember { mutableStateOf(false) }
   var isShowHistoryErrorDialog by remember { mutableStateOf(false) }
+  val pullToRefreshState = rememberPullToRefreshState()
 
   LaunchedEffect(removeFromHistoryUiState.isError) {
     if (removeFromHistoryUiState.isError) isShowRemoveFromHistoryErrorDialog = true
@@ -65,7 +71,12 @@ fun HistoryContent(
     if (historyUiState is BasePaginationUiState.FirstPageError) isShowHistoryErrorDialog = true
   }
 
-  Box(modifier = modifier) {
+  PullToRefreshBox(
+    state = pullToRefreshState,
+    isRefreshing = false,
+    onRefresh = onRefresh,
+    modifier = modifier,
+  ) {
     when (historyUiState) {
       BasePaginationUiState.FirstPageLoading -> LoadingScreen(modifier = Modifier.fillMaxSize())
 
@@ -233,6 +244,7 @@ private fun HistoryContentFirstPageLoadingPreview() {
       onObserveHistoryNextPage = {},
       onRetryObserveHistoryNextPage = {},
       onRetryObserveHistoryFirstPage = {},
+      onRefresh = {},
       modifier = Modifier.fillMaxSize()
     )
   }
@@ -253,6 +265,7 @@ private fun HistoryContentFirstPageErrorPreview() {
       onObserveHistoryNextPage = {},
       onRetryObserveHistoryNextPage = {},
       onRetryObserveHistoryFirstPage = {},
+      onRefresh = {},
       modifier = Modifier.fillMaxSize()
     )
   }
@@ -276,6 +289,7 @@ private fun HistoryContentEmptyPreview() {
       onObserveHistoryNextPage = {},
       onRetryObserveHistoryNextPage = {},
       onRetryObserveHistoryFirstPage = {},
+      onRefresh = {},
       modifier = Modifier.fillMaxSize()
     )
   }
@@ -299,6 +313,7 @@ private fun HistoryContentWithItemsPreview() {
       onObserveHistoryNextPage = {},
       onRetryObserveHistoryNextPage = {},
       onRetryObserveHistoryFirstPage = {},
+      onRefresh = {},
       modifier = Modifier.fillMaxSize()
     )
   }
@@ -325,6 +340,7 @@ private fun HistoryContentRemoveLoadingPreview() {
       onObserveHistoryNextPage = {},
       onRetryObserveHistoryNextPage = {},
       onRetryObserveHistoryFirstPage = {},
+      onRefresh = {},
       modifier = Modifier.fillMaxSize()
     )
   }
@@ -348,6 +364,7 @@ private fun HistoryContentRemoveSuccessPreview() {
       onObserveHistoryNextPage = {},
       onRetryObserveHistoryNextPage = {},
       onRetryObserveHistoryFirstPage = {},
+      onRefresh = {},
       modifier = Modifier.fillMaxSize()
     )
   }

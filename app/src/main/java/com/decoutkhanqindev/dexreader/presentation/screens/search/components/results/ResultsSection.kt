@@ -5,6 +5,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -35,6 +38,7 @@ import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResultsSection(
   query: String,
@@ -44,19 +48,23 @@ fun ResultsSection(
   onFetchMangaListNextPage: () -> Unit,
   onRetryFetchMangaListNextPage: () -> Unit,
   onRetry: () -> Unit,
+  onRefresh: () -> Unit,
 ) {
   val gridState = rememberLazyGridState()
   val coroutineScope = rememberCoroutineScope()
   val mangaListSize = (resultsUiState as? BasePaginationUiState.Content)?.currentList?.size ?: 0
   var isShowErrorDialog by remember { mutableStateOf(false) }
+  val pullToRefreshState = rememberPullToRefreshState()
 
   LaunchedEffect(resultsUiState) {
     if (resultsUiState is BasePaginationUiState.FirstPageError) isShowErrorDialog = true
   }
 
-  Box(
+  PullToRefreshBox(
+    state = pullToRefreshState,
+    isRefreshing = false,
+    onRefresh = onRefresh,
     modifier = modifier,
-    contentAlignment = Alignment.Center
   ) {
     when (resultsUiState) {
       BasePaginationUiState.FirstPageLoading -> LoadingScreen(modifier = Modifier.fillMaxSize())
@@ -79,10 +87,15 @@ fun ResultsSection(
         val nextPageState = resultsUiState.nextPageState
 
         if (mangaList.isEmpty()) {
-          ResultsNotFoundMessage(
-            message = stringResource(R.string.sorry_no_manga_found_with_title, query),
-            modifier = Modifier.fillMaxWidth()
-          )
+          Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+          ) {
+            ResultsNotFoundMessage(
+              message = stringResource(R.string.sorry_no_manga_found_with_title, query),
+              modifier = Modifier.fillMaxWidth()
+            )
+          }
         } else {
           VerticalGridMangaList(
             gridState = { gridState },
@@ -166,6 +179,7 @@ private fun ResultsSectionLoadingPreview() {
       onFetchMangaListNextPage = {},
       onRetryFetchMangaListNextPage = {},
       onRetry = {},
+      onRefresh = {},
     )
   }
 }
@@ -182,6 +196,7 @@ private fun ResultsSectionErrorPreview() {
       onFetchMangaListNextPage = {},
       onRetryFetchMangaListNextPage = {},
       onRetry = {},
+      onRefresh = {},
     )
   }
 }
@@ -198,6 +213,7 @@ private fun ResultsSectionEmptyPreview() {
       onFetchMangaListNextPage = {},
       onRetryFetchMangaListNextPage = {},
       onRetry = {},
+      onRefresh = {},
     )
   }
 }
@@ -217,6 +233,7 @@ private fun ResultsSectionContentIdlePreview() {
       onFetchMangaListNextPage = {},
       onRetryFetchMangaListNextPage = {},
       onRetry = {},
+      onRefresh = {},
     )
   }
 }
@@ -236,6 +253,7 @@ private fun ResultsSectionContentLoadingNextPagePreview() {
       onFetchMangaListNextPage = {},
       onRetryFetchMangaListNextPage = {},
       onRetry = {},
+      onRefresh = {},
     )
   }
 }
@@ -255,6 +273,7 @@ private fun ResultsSectionContentNextPageErrorPreview() {
       onFetchMangaListNextPage = {},
       onRetryFetchMangaListNextPage = {},
       onRetry = {},
+      onRefresh = {},
     )
   }
 }
@@ -274,6 +293,7 @@ private fun ResultsSectionContentNoMoreItemsPreview() {
       onFetchMangaListNextPage = {},
       onRetryFetchMangaListNextPage = {},
       onRetry = {},
+      onRefresh = {},
     )
   }
 }

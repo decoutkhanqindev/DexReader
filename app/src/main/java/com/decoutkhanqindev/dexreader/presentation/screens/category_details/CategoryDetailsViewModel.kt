@@ -179,6 +179,10 @@ class CategoryDetailsViewModel @Inject constructor(
     fetchMangaListByCategoryFirstPage()
   }
 
+  fun refresh() {
+    fetchMangaListByCategoryFirstPage()
+  }
+
   fun retry() {
     if (_categoryDetailsUiState.value is BasePaginationUiState.FirstPageError)
       fetchMangaListByCategoryFirstPage()

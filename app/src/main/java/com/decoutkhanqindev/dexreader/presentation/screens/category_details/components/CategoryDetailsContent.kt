@@ -6,6 +6,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -46,6 +49,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryDetailsContent(
   detailsUiState: BasePaginationUiState<MangaModel>,
@@ -63,6 +67,7 @@ fun CategoryDetailsContent(
   onFetchMangaListNextPage: () -> Unit,
   onRetryFetchMangaListNextPage: () -> Unit,
   onRetry: () -> Unit,
+  onRefresh: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   val gridState = rememberLazyGridState()
@@ -70,12 +75,18 @@ fun CategoryDetailsContent(
   var isShowErrorDialog by remember { mutableStateOf(false) }
   var isShowSortBottomSheet by remember { mutableStateOf(false) }
   var isShowFilterBottomSheet by remember { mutableStateOf(false) }
+  val pullToRefreshState = rememberPullToRefreshState()
 
   LaunchedEffect(detailsUiState) {
     if (detailsUiState is BasePaginationUiState.FirstPageError) isShowErrorDialog = true
   }
 
-  Box(modifier = modifier) {
+  PullToRefreshBox(
+    state = pullToRefreshState,
+    isRefreshing = false,
+    onRefresh = onRefresh,
+    modifier = modifier,
+  ) {
     when (detailsUiState) {
       BasePaginationUiState.FirstPageLoading -> LoadingScreen(modifier = Modifier.fillMaxSize())
 
@@ -234,6 +245,7 @@ private fun CategoryDetailsContentFirstPageLoadingPreview() {
       onFetchMangaListNextPage = {},
       onRetryFetchMangaListNextPage = {},
       onRetry = {},
+      onRefresh = {},
       modifier = Modifier.fillMaxSize()
     )
   }
@@ -253,6 +265,7 @@ private fun CategoryDetailsContentFirstPageErrorPreview() {
       onFetchMangaListNextPage = {},
       onRetryFetchMangaListNextPage = {},
       onRetry = {},
+      onRefresh = {},
       modifier = Modifier.fillMaxSize()
     )
   }
@@ -275,6 +288,7 @@ private fun CategoryDetailsContentIdlePreview() {
       onFetchMangaListNextPage = {},
       onRetryFetchMangaListNextPage = {},
       onRetry = {},
+      onRefresh = {},
       modifier = Modifier.fillMaxSize()
     )
   }
@@ -297,6 +311,7 @@ private fun CategoryDetailsContentNextPageLoadingPreview() {
       onFetchMangaListNextPage = {},
       onRetryFetchMangaListNextPage = {},
       onRetry = {},
+      onRefresh = {},
       modifier = Modifier.fillMaxSize()
     )
   }
@@ -319,6 +334,7 @@ private fun CategoryDetailsContentNextPageErrorPreview() {
       onFetchMangaListNextPage = {},
       onRetryFetchMangaListNextPage = {},
       onRetry = {},
+      onRefresh = {},
       modifier = Modifier.fillMaxSize()
     )
   }
@@ -341,6 +357,7 @@ private fun CategoryDetailsContentNoMoreItemsPreview() {
       onFetchMangaListNextPage = {},
       onRetryFetchMangaListNextPage = {},
       onRetry = {},
+      onRefresh = {},
       modifier = Modifier.fillMaxSize()
     )
   }

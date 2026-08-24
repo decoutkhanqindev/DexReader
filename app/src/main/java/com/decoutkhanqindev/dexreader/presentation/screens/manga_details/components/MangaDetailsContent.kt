@@ -11,10 +11,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -57,6 +60,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MangaDetailsContent(
   mangaDetailsUiState: MangaDetailsUiState,
@@ -89,16 +93,23 @@ fun MangaDetailsContent(
   onRetryFetchChapterListNextPage: () -> Unit,
   onRetryFetchChapterListFirstPage: () -> Unit,
   onRetry: () -> Unit,
+  onRefresh: () -> Unit,
 ) {
   val lazyListState = rememberLazyListState()
   val coroutineScope = rememberCoroutineScope()
   var isShowErrorDialog by remember { mutableStateOf(false) }
+  val pullToRefreshState = rememberPullToRefreshState()
 
   LaunchedEffect(mangaDetailsUiState) {
     if (mangaDetailsUiState is MangaDetailsUiState.Error) isShowErrorDialog = true
   }
 
-  Box(modifier = modifier) {
+  PullToRefreshBox(
+    state = pullToRefreshState,
+    isRefreshing = false,
+    onRefresh = onRefresh,
+    modifier = modifier,
+  ) {
     when (mangaDetailsUiState) {
       MangaDetailsUiState.Loading -> LoadingScreen(modifier = Modifier.fillMaxSize())
 
@@ -357,7 +368,8 @@ private fun MangaDetailsContentLoadingPreview() {
       onFetchChapterListNextPage = {},
       onRetryFetchChapterListNextPage = {},
       onRetryFetchChapterListFirstPage = {},
-      onRetry = {}
+      onRetry = {},
+      onRefresh = {}
     )
   }
 }
@@ -381,7 +393,8 @@ private fun MangaDetailsContentErrorPreview() {
       onFetchChapterListNextPage = {},
       onRetryFetchChapterListNextPage = {},
       onRetryFetchChapterListFirstPage = {},
-      onRetry = {}
+      onRetry = {},
+      onRefresh = {}
     )
   }
 }
@@ -429,7 +442,8 @@ private fun MangaDetailsContentSuccessPreview() {
       onFetchChapterListNextPage = {},
       onRetryFetchChapterListNextPage = {},
       onRetryFetchChapterListFirstPage = {},
-      onRetry = {}
+      onRetry = {},
+      onRefresh = {}
     )
   }
 }
