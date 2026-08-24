@@ -3,8 +3,12 @@ package com.decoutkhanqindev.dexreader.presentation.screens.statistics
 import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingStats
 import com.decoutkhanqindev.dexreader.domain.usecase.user.statistics.ObserveStatisticsUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
+import com.decoutkhanqindev.dexreader.presentation.mapper.StatisticsMapper.toMonthlyChartPoint
+import com.decoutkhanqindev.dexreader.presentation.mapper.StatisticsMapper.toWeeklyChartPoint
+import com.decoutkhanqindev.dexreader.presentation.mapper.StatisticsMapper.toYearlyChartPoint
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -54,13 +58,20 @@ class StatisticsViewModel @Inject constructor(
 
   private fun calculateStats(statsList: List<ReadingStats>) {
     val today = ReadingStats.getCurrentDate()
+    val weeklyStats = ReadingStats.buildWeeklyBreakdown(statsList)
+    val monthlyStats = ReadingStats.buildMonthlyBreakdown(statsList)
+    val yearlyStats = ReadingStats.buildYearlyBreakdown(statsList)
     val dailyTime = statsList.find { it.date == today }?.durationMillis ?: 0L
+    val weeklyTime = weeklyStats.sumOf { it.durationMillis }
     val totalTime = statsList.sumOf { it.durationMillis }
 
     _uiState.value = StatisticsUiState.Success(
       dailyTimeMillis = dailyTime,
-      weeklyTimeMillis = totalTime,
-      totalTimeMillis = totalTime
+      weeklyTimeMillis = weeklyTime,
+      totalTimeMillis = totalTime,
+      weeklyBreakdown = weeklyStats.map { it.toWeeklyChartPoint() }.toImmutableList(),
+      monthlyBreakdown = monthlyStats.map { it.toMonthlyChartPoint() }.toImmutableList(),
+      yearlyBreakdown = yearlyStats.map { it.toYearlyChartPoint() }.toImmutableList(),
     )
   }
 

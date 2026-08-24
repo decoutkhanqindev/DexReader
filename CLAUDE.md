@@ -76,6 +76,24 @@ exceptions are mapped at the data boundary.
 - `ReadingHistory.findContinueTarget(list): ReadingHistory?` — first unfinished session
 - `ReadingHistory.findInitialPage(chapterId, navChapterId, navPage, list): Int`
 - `User.validateEmail/Password/ConfirmPassword/Name()` — throw `ValidationException` subtypes
+- `ReadingStats.getLastDates(days = 7): List<String>` — last `days` dates (`yyyy-MM-dd`), oldest→newest
+- `ReadingStats.buildWeeklyBreakdown(list): List<ReadingStats>` — zero-fills missing dates in the last
+  7 days so chart data always has exactly 7 points
+- `ReadingStats.buildMonthlyBreakdown(list): List<MonthlyReadingStat>` — groups the **entire** stats
+  history by `yyyy-MM` (string-prefix grouping on `date`, no date parsing needed since the format is
+  fixed), summed and sorted oldest→newest; returns a single zero-duration entry for the current month
+  if `list` is empty, since `ColumnCartesianLayerModel` requires at least one series entry
+- `ReadingStats.buildYearlyBreakdown(list): List<YearlyReadingStat>` — same shape/reasoning as
+  `buildMonthlyBreakdown`, just grouped by `yyyy` (4-char date prefix) instead of `yyyy-MM`. All three
+  breakdowns (`weekly`/`monthly`/`yearly`) are pure client-side aggregation over the same single
+  `ObserveStatisticsUseCase` result — deliberately **not** separate persisted Firestore rollup
+  documents. A persisted-rollup design (new collection, new `observe*` use case, new security rules)
+  was drafted and even implemented for yearly before being reverted: it solves a read-cost problem
+  (`observeStatistics` is a live, unbounded, unpaginated query over every daily doc a user has ever
+  created) that doesn't actually exist yet at this app's usage scale, at the cost of a second Firestore
+  collection + a batched atomic write + rules to keep in sync. Revisit that design specifically if/when
+  the unbounded daily read becomes an actual measured cost — don't reach for it by default just because
+  a new time-bucketed chart is being added.
 
 **UNKNOWN rule**: never discard unrecognized API values — map to `UNKNOWN` enum entry.
 **Default params**: repository interfaces define defaults; impls must not redefine them.
@@ -237,6 +255,45 @@ the one deliberate exception to the "flash to Loading" behavior every other scre
 info/summary updates in place without wiping the page's cover-art background — correct for a heavy
 detail screen with a background image, wrong for a plain list. Don't copy MangaDetails' pattern
 elsewhere without the same reasoning.
+
+**Charts**: use [Vico](https://github.com/patrykandpatrick/vico) (`com.patrykandpatrick.vico:compose-m3`,
+version pinned in `gradle/libs.versions.toml`) — **not** a hand-rolled Canvas chart, and never a plain
+text/number card once a chart can represent the same data (Statistics screen used to show 3 text
+`StatCard`s; all 3 were removed and replaced by 2 charts — see below). This artifact requires
+`compileSdk 37` (bumped from 36 specifically for this — the Android platform 37 SDK must be installed
+locally); AGP 9.1.0 only officially tests up to compileSdk 36.1 and prints an advisory "unsupported
+compile SDK" warning at build time, which is expected and non-fatal, not a real error.
+
+Chart composables live in `presentation/screens/<screen>/components/`, and should be **generic over a
+reusable chart-point presentation model**, not duplicated per time granularity — established by
+`ReadingActivityChart(dataPoints: ImmutableList<ReadingChartPointModel>)` in `statistics/`, which
+renders the weekly (7-day), monthly (`yyyy-MM`), **and** yearly (`yyyy`) charts off the same
+composable, just fed different `dataPoints`. `ReadingChartPointModel(id, label, minutes)` is
+intentionally generic (`label` is a weekday abbreviation for the weekly chart, a month/year label for
+the other two) rather than three near-identical models — reuse this shape (or the same pattern) for any future
+"one bar per bucket of time" chart rather than hand-rolling a new one-off model per screen.
+
+Data flows in via `CartesianChartModelProducer` +
+`LaunchedEffect(key) { modelProducer.runTransaction { columnModel { series(...) } } }` — `key` must be
+the presentation-model list driving the chart (re-runs the transaction whenever data changes, mirrors
+the `remember(key)` convention used elsewhere for derived state). Wrap the `CartesianChartHost` in
+`ProvideVicoTheme(rememberM3VicoTheme())` so the chart's colors track `MaterialTheme.colorScheme`
+(light/dark) automatically instead of hardcoding chart colors. Domain data for a chart must go through
+the same domain→presentation-model mapping as everything else (`presentation/mapper/`) — never feed a
+domain entity's raw fields straight into `columnModel`/`lineModel`. A `ColumnCartesianLayerModel`
+series can never be empty (`ColumnCartesianLayerModel.kt` throws `require(entries.isNotEmpty())`), so
+any aggregation feeding a chart must guarantee at least one data point even when the underlying list is
+empty (`ReadingStats.buildMonthlyBreakdown` returns a single zero-duration entry for the current
+period rather than an empty list — same reasoning `buildWeeklyBreakdown` already applied by always
+returning exactly 7 zero-filled entries).
+
+A chart doesn't have to fully replace every number — `StatisticsContent` keeps small `labelMedium`
+caption lines (e.g. "Daily Reading Time: 12 min") above each chart for the aggregate figures a bar
+chart doesn't make instantly readable (today's total, this week's total, all-time total), instead of
+wrapping those numbers back in a boxed `Card` — the distinction that matters is "boxed stat card as the
+primary content" (removed) vs. "plain caption text supporting a chart" (kept, and is good chart
+accessibility practice per the `data-table`-alternative guidance — a chart should have a readable
+numeric fallback nearby).
 
 ### Screen Structure
 

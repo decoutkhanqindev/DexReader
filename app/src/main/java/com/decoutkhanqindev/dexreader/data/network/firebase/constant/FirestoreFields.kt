@@ -4,4 +4,6 @@ object FirestoreFields {
   const val CREATED_AT = "createdAt"
   const val MANGA_ID = "manga_id"
   const val USER_ID = "user_id"
+  const val DATE = "date"
+  const val DURATION_MILLIS = "duration_millis"
 }

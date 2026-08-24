@@ -143,6 +143,9 @@
   <string name="total_reading_time">Total Reading Time</string>
   <string name="minutes_suffix">%d min</string>
   <string name="hours_suffix">%d h</string>
+  <string name="weekly_reading_activity">Weekly Reading Activity</string>
+  <string name="monthly_reading_activity">Monthly Reading Activity</string>
+  <string name="yearly_reading_activity">Yearly Reading Activity</string>
 
   <!-- Profile Screen -->
   <string name="please_sign_in_to_view_your_profile">Please sign in to view your profile.</string>

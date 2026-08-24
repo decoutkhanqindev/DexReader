@@ -2,10 +2,11 @@ package com.decoutkhanqindev.dexreader.data.network.firebase.firestore.statistic
 
 import com.decoutkhanqindev.dexreader.data.network.firebase.constant.FirestoreCollections
 import com.decoutkhanqindev.dexreader.data.network.firebase.constant.FirestoreFields
-import com.decoutkhanqindev.dexreader.data.network.firebase.dto.request.ReadingStatsRequest
 import com.decoutkhanqindev.dexreader.data.network.firebase.dto.response.ReadingStatsResponse
 import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingStats
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -21,21 +22,17 @@ class FirebaseStatisticsFirestoreSourceImpl @Inject constructor(
     date: String,
     durationMillis: Long,
   ) {
-    val statsId = ReadingStats.generateId(userId, date)
     val documentRef = firebaseFirestore.collection(FirestoreCollections.STATISTICS)
-      .document(statsId)
+      .document(ReadingStats.generateId(userId, date))
 
-    val existingDurationMillis = documentRef.get().await()
-      .toObject(ReadingStatsResponse::class.java)
-      ?.durationMillis ?: 0L
-
-    val request = ReadingStatsRequest(
-      id = statsId,
-      userId = userId,
-      date = date,
-      durationMillis = existingDurationMillis + durationMillis,
-    )
-    documentRef.set(request).await()
+    documentRef.set(
+      mapOf(
+        FirestoreFields.USER_ID to userId,
+        FirestoreFields.DATE to date,
+        FirestoreFields.DURATION_MILLIS to FieldValue.increment(durationMillis),
+      ),
+      SetOptions.merge(),
+    ).await()
   }
 
   override fun observeStatistics(userId: String): Flow<List<ReadingStatsResponse>> = callbackFlow {

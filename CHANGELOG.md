@@ -4,6 +4,73 @@ Dated log of notable multi-file / cross-cutting work sessions. Newest entry firs
 
 ---
 
+## 2026-08-24 — Yearly reading-activity chart + non-atomic increment bugfix
+
+Added a 3rd chart to Statistics: `ReadingStats.buildYearlyBreakdown(list): List<YearlyReadingStat>`
+(new companion on `ReadingStats`, same shape/reasoning as `buildMonthlyBreakdown` — groups the entire
+stats history by 4-char `yyyy` date-prefix instead of 7-char `yyyy-MM`) feeds a 3rd
+`ReadingActivityChart` call in `StatisticsContent`, with the "Total Reading Time" caption moved from
+under the monthly chart to under the yearly one (a grand-total figure reads more naturally next to the
+most macro chart). `YearlyReadingStat(year, durationMillis)` (domain) and `StatisticsMapper.
+toYearlyChartPoint()` (presentation) are the only new files — everything else is pure client-side
+aggregation over the exact same `ObserveStatisticsUseCase` result the weekly/monthly charts already use.
+
+**A persisted-Firestore-rollup design (new `/statistics_yearly/{userId}_{year}` collection, a 2nd
+`observe*` use case, a batched atomic write, new security rules) was fully implemented and then
+reverted** after direct pushback questioning why a client-side aggregation (like monthly) wasn't
+enough — it wasn't necessary at this app's usage scale, and added a second Firestore collection +
+rules to keep in sync for no problem that currently exists. Revisit that design specifically if
+`observeStatistics`'s unbounded/unpaginated full-history read ever becomes an actual measured cost, not
+by default. See the corresponding CLAUDE.md note under "Business logic in companions" for the full
+reasoning trail — worth reading before reaching for a persisted rollup on the next time-bucketed chart.
+
+Also fixed a real bug found while tracing that write path: `FirebaseStatisticsFirestoreSourceImpl.
+incrementReadingDuration` (called every 15s by `ReaderViewModel`'s reading timer) was doing a
+**read-then-write** (`.get()` the existing doc, add the delta in Kotlin, `.set()` a full new
+`ReadingStatsRequest`) — not atomic (races under concurrent writers), and cost 1 read + 1 write per
+tick instead of 1 write. Switched to a real `FieldValue.increment()` partial write via
+`SetOptions.merge()` on a raw `Map<String, Any>` — this is what CLAUDE.md's "Firestore paths" section
+already documented as the design intent, but the code never actually did it until now.
+`ReadingStatsRequest.kt` (the now-fully-unused typed write DTO) was deleted; `FirestoreFields` gained
+`DATE`/`DURATION_MILLIS` constants for the map keys (previously only inline `@PropertyName` string
+literals on the DTOs, per CLAUDE.md's now-corrected claim that map keys go through `FirestoreFields`).
+
+## 2026-08-24 — Statistics screen redesigned with Vico charts
+
+Replaced the Statistics screen's 3 plain text `StatCard`s entirely with 2 charts using
+[Vico](https://github.com/patrykandpatrick/vico) (`com.patrykandpatrick.vico:compose-m3:3.3.0` —
+confirmed the actual latest stable release directly against Maven Central's `maven-metadata.xml`
+rather than trusting a summarized doc fetch): a **weekly** column chart (last 7 days) and a
+**monthly** column chart (the user's entire reading history, grouped by `yyyy-MM`) — every
+`ReadingStats` record returned by Firestore now ends up represented in a chart, not just summed into
+a flat "Total" number. This required bumping `compileSdk` from 36 to 37 in `app/build.gradle.kts`
+(Vico's `compose-android` artifact requires it); AGP 9.1.0 prints an advisory "unsupported compile SDK
+37" warning at build time, which is expected and non-fatal.
+
+Also fixed a real bug found while touching this code: `StatisticsViewModel.calculateStats()` was
+assigning `weeklyTimeMillis = totalTime` — the "weekly" stat was silently identical to the all-time
+total, never actually filtered to the last 7 days.
+
+- `ReadingStats` (domain) gained `getLastDates(days = 7)` and `buildWeeklyBreakdown(list)` (zero-fills
+  any day in the last 7 with no Firestore record, so the weekly chart always renders exactly 7
+  columns) and `buildMonthlyBreakdown(list)` (groups the full history by `yyyy-MM`, summed and sorted
+  oldest→newest; falls back to a single zero-duration entry for the current month if the list is empty
+  — a `ColumnCartesianLayerModel` series can never be empty). New `MonthlyReadingStat(month,
+  durationMillis)` domain entity for the latter's return type.
+- New generic `ReadingChartPointModel(id, label, minutes)` (presentation) + `StatisticsMapper` gained
+  `toWeeklyChartPoint()` (weekday label) and `toMonthlyChartPoint()` (month label) — both map onto the
+  same model so one chart composable can render either granularity.
+- New `ReadingActivityChart.kt` (`statistics/components/`, replaces the single-purpose
+  `WeeklyReadingChart.kt` from the same day) — a reusable Vico `CartesianChartHost` column chart driven
+  by `dataPoints: ImmutableList<ReadingChartPointModel>`, minutes (" m" suffix) on the Y axis, themed via
+  `ProvideVicoTheme(rememberM3VicoTheme())` so it tracks the app's light/dark `MaterialTheme.colorScheme`
+  automatically, plus a tap-to-reveal marker showing the exact minute count per bar (ported from Vico's
+  own sample `rememberMarker()` helper). `StatisticsContent` renders it twice — once for
+  `weeklyBreakdown`, once for `monthlyBreakdown`.
+- `StatCard.kt` deleted outright — no longer used anywhere. `StatisticsContent`'s `Success` branch is
+  now `verticalScroll`-wrapped: title → weekly chart (with small "Daily/Weekly Reading Time" caption
+  text above it, not a boxed card) → monthly chart (with a "Total Reading Time" caption).
+
 ## 2026-08-24 — Pull-to-refresh on every list/data screen
 
 Home and Categories already had `PullToRefreshBox`; added the same pattern to the 6 remaining

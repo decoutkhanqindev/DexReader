@@ -8,11 +8,13 @@ plugins {
   id("com.google.devtools.ksp")
   id("com.google.dagger.hilt.android")
   id("com.google.gms.google-services")
+  id("com.google.firebase.crashlytics")
+  id("com.google.firebase.firebase-perf")
 }
 
 android {
   namespace = "com.decoutkhanqindev.dexreader"
-  compileSdk = 36
+  compileSdk = 37
 
   defaultConfig {
     applicationId = "com.decoutkhanqindev.dexreader"
@@ -59,15 +61,11 @@ android {
   }
 
   lint {
-    // False positive on AGP 9.x: ComponentActivity is a valid Activity subclass
-    // but Lint's bytecode analysis doesn't resolve the inheritance chain correctly.
     disable += "Instantiatable"
   }
 }
 
 composeCompiler {
-  // Emit reports only when explicitly requested via -PcomposeCompilerReports=true
-  // to avoid slowing down regular builds.
   if (providers.gradleProperty("composeCompilerReports").orNull == "true") {
     reportsDestination = layout.buildDirectory.dir("compose_compiler")
     metricsDestination = layout.buildDirectory.dir("compose_compiler")
@@ -142,7 +140,9 @@ dependencies {
   implementation(platform(libs.firebase.bom))
   implementation(libs.firebase.auth.ktx)
   implementation(libs.firebase.firestore.ktx)
+  implementation(libs.firebase.crashlytics)
   implementation(libs.firebase.analytics)
+  implementation(libs.firebase.perf)
 
   // Logging
   implementation(libs.timber)
@@ -153,4 +153,7 @@ dependencies {
   // Profile Installer — required for Macrobenchmark to install/drop baseline profile at runtime
   implementation(libs.androidx.profileinstaller)
   baselineProfile(project(":baselineprofile"))
+
+  // Vico Charts
+  implementation(libs.vico.compose.m3)
 }
