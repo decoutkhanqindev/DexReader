@@ -75,7 +75,6 @@ composeCompiler {
 }
 
 dependencies {
-
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.lifecycle.runtime.ktx)
   implementation(libs.androidx.activity.compose)
@@ -88,7 +87,6 @@ dependencies {
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)
-  androidTestImplementation(platform(libs.androidx.compose.bom))
   androidTestImplementation(libs.androidx.ui.test.junit4)
   debugImplementation(libs.androidx.ui.tooling)
   debugImplementation(libs.androidx.ui.test.manifest)
@@ -154,6 +152,5 @@ dependencies {
 
   // Profile Installer — required for Macrobenchmark to install/drop baseline profile at runtime
   implementation(libs.androidx.profileinstaller)
-
   baselineProfile(project(":baselineprofile"))
 }

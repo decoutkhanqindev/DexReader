@@ -30,6 +30,7 @@ fun MangaDetailsScreen(
   onNavigateCategoryDetailsScreen: (
     categoryId: String,
     categoryTitle: String,
+    categoryDescription: String,
   ) -> Unit,
   onNavigateToReaderScreen: (
     chapterId: String,

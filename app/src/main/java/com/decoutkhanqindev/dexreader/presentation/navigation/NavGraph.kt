@@ -111,11 +111,12 @@ fun NavGraph() {
           onNavigateToSearchScreen = {
             navController.navigateTo(NavRoute.Search)
           },
-          onNavigateToCategoryScreen = { categoryId, categoryTitle ->
+          onNavigateToCategoryScreen = { categoryId, categoryTitle, categoryDescription ->
             navController.navigateTo(
               NavRoute.CategoryDetails(
                 categoryTitle = categoryTitle,
                 categoryId = categoryId,
+                categoryDescription = categoryDescription,
                 initialSortCriteria = MangaSortCriteriaValue.TRENDING,
               )
             )
@@ -256,9 +257,13 @@ fun NavGraph() {
           onNavigateToLoginScreen = {
             navController.navigateClearStack<NavRoute.MangaDetails>(NavRoute.Login)
           },
-          onNavigateCategoryDetailsScreen = { categoryId, categoryTitle ->
+          onNavigateCategoryDetailsScreen = { categoryId, categoryTitle, categoryDescription ->
             navController.navigateTo(
-              NavRoute.CategoryDetails(categoryTitle = categoryTitle, categoryId = categoryId)
+              NavRoute.CategoryDetails(
+                categoryTitle = categoryTitle,
+                categoryId = categoryId,
+                categoryDescription = categoryDescription,
+              )
             )
           },
           onNavigateToReaderScreen = { chapterId, lastReadPage, mangaId ->

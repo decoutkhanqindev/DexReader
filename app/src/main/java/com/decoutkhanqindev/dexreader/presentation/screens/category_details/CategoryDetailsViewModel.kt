@@ -37,6 +37,7 @@ class CategoryDetailsViewModel @Inject constructor(
   private val route: NavRoute.CategoryDetails = savedStateHandle.toRoute()
   private val categoryIdFromArg: String? = route.categoryId
   val categoryTitleFromArg: String = route.categoryTitle
+  val categoryDescriptionFromArg: String = route.categoryDescription
 
   private val _categoryDetailsUiState =
     MutableStateFlow<BasePaginationUiState<MangaModel>>(BasePaginationUiState.FirstPageLoading)

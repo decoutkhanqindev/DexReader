@@ -30,6 +30,7 @@ fun VerticalGridMangaList(
   items: ImmutableList<MangaModel>,
   modifier: Modifier = Modifier,
   onItemClick: (String) -> Unit,
+  headerContent: (@Composable () -> Unit)? = null,
   loadMoreContent: @Composable () -> Unit,
 ) {
   LazyVerticalGrid(
@@ -39,6 +40,9 @@ fun VerticalGridMangaList(
     verticalArrangement = Arrangement.spacedBy(2.dp),
     horizontalArrangement = Arrangement.spacedBy(2.dp),
   ) {
+    if (headerContent != null) {
+      item(span = { GridItemSpan(maxLineSpan) }) { headerContent() }
+    }
     items(items = items, key = MangaModel::id) {
       MangaItem(
         item = it,

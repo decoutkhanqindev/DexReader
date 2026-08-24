@@ -31,7 +31,7 @@ fun CategoriesGrid(
   categoryMap: ImmutableMap<CategoryTypeValue, ImmutableList<CategoryModel>>,
   categoryCoverUiState: ImmutableMap<String, CategoryCoverUiState>,
   modifier: Modifier = Modifier,
-  onCategoryClick: (categoryId: String, title: String) -> Unit,
+  onCategoryClick: (categoryId: String, title: String, description: String) -> Unit,
   onLoadCover: (String) -> Unit,
 ) {
   LazyVerticalGrid(
@@ -92,7 +92,7 @@ private fun CategoriesGridPreview() {
         "g3" to CategoryCoverUiState.Success(coverUrl = ""),
       ),
       modifier = Modifier.fillMaxSize(),
-      onCategoryClick = { _, _ -> },
+      onCategoryClick = { _, _, _ -> },
       onLoadCover = {},
     )
   }

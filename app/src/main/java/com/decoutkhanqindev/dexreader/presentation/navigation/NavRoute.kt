@@ -48,6 +48,7 @@ sealed interface NavRoute {
   data class CategoryDetails(
     val categoryTitle: String,
     val categoryId: String? = null,
+    val categoryDescription: String = "",
     val initialSortCriteria: MangaSortCriteriaValue = MangaSortCriteriaValue.LATEST_UPDATE,
   ) : NavRoute
 

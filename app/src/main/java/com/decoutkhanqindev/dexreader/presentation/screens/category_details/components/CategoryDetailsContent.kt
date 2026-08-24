@@ -40,6 +40,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.states.Loading
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.AllItemLoadedMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadMoreMessage
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPageErrorMessage
+import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.summary.MangaDescription
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -49,6 +50,7 @@ import kotlinx.coroutines.launch
 fun CategoryDetailsContent(
   detailsUiState: BasePaginationUiState<MangaModel>,
   criteriaUiState: CategoryDetailsCriteriaUiState,
+  categoryDescription: String,
   onSortApplyClick: (
     sortCriteria: MangaSortCriteriaValue,
     sortOrder: MangaSortOrderValue,
@@ -99,6 +101,16 @@ fun CategoryDetailsContent(
             gridState = { gridState },
             items = mangaList,
             onItemClick = onMangaClick,
+            headerContent = if (categoryDescription.isNotBlank()) {
+              {
+                MangaDescription(
+                  description = categoryDescription,
+                  modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp, vertical = 8.dp)
+                )
+              }
+            } else null,
             loadMoreContent = {
               when (nextPageState) {
                 BaseNextPageState.LOADING -> ListLoadingIndicator(
@@ -215,6 +227,7 @@ private fun CategoryDetailsContentFirstPageLoadingPreview() {
     CategoryDetailsContent(
       detailsUiState = BasePaginationUiState.FirstPageLoading,
       criteriaUiState = previewCriteriaState,
+      categoryDescription = "Titles that focus on physical conflict, such as fighting, war, or crime.",
       onSortApplyClick = { _, _ -> },
       onFilterApplyClick = { _, _ -> },
       onMangaClick = {},
@@ -233,6 +246,7 @@ private fun CategoryDetailsContentFirstPageErrorPreview() {
     CategoryDetailsContent(
       detailsUiState = BasePaginationUiState.FirstPageError(FeatureError.NetworkUnavailable),
       criteriaUiState = previewCriteriaState,
+      categoryDescription = "Titles that focus on physical conflict, such as fighting, war, or crime.",
       onSortApplyClick = { _, _ -> },
       onFilterApplyClick = { _, _ -> },
       onMangaClick = {},
@@ -254,6 +268,7 @@ private fun CategoryDetailsContentIdlePreview() {
         nextPageState = BaseNextPageState.IDLE
       ),
       criteriaUiState = previewCriteriaState,
+      categoryDescription = "Titles that focus on physical conflict, such as fighting, war, or crime.",
       onSortApplyClick = { _, _ -> },
       onFilterApplyClick = { _, _ -> },
       onMangaClick = {},
@@ -275,6 +290,7 @@ private fun CategoryDetailsContentNextPageLoadingPreview() {
         nextPageState = BaseNextPageState.LOADING
       ),
       criteriaUiState = previewCriteriaState,
+      categoryDescription = "Titles that focus on physical conflict, such as fighting, war, or crime.",
       onSortApplyClick = { _, _ -> },
       onFilterApplyClick = { _, _ -> },
       onMangaClick = {},
@@ -296,6 +312,7 @@ private fun CategoryDetailsContentNextPageErrorPreview() {
         nextPageState = BaseNextPageState.ERROR
       ),
       criteriaUiState = previewCriteriaState,
+      categoryDescription = "Titles that focus on physical conflict, such as fighting, war, or crime.",
       onSortApplyClick = { _, _ -> },
       onFilterApplyClick = { _, _ -> },
       onMangaClick = {},
@@ -317,6 +334,7 @@ private fun CategoryDetailsContentNoMoreItemsPreview() {
         nextPageState = BaseNextPageState.NO_MORE_ITEMS
       ),
       criteriaUiState = previewCriteriaState,
+      categoryDescription = "Titles that focus on physical conflict, such as fighting, war, or crime.",
       onSortApplyClick = { _, _ -> },
       onFilterApplyClick = { _, _ -> },
       onMangaClick = {},

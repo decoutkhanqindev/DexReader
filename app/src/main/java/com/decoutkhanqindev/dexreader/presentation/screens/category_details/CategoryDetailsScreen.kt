@@ -21,6 +21,7 @@ fun CategoryDetailScreen(
   val detailsUiState by viewModel.categoryDetailsUiState.collectAsStateWithLifecycle()
   val criteriaUiState by viewModel.categoryCriteriaUiState.collectAsStateWithLifecycle()
   val categoryTitle = viewModel.categoryTitleFromArg
+  val categoryDescription = viewModel.categoryDescriptionFromArg
 
   BackHandler { onNavigateBack() }
 
@@ -33,6 +34,7 @@ fun CategoryDetailScreen(
     CategoryDetailsContent(
       detailsUiState = detailsUiState,
       criteriaUiState = criteriaUiState,
+      categoryDescription = categoryDescription,
       onSortApplyClick = { s, o -> viewModel.updateSortingCriteria(s, o) },
       onFilterApplyClick = { s, c -> viewModel.updateFilteringCriteria(s, c) },
       onMangaClick = onNavigateToMangaDetailScreen,

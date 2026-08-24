@@ -24,6 +24,7 @@ fun MangaCategoryList(
   onItemClick: (
     categoryId: String,
     categoryTitle: String,
+    categoryDescription: String,
   ) -> Unit,
 ) {
   LazyRow(
@@ -32,7 +33,9 @@ fun MangaCategoryList(
     verticalAlignment = Alignment.CenterVertically,
   ) {
     items(items, key = CategoryModel::id) { category ->
-      val onClick = remember(category.id) { { onItemClick(category.id, category.title) } }
+      val onClick = remember(category.id) {
+        { onItemClick(category.id, category.title, category.description) }
+      }
       MangaGenreChip(label = category.title, onClick = onClick)
     }
   }
@@ -50,7 +53,7 @@ private fun MangaCategoryListPreview() {
         CategoryModel(id = "g4", title = "Fantasy"),
       ),
       modifier = Modifier.fillMaxWidth(),
-      onItemClick = { _, _ -> }
+      onItemClick = { _, _, _ -> }
     )
   }
 }

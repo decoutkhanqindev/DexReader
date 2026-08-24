@@ -24,6 +24,7 @@ fun MangaSummarySection(
   onCategoryItemClick: (
     categoryId: String,
     categoryTitle: String,
+    categoryDescription: String,
   ) -> Unit,
 ) {
   Column(
@@ -55,7 +56,7 @@ private fun MangaSummarySectionPreview() {
     MangaSummarySection(
       manga = previewManga,
       modifier = Modifier.fillMaxWidth(),
-      onCategoryItemClick = { _, _ -> }
+      onCategoryItemClick = { _, _, _ -> }
     )
   }
 }

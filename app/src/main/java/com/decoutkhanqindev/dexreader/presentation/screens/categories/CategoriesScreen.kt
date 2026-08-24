@@ -20,7 +20,7 @@ fun CategoriesScreen(
   onNavigateToLoginScreen: () -> Unit,
   onNavigateToMenuItemScreen: (MenuValue) -> Unit,
   onNavigateToSearchScreen: () -> Unit,
-  onNavigateToCategoryScreen: (categoryId: String, title: String) -> Unit,
+  onNavigateToCategoryScreen: (categoryId: String, title: String, description: String) -> Unit,
 ) {
   val categoryListUiState by viewModel.categoryListUiState.collectAsStateWithLifecycle()
   val categoryCoverStates by viewModel.categoryCoverStates.collectAsStateWithLifecycle()
