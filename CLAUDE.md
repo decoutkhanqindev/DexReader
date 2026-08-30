@@ -301,6 +301,68 @@ numeric fallback nearby).
 composable, no VM) | `*ViewModel.kt` (business logic). `*Content` never calls `NavController`
 directly.
 
+**Hub screens (multiple feature VMs in one screen)**: `ProfileScreen` is the established example — it
+shows a top-5 preview of Favorites / History / Statistics behind a `SectionHeader`'s "More »" that
+navigates to the full dedicated screen. The hub has already loaded the data, so tapping "More »" must
+**not** refetch — the dedicated screen renders the state that's already there. The mechanism:
+`ProfileScreen`'s three feature VMs are created with plain `hiltViewModel()` inside
+`composable<NavRoute.Profile>`, so they're scoped to **Profile's own `NavBackStackEntry`**; the
+dedicated screens then retrieve *that same instance* with
+`hiltViewModel(remember(it) { navController.getBackStackEntry<NavRoute.Profile>() })`. Those VMs live in
+`common/viewmodels/{favorites,history,statistics}/` (with their UiState files), and the three *dedicated*
+screens take a **required** `viewModel:` param with no `= hiltViewModel()` default — that's what forces
+the caller to hand them Profile's instance instead of silently spinning up a second one.
+
+**Two navigation invariants this depends on — breaking either one is a crash, not a glitch:**
+`getBackStackEntry<T>()` throws `IllegalArgumentException` when `T` isn't on the back stack, so
+(1) Favorites/History/Statistics are **deliberately not drawer items** (`MenuValue.isDrawerItem = false`,
+`MenuDrawer` renders `MenuValue.drawerItems`) — Profile is their only entry point, guaranteeing it was
+created first; and (2) Profile's "More »" uses plain `navigateTo`, **never** `navigatePreserveState`,
+because the latter's `popUpTo<Home> { saveState = true }` would pop Profile off the stack on the way in.
+If you ever re-add one of those three to the drawer, or switch "More »" back to `navigatePreserveState`,
+this crashes immediately. Each screen still runs its own `SideEffect { …updateUserId(…) }` — harmless
+now (the setters early-return when the value is unchanged) and it keeps each screen self-healing.
+
+By contrast `MangaSectionViewModel` is scoped to Home's own entry via a plain `hiltViewModel()` default
+on `HomeScreen` — it is **not** shared, and it cannot be scoped to `NavRoute.Splash` even though Splash
+precedes Home, because `navigateClearStack<Splash>(Home)` pops Splash `inclusive = true`, destroying its
+`ViewModelStore` exactly when Home needs it. Scope-to-a-parent-entry only works when that parent
+provably stays on the back stack. A hub reuses each feature's VM **unchanged** — no new use case, no repo/domain change, no
+`limit` param: the VMs already fetch a 20-item first page, so "top N" is just `.take(N)` in the section
+composable. Per-section `*Section.kt` composables under `<screen>/components/sections/` own their own
+state (e.g. History's two-option navigate dialog) and take flat callbacks. **Every** block of a hub is a
+section in that folder, including the hub's own non-list content — Profile's avatar/name/email/Update
+block is `ProfileEditSection`, sitting next to `ProfileFavoritesSection`/`ProfileHistorySection`/
+`ProfileStatisticsSection`, so `*Content.kt` stays pure assembly (sections + screen-level dialogs) with
+no layout details of its own. Spacing between sections comes from **one**
+`Arrangement.spacedBy(16.dp)` on `*Content.kt`'s scrolling `Column` — sections themselves are passed a
+bare `Modifier.fillMaxWidth()`, so the page rhythm is set in exactly one place instead of being
+re-derived per section. `ProfileFavoritesSection`/`ProfileHistorySection`/`ProfileStatisticsSection`
+declare `onMoreClick: (() -> Unit)? = null` (optional, last param) to match `SectionHeader`; the
+trade-off is that forgetting to wire it is no longer a compile error, the "More »" link just silently
+disappears. `ProfileEditSection` deliberately mirrors
+`MenuHeader`'s horizontal shape (avatar left at its intrinsic 80dp — `ProfilePicture` is a fixed
+`size(80.dp)`, so **don't** give it a `weight`, that just strands it in an oversized slot — then
+name/email stacked in a `weight(1f)` column, `spacedBy(16.dp)`), with the Update button below the row.
+`ProfileNameEdit` is `Arrangement.Start`-aligned for this reason: centered name next to a start-aligned
+email inside the same column reads as broken. Name and email intentionally **wrap** rather than
+ellipsize — they carry the user's own identity, so truncating them is worse than an extra line.
+**Section-level errors render inline** (`LoadPageErrorMessage`, which has a retry button) inside a
+fixed-height `Box` — never a modal `AlertDialog`, because several sections load in parallel and
+concurrent modals would stack on top of each other. Fixed-height section boxes also stop the page from
+jumping as each section resolves. **Section-level loading uses `ListLoadingIndicator`** (the slim
+load-more bar from `common/indicators/`), **not `LoadingScreen`** — `LoadingScreen` is a whole-screen
+treatment and reads as "the page is loading" when it's really just one strip of it; with several
+sections resolving independently you'd get multiple full-screen spinners stacked down the page.
+Screen-level dialogs and `LoadingScreen` (the hub's own update/logout) stay as normal.
+
+**`ListLoadingIndicator` call sites**: the indicator is a single `LinearProgressIndicator` at
+`fillMaxWidth(0.4f)`, self-centered inside its own `Box` — so **never give it horizontal padding**
+(it can't reach the edges; padding only shrinks the bar). It's also only ~4dp tall, unlike the text
+states it shares a `when` with (`LoadMoreMessage`/`AllItemLoadedMessage`/`LoadPageErrorMessage`, ~20dp),
+so in a lazy list's load-more slot give it **vertical padding matching the `IDLE` branch at that same
+site** — otherwise the row collapses and the list visibly jumps the moment you tap "Load More".
+
 **Shared ViewModels** (`presentation/screens/common/viewmodels/`): a ViewModel whose instance must
 outlive a single screen lives here instead of under its owning screen's package. `NavGraph()` (zero
 params, called as `setContent { NavGraph() }` from `MainActivity` — there is no `DexReaderApp.kt`
@@ -311,9 +373,14 @@ these itself. `UserViewModel` (moved from top-level `presentation/`) exposes `is
 every screen. `viewmodels/settings/SettingsViewModel` + `SettingsUiState` (moved from
 `screens/settings/`, grouped under their own subpackage like `manga_section/` below) is read by
 `NavGraph` to drive the app-wide `DexReaderTheme(themeOption = ...)` wrapping the whole `NavHost`, and
-that same instance is passed into `SettingsScreen(viewModel = ...)` — both consumers share one
-instance instead of each calling its own `hiltViewModel()` (the previous bug: `MainActivity` and
-`SettingsScreen` each created an independent instance, so the two could desync).
+that same instance is passed into `ProfileScreen(settingsViewModel = ...)` — both consumers share one
+instance instead of each calling its own `hiltViewModel()` (the original bug: `MainActivity` and the
+old `SettingsScreen` each created an independent instance, so the two could desync). **There is no
+Settings screen any more** — it was deleted and its only content (the theme picker) became
+`ProfileSettingsSection` inside the Profile hub, so `NavRoute.Settings` and `MenuValue.SETTINGS` are
+gone too; the drawer is down to Home / Categories / Profile. `SettingsViewModel` itself is untouched
+and still lives in `common/viewmodels/settings/` because `NavGraph` needs `appliedThemeOption`
+regardless of where the picker UI sits.
 `viewmodels/manga_section/MangaSectionViewModel` + `MangaSectionUiState` (renamed from
 `HomeViewModel`/`HomeUiState`, moved out of `screens/home/`) is instantiated once in `NavGraph` and
 passed into `HomeScreen(viewModel = ...)` as a required param (no `= hiltViewModel()` default) — the
@@ -406,18 +473,24 @@ family at the top of most `*Screen.kt` files, and one-shot side-effect calls lik
 composition's apply-changes phase, not dispatched to a coroutine) — fine for the state-flag/setter
 pattern above, but worth re-checking case-by-case for anything timing-sensitive before converting.
 
-**Stage-then-confirm value with a wide-reach effect**: when a field is both (a) displayed/edited
-immediately in a screen's own UI and (b) drives a wider-reach effect gated behind a confirm dialog
-(e.g. Save), split it into a staged field (updates immediately on user input, for in-screen feedback
-only) and an applied field (updates only once the action is confirmed and persisted) — never let one
-field serve both roles. `SettingsUiState.selectedThemeOption` (tapped option, drives the
-`ThemeOptionList` highlight) vs. `appliedThemeOption` (persisted value, read by `NavGraph` to drive
-`DexReaderTheme` — see Screen Structure) is the established example: tapping an option only calls
-`updateThemeOption()` (stages `selectedThemeOption`); the
-app-wide theme doesn't move until `saveThemeOption()` succeeds and copies the staged value into
-`appliedThemeOption`. Dismissing the confirm dialog calls `resetThemeOption()` to snap
-`selectedThemeOption` back to `appliedThemeOption`, so a cancelled change doesn't leave a stale
-selection highlighted.
+**Staged vs. applied value for a wide-reach effect**: when a field is both (a) reflected immediately in
+a screen's own UI and (b) drives a wider-reach effect that only takes hold once persisted, split it into
+a staged field (updates the moment the user taps, for in-screen feedback) and an applied field (updates
+only after the write succeeds) — never let one field serve both roles.
+`SettingsUiState.selectedThemeOption` (tapped option, drives the radio highlight in
+`ProfileSettingsSection`) vs. `appliedThemeOption` (persisted value, read by `NavGraph` to drive
+`DexReaderTheme` — see Screen Structure) is the established example. Theme now **applies on tap**:
+`ProfileScreen` calls `updateThemeOption(it)` then `saveThemeOption()` back to back (safe — the former
+is a synchronous `MutableStateFlow.update`, so the latter reads the new staged value). There is
+deliberately **no confirm dialog and no success dialog** any more: a theme switch inside a profile page
+is a toggle, not a commitment, and the app repainting is its own confirmation — two modals to flip a
+theme was the old Settings-screen behaviour and it did not survive the move. `resetThemeOption()` still
+earns its keep: on a failed write it snaps `selectedThemeOption` back to `appliedThemeOption` so the
+selection can't sit on a value that was never saved. The write error surfaces inline via
+`LoadPageErrorMessage` with retry, matching the rest of the hub's sections. The picker itself is a
+`Row` of three `ThemeOptionItem`s at `weight(1f)` each (icon + short label, centred) — the labels are
+deliberately one word (`R.string.light`/`dark` are "Light"/"Dark", not "Light Mode"/"Dark Mode") so
+three fit across a phone without truncating.
 
 **Forcing a same-screen `HorizontalPager` jump from the ViewModel**:
 `rememberPagerState(initialPage = ...)` only reads `initialPage` once — there's no built-in channel
@@ -471,6 +544,17 @@ established shape as `observeHistoryJob`/`cancelObserveHistoryJob()`.
   shown instead of hand-rolling a new `Surface` or `Card` — established in `MangaItem`,
   `FavoriteMangaItem`, `MangaBanner`, `MangaInfoSection`, `MangaCategoryList` (Manga Details),
   `CategoryList` (Categories screen)
+- `SectionHeader` (`presentation/screens/common/sections/`) — shared "icon + title + More »" row for any
+  section of a bigger screen. Signature:
+  `SectionHeader(icon: ImageVector, title: String, modifier, onMoreClick: (() -> Unit)? = null)`. It owns
+  no padding — every call site passes `Modifier.fillMaxWidth().padding(start/end = 16.dp, top = 8.dp,
+  bottom = 4.dp)`, matching how section spacing lives at the call site everywhere else. If you add a new
+  caller, copy that padding; forgetting it is not a compile error, the header just sits flush against the
+  screen edge while every other section is inset. **`onMoreClick` is nullable on purpose**: pass it when the section has a
+  dedicated full screen behind it (Home's rows, Profile's Favorites/History/Statistics), leave it out
+  when the section *is* the whole feature and there is nowhere to go — `ProfileSettingsSection` omits it,
+  and the "More »" row simply isn't rendered. Never re-hand-roll this row — the "More »" affordance must
+  stay visually identical everywhere it appears
 - `AnimatedLogoAndSlogan` (`presentation/screens/common/animation/`) — shared hero logo used by both
   `SplashContent` and `AuthContent` (Login/Register/ForgotPassword). Takes `logoSize: Dp = 100.dp`
   (Splash passes `120.dp`; `AuthContent` uses the default, centered inside its own
@@ -514,10 +598,17 @@ established shape as `observeHistoryJob`/`cancelObserveHistoryJob()`.
   `TopAppBarColors`, defaulting to the Back-variant look (`surfaceContainer`/`onPrimaryContainer`);
   `BaseScreen`'s Menu variant overrides all four plus wraps its own `AppTopBar(...)` call in a local
   `Surface(alpha = 0.95f, tonalElevation = 3.dp)` for the translucent tab-root look (`AppTopBar`
-  itself has no alpha/elevation param — that wrapping is a call-site concern, not shared). Only 2
-  screens sit behind `BaseDetailsScreen` (`MangaDetailsScreen`, `CategoryDetailsScreen`) —
-  `ForgotPasswordScreen`/`RegisterScreen` have no top bar at all (just `BackHandler` + a `*Content`
-  call), despite what an earlier version of this doc claimed. `ReaderScreen` calls `AppTopBar`
+  itself has no alpha/elevation param — that wrapping is a call-site concern, not shared). 5 screens
+  sit behind `BaseDetailsScreen` (`MangaDetailsScreen`, `CategoryDetailsScreen`, plus
+  `FavoritesScreen`/`HistoryScreen`/`StatisticsScreen`) — **which wrapper a screen uses follows
+  directly from whether it's a drawer tab**: `BaseScreen` (Menu icon + drawer) only for the four
+  tabs still in `MenuValue.drawerItems` (Home, Categories, Profile, Settings); `BaseDetailsScreen`
+  (Back icon) for everything reached *from* another screen. When Favorites/History/Statistics stopped
+  being drawer tabs they moved to `BaseDetailsScreen` for exactly this reason — a hamburger that opens
+  a drawer the screen isn't listed in is a dead end. Moving a screen across this line also drops its
+  `onNavigateToMenuItemScreen`/`onNavigateToLoginScreen` params (drawer-only concerns) and adds
+  `onNavigateBack`. `ForgotPasswordScreen`/`RegisterScreen` have no top bar at all (just `BackHandler`
+  + a `*Content` call), despite what an earlier version of this doc claimed. `ReaderScreen` calls `AppTopBar`
   directly (not through `BaseDetailsScreen`, since it also needs a `bottomBar`/FAB/full-screen
   `AnimatedVisibility` toggle that `BaseDetailsScreen` doesn't expose): `centerContent` renders the
   volume/chapter number + chapter title (moved here from `NavigateChapterBottomBar`'s center slot —

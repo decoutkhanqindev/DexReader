@@ -86,7 +86,7 @@ fun ReadingHistoryList(
           BaseNextPageState.LOADING -> ListLoadingIndicator(
             modifier = Modifier
               .fillMaxWidth()
-              .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 12.dp)
+              .padding(vertical = 12.dp)
           )
 
           BaseNextPageState.ERROR -> LoadPageErrorMessage(

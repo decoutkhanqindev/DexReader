@@ -6,21 +6,20 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
-import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue
-import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseScreen
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseDetailsScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScreen
+import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.history.HistoryViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.history.components.HistoryContent
 
 @Composable
 fun HistoryScreen(
+  viewModel: HistoryViewModel,
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
-  onNavigateToLoginScreen: () -> Unit,
-  onNavigateToMenuItemScreen: (MenuValue) -> Unit,
+  onNavigateBack: () -> Unit,
   onNavigateToSearchScreen: () -> Unit,
   onNavigateToReaderScreen: (
     chapterId: String,
@@ -28,7 +27,6 @@ fun HistoryScreen(
     mangaId: String,
   ) -> Unit,
   onNavigateToMangaDetailScreen: (String) -> Unit,
-  viewModel: HistoryViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
 ) {
   val historyUiState by viewModel.historyUiState.collectAsStateWithLifecycle()
@@ -39,13 +37,10 @@ fun HistoryScreen(
     else viewModel.updateUserId(userId = null)
   }
 
-  BaseScreen(
-    isUserLoggedIn = isUserLoggedIn,
-    currentUser = currentUser,
-    selectedMenuItem = MenuValue.HISTORY,
+  BaseDetailsScreen(
+    title = stringResource(R.string.history_menu_item),
     modifier = modifier,
-    onNavigateToSignInScreen = onNavigateToLoginScreen,
-    onNavigateToMenuItemScreen = onNavigateToMenuItemScreen,
+    onNavigateBack = onNavigateBack,
     onNavigateToSearchScreen = onNavigateToSearchScreen
   ) {
     if (isUserLoggedIn) {

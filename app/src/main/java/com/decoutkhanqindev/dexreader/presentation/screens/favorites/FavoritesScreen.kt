@@ -6,24 +6,22 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
-import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue
-import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseScreen
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseDetailsScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScreen
+import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.favorites.FavoritesViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.favorites.components.FavoritesContent
 
 @Composable
 fun FavoritesScreen(
+  viewModel: FavoritesViewModel,
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
-  onNavigateToLoginScreen: () -> Unit,
-  onNavigateToMenuItemScreen: (MenuValue) -> Unit,
+  onNavigateBack: () -> Unit,
   onNavigateToSearchScreen: () -> Unit,
   onNavigateToMangaDetailScreen: (String) -> Unit,
-  viewModel: FavoritesViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -33,13 +31,10 @@ fun FavoritesScreen(
     else viewModel.updateUserId(userId = null)
   }
 
-  BaseScreen(
-    isUserLoggedIn = isUserLoggedIn,
-    currentUser = currentUser,
-    selectedMenuItem = MenuValue.FAVORITES,
+  BaseDetailsScreen(
+    title = stringResource(R.string.favorite_menu_item),
     modifier = modifier,
-    onNavigateToSignInScreen = onNavigateToLoginScreen,
-    onNavigateToMenuItemScreen = onNavigateToMenuItemScreen,
+    onNavigateBack = onNavigateBack,
     onNavigateToSearchScreen = onNavigateToSearchScreen
   ) {
     if (isUserLoggedIn) {

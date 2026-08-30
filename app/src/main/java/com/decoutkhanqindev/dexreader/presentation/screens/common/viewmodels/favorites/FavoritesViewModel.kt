@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.screens.favorites
+package com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.favorites
 
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.ObserveFavoritesUseCase

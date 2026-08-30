@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.screens.history
+package com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.history
 
 
 import androidx.compose.runtime.Immutable

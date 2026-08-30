@@ -4,6 +4,131 @@ Dated log of notable multi-file / cross-cutting work sessions. Newest entry firs
 
 ---
 
+## 2026-08-31 — Xoá màn Settings, theme picker dọn vào Profile hub
+
+Màn Settings bị **xoá hẳn** (cả `screens/settings/`: `SettingsScreen`, `SettingsContent`,
+`ThemeOptionList`, `ThemeOptionItem`), kèm `NavRoute.Settings`, `composable<NavRoute.Settings>`,
+`MenuValue.SETTINGS` và nhánh `SETTINGS ->` trong `MenuMapper`. Drawer còn 3 mục: Home / Categories /
+Profile. `SettingsViewModel` + `SettingsUiState` **không sửa dòng nào**, vẫn ở `common/viewmodels/settings/`
+vì `NavGraph` cần `appliedThemeOption` để lái `DexReaderTheme` bất kể UI chọn theme nằm ở đâu; giờ cùng
+instance đó truyền vào `ProfileScreen(settingsViewModel = ...)`.
+
+- **UI cũ bỏ hoàn toàn, không port**: `ThemeOptionList` là `Card` cố định `width(165.dp)` canh giữa —
+  hợp lý khi nó đứng một mình giữa màn trống, nhưng lạc lõng trong trang cuộn của Profile. Thay bằng
+  `ProfileSettingsSection` + `ThemeOptionItem`: một `Row` gồm 3 lựa chọn, mỗi cái `weight(1f)` (icon +
+  nhãn, canh giữa), chọn/không chọn phân biệt bằng màu `primary` vs `onSurfaceVariant`. Đặt ngay trên
+  nút Logout — nhóm hành vi tài khoản dồn xuống cuối trang.
+- **Nhãn theme rút còn một từ**: string `dark`/`light` bỏ chữ "Mode" → "Dark"/"Light", khớp với
+  "System" vốn đã không có. Đây là điều kiện để 3 lựa chọn xếp ngang vừa một hàng trên máy hẹp mà
+  không bị cắt chữ.
+- **Đổi theme áp dụng ngay khi chạm, bỏ dialog xác nhận + dialog thành công.** Luồng cũ: chạm option →
+  dialog "Are you sure you want to change the theme?" → dialog success. Hai modal để lật một cái theme
+  toggle là quá nặng, nhất là khi nằm trong trang profile; app đổi màu ngay chính là phản hồi rồi.
+  `ProfileScreen` gọi `updateThemeOption(it)` rồi `saveThemeOption()` liền nhau — an toàn vì
+  `MutableStateFlow.update` là đồng bộ nên `saveThemeOption` đọc được giá trị staged vừa set.
+- **`resetThemeOption()` vẫn còn tác dụng**: khi ghi lỗi thì snap `selectedThemeOption` về
+  `appliedThemeOption`, để radio không đứng ở giá trị chưa từng lưu được. Lỗi hiện **inline** bằng
+  `LoadPageErrorMessage` có nút retry, đúng quy ước các section khác của hub (không modal).
+- **`SectionHeader.onMoreClick` thành nullable** (`(() -> Unit)? = null`) — section Settings không còn
+  màn riêng nào để "More »" dẫn tới, nên khi null thì cụm "More »" đơn giản là không render. Các call
+  site cũ đều dùng named argument nên không vỡ. `SectionHeader` cũng bỏ luôn phần padding tự ôm; giờ
+  mọi call site tự truyền `padding(start/end = 16.dp, top = 8.dp, ...)`.
+- **`onMoreClick` của 3 section Profile cũng thành optional** (`(() -> Unit)? = null`, đẩy xuống cuối
+  danh sách param) cho đồng bộ với `SectionHeader`. Đánh đổi: quên wire thì **không còn lỗi compile**,
+  cụm "More »" chỉ lặng lẽ biến mất.
+- **Nhịp giãn cách giữa các section gom về một chỗ**: `Column` cuộn của `ProfileContent` dùng
+  `Arrangement.spacedBy(16.dp)`, các section chỉ nhận `Modifier.fillMaxWidth()` trần thay vì mỗi cái tự
+  mang `padding(top = 8.dp)`.
+
+## 2026-08-30 — Profile hub polish: header ngang, tách `ProfileEditSection`, retune `ListLoadingIndicator`
+
+Đợt tinh chỉnh tiếp theo của màn Profile hub (xem entry ngay dưới).
+
+- **`ProfileEditSection` tách riêng** vào `profile/components/sections/`, đứng cùng hàng với 3 section
+  kia. `ProfileContent` giờ thuần lắp ráp (4 section + `LogoutButton` + dialog cấp màn), không còn giữ
+  chi tiết layout nào. Section tự ôm padding của mình, call site chỉ truyền `Modifier.fillMaxWidth()`.
+  Dọn kèm 10 import chết + biến `val currentUser` không còn ai dùng trong `ProfileContent`.
+- **Khối profile chuyển sang layout ngang** soi theo `MenuHeader`: avatar trái, name + email xếp dọc
+  bên phải, `spacedBy(16.dp)`; nút Update vẫn nằm dưới hàng như cũ. **Không** cho avatar `weight` —
+  `ProfilePicture` vốn cố định `size(80.dp)` nên weight chỉ tạo ô trống thừa quanh nó trên máy rộng;
+  để nó wrap 80dp, cột text lấy `weight(1f)`.
+- **`ProfileNameEdit` đổi sang `Arrangement.Start`** (bỏ `TextAlign.Center`), Text/TextField lấy
+  `weight(1f)` để nút Edit không bị đẩy khỏi màn khi tên dài. Lý do: trong layout ngang, tên canh giữa
+  nằm cạnh email canh trái trong cùng một cột trông như lỗi. Component chỉ `ProfileContent` dùng nên
+  đổi an toàn.
+- **Name + email cố ý wrap, không ellipsize** (đã thử `maxLines = 1` + `TextOverflow.Ellipsis` rồi bỏ
+  theo yêu cầu) — đây là danh tính của chính user, cắt chữ tệ hơn là xuống thêm một dòng.
+- **`ListLoadingIndicator` đổi hình dạng** (một `LinearProgressIndicator` đơn, `fillMaxWidth(0.4f)`, tự
+  canh giữa — thay cho Row 2 thanh + icon 36dp trước đây) → **retune cả 9 call site**: bỏ hết padding
+  ngang (bar không bao giờ chạm mép, padding chỉ làm nó ngắn đi), và ở các slot load-more thì cho
+  padding dọc **khớp với nhánh `IDLE` cùng chỗ**. Không làm bước sau thì hàng LOADING tụt từ ~44dp
+  xuống ~16dp và list giật nảy ngay khi bấm "Load More". Giữ nguyên `bottom = 82.dp` ở
+  `CategoryDetailsContent` vì đó là khoảng chừa cho cụm nút Sort/Filter nổi, không liên quan indicator.
+
+## 2026-08-30 — Profile screen → user hub (favorites + history + stats + logout)
+
+Gom 4 màn user-centric vào 1 màn Profile cuộn dọc: profile edit → top-5 Favorites → top-5 History →
+month chart → nút Logout. 4 màn cũ (Favorites / History / Statistics) **giữ nguyên không đổi** — "More »"
+ở mỗi section chính là đường vào chúng.
+
+`FavoritesViewModel` / `HistoryViewModel` / `StatisticsViewModel` (+ `RemoveFromHistoryUiState`,
+`StatisticsUiState`) **chuyển sang `common/viewmodels/{favorites,history,statistics}/`**, tạo bằng
+`hiltViewModel()` **trong `composable<NavRoute.Profile>`** nên scope theo `NavBackStackEntry` của Profile;
+3 màn riêng lấy lại đúng instance đó qua
+`hiltViewModel(remember(it) { navController.getBackStackEntry<NavRoute.Profile>() })`. Mục đích: Profile
+đã load rồi thì bấm "More »" sang màn riêng **không load lại**. 3 màn riêng nhận `viewModel:` là **param
+bắt buộc** (không có `= hiltViewModel()`) để không ai vô tình tạo instance thứ 2.
+
+**Hai điều kiện bắt buộc để không crash** (`getBackStackEntry` ném `IllegalArgumentException` nếu
+destination không có trên stack):
+1. **Favorites/History/Statistics bị gỡ khỏi drawer** (`MenuValue.isDrawerItem = false`, `MenuDrawer`
+   render `MenuValue.drawerItems`) — Profile thành lối vào duy nhất, đảm bảo Profile luôn được tạo trước.
+   Trước đó 3 mục này là tab ngang hàng trong drawer, vào thẳng từ Home thì Profile chưa hề tồn tại → crash.
+   Kèm theo, 3 màn này chuyển từ `BaseScreen` (icon Menu + drawer) sang **`BaseDetailsScreen` (icon Back)**
+   — giữ hamburger mở ra cái drawer không còn chứa chính nó là ngõ cụt. Đổi luôn signature: bỏ
+   `onNavigateToMenuItemScreen` / `onNavigateToLoginScreen` (chỉ phục vụ drawer), thêm `onNavigateBack`.
+2. **"More »" dùng `navigateTo`, không dùng `navigatePreserveState`** — `navigatePreserveState<Home>` làm
+   `popUpTo<Home> { saveState = true }`, pop luôn Profile khỏi stack ngay khi sang Favorites → cũng crash.
+
+`MangaSectionViewModel` thì ngược lại: scope vào chính entry của Home bằng `hiltViewModel()` default trên
+`HomeScreen`, **không** share. Không thể scope vào `NavRoute.Splash` dù Splash đứng trước Home, vì
+`navigateClearStack<Splash>(Home)` pop Splash `inclusive = true` → `ViewModelStore` của Splash bị clear
+đúng lúc Home cần. Scope-vào-entry-cha chỉ dùng được khi entry cha chắc chắn còn trên back stack.
+
+**Cả 3 VM không sửa một dòng logic nào** — API public sẵn có (`updateUserId` / `refresh` / `retry*` /
+uiState) đã đủ. "Top 5" chỉ là `.take(5)` ở tầng composable vì VM vốn đã fetch page đầu 20 item →
+**không đụng tới domain/data layer, không thêm use case, không thêm param `limit`**.
+
+- `SectionHeader` (`common/sections/`) — tách nguyên si header "icon + title + More »" đang inline
+  trong Home's `MangaListSection`; Home refactor gọi lại nó (pure extraction, visual không đổi), 3
+  section mới của Profile dùng chung. Tránh 4 bản copy của cùng một affordance.
+- `ProfileFavoritesSection` — `LazyRow` các `FavoriteMangaItem` có sẵn, size `194×250dp` giống hệt
+  `HorizontalMangaList` của Home.
+- `ProfileHistoryItem` + `ProfileHistorySection` — biến thể ngang của history item (`300×184dp`), tái
+  dùng `ReadingHistoryInfo` nguyên vẹn nên `ReadingProgressBar` có sẵn. **Bỏ `SwipeToDismissBox`** vì
+  swipe-ngang-để-xoá đánh nhau trực tiếp với scroll ngang của `LazyRow` — xoá history vẫn làm ở màn
+  History đầy đủ. Đây là khác biệt hành vi duy nhất so với màn gốc, có chủ đích. Tap item → đúng dialog
+  2 lựa chọn (Manga details / Continue reading) copy từ `HistoryContent`.
+- `ProfileStatisticsSection` — `ReadingActivityChart` với `monthlyBreakdown`. Không thêm code zoom:
+  đã verify trong source Vico `CartesianChartHost.kt` rằng `zoomState` mặc định là
+  `rememberDefaultVicoZoomState(...)` với `zoomEnabled = true`, tức pinch-to-zoom vốn đã hoạt động.
+- `UpdateAndLogoutUserBottomBar` bị **xoá**, tách thành `UpdateProfileButton` (inline ngay dưới khung
+  edit, `AnimatedVisibility` khi có thay đổi chưa lưu) và `LogoutButton` (cuối trang) — `BaseScreen`
+  của Profile không còn `bottomBar`.
+- Lỗi từng section render **inline** bằng `LoadPageErrorMessage` trong `Box` cao cố định, **không dùng
+  modal `AlertDialog`** — 3 section load song song, modal sẽ chồng lên nhau; box cao cố định cũng chặn
+  layout nhảy khi từng section resolve xong. Loading của section dùng `ListLoadingIndicator` (thanh
+  load-more mảnh), **không dùng `LoadingScreen`** — `LoadingScreen` là treatment cả màn, đặt trong 1
+  section sẽ đọc thành "cả trang đang load", và 3 section resolve độc lập thì thành 3 spinner full-screen
+  xếp chồng dọc trang.
+
+Pull-to-refresh refresh cả 3 section một lượt. Nhánh chưa đăng nhập giữ nguyên `IdleScreen` như cũ.
+
+**Ghi chú build**: lần compile đầu fail với hàng loạt "Unresolved reference" ngay trên các dòng
+`import` — nguyên nhân là 2 build Gradle chạy đè nhau (`Detected multiple Kotlin daemon sessions`) do
+một build nền còn treo, **không phải lỗi code**. `./gradlew --stop` rồi build lại `--rerun-tasks` (11/11
+task chạy thật) là sạch.
+
 ## 2026-08-30 — LaunchedEffect → SideEffect migration (23 files)
 
 Bumped `composeBom` from `2026.05.00` to `2026.08.00` (`compose-runtime 1.11.1` → `1.12.0`) to pick up

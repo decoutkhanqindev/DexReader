@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.screens.statistics
+package com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.statistics
 
 import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingStats
 import com.decoutkhanqindev.dexreader.domain.usecase.user.statistics.ObserveStatisticsUseCase

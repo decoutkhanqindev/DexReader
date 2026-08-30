@@ -127,7 +127,7 @@ fun CategoryDetailsContent(
                 BaseNextPageState.LOADING -> ListLoadingIndicator(
                   modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 4.dp, end = 4.dp, bottom = 82.dp)
+                    .padding(top = 12.dp, bottom = 82.dp)
                 )
 
                 BaseNextPageState.ERROR -> LoadPageErrorMessage(

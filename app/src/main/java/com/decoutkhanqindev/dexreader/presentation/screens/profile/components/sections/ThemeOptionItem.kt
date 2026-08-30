@@ -1,11 +1,12 @@
-package com.decoutkhanqindev.dexreader.presentation.screens.settings.components
+package com.decoutkhanqindev.dexreader.presentation.screens.profile.components.sections
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -21,54 +22,58 @@ import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
 fun ThemeOptionItem(
-  isSelected: Boolean,
   item: ThemeModeValue,
+  isSelected: Boolean,
   modifier: Modifier = Modifier,
   onClick: (ThemeModeValue) -> Unit,
 ) {
-  val onClick = remember(item.name) { { onClick(item) } }
+  val onItemClick = remember(item) { { onClick(item) } }
 
   Row(
-    modifier = modifier.onClick(action = onClick),
+    modifier = modifier
+      .onClick(shape = MaterialTheme.shapes.medium, action = onItemClick)
+      .padding(vertical = 8.dp, horizontal = 4.dp),
     verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
   ) {
-    RadioButton(
-      selected = isSelected,
-      onClick = onClick,
-    )
-    Text(
-      text = stringResource(item.nameRes),
-      modifier = Modifier.padding(end = 4.dp),
-      fontWeight = FontWeight.Bold,
-      style = MaterialTheme.typography.bodyLarge,
-    )
     Icon(
       imageVector = item.icon,
       contentDescription = null,
+      tint = if (isSelected) MaterialTheme.colorScheme.primary
+      else MaterialTheme.colorScheme.onSurfaceVariant,
       modifier = Modifier.size(24.dp)
+    )
+    Text(
+      text = stringResource(item.nameRes),
+      fontWeight = FontWeight.Bold,
+      color = if (isSelected) MaterialTheme.colorScheme.primary
+      else MaterialTheme.colorScheme.onSurfaceVariant,
+      style = MaterialTheme.typography.bodyMedium,
     )
   }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun ThemeOptionItemSelectedPreview() {
   DexReaderTheme {
     ThemeOptionItem(
-      isSelected = true,
       item = ThemeModeValue.SYSTEM,
+      isSelected = true,
+      modifier = Modifier.width(110.dp),
       onClick = {},
     )
   }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun ThemeOptionItemUnselectedPreview() {
   DexReaderTheme {
     ThemeOptionItem(
+      item = ThemeModeValue.DARK,
       isSelected = false,
-      item = ThemeModeValue.LIGHT,
+      modifier = Modifier.width(110.dp),
       onClick = {},
     )
   }

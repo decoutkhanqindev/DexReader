@@ -212,7 +212,7 @@ fun MangaDetailsContent(
                   ListLoadingIndicator(
                     modifier = Modifier
                       .fillMaxWidth()
-                      .padding(horizontal = 16.dp, vertical = 24.dp)
+                      .padding(vertical = 24.dp)
                   )
                 }
               }
@@ -288,7 +288,7 @@ fun MangaDetailsContent(
                         BaseNextPageState.LOADING -> ListLoadingIndicator(
                           modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 12.dp)
+                            .padding(vertical = 12.dp)
                         )
 
                         BaseNextPageState.ERROR -> LoadPageErrorMessage(

@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.screens.statistics
+package com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.statistics
 
 import androidx.compose.runtime.Immutable
 import com.decoutkhanqindev.dexreader.presentation.error.FeatureError

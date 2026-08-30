@@ -2,7 +2,6 @@ package com.decoutkhanqindev.dexreader.presentation.screens.statistics.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,7 +30,7 @@ import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingChartPointModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
-import com.decoutkhanqindev.dexreader.presentation.screens.statistics.StatisticsUiState
+import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.statistics.StatisticsUiState
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.persistentListOf
 
@@ -104,7 +103,7 @@ fun StatisticsContent(
               color = MaterialTheme.colorScheme.onSurfaceVariant
             )
           }
-          Spacer(modifier = Modifier.height(12.dp))
+          Spacer(modifier = Modifier.height(8.dp))
           ReadingActivityChart(
             dataPoints = uiState.weeklyBreakdown,
             modifier = Modifier
@@ -127,7 +126,7 @@ fun StatisticsContent(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.fillMaxWidth()
           )
-          Spacer(modifier = Modifier.height(12.dp))
+          Spacer(modifier = Modifier.height(8.dp))
           ReadingActivityChart(
             dataPoints = uiState.monthlyBreakdown,
             modifier = Modifier
@@ -150,7 +149,7 @@ fun StatisticsContent(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.fillMaxWidth()
           )
-          Spacer(modifier = Modifier.height(12.dp))
+          Spacer(modifier = Modifier.height(8.dp))
           ReadingActivityChart(
             dataPoints = uiState.yearlyBreakdown,
             modifier = Modifier

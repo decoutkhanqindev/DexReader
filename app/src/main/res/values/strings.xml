@@ -1,6 +1,6 @@
 <resources>
   <!-- App -->
-  <string name="app_name" translatable="false">Dex Reader</string>
+  <string name="app_name" translatable="false">DexReader</string>
   <string name="slogan">Read to enjoy - Save to remember</string>
 
   <!-- Navigation / Menu -->
@@ -160,13 +160,9 @@
 
   <!-- Settings Screen -->
   <string name="system">System</string>
-  <string name="dark">Dark Mode</string>
-  <string name="light">Light Mode</string>
-  <string name="theme">Theme Options</string>
-  <string name="are_you_sure_you_want_to_change_the_theme">Are you sure you want to change the theme?</string>
-  <string name="change">Change</string>
+  <string name="dark">Dark</string>
+  <string name="light">Light</string>
   <string name="change_theme_failed">Change theme failed. Please try again.</string>
-  <string name="theme_change_successful">Theme change successful.</string>
 
   <!-- Language Names -->
   <string name="lang_english">English</string>

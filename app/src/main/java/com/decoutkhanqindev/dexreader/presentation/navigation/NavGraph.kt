@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -20,7 +21,6 @@ import com.decoutkhanqindev.dexreader.presentation.screens.auth.register.Registe
 import com.decoutkhanqindev.dexreader.presentation.screens.categories.CategoriesScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.UserViewModel
-import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.manga_section.MangaSectionViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.settings.SettingsViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.favorites.FavoritesScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.history.HistoryScreen
@@ -29,7 +29,6 @@ import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.MangaDe
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.ProfileScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.reader.ReaderScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.search.SearchScreen
-import com.decoutkhanqindev.dexreader.presentation.screens.settings.SettingsScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.splash.SplashScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.statistics.StatisticsScreen
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
@@ -41,7 +40,6 @@ import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateTo
 @Composable
 fun NavGraph() {
   val navController = rememberNavController()
-  val mangaSectionViewModel: MangaSectionViewModel = hiltViewModel()
 
   val userViewModel: UserViewModel = hiltViewModel()
   val isUserLoggedIn by userViewModel.isUserLoggedIn.collectAsStateWithLifecycle()
@@ -69,7 +67,6 @@ fun NavGraph() {
 
       composable<NavRoute.Home> {
         HomeScreen(
-          viewModel = mangaSectionViewModel,
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
           modifier = Modifier.fillMaxSize(),
@@ -140,14 +137,13 @@ fun NavGraph() {
       }
 
       composable<NavRoute.Favorites> {
+        val profileEntry = remember(it) { navController.getBackStackEntry<NavRoute.Profile>() }
         FavoritesScreen(
+          viewModel = hiltViewModel(profileEntry),
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
-          onNavigateToLoginScreen = {
-            navController.navigateClearStack<NavRoute.Favorites>(NavRoute.Login)
-          },
-          onNavigateToMenuItemScreen = { item ->
-            navController.navigatePreserveState<NavRoute.Home>(item.toNavRoute())
+          onNavigateBack = {
+            navController.navigateBack()
           },
           onNavigateToSearchScreen = {
             navController.navigateTo(NavRoute.Search)
@@ -160,14 +156,13 @@ fun NavGraph() {
       }
 
       composable<NavRoute.History> {
+        val profileEntry = remember(it) { navController.getBackStackEntry<NavRoute.Profile>() }
         HistoryScreen(
+          viewModel = hiltViewModel(profileEntry),
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
-          onNavigateToLoginScreen = {
-            navController.navigateClearStack<NavRoute.History>(NavRoute.Login)
-          },
-          onNavigateToMenuItemScreen = { item ->
-            navController.navigatePreserveState<NavRoute.Home>(item.toNavRoute())
+          onNavigateBack = {
+            navController.navigateBack()
           },
           onNavigateToSearchScreen = {
             navController.navigateTo(NavRoute.Search)
@@ -183,14 +178,13 @@ fun NavGraph() {
       }
 
       composable<NavRoute.Statistics> {
+        val profileEntry = remember(it) { navController.getBackStackEntry<NavRoute.Profile>() }
         StatisticsScreen(
+          viewModel = hiltViewModel(profileEntry),
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
-          onNavigateToLoginScreen = {
-            navController.navigateClearStack<NavRoute.Statistics>(NavRoute.Login)
-          },
-          onNavigateToMenuItemScreen = { item ->
-            navController.navigatePreserveState<NavRoute.Home>(item.toNavRoute())
+          onNavigateBack = {
+            navController.navigateBack()
           },
           onNavigateToSearchScreen = {
             navController.navigateTo(NavRoute.Search)
@@ -201,6 +195,7 @@ fun NavGraph() {
 
       composable<NavRoute.Profile> {
         ProfileScreen(
+          settingsViewModel = settingsViewModel,
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
           modifier = Modifier.fillMaxSize(),
@@ -213,20 +208,20 @@ fun NavGraph() {
           onNavigateToHomeScreen = {
             navController.navigateClearStack<NavRoute.Profile>(NavRoute.Home)
           },
-        )
-      }
-
-      composable<NavRoute.Settings> {
-        SettingsScreen(
-          viewModel = settingsViewModel,
-          isUserLoggedIn = isUserLoggedIn,
-          currentUser = currentUser,
-          modifier = Modifier.fillMaxSize(),
-          onNavigateToLoginScreen = {
-            navController.navigateClearStack<NavRoute.Settings>(NavRoute.Login)
+          onNavigateToFavoritesScreen = {
+            navController.navigateTo(NavRoute.Favorites)
           },
-          onNavigateToMenuItemScreen = { item ->
-            navController.navigatePreserveState<NavRoute.Home>(item.toNavRoute())
+          onNavigateToHistoryScreen = {
+            navController.navigateTo(NavRoute.History)
+          },
+          onNavigateToStatisticsScreen = {
+            navController.navigateTo(NavRoute.Statistics)
+          },
+          onNavigateToMangaDetailScreen = { mangaId ->
+            navController.navigateTo(NavRoute.MangaDetails(mangaId))
+          },
+          onNavigateToReaderScreen = { chapterId, lastReadPage, mangaId ->
+            navController.navigateTo(NavRoute.Reader(chapterId, lastReadPage, mangaId))
           },
         )
       }

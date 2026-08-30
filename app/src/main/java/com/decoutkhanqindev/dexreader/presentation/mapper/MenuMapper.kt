@@ -6,7 +6,6 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue.FA
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue.HISTORY
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue.HOME
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue.PROFILE
-import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue.SETTINGS
 import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue.STATISTICS
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 
@@ -18,6 +17,5 @@ object MenuMapper {
     HISTORY -> NavRoute.History
     STATISTICS -> NavRoute.Statistics
     PROFILE -> NavRoute.Profile
-    SETTINGS -> NavRoute.Settings
   }
 }

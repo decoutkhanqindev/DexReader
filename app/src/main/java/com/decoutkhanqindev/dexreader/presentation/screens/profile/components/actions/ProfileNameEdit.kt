@@ -27,7 +27,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
@@ -48,21 +47,23 @@ fun ProfileNameEdit(
 
   Row(
     modifier = modifier.fillMaxWidth(),
-    horizontalArrangement = Arrangement.Center,
+    horizontalArrangement = Arrangement.Start,
     verticalAlignment = Alignment.CenterVertically,
   ) {
     if (!isEdit) {
       Text(
         text = name,
-        textAlign = TextAlign.Center,
+        modifier = Modifier.weight(1f),
         style = MaterialTheme.typography.titleLarge,
       )
     } else {
       TextField(
         value = name,
         onValueChange = onNameChange,
-        modifier = Modifier.focusRequester(focusRequester),
-        textStyle = MaterialTheme.typography.titleLarge.copy(textAlign = TextAlign.Center),
+        modifier = Modifier
+          .weight(1f)
+          .focusRequester(focusRequester),
+        textStyle = MaterialTheme.typography.titleLarge,
         singleLine = true,
         colors = TextFieldDefaults.colors(
           focusedContainerColor = MaterialTheme.colorScheme.surface,

@@ -36,9 +36,6 @@ sealed interface NavRoute {
   data object Profile : NavRoute
 
   @Serializable
-  data object Settings : NavRoute
-
-  @Serializable
   data object Search : NavRoute
 
   @Serializable

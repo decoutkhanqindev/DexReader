@@ -127,7 +127,7 @@ fun FavoritesContent(
                   BaseNextPageState.LOADING -> ListLoadingIndicator(
                     modifier = Modifier
                       .fillMaxWidth()
-                      .padding(start = 4.dp, end = 4.dp, bottom = 12.dp)
+                      .padding(vertical = 12.dp)
                   )
 
                   BaseNextPageState.ERROR -> LoadPageErrorMessage(

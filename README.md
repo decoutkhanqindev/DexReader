@@ -1,5 +1,5 @@
 <h1 align="center">
-  📗 Dex Reader 📘 
+  📗 DexReader 📘 
 </h1>
 <p align="center">
   <i>Read to enjoy - Save to remember</i>
@@ -7,7 +7,7 @@
 
 ## 📜 Description
 
-**Dex Reader** is a modern manga reading application designed for a smooth and intuitive
+**DexReader** is a modern manga reading application designed for a smooth and intuitive
 experience.  
 Built with **Jetpack Compose** and **Material 3**, the app follows **Clean Architecture** and **MVVM
 pattern** to ensure high performance, scalability, and maintainability.  

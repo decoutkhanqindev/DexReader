@@ -50,7 +50,7 @@ fun MenuDrawer(
 
           MenuBody(
             selectedItem = selectedItem,
-            items = MenuValue.entries.toPersistentList(),
+            items = MenuValue.drawerItems.toPersistentList(),
             modifier = Modifier
               .weight(2f)
               .fillMaxWidth(),

@@ -1,4 +1,4 @@
-package com.decoutkhanqindev.dexreader.presentation.screens.history
+package com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.history
 
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.usecase.user.history.ObserveHistoryUseCase
