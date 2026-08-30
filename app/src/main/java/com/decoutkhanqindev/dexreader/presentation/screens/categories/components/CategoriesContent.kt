@@ -6,7 +6,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,7 +40,7 @@ fun CategoriesContent(
   var isShowErrorDialog by remember { mutableStateOf(false) }
   val pullToRefreshState = rememberPullToRefreshState()
 
-  LaunchedEffect(categoryListUiState) {
+  SideEffect(categoryListUiState) {
     if (categoryListUiState is CategoryListUiState.Error) isShowErrorDialog = true
   }
 

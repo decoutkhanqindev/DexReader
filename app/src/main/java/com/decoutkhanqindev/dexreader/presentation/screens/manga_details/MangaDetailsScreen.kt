@@ -3,7 +3,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.manga_details
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,7 +50,7 @@ fun MangaDetailsScreen(
 
   BackHandler { onNavigateBack() }
 
-  LaunchedEffect(isUserLoggedIn, currentUser?.id) {
+  SideEffect(isUserLoggedIn, currentUser?.id) {
     if (isUserLoggedIn && currentUser != null) viewModel.updateUserId(id = currentUser.id)
     else viewModel.updateUserId(id = null)
   }

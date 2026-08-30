@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,11 +37,11 @@ fun RegisterContent(
   var isShowErrorDialog by remember { mutableStateOf(false) }
   var isShowSuccessDialog by remember { mutableStateOf(false) }
 
-  LaunchedEffect(uiState.isError) {
+  SideEffect(uiState.isError) {
     if (uiState.isError) isShowErrorDialog = true
   }
 
-  LaunchedEffect(uiState.isSuccess) {
+  SideEffect(uiState.isSuccess) {
     if (uiState.isSuccess) isShowSuccessDialog = true
   }
 

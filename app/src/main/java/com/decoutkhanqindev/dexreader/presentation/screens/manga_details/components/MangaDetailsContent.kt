@@ -19,7 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -100,7 +100,7 @@ fun MangaDetailsContent(
   var isShowErrorDialog by remember { mutableStateOf(false) }
   val pullToRefreshState = rememberPullToRefreshState()
 
-  LaunchedEffect(mangaDetailsUiState) {
+  SideEffect(mangaDetailsUiState) {
     if (mangaDetailsUiState is MangaDetailsUiState.Error) isShowErrorDialog = true
   }
 

@@ -13,7 +13,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,7 +41,7 @@ fun CategoryCard(
   onCategoryClick: (categoryId: String, title: String, description: String) -> Unit,
   onLoadCover: (String) -> Unit,
 ) {
-  LaunchedEffect(category.id) { onLoadCover(category.id) }
+  SideEffect(category.id) { onLoadCover(category.id) }
 
   val coverUrl = (coverState as? CategoryCoverUiState.Success)?.coverUrl.orEmpty()
   var isImageLoaded by remember(coverUrl) { mutableStateOf(false) }

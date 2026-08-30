@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.history
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -34,7 +34,7 @@ fun HistoryScreen(
   val historyUiState by viewModel.historyUiState.collectAsStateWithLifecycle()
   val removeFromHistoryUiState by viewModel.removeFromHistoryUiState.collectAsStateWithLifecycle()
 
-  LaunchedEffect(isUserLoggedIn, currentUser?.id) {
+  SideEffect(isUserLoggedIn, currentUser?.id) {
     if (isUserLoggedIn && currentUser != null) viewModel.updateUserId(userId = currentUser.id)
     else viewModel.updateUserId(userId = null)
   }

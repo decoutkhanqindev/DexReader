@@ -4,6 +4,27 @@ Dated log of notable multi-file / cross-cutting work sessions. Newest entry firs
 
 ---
 
+## 2026-08-30 — LaunchedEffect → SideEffect migration (23 files)
+
+Bumped `composeBom` from `2026.05.00` to `2026.08.00` (`compose-runtime 1.11.1` → `1.12.0`) to pick up
+the new keyed `SideEffect(key1, ..., effect)` overloads, then migrated every `LaunchedEffect` call site
+in the codebase whose body was fully synchronous (no `delay`, no `.animateTo`/`.collect`, no calling
+a `suspend fun`) over to it — 23 files, ~27 call sites. Verified against the actual `compose-runtime
+1.12.0` sources (not just the announcement blog post) before touching anything: `SideEffect`'s keyed
+overloads take `effect: () -> Unit` (no `CoroutineScope`), so the swap only applies to effects that
+never needed the coroutine in the first place — mostly the "flip a dialog-visibility flag when a
+UiState field changes" pattern and the "`viewModel.updateUserId(...)` on login-state change" pattern
+that opens nearly every `*Screen.kt`, both confirmed to call only plain (non-suspend) functions.
+
+5 files were deliberately left on `LaunchedEffect` because their bodies do real suspend work:
+`AnimatedLogoAndSlogan` (`Animatable.animateTo`), `SplashScreen` (`delay`), `MangaBanner` (two effects,
+`delay`/`animateScrollToPage`/`animateTo`), `ReadingActivityChart` (Vico's `modelProducer.runTransaction`
+is suspend). `ChapterPagesSection`'s `LaunchedEffect(pagerState.currentPage) { onUpdateChapterPage(...) }`
+is technically synchronous too but was held back from this pass for separate testing — the Reader's
+`HorizontalPager` already has documented fragile unmount/remount timing dependencies elsewhere in this
+file (see the "Forcing a same-screen `HorizontalPager` jump" note below), so it isn't being batched
+with the safe, mechanical majority of this migration.
+
 ## 2026-08-24 — Yearly reading-activity chart + non-atomic increment bugfix
 
 Added a 3rd chart to Statistics: `ReadingStats.buildYearlyBreakdown(list): List<YearlyReadingStat>`

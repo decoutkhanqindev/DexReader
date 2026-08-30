@@ -16,7 +16,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,19 +53,19 @@ fun ProfileContent(
   var isShowLogoutUserErrorDialog by remember { mutableStateOf(false) }
   val currentUser = uiState.currentUser
 
-  LaunchedEffect(uiState.isUpdateUserSuccess) {
+  SideEffect(uiState.isUpdateUserSuccess) {
     if (uiState.isUpdateUserSuccess) isShowUpdateUserSuccessDialog = true
   }
 
-  LaunchedEffect(uiState.isUpdateUserError) {
+  SideEffect(uiState.isUpdateUserError) {
     if (uiState.isUpdateUserError) isShowUpdateUserErrorDialog = true
   }
 
-  LaunchedEffect(uiState.isLogoutUserSuccess) {
+  SideEffect(uiState.isLogoutUserSuccess) {
     if (uiState.isLogoutUserSuccess) isShowLogoutUserSuccessDialog = true
   }
 
-  LaunchedEffect(uiState.isLogoutUserError) {
+  SideEffect(uiState.isLogoutUserError) {
     if (uiState.isLogoutUserError) isShowLogoutUserErrorDialog = true
   }
 

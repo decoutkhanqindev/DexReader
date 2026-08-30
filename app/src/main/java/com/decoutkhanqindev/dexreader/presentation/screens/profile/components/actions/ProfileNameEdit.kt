@@ -16,7 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,7 +42,7 @@ fun ProfileNameEdit(
   val focusRequester = remember { FocusRequester() }
   val focusManager = LocalFocusManager.current
 
-  LaunchedEffect(isEdit) {
+  SideEffect(isEdit) {
     if (isEdit) focusRequester.requestFocus()
   }
 

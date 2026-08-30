@@ -20,7 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -70,16 +70,16 @@ fun ReaderScreen(
 
   BackHandler { onNavigateBack() }
 
-  LaunchedEffect(isUserLoggedIn, currentUser?.id) {
+  SideEffect(isUserLoggedIn, currentUser?.id) {
     if (isUserLoggedIn && currentUser != null) viewModel.updateUserId(userId = currentUser.id)
     else viewModel.updateUserId(userId = null)
   }
 
-  LaunchedEffect(resetProgressUiState.isSuccess) {
+  SideEffect(resetProgressUiState.isSuccess) {
     if (resetProgressUiState.isSuccess) isShowResetSuccessDialog = true
   }
 
-  LaunchedEffect(resetProgressUiState.isError) {
+  SideEffect(resetProgressUiState.isError) {
     if (resetProgressUiState.isError) isShowResetErrorDialog = true
   }
 

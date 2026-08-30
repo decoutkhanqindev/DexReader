@@ -386,11 +386,25 @@ TRENDING)` so the detail's first item matches the card's cover. `CategoryReposit
 ### State Management
 
 **Error dialog state**: `remember { mutableStateOf(false) }` +
-`LaunchedEffect(uiState) { if (uiState is Error) isShowErrorDialog = true }` — never key `remember` on
-`uiState` (or a field of it) to derive the initial/show value; only `LaunchedEffect` may set it back to
+`SideEffect(uiState) { if (uiState is Error) isShowErrorDialog = true }` — never key `remember` on
+`uiState` (or a field of it) to derive the initial/show value; only the keyed effect may set it back to
 `true`, so dismiss stays dismissed until the tracked condition flips again. For bundled (non-sealed)
-UiState, key the `LaunchedEffect` on the specific boolean field (`uiState.isError`), not the whole
-state object, so unrelated field changes (e.g. text input) don't re-arm the dialog.
+UiState, key the effect on the specific boolean field (`uiState.isError`), not the whole state object,
+so unrelated field changes (e.g. text input) don't re-arm the dialog. Uses keyed `SideEffect`
+(`compose-runtime 1.12.0+`, via `composeBom 2026.08.00`), not `LaunchedEffect` — the body here is
+always a synchronous state-flag flip or a plain (non-suspend) ViewModel setter call, never a
+coroutine/suspend call, so the coroutine `LaunchedEffect` launches is pure overhead. This is also the
+pattern for the `LaunchedEffect(isUserLoggedIn, currentUser?.id) { viewModel.updateUserId(...) }`
+family at the top of most `*Screen.kt` files, and one-shot side-effect calls like `CategoryCard`'s
+`LaunchedEffect(category.id) { onLoadCover(category.id) }` — same reasoning, same fix, same file.
+**Keep `LaunchedEffect` when the body does any suspend work** — `delay()`, `Animatable.animateTo()`/
+`.snapTo()`, `.collect()` on a flow, or calling a `suspend fun` — `SideEffect`'s `effect` is
+`() -> Unit` with no `CoroutineScope`, so it cannot do any of that (`AnimatedLogoAndSlogan`,
+`SplashScreen`, `MangaBanner`'s two pager-animation effects, `ReadingActivityChart`'s
+`modelProducer.runTransaction { }` are all `LaunchedEffect` for exactly this reason, not oversights).
+`SideEffect` also runs earlier than `LaunchedEffect`/`DisposableEffect` in the frame (during
+composition's apply-changes phase, not dispatched to a coroutine) — fine for the state-flag/setter
+pattern above, but worth re-checking case-by-case for anything timing-sensitive before converting.
 
 **Stage-then-confirm value with a wide-reach effect**: when a field is both (a) displayed/edited
 immediately in a screen's own UI and (b) drives a wider-reach effect gated behind a confirm dialog

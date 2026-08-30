@@ -8,7 +8,7 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,15 +59,15 @@ fun HistoryContent(
   var isShowHistoryErrorDialog by remember { mutableStateOf(false) }
   val pullToRefreshState = rememberPullToRefreshState()
 
-  LaunchedEffect(removeFromHistoryUiState.isError) {
+  SideEffect(removeFromHistoryUiState.isError) {
     if (removeFromHistoryUiState.isError) isShowRemoveFromHistoryErrorDialog = true
   }
 
-  LaunchedEffect(removeFromHistoryUiState.isSuccess) {
+  SideEffect(removeFromHistoryUiState.isSuccess) {
     if (removeFromHistoryUiState.isSuccess) isShowRemoveFromHistorySuccessDialog = true
   }
 
-  LaunchedEffect(historyUiState) {
+  SideEffect(historyUiState) {
     if (historyUiState is BasePaginationUiState.FirstPageError) isShowHistoryErrorDialog = true
   }
 

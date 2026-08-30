@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -44,7 +44,7 @@ fun ProfileScreen(
     }
   }
 
-  LaunchedEffect(isUserLoggedIn, currentUser) {
+  SideEffect(isUserLoggedIn, currentUser) {
     if (isUserLoggedIn && currentUser != null) viewModel.updateCurrentUser(value = currentUser)
     else viewModel.updateCurrentUser(value = null)
   }

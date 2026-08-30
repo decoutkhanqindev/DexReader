@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.statistics
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -27,7 +27,7 @@ fun StatisticsScreen(
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-  LaunchedEffect(currentUser?.id) {
+  SideEffect(currentUser?.id) {
     viewModel.updateUserId(currentUser?.id)
   }
 

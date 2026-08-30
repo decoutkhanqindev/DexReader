@@ -10,7 +10,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -77,7 +77,7 @@ fun CategoryDetailsContent(
   var isShowFilterBottomSheet by remember { mutableStateOf(false) }
   val pullToRefreshState = rememberPullToRefreshState()
 
-  LaunchedEffect(detailsUiState) {
+  SideEffect(detailsUiState) {
     if (detailsUiState is BasePaginationUiState.FirstPageError) isShowErrorDialog = true
   }
 
