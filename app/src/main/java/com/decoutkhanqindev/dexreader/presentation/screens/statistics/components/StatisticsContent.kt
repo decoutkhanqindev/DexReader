@@ -92,13 +92,13 @@ fun StatisticsContent(
           ) {
             Text(
               text = stringResource(R.string.daily_reading_time) + ": " +
-                formatDuration(uiState.dailyTimeMillis),
+                  formatDuration(uiState.dailyTimeMillis),
               style = MaterialTheme.typography.labelMedium,
               color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
               text = stringResource(R.string.weekly_reading_time) + ": " +
-                formatDuration(uiState.weeklyTimeMillis),
+                  formatDuration(uiState.weeklyTimeMillis),
               style = MaterialTheme.typography.labelMedium,
               color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -121,7 +121,7 @@ fun StatisticsContent(
           )
           Text(
             text = stringResource(R.string.total_reading_time) + ": " +
-              formatDuration(uiState.totalTimeMillis),
+                formatDuration(uiState.totalTimeMillis),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.fillMaxWidth()
@@ -144,7 +144,7 @@ fun StatisticsContent(
           )
           Text(
             text = stringResource(R.string.total_reading_time) + ": " +
-              formatDuration(uiState.totalTimeMillis),
+                formatDuration(uiState.totalTimeMillis),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.fillMaxWidth()
@@ -169,7 +169,7 @@ private fun formatDuration(millis: Long): String {
   val remainingMinutes = minutes % 60
   return if (hours > 0) {
     stringResource(R.string.hours_suffix, hours) + " " +
-      stringResource(R.string.minutes_suffix, remainingMinutes)
+        stringResource(R.string.minutes_suffix, remainingMinutes)
   } else {
     stringResource(R.string.minutes_suffix, minutes)
   }

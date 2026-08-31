@@ -98,80 +98,80 @@ fun FavoritesContent(
         } else {
           Box(modifier = Modifier.fillMaxSize()) {
             LazyVerticalGrid(
-            state = lazyGridState,
-            modifier = Modifier.fillMaxSize(),
-            columns = GridCells.Fixed(2),
-            verticalArrangement = Arrangement.spacedBy(2.dp),
-            horizontalArrangement = Arrangement.spacedBy(2.dp),
-          ) {
-            items(
-              items = favoriteMangaList,
-              key = FavoriteMangaModel::id
+              state = lazyGridState,
+              modifier = Modifier.fillMaxSize(),
+              columns = GridCells.Fixed(2),
+              verticalArrangement = Arrangement.spacedBy(2.dp),
+              horizontalArrangement = Arrangement.spacedBy(2.dp),
             ) {
-              FavoriteMangaItem(
-                manga = it,
-                onSelectedManga = onSelectedManga,
-                modifier = Modifier
-                  .padding(4.dp)
-                  .fillMaxWidth()
-                  .height(250.dp)
-              )
-            }
-            item(span = { GridItemSpan(maxLineSpan) }) {
-              Box(
-                modifier = Modifier
-                  .fillMaxWidth()
-                  .padding(top = 8.dp)
+              items(
+                items = favoriteMangaList,
+                key = FavoriteMangaModel::id
               ) {
-                when (nextPageState) {
-                  BaseNextPageState.LOADING -> ListLoadingIndicator(
-                    modifier = Modifier
-                      .fillMaxWidth()
-                      .padding(vertical = 12.dp)
-                  )
+                FavoriteMangaItem(
+                  manga = it,
+                  onSelectedManga = onSelectedManga,
+                  modifier = Modifier
+                    .padding(4.dp)
+                    .fillMaxWidth()
+                    .height(250.dp)
+                )
+              }
+              item(span = { GridItemSpan(maxLineSpan) }) {
+                Box(
+                  modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+                ) {
+                  when (nextPageState) {
+                    BaseNextPageState.LOADING -> ListLoadingIndicator(
+                      modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 12.dp)
+                    )
 
-                  BaseNextPageState.ERROR -> LoadPageErrorMessage(
-                    message = stringResource(R.string.can_t_load_next_manga_page_please_try_again),
-                    onRetryClick = onRetryObserveFavoriteMangaListNextPage,
-                    modifier = Modifier
-                      .fillMaxWidth()
-                      .padding(start = 4.dp, end = 4.dp, bottom = 12.dp)
-                  )
+                    BaseNextPageState.ERROR -> LoadPageErrorMessage(
+                      message = stringResource(R.string.can_t_load_next_manga_page_please_try_again),
+                      onRetryClick = onRetryObserveFavoriteMangaListNextPage,
+                      modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 4.dp, end = 4.dp, bottom = 12.dp)
+                    )
 
-                  BaseNextPageState.IDLE -> LoadMoreMessage(
-                    onClick = onObserveFavoriteMangaListNextPage,
-                    modifier = Modifier
-                      .fillMaxWidth()
-                      .padding(start = 4.dp, top = 12.dp, end = 4.dp, bottom = 12.dp)
-                  )
+                    BaseNextPageState.IDLE -> LoadMoreMessage(
+                      onClick = onObserveFavoriteMangaListNextPage,
+                      modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 4.dp, top = 12.dp, end = 4.dp, bottom = 12.dp)
+                    )
 
-                  BaseNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
-                    title = stringResource(R.string.all_mangas_loaded),
-                    modifier = Modifier
-                      .fillMaxWidth()
-                      .padding(start = 4.dp, end = 4.dp, bottom = 12.dp)
-                  )
+                    BaseNextPageState.NO_MORE_ITEMS -> AllItemLoadedMessage(
+                      title = stringResource(R.string.all_mangas_loaded),
+                      modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 4.dp, end = 4.dp, bottom = 12.dp)
+                    )
+                  }
                 }
               }
             }
-          }
 
-          MoveToTopButton(
-            itemsSize = favoriteMangaList.size,
-            gridState = { lazyGridState },
-            modifier = Modifier
-              .align(Alignment.BottomEnd)
-              .padding(16.dp)
-          ) {
-            coroutineScope.launch {
-              lazyGridState.animateScrollToItem(0)
+            MoveToTopButton(
+              itemsSize = favoriteMangaList.size,
+              gridState = { lazyGridState },
+              modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp)
+            ) {
+              coroutineScope.launch {
+                lazyGridState.animateScrollToItem(0)
+              }
             }
           }
         }
       }
     }
   }
-}
 }
 
 private val previewFavoriteList = persistentListOf(

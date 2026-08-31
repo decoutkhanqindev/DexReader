@@ -28,7 +28,8 @@ class CategoriesViewModel @Inject constructor(
   private val getCategoryListUseCase: GetCategoryListUseCase,
   private val getMangaListUseCase: GetMangaListUseCase,
 ) : BaseViewModel() {
-  private val _categoryListUiState = MutableStateFlow<CategoryListUiState>(CategoryListUiState.Loading)
+  private val _categoryListUiState =
+    MutableStateFlow<CategoryListUiState>(CategoryListUiState.Loading)
   val categoryListUiState: StateFlow<CategoryListUiState> = _categoryListUiState.asStateFlow()
 
   private val _categoryCoverStates =
@@ -80,7 +81,10 @@ class CategoriesViewModel @Inject constructor(
       )
         .onSuccess { mangaList ->
           _categoryCoverStates.update {
-            it.put(categoryId, CategoryCoverUiState.Success(mangaList.firstOrNull()?.coverUrl.orEmpty()))
+            it.put(
+              categoryId,
+              CategoryCoverUiState.Success(mangaList.firstOrNull()?.coverUrl.orEmpty())
+            )
           }
         }
         .onFailure { throwable ->

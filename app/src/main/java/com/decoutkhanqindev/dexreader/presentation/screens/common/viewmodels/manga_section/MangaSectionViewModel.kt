@@ -77,7 +77,8 @@ class MangaSectionViewModel @Inject constructor(
         )
       } else {
         val throwable = results.firstOrNull { it.isFailure }?.exceptionOrNull()
-        _uiState.value = MangaSectionUiState.Error(throwable?.toFeatureError() ?: FeatureError.Generic)
+        _uiState.value =
+          MangaSectionUiState.Error(throwable?.toFeatureError() ?: FeatureError.Generic)
         Timber.tag(this::class.java.simpleName)
           .e("fetchMangaLists have error: ${throwable?.stackTraceToString()}")
       }

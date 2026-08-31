@@ -24,7 +24,11 @@ class StatisticsRepositoryImpl @Inject constructor(
   ) = runSuspendCatching(
     context = Dispatchers.IO,
     block = {
-      firestoreSource.incrementReadingDuration(userId, readingStats.date, readingStats.durationMillis)
+      firestoreSource.incrementReadingDuration(
+        userId,
+        readingStats.date,
+        readingStats.durationMillis
+      )
     },
     catch = { it.toFirebaseFirestoreException() }
   )

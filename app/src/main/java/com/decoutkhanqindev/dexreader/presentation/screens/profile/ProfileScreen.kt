@@ -19,14 +19,13 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.bottom_bar.BottomTabItemValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseScreen
-import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmerHighlight
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScreen
-import com.decoutkhanqindev.dexreader.presentation.screens.profile.components.actions.SignInButton
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.favorites.FavoritesViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.history.HistoryViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.settings.SettingsViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.statistics.StatisticsViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.components.ProfileContent
+import com.decoutkhanqindev.dexreader.presentation.screens.profile.components.actions.SignInButton
 
 @Composable
 fun ProfileScreen(

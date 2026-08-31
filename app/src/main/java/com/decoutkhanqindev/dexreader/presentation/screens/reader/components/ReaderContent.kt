@@ -24,6 +24,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterPagesModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.reader.ChapterPagesUiState
+import com.decoutkhanqindev.dexreader.presentation.screens.reader.ResetProgressUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.reader.components.pages.ChapterPagesSection
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.persistentListOf
@@ -31,6 +32,7 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 fun ReaderContent(
   chapterPageUiState: ChapterPagesUiState,
+  resetProgressUiState: ResetProgressUiState,
   modifier: Modifier = Modifier,
   onUpdateChapterPage: (Int) -> Unit,
   onRetry: () -> Unit,
@@ -77,6 +79,7 @@ fun ReaderContent(
           )
         } else {
           ChapterPagesSection(
+            reset = resetProgressUiState.isSuccess,
             chapterPages = chapterPages,
             currentPage = currentPage,
             totalPages = totalPages,
@@ -95,6 +98,7 @@ private fun ReaderContentLoadingPreview() {
   DexReaderTheme {
     ReaderContent(
       chapterPageUiState = ChapterPagesUiState.Loading,
+      resetProgressUiState = ResetProgressUiState(isSuccess = false, isError = false),
       modifier = Modifier.fillMaxSize(),
       onUpdateChapterPage = {},
       onRetry = {}
@@ -108,6 +112,7 @@ private fun ReaderContentErrorPreview() {
   DexReaderTheme {
     ReaderContent(
       chapterPageUiState = ChapterPagesUiState.Error(FeatureError.NetworkUnavailable),
+      resetProgressUiState = ResetProgressUiState(isSuccess = false, isError = false),
       modifier = Modifier.fillMaxSize(),
       onUpdateChapterPage = {},
       onRetry = {}
@@ -128,6 +133,7 @@ private fun ReaderContentEmptyPagesPreview() {
           totalPages = 0,
         )
       ),
+      resetProgressUiState = ResetProgressUiState(isSuccess = false, isError = false),
       modifier = Modifier.fillMaxSize(),
       onUpdateChapterPage = {},
       onRetry = {}
@@ -148,9 +154,10 @@ private fun ReaderContentWithPagesPreview() {
           totalPages = 4,
         )
       ),
+      resetProgressUiState = ResetProgressUiState(isSuccess = false, isError = false),
       modifier = Modifier.fillMaxSize(),
       onUpdateChapterPage = {},
-      onRetry = {}
+      onRetry = {},
     )
   }
 }

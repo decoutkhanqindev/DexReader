@@ -14,7 +14,9 @@ data class CategoryDetailsCriteriaUiState(
   val sortCriteria: MangaSortCriteriaValue = MangaSortCriteriaValue.LATEST_UPDATE,
   val sortOrder: MangaSortOrderValue = MangaSortOrderValue.DESC,
   val statusFilter: ImmutableList<MangaStatusValue> = persistentListOf(MangaStatusValue.ON_GOING),
-  val contentRatingFilter: ImmutableList<MangaContentRatingValue> = persistentListOf(MangaContentRatingValue.SAFE),
+  val contentRatingFilter: ImmutableList<MangaContentRatingValue> = persistentListOf(
+    MangaContentRatingValue.SAFE
+  ),
 ) {
   companion object {
     fun forSection(sortCriteria: MangaSortCriteriaValue): CategoryDetailsCriteriaUiState =

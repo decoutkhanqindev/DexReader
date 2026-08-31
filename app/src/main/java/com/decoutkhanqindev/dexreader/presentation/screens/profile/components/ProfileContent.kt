@@ -131,9 +131,11 @@ fun ProfileContent(
         onUpdateClick = onUpdateClick,
       )
 
-      HorizontalDivider(modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = 8.dp))
+      HorizontalDivider(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(top = 8.dp)
+      )
 
       ProfileFavoritesSection(
         uiState = favoritesUiState,

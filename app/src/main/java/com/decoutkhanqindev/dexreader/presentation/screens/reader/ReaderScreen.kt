@@ -150,6 +150,7 @@ fun ReaderScreen(
   ) { innerPadding ->
     ReaderContent(
       chapterPageUiState = chapterPagesUiState,
+      resetProgressUiState = resetProgressUiState,
       modifier = Modifier
         .fillMaxSize()
         .padding(innerPadding),

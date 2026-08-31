@@ -8,6 +8,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -17,6 +18,7 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun ChapterPagesSection(
+  reset: Boolean = false,
   chapterPages: ImmutableList<String>,
   currentPage: Int,
   totalPages: Int,
@@ -28,8 +30,12 @@ fun ChapterPagesSection(
     pageCount = { totalPages }
   )
 
-  LaunchedEffect(pagerState.currentPage) {
+  SideEffect(pagerState.currentPage) {
     onUpdateChapterPage(pagerState.currentPage + 1)
+  }
+
+  LaunchedEffect(reset) {
+    if (reset) pagerState.animateScrollToPage(0)
   }
 
   HorizontalPager(

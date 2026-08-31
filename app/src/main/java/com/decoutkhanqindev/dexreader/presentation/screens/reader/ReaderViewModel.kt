@@ -633,20 +633,30 @@ class ReaderViewModel @Inject constructor(
         )
       } ?: Result.success(Unit)
 
-      removeResult
-        .onSuccess {
-          if (currentChapterId == chapterIdAtResetStart) {
-            currentReadingHistory = null
-            _chapterPagesUiState.value = ChapterPagesUiState.Loading
-            _chapterPagesUiState.value = currentPagesState.copy(currentChapterPage = 1)
-          }
-          _resetProgressUiState.update { it.copy(isLoading = false, isSuccess = true, isError = false) }
+      removeResult.onSuccess {
+        if (currentChapterId == chapterIdAtResetStart) {
+          currentReadingHistory = null
+          _chapterPagesUiState.value = ChapterPagesUiState.Loading
+          _chapterPagesUiState.value = currentPagesState.copy(currentChapterPage = 1)
         }
-        .onFailure { throwable ->
-          _resetProgressUiState.update { it.copy(isLoading = false, isSuccess = false, isError = true) }
-          Timber.tag(this::class.java.simpleName)
-            .e("resetChapterProgress have error: ${throwable.stackTraceToString()}")
+        _resetProgressUiState.update {
+          it.copy(
+            isLoading = false,
+            isSuccess = true,
+            isError = false
+          )
         }
+      }.onFailure { throwable ->
+        _resetProgressUiState.update {
+          it.copy(
+            isLoading = false,
+            isSuccess = false,
+            isError = true
+          )
+        }
+        Timber.tag(this::class.java.simpleName)
+          .e("resetChapterProgress have error: ${throwable.stackTraceToString()}")
+      }
     }
   }
 

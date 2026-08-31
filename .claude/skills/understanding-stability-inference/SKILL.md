@@ -145,6 +145,7 @@ The compiler walks `Box<T>`:
 ```
 
 ### Pattern: "Why does
+
 `@Immutable data class Person(val name: String)` enable more optimizations than `@Stable`?"
 
 `@Stable` is a contract: "I will notify Compose of changes". `@Immutable` is a stronger contract: "I

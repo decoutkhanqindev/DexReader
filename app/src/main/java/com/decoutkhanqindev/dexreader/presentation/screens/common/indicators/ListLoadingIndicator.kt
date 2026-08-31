@@ -16,11 +16,11 @@ fun ListLoadingIndicator(modifier: Modifier = Modifier) {
     modifier = modifier,
     contentAlignment = Alignment.Center
   ) {
-      LinearProgressIndicator(
-        modifier = Modifier.fillMaxWidth(0.4f),
-        color = MaterialTheme.colorScheme.onPrimaryContainer,
-        trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
-      )
+    LinearProgressIndicator(
+      modifier = Modifier.fillMaxWidth(0.4f),
+      color = MaterialTheme.colorScheme.onPrimaryContainer,
+      trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+    )
   }
 }
 

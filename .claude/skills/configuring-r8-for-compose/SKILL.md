@@ -5,16 +5,16 @@ license: Apache-2.0. See LICENSE for complete terms.
 metadata:
   author: Jaewoong Eum (skydoves)
   keywords:
-  - jetpack-compose
-  - performance
-  - r8
-  - proguard
-  - keep-rules
-  - apk-size
-  - minification
-  - shrinking
-  - obfuscation
-  - release-build
+    - jetpack-compose
+    - performance
+    - r8
+    - proguard
+    - keep-rules
+    - apk-size
+    - minification
+    - shrinking
+    - obfuscation
+    - release-build
 ---
 
 # Configuring R8 for Compose — Trust Consumer Rules, Avoid Blanket Keeps
@@ -87,16 +87,16 @@ Developers Medium).
 ```kotlin
 // app/build.gradle.kts
 android {
-    buildTypes {
-        release {
-            isMinifyEnabled = true
-            isShrinkResources = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro",
-            )
-        }
+  buildTypes {
+    release {
+      isMinifyEnabled = true
+      isShrinkResources = true
+      proguardFiles(
+        getDefaultProguardFile("proguard-android-optimize.txt"),
+        "proguard-rules.pro",
+      )
     }
+  }
 }
 ```
 
@@ -180,11 +180,11 @@ un-minified release.
 ```kotlin
 // WRONG
 buildTypes.release {
-    isMinifyEnabled = true
-    proguardFiles(
-        getDefaultProguardFile("proguard-android.txt"),
-        "proguard-rules.pro",
-    )
+  isMinifyEnabled = true
+  proguardFiles(
+    getDefaultProguardFile("proguard-android.txt"),
+    "proguard-rules.pro",
+  )
 }
 // WRONG because: proguard-android.txt explicitly skips R8's optimization passes. Lambda grouping, devirtualization, constant folding, sourceInformation stripping all do not run. The release variant builds and installs but performs like a poorly minified app.
 ```
@@ -192,12 +192,12 @@ buildTypes.release {
 ```kotlin
 // RIGHT
 buildTypes.release {
-    isMinifyEnabled = true
-    isShrinkResources = true
-    proguardFiles(
-        getDefaultProguardFile("proguard-android-optimize.txt"),
-        "proguard-rules.pro",
-    )
+  isMinifyEnabled = true
+  isShrinkResources = true
+  proguardFiles(
+    getDefaultProguardFile("proguard-android-optimize.txt"),
+    "proguard-rules.pro",
+  )
 }
 ```
 

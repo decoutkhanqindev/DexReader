@@ -5,14 +5,14 @@ license: Apache-2.0. See LICENSE for complete terms.
 metadata:
   author: Jaewoong Eum (skydoves)
   keywords:
-  - jetpack-compose
-  - performance
-  - lazy-prefetch
-  - lazy-layout-cache-window
-  - pausable-composition
-  - nested-prefetch
-  - frame-timing
-  - macrobenchmark
+    - jetpack-compose
+    - performance
+    - lazy-prefetch
+    - lazy-layout-cache-window
+    - pausable-composition
+    - nested-prefetch
+    - frame-timing
+    - macrobenchmark
 ---
 
 # Configuring Lazy Prefetch — Cache Window and Pausable Composition
@@ -92,14 +92,14 @@ implement nested prefetch, and how to validate the change with Macrobenchmark.
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HeavyFeed(items: ImmutableList<HeavyItem>) {
-    val state = rememberLazyListState(
-        cacheWindow = LazyLayoutCacheWindow(ahead = 200.dp, behind = 100.dp)
-    )
-    LazyColumn(state = state) {
-        items(items, key = { it.id }, contentType = { it::class }) { item ->
-            HeavyItemRow(item, Modifier.animateItem())
-        }
+  val state = rememberLazyListState(
+    cacheWindow = LazyLayoutCacheWindow(ahead = 200.dp, behind = 100.dp)
+  )
+  LazyColumn(state = state) {
+    items(items, key = { it.id }, contentType = { it::class }) { item ->
+      HeavyItemRow(item, Modifier.animateItem())
     }
+  }
 }
 ```
 
@@ -130,7 +130,7 @@ fun HeavyFeed(items: ImmutableList<HeavyItem>) {
 ```kotlin
 // OK — short, light items: default behavior is correct
 LazyColumn {
-    items(items, key = { it.id }, contentType = { it::class }) { Item(it) }
+  items(items, key = { it.id }, contentType = { it::class }) { Item(it) }
 }
 ```
 
@@ -139,12 +139,12 @@ LazyColumn {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HeavyFeed(items: ImmutableList<HeavyItem>) {
-    val state = rememberLazyListState(
-        cacheWindow = LazyLayoutCacheWindow(ahead = 200.dp, behind = 100.dp)
-    )
-    LazyColumn(state = state) {
-        items(items, key = { it.id }, contentType = { it::class }) { HeavyItem(it) }
-    }
+  val state = rememberLazyListState(
+    cacheWindow = LazyLayoutCacheWindow(ahead = 200.dp, behind = 100.dp)
+  )
+  LazyColumn(state = state) {
+    items(items, key = { it.id }, contentType = { it::class }) { HeavyItem(it) }
+  }
 }
 ```
 
@@ -153,14 +153,14 @@ fun HeavyFeed(items: ImmutableList<HeavyItem>) {
 ```kotlin
 // RIGHT — the outer LazyColumn warms the inner pager's first item via nested prefetch
 LazyColumn {
-    items(rows, key = { it.id }, contentType = { it::class }) { row ->
-        HorizontalPager(
-            state = rememberPagerState(pageCount = { row.pages.size }),
-            // Implement NestedPrefetchScope on the inner pager so outer prefetch chains in.
-        ) { pageIndex ->
-            PagerPage(row.pages[pageIndex])
-        }
+  items(rows, key = { it.id }, contentType = { it::class }) { row ->
+    HorizontalPager(
+      state = rememberPagerState(pageCount = { row.pages.size }),
+      // Implement NestedPrefetchScope on the inner pager so outer prefetch chains in.
+    ) { pageIndex ->
+      PagerPage(row.pages[pageIndex])
     }
+  }
 }
 ```
 
@@ -175,10 +175,10 @@ the outer prefetch slot.
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WideWindow(items: ImmutableList<Item>) {
-    val state = rememberLazyListState(
-        cacheWindow = LazyLayoutCacheWindow(ahead = 2000.dp, behind = 2000.dp)
-    )
-    LazyColumn(state = state) { /* ... */ }
+  val state = rememberLazyListState(
+    cacheWindow = LazyLayoutCacheWindow(ahead = 2000.dp, behind = 2000.dp)
+  )
+  LazyColumn(state = state) { /* ... */ }
 }
 // WRONG because: a 2000.dp ahead/behind window pre-composes a screenful of extra items on every scroll tick. Memory pressure rises (especially with image-heavy items) and a single direction-reverse wastes most of the prefetched work. Wide windows are not "safe defaults" — they are deliberate trade-offs that MUST be backed by Macrobenchmark numbers.
 ```
@@ -188,10 +188,10 @@ fun WideWindow(items: ImmutableList<Item>) {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NarrowWindow(items: ImmutableList<Item>) {
-    val state = rememberLazyListState(
-        cacheWindow = LazyLayoutCacheWindow(ahead = 200.dp, behind = 100.dp)
-    )
-    LazyColumn(state = state) { /* ... */ }
+  val state = rememberLazyListState(
+    cacheWindow = LazyLayoutCacheWindow(ahead = 200.dp, behind = 100.dp)
+  )
+  LazyColumn(state = state) { /* ... */ }
 }
 ```
 
@@ -202,12 +202,12 @@ fun NarrowWindow(items: ImmutableList<Item>) {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Feed(items: List<Item>) {        // unstable parameter
-    val state = rememberLazyListState(
-        cacheWindow = LazyLayoutCacheWindow(ahead = 400.dp, behind = 200.dp)
-    )
-    LazyColumn(state = state) {
-        items(items, key = { it.id }) { item -> ItemRow(item) }
-    }
+  val state = rememberLazyListState(
+    cacheWindow = LazyLayoutCacheWindow(ahead = 400.dp, behind = 200.dp)
+  )
+  LazyColumn(state = state) {
+    items(items, key = { it.id }) { item -> ItemRow(item) }
+  }
 }
 // WRONG because: pre-composing additional unstable rows just spreads the same wasted work over more frames. The cache window cannot fix non-skippable item composables.
 ```
@@ -216,9 +216,9 @@ fun Feed(items: List<Item>) {        // unstable parameter
 // RIGHT — fix stability first, then leave the window at default; widen only if Macrobenchmark still shows jank
 @Composable
 fun Feed(items: ImmutableList<Item>) {
-    LazyColumn {
-        items(items, key = { it.id }, contentType = { it::class }) { item -> ItemRow(item) }
-    }
+  LazyColumn {
+    items(items, key = { it.id }, contentType = { it::class }) { item -> ItemRow(item) }
+  }
 }
 ```
 
@@ -232,7 +232,7 @@ Cross-reference: `../optimizing-lazy-layouts/SKILL.md` and
 // gradle/libs.versions.toml:
 //   compose-foundation = "1.10.0"
 LazyColumn {
-    items(items, key = { it.id }, contentType = { it::class }) { HeavyItem(it) }
+  items(items, key = { it.id }, contentType = { it::class }) { HeavyItem(it) }
 }
 ```
 

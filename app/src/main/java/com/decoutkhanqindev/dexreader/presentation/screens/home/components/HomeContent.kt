@@ -211,7 +211,12 @@ private fun HomeContentSuccessPreview() {
           MangaSectionValue.NEW_RELEASE to previewMangaList,
           MangaSectionValue.TOP_RATED to previewMangaList,
         ),
-      ), modifier = Modifier.fillMaxSize(), onItemClick = {}, onMoreClick = { _, _ -> }, onRetry = {}, onRefresh = {}
+      ),
+      modifier = Modifier.fillMaxSize(),
+      onItemClick = {},
+      onMoreClick = { _, _ -> },
+      onRetry = {},
+      onRefresh = {}
     )
   }
 }

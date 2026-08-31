@@ -25,7 +25,8 @@ object StatisticsMapper {
   }
 
   fun ReadingStats.toWeeklyChartPoint(): ReadingChartPointModel {
-    val label = dateParseFormat.get()!!.parse(date)?.let { dayLabelFormat.get()!!.format(it) }.orEmpty()
+    val label =
+      dateParseFormat.get()!!.parse(date)?.let { dayLabelFormat.get()!!.format(it) }.orEmpty()
     return ReadingChartPointModel(
       id = date,
       label = label,
@@ -34,7 +35,8 @@ object StatisticsMapper {
   }
 
   fun MonthlyReadingStat.toMonthlyChartPoint(): ReadingChartPointModel {
-    val label = monthParseFormat.get()!!.parse(month)?.let { monthLabelFormat.get()!!.format(it) }.orEmpty()
+    val label =
+      monthParseFormat.get()!!.parse(month)?.let { monthLabelFormat.get()!!.format(it) }.orEmpty()
     return ReadingChartPointModel(
       id = month,
       label = label,

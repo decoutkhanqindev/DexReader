@@ -63,7 +63,7 @@ fun NameInputField(
     },
     textStyle = MaterialTheme.typography.bodyLarge,
     keyboardOptions = keyboardOptions,
-    colors =  OutlinedTextFieldDefaults.colors(
+    colors = OutlinedTextFieldDefaults.colors(
       focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
       unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
       focusedBorderColor = MaterialTheme.colorScheme.onPrimaryContainer,

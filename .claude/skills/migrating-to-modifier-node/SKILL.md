@@ -5,14 +5,14 @@ license: Apache-2.0. See LICENSE for complete terms.
 metadata:
   author: Jaewoong Eum (skydoves)
   keywords:
-  - jetpack-compose
-  - performance
-  - modifier-node
-  - modifier-composed
-  - custom-modifier
-  - draw-modifier-node
-  - layout-modifier-node
-  - composition-local-consumer
+    - jetpack-compose
+    - performance
+    - modifier-node
+    - modifier-composed
+    - custom-modifier
+    - draw-modifier-node
+    - layout-modifier-node
+    - composition-local-consumer
 ---
 
 # Migrating to Modifier.Node — Persistent Nodes Over `composed { }`
@@ -128,8 +128,8 @@ mega-node implementing five interfaces.
 ```kotlin
 // WRONG (legacy)
 fun Modifier.circle(color: Color): Modifier = composed {
-    val computed = remember(color) { color.copy(alpha = 0.5f) }
-    drawBehind { drawCircle(computed) }
+  val computed = remember(color) { color.copy(alpha = 0.5f) }
+  drawBehind { drawCircle(computed) }
 }
 // WRONG because: composed { } opens a fresh composable scope per parent recomposition; the modifier can never be skipped and forces the parent to recompose on every read it does inside.
 ```
@@ -137,15 +137,17 @@ fun Modifier.circle(color: Color): Modifier = composed {
 ```kotlin
 // RIGHT
 private data class CircleElement(val color: Color) : ModifierNodeElement<CircleNode>() {
-    override fun create(): CircleNode = CircleNode(color)
-    override fun update(node: CircleNode) { node.color = color }
+  override fun create(): CircleNode = CircleNode(color)
+  override fun update(node: CircleNode) {
+    node.color = color
+  }
 }
 
 private class CircleNode(var color: Color) : Modifier.Node(), DrawModifierNode {
-    override fun ContentDrawScope.draw() {
-        drawCircle(color.copy(alpha = 0.5f))
-        drawContent()
-    }
+  override fun ContentDrawScope.draw() {
+    drawCircle(color.copy(alpha = 0.5f))
+    drawContent()
+  }
 }
 
 fun Modifier.circle(color: Color): Modifier = this then CircleElement(color)
@@ -160,11 +162,13 @@ mutates `node.color` in place — no allocation, no Composition invalidation in 
 ```kotlin
 // WRONG (legacy)
 fun Modifier.pulse(period: Long): Modifier = composed {
-    val alpha = remember { Animatable(1f) }
-    LaunchedEffect(period) {
-        while (true) { alpha.animateTo(0.3f); alpha.animateTo(1f); delay(period) }
+  val alpha = remember { Animatable(1f) }
+  LaunchedEffect(period) {
+    while (true) {
+      alpha.animateTo(0.3f); alpha.animateTo(1f); delay(period)
     }
-    graphicsLayer { this.alpha = alpha.value }
+  }
+  graphicsLayer { this.alpha = alpha.value }
 }
 // WRONG because: every parent recomposition allocates a new composable scope, and the LaunchedEffect's keying logic re-evaluates inside that scope.
 ```
@@ -172,27 +176,29 @@ fun Modifier.pulse(period: Long): Modifier = composed {
 ```kotlin
 // RIGHT
 private data class PulseElement(val period: Long) : ModifierNodeElement<PulseNode>() {
-    override fun create(): PulseNode = PulseNode(period)
-    override fun update(node: PulseNode) { node.period = period }
+  override fun create(): PulseNode = PulseNode(period)
+  override fun update(node: PulseNode) {
+    node.period = period
+  }
 }
 
 private class PulseNode(var period: Long) : Modifier.Node(), DrawModifierNode {
-    private var alpha by mutableFloatStateOf(1f)
+  private var alpha by mutableFloatStateOf(1f)
 
-    override fun onAttach() {
-        coroutineScope.launch {
-            while (true) {
-                animate(1f, 0.3f) { value, _ -> alpha = value; invalidateDraw() }
-                animate(0.3f, 1f) { value, _ -> alpha = value; invalidateDraw() }
-                delay(period)
-            }
-        }
+  override fun onAttach() {
+    coroutineScope.launch {
+      while (true) {
+        animate(1f, 0.3f) { value, _ -> alpha = value; invalidateDraw() }
+        animate(0.3f, 1f) { value, _ -> alpha = value; invalidateDraw() }
+        delay(period)
+      }
     }
+  }
 
-    override fun ContentDrawScope.draw() {
-        drawContent()
-        drawRect(Color.Black.copy(alpha = 1f - alpha), blendMode = BlendMode.DstIn)
-    }
+  override fun ContentDrawScope.draw() {
+    drawContent()
+    drawRect(Color.Black.copy(alpha = 1f - alpha), blendMode = BlendMode.DstIn)
+  }
 }
 
 fun Modifier.pulse(period: Long): Modifier = this then PulseElement(period)
@@ -206,8 +212,8 @@ The node's built-in `coroutineScope` is cancelled automatically on `onDetach`. N
 ```kotlin
 // WRONG (legacy)
 fun Modifier.themedBorder(width: Dp): Modifier = composed {
-    val tokens = LocalThemeTokens.current
-    drawBehind { drawRect(tokens.outline, style = Stroke(width.toPx())) }
+  val tokens = LocalThemeTokens.current
+  drawBehind { drawRect(tokens.outline, style = Stroke(width.toPx())) }
 }
 // WRONG because: every CompositionLocal read inside composed { } pins the modifier to a fresh scope per parent recomposition.
 ```
@@ -215,18 +221,20 @@ fun Modifier.themedBorder(width: Dp): Modifier = composed {
 ```kotlin
 // RIGHT
 private data class ThemedBorderElement(val width: Dp) : ModifierNodeElement<ThemedBorderNode>() {
-    override fun create(): ThemedBorderNode = ThemedBorderNode(width)
-    override fun update(node: ThemedBorderNode) { node.width = width }
+  override fun create(): ThemedBorderNode = ThemedBorderNode(width)
+  override fun update(node: ThemedBorderNode) {
+    node.width = width
+  }
 }
 
 private class ThemedBorderNode(
-    var width: Dp,
+  var width: Dp,
 ) : Modifier.Node(), DrawModifierNode, CompositionLocalConsumerModifierNode {
-    override fun ContentDrawScope.draw() {
-        val tokens = currentValueOf(LocalThemeTokens)
-        drawContent()
-        drawRect(tokens.outline, style = Stroke(width.toPx()))
-    }
+  override fun ContentDrawScope.draw() {
+    val tokens = currentValueOf(LocalThemeTokens)
+    drawContent()
+    drawRect(tokens.outline, style = Stroke(width.toPx()))
+  }
 }
 
 fun Modifier.themedBorder(width: Dp): Modifier = this then ThemedBorderElement(width)
@@ -241,8 +249,10 @@ changing `LocalThemeTokens` redraws the node without recomposing the parent.
 ```kotlin
 // WRONG
 private class CircleElement(val color: Color) : ModifierNodeElement<CircleNode>() {
-    override fun create() = CircleNode(color)
-    override fun update(node: CircleNode) { node.color = color }
+  override fun create() = CircleNode(color)
+  override fun update(node: CircleNode) {
+    node.color = color
+  }
 }
 // WRONG because: not a data class -> equals() is referential -> every apply looks like a different element -> Compose tears down and recreates the node every time, OR the diff fails and update() is never called, leaving the node with the original color forever.
 ```
@@ -250,8 +260,10 @@ private class CircleElement(val color: Color) : ModifierNodeElement<CircleNode>(
 ```kotlin
 // RIGHT
 private data class CircleElement(val color: Color) : ModifierNodeElement<CircleNode>() {
-    override fun create() = CircleNode(color)
-    override fun update(node: CircleNode) { node.color = color }
+  override fun create() = CircleNode(color)
+  override fun update(node: CircleNode) {
+    node.color = color
+  }
 }
 ```
 
@@ -266,8 +278,10 @@ private class HostingNode(val composer: Composer) : Modifier.Node() { /* ... */ 
 ```kotlin
 // RIGHT — accept primitive/stable parameters; read CompositionLocals via CompositionLocalConsumerModifierNode if you need composition context.
 private data class HostingElement(val tag: String) : ModifierNodeElement<HostingNode>() {
-    override fun create() = HostingNode(tag)
-    override fun update(node: HostingNode) { node.tag = tag }
+  override fun create() = HostingNode(tag)
+  override fun update(node: HostingNode) {
+    node.tag = tag
+  }
 }
 private class HostingNode(var tag: String) : Modifier.Node() { /* ... */ }
 ```
@@ -277,26 +291,26 @@ private class HostingNode(var tag: String) : Modifier.Node() { /* ... */ }
 ```kotlin
 // RIGHT — one public modifier, three small nodes delegated under one element
 private data class CardEffectsElement(
-    val color: Color,
-    val onClick: () -> Unit,
+  val color: Color,
+  val onClick: () -> Unit,
 ) : ModifierNodeElement<CardEffectsNode>() {
-    override fun create() = CardEffectsNode(color, onClick)
-    override fun update(node: CardEffectsNode) {
-        node.update(color, onClick)
-    }
+  override fun create() = CardEffectsNode(color, onClick)
+  override fun update(node: CardEffectsNode) {
+    node.update(color, onClick)
+  }
 }
 
 private class CardEffectsNode(
-    color: Color,
-    onClick: () -> Unit,
+  color: Color,
+  onClick: () -> Unit,
 ) : DelegatingNode() {
-    private val background = delegate(BackgroundNode(color))
-    private val click = delegate(ClickNode(onClick))
+  private val background = delegate(BackgroundNode(color))
+  private val click = delegate(ClickNode(onClick))
 
-    fun update(color: Color, onClick: () -> Unit) {
-        background.color = color
-        click.onClick = onClick
-    }
+  fun update(color: Color, onClick: () -> Unit) {
+    background.color = color
+    click.onClick = onClick
+  }
 }
 ```
 

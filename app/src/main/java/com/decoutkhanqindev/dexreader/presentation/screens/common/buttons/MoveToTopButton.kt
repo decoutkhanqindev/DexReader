@@ -24,8 +24,8 @@ import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 @Composable
 fun MoveToTopButton(
   itemsSize: Int,
-  listState: (() -> LazyListState)?= null,
-  gridState: (() -> LazyGridState)?= null,
+  listState: (() -> LazyListState)? = null,
+  gridState: (() -> LazyGridState)? = null,
   modifier: Modifier = Modifier,
   onClick: () -> Unit,
 ) {

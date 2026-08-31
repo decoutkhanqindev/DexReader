@@ -52,7 +52,13 @@ fun CategoryCard(
   Card(
     modifier = modifier
       .animateItemOnAppear()
-      .onClick(shape = shape) { onCategoryClick(category.id, category.title, category.description) },
+      .onClick(shape = shape) {
+        onCategoryClick(
+          category.id,
+          category.title,
+          category.description
+        )
+      },
     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     shape = shape,
     colors = CardDefaults.cardColors(
