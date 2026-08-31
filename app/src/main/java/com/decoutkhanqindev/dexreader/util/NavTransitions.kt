@@ -2,9 +2,10 @@ package com.decoutkhanqindev.dexreader.util
 
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 
 object NavTransitions {
-  inline fun <reified Root : Any> NavHostController.navigatePreserveState(route: Any) {
+  inline fun <reified Root : NavRoute> NavHostController.navigatePreserveState(route: NavRoute) {
     this.navigateTo(route) {
       popUpTo<Root> { saveState = true }
       launchSingleTop = true
@@ -12,7 +13,7 @@ object NavTransitions {
     }
   }
 
-  inline fun <reified T : Any> NavHostController.navigateClearStack(route: Any) {
+  inline fun <reified T : NavRoute> NavHostController.navigateClearStack(route: NavRoute) {
     this.navigateTo(route) {
       popUpTo<T> { inclusive = true }
       launchSingleTop = true
@@ -20,7 +21,7 @@ object NavTransitions {
   }
 
   fun NavHostController.navigateTo(
-    route: Any,
+    route: NavRoute,
     builder: NavOptionsBuilder.() -> Unit = {},
   ) {
     this.navigate(route, builder)

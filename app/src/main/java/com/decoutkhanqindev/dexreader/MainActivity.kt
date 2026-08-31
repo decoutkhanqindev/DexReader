@@ -7,6 +7,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.ComposeUiFlags
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavGraph
 import com.google.firebase.Firebase
@@ -34,6 +37,23 @@ class MainActivity : ComponentActivity() {
       runCatching {
         Firebase.crashlytics.isCrashlyticsCollectionEnabled = !BuildConfig.DEBUG
         Firebase.analytics.setAnalyticsCollectionEnabled(!BuildConfig.DEBUG)
+      }
+    }
+  }
+
+  override fun onWindowFocusChanged(hasFocus: Boolean) {
+    super.onWindowFocusChanged(hasFocus)
+    if (hasFocus) hideSystemBar()
+  }
+
+  private fun hideSystemBar() {
+    runCatching {
+      WindowCompat.setDecorFitsSystemWindows(window, true)
+      WindowCompat.getInsetsController(window, window.decorView).apply {
+        systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        isAppearanceLightNavigationBars = false
+//        hide(WindowInsetsCompat.Type.statusBars())
+        hide(WindowInsetsCompat.Type.navigationBars())
       }
     }
   }

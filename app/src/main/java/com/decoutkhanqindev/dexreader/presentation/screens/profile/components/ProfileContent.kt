@@ -2,6 +2,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.profile.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -109,10 +110,7 @@ fun ProfileContent(
     isRefreshing = false,
     onRefresh = onRefresh,
     modifier = if (profileUiState.isLoading) {
-      modifier.blurBackground(
-        topAlpha = 0.7f,
-        bottomAlpha = 0.7f,
-      )
+      modifier.blurBackground(alphas = persistentListOf(0.7f, 0.7f))
     } else modifier,
   ) {
     Column(
@@ -133,7 +131,9 @@ fun ProfileContent(
         onUpdateClick = onUpdateClick,
       )
 
-      HorizontalDivider(modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
+      HorizontalDivider(modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 8.dp))
 
       ProfileFavoritesSection(
         uiState = favoritesUiState,
@@ -166,10 +166,13 @@ fun ProfileContent(
         onRetry = onRetryTheme,
       )
 
+      Spacer(modifier = Modifier.weight(1f))
+
       LogoutButton(
         modifier = Modifier
           .fillMaxWidth()
-          .padding(start = 24.dp, end = 24.dp, top = 24.dp, bottom = 32.dp),
+          .padding(horizontal = 16.dp)
+          .padding(bottom = 78.dp),
         onLogoutClick = onLogoutClick,
       )
     }

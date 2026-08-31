@@ -209,18 +209,41 @@ is the only bidirectional mapper (needed by `UpdateUserProfileUseCase`).
 **`DateTimeHandler`**: `String?.parseIso8601ToEpoch(): Long?` | `Long?.toTimeAgo(): String` — both
 `SimpleDateFormat` use `ThreadLocal` (not thread-safe without it).
 
-**`NavTransitions`**: `navigatePreserveState<Root>(route)` for tab/drawer switches (preserves state)
-via `popUpTo<Root> { saveState = true }` + `restoreState = true` — `Root` MUST be the actual tab-root
-destination that stays on the back stack forever (`NavRoute.Home`), never the `NavHost`'s graph-level
-`startDestination` (`NavRoute.Splash`) — Splash is popped inclusively right after login, so a
-`popUpTo` targeting it can never match again and save/restore silently no-ops, losing tab state on
-every switch. `navigateClearStack<T>(route)` for auth flows — `T` is the route to pop inclusive (e.g.
-`navigateClearStack<NavRoute.Login>(NavRoute.Home)`). `navigateTo`/`navigateBack` debounce internally
-(500ms, one shared timer for the whole app) as a safety net against rapid double-navigation — kept
-even though `Modifier.onClick` (see Compose Conventions) *also* debounces per click-instance, because
-several navigation triggers (`AppTopBar`/`SearchBar` back and search icons, `MenuItemRow`'s drawer
-items) go through raw Material3 `IconButton`/`NavigationDrawerItem` rather than `Modifier.onClick`,
-and would otherwise have no protection at all.
+**`NavTransitions`**: `navigatePreserveState<Root>(route)` is the **bottom-tab switch**
+(preserves each tab's state) via `popUpTo<Root> { saveState = true }` + `launchSingleTop` +
+`restoreState = true` — `Root` MUST be the destination that stays on the back stack forever, i.e. the **inner** tab
+`NavHost`'s `startDestination` (`NavRoute.Home`), never a graph-level `startDestination` that gets
+popped (`NavRoute.Splash` is popped inclusively right after Splash, so a `popUpTo` targeting it can
+never match again and save/restore silently no-ops, losing tab state on every switch). Dropping the `popUpTo` would give
+back-to-previous-tab, but then `saveState`/`restoreState` have nothing to hook into and every tab
+switch rebuilds the tab from scratch (new `NavBackStackEntry` ⇒ new `ViewModelStore` ⇒ refetch + lost
+scroll) — state preservation is the reason this shape was chosen. The back question is moot anyway:
+`MainScreen` swallows Back entirely (see Bottom navigation below), so tab switching is
+tap-only. `navigateClearStack<T>(route)` for
+auth flows — `T` is the route to pop inclusive (e.g.
+`navigateClearStack<NavRoute.Login>(NavRoute.Main)`).
+
+**The two pop helpers are `inline` + `reified`, and the pop target must stay a type argument.** A
+`popUpTo<T> { }` compiles to `NavOptionsBuilder.popUpTo(route: KClass<T>, …)` (verified in the
+bytecode: `popUpTo:(Lkotlin/reflect/KClass;…)`), which matches a destination **by route pattern**.
+A value-typed pop target instead binds `popUpTo(route: T, …)`, and that overload behaves differently
+in two ways worth knowing before anyone "simplifies" the generics away: it matches by the
+**fully-filled route including arguments** (so a data-class route like `NavRoute.MangaDetails` would
+need the exact instance off the back stack via `entry.toRoute<…>()`, not a freshly built one), and its
+`generateRouteFilled()` **throws `IllegalArgumentException`** when the route isn't declared in that
+controller's own graph, where the reified/`KClass` path merely logs `Ignoring popBackStack …` and
+returns false. With two `NavHost`s (tab routes only in the inner graph, everything else only in the
+outer) that second difference is a live crash risk, which is why this stayed reified.
+
+The routes themselves are still typed: `route: NavRoute` and `Root`/`T : NavRoute`, not `Any` —
+`NavController.navigate` only asks for `Any`, so the narrowing is ours, and it makes passing a
+non-route a compile error. Cost: `util/NavTransitions.kt` imports `presentation.navigation.NavRoute`,
+so this one util file is knowingly coupled to the presentation layer (it is navigation glue, not a
+general-purpose helper like `CoroutineHandler`/`DateTimeHandler`). `navigateTo`/`navigateBack` are thin
+wrappers over `navigate`/`popBackStack` with **no** debounce of their own; rapid double-navigation is
+guarded per click-instance by `Modifier.onClick` (see Compose Conventions), which `AppBottomBar` and
+`AppTopBar`'s icon slots go through — `SearchBar`'s back arrow is still a raw Material3 `IconButton`
+and has no such guard.
 
 ---
 
@@ -308,25 +331,29 @@ navigates to the full dedicated screen. The hub has already loaded the data, so 
 `ProfileScreen`'s three feature VMs are created with plain `hiltViewModel()` inside
 `composable<NavRoute.Profile>`, so they're scoped to **Profile's own `NavBackStackEntry`**; the
 dedicated screens then retrieve *that same instance* with
-`hiltViewModel(remember(it) { navController.getBackStackEntry<NavRoute.Profile>() })`. Those VMs live in
+`hiltViewModel(remember(it) { navController.getBackStackEntry<NavRoute.Main>() })`. Those VMs live in
 `common/viewmodels/{favorites,history,statistics}/` (with their UiState files), and the three *dedicated*
 screens take a **required** `viewModel:` param with no `= hiltViewModel()` default — that's what forces
-the caller to hand them Profile's instance instead of silently spinning up a second one.
+the caller to hand them the shared instance instead of silently spinning up a second one.
 
-**Two navigation invariants this depends on — breaking either one is a crash, not a glitch:**
-`getBackStackEntry<T>()` throws `IllegalArgumentException` when `T` isn't on the back stack, so
-(1) Favorites/History/Statistics are **deliberately not drawer items** (`MenuValue.isDrawerItem = false`,
-`MenuDrawer` renders `MenuValue.drawerItems`) — Profile is their only entry point, guaranteeing it was
-created first; and (2) Profile's "More »" uses plain `navigateTo`, **never** `navigatePreserveState`,
-because the latter's `popUpTo<Home> { saveState = true }` would pop Profile off the stack on the way in.
-If you ever re-add one of those three to the drawer, or switch "More »" back to `navigatePreserveState`,
-this crashes immediately. Each screen still runs its own `SideEffect { …updateUserId(…) }` — harmless
-now (the setters early-return when the value is unchanged) and it keeps each screen self-healing.
+**Why `NavRoute.Main` and not `NavRoute.Profile`** (this changed with the bottom-bar refactor —
+see Bottom navigation below): Profile now lives on the **inner** tab `NavHost`, while
+Favorites/History/Statistics live on the **outer** one, so `getBackStackEntry<NavRoute.Profile>()`
+called on the outer controller would throw `IllegalArgumentException` — Profile simply isn't on that
+back stack. `Main` is the one entry both hosts sit under, so scoping there is what makes the four
+screens share one instance. Concretely: `MainScreen` declares them as
+`favoritesViewModel: FavoritesViewModel = hiltViewModel()` params, which resolve against the
+`NavRoute.Main` entry because that's where `MainScreen` is composed; the outer graph's
+Favorites/History/Statistics destinations then pull the same instances back out via
+`hiltViewModel(mainEntry)`. Each screen still runs its own `SideEffect { …updateUserId(…) }` —
+harmless (the setters early-return when the value is unchanged) and it keeps each screen self-healing.
+The two old invariants this used to depend on (those three must not be tab items; "More »" must use
+plain `navigateTo`) **no longer apply** — `Main` is never popped while a child screen is open.
 
 By contrast `MangaSectionViewModel` is scoped to Home's own entry via a plain `hiltViewModel()` default
 on `HomeScreen` — it is **not** shared, and it cannot be scoped to `NavRoute.Splash` even though Splash
-precedes Home, because `navigateClearStack<Splash>(Home)` pops Splash `inclusive = true`, destroying its
-`ViewModelStore` exactly when Home needs it. Scope-to-a-parent-entry only works when that parent
+precedes the tabs, because `navigateClearStack<Splash>(Main)` pops Splash `inclusive = true`,
+destroying its `ViewModelStore`. Scope-to-a-parent-entry only works when that parent
 provably stays on the back stack. A hub reuses each feature's VM **unchanged** — no new use case, no repo/domain change, no
 `limit` param: the VMs already fetch a 20-item first page, so "top N" is just `.take(N)` in the section
 composable. Per-section `*Section.kt` composables under `<screen>/components/sections/` own their own
@@ -340,8 +367,8 @@ bare `Modifier.fillMaxWidth()`, so the page rhythm is set in exactly one place i
 re-derived per section. `ProfileFavoritesSection`/`ProfileHistorySection`/`ProfileStatisticsSection`
 declare `onMoreClick: (() -> Unit)? = null` (optional, last param) to match `SectionHeader`; the
 trade-off is that forgetting to wire it is no longer a compile error, the "More »" link just silently
-disappears. `ProfileEditSection` deliberately mirrors
-`MenuHeader`'s horizontal shape (avatar left at its intrinsic 80dp — `ProfilePicture` is a fixed
+disappears. `ProfileEditSection` deliberately mirrors the horizontal shape of the now-deleted drawer
+`MenuHeader` (avatar left at its intrinsic 80dp — `ProfilePicture` is a fixed
 `size(80.dp)`, so **don't** give it a `weight`, that just strands it in an oversized slot — then
 name/email stacked in a `weight(1f)` column, `spacedBy(16.dp)`), with the Update button below the row.
 `ProfileNameEdit` is `Arrangement.Start`-aligned for this reason: centered name next to a start-aligned
@@ -378,7 +405,7 @@ instance instead of each calling its own `hiltViewModel()` (the original bug: `M
 old `SettingsScreen` each created an independent instance, so the two could desync). **There is no
 Settings screen any more** — it was deleted and its only content (the theme picker) became
 `ProfileSettingsSection` inside the Profile hub, so `NavRoute.Settings` and `MenuValue.SETTINGS` are
-gone too; the drawer is down to Home / Categories / Profile. `SettingsViewModel` itself is untouched
+gone too; the tab bar is down to Home / Categories / Profile. `SettingsViewModel` itself is untouched
 and still lives in `common/viewmodels/settings/` because `NavGraph` needs `appliedThemeOption`
 regardless of where the picker UI sits.
 `viewmodels/manga_section/MangaSectionViewModel` + `MangaSectionUiState` (renamed from
@@ -398,8 +425,65 @@ reach for a narrow slice when the wide-reach call site's own churn is otherwise 
 by default.
 
 **Navigation**: `NavRoute` sealed interface with `@Serializable` members. `navigateClearStack()` for
-auth flows; `navigatePreserveState()` for tab/drawer navigation. Value enums used as type-safe nav
+auth flows; `navigatePreserveState()` for bottom-tab navigation. Value enums used as type-safe nav
 args must be `@Serializable` (e.g. `MangaSortCriteriaValue`, carried on `NavRoute.CategoryDetails`).
+
+**Bottom navigation — two `NavHost`s, one overlay bar**: there is no navigation drawer any more (the
+whole `common/menu/` package is deleted). The app has **two nested back stacks**:
+
+- **Outer** — `NavGraph()`'s `NavHost` (`startDestination = NavRoute.Splash`): `Splash`, the 3 auth
+  routes, **`Main`**, and every screen reached *from* a tab (`MangaDetails`, `CategoryDetails`,
+  `Search`, `Reader`, `Favorites`, `History`, `Statistics`).
+- **Inner** — `screens/main/MainScreen.kt`'s own `NavHost` (`startDestination = NavRoute.Home`):
+  exactly the 3 tabs, `Home` / `Categories` / `Profile`.
+
+Everything on the outer host therefore has **no bottom bar for free** — no per-destination `if` gating
+the bar, because the bar is drawn inside `MainScreen` and disappears the moment the outer
+controller navigates away. Add a new tab ⇒ inner host + a `BottomTabItemValue` entry; add a normal
+screen ⇒ outer host, nothing else to touch.
+
+`AppBottomBar` (`common/bottom_bar/`) is **deliberately not** Material3's `NavigationBar`: that draws
+an opaque container which would kill the scrim. It is a plain `Row` of 3 icon+label `Column`s
+(`weight(1f)` each, `primary` when selected else `onSurfaceVariant`), and it is **not** in
+`Scaffold.bottomBar` — it's `Modifier.align(Alignment.BottomCenter)` in the `Box` wrapping the inner
+`NavHost`, so content scrolls *under* a `blurBackground(alphas = persistentListOf(0f, 0.8f, 1f, 1f))` gradient
+exactly like CategoryDetails' sort/filter cluster and MangaDetails' continue-reading/favorite cluster.
+`blurBackground` is a gradient scrim, **not** `Modifier.blur` (API 31+, silently no-ops on
+`minSdk = 24`) — see Compose Conventions. Because the bar is an overlay it does **not** push content,
+so each tab's scrollable content pays `bottom = 82.dp` for clearance (`HomeContent`'s sections column,
+`CategoriesGrid`'s `contentPadding`, `ProfileContent`'s trailing credit line) — the same 82.dp
+`CategoryDetailsContent` already used to clear its floating cluster. Profile's bottom **buttons** pay
+`114.dp` (82 + the 32 the button already had).
+
+**Back is swallowed inside the tabs**: `MainScreen` declares a bare `BackHandler {}` — an empty
+handler that consumes the event — so switching tabs is **tap-only**, Back never moves between them.
+The handler is scoped to the `Main` composition, so it's disposed the moment the outer controller
+navigates to a child screen: Back works normally on MangaDetails/Search/Reader/etc. and still returns
+you to the tabs. Consequence to keep in mind: Back on a tab root no longer exits the app either
+(nothing is left to pop under `Main`) — Home is the only screen where that used to happen. If that
+becomes unwanted, gate the handler on `selectedTab != BottomTabItemValue.HOME` rather than deleting
+it.
+
+The selected tab is derived from the inner controller, never stored:
+`remember(currentBackStackEntry) { when { destination?.hasRoute(NavRoute.Categories::class) == true -> …
+} }` — `NavDestination.hasRoute(KClass)` from `androidx.navigation.NavDestination.Companion.hasRoute`.
+
+`BottomTabItemValue` (`model/value/bottom_bar/`, renamed from `MenuValue`) has exactly 3 entries
+carrying `nameRes` + `icon`; `BottomTabItemMapper.toNavRoute()` (renamed from `MenuMapper`) maps them
+to routes. The enum no longer needs an `isDrawerItem`/`drawerItems` split — everything in it *is* a
+tab. Section headers that used to borrow `MenuValue.FAVORITES.icon`/`nameRes`
+(`ProfileFavoritesSection`/`ProfileHistorySection`/`ProfileStatisticsSection`) now name their icon and
+string resource directly.
+
+**Sign-in reachability**: the Sign In button used to live only in the drawer's `MenuHeader`. With the
+drawer gone, `ProfileScreen`'s logged-out branch owns it — `SignInButton`
+(`profile/components/actions/`, next to `LogoutButton`, `ActionButton` + `colorScheme.primary` +
+`Icons.AutoMirrored.Filled.Login`, and **no** confirm dialog since signing in isn't destructive) sits
+at exactly the Logout button's position under a `weight(1f)` `IdleScreen`. If you ever restructure the
+Profile screen, keep an entry point to Login there — the only other one in the app is MangaDetails'
+"you must sign in to favorite" dialog. The drawer's credit line (`MenuFooter`,
+`R.string.decoutkhanqindev`) moved to the bottom of `ProfileContent`, same
+`bodySmall + Italic + onSurfaceVariant + centered` styling.
 
 **Generalized manga-list browse (one path, optional tag)**: a Home section (Trending / Latest Update /
 New Release / Top Rated) is *just a preset sort criterion over the whole catalog with no tag filter* —
@@ -530,9 +614,22 @@ established shape as `observeHistoryJob`/`cancelObserveHistoryJob()`.
 - All `@Preview` wrapped in `DexReaderTheme { }`
 - `Modifier.blur()` requires API 31+ (RenderEffect) — below that (app `minSdk = 24`) it silently
   no-ops, and it's a heavier hardware layer than the alternative even when it does run. Never use it
-  for loading/dim overlays — use `Modifier.blurBackground(topAlpha, bottomAlpha)` (gradient, works on
+  for loading/dim overlays — use `Modifier.blurBackground(alphas, …)` (gradient, works on
   every API level, cheaper), the established pattern across every screen (Login, Register,
-  ForgotPassword, History, Profile, Settings, MangaDetails)
+  ForgotPassword, History, Profile, MangaDetails, CategoryDetails, Home banner, manga/category cards,
+  `AppBottomBar`)
+- `Modifier.blurBackground(alphas: ImmutableList<Float>, color, startY, endY)` takes the gradient as
+  an **arbitrary-length alpha list**, one entry per evenly-spaced stop —
+  `blurBackground(alphas = persistentListOf(0f, 0.1f, 0.8f, 1f))`. It used to be four fixed params
+  (`topAlpha`/`topCenterAlpha`/`bottomCenterAlpha`/`bottomAlpha`, the two center ones nullable and
+  defaulting to their neighbour); that shape could not express 2, 3, or 5+ stops and made every
+  call site reason about which slot fell back to which. **Don't reintroduce named stop params.**
+  Two things to keep in mind: the list is a `Brush.verticalGradient` colors list, so **it needs at
+  least 2 entries** (one throws `IllegalArgumentException: colors must have length of at least 2`),
+  and stop *count* changes the curve — the old `topAlpha = 0f, bottomAlpha = 1f` expanded to
+  `[0, 0, 1, 1]` (flat, then a ramp across the middle third, then flat), **not** a straight `[0, 1]`
+  ramp, which is why the overlay call sites (`SortAndFilterSection`, `ReadingAndFavoriteSection`)
+  spell out all four. `alphas` has no default — every call site states its own gradient.
 - Coil `ImageRequest` passed to `AsyncImage` / `ZoomableAsyncImage` must be
   `remember(url) { ImageRequest.Builder(...).build() }` — never built inline in the call site.
   Established in `MangaCoverArt`, `ChapterPageImage`, `MangaDetailsBackground`, `ProfilePicture`
@@ -580,7 +677,8 @@ established shape as `observeHistoryJob`/`cancelObserveHistoryJob()`.
   stop-indicator dot) — pass `gapSize = 0.dp` and `drawStopIndicator = {}` to get the classic
   continuous bar needed for a compact list-row indicator
 - `AppTopBar` (`presentation/screens/common/top_bars/`) — single composable replacing the former
-  `MainTopBar`/`DetailsTopBar` pair; serves both `BaseScreen`'s Menu/drawer variant and
+  `MainTopBar`/`DetailsTopBar` pair; serves both `BaseScreen`'s tab-root variant (title + optional
+  search icon, **no left slot** now that the hamburger is gone) and
   `BaseDetailsScreen`'s/`ReaderScreen`'s Back variant. Three independent slots — `center`/`left`/
   `right` — each resolved via `when { xContent != null -> xContent(); xIcon != null -> ...; xTitle
   != null -> ... }`: `xContent: (@Composable () -> Unit)?` wins if set (`ReaderScreen`'s
@@ -596,18 +694,19 @@ established shape as `observeHistoryJob`/`cancelObserveHistoryJob()`.
   `contentDescription = null`. Colors are 4 flat `Color` params (`containerColor`,
   `centerContentColor`, `leftContentColor`, `rightContentColor`) instead of a bundled
   `TopAppBarColors`, defaulting to the Back-variant look (`surfaceContainer`/`onPrimaryContainer`);
-  `BaseScreen`'s Menu variant overrides all four plus wraps its own `AppTopBar(...)` call in a local
-  `Surface(alpha = 0.95f, tonalElevation = 3.dp)` for the translucent tab-root look (`AppTopBar`
-  itself has no alpha/elevation param — that wrapping is a call-site concern, not shared). 5 screens
-  sit behind `BaseDetailsScreen` (`MangaDetailsScreen`, `CategoryDetailsScreen`, plus
+  `BaseScreen`'s tab-root variant overrides all four (transparent container, `onSurface` title,
+  `primary` search icon). The translucent `Surface(surface.copy(alpha = 0.95f),
+  tonalElevation = 3.dp)` is **inside `AppTopBar` itself** (`AppTopBar.kt:50`), so every caller gets
+  it — an earlier version of this doc wrongly described it as a `BaseScreen` call-site wrapper. 5
+  screens sit behind `BaseDetailsScreen` (`MangaDetailsScreen`, `CategoryDetailsScreen`, plus
   `FavoritesScreen`/`HistoryScreen`/`StatisticsScreen`) — **which wrapper a screen uses follows
-  directly from whether it's a drawer tab**: `BaseScreen` (Menu icon + drawer) only for the four
-  tabs still in `MenuValue.drawerItems` (Home, Categories, Profile, Settings); `BaseDetailsScreen`
-  (Back icon) for everything reached *from* another screen. When Favorites/History/Statistics stopped
-  being drawer tabs they moved to `BaseDetailsScreen` for exactly this reason — a hamburger that opens
-  a drawer the screen isn't listed in is a dead end. Moving a screen across this line also drops its
-  `onNavigateToMenuItemScreen`/`onNavigateToLoginScreen` params (drawer-only concerns) and adds
-  `onNavigateBack`. `ForgotPasswordScreen`/`RegisterScreen` have no top bar at all (just `BackHandler`
+  directly from which `NavHost` it lives on**: `BaseScreen` (title + search, no back) only for the 3
+  inner-host tabs (Home, Categories, Profile); `BaseDetailsScreen` (Back icon) for everything on the
+  outer host, i.e. everything reached *from* a tab. Moving a screen across this line also drops its
+  tab-only params and adds `onNavigateBack`. `BaseScreen` itself is now just a `Scaffold` +
+  `AppTopBar` + content `Box` — it has no `bottomBar` slot (the bottom bar is an overlay owned by
+  `MainScreen`, not a Scaffold slot) and no `isUserLoggedIn`/`currentUser`/`onNavigateToSignInScreen`
+  params (those were drawer-header concerns). `ForgotPasswordScreen`/`RegisterScreen` have no top bar at all (just `BackHandler`
   + a `*Content` call), despite what an earlier version of this doc claimed. `ReaderScreen` calls `AppTopBar`
   directly (not through `BaseDetailsScreen`, since it also needs a `bottomBar`/FAB/full-screen
   `AnimatedVisibility` toggle that `BaseDetailsScreen` doesn't expose): `centerContent` renders the
@@ -631,8 +730,8 @@ established shape as `observeHistoryJob`/`cancelObserveHistoryJob()`.
   `labelSmall + FontWeight.Black`; empty-state/pagination/not-found messages use `titleMedium +
   fontStyle = Italic + textAlign = Center` with no weight override (inherits the token's own
   SemiBold); chapter-row flavor text (the separator dot, chapter title in list rows, `ReaderScreen`'s
-  top-bar subtitle) uses `labelMedium + fontStyle = Italic`; footer/quiet-caption text (menu drawer
-  email, app-credit line, "Don't have an account?") uses its own base style + `fontStyle = Italic` +
+  top-bar subtitle) uses `labelMedium + fontStyle = Italic`; footer/quiet-caption text
+  (`ProfileContent`'s trailing app-credit line, "Don't have an account?") uses its own base style + `fontStyle = Italic` +
   `color = onSurfaceVariant`, no weight override — this is distinct from a *clickable* inline link
   (`LoginForm`'s "Forgot Password?"/"Sign Up", `titleMedium + Bold + Italic + onPrimaryContainer`),
   which signals tappability via color and must not be folded into the quiet-caption convention. The

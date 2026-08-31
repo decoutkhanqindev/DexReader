@@ -13,20 +13,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.decoutkhanqindev.dexreader.presentation.mapper.MenuMapper.toNavRoute
-import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortCriteriaValue
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.forgot_password.ForgotPasswordScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.login.LoginScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.register.RegisterScreen
-import com.decoutkhanqindev.dexreader.presentation.screens.categories.CategoriesScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.UserViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.settings.SettingsViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.favorites.FavoritesScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.history.HistoryScreen
-import com.decoutkhanqindev.dexreader.presentation.screens.home.HomeScreen
+import com.decoutkhanqindev.dexreader.presentation.screens.main.MainScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.MangaDetailsScreen
-import com.decoutkhanqindev.dexreader.presentation.screens.profile.ProfileScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.reader.ReaderScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.search.SearchScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.splash.SplashScreen
@@ -34,7 +30,6 @@ import com.decoutkhanqindev.dexreader.presentation.screens.statistics.Statistics
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateBack
 import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateClearStack
-import com.decoutkhanqindev.dexreader.util.NavTransitions.navigatePreserveState
 import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateTo
 
 @Composable
@@ -60,21 +55,19 @@ fun NavGraph() {
         SplashScreen(
           modifier = Modifier.fillMaxSize(),
           onNavigateToHome = {
-            navController.navigateClearStack<NavRoute.Splash>(NavRoute.Home)
+            navController.navigateClearStack<NavRoute.Splash>(NavRoute.Main)
           },
         )
       }
 
-      composable<NavRoute.Home> {
-        HomeScreen(
+      composable<NavRoute.Main> {
+        MainScreen(
+          settingsViewModel = settingsViewModel,
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
           modifier = Modifier.fillMaxSize(),
           onNavigateToLoginScreen = {
-            navController.navigateClearStack<NavRoute.Home>(NavRoute.Login)
-          },
-          onNavigateToMenuItemScreen = { item ->
-            navController.navigatePreserveState<NavRoute.Home>(item.toNavRoute())
+            navController.navigateClearStack<NavRoute.Main>(NavRoute.Login)
           },
           onNavigateToSearchScreen = {
             navController.navigateTo(NavRoute.Search)
@@ -82,41 +75,27 @@ fun NavGraph() {
           onNavigateToMangaDetailScreen = { mangaId ->
             navController.navigateTo(NavRoute.MangaDetails(mangaId))
           },
-          onNavigateToSectionDetailsScreen = { title, sortCriteria ->
-            navController.navigateTo(
-              NavRoute.CategoryDetails(
-                categoryTitle = title,
-                categoryId = null,
-                initialSortCriteria = sortCriteria,
-              )
-            )
-          },
-        )
-      }
-
-      composable<NavRoute.Categories> {
-        CategoriesScreen(
-          isUserLoggedIn = isUserLoggedIn,
-          currentUser = currentUser,
-          modifier = Modifier.fillMaxSize(),
-          onNavigateToLoginScreen = {
-            navController.navigateClearStack<NavRoute.Categories>(NavRoute.Login)
-          },
-          onNavigateToMenuItemScreen = { item ->
-            navController.navigatePreserveState<NavRoute.Home>(item.toNavRoute())
-          },
-          onNavigateToSearchScreen = {
-            navController.navigateTo(NavRoute.Search)
-          },
-          onNavigateToCategoryScreen = { categoryId, categoryTitle, categoryDescription ->
+          onNavigateToCategoryDetailsScreen = { categoryId, categoryTitle, categoryDescription, initialSortCriteria ->
             navController.navigateTo(
               NavRoute.CategoryDetails(
                 categoryTitle = categoryTitle,
                 categoryId = categoryId,
                 categoryDescription = categoryDescription,
-                initialSortCriteria = MangaSortCriteriaValue.TRENDING,
+                initialSortCriteria = initialSortCriteria,
               )
             )
+          },
+          onNavigateToFavoritesScreen = {
+            navController.navigateTo(NavRoute.Favorites)
+          },
+          onNavigateToHistoryScreen = {
+            navController.navigateTo(NavRoute.History)
+          },
+          onNavigateToStatisticsScreen = {
+            navController.navigateTo(NavRoute.Statistics)
+          },
+          onNavigateToReaderScreen = { chapterId, lastReadPage, mangaId ->
+            navController.navigateTo(NavRoute.Reader(chapterId, lastReadPage, mangaId))
           },
         )
       }
@@ -137,9 +116,9 @@ fun NavGraph() {
       }
 
       composable<NavRoute.Favorites> {
-        val profileEntry = remember(it) { navController.getBackStackEntry<NavRoute.Profile>() }
+        val mainEntry = remember(it) { navController.getBackStackEntry<NavRoute.Main>() }
         FavoritesScreen(
-          viewModel = hiltViewModel(profileEntry),
+          viewModel = hiltViewModel(mainEntry),
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
           onNavigateBack = {
@@ -156,9 +135,9 @@ fun NavGraph() {
       }
 
       composable<NavRoute.History> {
-        val profileEntry = remember(it) { navController.getBackStackEntry<NavRoute.Profile>() }
+        val mainEntry = remember(it) { navController.getBackStackEntry<NavRoute.Main>() }
         HistoryScreen(
-          viewModel = hiltViewModel(profileEntry),
+          viewModel = hiltViewModel(mainEntry),
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
           onNavigateBack = {
@@ -178,9 +157,9 @@ fun NavGraph() {
       }
 
       composable<NavRoute.Statistics> {
-        val profileEntry = remember(it) { navController.getBackStackEntry<NavRoute.Profile>() }
+        val mainEntry = remember(it) { navController.getBackStackEntry<NavRoute.Main>() }
         StatisticsScreen(
-          viewModel = hiltViewModel(profileEntry),
+          viewModel = hiltViewModel(mainEntry),
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
           onNavigateBack = {
@@ -190,39 +169,6 @@ fun NavGraph() {
             navController.navigateTo(NavRoute.Search)
           },
           modifier = Modifier.fillMaxSize()
-        )
-      }
-
-      composable<NavRoute.Profile> {
-        ProfileScreen(
-          settingsViewModel = settingsViewModel,
-          isUserLoggedIn = isUserLoggedIn,
-          currentUser = currentUser,
-          modifier = Modifier.fillMaxSize(),
-          onNavigateToLoginScreen = {
-            navController.navigateClearStack<NavRoute.Profile>(NavRoute.Login)
-          },
-          onNavigateToMenuItemScreen = { item ->
-            navController.navigatePreserveState<NavRoute.Home>(item.toNavRoute())
-          },
-          onNavigateToHomeScreen = {
-            navController.navigateClearStack<NavRoute.Profile>(NavRoute.Home)
-          },
-          onNavigateToFavoritesScreen = {
-            navController.navigateTo(NavRoute.Favorites)
-          },
-          onNavigateToHistoryScreen = {
-            navController.navigateTo(NavRoute.History)
-          },
-          onNavigateToStatisticsScreen = {
-            navController.navigateTo(NavRoute.Statistics)
-          },
-          onNavigateToMangaDetailScreen = { mangaId ->
-            navController.navigateTo(NavRoute.MangaDetails(mangaId))
-          },
-          onNavigateToReaderScreen = { chapterId, lastReadPage, mangaId ->
-            navController.navigateTo(NavRoute.Reader(chapterId, lastReadPage, mangaId))
-          },
         )
       }
 
@@ -279,7 +225,7 @@ fun NavGraph() {
         LoginScreen(
           modifier = Modifier.fillMaxSize(),
           onNavigateToHomeScreen = {
-            navController.navigateClearStack<NavRoute.Login>(NavRoute.Home)
+            navController.navigateClearStack<NavRoute.Login>(NavRoute.Main)
           },
           onNavigateToRegisterScreen = {
             navController.navigateTo(NavRoute.Register)

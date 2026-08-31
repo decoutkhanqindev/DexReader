@@ -69,11 +69,8 @@ fun MangaItem(
         modifier = Modifier
           .fillMaxSize()
           .blurBackground(
+            alphas = persistentListOf(0f, 0.1f, 0.8f, 1f),
             color = MaterialTheme.colorScheme.scrim,
-            topAlpha = 0f,
-            topCenterAlpha = 0.1f,
-            bottomCenterAlpha = 0.8f,
-            bottomAlpha = 1f,
             startY = 350f,
           )
       )

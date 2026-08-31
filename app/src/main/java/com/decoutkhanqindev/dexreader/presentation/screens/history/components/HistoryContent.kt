@@ -121,10 +121,7 @@ fun HistoryContent(
               if (removeFromHistoryUiState.isLoading) {
                 Modifier
                   .fillMaxSize()
-                  .blurBackground(
-                    topAlpha = 0.7f,
-                    bottomAlpha = 0.7f,
-                  )
+                  .blurBackground(alphas = persistentListOf(0.7f, 0.7f))
               } else Modifier.fillMaxSize()
           )
         }

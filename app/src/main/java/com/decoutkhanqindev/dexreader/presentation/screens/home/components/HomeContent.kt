@@ -82,7 +82,7 @@ fun HomeContent(
           }
 
           Column(
-            modifier = Modifier.padding(vertical = 16.dp),
+            modifier = Modifier.padding(top = 16.dp, bottom = 82.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)
           ) {
             MangaSectionValue.entries.forEach { section ->

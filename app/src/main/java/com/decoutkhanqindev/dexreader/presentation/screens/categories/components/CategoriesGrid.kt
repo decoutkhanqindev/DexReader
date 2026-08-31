@@ -37,7 +37,7 @@ fun CategoriesGrid(
   LazyVerticalGrid(
     columns = GridCells.Fixed(2),
     modifier = modifier,
-    contentPadding = PaddingValues(horizontal = 4.dp, vertical = 8.dp),
+    contentPadding = PaddingValues(start = 4.dp, top = 8.dp, end = 4.dp, bottom = 82.dp),
   ) {
     categoryMap.forEach { (type, categories) ->
       if (categories.isNotEmpty()) {

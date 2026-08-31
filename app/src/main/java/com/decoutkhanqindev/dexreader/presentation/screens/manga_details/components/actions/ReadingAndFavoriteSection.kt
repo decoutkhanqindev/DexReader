@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.MoveToTopButton
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun ReadingAndFavoriteSection(
@@ -51,10 +52,7 @@ fun ReadingAndFavoriteSection(
       continueChapter = continueChapter,
       modifier = Modifier
         .fillMaxWidth()
-        .blurBackground(
-          topAlpha = 0f,
-          bottomAlpha = 1f,
-        )
+        .blurBackground(alphas = persistentListOf(0f, 0f, 1f, 1f))
         .padding(16.dp),
       onReadingClick = onReadingClick,
       onFavoriteClick = onFavoriteClick,

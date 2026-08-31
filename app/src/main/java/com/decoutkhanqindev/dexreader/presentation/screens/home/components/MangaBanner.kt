@@ -130,9 +130,8 @@ fun MangaBanner(
         modifier = Modifier
           .fillMaxSize()
           .blurBackground(
+            alphas = persistentListOf(0.5f, 0.5f, 0f, 0f),
             color = MaterialTheme.colorScheme.scrim,
-            topAlpha = 0.5f,
-            bottomAlpha = 0f,
             endY = 320f,
           )
       )
@@ -142,11 +141,8 @@ fun MangaBanner(
         modifier = Modifier
           .fillMaxSize()
           .blurBackground(
+            alphas = persistentListOf(0f, 0.4f, 0.8f, 1f),
             color = MaterialTheme.colorScheme.scrim,
-            topAlpha = 0f,
-            topCenterAlpha = 0.4f,
-            bottomCenterAlpha = 0.8f,
-            bottomAlpha = 1f,
             startY = 350f,
           )
       )

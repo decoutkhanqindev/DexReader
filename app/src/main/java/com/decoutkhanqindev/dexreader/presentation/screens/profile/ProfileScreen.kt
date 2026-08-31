@@ -1,7 +1,10 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.profile
 
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
@@ -9,13 +12,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
-import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.bottom_bar.BottomTabItemValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseScreen
+import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmerHighlight
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScreen
+import com.decoutkhanqindev.dexreader.presentation.screens.profile.components.actions.SignInButton
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.favorites.FavoritesViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.history.HistoryViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.settings.SettingsViewModel
@@ -33,8 +39,6 @@ fun ProfileScreen(
   currentUser: UserModel?,
   modifier: Modifier = Modifier,
   onNavigateToLoginScreen: () -> Unit,
-  onNavigateToMenuItemScreen: (MenuValue) -> Unit,
-  onNavigateToHomeScreen: () -> Unit,
   onNavigateToFavoritesScreen: () -> Unit,
   onNavigateToHistoryScreen: () -> Unit,
   onNavigateToStatisticsScreen: () -> Unit,
@@ -73,15 +77,11 @@ fun ProfileScreen(
   }
 
   BaseScreen(
-    isUserLoggedIn = isUserLoggedIn,
-    currentUser = currentUser,
-    selectedMenuItem = MenuValue.PROFILE,
+    selectedTab = BottomTabItemValue.PROFILE,
     isSearchEnabled = false,
     modifier = modifier,
-    onNavigateToSignInScreen = onNavigateToLoginScreen,
-    onNavigateToMenuItemScreen = onNavigateToMenuItemScreen,
   ) {
-    if (isUserLoggedIn || uiState.isLogoutUserSuccess) {
+    if (isUserLoggedIn) {
       ProfileContent(
         profileUiState = uiState,
         favoritesUiState = favoritesUiState,
@@ -94,7 +94,7 @@ fun ProfileScreen(
         onUpdatePicUrlChange = { profileViewModel.updateUserPicUrl(it) },
         onUpdateClick = { profileViewModel.updateUserProfile() },
         onLogoutClick = { profileViewModel.logoutUser() },
-        onLogoutSuccess = onNavigateToHomeScreen,
+        onLogoutSuccess = {},
         onRetryUpdate = { profileViewModel.retryUpdateUserProfile() },
         onRetryLogout = { profileViewModel.retryLogoutUser() },
         onFavoriteMangaClick = onNavigateToMangaDetailScreen,
@@ -118,10 +118,22 @@ fun ProfileScreen(
         },
       )
     } else {
-      IdleScreen(
-        message = stringResource(R.string.please_sign_in_to_view_your_profile),
-        modifier = Modifier.fillMaxSize()
-      )
+      Column(modifier = Modifier.fillMaxSize()) {
+        IdleScreen(
+          message = stringResource(R.string.please_sign_in_to_view_your_profile),
+          modifier = Modifier
+            .weight(1f)
+            .fillMaxWidth()
+        )
+
+        SignInButton(
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+            .padding(bottom = 78.dp),
+          onSignInClick = onNavigateToLoginScreen,
+        )
+      }
     }
   }
 }

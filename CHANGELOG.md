@@ -4,6 +4,98 @@ Dated log of notable multi-file / cross-cutting work sessions. Newest entry firs
 
 ---
 
+## 2026-08-31 — `blurBackground` nhận list alpha thay cho 4 param top/center/bottom
+
+`Modifier.blurBackground` đổi chữ ký từ 4 param cố định
+(`topAlpha`/`topCenterAlpha`/`bottomCenterAlpha`/`bottomAlpha`, 2 cái center nullable và fallback về
+hàng xóm) sang **một `alphas: ImmutableList<Float>`** — mỗi phần tử là một stop chia đều.
+
+- **Lý do**: bộ 4 param cố định không diễn tả được gradient 2, 3 hay 5+ stop, và mỗi call site phải tự
+  suy luận slot nào fallback về slot nào. Giờ chỉ là
+  `blurBackground(alphas = persistentListOf(0f, 0.1f, 0.8f, 1f))`.
+- **`alphas` không có default** — mọi call site tự khai gradient của nó; `color`/`startY`/`endY` giữ
+  nguyên default.
+- **Migrate 14 call site, giữ nguyên hình ảnh**: số lượng stop *có* ảnh hưởng tới đường cong, nên
+  `topAlpha = 0f, bottomAlpha = 1f` cũ (nở thành `[0, 0, 1, 1]`: phẳng — dốc ở khoảng giữa — phẳng) được
+  ghi lại đúng thành `persistentListOf(0f, 0f, 1f, 1f)`, **không** rút gọn thành `[0f, 1f]` (đó là
+  đường dốc tuyến tính khác hẳn). Các trường hợp phẳng đều (`0.7f` cả trên lẫn dưới) rút còn 2 phần tử
+  vì màu không đổi nên kết quả giống hệt.
+- **Lưu ý còn lại**: list là colors của `Brush.verticalGradient` nên **phải có ít nhất 2 phần tử** —
+  1 phần tử sẽ ném `IllegalArgumentException: colors must have length of at least 2`.
+
+## 2026-08-31 — Bỏ menu drawer, chuyển sang bottom navigation bar (2 back stack)
+
+Điều hướng chính đổi từ `ModalNavigationDrawer` sang bottom nav bar. Cả package
+`presentation/screens/common/menu/` (`MenuDrawer`, `MenuHeader`, `MenuBody`, `MenuItemRow`,
+`MenuFooter`) bị **xoá hẳn**. Back stack tách làm hai tầng lồng nhau.
+
+- **Hai `NavHost`**: host **ngoài** (`NavGraph`) giữ `Splash`, 3 màn auth, **`NavRoute.Main` (mới)**,
+  và mọi màn đi ra từ tab (`MangaDetails`, `CategoryDetails`, `Search`, `Reader`, `Favorites`,
+  `History`, `Statistics`); host **trong** (`screens/main/MainScreen.kt`) chỉ có đúng 3 tab
+  `Home` / `Categories` / `Profile`. Nhờ vậy mọi màn ở host ngoài **tự động không có bottom bar** —
+  không cần một cái `if` nào gác theo destination, bar nằm trong `MainScreen` nên biến mất đúng
+  lúc host ngoài điều hướng đi.
+- **Bar là overlay, không phải `Scaffold.bottomBar`**: `AppBottomBar`
+  (`common/bottom_bar/AppBottomBar.kt`) đặt `Modifier.align(Alignment.BottomCenter)` trong `Box` bọc
+  `NavHost` trong, có `blurBackground(topAlpha = 0f, bottomAlpha = 1f)` để nội dung cuộn *xuyên dưới*
+  lớp gradient — cùng công thức với cụm sort/filter của CategoryDetails và cụm continue-reading/
+  favorite của MangaDetails. **Không** dùng `NavigationBar` của Material3: nó tự vẽ container màu đặc,
+  phá mất scrim. Vì là overlay nên không đẩy content ⇒ mỗi tab tự chừa `bottom = 82.dp`
+  (`HomeContent`, `CategoriesGrid.contentPadding`, dòng credit cuối `ProfileContent`), đúng con số
+  `CategoryDetailsContent` đã dùng sẵn; nút ở đáy Profile chừa `114.dp` (82 + 32 vốn có).
+- **Chuyển tab giữ state**: tab click gọi `navigatePreserveState<NavRoute.Home>(...)`, tức
+  `popUpTo<Home> { saveState = true }` + `launchSingleTop` + `restoreState`. Bản kế hoạch ban đầu định
+  **bỏ** `popUpTo` để Back quay về *tab trước đó*, nhưng như thế `saveState`/`restoreState` không có gì
+  để móc vào: mỗi lần đổi tab sẽ tạo `NavBackStackEntry` mới ⇒ `ViewModelStore` mới ⇒ refetch và mất vị
+  trí cuộn.
+- **`NavTransitions` giữ `inline`/`reified`, chỉ siết type theo `NavRoute`**: đích điều hướng là
+  `route: NavRoute` và type param là `Root`/`T : NavRoute` (không phải `Any`) — `NavController.navigate`
+  chỉ đòi `Any` nên phần siết này là chủ ý, để truyền nhầm thứ không phải route thành lỗi compile.
+  Trong đợt này có thử bỏ generic (đổi đích pop sang `KClass<out NavRoute>` rồi sang `NavRoute` value)
+  nhưng đã **revert**, vì `popUpTo(route: T, …)` khác `popUpTo(route: KClass<T>, …)` ở 2 điểm: (1) nó
+  khớp theo **route đã điền đủ args**, nên route data class như `NavRoute.MangaDetails` phải lấy đúng
+  instance trên back stack qua `entry.toRoute<…>()`; (2) `generateRouteFilled()` **ném
+  `IllegalArgumentException`** khi route không nằm trong graph của chính controller đó, trong khi nhánh
+  reified/`KClass` chỉ log `Ignoring popBackStack …` rồi trả false. Với 2 `NavHost` (route tab chỉ có ở
+  graph trong, phần còn lại chỉ ở graph ngoài) thì điểm (2) là rủi ro crash thật. Bytecode xác nhận bản
+  reified đi nhánh `popUpTo:(Lkotlin/reflect/KClass;…)`.
+- **Đánh đổi**: `util/NavTransitions.kt` import `presentation.navigation.NavRoute`, tức file util này
+  cố ý dính vào presentation layer (nó là navigation glue chứ không phải helper dùng chung như
+  `CoroutineHandler`/`DateTimeHandler`).
+- **Back bị nuốt hẳn trong khu vực tab**: `MainScreen` khai một `BackHandler {}` rỗng, nên đổi tab
+  **chỉ bằng cách chạm tab**, Back không nhảy qua lại giữa các tab. Handler này sống theo composition
+  của `Main` nên bị dispose ngay khi host ngoài điều hướng sang màn con — Back ở
+  MangaDetails/Search/Reader vẫn bình thường và vẫn quay về tab. Đánh đổi: Back ở tab root **không còn
+  thoát app** nữa; nếu cần lại thì gác handler theo `selectedTab != BottomTabItemValue.HOME`.
+- **Hoist 3 shared VM lên `NavRoute.Main`**: `FavoritesViewModel`/`HistoryViewModel`/
+  `StatisticsViewModel` trước đây scope vào entry của `NavRoute.Profile`. Profile giờ nằm ở host
+  **trong** còn 3 màn riêng nằm ở host **ngoài**, nên `getBackStackEntry<NavRoute.Profile>()` gọi trên
+  controller ngoài sẽ ném `IllegalArgumentException`. Chúng được khai báo thành param
+  `= hiltViewModel()` của `MainScreen` (resolve về entry `Main`), rồi host ngoài lấy lại đúng
+  instance đó bằng `hiltViewModel(mainEntry)`. Hệ quả: **2 bất biến điều hướng cũ đã hết hiệu lực**
+  (3 màn đó không được là drawer item; "More »" phải dùng `navigateTo` chứ không `navigatePreserveState`)
+  — đã gỡ khỏi CLAUDE.md.
+- **`MenuValue` → `BottomTabItemValue`** (`model/value/menu/` → `model/value/bottom_bar/`, `git mv`),
+  còn đúng 3 entry, bỏ `isDrawerItem`/`drawerItems` vì mọi thứ trong enum giờ *đều* là tab.
+  `MenuMapper` → `BottomTabItemMapper`. 3 section header của Profile trước đây mượn
+  `MenuValue.FAVORITES/HISTORY/STATISTICS` nay tự khai `Icons.Default.Favorite/History/Timeline` +
+  `R.string.*_menu_item`.
+- **`BaseScreen` rút gọn mạnh**: bỏ `ModalNavigationDrawer`/`rememberDrawerState`/`coroutineScope`,
+  bỏ slot `bottomBar`, bỏ param `isUserLoggedIn`/`currentUser`/`onNavigateToSignInScreen`/
+  `onNavigateToMenuItemScreen`. Còn `Scaffold` + `AppTopBar` (title theo `selectedTab`, `rightIcon`
+  search tuỳ chọn, **không có left slot**) + `Box` nội dung.
+- **Cứu lối vào Sign In**: nút Sign In trước chỉ nằm trong `MenuHeader` của drawer, bỏ drawer là user
+  chưa đăng nhập mất đường vào Login (lối còn lại duy nhất là dialog "must sign in to favorite" ở
+  MangaDetails). Thêm `profile/components/actions/SignInButton.kt` (`ActionButton` +
+  `colorScheme.primary` + `Icons.AutoMirrored.Filled.Login`, **không** dialog xác nhận vì đăng nhập
+  không phải hành động phá huỷ), đặt đúng vị trí nút Logout ở nhánh chưa đăng nhập của `ProfileScreen`.
+- **Dòng credit của `MenuFooter`** (`R.string.decoutkhanqindev`) chuyển xuống đáy `ProfileContent`,
+  giữ nguyên `bodySmall + Italic + onSurfaceVariant + canh giữa`.
+- **Sửa 2 chỗ doc lệch sẵn có**: (1) CLAUDE.md nói `BaseScreen` bọc `AppTopBar` trong
+  `Surface(alpha 0.95f)` — thực tế `Surface` nằm **bên trong** `AppTopBar` (`AppTopBar.kt:50`) nên mọi
+  caller đều có; (2) CLAUDE.md nói `navigateTo`/`navigateBack` tự debounce 500ms — `NavTransitions.kt`
+  hiện chỉ là wrapper mỏng của `navigate`/`popBackStack`, không có debounce nào.
+
 ## 2026-08-31 — Xoá màn Settings, theme picker dọn vào Profile hub
 
 Màn Settings bị **xoá hẳn** (cả `screens/settings/`: `SettingsScreen`, `SettingsContent`,

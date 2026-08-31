@@ -36,7 +36,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.ImmutableList
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -177,21 +177,13 @@ fun Modifier.shimmerHighlight(
 
 @Composable
 fun Modifier.blurBackground(
+  alphas: ImmutableList<Float>,
   color: Color = MaterialTheme.colorScheme.surfaceContainer,
-  topAlpha: Float = 0.7f,
-  topCenterAlpha: Float? = null,
-  bottomCenterAlpha: Float? = null,
-  bottomAlpha: Float = 1f,
   startY: Float = 0f,
   endY: Float = Float.POSITIVE_INFINITY,
 ): Modifier = this.background(
   brush = Brush.verticalGradient(
-    colors = persistentListOf(
-      color.copy(topAlpha),
-      color.copy(topCenterAlpha ?: topAlpha),
-      color.copy(bottomCenterAlpha ?: bottomAlpha),
-      color.copy(bottomAlpha)
-    ),
+    colors = alphas.map { color.copy(alpha = it) },
     startY = startY,
     endY = endY,
   )

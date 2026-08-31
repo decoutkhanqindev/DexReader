@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.History
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
-import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
@@ -54,8 +55,8 @@ fun ProfileHistorySection(
 
   Column(modifier = modifier) {
     SectionHeader(
-      icon = MenuValue.HISTORY.icon,
-      title = stringResource(MenuValue.HISTORY.nameRes),
+      icon = Icons.Default.History,
+      title = stringResource(R.string.history_menu_item),
       modifier = Modifier
         .fillMaxWidth()
         .padding(

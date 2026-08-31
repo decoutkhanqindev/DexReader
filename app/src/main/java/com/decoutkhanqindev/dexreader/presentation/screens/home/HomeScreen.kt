@@ -6,9 +6,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
+import com.decoutkhanqindev.dexreader.presentation.model.value.bottom_bar.BottomTabItemValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortCriteriaValue
-import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.manga_section.MangaSectionViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.home.components.HomeContent
@@ -16,11 +15,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.home.components.HomeC
 @Composable
 fun HomeScreen(
   viewModel: MangaSectionViewModel = hiltViewModel(),
-  isUserLoggedIn: Boolean,
-  currentUser: UserModel?,
   modifier: Modifier = Modifier,
-  onNavigateToLoginScreen: () -> Unit,
-  onNavigateToMenuItemScreen: (MenuValue) -> Unit,
   onNavigateToSearchScreen: () -> Unit,
   onNavigateToMangaDetailScreen: (String) -> Unit,
   onNavigateToSectionDetailsScreen: (categoryTitle: String, sortCriteria: MangaSortCriteriaValue) -> Unit,
@@ -28,12 +23,8 @@ fun HomeScreen(
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
   BaseScreen(
-    isUserLoggedIn = isUserLoggedIn,
-    currentUser = currentUser,
-    selectedMenuItem = MenuValue.HOME,
+    selectedTab = BottomTabItemValue.HOME,
     modifier = modifier,
-    onNavigateToSignInScreen = onNavigateToLoginScreen,
-    onNavigateToMenuItemScreen = onNavigateToMenuItemScreen,
     onNavigateToSearchScreen = onNavigateToSearchScreen
   ) {
     HomeContent(

@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,7 +22,6 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.manga.FavoriteMangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
-import com.decoutkhanqindev.dexreader.presentation.model.value.menu.MenuValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.ListLoadingIndicator
@@ -41,8 +42,8 @@ fun ProfileFavoritesSection(
 ) {
   Column(modifier = modifier) {
     SectionHeader(
-      icon = MenuValue.FAVORITES.icon,
-      title = stringResource(MenuValue.FAVORITES.nameRes),
+      icon = Icons.Default.Favorite,
+      title = stringResource(R.string.favorite_menu_item),
       modifier = Modifier
         .fillMaxWidth()
         .padding(

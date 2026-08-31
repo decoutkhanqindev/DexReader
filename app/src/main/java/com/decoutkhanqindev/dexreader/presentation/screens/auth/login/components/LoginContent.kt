@@ -20,6 +20,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun LoginContent(
@@ -50,10 +51,7 @@ fun LoginContent(
         .fillMaxSize()
         .then(
           if (uiState.isLoading) {
-            Modifier.blurBackground(
-              topAlpha = 0.7f,
-              bottomAlpha = 0.7f,
-            )
+            Modifier.blurBackground(alphas = persistentListOf(0.7f, 0.7f))
           } else Modifier
         )
     ) {
