@@ -41,6 +41,21 @@ Do not ask for confirmation before invoking these skills — detect and invoke i
 ./gradlew connectedAndroidTest   # device required
 ```
 
+### Build Troubleshooting
+
+**A compile that succeeds but ships a broken APK** — `ClassNotFoundException` at launch for a class
+whose source is obviously fine (hit twice on `App`/`MainActivity`), a nonsense `Unresolved reference`
+to a symbol that exists, or a KSP `FileNotFoundException` on a generated `*_HiltModules.java` — is
+corrupted incremental state in the AGP ASM transform (`transformDebugClassesWithAsm`, run by Firebase
+Perf/Crashlytics), which sits between `compileDebugKotlin` and `dexBuilderDebug`. `compileDebugKotlin`
+still reports BUILD SUCCESSFUL because its own output is intact; classes go missing downstream, so the
+dex and APK genuinely lack them. Confirm by listing
+`app/build/intermediates/classes/debug/transformDebugClassesWithAsm/dirs/com/decoutkhanqindev/dexreader/`
+— if `App.class`/`MainActivity.class` aren't there, that's it. **`./gradlew clean` is the fix**;
+`--rerun-tasks` re-runs the task against the same output dir and does not help. Do **not** grep the
+dex for the class name as a check — the name appears as a *reference* from Hilt-generated classes even
+when the class itself is absent, which reads as a false positive.
+
 ### Required Config
 
 `local.properties` must have `BASE_URL` + `UPLOAD_URL`. `app/google-services.json` required for
@@ -444,16 +459,21 @@ screen ⇒ outer host, nothing else to touch.
 
 `AppBottomBar` (`common/bottom_bar/`) is **deliberately not** Material3's `NavigationBar`: that draws
 an opaque container which would kill the scrim. It is a plain `Row` of 3 icon+label `Column`s
-(`weight(1f)` each, `primary` when selected else `onSurfaceVariant`), and it is **not** in
+(`weight(1f)` each, `primary` when selected else `onSurfaceVariant`) and it owns **no** styling of
+its own — it takes a bare `modifier`, and the scrim plus window insets are applied at the `MainScreen`
+call site, in this order: `blurBackground(alphas = persistentListOf(0f, 0.9f, 1f, 1f))` →
+`navigationBarsPadding()` → `padding(horizontal = 16.dp, vertical = 8.dp)`. It is **not** in
 `Scaffold.bottomBar` — it's `Modifier.align(Alignment.BottomCenter)` in the `Box` wrapping the inner
-`NavHost`, so content scrolls *under* a `blurBackground(alphas = persistentListOf(0f, 0.8f, 1f, 1f))` gradient
-exactly like CategoryDetails' sort/filter cluster and MangaDetails' continue-reading/favorite cluster.
+`NavHost`, so content scrolls *under* that gradient exactly like CategoryDetails' sort/filter cluster
+and MangaDetails' continue-reading/favorite cluster.
 `blurBackground` is a gradient scrim, **not** `Modifier.blur` (API 31+, silently no-ops on
 `minSdk = 24`) — see Compose Conventions. Because the bar is an overlay it does **not** push content,
 so each tab's scrollable content pays `bottom = 82.dp` for clearance (`HomeContent`'s sections column,
-`CategoriesGrid`'s `contentPadding`, `ProfileContent`'s trailing credit line) — the same 82.dp
-`CategoryDetailsContent` already used to clear its floating cluster. Profile's bottom **buttons** pay
-`114.dp` (82 + the 32 the button already had).
+`CategoriesGrid`'s `contentPadding`) — the same 82.dp `CategoryDetailsContent` already used to clear
+its floating cluster. Profile's two bottom **buttons** (`LogoutButton` in `ProfileContent`,
+`SignInButton` in `ProfileScreen`'s logged-out branch) instead both pay
+`.padding(horizontal = 16.dp).padding(bottom = 78.dp)` — keep the two numbers identical so the button
+sits in the same place whether or not the user is signed in.
 
 **Back is swallowed inside the tabs**: `MainScreen` declares a bare `BackHandler {}` — an empty
 handler that consumes the event — so switching tabs is **tap-only**, Back never moves between them.
@@ -481,8 +501,10 @@ drawer gone, `ProfileScreen`'s logged-out branch owns it — `SignInButton`
 `Icons.AutoMirrored.Filled.Login`, and **no** confirm dialog since signing in isn't destructive) sits
 at exactly the Logout button's position under a `weight(1f)` `IdleScreen`. If you ever restructure the
 Profile screen, keep an entry point to Login there — the only other one in the app is MangaDetails'
-"you must sign in to favorite" dialog. The drawer's credit line (`MenuFooter`,
-`R.string.decoutkhanqindev`) moved to the bottom of `ProfileContent`, same
+"you must sign in to favorite" dialog. The drawer's credit line (`MenuFooter`) was **dropped
+entirely**, not relocated — nothing renders `R.string.decoutkhanqindev` any more, so that string
+resource is currently orphaned. Harmless, but decide it deliberately: either delete the string, or
+re-add the line at the bottom of `ProfileContent` with the old
 `bodySmall + Italic + onSurfaceVariant + centered` styling.
 
 **Generalized manga-list browse (one path, optional tag)**: a Home section (Trending / Latest Update /
@@ -493,7 +515,7 @@ the four section endpoints and the tag endpoint all hit the same `GET /manga`, d
 `CategoryRepository.getMangaList(categoryId: String? = null, …)` → `GetMangaListUseCase`
 (`domain/usecase/manga/`, not `category/` — it's no longer category-specific). `CategoryDetailsScreen`/
 `CategoryDetailsViewModel` serve **both** entry points off `NavRoute.CategoryDetails(categoryTitle,
-categoryId: String? = null, initialSortCriteria = LATEST_UPDATE)`: Categories/MangaDetails pass a
+categoryId: String? = null, categoryDescription: String = "", initialSortCriteria = LATEST_UPDATE)`: Categories/MangaDetails pass a
 non-null `categoryId` (byte-identical to before); Home's per-section **"More »"** passes
 `categoryId = null` + the section's mapped sort (`MangaSectionValue.toSortCriteriaValue()` in
 `CriteriaMapper` — section→criteria is 1:1, with `NEW_RELEASE → MOST_VIEWED` since both are
@@ -731,7 +753,7 @@ established shape as `observeHistoryJob`/`cancelObserveHistoryJob()`.
   fontStyle = Italic + textAlign = Center` with no weight override (inherits the token's own
   SemiBold); chapter-row flavor text (the separator dot, chapter title in list rows, `ReaderScreen`'s
   top-bar subtitle) uses `labelMedium + fontStyle = Italic`; footer/quiet-caption text
-  (`ProfileContent`'s trailing app-credit line, "Don't have an account?") uses its own base style + `fontStyle = Italic` +
+  ("Don't have an account?") uses its own base style + `fontStyle = Italic` +
   `color = onSurfaceVariant`, no weight override — this is distinct from a *clickable* inline link
   (`LoginForm`'s "Forgot Password?"/"Sign Up", `titleMedium + Bold + Italic + onPrimaryContainer`),
   which signals tappability via color and must not be folded into the quiet-caption convention. The

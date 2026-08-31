@@ -24,7 +24,7 @@ class SettingsRepositoryImpl @Inject constructor(
     prefsManager.data.map { prefs ->
       prefs[themeModePrefsKey]
         ?.let { name -> ThemeMode.entries.find { it.name == name } }
-        ?: ThemeMode.SYSTEM
+        ?: ThemeMode.DARK
     }
       .flowOn(Dispatchers.IO)
       .distinctUntilChanged()

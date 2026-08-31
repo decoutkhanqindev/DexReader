@@ -4,6 +4,52 @@ Dated log of notable multi-file / cross-cutting work sessions. Newest entry firs
 
 ---
 
+## 2026-08-31 — Sửa `ClassNotFoundException` do ASM transform hỏng + đồng bộ lại CLAUDE.md
+
+Hai việc trong cùng phiên: gỡ một crash lúc khởi động **không phải do code**, và soát lại CLAUDE.md
+cho khớp code thật sau đợt refactor bottom nav.
+
+### Crash: `ClassNotFoundException: com.decoutkhanqindev.dexreader.App`
+
+App crash ngay lúc `Unable to instantiate application`, dù `App.kt`/`MainActivity.kt` và
+`AndroidManifest.xml` đều đúng và `assembleDebug` luôn BUILD SUCCESSFUL.
+
+- **Nguyên nhân**: state incremental hỏng ở **`transformDebugClassesWithAsm`** (task ASM
+  instrumentation của Firebase Perf/Crashlytics), nằm giữa `compileDebugKotlin` và `dexBuilderDebug`.
+  `built_in_kotlinc/debug/.../App.class` có mặt (nên compile vẫn xanh), nhưng thư mục output của ASM
+  `app/build/intermediates/classes/debug/transformDebugClassesWithAsm/dirs/com/decoutkhanqindev/dexreader/`
+  **thiếu hẳn `App.class` và `MainActivity.class`** — chỉ còn mấy class Hilt sinh ra (`App_*.class`).
+  Dex và APK vì thế thật sự không chứa 2 class đó.
+- **Fix**: `./gradlew clean` rồi build lại. **`--rerun-tasks` không cứu được** — nó chạy lại task
+  nhưng vẫn ghi vào đúng thư mục output cũ.
+- **Bẫy khi chẩn đoán**: `grep -a "Lcom/decoutkhanqindev/dexreader/App;"` trên file dex cho
+  **false positive** — chuỗi đó xuất hiện như một *reference* từ class Hilt sinh ra kể cả khi class
+  gốc vắng mặt. Kiểm tra thư mục output của ASM mới là phép thử quyết định.
+- Cùng một gốc này giải thích luôn 2 hiện tượng lạ trước đó trong phiên: `Unresolved reference 'Main'`
+  khi source hoàn toàn đúng, và KSP `FileNotFoundException: ForgotPasswordViewModel_HiltModules.java`.
+- Đã ghi thành mục **Build Troubleshooting** trong CLAUDE.md (`## Project Setup`).
+
+### Đồng bộ CLAUDE.md với code thật
+
+4 chỗ doc lệch so với code sau đợt bottom nav, sửa hết:
+
+- **Alpha của scrim bottom bar** là `persistentListOf(0f, 0.9f, 1f, 1f)`, doc đang ghi `0.8f`.
+- **`AppBottomBar` không tự trang trí**: nó chỉ nhận `modifier` trần; `blurBackground` →
+  `navigationBarsPadding()` → `padding(horizontal = 16.dp, vertical = 8.dp)` đều nằm ở call site
+  trong `MainScreen`. Doc cũ đọc như thể bar tự lo phần này.
+- **Nút đáy Profile chừa `78.dp`**, không phải `114.dp` như doc ghi. `LogoutButton`
+  (`ProfileContent`) và `SignInButton` (nhánh chưa đăng nhập của `ProfileScreen`) dùng chung
+  `.padding(horizontal = 16.dp).padding(bottom = 78.dp)` — giữ 2 số này bằng nhau để nút nằm đúng
+  một chỗ dù đã đăng nhập hay chưa.
+- **Dòng credit bị bỏ hẳn, không phải chuyển chỗ**: doc (và entry bottom-nav phía dưới) nói
+  `MenuFooter` dời xuống đáy `ProfileContent`, thực tế không nơi nào render
+  `R.string.decoutkhanqindev` nữa ⇒ string resource này đang **mồ côi**. Vô hại, nhưng cần quyết định
+  rõ: xoá string, hoặc thêm lại dòng credit với style `bodySmall + Italic + onSurfaceVariant` căn giữa.
+- Tiện thể: chữ ký `NavRoute.CategoryDetails` trong doc bổ sung `categoryDescription: String = ""`
+  (thêm ở commit `831a63c`), và mục typography bỏ dòng credit khỏi ví dụ "footer/quiet-caption".
+
+---
+
 ## 2026-08-31 — `blurBackground` nhận list alpha thay cho 4 param top/center/bottom
 
 `Modifier.blurBackground` đổi chữ ký từ 4 param cố định
