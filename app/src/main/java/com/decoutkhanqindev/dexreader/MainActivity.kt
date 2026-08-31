@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
 
   private fun hideSystemBar() {
     runCatching {
-      WindowCompat.setDecorFitsSystemWindows(window, true)
+      WindowCompat.setDecorFitsSystemWindows(window, false)
       WindowCompat.getInsetsController(window, window.decorView).apply {
         systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         isAppearanceLightNavigationBars = false
