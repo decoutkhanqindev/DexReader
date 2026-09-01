@@ -40,7 +40,7 @@ import kotlinx.collections.immutable.persistentMapOf
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeContent(
-  uiState: MangaSectionUiState,
+  mangaSectionUiState: MangaSectionUiState,
   modifier: Modifier = Modifier,
   onItemClick: (String) -> Unit,
   onMoreClick: (sectionTitle: String, sortCriteria: MangaSortCriteriaValue) -> Unit,
@@ -50,8 +50,8 @@ fun HomeContent(
   var isShowErrorDialog by remember { mutableStateOf(false) }
   val pullToRefreshState = rememberPullToRefreshState()
 
-  SideEffect(uiState) {
-    if (uiState is MangaSectionUiState.Error) isShowErrorDialog = true
+  SideEffect(mangaSectionUiState) {
+    if (mangaSectionUiState is MangaSectionUiState.Error) isShowErrorDialog = true
   }
 
   PullToRefreshBox(
@@ -60,7 +60,7 @@ fun HomeContent(
     onRefresh = onRefresh,
     modifier = modifier
   ) {
-    when (uiState) {
+    when (mangaSectionUiState) {
       MangaSectionUiState.Loading -> LoadingScreen(modifier = Modifier.fillMaxSize())
 
       is MangaSectionUiState.Success -> {
@@ -71,9 +71,9 @@ fun HomeContent(
           verticalArrangement = Arrangement.Top,
           horizontalAlignment = Alignment.CenterHorizontally
         ) {
-          if (uiState.bannerList.isNotEmpty()) {
+          if (mangaSectionUiState.bannerList.isNotEmpty()) {
             MangaBanner(
-              items = uiState.bannerList,
+              items = mangaSectionUiState.bannerList,
               modifier = Modifier
                 .fillMaxWidth()
                 .height(365.dp),
@@ -88,7 +88,7 @@ fun HomeContent(
             MangaSectionValue.entries.forEach { section ->
               MangaListSection(
                 section = section,
-                items = uiState.mainSections[section] ?: persistentListOf(),
+                items = mangaSectionUiState.mainSections[section] ?: persistentListOf(),
                 modifier = Modifier.fillMaxWidth(),
                 onItemClick = onItemClick,
                 onMoreClick = onMoreClick,
@@ -101,7 +101,7 @@ fun HomeContent(
       is MangaSectionUiState.Error -> {
         if (isShowErrorDialog) {
           AlertDialog(
-            title = stringResource(uiState.error.messageRes),
+            title = stringResource(mangaSectionUiState.error.messageRes),
             onConfirmClick = {
               isShowErrorDialog = false
               onRetry()
@@ -173,7 +173,7 @@ private val previewMangaList = persistentListOf(
 private fun HomeContentLoadingPreview() {
   DexReaderTheme {
     HomeContent(
-      uiState = MangaSectionUiState.Loading,
+      mangaSectionUiState = MangaSectionUiState.Loading,
       modifier = Modifier.fillMaxSize(),
       onItemClick = {},
       onMoreClick = { _, _ -> },
@@ -188,7 +188,7 @@ private fun HomeContentLoadingPreview() {
 private fun HomeContentErrorPreview() {
   DexReaderTheme {
     HomeContent(
-      uiState = MangaSectionUiState.Error(FeatureError.NetworkUnavailable),
+      mangaSectionUiState = MangaSectionUiState.Error(FeatureError.NetworkUnavailable),
       modifier = Modifier.fillMaxSize(),
       onItemClick = {},
       onMoreClick = { _, _ -> },
@@ -203,7 +203,7 @@ private fun HomeContentErrorPreview() {
 private fun HomeContentSuccessPreview() {
   DexReaderTheme {
     HomeContent(
-      uiState = MangaSectionUiState.Success(
+      mangaSectionUiState = MangaSectionUiState.Success(
         bannerList = previewMangaList,
         mainSections = persistentMapOf(
           MangaSectionValue.TRENDING to previewMangaList,

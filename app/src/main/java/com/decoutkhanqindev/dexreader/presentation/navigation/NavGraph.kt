@@ -18,6 +18,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.auth.login.LoginScree
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.register.RegisterScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.UserViewModel
+import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.manga_section.MangaSectionViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.onboarding.OnboardingViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.settings.SettingsViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.favorites.FavoritesScreen
@@ -37,6 +38,8 @@ import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateTo
 @Composable
 fun NavGraph() {
   val navController = rememberNavController()
+
+  val mangaSectionViewModel: MangaSectionViewModel = hiltViewModel()
 
   val userViewModel: UserViewModel = hiltViewModel()
   val isUserLoggedIn by userViewModel.isUserLoggedIn.collectAsStateWithLifecycle()
@@ -81,6 +84,7 @@ fun NavGraph() {
 
       composable<NavRoute.Main> {
         MainScreen(
+          manageSectionViewModel = mangaSectionViewModel,
           settingsViewModel = settingsViewModel,
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,

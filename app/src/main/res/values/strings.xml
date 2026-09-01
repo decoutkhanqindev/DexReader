@@ -31,7 +31,6 @@
   <string name="cancel">Cancel</string>
   <string name="load_more">Load More</string>
   <string name="all_mangas_loaded">All mangas loaded</string>
-  <string name="decoutkhanqindev">decoutkhanqindev</string>
   <string name="oops_something_went_wrong_please_try_again">Oops, something went wrong. Please try again.</string>
   <string name="no_internet_connection">No internet connection. Please check your connection and try again.</string>
   <string name="can_t_load_next_manga_page_please_try_again">Can\'t load next manga page.\nPlease try again.</string>

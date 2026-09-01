@@ -3,210 +3,383 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="light" name="color-scheme">
+    <meta content="Privacy Policy for the DexReader Android application: what data is collected, how it is used, and how to request deletion."
+          name="description">
     <title>Privacy Policy - DexReader</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap"
+          rel="stylesheet">
     <style>
+        :root {
+            color-scheme: light;
+            --bg: #ffffff;
+            --fg: #000000;
+            --muted: #444444;
+            --rule: #000000;
+            --hairline: #d4d4d4;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            color: #000000;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 40px 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        .header-banner {
-            background-color: #2c3e50;
-            color: #ffffff;
-            text-align: center;
-            padding: 35px 20px;
-            margin: 0;
-        }
-        .header-banner h1 {
-            margin: 0;
-            font-size: 32px;
-            letter-spacing: 1px;
-            font-weight: 700;
-        }
-        .header-banner p {
-            margin: 10px 0 0 0;
-            font-size: 16px;
-            color: #ecf0f1;
-        }
-        .content {
-            padding: 40px 50px;
-        }
-        h2 {
-            color: #000000;
-            border-bottom: 2px solid #000000;
-            padding-bottom: 8px;
-            margin-top: 40px;
-            font-size: 20px;
-        }
-        p, li {
+            font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas,
+            "Liberation Mono", monospace;
             font-size: 15px;
-            margin-bottom: 15px;
+            line-height: 1.75;
+            color: var(--fg);
+            background-color: var(--bg);
+            margin: 0;
+            padding: 64px 24px 96px;
+            -webkit-font-smoothing: antialiased;
         }
+
+        main {
+            max-width: 44rem;
+            margin: 0 auto;
+        }
+
+        header {
+            border-top: 4px solid var(--rule);
+            border-bottom: 1px solid var(--rule);
+            padding: 28px 0 20px;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        header p {
+            margin: 8px 0 0;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .meta {
+            margin: 0 0 40px;
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        nav {
+            border-left: 2px solid var(--hairline);
+            padding: 4px 0 4px 20px;
+            margin: 0 0 48px;
+        }
+
+        nav h2 {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            margin: 0 0 10px;
+            border: 0;
+            padding: 0;
+        }
+
+        nav ol {
+            margin: 0;
+            padding-left: 1.6em;
+            font-size: 14px;
+        }
+
+        nav li {
+            margin-bottom: 4px;
+        }
+
+        h2 {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin: 48px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--hairline);
+        }
+
+        h3 {
+            font-size: 15px;
+            font-weight: 700;
+            margin: 28px 0 8px;
+        }
+
+        p, li {
+            margin-bottom: 14px;
+        }
+
+        ul, ol {
+            margin-top: 0;
+            padding-left: 1.4em;
+        }
+
+        li > ul {
+            margin-top: 10px;
+        }
+
         strong {
             font-weight: 700;
         }
-        ul, ol {
-            margin-top: 0;
-            padding-left: 20px;
-        }
+
         a {
-            color: #0056b3;
+            color: inherit;
             text-decoration: underline;
+            text-underline-offset: 2px;
         }
-        a:hover {
-            color: #003d82;
+
+        a:hover, a:focus {
+            text-decoration-thickness: 2px;
         }
-        .date {
-            font-style: italic;
-            margin-bottom: 30px;
-            font-weight: 700;
+
+        .callout {
+            border: 1px solid var(--rule);
+            padding: 18px 22px;
+            margin: 24px 0;
         }
+
+        .callout p:last-child {
+            margin-bottom: 0;
+        }
+
+        footer {
+            margin-top: 64px;
+            padding-top: 20px;
+            border-top: 1px solid var(--hairline);
+            font-size: 14px;
+            color: var(--muted);
+        }
+
         @media (max-width: 600px) {
             body {
-                padding: 15px;
+                font-size: 14px;
+                padding: 40px 18px 64px;
             }
-            .content {
-                padding: 25px 20px;
+
+            header h1 {
+                font-size: 22px;
+            }
+
+            h2 {
+                font-size: 16px;
+            }
+        }
+
+        @media print {
+            :root {
+                --bg: #ffffff;
+                --fg: #000000;
+                --muted: #000000;
+                --rule: #000000;
+                --hairline: #000000;
+            }
+
+            body {
+                font-size: 11pt;
+                padding: 0;
+            }
+
+            nav {
+                display: none;
+            }
+
+            h2 {
+                page-break-after: avoid;
             }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header-banner">
+<main>
+    <header>
         <h1>DexReader</h1>
         <p>Privacy Policy</p>
-    </div>
+    </header>
 
-    <div class="content">
-        <p class="date">Last updated: August 31, 2026</p>
+    <p class="meta">Last updated: September 1, 2026</p>
 
-        <p><strong>decoutkhanqindev</strong> built the DexReader app as a Free app. This SERVICE is
-            provided by <strong>decoutkhanqindev</strong> at no cost and is intended for use as is.
-        </p>
+    <p><strong>decoutkhanqindev</strong> built the DexReader app as a free application. This Service is
+        provided at no cost and is intended for use as is.</p>
 
-        <p>This page is used to inform visitors regarding my policies with the collection, use, and
-            disclosure of Personal Information if anyone decided to use my Service.</p>
+    <p>This page informs you of my policies regarding the collection, use, and disclosure of personal
+        information when you use this Service. If you choose to use the Service, you agree to the
+        collection and use of information in accordance with this policy. I will not use or share your
+        information with anyone except as described here.</p>
 
-        <p>If you choose to use my Service, then you agree to the collection and use of information
-            in relation to this policy. The Personal Information that I collect is used for
-            providing and improving the Service. I will not use or share your information with
-            anyone except as described in this Privacy Policy.</p>
-
-        <h2>1. Information Collection and Use</h2>
-        <p>For a better experience, while using our Service, I may require you to provide us with
-            certain personally identifiable information.</p>
-        <p>DexReader provides cloud synchronization and user account management, therefore the app
-            collects and processes the following types of data:</p>
-        <ul>
-            <li><strong>Login and Authentication Information:</strong> The app uses authentication
-                services to manage accounts. When you register or log in, we collect your Email
-                address and related basic authentication information.
-            </li>
-            <li><strong>App Data:</strong> To provide synchronization features across multiple
-                devices, data including your Reading history and Favorites are securely stored on
-                our cloud servers.
-            </li>
-        </ul>
-        <p>The information that I request will be retained and used as described in this privacy
-            policy.</p>
-
-        <h2>2. Third-Party Services</h2>
-        <p>The app does use third-party services that may collect information used to identify you
-            in order to provide content and support the application's infrastructure.</p>
-        <p>Link to the privacy policy of third-party service providers used by the app:</p>
-        <ul>
-            <li><a href="https://policies.google.com/privacy" rel="noopener noreferrer"
-                   target="_blank">Google Play Services</a></li>
-            <li><a href="https://firebase.google.com/support/privacy" rel="noopener noreferrer"
-                   target="_blank">Firebase Authentication & Firestore</a></li>
-            <li><a href="https://mangadex.org/rules" rel="noopener noreferrer" target="_blank">MangaDex
-                API</a> (Service providing manga content and images)
-            </li>
-        </ul>
-
-        <h2>3. Log Data</h2>
-        <p>I want to inform you that whenever you use my Service, in a case of an error in the app I
-            collect data and information (through third-party products) on your phone called
-            <strong>Log Data</strong>. This Log Data may include information such as your device
-            Internet Protocol ("IP") address, device name, operating system version, the
-            configuration of the app when utilizing my Service, the time and date of your use of the
-            Service, and other statistics. This data is used solely for debugging and performance
-            improvement purposes.</p>
-
-        <h2>4. Data Deletion Request (User Rights)</h2>
-        <p>Users have full control over their personal data. If you wish to delete your account and
-            all associated data (including login email, favorites, and reading history stored on
-            Firebase Firestore), you can do so through the following methods:</p>
+    <nav aria-label="Contents">
+        <h2>Contents</h2>
         <ol>
-            <li><strong>In-App Deletion:</strong> Log into DexReader, navigate to Settings/Account,
-                and select "Delete Account". All your data will be immediately and permanently
-                removed from our systems.
-            </li>
-            <li><strong>Email Request:</strong> You can request data deletion by sending an email
-                from your registered account email address to the support email below. Your request
-                will be processed within 7 business days.
-            </li>
+            <li><a href="#collection">Information Collection and Use</a></li>
+            <li><a href="#local">Data Stored on Your Device</a></li>
+            <li><a href="#third-party">Third-Party Services</a></li>
+            <li><a href="#log-data">Log and Diagnostic Data</a></li>
+            <li><a href="#retention">Data Retention</a></li>
+            <li><a href="#deletion">Data Deletion Request</a></li>
+            <li><a href="#cookies">Cookies</a></li>
+            <li><a href="#security">Security</a></li>
+            <li><a href="#external">External Content and Links</a></li>
+            <li><a href="#children">Children's Privacy</a></li>
+            <li><a href="#changes">Changes to This Privacy Policy</a></li>
+            <li><a href="#contact">Contact</a></li>
         </ol>
+    </nav>
 
-        <h2>5. Cookies</h2>
-        <p>Cookies are files with a small amount of data that are commonly used as anonymous unique
-            identifiers. These are sent to your browser from the websites that you visit and are
-            stored on your device's internal memory.</p>
-        <p>This Service does not use these "cookies" explicitly. However, the app may use
-            third-party code and libraries that use "cookies" to collect information and improve
-            their services.</p>
+    <h2 id="collection">1. Information Collection and Use</h2>
+    <p>DexReader can be browsed without an account. Creating an account unlocks favorites, reading
+        history, and reading statistics, which are synchronised across your devices. When you sign in,
+        the following data is collected and stored on Google Firebase infrastructure:</p>
 
-        <h2>6. Security</h2>
-        <p>I value your trust in providing us your Personal Information (especially regarding data
-            storage via Firebase), thus we are striving to use commercially acceptable means of
-            protecting it. <strong>However, please remember</strong> that no method of transmission
-            over the internet, or method of electronic storage is 100% secure and reliable, and I
-            cannot guarantee its absolute security.</p>
+    <h3>Account information</h3>
+    <ul>
+        <li><strong>Email address</strong> and authentication credentials, handled by Firebase
+            Authentication. Your password is never stored or readable by me.
+        </li>
+        <li><strong>Account identifier</strong> assigned by Firebase Authentication.</li>
+        <li><strong>Display name</strong> and, if you provide one, an <strong>avatar image
+            URL</strong>. Both are values you enter yourself and can change at any time in the app.
+        </li>
+    </ul>
 
-        <h2>7. Links to Other Sites</h2>
-        <p>This Service may contain links to other sites (e.g., manga content websites). If you
-            click on a third-party link, you will be directed to that site. Note that these external
-            sites are not operated by me. Therefore, I strongly advise you to review the Privacy
-            Policy of these websites.</p>
+    <h3>App data</h3>
+    <ul>
+        <li><strong>Favorites</strong> — the manga you have marked as favorite.</li>
+        <li><strong>Reading history</strong> — which manga and chapter you opened, the last page you
+            reached in each chapter, and when you last read it.
+        </li>
+        <li><strong>Reading statistics</strong> — the total time spent reading per calendar day, used
+            to render the reading-activity charts in the app.
+        </li>
+    </ul>
 
-        <h2>8. Children's Privacy</h2>
-        <p>These Services do not address anyone under the age of 13. I do not knowingly collect
-            personally identifiable information from children under 13. In the case I discover that
-            a child under 13 has provided me with personal information, I immediately delete this
-            from our servers. If you are a parent or guardian and you are aware that your child has
-            provided us with personal information, please contact me so that I will be able to do
-            the necessary actions.</p>
+    <p>This data is used solely to provide and improve the features described above. It is not sold, and
+        it is not used for advertising or profiling.</p>
 
-        <h2>9. Changes to This Privacy Policy</h2>
-        <p>I may update our Privacy Policy from time to time. Thus, you are advised to review this
-            page periodically for any changes. I will notify you of any changes by posting the new
-            Privacy Policy on this page.</p>
+    <h2 id="local">2. Data Stored on Your Device</h2>
+    <p>Some data never leaves your phone and is not transmitted to me or to any third party:</p>
+    <ul>
+        <li><strong>Chapter cache</strong> — recently opened chapter pages are cached locally so they
+            load faster and can be re-read without re-downloading.
+        </li>
+        <li><strong>App preferences</strong> — your theme choice and whether you have completed the
+            onboarding screens.
+        </li>
+    </ul>
+    <p>Uninstalling the app removes all of this local data.</p>
 
-        <h2>10. Contact Us</h2>
-        <p>If you have any questions or suggestions about my Privacy Policy, especially requests
-            regarding the protection or deletion of personal data, do not hesitate to contact me
-            at:</p>
-        <ul>
-            <li><strong>Support Email:</strong> <a href="mailto:m1nk17n9032101@gmail.com">m1nk17n9032101@gmail.com</a>
-            </li>
-            <li><strong>Telegram:</strong> <a href="https://t.me/decoutkhanqindev" rel="noopener noreferrer"
-                                              target="_blank">@decoutkhanqindev</a></li>
-        </ul>
+    <h2 id="third-party">3. Third-Party Services</h2>
+    <p>The app relies on third-party services that may collect information used to identify you, in
+        order to deliver content and support the application's infrastructure:</p>
+    <ul>
+        <li><strong>Firebase Authentication</strong> — account sign-up, sign-in, and password reset.
+        </li>
+        <li><strong>Cloud Firestore</strong> — storage of your profile, favorites, reading history, and
+            reading statistics.
+        </li>
+        <li><strong>Firebase Crashlytics</strong> — crash reporting.</li>
+        <li><strong>Firebase Performance Monitoring</strong> — app startup and network performance
+            measurement.
+        </li>
+        <li><strong>Google Analytics for Firebase</strong> — aggregate usage measurement.</li>
+        <li><strong>MangaDex API</strong> — the source of all manga metadata, cover art, and chapter
+            images. Requests to load content reach MangaDex servers directly from your device.
+        </li>
+    </ul>
+    <p>Privacy policies of these providers:</p>
+    <ul>
+        <li><a href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank">Google
+            Privacy Policy</a> (Google Play Services and Google Analytics)
+        </li>
+        <li><a href="https://firebase.google.com/support/privacy" rel="noopener noreferrer"
+               target="_blank">Firebase Privacy and Security</a>
+        </li>
+        <li><a href="https://mangadex.org/rules" rel="noopener noreferrer" target="_blank">MangaDex</a>
+        </li>
+    </ul>
+
+    <h2 id="log-data">4. Log and Diagnostic Data</h2>
+    <p>When the app encounters an error, diagnostic data is collected through Firebase Crashlytics and
+        Firebase Performance Monitoring. This <strong>Log Data</strong> may include your device's
+        Internet Protocol ("IP") address, device model and name, operating system version, app
+        configuration and version, the time and date of use, and the stack trace of the failure. It is
+        used solely for debugging, stability, and performance work.</p>
+
+    <h2 id="retention">5. Data Retention</h2>
+    <p>Your account data, favorites, reading history, and reading statistics are retained for as long as
+        your account exists. They are removed when your account is deleted, as described in the next
+        section. Diagnostic data collected by Crashlytics and Performance Monitoring is retained
+        according to Google's own retention schedules, which are described in the Firebase privacy
+        documentation linked above.</p>
+
+    <h2 id="deletion">6. Data Deletion Request</h2>
+    <p>You can request deletion of your account and all associated data — your email address, display
+        name, avatar URL, favorites, reading history, and reading statistics stored in Cloud
+        Firestore.</p>
+    <div class="callout">
+        <p><strong>How to request deletion.</strong> Send an email from the address registered to your
+            DexReader account to the support address in the <a href="#contact">Contact</a> section, with
+            the subject line "Delete my DexReader account". Your request will be processed within 7
+            business days, after which the data is permanently removed and cannot be recovered.</p>
     </div>
-</div>
+    <p>You can also change or clear your display name and avatar at any time from the Profile screen in
+        the app, and you can remove individual favorites and individual reading-history entries from the
+        Favorites and History screens.</p>
+
+    <h2 id="cookies">7. Cookies</h2>
+    <p>Cookies are small data files commonly used as anonymous unique identifiers, sent to your browser
+        by the websites you visit and stored on your device. This Service does not use cookies
+        explicitly. However, the third-party libraries the app depends on may use them to collect
+        information and improve their services.</p>
+
+    <h2 id="security">8. Security</h2>
+    <p>I value your trust in providing your personal information, and I use commercially acceptable
+        means of protecting it. Account data is stored on Google Firebase infrastructure and access is
+        restricted by security rules so that each account can read and write only its own records.
+        <strong>However, please remember</strong> that no method of transmission over the internet, and
+        no method of electronic storage, is 100% secure. I cannot guarantee absolute security.</p>
+
+    <h2 id="external">9. External Content and Links</h2>
+    <p>All manga metadata, cover art, and chapter images displayed in the app are fetched from the
+        MangaDex API and are shown inside the app. DexReader does not host this content and is not
+        responsible for it. This policy page itself contains links to the privacy policies of the
+        third-party services listed above; those sites are not operated by me, and I advise you to
+        review their own policies.</p>
+
+    <h2 id="children">10. Children's Privacy</h2>
+    <p>This Service does not address anyone under the age of 13, and I do not knowingly collect
+        personally identifiable information from children under 13. If I discover that a child under 13
+        has provided personal information, I delete it from the servers immediately. If you are a parent
+        or guardian and believe your child has provided personal information, please contact me so that
+        I can take the necessary action.</p>
+
+    <h2 id="changes">11. Changes to This Privacy Policy</h2>
+    <p>I may update this Privacy Policy from time to time. You are advised to review this page
+        periodically. Changes take effect as soon as the revised policy is posted on this page, and the
+        date at the top of the page is updated to match.</p>
+
+    <h2 id="contact">12. Contact</h2>
+    <p>If you have questions or suggestions about this Privacy Policy, or you wish to request the
+        deletion of your personal data, contact me at:</p>
+    <ul>
+        <li><strong>Support email:</strong>
+            <a href="mailto:m1nk17n9032101@gmail.com">m1nk17n9032101@gmail.com</a></li>
+        <li><strong>Telegram:</strong>
+            <a href="https://t.me/decoutkhanqindev" rel="noopener noreferrer"
+               target="_blank">@decoutkhanqindev</a></li>
+    </ul>
+
+    <footer>
+        <p>DexReader is an unofficial reader client. Manga content is provided by MangaDex and remains
+            the property of its respective rights holders.</p>
+    </footer>
+</main>
 
 </body>
 </html>

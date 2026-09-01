@@ -28,6 +28,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.screens.common.bottom_bar.AppBottomBar
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.favorites.FavoritesViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.history.HistoryViewModel
+import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.manga_section.MangaSectionViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.settings.SettingsViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.statistics.StatisticsViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.home.HomeScreen
@@ -37,6 +38,7 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun MainScreen(
+  manageSectionViewModel: MangaSectionViewModel,
   settingsViewModel: SettingsViewModel,
   favoritesViewModel: FavoritesViewModel = hiltViewModel(),
   historyViewModel: HistoryViewModel = hiltViewModel(),
@@ -83,6 +85,7 @@ fun MainScreen(
     ) {
       composable<NavRoute.Home> {
         HomeScreen(
+          mangaSectionViewModel = manageSectionViewModel,
           modifier = Modifier.fillMaxSize(),
           onNavigateToSearchScreen = onNavigateToSearchScreen,
           onNavigateToMangaDetailScreen = onNavigateToMangaDetailScreen,
