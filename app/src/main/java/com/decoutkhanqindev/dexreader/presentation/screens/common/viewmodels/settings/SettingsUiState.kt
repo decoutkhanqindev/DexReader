@@ -6,8 +6,8 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.settings.ThemeMod
 @Immutable
 data class SettingsUiState(
   val isLoading: Boolean = false,
-  val appliedThemeOption: ThemeModeValue = ThemeModeValue.SYSTEM,
-  val selectedThemeOption: ThemeModeValue = ThemeModeValue.SYSTEM,
+  val appliedThemeOption: ThemeModeValue = ThemeModeValue.DARK,
+  val selectedThemeOption: ThemeModeValue = ThemeModeValue.DARK,
   val isSuccess: Boolean = false,
   val isError: Boolean = false,
 )

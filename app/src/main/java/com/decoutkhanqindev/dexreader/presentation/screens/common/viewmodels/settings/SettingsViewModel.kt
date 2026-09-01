@@ -46,8 +46,8 @@ class SettingsViewModel @Inject constructor(
             _uiState.update {
               it.copy(
                 isLoading = false,
-                appliedThemeOption = ThemeModeValue.SYSTEM,
-                selectedThemeOption = ThemeModeValue.SYSTEM,
+                appliedThemeOption = ThemeModeValue.DARK,
+                selectedThemeOption = ThemeModeValue.DARK,
               )
             }
 

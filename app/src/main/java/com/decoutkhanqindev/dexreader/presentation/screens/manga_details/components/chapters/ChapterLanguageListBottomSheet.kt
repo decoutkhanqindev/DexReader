@@ -24,6 +24,7 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.onClick
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
+import com.decoutkhanqindev.dexreader.util.LanguageManager
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -69,7 +70,7 @@ fun ChapterLanguageListBottomSheet(
           val onClick = remember(it) { { onItemClick(it) } }
 
           Text(
-            text = stringResource(it.value),
+            text = LanguageManager.labelOf(code = it.code, flag = it.flag),
             modifier = Modifier
               .padding(bottom = 8.dp)
               .onClick {

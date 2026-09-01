@@ -20,6 +20,7 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.onClick
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
+import com.decoutkhanqindev.dexreader.util.LanguageManager
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -56,7 +57,10 @@ fun MangaChaptersHeader(
       style = MaterialTheme.typography.titleLarge,
     )
     Text(
-      text = stringResource(selectedLanguage.value),
+      text = LanguageManager.labelOf(
+        code = selectedLanguage.code,
+        flag = selectedLanguage.flag,
+      ),
       modifier = Modifier.onClick { isShowLanguageBottomSheet = true },
       fontWeight = FontWeight.Bold,
       style = MaterialTheme.typography.titleMedium,

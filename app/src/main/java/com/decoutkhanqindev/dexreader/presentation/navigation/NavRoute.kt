@@ -18,6 +18,9 @@ sealed interface NavRoute {
   data object ForgotPassword : NavRoute
 
   @Serializable
+  data object LanguageSelection : NavRoute
+
+  @Serializable
   data object Onboarding : NavRoute
 
   @Serializable
@@ -40,6 +43,15 @@ sealed interface NavRoute {
 
   @Serializable
   data object Profile : NavRoute
+
+  @Serializable
+  data object Settings : NavRoute
+
+  @Serializable
+  data object LanguageSetting : NavRoute
+
+  @Serializable
+  data object PrivacyPolicy : NavRoute
 
   @Serializable
   data object Search : NavRoute

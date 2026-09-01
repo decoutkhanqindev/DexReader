@@ -14,19 +14,22 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.top_bars.AppTo
 
 @Composable
 fun BaseDetailsScreen(
-  title: String,
+  title: String = "",
+  isBackEnabled: Boolean = true,
   isSearchEnabled: Boolean = true,
   modifier: Modifier = Modifier,
-  onNavigateBack: () -> Unit,
+  onNavigateBack: () -> Unit = {},
   onNavigateToSearchScreen: () -> Unit = {},
   bottomBar: @Composable () -> Unit = {},
+  floatingActionButton: @Composable () -> Unit = {},
+  topBar: (@Composable () -> Unit)? = null,
   content: @Composable () -> Unit,
 ) {
   Scaffold(
     modifier = modifier,
-    topBar = {
+    topBar = topBar ?: {
       AppTopBar(
-        leftIcon = Icons.AutoMirrored.Filled.ArrowBack,
+        leftIcon = if (isBackEnabled) Icons.AutoMirrored.Filled.ArrowBack else null,
         onLeftClick = onNavigateBack,
         centerTitle = title,
         rightIcon = if (isSearchEnabled) Icons.Default.Search else null,
@@ -35,6 +38,7 @@ fun BaseDetailsScreen(
       )
     },
     bottomBar = bottomBar,
+    floatingActionButton = floatingActionButton,
   ) { paddingValues ->
     Box(
       modifier = Modifier

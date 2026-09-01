@@ -17,7 +17,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.RestartAlt
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseDetailsScreen
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
@@ -83,7 +83,7 @@ fun ReaderScreen(
     if (resetProgressUiState.isError) isShowResetErrorDialog = true
   }
 
-  Scaffold(
+  BaseDetailsScreen(
     topBar = {
       AnimatedVisibility(
         visible = !isFullScreen,
@@ -146,14 +146,12 @@ fun ReaderScreen(
         modifier = Modifier.size(56.dp),
       ) { isFullScreen = !isFullScreen }
     },
-    modifier = modifier
-  ) { innerPadding ->
+    modifier = modifier,
+  ) {
     ReaderContent(
       chapterPageUiState = chapterPagesUiState,
       resetProgressUiState = resetProgressUiState,
-      modifier = Modifier
-        .fillMaxSize()
-        .padding(innerPadding),
+      modifier = Modifier.fillMaxSize(),
       onUpdateChapterPage = { viewModel.updateChapterPage(it) },
       onRetry = { viewModel.retry() },
     )

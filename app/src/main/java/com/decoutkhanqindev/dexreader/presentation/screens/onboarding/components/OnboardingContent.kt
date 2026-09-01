@@ -135,7 +135,7 @@ fun OnboardingContent(
           contentDescription = null,
           tint = MaterialTheme.colorScheme.onPrimary,
           modifier = Modifier
-            .size(16.dp)
+            .size(24.dp)
             .padding(start = 4.dp)
         )
       }

@@ -4,6 +4,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.category_details
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaListUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.settings.ObserveContentLanguageUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortCriteria
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortOrder
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
@@ -25,6 +26,7 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.update
 import timber.log.Timber
 import javax.inject.Inject
@@ -33,6 +35,7 @@ import javax.inject.Inject
 class CategoryDetailsViewModel @Inject constructor(
   savedStateHandle: SavedStateHandle,
   private val getMangaListUseCase: GetMangaListUseCase,
+  private val observeContentLanguageUseCase: ObserveContentLanguageUseCase,
 ) : BaseViewModel() {
   private val route: NavRoute.CategoryDetails = savedStateHandle.toRoute()
   private val categoryIdFromArg: String? = route.categoryId
@@ -53,6 +56,15 @@ class CategoryDetailsViewModel @Inject constructor(
 
   init {
     fetchMangaListByCategoryFirstPage()
+    observeContentLanguageChange()
+  }
+
+  private fun observeContentLanguageChange() {
+    vmLaunch {
+      observeContentLanguageUseCase()
+        .drop(1)
+        .collect { result -> result.onSuccess { fetchMangaListByCategoryFirstPage() } }
+    }
   }
 
   private fun fetchMangaListByCategoryFirstPage() {

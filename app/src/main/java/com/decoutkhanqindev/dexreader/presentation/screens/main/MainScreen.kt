@@ -29,7 +29,6 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.bottom_bar.App
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.favorites.FavoritesViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.history.HistoryViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.manga_section.MangaSectionViewModel
-import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.settings.SettingsViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.statistics.StatisticsViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.home.HomeScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.ProfileScreen
@@ -39,7 +38,6 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 fun MainScreen(
   manageSectionViewModel: MangaSectionViewModel,
-  settingsViewModel: SettingsViewModel,
   favoritesViewModel: FavoritesViewModel = hiltViewModel(),
   historyViewModel: HistoryViewModel = hiltViewModel(),
   statisticsViewModel: StatisticsViewModel = hiltViewModel(),
@@ -47,6 +45,7 @@ fun MainScreen(
   currentUser: UserModel?,
   modifier: Modifier = Modifier,
   onNavigateToLoginScreen: () -> Unit,
+  onNavigateToSettingsScreen: () -> Unit,
   onNavigateToSearchScreen: () -> Unit,
   onNavigateToMangaDetailScreen: (String) -> Unit,
   onNavigateToCategoryDetailsScreen: (
@@ -112,7 +111,6 @@ fun MainScreen(
 
       composable<NavRoute.Profile> {
         ProfileScreen(
-          settingsViewModel = settingsViewModel,
           favoritesViewModel = favoritesViewModel,
           historyViewModel = historyViewModel,
           statisticsViewModel = statisticsViewModel,
@@ -120,6 +118,7 @@ fun MainScreen(
           currentUser = currentUser,
           modifier = Modifier.fillMaxSize(),
           onNavigateToLoginScreen = onNavigateToLoginScreen,
+          onNavigateToSettingsScreen = onNavigateToSettingsScreen,
           onNavigateToFavoritesScreen = onNavigateToFavoritesScreen,
           onNavigateToHistoryScreen = onNavigateToHistoryScreen,
           onNavigateToStatisticsScreen = onNavigateToStatisticsScreen,

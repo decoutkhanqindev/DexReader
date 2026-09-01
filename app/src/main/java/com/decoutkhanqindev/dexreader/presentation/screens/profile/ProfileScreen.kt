@@ -22,14 +22,12 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseScree
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.favorites.FavoritesViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.history.HistoryViewModel
-import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.settings.SettingsViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.statistics.StatisticsViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.components.ProfileContent
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.components.actions.SignInButton
 
 @Composable
 fun ProfileScreen(
-  settingsViewModel: SettingsViewModel,
   favoritesViewModel: FavoritesViewModel = hiltViewModel(),
   historyViewModel: HistoryViewModel = hiltViewModel(),
   statisticsViewModel: StatisticsViewModel = hiltViewModel(),
@@ -38,6 +36,7 @@ fun ProfileScreen(
   currentUser: UserModel?,
   modifier: Modifier = Modifier,
   onNavigateToLoginScreen: () -> Unit,
+  onNavigateToSettingsScreen: () -> Unit,
   onNavigateToFavoritesScreen: () -> Unit,
   onNavigateToHistoryScreen: () -> Unit,
   onNavigateToStatisticsScreen: () -> Unit,
@@ -52,7 +51,6 @@ fun ProfileScreen(
   val favoritesUiState by favoritesViewModel.uiState.collectAsStateWithLifecycle()
   val historyUiState by historyViewModel.historyUiState.collectAsStateWithLifecycle()
   val statisticsUiState by statisticsViewModel.uiState.collectAsStateWithLifecycle()
-  val settingsUiState by settingsViewModel.uiState.collectAsStateWithLifecycle()
   val isShowUpdateButton by remember {
     derivedStateOf {
       val nameChanged = uiState.newName != null
@@ -78,7 +76,9 @@ fun ProfileScreen(
   BaseScreen(
     selectedTab = BottomTabItemValue.PROFILE,
     isSearchEnabled = false,
+    isSettingsEnabled = true,
     modifier = modifier,
+    onNavigateToSettingsScreen = onNavigateToSettingsScreen,
   ) {
     if (isUserLoggedIn) {
       ProfileContent(
@@ -86,7 +86,6 @@ fun ProfileScreen(
         favoritesUiState = favoritesUiState,
         historyUiState = historyUiState,
         statisticsUiState = statisticsUiState,
-        settingsUiState = settingsUiState,
         isShowUpdateButton = isShowUpdateButton,
         modifier = Modifier.fillMaxSize(),
         onUpdateNameChange = { profileViewModel.updateUserName(it) },
@@ -105,11 +104,6 @@ fun ProfileScreen(
         onRetryHistory = { historyViewModel.retryObserveHistoryFirstPage() },
         onStatisticsMoreClick = onNavigateToStatisticsScreen,
         onRetryStatistics = { statisticsViewModel.retry() },
-        onThemeOptionClick = {
-          settingsViewModel.updateThemeOption(it)
-          settingsViewModel.saveThemeOption()
-        },
-        onRetryTheme = { settingsViewModel.retry() },
         onRefresh = {
           favoritesViewModel.refresh()
           historyViewModel.refresh()

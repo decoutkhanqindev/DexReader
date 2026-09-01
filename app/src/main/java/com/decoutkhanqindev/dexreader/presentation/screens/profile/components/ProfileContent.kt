@@ -31,20 +31,17 @@ import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingChartPointM
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
-import com.decoutkhanqindev.dexreader.presentation.model.value.settings.ThemeModeValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
-import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.settings.SettingsUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.statistics.StatisticsUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.ProfileUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.components.actions.LogoutButton
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.components.sections.ProfileEditSection
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.components.sections.ProfileFavoritesSection
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.components.sections.ProfileHistorySection
-import com.decoutkhanqindev.dexreader.presentation.screens.profile.components.sections.ProfileSettingsSection
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.components.sections.ProfileStatisticsSection
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.persistentListOf
@@ -56,7 +53,6 @@ fun ProfileContent(
   favoritesUiState: BasePaginationUiState<FavoriteMangaModel>,
   historyUiState: BasePaginationUiState<ReadingHistoryModel>,
   statisticsUiState: StatisticsUiState,
-  settingsUiState: SettingsUiState,
   isShowUpdateButton: Boolean,
   modifier: Modifier = Modifier,
   onUpdateNameChange: (String) -> Unit,
@@ -79,8 +75,6 @@ fun ProfileContent(
   onRetryHistory: () -> Unit,
   onStatisticsMoreClick: () -> Unit,
   onRetryStatistics: () -> Unit,
-  onThemeOptionClick: (ThemeModeValue) -> Unit,
-  onRetryTheme: () -> Unit,
   onRefresh: () -> Unit,
 ) {
   var isShowUpdateUserSuccessDialog by remember { mutableStateOf(false) }
@@ -159,13 +153,6 @@ fun ProfileContent(
         modifier = Modifier.fillMaxWidth(),
         onMoreClick = onStatisticsMoreClick,
         onRetry = onRetryStatistics,
-      )
-
-      ProfileSettingsSection(
-        uiState = settingsUiState,
-        modifier = Modifier.fillMaxWidth(),
-        onThemeOptionClick = onThemeOptionClick,
-        onRetry = onRetryTheme,
       )
 
       Spacer(modifier = Modifier.weight(1f))
@@ -306,10 +293,6 @@ private fun ProfileContentPreviewHost(
       nextPageState = BaseNextPageState.IDLE
     ),
     statisticsUiState = previewStatisticsUiState,
-    settingsUiState = SettingsUiState(
-      appliedThemeOption = ThemeModeValue.SYSTEM,
-      selectedThemeOption = ThemeModeValue.SYSTEM,
-    ),
     isShowUpdateButton = isShowUpdateButton,
     modifier = Modifier.fillMaxSize(),
     onUpdateNameChange = {},
@@ -328,8 +311,6 @@ private fun ProfileContentPreviewHost(
     onRetryHistory = {},
     onStatisticsMoreClick = {},
     onRetryStatistics = {},
-    onThemeOptionClick = {},
-    onRetryTheme = {},
     onRefresh = {},
   )
 }

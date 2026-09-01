@@ -4,6 +4,79 @@ Dated log of notable multi-file / cross-cutting work sessions. Newest entry firs
 
 ---
 
+## 2026-09-01 — Chọn ngôn ngữ app + màn Settings, gỡ theme khỏi Profile
+
+Đợt refactor lớn: một giá trị ngôn ngữ duy nhất điều khiển **cả UI lẫn nội dung MangaDex**, thêm 2 màn
+language + 1 màn Settings, và bỏ mục setting khỏi Profile hub.
+
+- **`MangaLanguageValue` bỏ `@StringRes`**, đổi sang `code` + `flag` (emoji regional indicator); tên
+  hiển thị suy từ `Locale.forLanguageTag(code).getDisplayLanguage(...)` qua
+  `LanguageManager.displayNameOf`/`labelOf`. **Xoá được toàn bộ 65 string `lang_*`** (207 → 143 string),
+  và tên ngôn ngữ tự localize theo UI.
+- **`AppLanguageValue`** = tập con app thật sự hỗ trợ, mỗi entry bọc một `MangaLanguageValue` nên
+  `code`/`flag` chỉ định nghĩa một chỗ. Thêm ngôn ngữ = 1 entry + 1 thư mục `values-XX`.
+- **`LanguageManager`** (`util/`) giữ `LocalAppLanguage` (staticCompositionLocalOf) + `ProvideAppLanguage`.
+  Thứ tự danh sách: ngôn ngữ máy → English → alphabet.
+- **2 màn + 1 content** trong `screens/language/`. `LanguageTypeValue` quyết định lúc nào Done bật:
+  `SELECTION` bật ngay khi chọn, `SETTING` chỉ bật khi khác ngôn ngữ đang áp dụng. Nút Done dùng đúng
+  khuôn nút nổi của sort/filter (`blurBackground` + `ActionButton` ở `BottomCenter`).
+- **Luồng first-open**: `Splash → LanguageSelection → Onboarding → Main`, dùng chung cờ onboarding.
+- **Settings** (`screens/settings/`): vào từ **nút gear trên top bar Profile**; `ProfileSettingsSection`
+  và `ThemeOptionItem` bị xoá. `SettingItemValue` (THEME/LANGUAGE/PRIVACY) — theme là `Switch`, hai mục
+  còn lại điều hướng. **`ThemeMode` bỏ `SYSTEM`**, chỉ còn Light/Dark.
+- **`PrivacyPolicyScreen`**: `WebView` trong `AndroidView`, tắt JavaScript và DOM storage.
+
+**Bẫy đã vấp và cách tránh:** cách làm phổ biến `LocalContext provides context.createConfigurationContext(config)`
+**làm app crash** — nó trả `ContextImpl` chứ không phải Activity, nên mọi `hiltViewModel()` dưới provider
+chết với `Expected an activity context for creating a HiltViewModelFactory` (`MainScreen` tạo 3 cái).
+Cách đúng: chỉ provide **`LocalResources`** (kèm `LocalConfiguration` để invalidate), giữ nguyên
+`LocalContext`.
+
+**Đã chạy thật trên emulator**: màn Selection hiện cờ + tên đúng, thứ tự device-first, Done disable
+tới khi chọn; chọn xong → Onboarding; Profile có gear → Settings; toggle Dark Mode, Language, và
+WebView load đúng trang privacy trên GitHub Pages.
+
+**Bổ sung cùng ngày:**
+
+- **`AppLanguageValue` mở rộng thành đủ 64 ngôn ngữ** (toàn bộ `MangaLanguageValue` trừ `UNKNOWN`),
+  nên picker liệt kê hết. Bản dịch UI vẫn là tập nhỏ hơn — chỉ `values/` và `values-vi/` — nên chọn 62
+  ngôn ngữ còn lại sẽ đổi **nội dung** (tên truyện, mô tả, chapter) còn giao diện rơi về tiếng Anh theo
+  cơ chế fallback của Android. Đánh đổi: hai enum giờ trùng danh sách entry, thêm ngôn ngữ MangaDex
+  phải thêm ở **cả hai** nơi.
+- **`values-vi/strings.xml`** — dịch đủ **148/148** chuỗi dịch được, đã đối chiếu tự động: không thiếu,
+  không thừa, placeholder (`%1$s`, `%d`, …) khớp hết. Quy ước từ vựng cần giữ khi thêm chuỗi mới: tab
+  Categories = "Danh mục" còn genre = "Thể loại" (không được trùng), manga = "truyện",
+  chapter = "chương", volume = "tập".
+- **Mọi màn hình giờ đều đi qua `BaseScreen`/`BaseDetailsScreen`.** `ReaderScreen` và `SearchScreen`
+  trước đó dùng `Scaffold` thô; `BaseDetailsScreen` được thêm 3 tham số tuỳ chọn để nhận được chúng mà
+  không đổi hành vi cũ: `topBar` (thay hẳn bar mặc định — Search truyền `SearchBar`, Reader truyền bar
+  bọc `AnimatedVisibility`), `floatingActionButton` (Reader), và `isBackEnabled` (LanguageSelection ẩn
+  nút back vì luồng first-run không được thoát). `title` có default `""` cho các màn tự dựng top bar.
+- **`LanguageSelectionScreen` không tick sẵn ngôn ngữ nào** — `isSelected` phân nhánh theo
+  `LanguageTypeValue`: SELECTION chỉ so với `selectedLanguage`, SETTING mới fallback về
+  `appliedLanguage`.
+
+**Đã kiểm chứng trên emulator**: chọn Tiếng Việt → toàn bộ UI sang tiếng Việt (onboarding, Trang chủ,
+Cài đặt, bottom bar), và tên truyện thành "Tôi Thăng Cấp Một Mình" / "Cô Nàng Nổi Loạn X Chàng Thợ May".
+
+**Refetch khi đổi ngôn ngữ (làm nốt cùng ngày):** repository đọc setting theo *từng lời gọi*, nên dữ
+liệu fetch trước lúc đổi vẫn giữ ngôn ngữ cũ — rõ nhất ở first run vì `MangaSectionViewModel` tải Home
+trong lúc người dùng còn đang ở màn chọn ngôn ngữ (chọn tiếng Việt xong Home vẫn hiện "Solo Leveling",
+phải mở lại app mới đúng). Đã cho 5 ViewModel observe và refetch: `MangaSectionViewModel`,
+`CategoriesViewModel`, `CategoryDetailsViewModel`, `SearchViewModel`, `MangaDetailsViewModel`.
+
+**`.drop(1)` là bắt buộc** — flow của DataStore phát lại giá trị hiện tại ngay khi collect, không drop
+thì mọi màn này fetch lần hai ngay lúc khởi tạo. `SearchViewModel` chặn thêm điều kiện query không rỗng;
+`MangaDetailsViewModel` chạy lại cả `resolveChapterLanguageThenFetch()` chứ không chỉ
+`fetchMangaDetails()`, vì fallback ngôn ngữ chapter phải giải lại theo ngôn ngữ mới. Favorites/History
+**cố ý không** nằm trong danh sách: tiêu đề của chúng là bản sao lưu trong Firestore, không phải
+response MangaDex, nên đổi ngôn ngữ không ảnh hưởng.
+
+**Kiểm chứng**: chạy lại first run, chọn tiếng Việt → Home hiện ngay "Tôi Thăng Cấp Một Mình" /
+"Cô Nàng Nổi Loạn X Chàng Thợ May" và mô tả banner tiếng Việt, **không cần khởi động lại**.
+
+---
+
 ## 2026-09-01 — Localize text lấy từ MangaDex: đọc `altTitles`, bỏ hardcode `"en"` trong mapper
 
 Điều tra khả năng localize của MangaDex API rồi sửa tầng mapper theo kết quả. Chưa có màn chọn ngôn

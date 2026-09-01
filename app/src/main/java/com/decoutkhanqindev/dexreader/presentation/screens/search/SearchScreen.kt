@@ -4,7 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseDetailsScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,7 +32,7 @@ fun SearchScreen(
 
   BackHandler { onNavigateBack() }
 
-  Scaffold(
+  BaseDetailsScreen(
     modifier = modifier,
     topBar = {
       SearchBar(
@@ -48,17 +48,15 @@ fun SearchScreen(
         },
         onNavigateBack = onNavigateBack,
       )
-    }
-  ) { innerPadding ->
+    },
+  ) {
     SearchContent(
       query = query,
       suggestionsUiState = suggestionsUiState,
       resultsUiState = resultsUiState,
       isExpanded = isExpanded,
       suggestionList = suggestionList,
-      modifier = Modifier
-        .fillMaxSize()
-        .padding(innerPadding),
+      modifier = Modifier.fillMaxSize(),
       onSelectedSuggestion = {
         viewModel.updateQuery(it)
         viewModel.fetchMangaListFirstPage()

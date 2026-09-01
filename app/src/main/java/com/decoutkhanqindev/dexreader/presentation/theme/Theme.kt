@@ -1,6 +1,5 @@
 package com.decoutkhanqindev.dexreader.presentation.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -89,14 +88,10 @@ private val darkScheme by lazy {
 
 @Composable
 fun DexReaderTheme(
-  themeOption: ThemeModeValue = ThemeModeValue.SYSTEM,
+  themeOption: ThemeModeValue = ThemeModeValue.DARK,
   content: @Composable () -> Unit,
 ) {
-  val isDarkTheme = when (themeOption) {
-    ThemeModeValue.SYSTEM -> isSystemInDarkTheme()
-    ThemeModeValue.DARK -> true
-    ThemeModeValue.LIGHT -> false
-  }
+  val isDarkTheme = themeOption == ThemeModeValue.DARK
 
   MaterialTheme(
     colorScheme = if (isDarkTheme) darkScheme else lightScheme,

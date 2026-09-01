@@ -15,6 +15,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.AddToFavorite
 import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.ObserveIsFavoriteUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.RemoveFromFavoritesUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.history.ObserveHistoryUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.settings.ObserveContentLanguageUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.ChapterMapper.toChapterModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguage
@@ -37,6 +38,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -54,6 +56,7 @@ class MangaDetailsViewModel @Inject constructor(
   private val removeFromFavoritesUseCase: RemoveFromFavoritesUseCase,
   private val observeIsFavoriteUseCase: ObserveIsFavoriteUseCase,
   private val observeHistoryUseCase: ObserveHistoryUseCase,
+  private val observeContentLanguageUseCase: ObserveContentLanguageUseCase,
 ) : BaseViewModel() {
   private val mangaIdFromArg: String =
     savedStateHandle.toRoute<NavRoute.MangaDetails>().mangaId
@@ -120,6 +123,16 @@ class MangaDetailsViewModel @Inject constructor(
     fetchMangaDetails()
     resolveChapterLanguageThenFetch()
     observeHistoryFirstPage()
+    observeContentLanguageChange()
+  }
+
+  private fun observeContentLanguageChange() {
+    vmLaunch {
+      observeContentLanguageUseCase()
+        .drop(1)
+        .collect { result -> result.onSuccess { fetchMangaDetails()
+            resolveChapterLanguageThenFetch() } }
+    }
   }
 
   private fun resolveChapterLanguageThenFetch() {

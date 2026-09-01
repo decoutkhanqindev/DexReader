@@ -1,0 +1,185 @@
+<resources>
+  <!-- App -->
+  <string name="slogan">Đọc để tận hưởng - Lưu để nhớ mãi</string>
+
+  <!-- Navigation / Menu -->
+  <string name="back">Quay lại</string>
+  <string name="home_menu_item">Trang chủ</string>
+  <string name="category_menu_item">Danh mục</string>
+  <string name="favorite_menu_item">Yêu thích</string>
+  <string name="history_menu_item">Lịch sử</string>
+  <string name="statistics_menu_item">Thống kê</string>
+  <string name="profile_menu_item">Hồ sơ</string>
+  <string name="settings_menu_item">Cài đặt</string>
+
+  <!-- Language / Settings Screen -->
+  <string name="language">Ngôn ngữ</string>
+  <string name="select_language">Chọn ngôn ngữ</string>
+  <string name="done">Xong</string>
+  <string name="theme">Giao diện</string>
+  <string name="dark_mode">Chế độ tối</string>
+  <string name="privacy_policy">Chính sách bảo mật</string>
+
+  <!-- Onboarding Screen -->
+  <string name="skip">Bỏ qua</string>
+  <string name="next">Tiếp</string>
+  <string name="get_started">Bắt đầu</string>
+  <string name="onboarding_discover_title">Kệ truyện của bạn, luôn trong tầm tay</string>
+  <string name="onboarding_discover_description">Thịnh hành, mới cập nhật, truyện mới và đánh giá cao — tất cả gói gọn trong một trang chủ.</string>
+  <string name="onboarding_browse_title">Duyệt theo đúng tâm trạng</string>
+  <string name="onboarding_browse_description">Chọn thể loại, chủ đề hay định dạng, rồi sắp xếp và lọc đến khi truyện bạn muốn nằm trên cùng.</string>
+  <string name="onboarding_read_title">Trình đọc sinh ra để cày truyện</string>
+  <string name="onboarding_read_description">Lướt qua từng trang, phóng to xem nét vẽ, và sang chương mới mà không cần rời trang.</string>
+  <string name="onboarding_track_title">Không bao giờ lạc mất chỗ đang đọc</string>
+  <string name="onboarding_track_description">Lưu truyện bạn thích và quay lại đúng trang bạn đã dừng ở mỗi chương.</string>
+
+  <!-- Common / Shared -->
+  <string name="ok">OK</string>
+  <string name="cancel">Huỷ</string>
+  <string name="load_more">Tải thêm</string>
+  <string name="all_mangas_loaded">Đã tải hết truyện</string>
+  <string name="oops_something_went_wrong_please_try_again">Rất tiếc, đã có lỗi xảy ra. Vui lòng thử lại.</string>
+  <string name="no_internet_connection">Không có kết nối mạng. Vui lòng kiểm tra kết nối và thử lại.</string>
+  <string name="can_t_load_next_manga_page_please_try_again">Không tải được trang truyện tiếp theo.\nVui lòng thử lại.</string>
+  <string name="error_server_unavailable">Lỗi máy chủ. Vui lòng thử lại sau.</string>
+  <string name="error_access_denied">Truy cập bị từ chối. Vui lòng đăng nhập lại.</string>
+
+  <!-- Auth Screen -->
+  <string name="email">Email</string>
+  <string name="email_required">Vui lòng nhập email.</string>
+  <string name="invalid_email_format">Email không đúng định dạng.</string>
+  <string name="password">Mật khẩu</string>
+  <string name="password_required">Vui lòng nhập mật khẩu.</string>
+  <string name="password_min_length">Mật khẩu phải có ít nhất 8 ký tự.</string>
+  <string name="confirm_password">Xác nhận mật khẩu</string>
+  <string name="confirm_password_required">Vui lòng xác nhận mật khẩu.</string>
+  <string name="password_dont_match">Mật khẩu không khớp.</string>
+  <string name="name">Tên</string>
+  <string name="name_required">Vui lòng nhập tên.</string>
+  <string name="show_password">hiện mật khẩu</string>
+  <string name="hide_password">ẩn mật khẩu</string>
+  <string name="sign_up">Đăng ký</string>
+  <string name="sign_in">Đăng nhập</string>
+  <string name="don_t_have_an_account">Chưa có tài khoản?</string>
+  <string name="forgot_password">Quên mật khẩu</string>
+  <string name="reset_password">Đặt lại mật khẩu</string>
+  <string name="sign_up_failed_please_try_again">Đăng ký thất bại. Vui lòng thử lại.</string>
+  <string name="sign_up_successful">Đăng ký thành công.</string>
+  <string name="sign_in_failed_please_try_again">Đăng nhập thất bại. Vui lòng thử lại.</string>
+  <string name="sign_in_successful">Đăng nhập thành công.</string>
+  <string name="submit_reset_password_failed_please_try_again">Gửi yêu cầu đặt lại mật khẩu thất bại. Vui lòng thử lại.</string>
+  <string name="submit_reset_password_successful">Đã gửi yêu cầu đặt lại mật khẩu. Vui lòng kiểm tra email.</string>
+  <string name="error_email_already_in_use">Email đã được sử dụng.</string>
+  <string name="error_incorrect_password">Mật khẩu không đúng.</string>
+  <string name="error_user_not_found">Không tìm thấy người dùng.</string>
+
+  <!-- Splash Screen -->
+  <string name="loading">Đang tải …</string>
+
+  <!-- Home Screen -->
+  <string name="latest_update">Mới cập nhật</string>
+  <string name="trending">Thịnh hành</string>
+  <string name="new_releases">Truyện mới</string>
+  <string name="top_rated">Đánh giá cao</string>
+  <string name="more">Xem thêm</string>
+  <string name="read_now">Đọc ngay</string>
+
+  <!-- Categories Screen -->
+  <string name="category_type_genre">Thể loại</string>
+  <string name="category_type_theme">Chủ đề</string>
+  <string name="category_type_format">Định dạng</string>
+  <string name="category_type_content">Nội dung</string>
+  <string name="category_type_unknown">Không rõ</string>
+
+  <!-- Category Details Screen -->
+  <string name="sort_options">Tuỳ chọn sắp xếp</string>
+  <string name="sort_order_ascending">Tăng dần</string>
+  <string name="sort_order_descending">Giảm dần</string>
+  <string name="filter_options">Tuỳ chọn lọc</string>
+  <string name="filter_status">Trạng thái</string>
+  <string name="filter_content_rating">Phân loại nội dung</string>
+  <string name="apply">Áp dụng</string>
+  <string name="status_on_going">Đang ra</string>
+  <string name="status_completed">Hoàn thành</string>
+  <string name="status_hiatus">Tạm ngưng</string>
+  <string name="status_cancelled">Đã huỷ</string>
+  <string name="status_unknown">Không rõ</string>
+  <string name="content_rating_safe">An toàn</string>
+  <string name="content_rating_suggestive">Gợi cảm</string>
+  <string name="content_rating_erotica">Khiêu dâm</string>
+  <string name="content_rating_unknown">Không rõ</string>
+
+  <!-- Manga Details Screen -->
+  <string name="manga_details">Chi tiết truyện</string>
+  <string name="manga_not_available">Truyện này không còn khả dụng.</string>
+  <string name="chapter_not_available">Chương này không còn khả dụng.</string>
+  <string name="summary">Tóm tắt</string>
+  <string name="chapters">Danh sách chương</string>
+  <string name="all_chapters_loaded">Đã tải hết chương</string>
+  <string name="no_chapters_available">Chưa có chương nào</string>
+  <string name="something_went_wrong_while_loading_chapters_please_try_again">Đã có lỗi khi tải danh sách chương. Vui lòng thử lại.</string>
+  <string name="can_t_load_next_chapter_page_please_try_again">Không tải được trang chương tiếp theo.\nVui lòng thử lại.</string>
+  <string name="no_languages_available">Không có ngôn ngữ nào</string>
+  <string name="language_options">Tuỳ chọn ngôn ngữ</string>
+  <string name="volume_chapter">Tập %1$s - Ch %2$s</string>
+  <string name="start_reading">Bắt đầu đọc</string>
+  <string name="continue_reading">Đọc tiếp</string>
+  <string name="favorite">Yêu thích</string>
+  <string name="unfavorite">Bỏ yêu thích</string>
+  <string name="you_must_sign_in_to_favorite_this_manga">Bạn cần đăng nhập để lưu truyện này vào yêu thích.</string>
+
+  <!-- Reader Screen -->
+  <string name="no_chapter_pages_available">Chương này chưa có trang nào.</string>
+  <string name="reader_title">%1$s/%2$s</string>
+  <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">Bạn có chắc muốn đặt lại tiến độ đọc của chương này? Chương sẽ bị xoá khỏi lịch sử đọc.</string>
+  <string name="reset">Đặt lại</string>
+  <string name="you_have_reset_this_chapter_s_progress_successfully">Đã đặt lại tiến độ đọc của chương này.</string>
+  <string name="reset_chapter_progress_failed">Đặt lại tiến độ chương thất bại. Vui lòng thử lại.</string>
+
+  <!-- Search Screen -->
+  <string name="search_manga_placeholder">Nhập tên truyện …</string>
+  <string name="search_your_manga_here">Tìm truyện của bạn tại đây.</string>
+  <string name="sorry_no_manga_found_with_title">Rất tiếc, không tìm thấy truyện nào có tên %s.\nVui lòng thử lại với tên khác.</string>
+
+  <!-- Favorites Screen -->
+  <string name="please_sign_in_to_view_your_favorites">Vui lòng đăng nhập để xem truyện yêu thích.</string>
+  <string name="you_haven_t_added_any_favorite_manga_yet">Bạn chưa thêm truyện yêu thích nào.</string>
+
+  <!-- History Screen -->
+  <string name="please_sign_in_to_view_your_history">Vui lòng đăng nhập để xem lịch sử đọc.</string>
+  <string name="you_have_no_reading_history_here">Bạn chưa có lịch sử đọc nào.</string>
+  <string name="are_you_sure_you_want_to_remove_it_from_your_history">Bạn có chắc muốn xoá mục này khỏi lịch sử?</string>
+  <string name="remove">Xoá</string>
+  <string name="can_t_load_next_reading_history_page_please_try_again">Không tải được trang lịch sử tiếp theo.\nVui lòng thử lại.</string>
+  <string name="you_have_removed_from_history_successfully">Đã xoá khỏi lịch sử thành công.</string>
+  <string name="removed_from_history_failed">Xoá khỏi lịch sử thất bại. Vui lòng thử lại.</string>
+  <string name="view_details_or_continue">Xem chi tiết hay đọc tiếp?</string>
+
+  <!-- Statistics Screen -->
+  <string name="please_sign_in_to_view_your_statistics">Vui lòng đăng nhập để xem thống kê.</string>
+  <string name="daily_reading_time">Thời gian đọc hôm nay</string>
+  <string name="weekly_reading_time">Thời gian đọc tuần này</string>
+  <string name="total_reading_time">Tổng thời gian đọc</string>
+  <string name="minutes_suffix">%d phút</string>
+  <string name="hours_suffix">%d giờ</string>
+  <string name="weekly_reading_activity">Hoạt động đọc theo tuần</string>
+  <string name="monthly_reading_activity">Hoạt động đọc theo tháng</string>
+  <string name="yearly_reading_activity">Hoạt động đọc theo năm</string>
+
+  <!-- Profile Screen -->
+  <string name="please_sign_in_to_view_your_profile">Vui lòng đăng nhập để xem hồ sơ.</string>
+  <string name="logout">Đăng xuất</string>
+  <string name="logout_failed_please_try_again">Đăng xuất thất bại. Vui lòng thử lại.</string>
+  <string name="logout_successful">Đăng xuất thành công.</string>
+  <string name="are_you_sure_you_want_to_logout">Bạn có chắc muốn đăng xuất?</string>
+  <string name="update_profile">Cập nhật</string>
+  <string name="update_profile_failed">Cập nhật hồ sơ thất bại. Vui lòng thử lại.</string>
+  <string name="are_you_sure_you_want_to_update_with_the_new_changes">Bạn có chắc muốn cập nhật với các thay đổi mới?</string>
+  <string name="your_profile_has_been_updated_successfully">Hồ sơ của bạn đã được cập nhật thành công.</string>
+
+  <!-- Settings Screen -->
+  <string name="system">Hệ thống</string>
+  <string name="dark">Tối</string>
+  <string name="light">Sáng</string>
+  <string name="change_theme_failed">Đổi giao diện thất bại. Vui lòng thử lại.</string>
+</resources>

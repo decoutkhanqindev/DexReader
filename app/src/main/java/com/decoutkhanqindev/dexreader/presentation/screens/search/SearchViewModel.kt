@@ -4,6 +4,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.search
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaSuggestionsUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.SearchMangaUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.settings.ObserveContentLanguageUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
@@ -19,6 +20,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
@@ -32,6 +34,7 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
   private val searchMangaUseCase: SearchMangaUseCase,
   private val getMangaSuggestionsUseCase: GetMangaSuggestionsUseCase,
+  private val observeContentLanguageUseCase: ObserveContentLanguageUseCase,
 ) : BaseViewModel() {
   private val _suggestionsUiState = MutableStateFlow<SuggestionsUiState>(SuggestionsUiState.Loading)
   val suggestionsUiState: StateFlow<SuggestionsUiState> = _suggestionsUiState.asStateFlow()
@@ -70,6 +73,20 @@ class SearchViewModel @Inject constructor(
         started = WhileSubscribed(WHILE_SUBSCRIBED_STOP_TIMEOUT_MILLIS),
         initialValue = persistentListOf()
       )
+
+  init {
+    observeContentLanguageChange()
+  }
+
+  private fun observeContentLanguageChange() {
+    vmLaunch {
+      observeContentLanguageUseCase()
+        .drop(1)
+        .collect { result ->
+          result.onSuccess { if (query.value.isNotBlank()) fetchMangaListFirstPage() }
+        }
+    }
+  }
 
   fun fetchMangaListFirstPage() {
     vmLaunch {

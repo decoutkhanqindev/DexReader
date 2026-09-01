@@ -604,6 +604,78 @@ has emitted, so a plain parameter capture would still be `null` three seconds la
 first-run user would silently skip onboarding. Don't simplify those three `rememberUpdatedState`
 calls away.
 
+**App language (`util/LanguageManager.kt` + `screens/language/`)**: one stored value drives **both**
+the UI locale and the MangaDex content language — it is `SettingsRepository.observeContentLanguage()`
+(a `MangaLanguage`).
+
+`AppLanguageValue` (`model/value/language/`) mirrors **every** `MangaLanguageValue` except `UNKNOWN`
+(64 entries), each wrapping one so `code`/`flag` have exactly one definition. The picker therefore
+lists all 64. **UI translations are a separate, smaller set**: only `values/` (English) and
+`values-vi/` exist, so picking any of the other 62 changes the *content* language (titles,
+descriptions, chapter feed) while the interface falls back to English — Android's own resource
+fallback handles that, nothing in the code special-cases it. Shipping UI for one more language is
+just a new `values-XX/strings.xml`; the picker already offers it.
+
+Because `AppLanguageValue` duplicates the `MangaLanguageValue` entry list, **adding a MangaDex
+language means adding it in both** — the two enums must stay in step or `AppLanguageValue` silently
+omits the new one from the picker.
+
+`MangaLanguageValue` no longer carries `@StringRes`: it carries `code` + `flag` (regional-indicator
+emoji), and the display name comes from `Locale.forLanguageTag(code).getDisplayLanguage(...)` via
+`LanguageManager.displayNameOf` / `labelOf`. That deleted all 65 `lang_*` string resources and makes
+language names localize themselves — a Vietnamese UI shows "Tiếng Anh" without a single new string.
+
+**`ProvideAppLanguage` must not override `LocalContext`.** The obvious recipe
+(`LocalContext provides context.createConfigurationContext(config)`) **crashes this app**:
+`createConfigurationContext` returns a plain `ContextImpl`, and every `hiltViewModel()` below the
+provider then dies with `Expected an activity context for creating a HiltViewModelFactory`
+(`MainScreen` creates three). Provide **`LocalResources`** (plus `LocalConfiguration` for
+invalidation) instead — `stringResource` reads `LocalResources`, and the Activity context stays
+intact for Hilt.
+
+`values-vi/strings.xml` ships a full Vietnamese translation (148/148 translatable strings; the two
+`translatable="false"` entries — `app_name`, `privacy_policy_url` — are correctly absent). Term
+choices worth keeping consistent if you add strings: Categories tab = "Danh mục" while a genre =
+"Thể loại" (they must not collide), manga = "truyện", chapter = "chương", volume = "tập".
+
+**Content ViewModels refetch when the language changes.** Repositories read the preference *per
+call*, so anything fetched before a change would otherwise keep the old language — most visible on
+first run, where `MangaSectionViewModel` loads Home while the user is still on the language picker.
+Five ViewModels therefore observe it and refetch: `MangaSectionViewModel`, `CategoriesViewModel`,
+`CategoryDetailsViewModel`, `SearchViewModel`, `MangaDetailsViewModel`. The shape is always
+
+```kotlin
+observeContentLanguageUseCase().drop(1).collect { it.onSuccess { <refetch>() } }
+```
+
+**`.drop(1)` is load-bearing** — the DataStore flow replays its current value on collection, so
+without it every one of these screens would fire a second fetch immediately on creation.
+`SearchViewModel` additionally guards on a non-blank query (nothing to re-search otherwise), and
+`MangaDetailsViewModel` re-runs `resolveChapterLanguageThenFetch()` as well as `fetchMangaDetails()`,
+since the chapter-language fallback has to be re-resolved for the new preference. Favorites/History
+are deliberately **not** in the list: their titles are denormalised copies stored in Firestore, not
+MangaDex responses, so a language change cannot affect them.
+
+`LanguageTypeValue` (SELECTION/SETTING) is not cosmetic — it decides when Done enables:
+`SELECTION` (first run, nothing applied yet) enables as soon as a language is tapped; `SETTING`
+enables only when the tapped language *differs* from the applied one. Both screens render the same
+`LanguageContent`; they differ only in top bar (Selection has no Back — the first-run flow must not
+be escapable) and in that value.
+
+**First-run order is `Splash → LanguageSelection → Onboarding → Main`**, gated by the *onboarding*
+flag — there is no separate "language chosen" flag, so clearing app data replays both.
+
+**Settings (`screens/settings/`)**: reached from a gear in **Profile's top bar**, not from a section
+inside Profile (`ProfileSettingsSection`/`ThemeOptionItem` are deleted). `BaseScreen` grew
+`isSettingsEnabled`/`onNavigateToSettingsScreen`; its right slot is search when `isSearchEnabled`,
+else the gear, else nothing. Items come from `SettingItemValue` (THEME/LANGUAGE/PRIVACY) —
+theme is a `Switch`, the other two navigate. **`ThemeMode` lost `SYSTEM`** (Light/Dark only), so
+`DexReaderTheme` is now `themeOption == DARK` with no `isSystemInDarkTheme()`.
+
+`PrivacyPolicyScreen` is a `WebView` in an `AndroidView` pointed at `R.string.privacy_policy_url`
+(the GitHub Pages copy of `privacy-policy.html` at the repo root). JavaScript and DOM storage are
+**off** — the page is static and doesn't need either.
+
 **Bottom navigation — two `NavHost`s, one overlay bar**: there is no navigation drawer any more (the
 whole `common/menu/` package is deleted). The app has **two nested back stacks**:
 

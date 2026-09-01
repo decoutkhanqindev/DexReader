@@ -20,16 +20,16 @@ import kotlinx.coroutines.delay
 fun SplashScreen(
   isOnboardingCompleted: Boolean?,
   modifier: Modifier = Modifier,
-  onNavigateToOnboardingScreen: () -> Unit,
+  onNavigateToLanguageSelectionScreen: () -> Unit,
   onNavigateToMainScreen: () -> Unit,
 ) {
   val latestIsOnboardingCompleted by rememberUpdatedState(isOnboardingCompleted)
-  val latestOnNavigateToOnboardingScreen by rememberUpdatedState(onNavigateToOnboardingScreen)
+  val latestOnNavigateToLanguageSelectionScreen by rememberUpdatedState(onNavigateToLanguageSelectionScreen)
   val latestOnNavigateToMainScreen by rememberUpdatedState(onNavigateToMainScreen)
 
   LaunchedEffect(Unit) {
     delay(3000L)
-    if (latestIsOnboardingCompleted == false) latestOnNavigateToOnboardingScreen()
+    if (latestIsOnboardingCompleted == false) latestOnNavigateToLanguageSelectionScreen()
     else latestOnNavigateToMainScreen()
   }
 
@@ -49,7 +49,7 @@ private fun SplashScreenPreview() {
     SplashScreen(
       isOnboardingCompleted = false,
       modifier = Modifier.fillMaxSize(),
-      onNavigateToOnboardingScreen = {},
+      onNavigateToLanguageSelectionScreen = {},
       onNavigateToMainScreen = {},
     )
   }

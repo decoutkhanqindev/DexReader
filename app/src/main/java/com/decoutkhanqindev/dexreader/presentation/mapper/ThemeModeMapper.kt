@@ -7,14 +7,12 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.settings.ThemeMod
 object ThemeModeMapper {
   fun ThemeMode.toThemeModeValue() =
     when (this) {
-      ThemeMode.SYSTEM -> ThemeModeValue.SYSTEM
       ThemeMode.DARK -> ThemeModeValue.DARK
       ThemeMode.LIGHT -> ThemeModeValue.LIGHT
     }
 
   fun ThemeModeValue.toThemeMode() =
     when (this) {
-      ThemeModeValue.SYSTEM -> ThemeMode.SYSTEM
       ThemeModeValue.DARK -> ThemeMode.DARK
       ThemeModeValue.LIGHT -> ThemeMode.LIGHT
     }
