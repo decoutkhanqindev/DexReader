@@ -18,11 +18,13 @@ import com.decoutkhanqindev.dexreader.presentation.screens.auth.login.LoginScree
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.register.RegisterScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.UserViewModel
+import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.onboarding.OnboardingViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.settings.SettingsViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.favorites.FavoritesScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.history.HistoryScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.main.MainScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.MangaDetailsScreen
+import com.decoutkhanqindev.dexreader.presentation.screens.onboarding.OnboardingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.reader.ReaderScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.search.SearchScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.splash.SplashScreen
@@ -43,6 +45,9 @@ fun NavGraph() {
   val settingsViewModel: SettingsViewModel = hiltViewModel()
   val settingsUiState by settingsViewModel.uiState.collectAsStateWithLifecycle()
 
+  val onboardingViewModel: OnboardingViewModel = hiltViewModel()
+  val onboardingUiState by onboardingViewModel.uiState.collectAsStateWithLifecycle()
+
   DexReaderTheme(themeOption = settingsUiState.appliedThemeOption) {
     NavHost(
       navController = navController,
@@ -53,9 +58,23 @@ fun NavGraph() {
     ) {
       composable<NavRoute.Splash> {
         SplashScreen(
+          isOnboardingCompleted = onboardingUiState.isCompleted,
           modifier = Modifier.fillMaxSize(),
-          onNavigateToHome = {
+          onNavigateToOnboardingScreen = {
+            navController.navigateClearStack<NavRoute.Splash>(NavRoute.Onboarding)
+          },
+          onNavigateToMainScreen = {
             navController.navigateClearStack<NavRoute.Splash>(NavRoute.Main)
+          },
+        )
+      }
+
+      composable<NavRoute.Onboarding> {
+        OnboardingScreen(
+          viewModel = onboardingViewModel,
+          modifier = Modifier.fillMaxSize(),
+          onNavigateToMainScreen = {
+            navController.navigateClearStack<NavRoute.Onboarding>(NavRoute.Main)
           },
         )
       }

@@ -2,6 +2,7 @@ package com.decoutkhanqindev.dexreader.data.repository.settings
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toUnexpectedException
@@ -18,7 +19,12 @@ import javax.inject.Inject
 class SettingsRepositoryImpl @Inject constructor(
   private val prefsManager: DataStore<Preferences>,
 ) : SettingsRepository {
-  private val themeModePrefsKey by lazy { stringPreferencesKey(THEME_MODE_KEY) }
+  private val themeModePrefsKey by lazy {
+    stringPreferencesKey(THEME_MODE_KEY)
+  }
+  private val isOnboardingCompletedPrefsKey by lazy {
+    booleanPreferencesKey(IS_ONBOARDING_COMPLETED_KEY)
+  }
 
   override fun observeThemeMode(): Flow<ThemeMode> =
     prefsManager.data.map { prefs ->
@@ -41,7 +47,25 @@ class SettingsRepositoryImpl @Inject constructor(
       catch = { it.toUnexpectedException() }
     )
 
+  override fun observeIsOnboardingCompleted(): Flow<Boolean> =
+    prefsManager.data.map { prefs -> prefs[isOnboardingCompletedPrefsKey] ?: false }
+      .flowOn(Dispatchers.IO)
+      .distinctUntilChanged()
+
+  override suspend fun saveIsOnboardingCompleted(value: Boolean) =
+    runSuspendCatching(
+      context = Dispatchers.IO,
+      block = {
+        prefsManager.edit { prefs ->
+          prefs[isOnboardingCompletedPrefsKey] = value
+        }
+        Unit
+      },
+      catch = { it.toUnexpectedException() }
+    )
+
   companion object {
     private const val THEME_MODE_KEY = "theme_mode"
+    private const val IS_ONBOARDING_COMPLETED_KEY = "is_onboarding_completed"
   }
 }

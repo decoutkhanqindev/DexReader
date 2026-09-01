@@ -13,6 +13,19 @@
   <string name="profile_menu_item">Profile</string>
   <string name="settings_menu_item">Settings</string>
 
+  <!-- Onboarding Screen -->
+  <string name="skip">Skip</string>
+  <string name="next">Next</string>
+  <string name="get_started">Get Started</string>
+  <string name="onboarding_discover_title">Your manga shelf, always in reach</string>
+  <string name="onboarding_discover_description">Trending, latest updates, new releases and top rated — all waiting on one home screen.</string>
+  <string name="onboarding_browse_title">Browse the way you feel</string>
+  <string name="onboarding_browse_description">Pick a genre, theme or format, then sort and filter until the right title sits on top.</string>
+  <string name="onboarding_read_title">A reader made for binging</string>
+  <string name="onboarding_read_description">Swipe through pages, zoom into the art, and jump to the next chapter without leaving the page.</string>
+  <string name="onboarding_track_title">Never lose your place</string>
+  <string name="onboarding_track_description">Favorite what you love and come back to every chapter exactly where you stopped.</string>
+
   <!-- Common / Shared -->
   <string name="ok">OK</string>
   <string name="cancel">Cancel</string>

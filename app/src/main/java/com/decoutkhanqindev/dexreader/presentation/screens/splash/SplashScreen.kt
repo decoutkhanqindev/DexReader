@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -16,12 +18,19 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
+  isOnboardingCompleted: Boolean?,
   modifier: Modifier = Modifier,
-  onNavigateToHome: () -> Unit,
+  onNavigateToOnboardingScreen: () -> Unit,
+  onNavigateToMainScreen: () -> Unit,
 ) {
+  val latestIsOnboardingCompleted by rememberUpdatedState(isOnboardingCompleted)
+  val latestOnNavigateToOnboardingScreen by rememberUpdatedState(onNavigateToOnboardingScreen)
+  val latestOnNavigateToMainScreen by rememberUpdatedState(onNavigateToMainScreen)
+
   LaunchedEffect(Unit) {
     delay(3000L)
-    onNavigateToHome()
+    if (latestIsOnboardingCompleted == false) latestOnNavigateToOnboardingScreen()
+    else latestOnNavigateToMainScreen()
   }
 
   SplashContent(
@@ -38,8 +47,10 @@ fun SplashScreen(
 private fun SplashScreenPreview() {
   DexReaderTheme {
     SplashScreen(
+      isOnboardingCompleted = false,
       modifier = Modifier.fillMaxSize(),
-      onNavigateToHome = {},
+      onNavigateToOnboardingScreen = {},
+      onNavigateToMainScreen = {},
     )
   }
 }

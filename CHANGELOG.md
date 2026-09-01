@@ -4,6 +4,58 @@ Dated log of notable multi-file / cross-cutting work sessions. Newest entry firs
 
 ---
 
+## 2026-09-01 — Màn onboarding 4 page (HorizontalPager) chèn giữa Splash và Main
+
+Thêm `screens/onboarding/` — onboarding dạng slide, **chỉ hiện một lần**, nằm giữa Splash và Main
+trên host ngoài: `Splash → Onboarding → Main`, mỗi bước đều `navigateClearStack` nên Back không quay
+lại được.
+
+- **Cấu trúc một page** (trên xuống): ảnh → title (`headlineMedium`) → description (`bodyLarge`),
+  gói trong `OnboardingPage`. Page indicator và hàng Skip / Next / Get Started nằm **ngoài** pager,
+  trong `OnboardingContent`, nên chúng đứng yên khi page trượt. Page cuối đổi Next → Get Started và
+  ẩn Skip (`isLastPage` quyết định cả label, hành động lẫn việc hiện Skip); Skip và Get Started gọi
+  chung `onCompleteClick`. Nút dùng lại `ActionButton(isHighlighted = true, backgroundColor = primary)`
+  đúng khuôn `SignInButton`.
+- **`OnboardingPageValue`** (`model/value/onboarding/`) giữ `imageRes` + `titleRes` + `descriptionRes`,
+  cùng hình dạng với `BottomTabItemValue` — thêm page mới = thêm một entry, không đụng composable.
+- **Ảnh là screenshot thật của chính app này**, chụp trên emulator rồi ghép thành mockup điện thoại
+  (bo góc + viền + đổ bóng; 2 máy chồng nhau ở page 2-4), lưu **WebP** trong `drawable/`
+  (~150 KB/ảnh, PNG gốc ~1.3 MB). Điều phải giữ khi làm lại ảnh: tỉ lệ ảnh ghép phải bám sát khung ảnh
+  của pager (**~0.7 w/h**) — bản đầu ghép quá rộng nên `ContentScale.Fit` co lại và chừa một mảng
+  trống to phía trên.
+- **`drawable/` trần ở đây là ổn, và điều này được đo chứ không phải đoán**: vào onboarding native
+  heap chỉ tăng ~5.5 MB với page 1-2 đã compose, khớp mức decode 1:1 (4.5 + 5.4 MB). `painterResource`
+  của Compose không nhân density mdpi→xxhdpi 3× như `BitmapDrawable` — nếu có thì riêng một page đã
+  ~49 MB. Trong phiên này tôi từng khẳng định ngược lại và bắt để ở `drawable-xxhdpi/`; đo lại thì sai,
+  **đừng chuyển ngược lại**.
+- **Cờ "đã xem" nằm trong `SettingsRepository`**, không tạo repository mới — vẫn DataStore đó, nên
+  `observeIsOnboardingCompleted()` / `saveIsOnboardingCompleted()` nằm cạnh cặp theme và **không phải
+  sửa DI**. Kèm 2 use case `ObserveIsOnboardingCompletedUseCase` / `SaveIsOnboardingCompletedUseCase`.
+- **`OnboardingUiState.isCompleted` là `Boolean?` có chủ đích**: `null` = chưa đọc xong DataStore, và
+  Splash chỉ đi sang Onboarding khi giá trị là `false` tường minh — mọi trường hợp khác đi thẳng Main,
+  nên đọc chậm hoặc lỗi không bao giờ nhốt người dùng cũ trong onboarding (`onFailure` cũng set `true`).
+- **`SplashScreen` bọc cờ và 2 callback bằng `rememberUpdatedState`** — không phải thừa: nó cần đổi chữ
+  ký (`isOnboardingCompleted` + `onNavigateToOnboardingScreen`/`onNavigateToMainScreen` thay cho
+  `onNavigateToHome`), mà `LaunchedEffect(Unit)` được compose **trước** khi DataStore emit, nên nếu
+  capture param theo cách thường thì sau 3 giây giá trị vẫn là `null` và **mọi** người dùng lần đầu sẽ
+  bị bỏ qua onboarding.
+- Muốn xem lại onboarding khi dev: `adb shell pm clear com.decoutkhanqindev.dexreader` (không có nút
+  reset trong app).
+
+**Verify**: `:app:compileDebugKotlin` BUILD SUCCESSFUL; chạy thật trên emulator Pixel_7_Pro — 4 page
+trượt đúng, indicator và Next/Get Started đổi đúng, bấm Get Started xong force-stop rồi mở lại thì vào
+thẳng Main.
+
+**Ảnh chốt lại sau vài vòng**: page 4 (`ob_track`) ban đầu ghép tạm từ Manga Details + danh sách
+chapter vì Favorites/History/Statistics cần đăng nhập; sau khi có tài khoản thật thì thay bằng
+**Profile hub** (Favorites + History có thanh %) ghép với màn **Statistics**. Chụp Profile phải **cuộn
+qua khỏi header** — ảnh chưa cuộn dính tên và email thật của người dùng, mà ảnh này ship trong APK.
+Page 3 (`ob_read`) cũng chụp lại: bản đầu lấy Manga Details đã cuộn sâu vào danh sách chapter nên mất
+hết info manga; bản chốt cuộn vừa đủ để còn cover, tên, tác giả, badge năm/status/rating, Summary,
+chip thể loại và đầu mục Chapters.
+
+---
+
 ## 2026-08-31 — Sửa `ClassNotFoundException` do ASM transform hỏng + đồng bộ lại CLAUDE.md
 
 Hai việc trong cùng phiên: gỡ một crash lúc khởi động **không phải do code**, và soát lại CLAUDE.md

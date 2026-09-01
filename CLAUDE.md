@@ -469,7 +469,9 @@ outlive a single screen lives here instead of under its owning screen's package.
 params, called as `setContent { NavGraph() }` from `MainActivity` — there is no `DexReaderApp.kt`
 composable anymore) is the single composition root that instantiates every shared ViewModel via
 `hiltViewModel()` and threads it down as a param — a screen never calls `hiltViewModel()` for one of
-these itself. `UserViewModel` (moved from top-level `presentation/`) exposes `isUserLoggedIn`/
+these itself. `viewmodels/onboarding/OnboardingViewModel` + `OnboardingUiState` gate the onboarding screen (see
+Onboarding above) — `NavGraph` both consumes it and passes it down.
+`UserViewModel` (moved from top-level `presentation/`) exposes `isUserLoggedIn`/
 `userProfile`, read by `NavGraph` and passed down as plain `isUserLoggedIn`/`currentUser` params to
 every screen. `viewmodels/settings/SettingsViewModel` + `SettingsUiState` (moved from
 `screens/settings/`, grouped under their own subpackage like `manga_section/` below) is read by
@@ -509,12 +511,54 @@ by default.
 auth flows; `navigatePreserveState()` for bottom-tab navigation. Value enums used as type-safe nav
 args must be `@Serializable` (e.g. `MangaSortCriteriaValue`, carried on `NavRoute.CategoryDetails`).
 
+**Onboarding (`screens/onboarding/`)**: a 4-page `HorizontalPager` shown **once**, sitting between
+Splash and Main on the outer host (`Splash → Onboarding → Main`, each hop via `navigateClearStack`, so
+Back never returns to it). Each page is one `OnboardingPageValue` entry
+(`model/value/onboarding/`: `@param:DrawableRes imageRes` + `@param:StringRes titleRes` +
+`descriptionRes` — same shape as `BottomTabItemValue`), rendered top-to-bottom as image → title
+(`headlineMedium`) → description (`bodyLarge`). The page indicator and the Skip / Next / Get Started
+row live **below** the pager in `OnboardingContent`, not inside `OnboardingPage`, so they stay put
+while pages slide. The last page swaps Next for Get Started and drops Skip (`isLastPage` drives the
+label, the button action, and Skip's visibility); Skip and Get Started both call the same
+`onCompleteClick`.
+
+The illustrations (`drawable/ob_discover|ob_browse|ob_read|ob_track.webp`, ~1000×1380 each) are
+**real screenshots of this app** taken on the emulator, composited into phone mockups (rounded
+corners + bezel + drop shadow; two overlapping phones on pages 2-4). When regenerating them: keep the
+composite's aspect ratio near the pager's image slot (**~0.7 w/h**) — a wider composite gets shrunk by
+`ContentScale.Fit` and leaves dead space above and below the phones, which is exactly what the first
+pass looked like — and keep them **WebP** (the PNG originals were ~1.3 MB each, the WebP ~150 KB with
+no visible loss on these flat dark screenshots).
+
+Plain `drawable/` (no density qualifier) is fine here and was **measured**, not assumed: entering
+onboarding grows the native heap by ~5.5 MB with pages 1-2 composed, which matches a 1:1 decode
+(4.5 + 5.4 MB). Compose's `painterResource` is not applying the mdpi→xxhdpi 3× upscale that a
+`BitmapDrawable` would — at 3× a single page would cost ~49 MB on its own. Don't move these into
+`drawable-xxhdpi/` on the theory that they need it.
+
+**The "already seen it" flag lives in `SettingsRepository`**, not a new repository — same DataStore,
+so `observeIsOnboardingCompleted()` / `saveIsOnboardingCompleted()` sit next to the theme pair and
+need **no DI change** (`RepositoryModule` already binds it). `OnboardingViewModel`
+(`common/viewmodels/onboarding/`) is a **shared** VM: `NavGraph` creates it, reads
+`uiState.isCompleted` to route Splash, and hands the same instance to `OnboardingScreen`.
+`OnboardingUiState.isCompleted` is `Boolean?` on purpose — `null` means the DataStore read hasn't
+landed yet, and Splash routes to **Main** for anything that isn't an explicit `false`, so a slow or
+failed read can never trap a returning user in onboarding (the VM's `onFailure` sets it to `true` for
+the same reason). There is no in-app reset: to see onboarding again during development, clear app
+data (`adb shell pm clear com.decoutkhanqindev.dexreader`).
+
+`SplashScreen` reads that flag — and both of its navigate callbacks — through `rememberUpdatedState`,
+and that is **load-bearing, not ceremony**: its `LaunchedEffect(Unit)` is composed before DataStore
+has emitted, so a plain parameter capture would still be `null` three seconds later and every
+first-run user would silently skip onboarding. Don't simplify those three `rememberUpdatedState`
+calls away.
+
 **Bottom navigation — two `NavHost`s, one overlay bar**: there is no navigation drawer any more (the
 whole `common/menu/` package is deleted). The app has **two nested back stacks**:
 
-- **Outer** — `NavGraph()`'s `NavHost` (`startDestination = NavRoute.Splash`): `Splash`, the 3 auth
-  routes, **`Main`**, and every screen reached *from* a tab (`MangaDetails`, `CategoryDetails`,
-  `Search`, `Reader`, `Favorites`, `History`, `Statistics`).
+- **Outer** — `NavGraph()`'s `NavHost` (`startDestination = NavRoute.Splash`): `Splash`,
+  `Onboarding`, the 3 auth routes, **`Main`**, and every screen reached *from* a tab
+  (`MangaDetails`, `CategoryDetails`, `Search`, `Reader`, `Favorites`, `History`, `Statistics`).
 - **Inner** — `screens/main/MainScreen.kt`'s own `NavHost` (`startDestination = NavRoute.Home`):
   exactly the 3 tabs, `Home` / `Categories` / `Profile`.
 

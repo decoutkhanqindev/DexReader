@@ -18,6 +18,9 @@ sealed interface NavRoute {
   data object ForgotPassword : NavRoute
 
   @Serializable
+  data object Onboarding : NavRoute
+
+  @Serializable
   data object Main : NavRoute
 
   @Serializable

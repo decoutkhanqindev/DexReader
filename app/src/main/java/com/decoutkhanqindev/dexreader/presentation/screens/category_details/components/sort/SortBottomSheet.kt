@@ -80,7 +80,7 @@ fun SortBottomSheet(
       modifier = Modifier
         .fillMaxWidth()
         .padding(horizontal = 4.dp)
-        .padding(bottom = 8.dp)
+        .padding(bottom = 16.dp)
     ) {
       Text(
         text = stringResource(R.string.apply),
