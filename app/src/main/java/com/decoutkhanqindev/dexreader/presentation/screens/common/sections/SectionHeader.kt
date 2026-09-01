@@ -57,7 +57,7 @@ fun SectionHeader(
           .onClick(shape = MaterialTheme.shapes.small) { onMoreClick() }
           .padding(start = 4.dp, top = 4.dp, bottom = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(2.dp)
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
       ) {
         Text(
           text = stringResource(R.string.more),

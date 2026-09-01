@@ -14,6 +14,8 @@ interface ChapterRepository {
     sortOrder: MangaSortOrder = MangaSortOrder.DESC,
   ): List<Chapter>
 
+  suspend fun resolveChapterLanguage(mangaId: String): MangaLanguage
+
   suspend fun getChapterDetails(chapterId: String): Chapter
   suspend fun getChapterPages(chapterId: String, mangaId: String): ChapterPages
 }

@@ -9,6 +9,7 @@ import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.entity.value.criteria.MangaSortOrder
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetChapterListUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.manga.ResolveChapterLanguageUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaDetailsUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.AddToFavoritesUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.ObserveIsFavoriteUseCase
@@ -17,6 +18,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.user.history.ObserveHistory
 import com.decoutkhanqindev.dexreader.presentation.mapper.ChapterMapper.toChapterModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguage
+import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguageValue
 import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ReadingHistoryMapper.toReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterModel
@@ -47,6 +49,7 @@ class MangaDetailsViewModel @Inject constructor(
   savedStateHandle: SavedStateHandle,
   private val getMangaDetailsUseCase: GetMangaDetailsUseCase,
   private val getChapterListUseCase: GetChapterListUseCase,
+  private val resolveChapterLanguageUseCase: ResolveChapterLanguageUseCase,
   private val addToFavoritesUseCase: AddToFavoritesUseCase,
   private val removeFromFavoritesUseCase: RemoveFromFavoritesUseCase,
   private val observeIsFavoriteUseCase: ObserveIsFavoriteUseCase,
@@ -115,9 +118,22 @@ class MangaDetailsViewModel @Inject constructor(
   init {
     observeIsFavorite()
     fetchMangaDetails()
-    fetchFirstChapter()
-    fetchChapterListFirstPage()
+    resolveChapterLanguageThenFetch()
     observeHistoryFirstPage()
+  }
+
+  private fun resolveChapterLanguageThenFetch() {
+    vmLaunch {
+      resolveChapterLanguageUseCase(mangaId = mangaIdFromArg)
+        .onSuccess { _chapterLanguage.value = it.toMangaLanguageValue() }
+        .onFailure { throwable ->
+          Timber.tag(this::class.java.simpleName)
+            .d("resolveChapterLanguage have error: ${throwable.stackTraceToString()}")
+        }
+
+      fetchFirstChapter()
+      fetchChapterListFirstPage()
+    }
   }
 
   private fun fetchMangaDetails() {

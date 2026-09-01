@@ -4,6 +4,72 @@ Dated log of notable multi-file / cross-cutting work sessions. Newest entry firs
 
 ---
 
+## 2026-09-01 — Localize text lấy từ MangaDex: đọc `altTitles`, bỏ hardcode `"en"` trong mapper
+
+Điều tra khả năng localize của MangaDex API rồi sửa tầng mapper theo kết quả. Chưa có màn chọn ngôn
+ngữ — mọi thứ mặc định `MangaLanguage.ENGLISH`, chờ setting sau.
+
+**Kết quả điều tra (đo trên API thật, không phải đọc docs):**
+
+- **Không có locale negotiation phía server.** `Accept-Language`, `X-Locale`, `?locale=`, `?lang=`,
+  `?language=` đều bị bỏ qua, response giống hệt từng byte. `availableTranslatedLanguage[]` chỉ lọc
+  *manga nào* được trả về, không đổi nội dung field.
+- **`title` gần như không phải tiếng Anh.** Trên 1000 manga nhiều follow nhất: `ja-ro` **81%**,
+  `en` chỉ **15%**. Nên `title["en"]` trượt gần hết, và fallback cũ hiển thị tên romanized tiếng Nhật.
+  Tên tiếng Anh/Việt nằm ở **`altTitles`** — field mà DTO chưa hề khai báo.
+- **`chapter.title` không localize** (String thường), ngôn ngữ nằm ở `translatedLanguage`.
+- **Tag name chỉ có `en`** — không có đường localize tên thể loại từ API.
+- Độ phủ tiếng Việt: `altTitles` 62%, `description` 19%, có chapter `vi` 59%.
+
+**Thay đổi:**
+
+- `MangaAttributesResponse` thêm `altTitles: List<Map<String, String>>?`.
+- **`LocalizedTextMapper`** (mới) — một chỗ duy nhất giải map, chuỗi
+  `preferred → preferred trong altTexts → en → en trong altTexts → giá trị đầu`.
+- `MangaMapper.toManga` và `CategoryMapper.toCategory` nhận
+  `preferredLanguage: MangaLanguage = MangaLanguage.ENGLISH`, bỏ hằng `LANG_EN` hardcode ở cả hai.
+- **Kết quả đo lại: 86% tên truyện đổi sang tên đúng** — "Na Honjaman Level-Up" → "Solo Leveling",
+  "Sono Bisque Doll wa Koi o Suru" → "My Dress-Up Darling", "Tensei Shitara Slime datta Ken" →
+  "That Time I Got Reincarnated as a Slime". Xác nhận trực tiếp trên emulator.
+- Thêm 2 mã ngôn ngữ MangaDex có trả về mà app thiếu: **`pt`** (23/3000 manga trong mẫu) và **`lv`**.
+  Đồng bộ đủ 4 nguồn — `MangaLanguage`, `MangaLanguageValue`, `MangaLanguageCodeParam`, `strings.xml`
+  — mỗi nơi 65 entry.
+- `availableLanguages` thêm `.distinct()`: nhiều ngôn ngữ không map được cùng dồn về `UNKNOWN` sẽ
+  sinh key trùng và **crash** `ChapterLanguageListBottomSheet` (`items(key = ...::name)`).
+
+**Ghi lại để không phải điều tra lại:** `availableTranslatedLanguages` **stale, không dùng để quyết
+định fallback được** — 5/12 manga khai báo có ngôn ngữ nhưng feed trả `total = 0`. Muốn fallback thì
+gọi feed theo ngôn ngữ ưu tiên, thấy rỗng mới gọi lại tiếng Anh; **không** gửi 2 ngôn ngữ trong một
+call vì API trộn lẫn không ưu tiên và phân trang xen kẽ.
+
+**Nối vào repository + fallback chapter (cùng ngày):**
+
+- `SettingsRepository` thêm `observeContentLanguage()` / `saveContentLanguage()` (cùng DataStore với
+  theme và onboarding, **không phải sửa DI**), kèm 2 use case `ObserveContentLanguageUseCase` /
+  `SaveContentLanguageUseCase`. Default `MangaLanguage.ENGLISH`.
+- `MangaRepositoryImpl`, `CategoryRepositoryImpl`, `ChapterRepositoryImpl` inject `SettingsRepository`
+  và tự đọc ngôn ngữ. Chọn cách này thay vì truyền param xuyên use case/ViewModel vì giá trị đó không
+  do chỗ nào trong chuỗi gọi quyết định — truyền tay sẽ đụng ~8 method repository và toàn bộ caller.
+  `MangaRepositoryImpl.toMangaList()` sinh ra để `.first()` chỉ chạy **một lần mỗi response**, không
+  phải mỗi manga.
+- **Fallback**: `ChapterRepository.resolveChapterLanguage(mangaId)` — đặt riêng chứ không nhét vào
+  `getChapterList`, vì repository không phân biệt được caller đang truyền lựa chọn tường minh của
+  người dùng (bottom sheet) hay chỉ là default; ghi đè lựa chọn tường minh là sai. Impl short-circuit
+  khi ngôn ngữ ưu tiên đã là English nên ca phổ biến **không tốn request nào**; ngược lại probe
+  `limit = 1` rồi lùi về English nếu rỗng.
+- `MangaDetailsViewModel.resolveChapterLanguageThenFetch()` gọi nó một lần trong `init` **trước**
+  `fetchFirstChapter()`/`fetchChapterListFirstPage()`. `updateChapterLanguage()` không đi qua đường này.
+
+**Kiểm chứng thật trên emulator** (tạm đổi default sang VIETNAMESE rồi trả lại): Home hiện
+"Tôi Thăng Cấp Một Mình", "Cô Nàng Nổi Loạn X Chàng Thợ May". Mở Solo Leveling — chính là manga
+**khai báo có `vi` nhưng feed trả 0** — danh sách chapter hiện đầy đủ bằng tiếng Anh ("The Weakest
+Hunter", "Double Dungeon", "Statue") thay vì rỗng. Fallback chạy đúng.
+
+**Chưa làm:** màn chọn ngôn ngữ (UI), và localize tên thể loại (API chỉ có `en`, phải map bằng
+string resource trong app).
+
+---
+
 ## 2026-09-01 — Màn onboarding 4 page (HorizontalPager) chèn giữa Splash và Main
 
 Thêm `screens/onboarding/` — onboarding dạng slide, **chỉ hiện một lần**, nằm giữa Splash và Main

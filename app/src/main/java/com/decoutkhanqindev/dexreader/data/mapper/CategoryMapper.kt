@@ -1,25 +1,29 @@
 package com.decoutkhanqindev.dexreader.data.mapper
 
+import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toApiParam
+import com.decoutkhanqindev.dexreader.data.mapper.LocalizedTextMapper.localized
 import com.decoutkhanqindev.dexreader.data.network.api.response.tag.TagResponse
 import com.decoutkhanqindev.dexreader.domain.entity.category.Category
 import com.decoutkhanqindev.dexreader.domain.entity.value.category.CategoryType
+import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaLanguage
 
 object CategoryMapper {
-
-  private const val LANG_EN = "en"
 
   private fun String.toCategoryType() =
     CategoryType.entries.firstOrNull {
       it.name.equals(other = this, ignoreCase = true)
     } ?: CategoryType.UNKNOWN
 
-  fun TagResponse.toCategory(): Category? =
-    Category(
+  fun TagResponse.toCategory(
+    preferredLanguage: MangaLanguage = MangaLanguage.ENGLISH,
+  ): Category? {
+    val languageCode = preferredLanguage.toApiParam()
+
+    return Category(
       id = id ?: return null,
-      title = attributes?.name?.get(LANG_EN)
-        ?: attributes?.name?.values?.firstOrNull() ?: Category.DEFAULT_TITLE,
-      description = attributes?.description?.get(LANG_EN)
-        ?: attributes?.description?.values?.firstOrNull(),
+      title = attributes?.name.localized(languageCode) ?: Category.DEFAULT_TITLE,
+      description = attributes?.description.localized(languageCode),
       type = attributes?.group?.toCategoryType() ?: Category.DEFAULT_TYPE
     )
+  }
 }

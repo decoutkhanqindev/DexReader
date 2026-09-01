@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
       WindowCompat.getInsetsController(window, window.decorView).apply {
         systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         isAppearanceLightNavigationBars = false
-//        hide(WindowInsetsCompat.Type.statusBars())
+        hide(WindowInsetsCompat.Type.statusBars())
         hide(WindowInsetsCompat.Type.navigationBars())
       }
     }

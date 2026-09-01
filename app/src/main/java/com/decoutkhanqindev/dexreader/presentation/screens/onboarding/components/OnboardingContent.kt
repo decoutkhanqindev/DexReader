@@ -8,9 +8,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -124,6 +128,15 @@ fun OnboardingContent(
           color = MaterialTheme.colorScheme.onPrimary,
           fontWeight = FontWeight.ExtraBold,
           style = MaterialTheme.typography.titleMedium,
+        )
+
+        Icon(
+          imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+          contentDescription = null,
+          tint = MaterialTheme.colorScheme.onPrimary,
+          modifier = Modifier
+            .size(16.dp)
+            .padding(start = 4.dp)
         )
       }
     }

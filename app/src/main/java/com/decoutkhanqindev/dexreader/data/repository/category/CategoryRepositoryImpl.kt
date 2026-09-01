@@ -13,18 +13,24 @@ import com.decoutkhanqindev.dexreader.domain.entity.value.criteria.MangaSortOrde
 import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaContentRating
 import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaStatus
 import com.decoutkhanqindev.dexreader.domain.repository.category.CategoryRepository
+import com.decoutkhanqindev.dexreader.domain.repository.settings.SettingsRepository
 import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class CategoryRepositoryImpl @Inject constructor(
   private val apiService: ApiService,
+  private val settingsRepository: SettingsRepository,
 ) : CategoryRepository {
   override suspend fun getCategoryList(): List<Category> =
     runSuspendCatching(
       context = Dispatchers.IO,
       block = {
-        apiService.getTagList().data?.mapNotNull { it.toCategory() } ?: emptyList()
+        val preferredLanguage = settingsRepository.observeContentLanguage().first()
+        apiService.getTagList().data?.mapNotNull {
+          it.toCategory(preferredLanguage = preferredLanguage)
+        } ?: emptyList()
       },
       catch = { it.toDomainException() }
     )
@@ -41,6 +47,7 @@ class CategoryRepositoryImpl @Inject constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       block = {
+        val preferredLanguage = settingsRepository.observeContentLanguage().first()
         val orderValue = sortOrder.toApiParam()
         val lastUpdated: String?
         val followedCount: String?
@@ -93,7 +100,7 @@ class CategoryRepositoryImpl @Inject constructor(
             .map { it.toApiParam() },
         )
           .data
-          ?.mapNotNull { it.toManga(BuildConfig.UPLOAD_URL) }
+          ?.mapNotNull { it.toManga(BuildConfig.UPLOAD_URL, preferredLanguage) }
           ?: emptyList()
       },
       catch = { it.toDomainException() }

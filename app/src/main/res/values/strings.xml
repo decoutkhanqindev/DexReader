@@ -214,6 +214,7 @@
   <string name="lang_kazakh">Kazakh</string>
   <string name="lang_korean">Korean</string>
   <string name="lang_latin">Latin</string>
+  <string name="lang_latvian">Latvian</string>
   <string name="lang_lithuanian">Lithuanian</string>
   <string name="lang_malay">Malay</string>
   <string name="lang_mongolian">Mongolian</string>
@@ -221,6 +222,7 @@
   <string name="lang_norwegian">Norwegian</string>
   <string name="lang_persian">Persian</string>
   <string name="lang_polish">Polish</string>
+  <string name="lang_portuguese">Portuguese</string>
   <string name="lang_portuguese_br">Portuguese (BR)</string>
   <string name="lang_romanian">Romanian</string>
   <string name="lang_russian">Russian</string>

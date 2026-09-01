@@ -7,6 +7,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class MangaAttributesResponse(
   @field:Json(name = "title") val title: Map<String, String>? = null,
+  @field:Json(name = "altTitles") val altTitles: List<Map<String, String>>? = null,
   @field:Json(name = "description") val description: Map<String, String>? = null,
   @field:Json(name = "status") val status: String? = null,
   @field:Json(name = "contentRating") val contentRating: String? = null,

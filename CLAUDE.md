@@ -195,6 +195,57 @@ layers. `ApiParamMapper` owns ISO codes/API strings; never put them in domain en
 **Mappers**: all `object` singletons — `MangaMapper.toManga(dto)`, never instantiated. `UserMapper`
 is the only bidirectional mapper (needed by `UpdateUserProfileUseCase`).
 
+**Localized text from MangaDex** — the API has **no server-side locale negotiation**. Verified
+against the live API: `Accept-Language`, `X-Locale`, `?locale=`, `?lang=`, `?language=` are all
+ignored (byte-identical responses), and `availableTranslatedLanguage[]` only *filters which manga*
+come back, it does not narrow the text fields. So the client always receives the whole map and picks
+a key itself. Which fields are maps: `manga.title`, `manga.altTitles` (a **list** of maps),
+`manga.description`, `tag.name`, `tag.description`. `chapter.title` is a plain `String` — a chapter
+is a single translation, its language is `translatedLanguage`.
+
+`LocalizedTextMapper.localized(languageCode, altTexts)` is the one place that resolves them, chained
+`preferred → preferred-in-altTexts → en → en-in-altTexts → first value`. Both `MangaMapper.toManga`
+and `CategoryMapper.toCategory` take `preferredLanguage: MangaLanguage = MangaLanguage.ENGLISH` and
+feed it through — **never re-hardcode `"en"` in a mapper**, which is what they both used to do.
+
+`altTexts` matters more than it looks: measured over the 1000 most-followed manga, `title` is keyed
+`ja-ro` **81%** of the time and `en` only **15%**, so `title["en"]` misses almost always and the old
+fallback showed romanized Japanese. Reading `altTitles` fixes **86%** of displayed titles
+("Na Honjaman Level-Up" → "Solo Leveling", "Sono Bisque Doll wa Koi o Suru" → "My Dress-Up Darling").
+Coverage for a Vietnamese preference: `altTitles` has `vi` on 62% of manga, `description` on 19%,
+and 59% have Vietnamese chapters. **Tag names are `en`-only** in MangaDex data — localizing genre
+names has to be done with in-app string resources, there is nothing to read from the API.
+
+`availableTranslatedLanguages` is **not trustworthy for fallback decisions** — it is stale. Measured:
+5 of 12 sampled manga declare a language whose chapter feed then returns `total = 0` (e.g.
+"Na Honjaman Level-Up" declares `vi`, feed returns nothing under every `contentRating` /
+`includeExternalUrl` / `includeFuturePublishAt` combination). To fall back, request the preferred
+language and check `total == 0`, then re-request English. Do **not** send two languages in one call:
+the feed mixes them with no priority (10 `en` + 7 `vi` in one page) and pagination interleaves them.
+
+**Where the preferred language comes from**: `SettingsRepository.observeContentLanguage()` (same
+DataStore as the theme pair, so no DI change), read *inside* the data layer —
+`MangaRepositoryImpl`, `CategoryRepositoryImpl` and `ChapterRepositoryImpl` inject
+`SettingsRepository` and resolve it themselves. That is deliberate: threading a `preferredLanguage`
+param up through every use case and ViewModel would have touched ~8 repository methods and every
+caller, for a value none of them actually decide. Read it **once per repository method**, never
+inside a `mapNotNull` lambda — `MangaRepositoryImpl.toMangaList()` exists exactly so the `.first()`
+happens once per response rather than once per manga.
+
+**Chapter language fallback** lives in `ChapterRepository.resolveChapterLanguage(mangaId)`, not in
+`getChapterList`: the repository cannot tell whether a caller's `language` was an explicit user pick
+from `ChapterLanguageListBottomSheet` or just a default, and silently overriding an explicit pick
+would be wrong. `MangaDetailsViewModel.resolveChapterLanguageThenFetch()` calls it once in `init`
+**before** the first `fetchFirstChapter()`/`fetchChapterListFirstPage()`, then seeds
+`_chapterLanguage`; `updateChapterLanguage()` (the explicit pick) never goes through it. The impl
+short-circuits when the preferred language is already English — the fallback target — so the common
+case costs no extra request; otherwise it probes with `limit = 1` and falls back on an empty result.
+
+`availableLanguages` is `.distinct()`-ed in `MangaMapper` on purpose: every code the app's enum
+doesn't know maps to `MangaLanguage.UNKNOWN`, so a manga translated into two unmapped languages
+would otherwise yield duplicate `UNKNOWN` entries and crash `ChapterLanguageListBottomSheet`, whose
+`items(key = MangaLanguageValue::name)` rejects duplicate keys.
+
 ---
 
 ## DI Layer
