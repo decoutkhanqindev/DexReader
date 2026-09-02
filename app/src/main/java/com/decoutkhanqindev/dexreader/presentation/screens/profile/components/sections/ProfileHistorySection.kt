@@ -34,6 +34,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScr
 import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPageErrorMessage
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun ProfileHistorySection(
@@ -88,7 +89,9 @@ fun ProfileHistorySection(
         )
 
         is BasePaginationUiState.Content<ReadingHistoryModel> -> {
-          val topReadingHistoryList = uiState.currentList.take(TOP_ITEM_COUNT)
+          val topReadingHistoryList = remember(uiState.currentList) {
+            uiState.currentList.take(TOP_ITEM_COUNT).toImmutableList()
+          }
 
           if (topReadingHistoryList.isEmpty()) {
             IdleScreen(
@@ -152,7 +155,7 @@ fun ProfileHistorySection(
   }
 }
 
-private const val TOP_ITEM_COUNT = 5
+private const val TOP_ITEM_COUNT = 10
 
 private val previewHistoryItems = persistentListOf(
   ReadingHistoryModel(

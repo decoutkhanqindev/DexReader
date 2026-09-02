@@ -119,7 +119,8 @@ fun ProfileContent(
         isShowUpdateButton = isShowUpdateButton,
         modifier = Modifier
           .fillMaxWidth()
-          .padding(horizontal = 16.dp),
+          .padding(horizontal = 16.dp)
+          .padding(top = 8.dp),
         onUpdateNameChange = onUpdateNameChange,
         onUpdatePicUrlChange = onUpdatePicUrlChange,
         onUpdateClick = onUpdateClick,

@@ -84,6 +84,5 @@ class UserViewModel @Inject constructor(
 
   override fun onCleared() {
     cancelUserProfileJob()
-    super.onCleared()
   }
 }

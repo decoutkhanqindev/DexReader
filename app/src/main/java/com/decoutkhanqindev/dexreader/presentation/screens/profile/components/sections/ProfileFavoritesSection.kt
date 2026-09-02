@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -31,6 +32,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.texts.LoadPage
 import com.decoutkhanqindev.dexreader.presentation.screens.favorites.components.FavoriteMangaItem
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun ProfileFavoritesSection(
@@ -75,7 +77,9 @@ fun ProfileFavoritesSection(
         )
 
         is BasePaginationUiState.Content<FavoriteMangaModel> -> {
-          val topFavoriteMangaList = uiState.currentList.take(TOP_ITEM_COUNT)
+          val topFavoriteMangaList = remember(uiState.currentList) {
+            uiState.currentList.take(TOP_ITEM_COUNT).toImmutableList()
+          }
 
           if (topFavoriteMangaList.isEmpty()) {
             IdleScreen(
@@ -109,7 +113,7 @@ fun ProfileFavoritesSection(
   }
 }
 
-private const val TOP_ITEM_COUNT = 5
+private const val TOP_ITEM_COUNT = 10
 
 private val previewFavoriteList = persistentListOf(
   FavoriteMangaModel(

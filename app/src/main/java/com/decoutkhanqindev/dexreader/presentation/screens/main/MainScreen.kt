@@ -24,6 +24,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.value.bottom_bar.Bottom
 import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortCriteriaValue
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 import com.decoutkhanqindev.dexreader.presentation.screens.categories.CategoriesScreen
+import com.decoutkhanqindev.dexreader.presentation.screens.categories.CategoriesViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.screens.common.bottom_bar.AppBottomBar
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.favorites.FavoritesViewModel
@@ -32,15 +33,18 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.man
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.statistics.StatisticsViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.home.HomeScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.ProfileScreen
+import com.decoutkhanqindev.dexreader.presentation.screens.profile.ProfileViewModel
 import com.decoutkhanqindev.dexreader.util.NavTransitions.navigatePreserveState
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun MainScreen(
   manageSectionViewModel: MangaSectionViewModel,
+  categoriesViewModel: CategoriesViewModel = hiltViewModel(),
   favoritesViewModel: FavoritesViewModel = hiltViewModel(),
   historyViewModel: HistoryViewModel = hiltViewModel(),
   statisticsViewModel: StatisticsViewModel = hiltViewModel(),
+  profileViewModel: ProfileViewModel = hiltViewModel(),
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
   modifier: Modifier = Modifier,
@@ -96,6 +100,7 @@ fun MainScreen(
 
       composable<NavRoute.Categories> {
         CategoriesScreen(
+          categoriesViewModel = categoriesViewModel,
           modifier = Modifier.fillMaxSize(),
           onNavigateToSearchScreen = onNavigateToSearchScreen,
           onNavigateToCategoryScreen = { categoryId, categoryTitle, categoryDescription ->
@@ -114,6 +119,7 @@ fun MainScreen(
           favoritesViewModel = favoritesViewModel,
           historyViewModel = historyViewModel,
           statisticsViewModel = statisticsViewModel,
+          profileViewModel = profileViewModel,
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
           modifier = Modifier.fillMaxSize(),

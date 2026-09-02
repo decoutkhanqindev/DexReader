@@ -44,13 +44,13 @@ fun <T> FilterValueOptions(
             onItemsSelect(
               selectedItems
                 .toPersistentList()
-                .remove(option)
+                .removing(option)
             )
           } else {
             onItemsSelect(
               selectedItems
                 .toPersistentList()
-                .add(option)
+                .adding(option)
             )
           }
         }

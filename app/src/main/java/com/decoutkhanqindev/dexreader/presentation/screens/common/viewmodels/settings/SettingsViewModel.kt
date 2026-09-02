@@ -108,10 +108,6 @@ class SettingsViewModel @Inject constructor(
     }
   }
 
-  fun resetThemeOption() {
-    _uiState.update { it.copy(selectedThemeOption = it.appliedThemeOption) }
-  }
-
   fun retry() {
     if (_uiState.value.isError) saveThemeOption()
   }

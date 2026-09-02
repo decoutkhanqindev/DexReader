@@ -505,7 +505,6 @@ class MangaDetailsViewModel @Inject constructor(
   override fun onCleared() {
     cancelObserveIsFavoriteJob()
     cancelObserveHistoryJob()
-    super.onCleared()
   }
 
   companion object {

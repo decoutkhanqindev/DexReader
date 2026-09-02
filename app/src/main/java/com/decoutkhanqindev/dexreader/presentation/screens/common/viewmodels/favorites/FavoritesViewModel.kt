@@ -192,7 +192,6 @@ class FavoritesViewModel @Inject constructor(
 
   override fun onCleared() {
     cancelObserveFavoritesJob()
-    super.onCleared()
   }
 
   companion object {

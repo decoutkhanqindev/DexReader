@@ -83,7 +83,7 @@ class CategoriesViewModel @Inject constructor(
     if (current is CategoryCoverUiState.Loading || current is CategoryCoverUiState.Success) return
 
     vmLaunch {
-      _categoryCoverStates.update { it.put(categoryId, CategoryCoverUiState.Loading) }
+      _categoryCoverStates.update { it.putting(categoryId, CategoryCoverUiState.Loading) }
 
       getMangaListUseCase(
         categoryId = categoryId,
@@ -93,7 +93,7 @@ class CategoriesViewModel @Inject constructor(
       )
         .onSuccess { mangaList ->
           _categoryCoverStates.update {
-            it.put(
+            it.putting(
               categoryId,
               CategoryCoverUiState.Success(mangaList.firstOrNull()?.coverUrl.orEmpty())
             )
@@ -101,7 +101,7 @@ class CategoriesViewModel @Inject constructor(
         }
         .onFailure { throwable ->
           _categoryCoverStates.update {
-            it.put(categoryId, CategoryCoverUiState.Error(throwable.toFeatureError()))
+            it.putting(categoryId, CategoryCoverUiState.Error(throwable.toFeatureError()))
           }
           Timber.tag(this::class.java.simpleName)
             .e("loadCategoryCover($categoryId) have error: ${throwable.stackTraceToString()}")

@@ -685,7 +685,6 @@ class ReaderViewModel @Inject constructor(
     cancelObserveHistoryJob()
     cancelReadingTimerJob()
     cancelResetProgressJob()
-    super.onCleared()
   }
 
   companion object {

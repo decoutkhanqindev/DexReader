@@ -27,35 +27,33 @@ android {
 
     android.buildFeatures.buildConfig = true
 
-    val properties = Properties()
-    properties.load(project.rootProject.file("local.properties").inputStream())
+    val localProps = Properties().apply {
+      load(rootProject.file("local.properties").inputStream())
+    }
 
     buildConfigField(
       type = "String",
       name = "BASE_URL",
-      value = "\"${properties.getProperty("BASE_URL")}\""
+      value = "\"${localProps.getProperty("BASE_URL")}\""
     )
 
     buildConfigField(
       type = "String",
       name = "UPLOAD_URL",
-      value = "\"${properties.getProperty("UPLOAD_URL")}\""
+      value = "\"${localProps.getProperty("UPLOAD_URL")}\""
     )
   }
 
-  val keystorePropsFile = rootProject.file("keystore.properties")
   val keystoreProps = Properties().apply {
-    if (keystorePropsFile.exists()) load(keystorePropsFile.inputStream())
+    load(rootProject.file("keystore.properties").inputStream())
   }
 
   signingConfigs {
     create("release") {
-      if (keystorePropsFile.exists()) {
-        storeFile = file(keystoreProps.getProperty("storeFile"))
-        storePassword = keystoreProps.getProperty("storePassword")
-        keyAlias = keystoreProps.getProperty("keyAlias")
-        keyPassword = keystoreProps.getProperty("keyPassword")
-      }
+      storeFile = file(keystoreProps.getProperty("storeFile"))
+      storePassword = keystoreProps.getProperty("storePassword")
+      keyAlias = keystoreProps.getProperty("keyAlias")
+      keyPassword = keystoreProps.getProperty("keyPassword")
     }
   }
 
@@ -65,9 +63,7 @@ android {
       isShrinkResources = true
       isDebuggable = false
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-      signingConfig =
-        if (keystorePropsFile.exists()) signingConfigs.getByName("release")
-        else signingConfigs.getByName("debug")
+      signingConfig = signingConfigs.getByName("release")
     }
 
     debug {
@@ -78,6 +74,7 @@ android {
       signingConfig = signingConfigs.getByName("debug")
     }
   }
+
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
@@ -112,7 +109,6 @@ dependencies {
   implementation(libs.androidx.ui.graphics)
   implementation(libs.androidx.ui.tooling.preview)
   implementation(libs.androidx.material3)
-  implementation(libs.androidx.lifecycle.process)
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)
@@ -177,9 +173,6 @@ dependencies {
 
   // Logging
   implementation(libs.timber)
-
-  // Shimmer
-  implementation(libs.compose.shimmer)
 
   // Profile Installer — required for Macrobenchmark to install/drop baseline profile at runtime
   implementation(libs.androidx.profileinstaller)

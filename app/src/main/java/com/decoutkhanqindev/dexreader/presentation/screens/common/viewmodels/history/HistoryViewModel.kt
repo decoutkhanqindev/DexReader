@@ -267,7 +267,6 @@ constructor(
 
   override fun onCleared() {
     cancelObserveHistoryJob()
-    super.onCleared()
   }
 
   companion object {

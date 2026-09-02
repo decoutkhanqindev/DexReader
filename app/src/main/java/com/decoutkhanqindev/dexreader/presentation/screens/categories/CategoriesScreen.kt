@@ -12,13 +12,13 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseScree
 
 @Composable
 fun CategoriesScreen(
-  viewModel: CategoriesViewModel = hiltViewModel(),
+  categoriesViewModel: CategoriesViewModel,
   modifier: Modifier = Modifier,
   onNavigateToSearchScreen: () -> Unit,
   onNavigateToCategoryScreen: (categoryId: String, title: String, description: String) -> Unit,
 ) {
-  val categoryListUiState by viewModel.categoryListUiState.collectAsStateWithLifecycle()
-  val categoryCoverStates by viewModel.categoryCoverStates.collectAsStateWithLifecycle()
+  val categoryListUiState by categoriesViewModel.categoryListUiState.collectAsStateWithLifecycle()
+  val categoryCoverStates by categoriesViewModel.categoryCoverStates.collectAsStateWithLifecycle()
 
   BaseScreen(
     selectedTab = BottomTabItemValue.CATEGORIES,
@@ -30,9 +30,9 @@ fun CategoriesScreen(
       categoryCoverUiState = categoryCoverStates,
       modifier = Modifier.fillMaxSize(),
       onCategoryClick = onNavigateToCategoryScreen,
-      onLoadCover = { viewModel.loadCategoryCover(it) },
-      onRefresh = { viewModel.refresh() },
-      onRetry = { viewModel.retry() },
+      onLoadCover = { categoriesViewModel.loadCategoryCover(it) },
+      onRefresh = { categoriesViewModel.refresh() },
+      onRetry = { categoriesViewModel.retry() },
     )
   }
 }

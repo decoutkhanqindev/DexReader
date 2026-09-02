@@ -76,7 +76,8 @@ fun HomeContent(
               items = mangaSectionUiState.bannerList,
               modifier = Modifier
                 .fillMaxWidth()
-                .height(365.dp),
+                .height(365.dp)
+                .padding(top = 8.dp),
               onItemClick = onItemClick
             )
           }
