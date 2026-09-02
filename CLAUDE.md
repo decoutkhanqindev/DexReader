@@ -211,12 +211,14 @@ feed it through — **never re-hardcode `"en"` in a mapper**, which is what they
 `altTexts` matters more than it looks: measured over the 1000 most-followed manga, `title` is keyed
 `ja-ro` **81%** of the time and `en` only **15%**, so `title["en"]` misses almost always and the old
 fallback showed romanized Japanese. Reading `altTitles` fixes **86%** of displayed titles
-("Na Honjaman Level-Up" → "Solo Leveling", "Sono Bisque Doll wa Koi o Suru" → "My Dress-Up Darling").
+("Na Honjaman Level-Up" → "Solo Leveling", "Sono Bisque Doll wa Koi o Suru" → "My Dress-Up
+Darling").
 Coverage for a Vietnamese preference: `altTitles` has `vi` on 62% of manga, `description` on 19%,
 and 59% have Vietnamese chapters. **Tag names are `en`-only** in MangaDex data — localizing genre
 names has to be done with in-app string resources, there is nothing to read from the API.
 
-`availableTranslatedLanguages` is **not trustworthy for fallback decisions** — it is stale. Measured:
+`availableTranslatedLanguages` is **not trustworthy for fallback decisions** — it is stale.
+Measured:
 5 of 12 sampled manga declare a language whose chapter feed then returns `total = 0` (e.g.
 "Na Honjaman Level-Up" declares `vi`, feed returns nothing under every `contentRating` /
 `includeExternalUrl` / `includeFuturePublishAt` combination). To fall back, request the preferred
@@ -523,7 +525,8 @@ outlive a single screen lives here instead of under its owning screen's package.
 params, called as `setContent { NavGraph() }` from `MainActivity` — there is no `DexReaderApp.kt`
 composable anymore) is the single composition root that instantiates every shared ViewModel via
 `hiltViewModel()` and threads it down as a param — a screen never calls `hiltViewModel()` for one of
-these itself. `viewmodels/onboarding/OnboardingViewModel` + `OnboardingUiState` gate the onboarding screen (see
+these itself. `viewmodels/onboarding/OnboardingViewModel` + `OnboardingUiState` gate the onboarding
+screen (see
 Onboarding above) — `NavGraph` both consumes it and passes it down.
 `UserViewModel` (moved from top-level `presentation/`) exposes `isUserLoggedIn`/
 `userProfile`, read by `NavGraph` and passed down as plain `isUserLoggedIn`/`currentUser` params to
@@ -566,7 +569,8 @@ auth flows; `navigatePreserveState()` for bottom-tab navigation. Value enums use
 args must be `@Serializable` (e.g. `MangaSortCriteriaValue`, carried on `NavRoute.CategoryDetails`).
 
 **Onboarding (`screens/onboarding/`)**: a 4-page `HorizontalPager` shown **once**, sitting between
-Splash and Main on the outer host (`Splash → Onboarding → Main`, each hop via `navigateClearStack`, so
+Splash and Main on the outer host (`Splash → Onboarding → Main`, each hop via `navigateClearStack`,
+so
 Back never returns to it). Each page is one `OnboardingPageValue` entry
 (`model/value/onboarding/`: `@param:DrawableRes imageRes` + `@param:StringRes titleRes` +
 `descriptionRes` — same shape as `BottomTabItemValue`), rendered top-to-bottom as image → title
@@ -578,10 +582,13 @@ label, the button action, and Skip's visibility); Skip and Get Started both call
 
 The illustrations (`drawable/ob_discover|ob_browse|ob_read|ob_track.webp`, ~1000×1380 each) are
 **real screenshots of this app** taken on the emulator, composited into phone mockups (rounded
-corners + bezel + drop shadow; two overlapping phones on pages 2-4). When regenerating them: keep the
-composite's aspect ratio near the pager's image slot (**~0.7 w/h**) — a wider composite gets shrunk by
+corners + bezel + drop shadow; two overlapping phones on pages 2-4). When regenerating them: keep
+the
+composite's aspect ratio near the pager's image slot (**~0.7 w/h**) — a wider composite gets shrunk
+by
 `ContentScale.Fit` and leaves dead space above and below the phones, which is exactly what the first
-pass looked like — and keep them **WebP** (the PNG originals were ~1.3 MB each, the WebP ~150 KB with
+pass looked like — and keep them **WebP** (the PNG originals were ~1.3 MB each, the WebP ~150 KB
+with
 no visible loss on these flat dark screenshots).
 
 Plain `drawable/` (no density qualifier) is fine here and was **measured**, not assumed: entering
@@ -597,18 +604,21 @@ need **no DI change** (`RepositoryModule` already binds it). `OnboardingViewMode
 `uiState.isCompleted` to route Splash, and hands the same instance to `OnboardingScreen`.
 `OnboardingUiState.isCompleted` is `Boolean?` on purpose — `null` means the DataStore read hasn't
 landed yet, and Splash routes to **Main** for anything that isn't an explicit `false`, so a slow or
-failed read can never trap a returning user in onboarding (the VM's `onFailure` sets it to `true` for
+failed read can never trap a returning user in onboarding (the VM's `onFailure` sets it to `true`
+for
 the same reason). There is no in-app reset: to see onboarding again during development, clear app
 data (`adb shell pm clear com.decoutkhanqindev.dexreader`).
 
-`SplashScreen` reads that flag — and both of its navigate callbacks — through `rememberUpdatedState`,
+`SplashScreen` reads that flag — and both of its navigate callbacks — through
+`rememberUpdatedState`,
 and that is **load-bearing, not ceremony**: its `LaunchedEffect(Unit)` is composed before DataStore
 has emitted, so a plain parameter capture would still be `null` three seconds later and every
 first-run user would silently skip onboarding. Don't simplify those three `rememberUpdatedState`
 calls away.
 
 **App language (`util/LanguageManager.kt` + `screens/language/`)**: one stored value drives **both**
-the UI locale and the MangaDex content language — it is `SettingsRepository.observeContentLanguage()`
+the UI locale and the MangaDex content language — it is
+`SettingsRepository.observeContentLanguage()`
 (a `MangaLanguage`).
 
 **There is ONE language enum, `LanguageValue` (`model/value/language/`, 64 entries), used for
@@ -625,7 +635,8 @@ MangaDex language is now a single edit** in `MangaLanguage` + `LanguageValue` �
 to keep in step.
 
 The picker lists all **64**, and **every one now ships a full UI translation** — `values/` (English)
-plus **63** `values-XX/` folders = **64 UI locales**, i.e. **zero English-UI fallback left**. (Android
+plus **63** `values-XX/` folders = **64 UI locales**, i.e. **zero English-UI fallback left**. (
+Android
 resource fallback still means a code with no `values-XX/` would resolve every string from `values/`,
 so a missing translation degrades gracefully rather than failing — that safety net just isn't
 exercised any more now that coverage is complete.) The content language (titles, descriptions,
@@ -650,9 +661,11 @@ the 64-language picker exactly — **no fallback locales left**). Each carries a
 strings (the two `translatable="false"` entries, `app_name` and `privacy_policy_url`, are correctly
 absent everywhere). The **last 19 added** — `af`, `be`, `cv`, `eo`, `es-la` (folder `values-es-rLA`,
 since `Locale.forLanguageTag("es-la")` → `es-LA`), `et`, `eu`, `ga`, `jv`, `ka`, `kk`, `la`, `lt`,
-`lv`, `mn`, `ne`, `sr`, `tl`, `zh-hk` (folder `values-zh-rHK`) — were machine-translated in one pass;
+`lv`, `mn`, `ne`, `sr`, `tl`, `zh-hk` (folder `values-zh-rHK`) — were machine-translated in one
+pass;
 the low-resource ones (**`cv` Chuvash** especially, then `ka`, `kk`, `mn`, `ne`, `jv`, `la`) are the
-first to hand to a native reviewer. Adding another language is still just a new `values-XX/strings.xml`.
+first to hand to a native reviewer. Adding another language is still just a new
+`values-XX/strings.xml`.
 
 Two traps this resource set already sprang, both worth knowing before touching it again:
 
@@ -682,13 +695,14 @@ Five ViewModels therefore observe it and refetch: `MangaSectionViewModel`, `Cate
 `CategoryDetailsViewModel`, `SearchViewModel`, `MangaDetailsViewModel`. The shape is always
 
 ```kotlin
-observeContentLanguageUseCase().drop(1).collect { it.onSuccess { <refetch>() } }
+observeContentLanguageUseCase().drop(1).collect { it.onSuccess { <refetch > () } }
 ```
 
 **`.drop(1)` is load-bearing** — the DataStore flow replays its current value on collection, so
 without it every one of these screens would fire a second fetch immediately on creation.
 `SearchViewModel` additionally guards on a non-blank query (nothing to re-search otherwise), and
-`MangaDetailsViewModel` re-runs `resolveChapterLanguageThenFetch()` as well as `fetchMangaDetails()`,
+`MangaDetailsViewModel` re-runs `resolveChapterLanguageThenFetch()` as well as
+`fetchMangaDetails()`,
 since the chapter-language fallback has to be re-resolved for the new preference. Favorites/History
 are deliberately **not** in the list: their titles are denormalised copies stored in Firestore, not
 MangaDex responses, so a language change cannot affect them.

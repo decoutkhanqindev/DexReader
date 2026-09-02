@@ -1,9 +1,9 @@
 package com.decoutkhanqindev.dexreader.data.mapper
 
+import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toApiParam
 import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toMangaContentRating
 import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toMangaLanguage
 import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toMangaStatus
-import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toApiParam
 import com.decoutkhanqindev.dexreader.data.mapper.CategoryMapper.toCategory
 import com.decoutkhanqindev.dexreader.data.mapper.LocalizedTextMapper.localized
 import com.decoutkhanqindev.dexreader.data.network.api.response.manga.MangaResponse

@@ -8,17 +8,21 @@ Dated log of notable multi-file / cross-cutting work sessions. Newest entry firs
 
 **Hai việc trong một phiên:**
 
-**1. Hợp nhất enum.** `AppLanguageValue` từng tồn tại riêng chỉ vì nó *mirror mọi enum ngôn ngữ manga
+**1. Hợp nhất enum.** `AppLanguageValue` từng tồn tại riêng chỉ vì nó *mirror mọi enum ngôn ngữ
+manga
 trừ `UNKNOWN`*. Khi `UNKNOWN` đã bị bỏ khỏi cả domain `MangaLanguage` lẫn enum presentation (unknown
 code giờ fallback về `ENGLISH`), hai enum thành **tập 64 entry y hệt** → không còn lý do tách.
 
 - **Xóa `AppLanguageValue.kt`**; gộp 3 helper picker (`DEFAULT`, `fromCode()`, `sortedForDisplay()`)
   vào enum còn lại, rồi **đổi tên enum thành `LanguageValue`** (`model/value/language/`) — tên trung
   tính vì nó lái cả UI locale lẫn content language, không chỉ manga.
-- Đổi type sang `LanguageValue` ở: `LanguageManager` (`LocalAppLanguage`/`current`/`configurationFor`/
+- Đổi type sang `LanguageValue` ở: `LanguageManager` (`LocalAppLanguage`/`current`/
+  `configurationFor`/
   `displayNameOf`/`ProvideAppLanguage`), `LanguageUiState`, `LanguageViewModel`, `LanguageContent`,
-  `LanguageItem`, và mọi call site content (`MangaModel`, `ChapterLanguageListBottomSheet`, `MangaMapper`…).
-- `LanguageMapper` gọn còn 2 hàm (`MangaLanguage.toLanguageValue()` / `LanguageValue.toMangaLanguage()`).
+  `LanguageItem`, và mọi call site content (`MangaModel`, `ChapterLanguageListBottomSheet`,
+  `MangaMapper`…).
+- `LanguageMapper` gọn còn 2 hàm (`MangaLanguage.toLanguageValue()` /
+  `LanguageValue.toMangaLanguage()`).
 - **Lợi ích**: hết bẫy "thêm 1 ngôn ngữ phải sửa ở cả hai enum" — giờ chỉ sửa `MangaLanguage` +
   `LanguageValue`. `compileDebugKotlin` PASS.
 
@@ -30,9 +34,11 @@ English = 64 UI locale, khớp đúng picker, 0 fallback**:
   `sr`, `tl`, `zh-hk`.
 - **Tên folder xác minh bằng JVM thật**: `es-la` → `Locale.forLanguageTag("es-la")` = `es-LA` →
   `values-es-rLA`; `zh-hk` → `zh-HK` → `values-zh-rHK`; 17 mã còn lại là `values-XX` phẳng.
-- Escape `\'` cẩn thận (af dùng `\'n`, ga dùng `D\'…`), giữ nguyên placeholder (`%1$s`/`%d`), `\n`, `…`.
+- Escape `\'` cẩn thận (af dùng `\'n`, ga dùng `D\'…`), giữ nguyên placeholder (`%1$s`/`%d`), `\n`,
+  `…`.
 - **Đã kiểm**: mỗi file đúng 148 key, 0 mồ côi/0 thiếu; `mergeDebugResources` (AAPT2) PASS.
-- ⚠️ **Chất lượng dịch máy** — ưu tiên rà soát bản ngữ cho các ngôn ngữ ít tài nguyên: **`cv` (Chuvash)**
+- ⚠️ **Chất lượng dịch máy** — ưu tiên rà soát bản ngữ cho các ngôn ngữ ít tài nguyên: **`cv` (
+  Chuvash)**
   trước hết, rồi `ka`, `kk`, `mn`, `ne`, `jv`, `la`.
 
 ---
@@ -54,9 +60,11 @@ tác dụng gì.
 
 **Hai cái bẫy đã vấp, ghi lại để khỏi mất thời gian lần sau:**
 
-1. **Dấu nháy đơn trần làm hỏng build.** AAPT2 báo `Invalid unicode escape sequence in string` kèm số
+1. **Dấu nháy đơn trần làm hỏng build.** AAPT2 báo `Invalid unicode escape sequence in string` kèm
+   số
    dòng trỏ vào resource *không liên quan* — một lần còn trỏ thẳng vào file của thư viện AndroidX
-   trong Gradle cache. Thủ phạm thật là `'` chưa escape: 61 chỗ, riêng tiếng Uzbek 47 chỗ (`o'qish`).
+   trong Gradle cache. Thủ phạm thật là `'` chưa escape: 61 chỗ, riêng tiếng Uzbek 47 chỗ (
+   `o'qish`).
    Phải viết `\'`. Trình quét escape `\x` tôi viết lúc đầu báo 0 lỗi vì nó tìm sai thứ.
 2. **Indonesia và Hebrew phải dùng tên thư mục cũ** `values-in`, `values-iw` chứ không phải
    `values-id`/`values-he`, vì `Locale.forLanguageTag("id").language` trả `"in"` trong Java, mà app
@@ -75,29 +83,38 @@ elinin altında", "Atla", "İleri"), Home dùng bản dịch cũ giờ đã số
 
 ## 2026-09-01 — Chọn ngôn ngữ app + màn Settings, gỡ theme khỏi Profile
 
-Đợt refactor lớn: một giá trị ngôn ngữ duy nhất điều khiển **cả UI lẫn nội dung MangaDex**, thêm 2 màn
+Đợt refactor lớn: một giá trị ngôn ngữ duy nhất điều khiển **cả UI lẫn nội dung MangaDex**, thêm 2
+màn
 language + 1 màn Settings, và bỏ mục setting khỏi Profile hub.
 
 - **`MangaLanguageValue` bỏ `@StringRes`**, đổi sang `code` + `flag` (emoji regional indicator); tên
   hiển thị suy từ `Locale.forLanguageTag(code).getDisplayLanguage(...)` qua
-  `LanguageManager.displayNameOf`/`labelOf`. **Xoá được toàn bộ 65 string `lang_*`** (207 → 143 string),
+  `LanguageManager.displayNameOf`/`labelOf`. **Xoá được toàn bộ 65 string `lang_*`** (207 → 143
+  string),
   và tên ngôn ngữ tự localize theo UI.
 - **`AppLanguageValue`** = tập con app thật sự hỗ trợ, mỗi entry bọc một `MangaLanguageValue` nên
   `code`/`flag` chỉ định nghĩa một chỗ. Thêm ngôn ngữ = 1 entry + 1 thư mục `values-XX`.
-- **`LanguageManager`** (`util/`) giữ `LocalAppLanguage` (staticCompositionLocalOf) + `ProvideAppLanguage`.
+- **`LanguageManager`** (`util/`) giữ `LocalAppLanguage` (staticCompositionLocalOf) +
+  `ProvideAppLanguage`.
   Thứ tự danh sách: ngôn ngữ máy → English → alphabet.
 - **2 màn + 1 content** trong `screens/language/`. `LanguageTypeValue` quyết định lúc nào Done bật:
-  `SELECTION` bật ngay khi chọn, `SETTING` chỉ bật khi khác ngôn ngữ đang áp dụng. Nút Done dùng đúng
+  `SELECTION` bật ngay khi chọn, `SETTING` chỉ bật khi khác ngôn ngữ đang áp dụng. Nút Done dùng
+  đúng
   khuôn nút nổi của sort/filter (`blurBackground` + `ActionButton` ở `BottomCenter`).
 - **Luồng first-open**: `Splash → LanguageSelection → Onboarding → Main`, dùng chung cờ onboarding.
-- **Settings** (`screens/settings/`): vào từ **nút gear trên top bar Profile**; `ProfileSettingsSection`
-  và `ThemeOptionItem` bị xoá. `SettingItemValue` (THEME/LANGUAGE/PRIVACY) — theme là `Switch`, hai mục
+- **Settings** (`screens/settings/`): vào từ **nút gear trên top bar Profile**;
+  `ProfileSettingsSection`
+  và `ThemeOptionItem` bị xoá. `SettingItemValue` (THEME/LANGUAGE/PRIVACY) — theme là `Switch`, hai
+  mục
   còn lại điều hướng. **`ThemeMode` bỏ `SYSTEM`**, chỉ còn Light/Dark.
 - **`PrivacyPolicyScreen`**: `WebView` trong `AndroidView`, tắt JavaScript và DOM storage.
 
-**Bẫy đã vấp và cách tránh:** cách làm phổ biến `LocalContext provides context.createConfigurationContext(config)`
-**làm app crash** — nó trả `ContextImpl` chứ không phải Activity, nên mọi `hiltViewModel()` dưới provider
-chết với `Expected an activity context for creating a HiltViewModelFactory` (`MainScreen` tạo 3 cái).
+**Bẫy đã vấp và cách tránh:** cách làm phổ biến
+`LocalContext provides context.createConfigurationContext(config)`
+**làm app crash** — nó trả `ContextImpl` chứ không phải Activity, nên mọi `hiltViewModel()` dưới
+provider
+chết với `Expected an activity context for creating a HiltViewModelFactory` (`MainScreen` tạo 3
+cái).
 Cách đúng: chỉ provide **`LocalResources`** (kèm `LocalConfiguration` để invalidate), giữ nguyên
 `LocalContext`.
 
@@ -108,36 +125,51 @@ WebView load đúng trang privacy trên GitHub Pages.
 **Bổ sung cùng ngày:**
 
 - **`AppLanguageValue` mở rộng thành đủ 64 ngôn ngữ** (toàn bộ `MangaLanguageValue` trừ `UNKNOWN`),
-  nên picker liệt kê hết. Bản dịch UI vẫn là tập nhỏ hơn — chỉ `values/` và `values-vi/` — nên chọn 62
-  ngôn ngữ còn lại sẽ đổi **nội dung** (tên truyện, mô tả, chapter) còn giao diện rơi về tiếng Anh theo
+  nên picker liệt kê hết. Bản dịch UI vẫn là tập nhỏ hơn — chỉ `values/` và `values-vi/` — nên chọn
+  62
+  ngôn ngữ còn lại sẽ đổi **nội dung** (tên truyện, mô tả, chapter) còn giao diện rơi về tiếng Anh
+  theo
   cơ chế fallback của Android. Đánh đổi: hai enum giờ trùng danh sách entry, thêm ngôn ngữ MangaDex
   phải thêm ở **cả hai** nơi.
-- **`values-vi/strings.xml`** — dịch đủ **148/148** chuỗi dịch được, đã đối chiếu tự động: không thiếu,
-  không thừa, placeholder (`%1$s`, `%d`, …) khớp hết. Quy ước từ vựng cần giữ khi thêm chuỗi mới: tab
+- **`values-vi/strings.xml`** — dịch đủ **148/148** chuỗi dịch được, đã đối chiếu tự động: không
+  thiếu,
+  không thừa, placeholder (`%1$s`, `%d`, …) khớp hết. Quy ước từ vựng cần giữ khi thêm chuỗi mới:
+  tab
   Categories = "Danh mục" còn genre = "Thể loại" (không được trùng), manga = "truyện",
   chapter = "chương", volume = "tập".
 - **Mọi màn hình giờ đều đi qua `BaseScreen`/`BaseDetailsScreen`.** `ReaderScreen` và `SearchScreen`
-  trước đó dùng `Scaffold` thô; `BaseDetailsScreen` được thêm 3 tham số tuỳ chọn để nhận được chúng mà
-  không đổi hành vi cũ: `topBar` (thay hẳn bar mặc định — Search truyền `SearchBar`, Reader truyền bar
-  bọc `AnimatedVisibility`), `floatingActionButton` (Reader), và `isBackEnabled` (LanguageSelection ẩn
-  nút back vì luồng first-run không được thoát). `title` có default `""` cho các màn tự dựng top bar.
+  trước đó dùng `Scaffold` thô; `BaseDetailsScreen` được thêm 3 tham số tuỳ chọn để nhận được chúng
+  mà
+  không đổi hành vi cũ: `topBar` (thay hẳn bar mặc định — Search truyền `SearchBar`, Reader truyền
+  bar
+  bọc `AnimatedVisibility`), `floatingActionButton` (Reader), và `isBackEnabled` (LanguageSelection
+  ẩn
+  nút back vì luồng first-run không được thoát). `title` có default `""` cho các màn tự dựng top
+  bar.
 - **`LanguageSelectionScreen` không tick sẵn ngôn ngữ nào** — `isSelected` phân nhánh theo
   `LanguageTypeValue`: SELECTION chỉ so với `selectedLanguage`, SETTING mới fallback về
   `appliedLanguage`.
 
-**Đã kiểm chứng trên emulator**: chọn Tiếng Việt → toàn bộ UI sang tiếng Việt (onboarding, Trang chủ,
-Cài đặt, bottom bar), và tên truyện thành "Tôi Thăng Cấp Một Mình" / "Cô Nàng Nổi Loạn X Chàng Thợ May".
+**Đã kiểm chứng trên emulator**: chọn Tiếng Việt → toàn bộ UI sang tiếng Việt (onboarding, Trang
+chủ,
+Cài đặt, bottom bar), và tên truyện thành "Tôi Thăng Cấp Một Mình" / "Cô Nàng Nổi Loạn X Chàng Thợ
+May".
 
 **Refetch khi đổi ngôn ngữ (làm nốt cùng ngày):** repository đọc setting theo *từng lời gọi*, nên dữ
-liệu fetch trước lúc đổi vẫn giữ ngôn ngữ cũ — rõ nhất ở first run vì `MangaSectionViewModel` tải Home
-trong lúc người dùng còn đang ở màn chọn ngôn ngữ (chọn tiếng Việt xong Home vẫn hiện "Solo Leveling",
+liệu fetch trước lúc đổi vẫn giữ ngôn ngữ cũ — rõ nhất ở first run vì `MangaSectionViewModel` tải
+Home
+trong lúc người dùng còn đang ở màn chọn ngôn ngữ (chọn tiếng Việt xong Home vẫn hiện "Solo
+Leveling",
 phải mở lại app mới đúng). Đã cho 5 ViewModel observe và refetch: `MangaSectionViewModel`,
 `CategoriesViewModel`, `CategoryDetailsViewModel`, `SearchViewModel`, `MangaDetailsViewModel`.
 
-**`.drop(1)` là bắt buộc** — flow của DataStore phát lại giá trị hiện tại ngay khi collect, không drop
-thì mọi màn này fetch lần hai ngay lúc khởi tạo. `SearchViewModel` chặn thêm điều kiện query không rỗng;
+**`.drop(1)` là bắt buộc** — flow của DataStore phát lại giá trị hiện tại ngay khi collect, không
+drop
+thì mọi màn này fetch lần hai ngay lúc khởi tạo. `SearchViewModel` chặn thêm điều kiện query không
+rỗng;
 `MangaDetailsViewModel` chạy lại cả `resolveChapterLanguageThenFetch()` chứ không chỉ
-`fetchMangaDetails()`, vì fallback ngôn ngữ chapter phải giải lại theo ngôn ngữ mới. Favorites/History
+`fetchMangaDetails()`, vì fallback ngôn ngữ chapter phải giải lại theo ngôn ngữ mới.
+Favorites/History
 **cố ý không** nằm trong danh sách: tiêu đề của chúng là bản sao lưu trong Firestore, không phải
 response MangaDex, nên đổi ngôn ngữ không ảnh hưởng.
 
@@ -157,7 +189,8 @@ ngữ — mọi thứ mặc định `MangaLanguage.ENGLISH`, chờ setting sau.
   `?language=` đều bị bỏ qua, response giống hệt từng byte. `availableTranslatedLanguage[]` chỉ lọc
   *manga nào* được trả về, không đổi nội dung field.
 - **`title` gần như không phải tiếng Anh.** Trên 1000 manga nhiều follow nhất: `ja-ro` **81%**,
-  `en` chỉ **15%**. Nên `title["en"]` trượt gần hết, và fallback cũ hiển thị tên romanized tiếng Nhật.
+  `en` chỉ **15%**. Nên `title["en"]` trượt gần hết, và fallback cũ hiển thị tên romanized tiếng
+  Nhật.
   Tên tiếng Anh/Việt nằm ở **`altTitles`** — field mà DTO chưa hề khai báo.
 - **`chapter.title` không localize** (String thường), ngôn ngữ nằm ở `translatedLanguage`.
 - **Tag name chỉ có `en`** — không có đường localize tên thể loại từ API.
@@ -173,8 +206,10 @@ ngữ — mọi thứ mặc định `MangaLanguage.ENGLISH`, chờ setting sau.
 - **Kết quả đo lại: 86% tên truyện đổi sang tên đúng** — "Na Honjaman Level-Up" → "Solo Leveling",
   "Sono Bisque Doll wa Koi o Suru" → "My Dress-Up Darling", "Tensei Shitara Slime datta Ken" →
   "That Time I Got Reincarnated as a Slime". Xác nhận trực tiếp trên emulator.
-- Thêm 2 mã ngôn ngữ MangaDex có trả về mà app thiếu: **`pt`** (23/3000 manga trong mẫu) và **`lv`**.
-  Đồng bộ đủ 4 nguồn — `MangaLanguage`, `MangaLanguageValue`, `MangaLanguageCodeParam`, `strings.xml`
+- Thêm 2 mã ngôn ngữ MangaDex có trả về mà app thiếu: **`pt`** (23/3000 manga trong mẫu) và **`lv`
+  **.
+  Đồng bộ đủ 4 nguồn — `MangaLanguage`, `MangaLanguageValue`, `MangaLanguageCodeParam`,
+  `strings.xml`
   — mỗi nơi 65 entry.
 - `availableLanguages` thêm `.distinct()`: nhiều ngôn ngữ không map được cùng dồn về `UNKNOWN` sẽ
   sinh key trùng và **crash** `ChapterLanguageListBottomSheet` (`items(key = ...::name)`).
@@ -189,18 +224,22 @@ call vì API trộn lẫn không ưu tiên và phân trang xen kẽ.
 - `SettingsRepository` thêm `observeContentLanguage()` / `saveContentLanguage()` (cùng DataStore với
   theme và onboarding, **không phải sửa DI**), kèm 2 use case `ObserveContentLanguageUseCase` /
   `SaveContentLanguageUseCase`. Default `MangaLanguage.ENGLISH`.
-- `MangaRepositoryImpl`, `CategoryRepositoryImpl`, `ChapterRepositoryImpl` inject `SettingsRepository`
-  và tự đọc ngôn ngữ. Chọn cách này thay vì truyền param xuyên use case/ViewModel vì giá trị đó không
+- `MangaRepositoryImpl`, `CategoryRepositoryImpl`, `ChapterRepositoryImpl` inject
+  `SettingsRepository`
+  và tự đọc ngôn ngữ. Chọn cách này thay vì truyền param xuyên use case/ViewModel vì giá trị đó
+  không
   do chỗ nào trong chuỗi gọi quyết định — truyền tay sẽ đụng ~8 method repository và toàn bộ caller.
   `MangaRepositoryImpl.toMangaList()` sinh ra để `.first()` chỉ chạy **một lần mỗi response**, không
   phải mỗi manga.
 - **Fallback**: `ChapterRepository.resolveChapterLanguage(mangaId)` — đặt riêng chứ không nhét vào
   `getChapterList`, vì repository không phân biệt được caller đang truyền lựa chọn tường minh của
-  người dùng (bottom sheet) hay chỉ là default; ghi đè lựa chọn tường minh là sai. Impl short-circuit
+  người dùng (bottom sheet) hay chỉ là default; ghi đè lựa chọn tường minh là sai. Impl
+  short-circuit
   khi ngôn ngữ ưu tiên đã là English nên ca phổ biến **không tốn request nào**; ngược lại probe
   `limit = 1` rồi lùi về English nếu rỗng.
 - `MangaDetailsViewModel.resolveChapterLanguageThenFetch()` gọi nó một lần trong `init` **trước**
-  `fetchFirstChapter()`/`fetchChapterListFirstPage()`. `updateChapterLanguage()` không đi qua đường này.
+  `fetchFirstChapter()`/`fetchChapterListFirstPage()`. `updateChapterLanguage()` không đi qua đường
+  này.
 
 **Kiểm chứng thật trên emulator** (tạm đổi default sang VIETNAMESE rồi trả lại): Home hiện
 "Tôi Thăng Cấp Một Mình", "Cô Nàng Nổi Loạn X Chàng Thợ May". Mở Solo Leveling — chính là manga
@@ -222,43 +261,58 @@ lại được.
   gói trong `OnboardingPage`. Page indicator và hàng Skip / Next / Get Started nằm **ngoài** pager,
   trong `OnboardingContent`, nên chúng đứng yên khi page trượt. Page cuối đổi Next → Get Started và
   ẩn Skip (`isLastPage` quyết định cả label, hành động lẫn việc hiện Skip); Skip và Get Started gọi
-  chung `onCompleteClick`. Nút dùng lại `ActionButton(isHighlighted = true, backgroundColor = primary)`
+  chung `onCompleteClick`. Nút dùng lại
+  `ActionButton(isHighlighted = true, backgroundColor = primary)`
   đúng khuôn `SignInButton`.
-- **`OnboardingPageValue`** (`model/value/onboarding/`) giữ `imageRes` + `titleRes` + `descriptionRes`,
+- **`OnboardingPageValue`** (`model/value/onboarding/`) giữ `imageRes` + `titleRes` +
+  `descriptionRes`,
   cùng hình dạng với `BottomTabItemValue` — thêm page mới = thêm một entry, không đụng composable.
 - **Ảnh là screenshot thật của chính app này**, chụp trên emulator rồi ghép thành mockup điện thoại
   (bo góc + viền + đổ bóng; 2 máy chồng nhau ở page 2-4), lưu **WebP** trong `drawable/`
-  (~150 KB/ảnh, PNG gốc ~1.3 MB). Điều phải giữ khi làm lại ảnh: tỉ lệ ảnh ghép phải bám sát khung ảnh
+  (~150 KB/ảnh, PNG gốc ~1.3 MB). Điều phải giữ khi làm lại ảnh: tỉ lệ ảnh ghép phải bám sát khung
+  ảnh
   của pager (**~0.7 w/h**) — bản đầu ghép quá rộng nên `ContentScale.Fit` co lại và chừa một mảng
   trống to phía trên.
 - **`drawable/` trần ở đây là ổn, và điều này được đo chứ không phải đoán**: vào onboarding native
-  heap chỉ tăng ~5.5 MB với page 1-2 đã compose, khớp mức decode 1:1 (4.5 + 5.4 MB). `painterResource`
+  heap chỉ tăng ~5.5 MB với page 1-2 đã compose, khớp mức decode 1:1 (4.5 + 5.4 MB).
+  `painterResource`
   của Compose không nhân density mdpi→xxhdpi 3× như `BitmapDrawable` — nếu có thì riêng một page đã
-  ~49 MB. Trong phiên này tôi từng khẳng định ngược lại và bắt để ở `drawable-xxhdpi/`; đo lại thì sai,
+  ~49 MB. Trong phiên này tôi từng khẳng định ngược lại và bắt để ở `drawable-xxhdpi/`; đo lại thì
+  sai,
   **đừng chuyển ngược lại**.
 - **Cờ "đã xem" nằm trong `SettingsRepository`**, không tạo repository mới — vẫn DataStore đó, nên
-  `observeIsOnboardingCompleted()` / `saveIsOnboardingCompleted()` nằm cạnh cặp theme và **không phải
-  sửa DI**. Kèm 2 use case `ObserveIsOnboardingCompletedUseCase` / `SaveIsOnboardingCompletedUseCase`.
-- **`OnboardingUiState.isCompleted` là `Boolean?` có chủ đích**: `null` = chưa đọc xong DataStore, và
-  Splash chỉ đi sang Onboarding khi giá trị là `false` tường minh — mọi trường hợp khác đi thẳng Main,
-  nên đọc chậm hoặc lỗi không bao giờ nhốt người dùng cũ trong onboarding (`onFailure` cũng set `true`).
-- **`SplashScreen` bọc cờ và 2 callback bằng `rememberUpdatedState`** — không phải thừa: nó cần đổi chữ
+  `observeIsOnboardingCompleted()` / `saveIsOnboardingCompleted()` nằm cạnh cặp theme và **không
+  phải
+  sửa DI**. Kèm 2 use case `ObserveIsOnboardingCompletedUseCase` /
+  `SaveIsOnboardingCompletedUseCase`.
+- **`OnboardingUiState.isCompleted` là `Boolean?` có chủ đích**: `null` = chưa đọc xong DataStore,
+  và
+  Splash chỉ đi sang Onboarding khi giá trị là `false` tường minh — mọi trường hợp khác đi thẳng
+  Main,
+  nên đọc chậm hoặc lỗi không bao giờ nhốt người dùng cũ trong onboarding (`onFailure` cũng set
+  `true`).
+- **`SplashScreen` bọc cờ và 2 callback bằng `rememberUpdatedState`** — không phải thừa: nó cần đổi
+  chữ
   ký (`isOnboardingCompleted` + `onNavigateToOnboardingScreen`/`onNavigateToMainScreen` thay cho
   `onNavigateToHome`), mà `LaunchedEffect(Unit)` được compose **trước** khi DataStore emit, nên nếu
-  capture param theo cách thường thì sau 3 giây giá trị vẫn là `null` và **mọi** người dùng lần đầu sẽ
+  capture param theo cách thường thì sau 3 giây giá trị vẫn là `null` và **mọi** người dùng lần đầu
+  sẽ
   bị bỏ qua onboarding.
 - Muốn xem lại onboarding khi dev: `adb shell pm clear com.decoutkhanqindev.dexreader` (không có nút
   reset trong app).
 
 **Verify**: `:app:compileDebugKotlin` BUILD SUCCESSFUL; chạy thật trên emulator Pixel_7_Pro — 4 page
-trượt đúng, indicator và Next/Get Started đổi đúng, bấm Get Started xong force-stop rồi mở lại thì vào
+trượt đúng, indicator và Next/Get Started đổi đúng, bấm Get Started xong force-stop rồi mở lại thì
+vào
 thẳng Main.
 
 **Ảnh chốt lại sau vài vòng**: page 4 (`ob_track`) ban đầu ghép tạm từ Manga Details + danh sách
 chapter vì Favorites/History/Statistics cần đăng nhập; sau khi có tài khoản thật thì thay bằng
-**Profile hub** (Favorites + History có thanh %) ghép với màn **Statistics**. Chụp Profile phải **cuộn
+**Profile hub** (Favorites + History có thanh %) ghép với màn **Statistics**. Chụp Profile phải *
+*cuộn
 qua khỏi header** — ảnh chưa cuộn dính tên và email thật của người dùng, mà ảnh này ship trong APK.
-Page 3 (`ob_read`) cũng chụp lại: bản đầu lấy Manga Details đã cuộn sâu vào danh sách chapter nên mất
+Page 3 (`ob_read`) cũng chụp lại: bản đầu lấy Manga Details đã cuộn sâu vào danh sách chapter nên
+mất
 hết info manga; bản chốt cuộn vừa đủ để còn cover, tên, tác giả, badge năm/status/rating, Summary,
 chip thể loại và đầu mục Chapters.
 
@@ -484,6 +538,7 @@ instance đó truyền vào `ProfileScreen(settingsViewModel = ...)`.
   mang `padding(top = 8.dp)`.
 
 ## 2026-08-30 — Profile hub polish: header ngang, tách `ProfileEditSection`, retune
+
 `ListLoadingIndicator`
 
 Đợt tinh chỉnh tiếp theo của màn Profile hub (xem entry ngay dưới).

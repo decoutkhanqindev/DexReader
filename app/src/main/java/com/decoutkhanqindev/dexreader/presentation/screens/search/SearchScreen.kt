@@ -3,8 +3,6 @@ package com.decoutkhanqindev.dexreader.presentation.screens.search
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseDetailsScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,6 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseDetailsScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.search.components.SearchContent
 import com.decoutkhanqindev.dexreader.presentation.screens.search.components.actions.SearchBar
 

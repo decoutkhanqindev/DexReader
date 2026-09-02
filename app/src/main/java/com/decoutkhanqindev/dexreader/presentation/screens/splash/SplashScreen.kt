@@ -25,7 +25,9 @@ fun SplashScreen(
   onNavigateToMainScreen: () -> Unit,
 ) {
   val latestIsOnboardingCompleted by rememberUpdatedState(isOnboardingCompleted)
-  val latestOnNavigateToLanguageSelectionScreen by rememberUpdatedState(onNavigateToLanguageSelectionScreen)
+  val latestOnNavigateToLanguageSelectionScreen by rememberUpdatedState(
+    onNavigateToLanguageSelectionScreen
+  )
   val latestOnNavigateToMainScreen by rememberUpdatedState(onNavigateToMainScreen)
 
   LaunchedEffect(Unit) {

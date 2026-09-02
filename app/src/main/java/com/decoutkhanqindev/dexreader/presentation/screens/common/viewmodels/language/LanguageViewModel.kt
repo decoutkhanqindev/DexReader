@@ -2,8 +2,8 @@ package com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.la
 
 import com.decoutkhanqindev.dexreader.domain.usecase.settings.ObserveContentLanguageUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.settings.SaveContentLanguageUseCase
-import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguage
 import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toLanguageValue
+import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguage
 import com.decoutkhanqindev.dexreader.presentation.model.value.language.LanguageValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
