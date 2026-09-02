@@ -21,8 +21,8 @@
     @com.squareup.moshi.Json <fields>;
 }
 # Keep all API response DTOs and their generated adapters
+# (response.** already covers the generated **JsonAdapter classes)
 -keep class com.decoutkhanqindev.dexreader.data.network.api.response.** { *; }
--keep class com.decoutkhanqindev.dexreader.data.network.api.response.**JsonAdapter { *; }
 
 # -----------------------------------------------------------------------
 # Retrofit — keep annotated interface methods; Retrofit proxies them

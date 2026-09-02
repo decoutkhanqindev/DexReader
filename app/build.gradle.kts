@@ -43,10 +43,37 @@ android {
     )
   }
 
+  val keystorePropsFile = rootProject.file("keystore.properties")
+  val keystoreProps = Properties().apply {
+    if (keystorePropsFile.exists()) load(keystorePropsFile.inputStream())
+  }
+
+  signingConfigs {
+    create("release") {
+      if (keystorePropsFile.exists()) {
+        storeFile = file(keystoreProps.getProperty("storeFile"))
+        storePassword = keystoreProps.getProperty("storePassword")
+        keyAlias = keystoreProps.getProperty("keyAlias")
+        keyPassword = keystoreProps.getProperty("keyPassword")
+      }
+    }
+  }
+
   buildTypes {
     release {
       isMinifyEnabled = true
       isShrinkResources = true
+      isDebuggable = false
+      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+      signingConfig =
+        if (keystorePropsFile.exists()) signingConfigs.getByName("release")
+        else signingConfigs.getByName("debug")
+    }
+
+    debug {
+      isMinifyEnabled = false
+      isShrinkResources = false
+      isDebuggable = true
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
       signingConfig = signingConfigs.getByName("debug")
     }
@@ -58,6 +85,10 @@ android {
 
   buildFeatures {
     compose = true
+  }
+
+  androidResources {
+    generateLocaleConfig = true
   }
 
   lint {
