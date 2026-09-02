@@ -15,7 +15,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 private const val PACKAGE = "com.decoutkhanqindev.dexreader"
-private const val FEED_WAIT_MS = 10_000L
+private const val FEED_WAIT_MS = 40_000L
+private const val HOME_SCROLL = "home_scroll"
 
 @RunWith(AndroidJUnit4::class)
 class StartupBenchmarks {
@@ -32,7 +33,7 @@ class StartupBenchmarks {
   ) {
     pressHome()
     startActivityAndWait()
-    device.wait(Until.hasObject(By.desc("home_feed")), FEED_WAIT_MS)
+    device.wait(Until.hasObject(By.res(HOME_SCROLL)), FEED_WAIT_MS)
   }
 
   @Test
@@ -45,7 +46,7 @@ class StartupBenchmarks {
   ) {
     pressHome()
     startActivityAndWait()
-    device.wait(Until.hasObject(By.desc("home_feed")), FEED_WAIT_MS)
+    device.wait(Until.hasObject(By.res(HOME_SCROLL)), FEED_WAIT_MS)
   }
 
   @Test
@@ -57,8 +58,8 @@ class StartupBenchmarks {
     compilationMode = CompilationMode.Partial(BaselineProfileMode.Require),
   ) {
     startActivityAndWait()
-    device.wait(Until.hasObject(By.desc("home_feed")), FEED_WAIT_MS)
-    val feed = device.findObject(By.desc("home_feed")) ?: return@measureRepeated
+    device.wait(Until.hasObject(By.res(HOME_SCROLL)), FEED_WAIT_MS)
+    val feed = device.findObject(By.res(HOME_SCROLL)) ?: return@measureRepeated
     feed.setGestureMargin(device.displayWidth / 5)
     repeat(3) { i -> feed.fling(if (i < 2) Direction.DOWN else Direction.UP) }
   }

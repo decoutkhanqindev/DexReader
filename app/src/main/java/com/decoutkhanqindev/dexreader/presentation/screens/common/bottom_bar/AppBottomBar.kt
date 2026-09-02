@@ -13,6 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import com.decoutkhanqindev.dexreader.presentation.screens.common.TestTags
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -56,6 +58,7 @@ private fun AppBottomBarItem(
 
   Column(
     modifier = modifier
+      .testTag(TestTags.TAB_PREFIX + item.name.lowercase())
       .onClick(shape = MaterialTheme.shapes.medium, action = onItemClick)
       .padding(vertical = 6.dp),
     horizontalAlignment = Alignment.CenterHorizontally,

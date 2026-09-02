@@ -19,6 +19,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import com.decoutkhanqindev.dexreader.presentation.screens.common.TestTags
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -100,7 +102,9 @@ fun ProfileHistorySection(
             )
           } else {
             LazyRow(
-              modifier = Modifier.fillMaxSize(),
+              modifier = Modifier
+                .fillMaxSize()
+                .testTag(TestTags.PROFILE_HISTORY_ROW),
               horizontalArrangement = Arrangement.spacedBy(2.dp),
               verticalAlignment = Alignment.CenterVertically,
             ) {

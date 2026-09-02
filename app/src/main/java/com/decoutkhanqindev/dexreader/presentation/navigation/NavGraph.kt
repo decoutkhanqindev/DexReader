@@ -5,6 +5,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.semantics.testTagsAsResourceId
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -41,6 +44,7 @@ import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateBack
 import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateClearStack
 import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateTo
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun NavGraph() {
   val navController = rememberNavController()
@@ -67,6 +71,7 @@ fun NavGraph() {
         startDestination = NavRoute.Splash,
         modifier = Modifier
           .fillMaxSize()
+          .semantics { testTagsAsResourceId = true }
           .background(color = MaterialTheme.colorScheme.background)
       ) {
         composable<NavRoute.Splash> {
