@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.language
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -14,11 +15,13 @@ import com.decoutkhanqindev.dexreader.presentation.screens.language.components.L
 
 @Composable
 fun LanguageSelectionScreen(
-  viewModel: LanguageViewModel,
+  languageViewModel: LanguageViewModel,
   modifier: Modifier = Modifier,
-  onDoneClick: () -> Unit,
+  onNavigateToOnboardingScreen: () -> Unit,
 ) {
-  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  val uiState by languageViewModel.uiState.collectAsStateWithLifecycle()
+
+  BackHandler { }
 
   BaseDetailsScreen(
     title = stringResource(R.string.language),
@@ -31,10 +34,10 @@ fun LanguageSelectionScreen(
       selectedLanguage = uiState.selectedLanguage,
       appliedLanguage = uiState.appliedLanguage,
       modifier = Modifier.fillMaxSize(),
-      onLanguageClick = { viewModel.updateSelectedLanguage(it) },
+      onLanguageClick = { languageViewModel.updateSelectedLanguage(it) },
       onDoneClick = {
-        viewModel.saveSelectedLanguage()
-        onDoneClick()
+        languageViewModel.saveSelectedLanguage()
+        onNavigateToOnboardingScreen()
       },
     )
   }

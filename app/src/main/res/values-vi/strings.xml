@@ -14,9 +14,7 @@
 
   <!-- Language / Settings Screen -->
   <string name="language">Ngôn ngữ</string>
-  <string name="select_language">Chọn ngôn ngữ</string>
   <string name="done">Xong</string>
-  <string name="theme">Giao diện</string>
   <string name="dark_mode">Chế độ tối</string>
   <string name="privacy_policy">Chính sách bảo mật</string>
 
@@ -178,8 +176,6 @@
   <string name="your_profile_has_been_updated_successfully">Hồ sơ của bạn đã được cập nhật thành công.</string>
 
   <!-- Settings Screen -->
-  <string name="system">Hệ thống</string>
   <string name="dark">Tối</string>
   <string name="light">Sáng</string>
-  <string name="change_theme_failed">Đổi giao diện thất bại. Vui lòng thử lại.</string>
 </resources>

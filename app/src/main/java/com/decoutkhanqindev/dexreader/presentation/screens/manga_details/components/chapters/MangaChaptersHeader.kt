@@ -17,7 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.language.LanguageValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.onClick
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import com.decoutkhanqindev.dexreader.util.LanguageManager
@@ -26,10 +26,10 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun MangaChaptersHeader(
-  selectedLanguage: MangaLanguageValue,
-  languageList: ImmutableList<MangaLanguageValue>,
+  selectedLanguage: LanguageValue,
+  languageList: ImmutableList<LanguageValue>,
   modifier: Modifier = Modifier,
-  onLanguageItemClick: (MangaLanguageValue) -> Unit,
+  onLanguageItemClick: (LanguageValue) -> Unit,
 ) {
   var isShowLanguageBottomSheet by remember { mutableStateOf(false) }
 
@@ -73,8 +73,8 @@ fun MangaChaptersHeader(
 private fun MangaChaptersHeaderPreview() {
   DexReaderTheme {
     MangaChaptersHeader(
-      selectedLanguage = MangaLanguageValue.ENGLISH,
-      languageList = persistentListOf(MangaLanguageValue.ENGLISH, MangaLanguageValue.JAPANESE),
+      selectedLanguage = LanguageValue.ENGLISH,
+      languageList = persistentListOf(LanguageValue.ENGLISH, LanguageValue.JAPANESE),
       modifier = Modifier.fillMaxWidth(),
       onLanguageItemClick = {}
     )

@@ -4,7 +4,7 @@ import com.decoutkhanqindev.dexreader.domain.entity.manga.Manga
 import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaContentRating
 import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaStatus
 import com.decoutkhanqindev.dexreader.presentation.mapper.CategoryMapper.toCategoryModel
-import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguageValue
+import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toLanguageValue
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
@@ -30,7 +30,7 @@ object MangaMapper {
       status = status.toMangaStatusValue(),
       contentRating = contentRating.toMangaContentRatingValue(),
       year = year ?: Manga.DEFAULT_YEAR,
-      availableLanguages = availableLanguages.map { it.toMangaLanguageValue() }.toPersistentList(),
+      availableLanguages = availableLanguages.map { it.toLanguageValue() }.toPersistentList(),
       latestChapter = latestChapter ?: Manga.DEFAULT_LAST_CHAPTER,
       updatedAt = updatedAt.toTimeAgo(),
       rating = rating?.let { String.format(java.util.Locale.US, "%.1f", it) } ?: "",

@@ -2,76 +2,76 @@ package com.decoutkhanqindev.dexreader.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
-val primaryLight by lazy { Color(0xFF2B5B7A) }
-val onPrimaryLight by lazy { Color(0xFFFFFFFF) }
-val primaryContainerLight by lazy { Color(0xFFD0E4FF) }
-val onPrimaryContainerLight by lazy { Color(0xFF0B3A5A) }
-val secondaryLight by lazy { Color(0xFF4C5A69) }
-val onSecondaryLight by lazy { Color(0xFFFFFFFF) }
-val secondaryContainerLight by lazy { Color(0xFFD1E0F2) }
-val onSecondaryContainerLight by lazy { Color(0xFF354351) }
-val tertiaryLight by lazy { Color(0xFF6B567D) }
-val onTertiaryLight by lazy { Color(0xFFFFFFFF) }
-val tertiaryContainerLight by lazy { Color(0xFFEAD8FF) }
-val onTertiaryContainerLight by lazy { Color(0xFF4A3C5C) }
-val errorLight by lazy { Color(0xFFB3261E) }
-val onErrorLight by lazy { Color(0xFFFFFFFF) }
-val errorContainerLight by lazy { Color(0xFFF9DEDC) }
-val onErrorContainerLight by lazy { Color(0xFF8C0009) }
-val backgroundLight by lazy { Color(0xFFF8FAFF) }
-val onBackgroundLight by lazy { Color(0xFF1A1C21) }
-val surfaceLight by lazy { Color(0xFFF8FAFF) }
-val onSurfaceLight by lazy { Color(0xFF1A1C21) }
-val surfaceVariantLight by lazy { Color(0xFFDFE4EC) }
-val onSurfaceVariantLight by lazy { Color(0xFF41474F) }
-val outlineLight by lazy { Color(0xFF71787F) }
-val outlineVariantLight by lazy { Color(0xFFC1C7CF) }
-val scrimLight by lazy { Color(0xFF000000) }
-val inverseSurfaceLight by lazy { Color(0xFF2E3136) }
-val inverseOnSurfaceLight by lazy { Color(0xFFF0F2F8) }
-val inversePrimaryLight by lazy { Color(0xFF9ACDFC) }
-val surfaceDimLight by lazy { Color(0xFFD8DBE0) }
-val surfaceBrightLight by lazy { Color(0xFFF8FAFF) }
-val surfaceContainerLowestLight by lazy { Color(0xFFFFFFFF) }
-val surfaceContainerLowLight by lazy { Color(0xFFF2F5FA) }
-val surfaceContainerLight by lazy { Color(0xFFECEFF4) }
-val surfaceContainerHighLight by lazy { Color(0xFFE6E9EF) }
-val surfaceContainerHighestLight by lazy { Color(0xFFE0E3E9) }
-val primaryDark by lazy { Color(0xFF9ACDFC) }
-val onPrimaryDark by lazy { Color(0xFF00344F) }
-val primaryContainerDark by lazy { Color(0xFF0B3A5A) }
-val onPrimaryContainerDark by lazy { Color(0xFFD0E4FF) }
-val secondaryDark by lazy { Color(0xFFB5C5D7) }
-val onSecondaryDark by lazy { Color(0xFF1F2E3C) }
-val secondaryContainerDark by lazy { Color(0xFF354351) }
-val onSecondaryContainerDark by lazy { Color(0xFFD1E0F2) }
-val tertiaryDark by lazy { Color(0xFFD0BFE6) }
-val onTertiaryDark by lazy { Color(0xFF3A2C4C) }
-val tertiaryContainerDark by lazy { Color(0xFF4A3C5C) }
-val onTertiaryContainerDark by lazy { Color(0xFFEAD8FF) }
-val errorDark by lazy { Color(0xFFF9B7B3) }
-val onErrorDark by lazy { Color(0xFF680003) }
-val errorContainerDark by lazy { Color(0xFF8C0009) }
-val onErrorContainerDark by lazy { Color(0xFFF9DEDC) }
-val backgroundDark by lazy { Color(0xFF111418) }
-val onBackgroundDark by lazy { Color(0xFFE1E4EA) }
-val surfaceDark by lazy { Color(0xFF111418) }
-val onSurfaceDark by lazy { Color(0xFFE1E4EA) }
-val surfaceVariantDark by lazy { Color(0xFF41474F) }
-val onSurfaceVariantDark by lazy { Color(0xFFC1C7CF) }
-val outlineDark by lazy { Color(0xFF8A9098) }
-val outlineVariantDark by lazy { Color(0xFF41474F) }
-val scrimDark by lazy { Color(0xFF000000) }
-val inverseSurfaceDark by lazy { Color(0xFFE1E4EA) }
-val inverseOnSurfaceDark by lazy { Color(0xFF2E3136) }
-val inversePrimaryDark by lazy { Color(0xFF2B5B7A) }
-val surfaceDimDark by lazy { Color(0xFF111418) }
-val surfaceBrightDark by lazy { Color(0xFF373A3F) }
-val surfaceContainerLowestDark by lazy { Color(0xFF0C0F13) }
-val surfaceContainerLowDark by lazy { Color(0xFF191C21) }
-val surfaceContainerDark by lazy { Color(0xFF1D2025) }
-val surfaceContainerHighDark by lazy { Color(0xFF282B30) }
-val surfaceContainerHighestDark by lazy { Color(0xFF32353A) }
-val OnScrim by lazy { Color(0xFFFFFFFF) }
-val RatingStarGold by lazy { Color(0xFFFFD700) }
-val FavoriteRed by lazy { Color(0xFFE0245E) }
+val primaryLight = Color(0xFF2B5B7A)
+val onPrimaryLight = Color(0xFFFFFFFF)
+val primaryContainerLight = Color(0xFFD0E4FF)
+val onPrimaryContainerLight = Color(0xFF0B3A5A)
+val secondaryLight = Color(0xFF4C5A69)
+val onSecondaryLight = Color(0xFFFFFFFF)
+val secondaryContainerLight = Color(0xFFD1E0F2)
+val onSecondaryContainerLight = Color(0xFF354351)
+val tertiaryLight = Color(0xFF6B567D)
+val onTertiaryLight = Color(0xFFFFFFFF)
+val tertiaryContainerLight = Color(0xFFEAD8FF)
+val onTertiaryContainerLight = Color(0xFF4A3C5C)
+val errorLight = Color(0xFFB3261E)
+val onErrorLight = Color(0xFFFFFFFF)
+val errorContainerLight = Color(0xFFF9DEDC)
+val onErrorContainerLight = Color(0xFF8C0009)
+val backgroundLight = Color(0xFFF8FAFF)
+val onBackgroundLight = Color(0xFF1A1C21)
+val surfaceLight = Color(0xFFF8FAFF)
+val onSurfaceLight = Color(0xFF1A1C21)
+val surfaceVariantLight = Color(0xFFDFE4EC)
+val onSurfaceVariantLight = Color(0xFF41474F)
+val outlineLight = Color(0xFF71787F)
+val outlineVariantLight = Color(0xFFC1C7CF)
+val scrimLight = Color(0xFF000000)
+val inverseSurfaceLight = Color(0xFF2E3136)
+val inverseOnSurfaceLight = Color(0xFFF0F2F8)
+val inversePrimaryLight = Color(0xFF9ACDFC)
+val surfaceDimLight = Color(0xFFD8DBE0)
+val surfaceBrightLight = Color(0xFFF8FAFF)
+val surfaceContainerLowestLight = Color(0xFFFFFFFF)
+val surfaceContainerLowLight = Color(0xFFF2F5FA)
+val surfaceContainerLight = Color(0xFFECEFF4)
+val surfaceContainerHighLight = Color(0xFFE6E9EF)
+val surfaceContainerHighestLight = Color(0xFFE0E3E9)
+val primaryDark = Color(0xFF9ACDFC)
+val onPrimaryDark = Color(0xFF00344F)
+val primaryContainerDark = Color(0xFF0B3A5A)
+val onPrimaryContainerDark = Color(0xFFD0E4FF)
+val secondaryDark = Color(0xFFB5C5D7)
+val onSecondaryDark = Color(0xFF1F2E3C)
+val secondaryContainerDark = Color(0xFF354351)
+val onSecondaryContainerDark = Color(0xFFD1E0F2)
+val tertiaryDark = Color(0xFFD0BFE6)
+val onTertiaryDark = Color(0xFF3A2C4C)
+val tertiaryContainerDark = Color(0xFF4A3C5C)
+val onTertiaryContainerDark = Color(0xFFEAD8FF)
+val errorDark = Color(0xFFF9B7B3)
+val onErrorDark = Color(0xFF680003)
+val errorContainerDark = Color(0xFF8C0009)
+val onErrorContainerDark = Color(0xFFF9DEDC)
+val backgroundDark = Color(0xFF111418)
+val onBackgroundDark = Color(0xFFE1E4EA)
+val surfaceDark = Color(0xFF111418)
+val onSurfaceDark = Color(0xFFE1E4EA)
+val surfaceVariantDark = Color(0xFF41474F)
+val onSurfaceVariantDark = Color(0xFFC1C7CF)
+val outlineDark = Color(0xFF8A9098)
+val outlineVariantDark = Color(0xFF41474F)
+val scrimDark = Color(0xFF000000)
+val inverseSurfaceDark = Color(0xFFE1E4EA)
+val inverseOnSurfaceDark = Color(0xFF2E3136)
+val inversePrimaryDark = Color(0xFF2B5B7A)
+val surfaceDimDark = Color(0xFF111418)
+val surfaceBrightDark = Color(0xFF373A3F)
+val surfaceContainerLowestDark = Color(0xFF0C0F13)
+val surfaceContainerLowDark = Color(0xFF191C21)
+val surfaceContainerDark = Color(0xFF1D2025)
+val surfaceContainerHighDark = Color(0xFF282B30)
+val surfaceContainerHighestDark = Color(0xFF32353A)
+val OnScrim = Color(0xFFFFFFFF)
+val RatingStarGold = Color(0xFFFFD700)
+val FavoriteRed = Color(0xFFE0245E)

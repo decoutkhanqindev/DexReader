@@ -36,7 +36,7 @@ import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterModel
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
-import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.language.LanguageValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
@@ -66,8 +66,8 @@ fun MangaDetailsContent(
   mangaDetailsUiState: MangaDetailsUiState,
   mangaChaptersUiState: BasePaginationUiState<ChapterModel>,
   isFavorite: Boolean,
-  chapterLanguage: MangaLanguageValue,
-  availableLanguageList: ImmutableList<MangaLanguageValue>,
+  chapterLanguage: LanguageValue,
+  availableLanguageList: ImmutableList<LanguageValue>,
   readingHistoryList: ImmutableList<ReadingHistoryModel> = persistentListOf(),
   startedChapterId: String? = null,
   continueChapter: ReadingHistoryModel? = null,
@@ -78,7 +78,7 @@ fun MangaDetailsContent(
     mangaId: String,
   ) -> Unit,
   onFavoriteClick: () -> Unit,
-  onLanguageItemClick: (MangaLanguageValue) -> Unit,
+  onLanguageItemClick: (LanguageValue) -> Unit,
   onCategoryItemClick: (
     categoryId: String,
     categoryTitle: String,
@@ -354,8 +354,8 @@ private fun MangaDetailsContentLoadingPreview() {
       mangaDetailsUiState = MangaDetailsUiState.Loading,
       mangaChaptersUiState = BasePaginationUiState.FirstPageLoading,
       isFavorite = false,
-      chapterLanguage = MangaLanguageValue.ENGLISH,
-      availableLanguageList = persistentListOf(MangaLanguageValue.ENGLISH),
+      chapterLanguage = LanguageValue.ENGLISH,
+      availableLanguageList = persistentListOf(LanguageValue.ENGLISH),
       modifier = Modifier.fillMaxSize(),
       onReadingClick = { _, _, _ -> },
       onFavoriteClick = {},
@@ -379,8 +379,8 @@ private fun MangaDetailsContentErrorPreview() {
       mangaDetailsUiState = MangaDetailsUiState.Error(FeatureError.NetworkUnavailable),
       mangaChaptersUiState = BasePaginationUiState.FirstPageLoading,
       isFavorite = false,
-      chapterLanguage = MangaLanguageValue.ENGLISH,
-      availableLanguageList = persistentListOf(MangaLanguageValue.ENGLISH),
+      chapterLanguage = LanguageValue.ENGLISH,
+      availableLanguageList = persistentListOf(LanguageValue.ENGLISH),
       modifier = Modifier.fillMaxSize(),
       onReadingClick = { _, _, _ -> },
       onFavoriteClick = {},
@@ -424,10 +424,10 @@ private fun MangaDetailsContentSuccessPreview() {
         nextPageState = BaseNextPageState.IDLE
       ),
       isFavorite = false,
-      chapterLanguage = MangaLanguageValue.ENGLISH,
+      chapterLanguage = LanguageValue.ENGLISH,
       availableLanguageList = persistentListOf(
-        MangaLanguageValue.ENGLISH,
-        MangaLanguageValue.JAPANESE
+        LanguageValue.ENGLISH,
+        LanguageValue.JAPANESE
       ),
       startedChapterId = "c-001",
       modifier = Modifier.fillMaxSize(),

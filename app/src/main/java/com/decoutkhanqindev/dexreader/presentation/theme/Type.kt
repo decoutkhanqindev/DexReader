@@ -8,17 +8,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.decoutkhanqindev.dexreader.R
 
-private val JsFont by lazy {
-  FontFamily(
-    Font(R.font.js_regular, FontWeight.Normal),
-    Font(R.font.js_medium, FontWeight.Medium),
-    Font(R.font.js_semibold, FontWeight.SemiBold),
-    Font(R.font.js_bold, FontWeight.Bold),
-    Font(R.font.js_extrabold, FontWeight.ExtraBold),
-  )
-}
+private val JsFont = FontFamily(
+  Font(R.font.js_regular, FontWeight.Normal),
+  Font(R.font.js_medium, FontWeight.Medium),
+  Font(R.font.js_semibold, FontWeight.SemiBold),
+  Font(R.font.js_bold, FontWeight.Bold),
+  Font(R.font.js_extrabold, FontWeight.ExtraBold),
+)
 
-val Typography by lazy {
+val Typography =
   Typography(
     bodySmall = TextStyle(
       fontFamily = JsFont,
@@ -98,4 +96,3 @@ val Typography by lazy {
       letterSpacing = 0.sp
     )
   )
-}

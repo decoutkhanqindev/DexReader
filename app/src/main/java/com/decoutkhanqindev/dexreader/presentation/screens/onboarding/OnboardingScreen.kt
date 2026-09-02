@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.onboarding
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -9,14 +10,16 @@ import com.decoutkhanqindev.dexreader.presentation.screens.onboarding.components
 
 @Composable
 fun OnboardingScreen(
-  viewModel: OnboardingViewModel,
+  onboardingViewModel: OnboardingViewModel,
   modifier: Modifier = Modifier,
   onNavigateToMainScreen: () -> Unit,
 ) {
+  BackHandler { }
+
   OnboardingContent(
     modifier = modifier.background(MaterialTheme.colorScheme.background),
     onGetStartedClick = {
-      viewModel.completeOnboarding()
+      onboardingViewModel.completeOnboarding()
       onNavigateToMainScreen()
     },
   )

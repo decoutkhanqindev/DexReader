@@ -14,11 +14,11 @@ import com.decoutkhanqindev.dexreader.presentation.screens.language.components.L
 
 @Composable
 fun LanguageSettingScreen(
-  viewModel: LanguageViewModel,
+  languageViewModel: LanguageViewModel,
   modifier: Modifier = Modifier,
   onNavigateBack: () -> Unit,
 ) {
-  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  val uiState by languageViewModel.uiState.collectAsStateWithLifecycle()
 
   BaseDetailsScreen(
     title = stringResource(R.string.language),
@@ -31,9 +31,9 @@ fun LanguageSettingScreen(
       selectedLanguage = uiState.selectedLanguage,
       appliedLanguage = uiState.appliedLanguage,
       modifier = Modifier.fillMaxSize(),
-      onLanguageClick = { viewModel.updateSelectedLanguage(it) },
+      onLanguageClick = { languageViewModel.updateSelectedLanguage(it) },
       onDoneClick = {
-        viewModel.saveSelectedLanguage()
+        languageViewModel.saveSelectedLanguage()
         onNavigateBack()
       },
     )

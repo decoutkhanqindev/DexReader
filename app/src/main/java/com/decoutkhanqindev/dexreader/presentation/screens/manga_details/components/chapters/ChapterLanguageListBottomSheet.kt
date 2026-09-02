@@ -21,7 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.language.LanguageValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.onClick
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import com.decoutkhanqindev.dexreader.util.LanguageManager
@@ -31,10 +31,10 @@ import kotlinx.collections.immutable.persistentListOf
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChapterLanguageListBottomSheet(
-  selectedItem: MangaLanguageValue,
-  items: ImmutableList<MangaLanguageValue>,
+  selectedItem: LanguageValue,
+  items: ImmutableList<LanguageValue>,
   modifier: Modifier = Modifier,
-  onItemClick: (MangaLanguageValue) -> Unit,
+  onItemClick: (LanguageValue) -> Unit,
   onDismissClick: () -> Unit,
 ) {
   ModalBottomSheet(
@@ -65,7 +65,7 @@ fun ChapterLanguageListBottomSheet(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
-        items(items, key = MangaLanguageValue::name) {
+        items(items, key = LanguageValue::name) {
           val isSelected = it == selectedItem
           val onClick = remember(it) { { onItemClick(it) } }
 
@@ -92,12 +92,12 @@ fun ChapterLanguageListBottomSheet(
 private fun ChapterLanguageListBottomSheetPreview() {
   DexReaderTheme {
     ChapterLanguageListBottomSheet(
-      selectedItem = MangaLanguageValue.ENGLISH,
+      selectedItem = LanguageValue.ENGLISH,
       items = persistentListOf(
-        MangaLanguageValue.ENGLISH,
-        MangaLanguageValue.JAPANESE,
-        MangaLanguageValue.FRENCH,
-        MangaLanguageValue.SPANISH,
+        LanguageValue.ENGLISH,
+        LanguageValue.JAPANESE,
+        LanguageValue.FRENCH,
+        LanguageValue.SPANISH,
       ),
       onItemClick = {},
       onDismissClick = {}
@@ -111,7 +111,7 @@ private fun ChapterLanguageListBottomSheetPreview() {
 private fun ChapterLanguageListBottomSheetEmptyPreview() {
   DexReaderTheme {
     ChapterLanguageListBottomSheet(
-      selectedItem = MangaLanguageValue.ENGLISH,
+      selectedItem = LanguageValue.ENGLISH,
       items = persistentListOf(),
       onItemClick = {},
       onDismissClick = {}

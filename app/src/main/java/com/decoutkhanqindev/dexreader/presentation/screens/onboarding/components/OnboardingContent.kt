@@ -50,7 +50,7 @@ fun OnboardingContent(
   }
   val pagerState = rememberPagerState(pageCount = { pages.size })
   val coroutineScope = rememberCoroutineScope()
-  val isLastPage by remember(pages) {
+  val isLastPage by remember {
     derivedStateOf { pagerState.currentPage == pages.lastIndex }
   }
 
@@ -136,7 +136,7 @@ fun OnboardingContent(
           tint = MaterialTheme.colorScheme.onPrimary,
           modifier = Modifier
             .size(24.dp)
-            .padding(start = 4.dp)
+            .padding(start = 8.dp)
         )
       }
     }

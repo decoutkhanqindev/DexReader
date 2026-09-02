@@ -11,13 +11,13 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
-import com.decoutkhanqindev.dexreader.presentation.model.value.language.AppLanguageValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.language.LanguageValue
 import java.util.Locale
 
 object LanguageManager {
-  val LocalAppLanguage = staticCompositionLocalOf { AppLanguageValue.DEFAULT }
+  val LocalAppLanguage = staticCompositionLocalOf { LanguageValue.DEFAULT }
 
-  val current: AppLanguageValue
+  val current: LanguageValue
     @Composable
     @ReadOnlyComposable
     get() = LocalAppLanguage.current
@@ -27,7 +27,7 @@ object LanguageManager {
   fun deviceLanguageCode(): String =
     Resources.getSystem().configuration.locales[0].language
 
-  fun configurationFor(context: Context, language: AppLanguageValue): Configuration {
+  fun configurationFor(context: Context, language: LanguageValue): Configuration {
     val locale = localeOf(language.code)
     Locale.setDefault(locale)
     return Configuration(context.resources.configuration).apply {
@@ -36,7 +36,7 @@ object LanguageManager {
     }
   }
 
-  fun displayNameOf(code: String, displayIn: AppLanguageValue): String {
+  fun displayNameOf(code: String, displayIn: LanguageValue): String {
     val locale = localeOf(code)
     val name =
       if (locale.country.isNotEmpty()) locale.getDisplayName(localeOf(displayIn.code))
@@ -49,11 +49,13 @@ object LanguageManager {
 
   @Composable
   fun ProvideAppLanguage(
-    language: AppLanguageValue,
+    language: LanguageValue,
     content: @Composable () -> Unit,
   ) {
     val context = LocalContext.current
-    val configuration = remember(language, context) { configurationFor(context, language) }
+    val configuration = remember(language) {
+      configurationFor(context, language)
+    }
     val resources = remember(configuration) {
       context.createConfigurationContext(configuration).resources
     }

@@ -4,6 +4,75 @@ Dated log of notable multi-file / cross-cutting work sessions. Newest entry firs
 
 ---
 
+## 2026-09-02 — Hợp nhất 2 enum ngôn ngữ thành `LanguageValue` + dịch đủ 64 locale UI
+
+**Hai việc trong một phiên:**
+
+**1. Hợp nhất enum.** `AppLanguageValue` từng tồn tại riêng chỉ vì nó *mirror mọi enum ngôn ngữ manga
+trừ `UNKNOWN`*. Khi `UNKNOWN` đã bị bỏ khỏi cả domain `MangaLanguage` lẫn enum presentation (unknown
+code giờ fallback về `ENGLISH`), hai enum thành **tập 64 entry y hệt** → không còn lý do tách.
+
+- **Xóa `AppLanguageValue.kt`**; gộp 3 helper picker (`DEFAULT`, `fromCode()`, `sortedForDisplay()`)
+  vào enum còn lại, rồi **đổi tên enum thành `LanguageValue`** (`model/value/language/`) — tên trung
+  tính vì nó lái cả UI locale lẫn content language, không chỉ manga.
+- Đổi type sang `LanguageValue` ở: `LanguageManager` (`LocalAppLanguage`/`current`/`configurationFor`/
+  `displayNameOf`/`ProvideAppLanguage`), `LanguageUiState`, `LanguageViewModel`, `LanguageContent`,
+  `LanguageItem`, và mọi call site content (`MangaModel`, `ChapterLanguageListBottomSheet`, `MangaMapper`…).
+- `LanguageMapper` gọn còn 2 hàm (`MangaLanguage.toLanguageValue()` / `LanguageValue.toMangaLanguage()`).
+- **Lợi ích**: hết bẫy "thêm 1 ngôn ngữ phải sửa ở cả hai enum" — giờ chỉ sửa `MangaLanguage` +
+  `LanguageValue`. `compileDebugKotlin` PASS.
+
+**2. Dịch đủ UI cho cả 64 ngôn ngữ.** Trước đó picker offer 64 nhưng chỉ 44 folder có bản dịch → 19
+ngôn ngữ dùng UI English. Đã **thêm 19 `values-XX/` mới** (148/148 chuỗi mỗi file) → **63 folder +
+English = 64 UI locale, khớp đúng picker, 0 fallback**:
+
+- `af`, `be`, `cv`, `eo`, `es-la`, `et`, `eu`, `ga`, `jv`, `ka`, `kk`, `la`, `lt`, `lv`, `mn`, `ne`,
+  `sr`, `tl`, `zh-hk`.
+- **Tên folder xác minh bằng JVM thật**: `es-la` → `Locale.forLanguageTag("es-la")` = `es-LA` →
+  `values-es-rLA`; `zh-hk` → `zh-HK` → `values-zh-rHK`; 17 mã còn lại là `values-XX` phẳng.
+- Escape `\'` cẩn thận (af dùng `\'n`, ga dùng `D\'…`), giữ nguyên placeholder (`%1$s`/`%d`), `\n`, `…`.
+- **Đã kiểm**: mỗi file đúng 148 key, 0 mồ côi/0 thiếu; `mergeDebugResources` (AAPT2) PASS.
+- ⚠️ **Chất lượng dịch máy** — ưu tiên rà soát bản ngữ cho các ngôn ngữ ít tài nguyên: **`cv` (Chuvash)**
+  trước hết, rồi `ka`, `kk`, `mn`, `ne`, `jv`, `la`.
+
+---
+
+## 2026-09-02 — 72 bản dịch bị chôn sai chỗ: cứu 43 locale, hoàn thiện 148/148 chuỗi
+
+Repo đã có sẵn **72 thư mục ngôn ngữ** nhưng chúng nằm ở `res/values/values-XX/` thay vì
+`res/values-XX/`, nên **Android chưa bao giờ dùng tới** — chúng nằm im trong git từ lâu mà không có
+tác dụng gì.
+
+- **Chuyển 43 locale lên đúng chỗ**, bỏ 29: các biến thể vùng picker không chọn được (`en-rUS`,
+  `es-rMX`, `ms-rMY`…) và ngôn ngữ MangaDex không có mã (`gu`, `kn`, `ml`, `pa`, `xh`, `zu`…).
+- **Dọn 4043 chuỗi rác** — mỗi file mang ~94 chuỗi của tính năng đã xoá (`menu`, `search`, `clear`,
+  `retry`, `move_to_top`, `by_author`…).
+- **Dịch 33 chuỗi còn thiếu cho từng locale** — toàn bộ onboarding, language, settings, privacy,
+  reset chapter và 3 biểu đồ statistics. Kết quả: **cả 44 locale đủ 148/148 chuỗi**, không thiếu
+  không thừa, placeholder khớp.
+- Bản `values-vi` giữ bản mới (148 chuỗi, khớp code hiện tại); bản cũ 209 chuỗi bị bỏ.
+
+**Hai cái bẫy đã vấp, ghi lại để khỏi mất thời gian lần sau:**
+
+1. **Dấu nháy đơn trần làm hỏng build.** AAPT2 báo `Invalid unicode escape sequence in string` kèm số
+   dòng trỏ vào resource *không liên quan* — một lần còn trỏ thẳng vào file của thư viện AndroidX
+   trong Gradle cache. Thủ phạm thật là `'` chưa escape: 61 chỗ, riêng tiếng Uzbek 47 chỗ (`o'qish`).
+   Phải viết `\'`. Trình quét escape `\x` tôi viết lúc đầu báo 0 lỗi vì nó tìm sai thứ.
+2. **Indonesia và Hebrew phải dùng tên thư mục cũ** `values-in`, `values-iw` chứ không phải
+   `values-id`/`values-he`, vì `Locale.forLanguageTag("id").language` trả `"in"` trong Java, mà app
+   ép locale qua `Configuration` override nên tra resource theo mã cũ. Filipino 3 chữ cái cần dạng
+   BCP-47 `values-b+fil`.
+
+**Kiểm chứng trên emulator**: chọn Turkish → onboarding dùng chuỗi mới dịch ("Manga rafın her zaman
+elinin altında", "Atla", "İleri"), Home dùng bản dịch cũ giờ đã sống ("Ana Sayfa", "Trend Olanlar",
+"Son Güncellemeler", "DEVAM EDIYOR"), tên truyện sang tiếng Thổ ("Yalnız Seviye Atlama").
+
+**Còn lệch:** picker liệt kê 64 ngôn ngữ nhưng chỉ 45 có bản dịch UI; 19 cái còn lại (`af`, `be`,
+`cv`, `eo`, `es-la`, `et`, `eu`, `ga`, `jv`, `ka`, `kk`, `la`, `lt`, `lv`, `mn`, `ne`, `sr`, `tl`,
+`zh-hk`) đổi nội dung nhưng giao diện rơi về tiếng Anh.
+
+---
+
 ## 2026-09-01 — Chọn ngôn ngữ app + màn Settings, gỡ theme khỏi Profile
 
 Đợt refactor lớn: một giá trị ngôn ngữ duy nhất điều khiển **cả UI lẫn nội dung MangaDex**, thêm 2 màn

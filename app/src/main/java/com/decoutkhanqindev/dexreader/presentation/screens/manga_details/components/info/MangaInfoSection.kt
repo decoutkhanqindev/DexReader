@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
-import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.language.LanguageValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.badges.MangaRatingChip
 import com.decoutkhanqindev.dexreader.presentation.screens.common.badges.MangaStatusBadge
@@ -109,7 +109,7 @@ internal val previewManga = MangaModel(
   status = MangaStatusValue.ON_GOING,
   contentRating = MangaContentRatingValue.SAFE,
   year = "1997",
-  availableLanguages = persistentListOf(MangaLanguageValue.ENGLISH, MangaLanguageValue.JAPANESE),
+  availableLanguages = persistentListOf(LanguageValue.ENGLISH, LanguageValue.JAPANESE),
   latestChapter = "1110",
   updatedAt = "2024-01-01",
   rating = "9.1",

@@ -29,9 +29,9 @@ import com.decoutkhanqindev.dexreader.presentation.screens.language.LanguageSett
 import com.decoutkhanqindev.dexreader.presentation.screens.main.MainScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.MangaDetailsScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.onboarding.OnboardingScreen
+import com.decoutkhanqindev.dexreader.presentation.screens.privacy_policy.PrivacyPolicyScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.reader.ReaderScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.search.SearchScreen
-import com.decoutkhanqindev.dexreader.presentation.screens.privacy_policy.PrivacyPolicyScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.settings.SettingsScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.splash.SplashScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.statistics.StatisticsScreen
@@ -60,8 +60,8 @@ fun NavGraph() {
   val languageViewModel: LanguageViewModel = hiltViewModel()
   val languageUiState by languageViewModel.uiState.collectAsStateWithLifecycle()
 
-  DexReaderTheme(themeOption = settingsUiState.appliedThemeOption) {
-    LanguageManager.ProvideAppLanguage(language = languageUiState.appliedLanguage) {
+  LanguageManager.ProvideAppLanguage(language = languageUiState.appliedLanguage) {
+    DexReaderTheme(themeOption = settingsUiState.appliedThemeOption) {
       NavHost(
         navController = navController,
         startDestination = NavRoute.Splash,
@@ -84,9 +84,9 @@ fun NavGraph() {
 
         composable<NavRoute.LanguageSelection> {
           LanguageSelectionScreen(
-            viewModel = languageViewModel,
+            languageViewModel = languageViewModel,
             modifier = Modifier.fillMaxSize(),
-            onDoneClick = {
+            onNavigateToOnboardingScreen = {
               navController.navigateClearStack<NavRoute.LanguageSelection>(NavRoute.Onboarding)
             },
           )
@@ -104,7 +104,7 @@ fun NavGraph() {
 
         composable<NavRoute.LanguageSetting> {
           LanguageSettingScreen(
-            viewModel = languageViewModel,
+            languageViewModel = languageViewModel,
             modifier = Modifier.fillMaxSize(),
             onNavigateBack = { navController.navigateBack() },
           )
@@ -119,7 +119,7 @@ fun NavGraph() {
 
         composable<NavRoute.Onboarding> {
           OnboardingScreen(
-            viewModel = onboardingViewModel,
+            onboardingViewModel = onboardingViewModel,
             modifier = Modifier.fillMaxSize(),
             onNavigateToMainScreen = {
               navController.navigateClearStack<NavRoute.Onboarding>(NavRoute.Main)

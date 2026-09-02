@@ -3,7 +3,7 @@ package com.decoutkhanqindev.dexreader.presentation.model.manga
 import androidx.compose.runtime.Immutable
 import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
-import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.language.LanguageValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import kotlinx.collections.immutable.ImmutableList
 
@@ -19,7 +19,7 @@ data class MangaModel(
   val status: MangaStatusValue,
   val contentRating: MangaContentRatingValue,
   val year: String,
-  val availableLanguages: ImmutableList<MangaLanguageValue>,
+  val availableLanguages: ImmutableList<LanguageValue>,
   val latestChapter: String,
   val updatedAt: String,
   val rating: String,

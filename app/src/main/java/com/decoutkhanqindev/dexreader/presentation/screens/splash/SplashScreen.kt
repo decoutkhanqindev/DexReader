@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.splash
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -32,6 +33,8 @@ fun SplashScreen(
     if (latestIsOnboardingCompleted == false) latestOnNavigateToLanguageSelectionScreen()
     else latestOnNavigateToMainScreen()
   }
+
+  BackHandler { }
 
   SplashContent(
     modifier = modifier

@@ -42,5 +42,5 @@ object ApiParamMapper {
     MangaLanguageCodeParam.entries.find { it.value == this?.lowercase() }
       ?.let { param ->
         MangaLanguage.entries.find { it.name == param.name }
-      } ?: MangaLanguage.UNKNOWN
+      } ?: MangaLanguage.ENGLISH
 }

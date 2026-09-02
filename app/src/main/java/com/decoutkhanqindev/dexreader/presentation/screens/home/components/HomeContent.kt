@@ -27,7 +27,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortCriteriaValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
-import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.language.LanguageValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaSectionValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
@@ -126,7 +126,7 @@ private val previewMangaList = persistentListOf(
     status = MangaStatusValue.ON_GOING,
     contentRating = MangaContentRatingValue.SAFE,
     year = "1997",
-    availableLanguages = persistentListOf(MangaLanguageValue.ENGLISH),
+    availableLanguages = persistentListOf(LanguageValue.ENGLISH),
     latestChapter = "1110",
     updatedAt = "2024-01-01",
     rating = "9.1",
@@ -143,7 +143,7 @@ private val previewMangaList = persistentListOf(
     status = MangaStatusValue.COMPLETED,
     contentRating = MangaContentRatingValue.SAFE,
     year = "1999",
-    availableLanguages = persistentListOf(MangaLanguageValue.ENGLISH),
+    availableLanguages = persistentListOf(LanguageValue.ENGLISH),
     latestChapter = "700",
     updatedAt = "2014-11-10",
     rating = "8.7",
@@ -160,7 +160,7 @@ private val previewMangaList = persistentListOf(
     status = MangaStatusValue.COMPLETED,
     contentRating = MangaContentRatingValue.SAFE,
     year = "2009",
-    availableLanguages = persistentListOf(MangaLanguageValue.ENGLISH),
+    availableLanguages = persistentListOf(LanguageValue.ENGLISH),
     latestChapter = "139",
     updatedAt = "2021-04-09",
     rating = "9.0",

@@ -241,10 +241,13 @@ would be wrong. `MangaDetailsViewModel.resolveChapterLanguageThenFetch()` calls 
 short-circuits when the preferred language is already English — the fallback target — so the common
 case costs no extra request; otherwise it probes with `limit = 1` and falls back on an empty result.
 
-`availableLanguages` is `.distinct()`-ed in `MangaMapper` on purpose: every code the app's enum
-doesn't know maps to `MangaLanguage.UNKNOWN`, so a manga translated into two unmapped languages
-would otherwise yield duplicate `UNKNOWN` entries and crash `ChapterLanguageListBottomSheet`, whose
-`items(key = MangaLanguageValue::name)` rejects duplicate keys.
+`availableLanguages` is `.distinct()`-ed in `MangaMapper` on purpose: there is **no `UNKNOWN`
+language entry** — `ApiParamMapper.toMangaLanguage()` maps every code the enum doesn't recognize to
+`MangaLanguage.ENGLISH`, so a manga translated into two unmapped languages would otherwise yield
+duplicate `ENGLISH` entries and crash `ChapterLanguageListBottomSheet`, whose
+`items(key = LanguageValue::name)` rejects duplicate keys. (This replaced the old `UNKNOWN`
+enum entry + `distinct` on duplicate `UNKNOWN`s; the dedup is still required, only the collapsed
+value changed.)
 
 ---
 
@@ -608,19 +611,28 @@ calls away.
 the UI locale and the MangaDex content language — it is `SettingsRepository.observeContentLanguage()`
 (a `MangaLanguage`).
 
-`AppLanguageValue` (`model/value/language/`) mirrors **every** `MangaLanguageValue` except `UNKNOWN`
-(64 entries), each wrapping one so `code`/`flag` have exactly one definition. The picker therefore
-lists all 64. **UI translations are a separate, smaller set**: only `values/` (English) and
-`values-vi/` exist, so picking any of the other 62 changes the *content* language (titles,
-descriptions, chapter feed) while the interface falls back to English — Android's own resource
-fallback handles that, nothing in the code special-cases it. Shipping UI for one more language is
-just a new `values-XX/strings.xml`; the picker already offers it.
+**There is ONE language enum, `LanguageValue` (`model/value/language/`, 64 entries), used for
+both the app UI locale and the MangaDex content language** — the separate `AppLanguageValue` was
+**deleted**. It once mirrored every `LanguageValue` except `UNKNOWN` (wrapping each for
+`code`/`flag`), but with `UNKNOWN` gone from both the domain `MangaLanguage` and `LanguageValue`
+the two enums became a byte-identical 64-entry set with no reason to stay split. `LanguageValue`
+now carries the picker helpers too — `DEFAULT` (= `ENGLISH`), `fromCode(code)`, and
+`sortedForDisplay(deviceLanguageCode, displayIn)` — as companion members; the language picker
+(`screens/language/`), `LanguageManager`, and `LanguageUiState`/`LanguageViewModel` all type on it
+directly. `LanguageMapper` is down to `MangaLanguage.toLanguageValue()` /
+`LanguageValue.toMangaLanguage()` (the two `AppLanguageValue` bridges are gone). **Adding a
+MangaDex language is now a single edit** in `MangaLanguage` + `LanguageValue` — no second enum
+to keep in step.
 
-Because `AppLanguageValue` duplicates the `MangaLanguageValue` entry list, **adding a MangaDex
-language means adding it in both** — the two enums must stay in step or `AppLanguageValue` silently
-omits the new one from the picker.
+The picker lists all **64**, and **every one now ships a full UI translation** — `values/` (English)
+plus **63** `values-XX/` folders = **64 UI locales**, i.e. **zero English-UI fallback left**. (Android
+resource fallback still means a code with no `values-XX/` would resolve every string from `values/`,
+so a missing translation degrades gracefully rather than failing — that safety net just isn't
+exercised any more now that coverage is complete.) The content language (titles, descriptions,
+chapter feed) is driven off the same single stored value; a language change re-fetches content but
+the UI locale switches from the shipped `values-XX/`.
 
-`MangaLanguageValue` no longer carries `@StringRes`: it carries `code` + `flag` (regional-indicator
+`LanguageValue` no longer carries `@StringRes`: it carries `code` + `flag` (regional-indicator
 emoji), and the display name comes from `Locale.forLanguageTag(code).getDisplayLanguage(...)` via
 `LanguageManager.displayNameOf` / `labelOf`. That deleted all 65 `lang_*` string resources and makes
 language names localize themselves — a Vietnamese UI shows "Tiếng Anh" without a single new string.
@@ -633,10 +645,35 @@ provider then dies with `Expected an activity context for creating a HiltViewMod
 invalidation) instead — `stringResource` reads `LocalResources`, and the Activity context stays
 intact for Hilt.
 
-`values-vi/strings.xml` ships a full Vietnamese translation (148/148 translatable strings; the two
-`translatable="false"` entries — `app_name`, `privacy_policy_url` — are correctly absent). Term
-choices worth keeping consistent if you add strings: Categories tab = "Danh mục" while a genre =
-"Thể loại" (they must not collide), manga = "truyện", chapter = "chương", volume = "tập".
+**63 `values-XX/` locales ship a full UI translation** (plus English `values/` = 64 total, matching
+the 64-language picker exactly — **no fallback locales left**). Each carries all 148 translatable
+strings (the two `translatable="false"` entries, `app_name` and `privacy_policy_url`, are correctly
+absent everywhere). The **last 19 added** — `af`, `be`, `cv`, `eo`, `es-la` (folder `values-es-rLA`,
+since `Locale.forLanguageTag("es-la")` → `es-LA`), `et`, `eu`, `ga`, `jv`, `ka`, `kk`, `la`, `lt`,
+`lv`, `mn`, `ne`, `sr`, `tl`, `zh-hk` (folder `values-zh-rHK`) — were machine-translated in one pass;
+the low-resource ones (**`cv` Chuvash** especially, then `ka`, `kk`, `mn`, `ne`, `jv`, `la`) are the
+first to hand to a native reviewer. Adding another language is still just a new `values-XX/strings.xml`.
+
+Two traps this resource set already sprang, both worth knowing before touching it again:
+
+- **Locale folders must be direct children of `res/`.** These translations lived at
+  `res/values/values-XX/` for a long time and were therefore compiled as nothing at all — Android
+  never saw them. Only 43 of the original 72 were kept (those whose code MangaDex also supports);
+  the 29 dropped were regional variants the picker cannot select (`en-rUS`, `es-rMX`, `ms-rMY`, …)
+  or languages MangaDex has no code for (`gu`, `kn`, `ml`, `pa`, `xh`, `zu`, …).
+- **A bare `'` in a string resource fails the build**, and AAPT2 reports it as
+  `Invalid unicode escape sequence in string` with a line number pointing at an unrelated resource —
+  in one case at an AndroidX library file in the Gradle cache. 61 unescaped apostrophes were hiding
+  in these files (47 in Uzbek alone, where `o'qish`-style spellings are everywhere). Escape as `\'`.
+
+Indonesian and Hebrew use the **legacy** folder names `values-in` and `values-iw`, not `values-id` /
+`values-he`: `Locale.forLanguageTag("id").language` returns `"in"` in Java, and the app forces the
+locale through a `Configuration` override, so the resource lookup uses the legacy code. Filipino is
+three letters, so it needs the BCP-47 form `values-b+fil`.
+
+Term choices worth keeping consistent if you add Vietnamese strings: Categories tab = "Danh mục"
+while a genre = "Thể loại" (they must not collide), manga = "truyện", chapter = "chương",
+volume = "tập".
 
 **Content ViewModels refetch when the language changes.** Repositories read the preference *per
 call*, so anything fetched before a change would otherwise keep the old language — most visible on

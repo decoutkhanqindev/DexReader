@@ -7,8 +7,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,8 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
-import com.decoutkhanqindev.dexreader.presentation.model.value.language.AppLanguageValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.language.LanguageTypeValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.language.LanguageValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
@@ -31,16 +35,16 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 fun LanguageContent(
   type: LanguageTypeValue,
-  selectedLanguage: AppLanguageValue?,
-  appliedLanguage: AppLanguageValue,
+  selectedLanguage: LanguageValue?,
+  appliedLanguage: LanguageValue,
   modifier: Modifier = Modifier,
-  onLanguageClick: (AppLanguageValue) -> Unit,
+  onLanguageClick: (LanguageValue) -> Unit,
   onDoneClick: () -> Unit,
 ) {
   val displayLanguage = LanguageManager.current
   val deviceLanguageCode = LanguageManager.deviceLanguageCode()
   val languages = remember(displayLanguage, deviceLanguageCode) {
-    AppLanguageValue.sortedForDisplay(
+    LanguageValue.sortedForDisplay(
       deviceLanguageCode = deviceLanguageCode,
       displayIn = displayLanguage,
     )
@@ -61,7 +65,7 @@ fun LanguageContent(
       ),
       verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-      items(languages, key = AppLanguageValue::name) { language ->
+      items(languages, key = LanguageValue::name) { language ->
         val isSelected = when (type) {
           LanguageTypeValue.SELECTION -> language == selectedLanguage
           LanguageTypeValue.SETTING -> language == (selectedLanguage ?: appliedLanguage)
@@ -95,6 +99,15 @@ fun LanguageContent(
         fontWeight = FontWeight.ExtraBold,
         style = MaterialTheme.typography.titleMedium,
       )
+
+      Icon(
+        imageVector = Icons.Filled.Done,
+        contentDescription = null,
+        tint = MaterialTheme.colorScheme.onPrimary,
+        modifier = Modifier
+          .size(24.dp)
+          .padding(start = 8.dp)
+      )
     }
   }
 }
@@ -105,8 +118,8 @@ private fun LanguageContentPreview() {
   DexReaderTheme {
     LanguageContent(
       type = LanguageTypeValue.SETTING,
-      selectedLanguage = AppLanguageValue.VIETNAMESE,
-      appliedLanguage = AppLanguageValue.ENGLISH,
+      selectedLanguage = LanguageValue.VIETNAMESE,
+      appliedLanguage = LanguageValue.ENGLISH,
       modifier = Modifier.fillMaxSize(),
       onLanguageClick = {},
       onDoneClick = {},
@@ -121,7 +134,7 @@ private fun LanguageContentNothingSelectedPreview() {
     LanguageContent(
       type = LanguageTypeValue.SELECTION,
       selectedLanguage = null,
-      appliedLanguage = AppLanguageValue.ENGLISH,
+      appliedLanguage = LanguageValue.ENGLISH,
       modifier = Modifier.fillMaxSize(),
       onLanguageClick = {},
       onDoneClick = {},

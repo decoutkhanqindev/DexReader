@@ -65,5 +65,4 @@ enum class MangaLanguage {
   URDU,
   UZBEK,
   VIETNAMESE,
-  UNKNOWN
 }

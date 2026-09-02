@@ -64,6 +64,5 @@ enum class MangaLanguageCodeParam(val value: String) {
   UKRAINIAN("uk"),
   URDU("ur"),
   UZBEK("uz"),
-  VIETNAMESE("vi"),
-  UNKNOWN("unknown")
+  VIETNAMESE("vi")
 }

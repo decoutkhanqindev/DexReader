@@ -15,14 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.decoutkhanqindev.dexreader.presentation.model.value.language.AppLanguageValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.language.LanguageValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.onClick
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import com.decoutkhanqindev.dexreader.util.LanguageManager
 
 @Composable
 fun LanguageItem(
-  language: AppLanguageValue,
+  language: LanguageValue,
   isSelected: Boolean,
   modifier: Modifier = Modifier.Companion,
   onClick: () -> Unit,
@@ -72,7 +72,7 @@ fun LanguageItem(
 private fun LanguageItemPreview() {
   DexReaderTheme {
     LanguageItem(
-      language = AppLanguageValue.ENGLISH,
+      language = LanguageValue.ENGLISH,
       isSelected = true,
       onClick = {},
     )

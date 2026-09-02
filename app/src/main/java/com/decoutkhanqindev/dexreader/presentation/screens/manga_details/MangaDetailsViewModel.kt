@@ -19,12 +19,12 @@ import com.decoutkhanqindev.dexreader.domain.usecase.settings.ObserveContentLang
 import com.decoutkhanqindev.dexreader.presentation.mapper.ChapterMapper.toChapterModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguage
-import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguageValue
+import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toLanguageValue
 import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ReadingHistoryMapper.toReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterModel
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
-import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaLanguageValue
+import com.decoutkhanqindev.dexreader.presentation.model.value.language.LanguageValue
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
@@ -70,10 +70,10 @@ class MangaDetailsViewModel @Inject constructor(
   val mangaChaptersUiState: StateFlow<BasePaginationUiState<ChapterModel>> =
     _mangaChaptersUiState.asStateFlow()
 
-  private val _chapterLanguage = MutableStateFlow(MangaLanguageValue.ENGLISH)
-  val chapterLanguage: StateFlow<MangaLanguageValue> = _chapterLanguage.asStateFlow()
+  private val _chapterLanguage = MutableStateFlow(LanguageValue.ENGLISH)
+  val chapterLanguage: StateFlow<LanguageValue> = _chapterLanguage.asStateFlow()
 
-  val availableLanguageList: StateFlow<ImmutableList<MangaLanguageValue>> =
+  val availableLanguageList: StateFlow<ImmutableList<LanguageValue>> =
     _mangaDetailsUiState
       .map { state ->
         if (state is MangaDetailsUiState.Success) state.manga.availableLanguages
@@ -138,7 +138,7 @@ class MangaDetailsViewModel @Inject constructor(
   private fun resolveChapterLanguageThenFetch() {
     vmLaunch {
       resolveChapterLanguageUseCase(mangaId = mangaIdFromArg)
-        .onSuccess { _chapterLanguage.value = it.toMangaLanguageValue() }
+        .onSuccess { _chapterLanguage.value = it.toLanguageValue() }
         .onFailure { throwable ->
           Timber.tag(this::class.java.simpleName)
             .d("resolveChapterLanguage have error: ${throwable.stackTraceToString()}")
@@ -454,7 +454,7 @@ class MangaDetailsViewModel @Inject constructor(
     _userId.value = id
   }
 
-  fun updateChapterLanguage(language: MangaLanguageValue) {
+  fun updateChapterLanguage(language: LanguageValue) {
     if (_chapterLanguage.value == language) return
     _chapterLanguage.value = language
     fetchFirstChapter()
