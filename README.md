@@ -1,89 +1,137 @@
 <h1 align="center">
-  📗 DexReader 📘 
+  <img src="https://raw.githubusercontent.com/decoutkhanqindev/DexReader/main/screenshots/web/feature_graphic.webp" width="100%" alt="DexReader - Read to enjoy, Save to remember">
 </h1>
+
 <p align="center">
-  <i>Read to enjoy - Save to remember</i>
+  <i>Read to enjoy — Save to remember</i>
 </p>
 
-## 📜 Description
+<p align="center">
+  <img src="https://img.shields.io/badge/Android-7.0%2B-3DDC84?logo=android&logoColor=white" alt="Android 7.0+">
+  <img src="https://img.shields.io/badge/version-1.0.1-blue" alt="Version 1.0.1">
+  <img src="https://img.shields.io/badge/languages-64-orange" alt="64 languages">
+  <img src="https://img.shields.io/badge/powered%20by-MangaDex-ff6740" alt="Powered by MangaDex">
+</p>
 
-**DexReader** is a modern manga reading application designed for a smooth and intuitive
-experience.  
-Built with **Jetpack Compose** and **Material 3**, the app follows **Clean Architecture** and **MVVM
-pattern** to ensure high performance, scalability, and maintainability.  
-Powered by the **MangaDex API**, it provides a vast collection of manga with seamless reading and
-synchronization via **Firebase**.
+## 📥 Download
 
-## Features
+<!-- TODO: thay "#" bằng link APKPure sau khi app được duyệt -->
+<p align="center">
+  <a href="#">
+    <img src="https://img.shields.io/badge/Get%20it%20on-APKPure-6c47ff?style=for-the-badge" alt="Get it on APKPure">
+  </a>
+</p>
 
-- **Modern UI**: Built entirely with Jetpack Compose and Material 3.
-- **Manga Explorer**: Browse latest updates, trending series, and new releases.
-- **Optimized Reader**: High-performance reader with zoom, fullscreen, and pre-fetching.
-- **Smart Search**: Search manga by title with real-time suggestions.
-- **Library Management**: Manage favorites and track reading history.
-- **Cloud Sync**: Sync your data across devices using Firebase.
-- **Theme Support**: Full support for Dark and Light modes.
+Requires Android 7.0 (API 24) or newer.
 
-## 🛠 Built With
+## 📖 About
+
+**DexReader** is a manga reader for Android built on the open
+[MangaDex](https://mangadex.org) API. Browse thousands of titles, read them in a
+full-screen reader, and let the app remember exactly where you stopped — down to the page.
+
+Everything is free, there are no ads, and your library follows you across devices
+once you sign in.
+
+## ✨ Features
+
+### Browse and discover
+- Home feed with **Trending**, **Latest Updates**, **New Releases** and **Top Rated**
+- Explore by **genre, theme, format and content type** — each category shown with real cover art
+- Sort and filter any list by publication status and content rating
+- Search any title by name
+
+### A reader made for long sessions
+- Swipe smoothly through chapter pages
+- Pinch to **zoom** into the artwork
+- Jump to the previous or next chapter without leaving the page
+- Pick the **translation language** per title
+
+### Never lose your place
+- **Favorite** the series you follow
+- **Reading history** remembers the exact page you stopped on
+- Resume any chapter with a single tap
+- Reset a chapter's progress whenever you want
+
+### See your reading habits
+- Reading-time charts by **day, week, month and year**
+- Totals for today, this week and all time
+
+### Made to fit you
+- Interface available in **64 languages**
+- **Light and dark** theme
+- Choose the language your titles and chapters load in
+- Sign in to sync favorites, history and statistics across devices
+
+## 📱 Screenshots
+
+<table align="center">
+  <tr>
+    <td><img src="https://raw.githubusercontent.com/decoutkhanqindev/DexReader/main/screenshots/web/onboarding_01_discover.webp" width="230" alt="Home"></td>
+    <td><img src="https://raw.githubusercontent.com/decoutkhanqindev/DexReader/main/screenshots/web/onboarding_02_browse.webp" width="230" alt="Browse"></td>
+    <td><img src="https://raw.githubusercontent.com/decoutkhanqindev/DexReader/main/screenshots/web/onboarding_03_read.webp" width="230" alt="Reader"></td>
+    <td><img src="https://raw.githubusercontent.com/decoutkhanqindev/DexReader/main/screenshots/web/onboarding_04_track.webp" width="230" alt="Track"></td>
+  </tr>
+</table>
+
+## 🎞️ Video demo
+
+[![Watch the demo](https://img.youtube.com/vi/HsdtD7xXBW8/0.jpg)](https://www.youtube.com/watch?v=HsdtD7xXBW8)
+
+## 🔒 Privacy
+
+DexReader stores your account, favorites, reading history and statistics in Firebase so
+they can sync between devices. Nothing else is collected.
+Read the full [Privacy Policy](https://decoutkhanqindev.github.io/DexReader/privacy-policy).
+
+## ⚖️ Disclaimer
+
+DexReader is an independent, unofficial client. All manga content, cover art and chapter
+data are provided by **MangaDex** and belong to their respective creators and publishers.
+DexReader does not host or upload any content.
+
+---
+
+<details>
+<summary><b>🛠 For developers</b></summary>
+
+<br>
+
+Built with Jetpack Compose and Material 3, following Clean Architecture (domain / data /
+presentation) with MVVM.
 
 | Category                 | Technology                                                                     |
 |--------------------------|--------------------------------------------------------------------------------|
 | 🏛 Architecture          | Clean Architecture & MVVM                                                      |
-| 🖼️ UI Framework         | [Jetpack Compose](https://developer.android.com/jetpack/compose)               |
+| 🖼️ UI Framework         | [Jetpack Compose](https://developer.android.com/jetpack/compose) + Material 3  |
 | 🛠️ Dependency Injection | [Dagger-Hilt](https://dagger.dev/hilt/)                                        |
-| 🗄️ Local Database       | [Room Database](https://developer.android.com/jetpack/androidx/releases/room)  |
+| 🗄️ Local Database       | [Room](https://developer.android.com/jetpack/androidx/releases/room)           |
 | 🖼️ Image Loading        | [Coil](https://coil-kt.github.io/coil/)                                        |
 | 🌐 Navigation            | [Compose Navigation](https://developer.android.com/jetpack/compose/navigation) |
 | 🔥 Backend & Auth        | [Firebase (Auth & Firestore)](https://firebase.google.com/)                    |
 | 📡 Networking            | [Retrofit & Moshi](https://square.github.io/retrofit/)                         |
+| 📊 Charts                | [Vico](https://github.com/patrykandpatrick/vico)                               |
+| ⚡ Startup                | Baseline Profiles + Macrobenchmark                                             |
 
-## 📱 Screenshots
+### Getting started
 
-<table style="width:100%">
-  <tr>
-    <th>Home Screen</th>
-    <th>Manga Details</th> 
-    <th>Reader Mode</th> 
-  </tr>
-  <tr>
-    <td><img src="https://raw.githubusercontent.com/decoutkhanqindev/DexReader/main/app/screenshots/home/z6721003176267_6647fd751e8bb12a8a81d29a330f5269.jpg" width=240/></td> 
-    <td><img src="https://raw.githubusercontent.com/decoutkhanqindev/DexReader/main/app/screenshots/manga_details/z6721003374269_96e6f57fdb1e9881dfd52ba7f10dbf5c.jpg" width=240/></td>
-    <td><img src="https://raw.githubusercontent.com/decoutkhanqindev/DexReader/main/app/screenshots/reader/z6721003401256_e5b9499fc06e26b21368c640e9c70ac3.jpg" width=240/></td>
-  </tr>
-  <tr>
-    <th>Search Screen</th>
-    <th>Categories</th> 
-    <th>Authentication</th> 
-  </tr>
-  <tr>
-    <td><img src="https://raw.githubusercontent.com/decoutkhanqindev/DexReader/main/app/screenshots/search/z6721003338898_1d27b1441fb04951e2e0ed531e04e537.jpg" width=240/></td> 
-    <td><img src="https://raw.githubusercontent.com/decoutkhanqindev/DexReader/main/app/screenshots/categories/z6721003199702_6b0a9842002278ec47cce44f620b0547.jpg" width=240/></td>
-    <td><img src="https://raw.githubusercontent.com/decoutkhanqindev/DexReader/main/app/screenshots/auth/login/z6721028456319_1f3a9884e7847f30286cd77eec4f5f41.jpg" width=240/></td>
-  </tr>
-</table>
-
-## 🎞️ Video Demo
-
-[![video_demo](https://img.youtube.com/vi/HsdtD7xXBW8/0.jpg)](https://www.youtube.com/watch?v=HsdtD7xXBW8)
-
-## 🚀 Getting Started
-
-1. **Clone the project**:
+1. **Clone the project**
    ```bash
    git clone https://github.com/decoutkhanqindev/DexReader.git
    ```
-2. **Setup Firebase**:
-    - Add `google-services.json` to the `app/` directory.
-3. **Configure API**:
-    - Add `BASE_URL` and `UPLOAD_URL` to `local.properties`.
-4. **Build & Run**:
-    - Use Android Studio Hedgehog or newer.
+2. **Set up Firebase** — add `google-services.json` to the `app/` directory.
+3. **Configure the API** — add `BASE_URL` and `UPLOAD_URL` to `local.properties`.
+4. **Build and run** with a recent Android Studio.
 
-## 🤝 Contributing
+To build a signed release, add `keystore.properties` to the project root with
+`storeFile`, `storePassword`, `keyAlias` and `keyPassword`.
 
-Contributions are welcome! Feel free to open issues or submit pull requests to help improve **Dex
-Reader**.
+### Contributing
+
+Contributions are welcome — feel free to open an issue or a pull request.
+
+</details>
 
 ## 📝 License
 
-This project is developed for educational and personal purposes.
+Developed for educational and personal purposes.
