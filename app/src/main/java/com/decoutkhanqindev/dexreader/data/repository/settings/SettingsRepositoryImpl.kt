@@ -52,7 +52,7 @@ class SettingsRepositoryImpl @Inject constructor(
     )
 
   override fun observeIsOnboardingCompleted(): Flow<Boolean> =
-    app.prefs.data.map { prefs -> prefs[isOnboardingCompletedKey] ?: true }
+    app.prefs.data.map { prefs -> prefs[isOnboardingCompletedKey] ?: false }
       .flowOn(Dispatchers.IO)
       .distinctUntilChanged()
 

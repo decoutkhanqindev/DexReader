@@ -2,7 +2,6 @@ package com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels
 
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.entity.user.User
-import com.decoutkhanqindev.dexreader.domain.usecase.user.LoginUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.profile.ObserveCurrentUserUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.profile.ObserveUserProfileUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.UserMapper.toUserModel
@@ -23,7 +22,6 @@ import javax.inject.Inject
 class UserViewModel @Inject constructor(
   private val observeCurrentUserUseCase: ObserveCurrentUserUseCase,
   private val observeUserProfileUseCase: ObserveUserProfileUseCase,
-  private val loginUseCase: LoginUseCase,
 ) : BaseViewModel() {
   private val _isUserLoggedIn = MutableStateFlow(false)
   val isUserLoggedIn: StateFlow<Boolean> = _isUserLoggedIn.asStateFlow()
@@ -38,7 +36,6 @@ class UserViewModel @Inject constructor(
     )
 
   private var userProfileJob: Job? = null
-  private var isAutoLoginAttempted = false
 
   init {
     observeCurrentUser()
@@ -54,7 +51,6 @@ class UserViewModel @Inject constructor(
             else {
               cancelUserProfileJob()
               _domainUserProfile.value = null
-              autoLogin()
             }
           }
           .onFailure {
@@ -81,18 +77,6 @@ class UserViewModel @Inject constructor(
     }
   }
 
-  private fun autoLogin() {
-    if (isAutoLoginAttempted) return
-    isAutoLoginAttempted = true
-    vmLaunch {
-      loginUseCase(email = BASELINE_EMAIL, password = BASELINE_PASSWORD)
-        .onFailure {
-          Timber.tag(this::class.java.simpleName)
-            .d("autoLogin have error: ${it.stackTraceToString()}")
-        }
-    }
-  }
-
   private fun cancelUserProfileJob() {
     userProfileJob?.cancel()
     userProfileJob = null
@@ -100,10 +84,5 @@ class UserViewModel @Inject constructor(
 
   override fun onCleared() {
     cancelUserProfileJob()
-  }
-
-  companion object {
-    private const val BASELINE_EMAIL = "phamminhkhangpy2003@gmail.com"
-    private const val BASELINE_PASSWORD = "12345678"
   }
 }

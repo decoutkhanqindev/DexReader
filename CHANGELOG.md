@@ -4,6 +4,44 @@ Dated log of notable multi-file / cross-cutting work sessions. Newest entry firs
 
 ---
 
+## 2026-09-03 — Baseline profile: flow mới bằng testTag + bộ asset store APKPure
+
+**Baseline profile cũ chạy rỗng.** Generator chờ `By.desc("home_feed")` — selector này
+**không tồn tại ở đâu trong code**, nên nó chờ 10s rồi thoát, không cuộn gì. Profile thu
+được chỉ 10.718 dòng, gần như vô giá trị.
+
+- **Thêm `TestTags.kt`** (gom hằng số một chỗ) + bật `testTagsAsResourceId = true` trên
+  `NavHost` của `NavGraph` để UiAutomator thấy được testTag qua `By.res(...)`.
+  Lưu ý: `testTagsAsResourceId` nằm ở `androidx.compose.ui.semantics`, **không phải**
+  `androidx.compose.ui.platform` như tài liệu cũ.
+- Gắn tag: 3 tab bottom bar, `home_scroll`, `home_section_<SECTION>` (4 section),
+  `categories_grid`, `profile_scroll`, `profile_favorites_row`, `profile_history_row`,
+  `profile_statistics_chart`.
+- **Flow mới**: Splash → Main → Home (cuộn dọc + cuộn ngang từng section) → Categories
+  (cuộn) → Profile (chờ đủ 3 section, cuộn dọc + cuộn ngang favorites/history).
+- Sửa `StartupBenchmarks` dùng selector mới thay `home_feed`.
+- **Kết quả: 10.718 → 47.478 dòng (×4.4)**, exit code 0. Độ phủ xác nhận đúng flow:
+  `MangaBanner` 61, `CategoriesGrid` 30, `ProfileHistorySection` 25, `ReadingActivityChart` 21;
+  `OnboardingScreen`/`LoginScreen` = 0 (đúng, hai màn này bị bỏ qua có chủ đích).
+
+**Hai hack tạm để chạy** (đã revert ngay sau khi chạy xong, khớp 100% bản gốc):
+onboarding flag default `true`, và auto-login hardcode trong `UserViewModel`.
+Rút kinh nghiệm: **không hardcode credential vào source** — dùng `local.properties`
+(đã gitignore) đổ qua `BuildConfig` thì an toàn hơn hẳn.
+
+**⚠️ TODO lần sau:** `baseline-prof.txt` và `startup-prof.txt` đang **giống hệt nhau
+từng byte**, vì generator chỉ có một `rule.collect(includeInStartupProfile = true)` bao
+trọn cả hành trình. Startup profile được AGP/R8 dùng cho **dex layout** (dồn class khởi
+động vào primary dex) — khi "cái gì cũng là startup" thì mất tác dụng ưu tiên. Cần tách
+2 test: `startup()` (`includeInStartupProfile = true`, chỉ launch + chờ Home, không cuộn)
+và `generate()` (`includeInStartupProfile = false`, hành trình đầy đủ).
+
+**Bộ asset store APKPure** (`screenshots/`): 4 ảnh onboarding 1440×2550 (PNG 24-bit,
+tỉ lệ 1.771 < 2×), feature graphic 1024×500, icon 512×512 **PNG 32-bit có alpha**
+(APKPure bắt buộc alpha — bản RGB sẽ bị từ chối), kèm `store_listing.md`.
+4 illustration onboarding cũng được dựng lại từ screenshot mới, giữ nguyên style mockup cũ
+(đo lại góc nghiêng +3.02° / −5.15°, bo góc 5.45% bề rộng).
+
 ## 2026-09-02 — Hợp nhất 2 enum ngôn ngữ thành `LanguageValue` + dịch đủ 64 locale UI
 
 **Hai việc trong một phiên:**
