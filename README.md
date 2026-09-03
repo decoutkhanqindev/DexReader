@@ -3,10 +3,6 @@
 </h1>
 
 <p align="center">
-  <i>Read to enjoy — Save to remember</i>
-</p>
-
-<p align="center">
   <img src="https://img.shields.io/badge/Android-7.0%2B-3DDC84?logo=android&logoColor=white" alt="Android 7.0+">
   <img src="https://img.shields.io/badge/version-1.0.1-blue" alt="Version 1.0.1">
   <img src="https://img.shields.io/badge/languages-64-orange" alt="64 languages">
