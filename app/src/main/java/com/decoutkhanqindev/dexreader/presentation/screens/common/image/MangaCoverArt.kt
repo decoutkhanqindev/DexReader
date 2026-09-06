@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
-import coil3.request.crossfade
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
@@ -32,7 +31,6 @@ fun MangaCoverArt(
   val model = remember(url) {
     ImageRequest.Builder(context)
       .data(url)
-      .crossfade(800)
       .memoryCachePolicy(CachePolicy.ENABLED)
       .diskCachePolicy(CachePolicy.ENABLED)
       .build()

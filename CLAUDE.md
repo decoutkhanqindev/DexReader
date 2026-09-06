@@ -797,7 +797,16 @@ its floating cluster. Profile's two bottom **buttons** (`LogoutButton` in `Profi
 `SignInButton` in `ProfileScreen`'s logged-out branch) instead both pay
 `.padding(horizontal = 16.dp).padding(bottom = 78.dp)` — keep the two numbers identical so the
 button
-sits in the same place whether or not the user is signed in.
+sits in the same place whether or not the user is signed in. **Any bottom-anchored *tappable*
+element on a tab screen uses this same 78.dp**, including `CategoriesContent`'s `MoveToTopButton`
+(`.align(Alignment.BottomEnd).padding(end = 16.dp, bottom = 78.dp)`). The number is derived, not
+picked: `BaseScreen`'s `Scaffold` already applies the navigation-bar inset via
+`.padding(paddingValues)`, so a tab's content region starts exactly where the bar's own
+`navigationBarsPadding()` starts — meaning the bar occupies the first **~70dp** of that region
+(`8` + `[6 + 24 icon + 2 + ~16 label + 6]` + `8`) and 78.dp clears it with an 8dp gap. Two
+corollaries: **never add `navigationBarsPadding()` to such an element** (it would count the inset
+twice), and don't reuse the 82.dp *content* clearance for something the user must tap — 82 happens
+to clear the bar too, but 78 is the button convention and keeps them aligned across screens.
 
 **Back is swallowed inside the tabs**: `MainScreen` declares a bare `BackHandler {}` — an empty
 handler that consumes the event — so switching tabs is **tap-only**, Back never moves between them.
@@ -1027,6 +1036,33 @@ established shape as `observeHistoryJob`/`cancelObserveHistoryJob()`.
 - Coil `ImageRequest` passed to `AsyncImage` / `ZoomableAsyncImage` must be
   `remember(url) { ImageRequest.Builder(...).build() }` — never built inline in the call site.
   Established in `MangaCoverArt`, `ChapterPageImage`, `MangaDetailsBackground`, `ProfilePicture`
+- **The Coil singleton `ImageLoader` is configured in `App`** (`App : Application(),
+  SingletonImageLoader.Factory`), not per call site — Coil 3 resolves it via
+  `(applicationContext as? Factory)?.newImageLoader(...)`, so `AsyncImage`, `ZoomableAsyncImage`
+  (telephoto) and every other Coil entry point all pick it up with no call-site change. The
+  overrides are **deliberate deviations from measured Coil 3 defaults**, not cargo cult — the
+  defaults (read from `coil-core` sources) are memory `0.2 × totalAvailableMemory` (`0.15` on
+  low-RAM), disk `2%` of free space clamped to `[10 MB, 250 MB]` at
+  `SYSTEM_TEMPORARY_DIRECTORY/coil3_disk_cache` (= app `cacheDir` on Android, since Android sets
+  `java.io.tmpdir` to it). This app raises memory to `0.25` and disk to `5%` clamped
+  `[64 MB, 512 MB]`, because one manga chapter is 20-40 full-page images — a 10 MB floor cannot
+  hold even one, so re-reading refetched everything. **The directory name `coil3_disk_cache` is
+  kept identical to Coil's own default on purpose**: `DiskCache.Builder` requires an explicit
+  `directory()`, and reusing the default path means existing users keep their cached pages across
+  the update instead of silently re-downloading. Disk size is a **storage trade-off**, not a free
+  win — lower it if users complain about app size. The per-request
+  `.memoryCachePolicy(ENABLED)/.diskCachePolicy(ENABLED)` calls in `MangaCoverArt`/`ChapterPageImage`
+  /`ProfilePicture` are redundant (they restate Coil defaults) but harmless and left as-is
+- **No `.crossfade(...)` anywhere** — not on the singleton loader, not on any `ImageRequest`. Coil's
+  own default is crossfade **off**, so the absence is the configuration; do not "restore" it. Image
+  loading is signalled by `Modifier.shimmerLoading(isEnable = !isImageLoaded)` at the call site
+  instead (`MangaItem`, `FavoriteMangaItem`, `ReadingHistoryItem`, `ProfileHistoryItem`,
+  `MangaBanner`, `CategoryCard` around `MangaCoverArt`; `ChapterPageImage` around its own image) —
+  running a fade *and* a shimmer for the same load is two competing transitions, and
+  `MangaCoverArt` was doing it at **800 ms**, so a fast scroll through a grid stacked dozens of
+  simultaneous alpha animations on top of shimmer. `ProfilePicture` and `MangaDetailsBackground`
+  have **no** shimmer and now pop in with no transition at all — that is a deliberate, accepted
+  trade-off (uniform "no crossfade" rule beats a per-file exception), not an oversight
 - Shared manga-info atoms live in `presentation/screens/common/badges/`: `MangaStatusBadge` (icon +
   label from `MangaStatusValue`), `MangaRatingChip` (star + rating), `MangaGenreChip` (label +
   optional `onClick`). All three share one visual family — `primaryContainer.copy(alpha = 0.9f)`
@@ -1170,6 +1206,15 @@ established shape as `observeHistoryJob`/`cancelObserveHistoryJob()`.
   `remember { derivedStateOf { } }`, which are caching/state, not lambda memoization — always keep
   those.
 - LazyList keys: never include index — stable server-side ID only
+- `contentType` is only worth adding to a **mixed** feed — a lazy layout whose slots hold
+  structurally different composables — so the layout reuses a slot for the same kind of item
+  instead of tearing down and re-composing. `CategoriesGrid` is the one real case (4 full-span
+  `Text` headers interleaved with 250dp `CategoryCard`s) and uses a `private enum class
+  CategoriesGridContentType { HEADER, CARD }` declared at the top of that file — a private enum,
+  not a `String` (typo-proof) and not a top-level `private val` (which the Comments/Compose rules
+  forbid). Homogeneous lists (`HorizontalMangaList`, `FavoritesContent`, `ReadingHistoryList`) do
+  **not** need it; a list whose only extra slot is a single header or load-more footer gains
+  nothing measurable, so don't add it there by reflex
 - Hoist `remember(list) { list.associateBy { it.id } }` before `items { }` — never `find { }` inside
 - No backwards writes: never write to `MutableState` already read in the same composition pass
 - `remember` keys must include ALL captured values that can change —

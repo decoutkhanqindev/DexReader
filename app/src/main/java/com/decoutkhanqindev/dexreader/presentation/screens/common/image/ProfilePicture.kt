@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
-import coil3.request.crossfade
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
 @Composable
@@ -27,7 +26,6 @@ fun ProfilePicture(
   val model = remember(url) {
     ImageRequest.Builder(context)
       .data(url)
-      .crossfade(true)
       .memoryCachePolicy(CachePolicy.ENABLED)
       .diskCachePolicy(CachePolicy.ENABLED)
       .build()

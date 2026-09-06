@@ -1,7 +1,10 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.categories.components
 
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -10,21 +13,26 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.category.CategoryTypeValue
 import com.decoutkhanqindev.dexreader.presentation.screens.categories.CategoryCoverUiState
 import com.decoutkhanqindev.dexreader.presentation.screens.categories.CategoryListUiState
+import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.MoveToTopButton
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,13 +75,33 @@ fun CategoriesContent(
       }
 
       is CategoryListUiState.Success -> {
-        CategoriesGrid(
-          categoryMap = categoryListUiState.categoryMap,
-          categoryCoverUiState = categoryCoverUiState,
-          modifier = Modifier.fillMaxSize(),
-          onCategoryClick = onCategoryClick,
-          onLoadCover = onLoadCover,
-        )
+        val categoryMap = categoryListUiState.categoryMap
+        val lazyGridState = rememberLazyGridState()
+        val coroutineScope = rememberCoroutineScope()
+        val categoriesSize = remember(categoryMap) { categoryMap.values.sumOf { it.size } }
+
+        Box(modifier = Modifier.fillMaxSize()) {
+          CategoriesGrid(
+            gridState = { lazyGridState },
+            categoryMap = categoryMap,
+            categoryCoverUiState = categoryCoverUiState,
+            modifier = Modifier.fillMaxSize(),
+            onCategoryClick = onCategoryClick,
+            onLoadCover = onLoadCover,
+          )
+
+          MoveToTopButton(
+            itemsSize = categoriesSize,
+            gridState = { lazyGridState },
+            modifier = Modifier
+              .align(Alignment.BottomEnd)
+              .padding(end = 16.dp, bottom = 78.dp)
+          ) {
+            coroutineScope.launch {
+              lazyGridState.animateScrollToItem(0)
+            }
+          }
+        }
       }
     }
   }

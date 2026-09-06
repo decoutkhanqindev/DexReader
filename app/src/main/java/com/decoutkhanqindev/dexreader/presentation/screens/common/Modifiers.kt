@@ -191,22 +191,24 @@ fun Modifier.blurBackground(
 
 @Composable
 fun Modifier.animateItemOnAppear(): Modifier {
-  val visibleState = remember {
-    MutableTransitionState(false).apply { targetState = true }
-  }
-  val transition = rememberTransition(visibleState, label = "ItemAppearance")
-  val alpha = transition.animateFloat(
-    transitionSpec = { spring(stiffness = Spring.StiffnessLow) },
-    label = "Alpha"
-  ) { if (it) 1f else 0f }
+//  val visibleState = remember {
+//    MutableTransitionState(false).apply { targetState = true }
+//  }
+//  val transition = rememberTransition(visibleState, label = "ItemAppearance")
+//  val alpha = transition.animateFloat(
+//    transitionSpec = { spring(stiffness = Spring.StiffnessLow) },
+//    label = "Alpha"
+//  ) { if (it) 1f else 0f }
+//
+//  val translationY = transition.animateFloat(
+//    transitionSpec = { spring(stiffness = Spring.StiffnessLow) },
+//    label = "TranslationY"
+//  ) { if (it) 0f else 50f }
+//
+//  return this.graphicsLayer {
+//    this.alpha = alpha.value
+//    this.translationY = translationY.value
+//  }
 
-  val translationY = transition.animateFloat(
-    transitionSpec = { spring(stiffness = Spring.StiffnessLow) },
-    label = "TranslationY"
-  ) { if (it) 0f else 50f }
-
-  return this.graphicsLayer {
-    this.alpha = alpha.value
-    this.translationY = translationY.value
-  }
+  return this
 }
