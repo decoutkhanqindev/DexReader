@@ -15,14 +15,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.navigation.NavHostController
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseDetailsScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
+import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateBack
 
 @Composable
 fun PrivacyPolicyScreen(
+  navController: NavHostController,
   modifier: Modifier = Modifier,
-  onNavigateBack: () -> Unit,
 ) {
   val context = LocalContext.current
   val url = remember { "https://decoutkhanqindev.github.io/DexReader/privacy-policy" }
@@ -59,7 +61,7 @@ fun PrivacyPolicyScreen(
 
   val handleBack = {
     if (webView.canGoBack()) webView.goBack()
-    else onNavigateBack()
+    else navController.navigateBack()
   }
 
   DisposableEffect(Unit) {

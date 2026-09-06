@@ -6,18 +6,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.register.components.RegisterContent
+import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateBack
+import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateClearStack
 
 @Composable
 fun RegisterScreen(
+  navController: NavHostController,
   viewModel: RegisterViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
-  onNavigateBack: () -> Unit,
-  onNavigateToLoginScreen: () -> Unit,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-  BackHandler { onNavigateBack() }
+  BackHandler { navController.navigateBack() }
 
   RegisterContent(
     uiState = uiState,
@@ -27,8 +30,8 @@ fun RegisterScreen(
     onConfirmPasswordChange = { viewModel.updateConfirmPassword(it) },
     onNameChange = { viewModel.updateName(it) },
     onSubmitClick = { viewModel.submit() },
-    onRegisterSuccess = onNavigateToLoginScreen,
-    onNavigateBack = onNavigateBack,
+    onRegisterSuccess = { navController.navigateClearStack<NavRoute.Register>(NavRoute.Login) },
+    onNavigateBack = { navController.navigateBack() },
     onRetry = { viewModel.retry() },
   )
 }

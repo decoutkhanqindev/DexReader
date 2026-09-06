@@ -12,31 +12,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseDetailsScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.MangaDetailsContent
+import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateBack
+import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateClearStack
+import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateTo
 
 @Composable
 fun MangaDetailsScreen(
+  navController: NavHostController,
   viewModel: MangaDetailsViewModel = hiltViewModel(),
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
   modifier: Modifier = Modifier,
-  onNavigateBack: () -> Unit,
-  onNavigateToSearchScreen: () -> Unit,
-  onNavigateToLoginScreen: () -> Unit,
-  onNavigateCategoryDetailsScreen: (
-    categoryId: String,
-    categoryTitle: String,
-    categoryDescription: String,
-  ) -> Unit,
-  onNavigateToReaderScreen: (
-    chapterId: String,
-    lastReadPage: Int,
-    mangaId: String,
-  ) -> Unit,
 ) {
   val mangaDetailsUiState by viewModel.mangaDetailsUiState.collectAsStateWithLifecycle()
   val mangaChaptersUiState by viewModel.mangaChaptersUiState.collectAsStateWithLifecycle()
@@ -48,7 +41,7 @@ fun MangaDetailsScreen(
   val isFavorite by viewModel.isFavorite.collectAsStateWithLifecycle()
   var isShowFavoritesDialog by remember { mutableStateOf(false) }
 
-  BackHandler { onNavigateBack() }
+  BackHandler { navController.navigateBack() }
 
   SideEffect(isUserLoggedIn, currentUser?.id) {
     if (isUserLoggedIn && currentUser != null) viewModel.updateUserId(id = currentUser.id)
@@ -61,7 +54,7 @@ fun MangaDetailsScreen(
       confirm = stringResource(R.string.sign_in),
       onConfirmClick = {
         isShowFavoritesDialog = false
-        onNavigateToLoginScreen()
+        navController.navigateClearStack<NavRoute.MangaDetails>(NavRoute.Login)
       },
       onDismissClick = { isShowFavoritesDialog = false },
     )
@@ -70,8 +63,8 @@ fun MangaDetailsScreen(
   BaseDetailsScreen(
     title = stringResource(R.string.manga_details),
     modifier = modifier,
-    onNavigateBack = onNavigateBack,
-    onNavigateToSearchScreen = onNavigateToSearchScreen
+    onNavigateBack = { navController.navigateBack() },
+    onNavigateToSearchScreen = { navController.navigateTo(NavRoute.Search) }
   ) {
     MangaDetailsContent(
       mangaDetailsUiState = mangaDetailsUiState,
@@ -83,7 +76,9 @@ fun MangaDetailsScreen(
       startedChapterId = startedChapterId,
       continueChapter = continueChapter,
       modifier = Modifier.fillMaxSize(),
-      onReadingClick = onNavigateToReaderScreen,
+      onReadingClick = { chapterId, lastReadPage, mangaId ->
+        navController.navigateTo(NavRoute.Reader(chapterId, lastReadPage, mangaId))
+      },
       onFavoriteClick = remember(isUserLoggedIn, isFavorite) {
         {
           if (isUserLoggedIn) {
@@ -93,8 +88,18 @@ fun MangaDetailsScreen(
         }
       },
       onLanguageItemClick = { viewModel.updateChapterLanguage(it) },
-      onCategoryItemClick = onNavigateCategoryDetailsScreen,
-      onChapterItemClick = onNavigateToReaderScreen,
+      onCategoryItemClick = { categoryId, categoryTitle, categoryDescription ->
+        navController.navigateTo(
+          NavRoute.CategoryDetails(
+            categoryTitle = categoryTitle,
+            categoryId = categoryId,
+            categoryDescription = categoryDescription,
+          )
+        )
+      },
+      onChapterItemClick = { chapterId, lastReadPage, mangaId ->
+        navController.navigateTo(NavRoute.Reader(chapterId, lastReadPage, mangaId))
+      },
       onFetchChapterListNextPage = { viewModel.fetchChapterListNextPage() },
       onRetryFetchChapterListNextPage = { viewModel.retryFetchChapterListNextPage() },
       onRetryFetchChapterListFirstPage = { viewModel.retryFetchChapterListFirstPage() },

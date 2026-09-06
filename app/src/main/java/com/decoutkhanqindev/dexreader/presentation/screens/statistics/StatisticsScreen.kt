@@ -7,20 +7,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseDetailsScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.statistics.StatisticsViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.statistics.components.StatisticsContent
+import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateBack
+import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateTo
 
 @Composable
 fun StatisticsScreen(
+  navController: NavHostController,
   viewModel: StatisticsViewModel,
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
-  onNavigateBack: () -> Unit,
-  onNavigateToSearchScreen: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -32,8 +35,8 @@ fun StatisticsScreen(
   BaseDetailsScreen(
     title = stringResource(R.string.statistics_menu_item),
     modifier = modifier,
-    onNavigateBack = onNavigateBack,
-    onNavigateToSearchScreen = onNavigateToSearchScreen,
+    onNavigateBack = { navController.navigateBack() },
+    onNavigateToSearchScreen = { navController.navigateTo(NavRoute.Search) },
   ) {
     if (isUserLoggedIn) {
       StatisticsContent(

@@ -1,93 +1,19 @@
 # -----------------------------------------------------------------------
-# Debugging: preserve line numbers in crash stack traces
+# Crashlytics: readable stack traces.
+# Required because proguard-android-optimize.txt ships this line commented out.
 # -----------------------------------------------------------------------
 -keepattributes SourceFile,LineNumberTable
 -renamesourcefileattribute SourceFile
 
 # -----------------------------------------------------------------------
-# Kotlin: keep metadata so reflection-based libraries can read types
+# Firebase Firestore: DTOs are mapped by reflection (toObject, @PropertyName),
+# so their members and the runtime annotations must both survive.
+# Nothing else in the build guarantees this attribute on its own.
 # -----------------------------------------------------------------------
--keepattributes *Annotation*
--keepattributes Signature
--keepattributes Exceptions
--keepattributes InnerClasses
--keepattributes EnclosingMethod
-
-# -----------------------------------------------------------------------
-# Moshi — KSP generates *JsonAdapter classes looked up by name at runtime
-# -----------------------------------------------------------------------
--keep @com.squareup.moshi.JsonClass class * { *; }
--keepclassmembers class * {
-    @com.squareup.moshi.Json <fields>;
-}
-# Keep all API response DTOs and their generated adapters
-# (response.** already covers the generated **JsonAdapter classes)
--keep class com.decoutkhanqindev.dexreader.data.network.api.response.** { *; }
-
-# -----------------------------------------------------------------------
-# Retrofit — keep annotated interface methods; Retrofit proxies them
-# -----------------------------------------------------------------------
--keepclassmembernames interface * {
-    @retrofit2.http.* <methods>;
-}
--keep interface com.decoutkhanqindev.dexreader.data.network.api.ApiService { *; }
-
-# -----------------------------------------------------------------------
-# OkHttp / Okio — bundled consumer rules handle most cases; seal the rest
-# -----------------------------------------------------------------------
--dontwarn okhttp3.internal.platform.**
--dontwarn org.conscrypt.**
--dontwarn org.bouncycastle.**
--dontwarn org.openjsse.**
-
-# -----------------------------------------------------------------------
-# Firebase Firestore — DTOs are deserialized via reflection (toObject())
-# All fields + no-arg constructor must survive R8
-# -----------------------------------------------------------------------
+-keepattributes RuntimeVisibleAnnotations
 -keep class com.decoutkhanqindev.dexreader.data.network.firebase.dto.** { *; }
 
 # -----------------------------------------------------------------------
-# Room — has bundled consumer rules via KSP; keep only @Entity-annotated classes
-# -----------------------------------------------------------------------
--keep @androidx.room.Entity class * { *; }
-
-# -----------------------------------------------------------------------
-# Kotlinx Coroutines — keep internal dispatcher resolution
-# -----------------------------------------------------------------------
--keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
--keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
--keepclassmembernames class kotlinx.** {
-    volatile <fields>;
-}
-
-# -----------------------------------------------------------------------
-# Kotlinx Serialization — has bundled rules; suppress known warnings
-# -----------------------------------------------------------------------
--dontwarn kotlinx.serialization.**
-
-# -----------------------------------------------------------------------
-# Navigation Compose type-safe routes
+# Navigation Compose: type-safe routes are resolved through the class name.
 # -----------------------------------------------------------------------
 -keepnames @kotlinx.serialization.Serializable class com.decoutkhanqindev.dexreader.**
-
-# -----------------------------------------------------------------------
-# Hilt / Dagger — have bundled consumer rules; suppress generated warnings
-# -----------------------------------------------------------------------
--dontwarn dagger.hilt.internal.**
-
-# -----------------------------------------------------------------------
-# ProfileInstaller — receiver must stay unobfuscated for Macrobenchmark
-# broadcasts (DROP_SHADER_CACHE, INSTALL_PROFILE) to work at runtime
-# -----------------------------------------------------------------------
--keep class androidx.profileinstaller.ProfileInstallReceiver { *; }
-
-# -----------------------------------------------------------------------
-# Timber — strip all log calls in release
-# -----------------------------------------------------------------------
--assumenosideeffects class timber.log.Timber {
-    public static void v(...);
-    public static void d(...);
-    public static void i(...);
-    public static void w(...);
-    public static void e(...);
-}

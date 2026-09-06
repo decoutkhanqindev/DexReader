@@ -14,9 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.bottom_bar.BottomTabItemValue
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.favorites.FavoritesViewModel
@@ -24,9 +26,12 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.his
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.statistics.StatisticsViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.components.ProfileContent
 import com.decoutkhanqindev.dexreader.presentation.screens.profile.components.actions.SignInButton
+import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateClearStack
+import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateTo
 
 @Composable
 fun ProfileScreen(
+  navController: NavHostController,
   favoritesViewModel: FavoritesViewModel,
   historyViewModel: HistoryViewModel,
   statisticsViewModel: StatisticsViewModel,
@@ -34,17 +39,6 @@ fun ProfileScreen(
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
   modifier: Modifier = Modifier,
-  onNavigateToLoginScreen: () -> Unit,
-  onNavigateToSettingsScreen: () -> Unit,
-  onNavigateToFavoritesScreen: () -> Unit,
-  onNavigateToHistoryScreen: () -> Unit,
-  onNavigateToStatisticsScreen: () -> Unit,
-  onNavigateToMangaDetailScreen: (String) -> Unit,
-  onNavigateToReaderScreen: (
-    chapterId: String,
-    lastReadPage: Int,
-    mangaId: String,
-  ) -> Unit,
 ) {
   val uiState by profileViewModel.uiState.collectAsStateWithLifecycle()
   val favoritesUiState by favoritesViewModel.uiState.collectAsStateWithLifecycle()
@@ -77,7 +71,7 @@ fun ProfileScreen(
     isSearchEnabled = false,
     isSettingsEnabled = true,
     modifier = modifier,
-    onNavigateToSettingsScreen = onNavigateToSettingsScreen,
+    onNavigateToSettingsScreen = { navController.navigateTo(NavRoute.Settings) },
   ) {
     if (isUserLoggedIn) {
       ProfileContent(
@@ -94,14 +88,20 @@ fun ProfileScreen(
         onLogoutSuccess = {},
         onRetryUpdate = { profileViewModel.retryUpdateUserProfile() },
         onRetryLogout = { profileViewModel.retryLogoutUser() },
-        onFavoriteMangaClick = onNavigateToMangaDetailScreen,
-        onFavoritesMoreClick = onNavigateToFavoritesScreen,
+        onFavoriteMangaClick = { mangaId ->
+          navController.navigateTo(NavRoute.MangaDetails(mangaId))
+        },
+        onFavoritesMoreClick = { navController.navigateTo(NavRoute.Favorites) },
         onRetryFavorites = { favoritesViewModel.retry() },
-        onContinueReadingClick = onNavigateToReaderScreen,
-        onHistoryMangaDetailsClick = onNavigateToMangaDetailScreen,
-        onHistoryMoreClick = onNavigateToHistoryScreen,
+        onContinueReadingClick = { chapterId, lastReadPage, mangaId ->
+          navController.navigateTo(NavRoute.Reader(chapterId, lastReadPage, mangaId))
+        },
+        onHistoryMangaDetailsClick = { mangaId ->
+          navController.navigateTo(NavRoute.MangaDetails(mangaId))
+        },
+        onHistoryMoreClick = { navController.navigateTo(NavRoute.History) },
         onRetryHistory = { historyViewModel.retryObserveHistoryFirstPage() },
-        onStatisticsMoreClick = onNavigateToStatisticsScreen,
+        onStatisticsMoreClick = { navController.navigateTo(NavRoute.Statistics) },
         onRetryStatistics = { statisticsViewModel.retry() },
         onRefresh = {
           favoritesViewModel.refresh()
@@ -123,7 +123,7 @@ fun ProfileScreen(
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
             .padding(bottom = 78.dp),
-          onSignInClick = onNavigateToLoginScreen,
+          onSignInClick = { navController.navigateClearStack<NavRoute.Main>(NavRoute.Login) },
         )
       }
     }

@@ -7,26 +7,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseDetailsScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.history.HistoryViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.history.components.HistoryContent
+import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateBack
+import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateTo
 
 @Composable
 fun HistoryScreen(
+  navController: NavHostController,
   viewModel: HistoryViewModel,
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
-  onNavigateBack: () -> Unit,
-  onNavigateToSearchScreen: () -> Unit,
-  onNavigateToReaderScreen: (
-    chapterId: String,
-    lastReadPage: Int,
-    mangaId: String,
-  ) -> Unit,
-  onNavigateToMangaDetailScreen: (String) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   val historyUiState by viewModel.historyUiState.collectAsStateWithLifecycle()
@@ -40,15 +37,19 @@ fun HistoryScreen(
   BaseDetailsScreen(
     title = stringResource(R.string.history_menu_item),
     modifier = modifier,
-    onNavigateBack = onNavigateBack,
-    onNavigateToSearchScreen = onNavigateToSearchScreen
+    onNavigateBack = { navController.navigateBack() },
+    onNavigateToSearchScreen = { navController.navigateTo(NavRoute.Search) }
   ) {
     if (isUserLoggedIn) {
       HistoryContent(
         historyUiState = historyUiState,
         removeFromHistoryUiState = removeFromHistoryUiState,
-        onContinueReadingClick = onNavigateToReaderScreen,
-        onMangaDetailsClick = onNavigateToMangaDetailScreen,
+        onContinueReadingClick = { chapterId, lastReadPage, mangaId ->
+          navController.navigateTo(NavRoute.Reader(chapterId, lastReadPage, mangaId))
+        },
+        onMangaDetailsClick = { mangaId ->
+          navController.navigateTo(NavRoute.MangaDetails(mangaId))
+        },
         onUpdateRemoveReadingHistoryId = { viewModel.updateRemoveReadingHistoryId(it) },
         onRemoveFromHistory = { viewModel.removeFromHistory() },
         onRetryRemoveFromHistory = { viewModel.retryRemoveFromHistory() },

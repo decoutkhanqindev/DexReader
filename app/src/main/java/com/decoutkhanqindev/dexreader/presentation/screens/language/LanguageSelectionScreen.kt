@@ -7,17 +7,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.value.language.LanguageTypeValue
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseDetailsScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.language.LanguageViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.language.components.LanguageContent
+import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateClearStack
 
 @Composable
 fun LanguageSelectionScreen(
+  navController: NavHostController,
   languageViewModel: LanguageViewModel,
   modifier: Modifier = Modifier,
-  onNavigateToOnboardingScreen: () -> Unit,
 ) {
   val uiState by languageViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -37,7 +40,7 @@ fun LanguageSelectionScreen(
       onLanguageClick = { languageViewModel.updateSelectedLanguage(it) },
       onDoneClick = {
         languageViewModel.saveSelectedLanguage()
-        onNavigateToOnboardingScreen()
+        navController.navigateClearStack<NavRoute.LanguageSelection>(NavRoute.Onboarding)
       },
     )
   }

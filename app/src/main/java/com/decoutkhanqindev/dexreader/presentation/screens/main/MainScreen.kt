@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -21,7 +22,6 @@ import androidx.navigation.compose.rememberNavController
 import com.decoutkhanqindev.dexreader.presentation.mapper.BottomTabItemMapper.toNavRoute
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.bottom_bar.BottomTabItemValue
-import com.decoutkhanqindev.dexreader.presentation.model.value.criteria.MangaSortCriteriaValue
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 import com.decoutkhanqindev.dexreader.presentation.screens.categories.CategoriesScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.categories.CategoriesViewModel
@@ -39,36 +39,19 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun MainScreen(
+  navController: NavHostController,
   manageSectionViewModel: MangaSectionViewModel,
+  isUserLoggedIn: Boolean,
+  currentUser: UserModel?,
   categoriesViewModel: CategoriesViewModel = hiltViewModel(),
   favoritesViewModel: FavoritesViewModel = hiltViewModel(),
   historyViewModel: HistoryViewModel = hiltViewModel(),
   statisticsViewModel: StatisticsViewModel = hiltViewModel(),
   profileViewModel: ProfileViewModel = hiltViewModel(),
-  isUserLoggedIn: Boolean,
-  currentUser: UserModel?,
   modifier: Modifier = Modifier,
-  onNavigateToLoginScreen: () -> Unit,
-  onNavigateToSettingsScreen: () -> Unit,
-  onNavigateToSearchScreen: () -> Unit,
-  onNavigateToMangaDetailScreen: (String) -> Unit,
-  onNavigateToCategoryDetailsScreen: (
-    categoryId: String?,
-    categoryTitle: String,
-    categoryDescription: String,
-    initialSortCriteria: MangaSortCriteriaValue,
-  ) -> Unit,
-  onNavigateToFavoritesScreen: () -> Unit,
-  onNavigateToHistoryScreen: () -> Unit,
-  onNavigateToStatisticsScreen: () -> Unit,
-  onNavigateToReaderScreen: (
-    chapterId: String,
-    lastReadPage: Int,
-    mangaId: String,
-  ) -> Unit,
 ) {
-  val navController = rememberNavController()
-  val currentBackStackEntry by navController.currentBackStackEntryAsState()
+  val tabNavController = rememberNavController()
+  val currentBackStackEntry by tabNavController.currentBackStackEntryAsState()
   val selectedTab = remember(currentBackStackEntry) {
     val destination = currentBackStackEntry?.destination
     when {
@@ -82,40 +65,29 @@ fun MainScreen(
 
   Box(modifier = modifier.fillMaxSize()) {
     NavHost(
-      navController = navController,
+      navController = tabNavController,
       startDestination = NavRoute.Home,
       modifier = Modifier.fillMaxSize()
     ) {
       composable<NavRoute.Home> {
         HomeScreen(
+          navController = navController,
           mangaSectionViewModel = manageSectionViewModel,
           modifier = Modifier.fillMaxSize(),
-          onNavigateToSearchScreen = onNavigateToSearchScreen,
-          onNavigateToMangaDetailScreen = onNavigateToMangaDetailScreen,
-          onNavigateToSectionDetailsScreen = { title, sortCriteria ->
-            onNavigateToCategoryDetailsScreen(null, title, "", sortCriteria)
-          },
         )
       }
 
       composable<NavRoute.Categories> {
         CategoriesScreen(
+          navController = navController,
           categoriesViewModel = categoriesViewModel,
           modifier = Modifier.fillMaxSize(),
-          onNavigateToSearchScreen = onNavigateToSearchScreen,
-          onNavigateToCategoryScreen = { categoryId, categoryTitle, categoryDescription ->
-            onNavigateToCategoryDetailsScreen(
-              categoryId,
-              categoryTitle,
-              categoryDescription,
-              MangaSortCriteriaValue.TRENDING,
-            )
-          },
         )
       }
 
       composable<NavRoute.Profile> {
         ProfileScreen(
+          navController = navController,
           favoritesViewModel = favoritesViewModel,
           historyViewModel = historyViewModel,
           statisticsViewModel = statisticsViewModel,
@@ -123,13 +95,6 @@ fun MainScreen(
           isUserLoggedIn = isUserLoggedIn,
           currentUser = currentUser,
           modifier = Modifier.fillMaxSize(),
-          onNavigateToLoginScreen = onNavigateToLoginScreen,
-          onNavigateToSettingsScreen = onNavigateToSettingsScreen,
-          onNavigateToFavoritesScreen = onNavigateToFavoritesScreen,
-          onNavigateToHistoryScreen = onNavigateToHistoryScreen,
-          onNavigateToStatisticsScreen = onNavigateToStatisticsScreen,
-          onNavigateToMangaDetailScreen = onNavigateToMangaDetailScreen,
-          onNavigateToReaderScreen = onNavigateToReaderScreen,
         )
       }
     }
@@ -143,7 +108,7 @@ fun MainScreen(
         .navigationBarsPadding()
         .padding(horizontal = 16.dp, vertical = 8.dp),
       onItemClick = { tab ->
-        navController.navigatePreserveState<NavRoute.Home>(tab.toNavRoute())
+        tabNavController.navigatePreserveState<NavRoute.Home>(tab.toNavRoute())
       },
     )
   }

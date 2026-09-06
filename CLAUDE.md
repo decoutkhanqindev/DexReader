@@ -428,9 +428,24 @@ numeric fallback nearby).
 
 ### Screen Structure
 
-**Screen split**: `*Screen.kt` (VM injection, `collectAsStateWithLifecycle`) | `*Content.kt` (pure
-composable, no VM) | `*ViewModel.kt` (business logic). `*Content` never calls `NavController`
-directly.
+**Screen split**: `*Screen.kt` (VM injection, `collectAsStateWithLifecycle`, **navigation**) |
+`*Content.kt` (pure composable, no VM) | `*ViewModel.kt` (business logic). `*Content` never calls
+`NavController` directly — it takes flat `on*Click` callbacks and the `*Screen.kt` above it turns
+those into `navController.navigateTo(...)`.
+
+**Every `*Screen.kt` takes `navController: NavHostController` as its first param and navigates
+itself** — there are no `onNavigateToXxxScreen: () -> Unit` params threaded down from `NavGraph`
+any more. `NavGraph`'s destinations are therefore near-uniform three-liners
+(`navController = navController` + the screen's VMs/flags + `modifier`), and adding a navigation
+edge is a one-line change inside the screen that owns the click, not a new param on every composable
+between it and `NavGraph`. Screens on the **inner** tab host (Home/Categories/Profile) receive the
+**outer** controller for the same reason they always did: everything they navigate to
+(Search, MangaDetails, CategoryDetails, Settings, Favorites/History/Statistics, Login) lives on the
+outer host, and `ProfileScreen`'s Sign In does `navigateClearStack<NavRoute.Main>(NavRoute.Login)`,
+which can only target the outer back stack. The two `BaseScreen`/`BaseDetailsScreen` wrappers keep
+their `onNavigateBack`/`onNavigateToSearchScreen`/`onNavigateToSettingsScreen` lambda params — they
+are shared UI shells with no route knowledge, and every caller now passes
+`{ navController.navigateBack() }` / `{ navController.navigateTo(NavRoute.Search) }` inline.
 
 **Hub screens (multiple feature VMs in one screen)**: `ProfileScreen` is the established example —
 it
@@ -568,6 +583,23 @@ by default.
 auth flows; `navigatePreserveState()` for bottom-tab navigation. Value enums used as type-safe nav
 args must be `@Serializable` (e.g. `MangaSortCriteriaValue`, carried on `NavRoute.CategoryDetails`).
 
+**The two controllers live at different depths, and that difference is load-bearing.** The outer one
+is a plain `val navController = rememberNavController()` at the top of `NavGraph()` and is passed
+into every screen; the inner tab one is `rememberNavController()` **inside `MainScreen`**, i.e.
+scoped to Main's own composition. Do **not** hoist the tab controller up next to the outer one in
+`NavGraph()` (nor anywhere else that outlives Main): `NavHost` calls
+`navController.setViewModelStore(viewModelStoreOwner.viewModelStore)`, whose implementation is
+`if (viewModel == NavControllerViewModel.getInstance(store)) return; check(backQueue.isEmpty())`
+(verified in `navigation-runtime` 2.9.8 sources, `NavControllerImpl.setViewModelStore`). The
+`ViewModelStoreOwner` inside `composable<NavRoute.Main>` is Main's own `NavBackStackEntry`, so a
+controller that outlives Main carries a non-empty `backQueue` into a **new** store the next time
+Main is pushed and throws `IllegalStateException: ViewModelStore should be set before setGraph
+call`. That is not hypothetical — it is the sign-in path: Profile → Sign In does
+`navigateClearStack<NavRoute.Main>(NavRoute.Login)` (pops Main inclusive) and login success does
+`navigateClearStack<NavRoute.Login>(NavRoute.Main)` (pushes a fresh Main). Keeping the `remember`
+inside `MainScreen` ties the controller to Main's composition, so a re-pushed Main gets a fresh tab
+controller and the tabs correctly restart at Home.
+
 **Onboarding (`screens/onboarding/`)**: a 4-page `HorizontalPager` shown **once**, sitting between
 Splash and Main on the outer host (`Splash → Onboarding → Main`, each hop via `navigateClearStack`,
 so
@@ -609,12 +641,12 @@ for
 the same reason). There is no in-app reset: to see onboarding again during development, clear app
 data (`adb shell pm clear com.decoutkhanqindev.dexreader`).
 
-`SplashScreen` reads that flag — and both of its navigate callbacks — through
-`rememberUpdatedState`,
-and that is **load-bearing, not ceremony**: its `LaunchedEffect(Unit)` is composed before DataStore
-has emitted, so a plain parameter capture would still be `null` three seconds later and every
-first-run user would silently skip onboarding. Don't simplify those three `rememberUpdatedState`
-calls away.
+`SplashScreen` reads that flag — and its `navController` — through `rememberUpdatedState`, and that
+is **load-bearing, not ceremony**: its `LaunchedEffect(Unit)` is composed before DataStore has
+emitted, so a plain parameter capture would still be `null` three seconds later and every first-run
+user would silently skip onboarding. Don't simplify those two `rememberUpdatedState` calls away.
+(It used to be three — the two `onNavigateTo*Screen` lambdas collapsed into the single
+`navController` when screens started navigating themselves.)
 
 **App language (`util/LanguageManager.kt` + `screens/language/`)**: one stored value drives **both**
 the UI locale and the MangaDex content language — it is
@@ -733,7 +765,8 @@ whole `common/menu/` package is deleted). The app has **two nested back stacks**
 - **Outer** — `NavGraph()`'s `NavHost` (`startDestination = NavRoute.Splash`): `Splash`,
   `Onboarding`, the 3 auth routes, **`Main`**, and every screen reached *from* a tab
   (`MangaDetails`, `CategoryDetails`, `Search`, `Reader`, `Favorites`, `History`, `Statistics`).
-- **Inner** — `screens/main/MainScreen.kt`'s own `NavHost` (`startDestination = NavRoute.Home`):
+- **Inner** — `screens/main/MainScreen.kt`'s own `NavHost` (`startDestination = NavRoute.Home`),
+  driven by a `rememberNavController()` that must stay inside `MainScreen` — see Navigation above:
   exactly the 3 tabs, `Home` / `Categories` / `Profile`.
 
 Everything on the outer host therefore has **no bottom bar for free** — no per-destination `if`

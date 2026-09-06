@@ -7,14 +7,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.components.CategoryDetailsContent
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseDetailsScreen
+import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateBack
+import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateTo
 
 @Composable
 fun CategoryDetailScreen(
-  onNavigateBack: () -> Unit,
-  onNavigateToSearchScreen: () -> Unit,
-  onNavigateToMangaDetailScreen: (String) -> Unit,
+  navController: NavHostController,
   viewModel: CategoryDetailsViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
 ) {
@@ -23,12 +25,12 @@ fun CategoryDetailScreen(
   val categoryTitle = viewModel.categoryTitleFromArg
   val categoryDescription = viewModel.categoryDescriptionFromArg
 
-  BackHandler { onNavigateBack() }
+  BackHandler { navController.navigateBack() }
 
   BaseDetailsScreen(
     title = categoryTitle,
-    onNavigateBack = onNavigateBack,
-    onNavigateToSearchScreen = onNavigateToSearchScreen,
+    onNavigateBack = { navController.navigateBack() },
+    onNavigateToSearchScreen = { navController.navigateTo(NavRoute.Search) },
     modifier = modifier,
   ) {
     CategoryDetailsContent(
@@ -37,7 +39,7 @@ fun CategoryDetailScreen(
       categoryDescription = categoryDescription,
       onSortApplyClick = { s, o -> viewModel.updateSortingCriteria(s, o) },
       onFilterApplyClick = { s, c -> viewModel.updateFilteringCriteria(s, c) },
-      onMangaClick = onNavigateToMangaDetailScreen,
+      onMangaClick = { mangaId -> navController.navigateTo(NavRoute.MangaDetails(mangaId)) },
       onFetchMangaListNextPage = { viewModel.fetchMangaListByCategoryNextPage() },
       onRetryFetchMangaListNextPage = { viewModel.retryFetchMangaListByCategoryNextPage() },
       onRetry = { viewModel.retry() },

@@ -5,12 +5,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.semantics.testTagsAsResourceId
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
@@ -40,9 +40,6 @@ import com.decoutkhanqindev.dexreader.presentation.screens.splash.SplashScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.statistics.StatisticsScreen
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import com.decoutkhanqindev.dexreader.util.LanguageManager
-import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateBack
-import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateClearStack
-import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateTo
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -76,114 +73,66 @@ fun NavGraph() {
       ) {
         composable<NavRoute.Splash> {
           SplashScreen(
+            navController = navController,
             isOnboardingCompleted = onboardingUiState.isCompleted,
             modifier = Modifier.fillMaxSize(),
-            onNavigateToLanguageSelectionScreen = {
-              navController.navigateClearStack<NavRoute.Splash>(NavRoute.LanguageSelection)
-            },
-            onNavigateToMainScreen = {
-              navController.navigateClearStack<NavRoute.Splash>(NavRoute.Main)
-            },
           )
         }
 
         composable<NavRoute.LanguageSelection> {
           LanguageSelectionScreen(
+            navController = navController,
             languageViewModel = languageViewModel,
             modifier = Modifier.fillMaxSize(),
-            onNavigateToOnboardingScreen = {
-              navController.navigateClearStack<NavRoute.LanguageSelection>(NavRoute.Onboarding)
-            },
-          )
-        }
-
-        composable<NavRoute.Settings> {
-          SettingsScreen(
-            settingsViewModel = settingsViewModel,
-            modifier = Modifier.fillMaxSize(),
-            onNavigateBack = { navController.navigateBack() },
-            onNavigateToLanguageScreen = { navController.navigateTo(NavRoute.LanguageSetting) },
-            onNavigateToPrivacyScreen = { navController.navigateTo(NavRoute.PrivacyPolicy) },
-          )
-        }
-
-        composable<NavRoute.LanguageSetting> {
-          LanguageSettingScreen(
-            languageViewModel = languageViewModel,
-            modifier = Modifier.fillMaxSize(),
-            onNavigateBack = { navController.navigateBack() },
-          )
-        }
-
-        composable<NavRoute.PrivacyPolicy> {
-          PrivacyPolicyScreen(
-            modifier = Modifier.fillMaxSize(),
-            onNavigateBack = { navController.navigateBack() },
           )
         }
 
         composable<NavRoute.Onboarding> {
           OnboardingScreen(
+            navController = navController,
             onboardingViewModel = onboardingViewModel,
             modifier = Modifier.fillMaxSize(),
-            onNavigateToMainScreen = {
-              navController.navigateClearStack<NavRoute.Onboarding>(NavRoute.Main)
-            },
           )
         }
 
         composable<NavRoute.Main> {
           MainScreen(
+            navController = navController,
             manageSectionViewModel = mangaSectionViewModel,
             isUserLoggedIn = isUserLoggedIn,
             currentUser = currentUser,
             modifier = Modifier.fillMaxSize(),
-            onNavigateToLoginScreen = {
-              navController.navigateClearStack<NavRoute.Main>(NavRoute.Login)
-            },
-            onNavigateToSettingsScreen = { navController.navigateTo(NavRoute.Settings) },
-            onNavigateToSearchScreen = {
-              navController.navigateTo(NavRoute.Search)
-            },
-            onNavigateToMangaDetailScreen = { mangaId ->
-              navController.navigateTo(NavRoute.MangaDetails(mangaId))
-            },
-            onNavigateToCategoryDetailsScreen = { categoryId, categoryTitle, categoryDescription, initialSortCriteria ->
-              navController.navigateTo(
-                NavRoute.CategoryDetails(
-                  categoryTitle = categoryTitle,
-                  categoryId = categoryId,
-                  categoryDescription = categoryDescription,
-                  initialSortCriteria = initialSortCriteria,
-                )
-              )
-            },
-            onNavigateToFavoritesScreen = {
-              navController.navigateTo(NavRoute.Favorites)
-            },
-            onNavigateToHistoryScreen = {
-              navController.navigateTo(NavRoute.History)
-            },
-            onNavigateToStatisticsScreen = {
-              navController.navigateTo(NavRoute.Statistics)
-            },
-            onNavigateToReaderScreen = { chapterId, lastReadPage, mangaId ->
-              navController.navigateTo(NavRoute.Reader(chapterId, lastReadPage, mangaId))
-            },
+          )
+        }
+
+        composable<NavRoute.Search> {
+          SearchScreen(
+            navController = navController,
+            modifier = Modifier.fillMaxSize(),
+          )
+        }
+
+        composable<NavRoute.MangaDetails> {
+          MangaDetailsScreen(
+            navController = navController,
+            isUserLoggedIn = isUserLoggedIn,
+            currentUser = currentUser,
+            modifier = Modifier.fillMaxSize(),
           )
         }
 
         composable<NavRoute.CategoryDetails> {
           CategoryDetailScreen(
-            onNavigateBack = {
-              navController.navigateBack()
-            },
-            onNavigateToSearchScreen = {
-              navController.navigateTo(NavRoute.Search)
-            },
-            onNavigateToMangaDetailScreen = { mangaId ->
-              navController.navigateTo(NavRoute.MangaDetails(mangaId))
-            },
+            navController = navController,
+            modifier = Modifier.fillMaxSize(),
+          )
+        }
+
+        composable<NavRoute.Reader> {
+          ReaderScreen(
+            navController = navController,
+            isUserLoggedIn = isUserLoggedIn,
+            currentUser = currentUser,
             modifier = Modifier.fillMaxSize(),
           )
         }
@@ -191,18 +140,10 @@ fun NavGraph() {
         composable<NavRoute.Favorites> {
           val mainEntry = remember(it) { navController.getBackStackEntry<NavRoute.Main>() }
           FavoritesScreen(
+            navController = navController,
             viewModel = hiltViewModel(mainEntry),
             isUserLoggedIn = isUserLoggedIn,
             currentUser = currentUser,
-            onNavigateBack = {
-              navController.navigateBack()
-            },
-            onNavigateToSearchScreen = {
-              navController.navigateTo(NavRoute.Search)
-            },
-            onNavigateToMangaDetailScreen = { mangaId ->
-              navController.navigateTo(NavRoute.MangaDetails(mangaId))
-            },
             modifier = Modifier.fillMaxSize()
           )
         }
@@ -210,21 +151,10 @@ fun NavGraph() {
         composable<NavRoute.History> {
           val mainEntry = remember(it) { navController.getBackStackEntry<NavRoute.Main>() }
           HistoryScreen(
+            navController = navController,
             viewModel = hiltViewModel(mainEntry),
             isUserLoggedIn = isUserLoggedIn,
             currentUser = currentUser,
-            onNavigateBack = {
-              navController.navigateBack()
-            },
-            onNavigateToSearchScreen = {
-              navController.navigateTo(NavRoute.Search)
-            },
-            onNavigateToReaderScreen = { chapterId, lastReadPage, mangaId ->
-              navController.navigateTo(NavRoute.Reader(chapterId, lastReadPage, mangaId))
-            },
-            onNavigateToMangaDetailScreen = { mangaId ->
-              navController.navigateTo(NavRoute.MangaDetails(mangaId))
-            },
             modifier = Modifier.fillMaxSize()
           )
         }
@@ -232,104 +162,55 @@ fun NavGraph() {
         composable<NavRoute.Statistics> {
           val mainEntry = remember(it) { navController.getBackStackEntry<NavRoute.Main>() }
           StatisticsScreen(
+            navController = navController,
             viewModel = hiltViewModel(mainEntry),
             isUserLoggedIn = isUserLoggedIn,
             currentUser = currentUser,
-            onNavigateBack = {
-              navController.navigateBack()
-            },
-            onNavigateToSearchScreen = {
-              navController.navigateTo(NavRoute.Search)
-            },
             modifier = Modifier.fillMaxSize()
           )
         }
 
-        composable<NavRoute.Search> {
-          SearchScreen(
+        composable<NavRoute.Settings> {
+          SettingsScreen(
+            navController = navController,
+            settingsViewModel = settingsViewModel,
             modifier = Modifier.fillMaxSize(),
-            onNavigateToManDetailScreen = { mangaId ->
-              navController.navigateTo(NavRoute.MangaDetails(mangaId))
-            },
-            onNavigateBack = {
-              navController.navigateBack()
-            },
           )
         }
 
-        composable<NavRoute.MangaDetails> {
-          MangaDetailsScreen(
-            isUserLoggedIn = isUserLoggedIn,
-            currentUser = currentUser,
+        composable<NavRoute.LanguageSetting> {
+          LanguageSettingScreen(
+            navController = navController,
+            languageViewModel = languageViewModel,
             modifier = Modifier.fillMaxSize(),
-            onNavigateBack = {
-              navController.navigateBack()
-            },
-            onNavigateToSearchScreen = {
-              navController.navigateTo(NavRoute.Search)
-            },
-            onNavigateToLoginScreen = {
-              navController.navigateClearStack<NavRoute.MangaDetails>(NavRoute.Login)
-            },
-            onNavigateCategoryDetailsScreen = { categoryId, categoryTitle, categoryDescription ->
-              navController.navigateTo(
-                NavRoute.CategoryDetails(
-                  categoryTitle = categoryTitle,
-                  categoryId = categoryId,
-                  categoryDescription = categoryDescription,
-                )
-              )
-            },
-            onNavigateToReaderScreen = { chapterId, lastReadPage, mangaId ->
-              navController.navigateTo(NavRoute.Reader(chapterId, lastReadPage, mangaId))
-            },
           )
         }
 
-        composable<NavRoute.Reader> {
-          ReaderScreen(
-            isUserLoggedIn = isUserLoggedIn,
-            currentUser = currentUser,
+        composable<NavRoute.PrivacyPolicy> {
+          PrivacyPolicyScreen(
+            navController = navController,
             modifier = Modifier.fillMaxSize(),
-          ) { navController.navigateBack() }
+          )
         }
 
         composable<NavRoute.Login> {
           LoginScreen(
+            navController = navController,
             modifier = Modifier.fillMaxSize(),
-            onNavigateToHomeScreen = {
-              navController.navigateClearStack<NavRoute.Login>(NavRoute.Main)
-            },
-            onNavigateToRegisterScreen = {
-              navController.navigateTo(NavRoute.Register)
-            },
-            onNavigateToForgotPasswordScreen = {
-              navController.navigateTo(NavRoute.ForgotPassword)
-            },
           )
         }
 
         composable<NavRoute.Register> {
           RegisterScreen(
+            navController = navController,
             modifier = Modifier.fillMaxSize(),
-            onNavigateBack = {
-              navController.navigateBack()
-            },
-            onNavigateToLoginScreen = {
-              navController.navigateClearStack<NavRoute.Register>(NavRoute.Login)
-            },
           )
         }
 
         composable<NavRoute.ForgotPassword> {
           ForgotPasswordScreen(
+            navController = navController,
             modifier = Modifier.fillMaxSize(),
-            onNavigateBack = {
-              navController.navigateBack()
-            },
-            onNavigateToLoginScreen = {
-              navController.navigateClearStack<NavRoute.ForgotPassword>(NavRoute.Login)
-            },
           )
         }
       }

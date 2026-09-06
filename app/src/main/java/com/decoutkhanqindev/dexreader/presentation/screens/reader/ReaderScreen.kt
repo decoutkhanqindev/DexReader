@@ -31,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseDetailsScreen
@@ -39,14 +40,15 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.top_bars.AppTo
 import com.decoutkhanqindev.dexreader.presentation.screens.reader.components.ReaderContent
 import com.decoutkhanqindev.dexreader.presentation.screens.reader.components.actions.NavigateChapterBottomBar
 import com.decoutkhanqindev.dexreader.presentation.screens.reader.components.actions.ZoomPageButton
+import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateBack
 
 @Composable
 fun ReaderScreen(
+  navController: NavHostController,
   viewModel: ReaderViewModel = hiltViewModel(),
   isUserLoggedIn: Boolean,
   currentUser: UserModel?,
   modifier: Modifier = Modifier,
-  onNavigateBack: () -> Unit,
 ) {
   val chapterDetailsUiState by viewModel.chapterDetailsUiState.collectAsStateWithLifecycle()
   val chapterPagesUiState by viewModel.chapterPagesUiState.collectAsStateWithLifecycle()
@@ -67,7 +69,7 @@ fun ReaderScreen(
   var isShowResetSuccessDialog by remember { mutableStateOf(false) }
   var isShowResetErrorDialog by remember { mutableStateOf(false) }
 
-  BackHandler { onNavigateBack() }
+  BackHandler { navController.navigateBack() }
 
   SideEffect(isUserLoggedIn, currentUser?.id) {
     if (isUserLoggedIn && currentUser != null) viewModel.updateUserId(userId = currentUser.id)
@@ -91,7 +93,7 @@ fun ReaderScreen(
       ) {
         AppTopBar(
           leftIcon = Icons.AutoMirrored.Filled.ArrowBack,
-          onLeftClick = onNavigateBack,
+          onLeftClick = { navController.navigateBack() },
           centerContent = {
             Column(
               modifier = Modifier.fillMaxWidth(),

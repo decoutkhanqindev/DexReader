@@ -9,15 +9,6 @@ sealed interface NavRoute {
   data object Splash : NavRoute
 
   @Serializable
-  data object Login : NavRoute
-
-  @Serializable
-  data object Register : NavRoute
-
-  @Serializable
-  data object ForgotPassword : NavRoute
-
-  @Serializable
   data object LanguageSelection : NavRoute
 
   @Serializable
@@ -33,25 +24,7 @@ sealed interface NavRoute {
   data object Categories : NavRoute
 
   @Serializable
-  data object Favorites : NavRoute
-
-  @Serializable
-  data object History : NavRoute
-
-  @Serializable
-  data object Statistics : NavRoute
-
-  @Serializable
   data object Profile : NavRoute
-
-  @Serializable
-  data object Settings : NavRoute
-
-  @Serializable
-  data object LanguageSetting : NavRoute
-
-  @Serializable
-  data object PrivacyPolicy : NavRoute
 
   @Serializable
   data object Search : NavRoute
@@ -73,4 +46,31 @@ sealed interface NavRoute {
     val lastReadPage: Int = 0,
     val mangaId: String,
   ) : NavRoute
+
+  @Serializable
+  data object Favorites : NavRoute
+
+  @Serializable
+  data object History : NavRoute
+
+  @Serializable
+  data object Statistics : NavRoute
+
+  @Serializable
+  data object Settings : NavRoute
+
+  @Serializable
+  data object LanguageSetting : NavRoute
+
+  @Serializable
+  data object PrivacyPolicy : NavRoute
+
+  @Serializable
+  data object Login : NavRoute
+
+  @Serializable
+  data object Register : NavRoute
+
+  @Serializable
+  data object ForgotPassword : NavRoute
 }

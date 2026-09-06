@@ -11,17 +11,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
+import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseDetailsScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.search.components.SearchContent
 import com.decoutkhanqindev.dexreader.presentation.screens.search.components.actions.SearchBar
+import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateBack
+import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateTo
 
 
 @Composable
 fun SearchScreen(
+  navController: NavHostController,
   viewModel: SearchViewModel = hiltViewModel(),
   modifier: Modifier = Modifier,
-  onNavigateToManDetailScreen: (String) -> Unit,
-  onNavigateBack: () -> Unit,
 ) {
   val suggestionsUiState by viewModel.suggestionsUiState.collectAsStateWithLifecycle()
   val resultsUiState by viewModel.resultsUiState.collectAsStateWithLifecycle()
@@ -29,7 +32,7 @@ fun SearchScreen(
   val query by viewModel.query.collectAsStateWithLifecycle()
   var isExpanded by remember { mutableStateOf(false) }
 
-  BackHandler { onNavigateBack() }
+  BackHandler { navController.navigateBack() }
 
   BaseDetailsScreen(
     modifier = modifier,
@@ -45,7 +48,7 @@ fun SearchScreen(
           viewModel.fetchMangaListFirstPage()
           isExpanded = false
         },
-        onNavigateBack = onNavigateBack,
+        onNavigateBack = { navController.navigateBack() },
       )
     },
   ) {
@@ -61,7 +64,7 @@ fun SearchScreen(
         viewModel.fetchMangaListFirstPage()
         isExpanded = false
       },
-      onSelectedManga = onNavigateToManDetailScreen,
+      onSelectedManga = { mangaId -> navController.navigateTo(NavRoute.MangaDetails(mangaId)) },
       onFetchMangaListNextPage = { viewModel.fetchMangaListNextPage() },
       onRetryFetchMangaListNextPage = { viewModel.retryFetchMangaListNextPage() },
       onRetry = { viewModel.retry() },

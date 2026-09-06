@@ -4,6 +4,42 @@ Dated log of notable multi-file / cross-cutting work sessions. Newest entry firs
 
 ---
 
+## 2026-09-06 — Navigation: screen tự navigate, bỏ chuỗi callback qua NavGraph
+
+**Vấn đề**: mọi `*Screen.kt` nhận `onNavigateToXxxScreen: () -> Unit` do `NavGraph` truyền
+xuống. Một cạnh điều hướng mới phải thêm param ở từng composable nằm giữa nút bấm và
+`NavGraph` — riêng `MainScreen` gánh 7 callback chỉ để chuyển tiếp xuống 3 tab.
+
+- **`navController: NavHostController` là param đầu của mọi `*Screen.kt`** (19 file); screen
+  tự gọi `navigateTo` / `navigateBack` / `navigateClearStack`. Toàn bộ param `onNavigateTo*`
+  bị xoá. `NavGraph` từ 338 → ~200 dòng, mỗi destination còn `navController` + VM/flag +
+  `modifier`.
+- 3 tab (Home/Categories/Profile) nhận **outer** controller: mọi đích của chúng
+  (Search, MangaDetails, CategoryDetails, Settings, Favorites/History/Statistics, Login)
+  đều nằm trên outer host, và Sign In của Profile là
+  `navigateClearStack<NavRoute.Main>(NavRoute.Login)` — chỉ outer stack mới pop được `Main`.
+- `BaseScreen`/`BaseDetailsScreen` **giữ nguyên** callback `onNavigateBack` /
+  `onNavigateToSearchScreen` / `onNavigateToSettingsScreen` — chúng là vỏ UI dùng chung,
+  không biết route. Mọi call site giờ truyền lambda inline.
+- `SplashScreen` còn **2** `rememberUpdatedState` (cờ onboarding + `navController`) thay vì 3.
+- `*Content.kt` **không đổi một dòng nào** — vẫn nhận callback phẳng, vẫn không biết
+  `NavController`. 59 `@Preview` trong `*Content.kt` không bị ảnh hưởng; chỉ 1 preview trong
+  `*Screen.kt` (`SplashScreenPreview`) phải thêm `rememberNavController()`.
+
+**Bẫy đã tránh — không hoist tab controller lên `NavGraph`.** Ý tưởng "để thẳng 2 controller
+trong NavGraph" sẽ **crash**: `NavHost` gọi
+`navController.setViewModelStore(viewModelStoreOwner.viewModelStore)`, mà
+`NavControllerImpl.setViewModelStore` (navigation-runtime 2.9.8) là
+`if (viewModel == NavControllerViewModel.getInstance(store)) return; check(backQueue.isEmpty())`.
+`ViewModelStoreOwner` trong `composable<NavRoute.Main>` chính là `NavBackStackEntry` của Main,
+nên controller sống lâu hơn Main sẽ mang `backQueue` không rỗng vào một store **mới** ở lần
+push Main kế tiếp → `IllegalStateException: ViewModelStore should be set before setGraph call`.
+Đúng luồng đăng nhập: Profile → Sign In (`navigateClearStack<Main>(Login)`, pop Main inclusive)
+→ login thành công (`navigateClearStack<Login>(Main)`, push Main mới). Vì vậy tab controller
+**ở lại trong `MainScreen`**; chỉ outer controller nằm ở `NavGraph`.
+
+---
+
 ## 2026-09-03 — Baseline profile: flow mới bằng testTag + bộ asset store APKPure
 
 **Baseline profile cũ chạy rỗng.** Generator chờ `By.desc("home_feed")` — selector này
