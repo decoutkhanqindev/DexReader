@@ -11,9 +11,8 @@
 
 ## 📥 Download
 
-<!-- TODO: thay "#" bằng link APKPure sau khi app được duyệt -->
 <p align="center">
-  <a href="#">
+  <a href="https://apkpure.com/p/com.decoutkhanqindev.dexreader">
     <img src="https://img.shields.io/badge/Get%20it%20on-APKPure-6c47ff?style=for-the-badge" alt="Get it on APKPure">
   </a>
 </p>
