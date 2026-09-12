@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaContentRatingValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
-import com.decoutkhanqindev.dexreader.presentation.screens.common.animateItemOnAppear
 import com.decoutkhanqindev.dexreader.presentation.screens.common.badges.MangaRatingChip
 import com.decoutkhanqindev.dexreader.presentation.screens.common.badges.MangaStatusBadge
 import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
@@ -44,7 +43,6 @@ fun MangaItem(
 
   Card(
     modifier = modifier
-      .animateItemOnAppear()
       .onClick(shape = MaterialTheme.shapes.medium) { onClick() },
     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     shape = MaterialTheme.shapes.medium,

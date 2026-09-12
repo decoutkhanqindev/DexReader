@@ -23,7 +23,6 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
-import com.decoutkhanqindev.dexreader.presentation.screens.common.animateItemOnAppear
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
 import com.decoutkhanqindev.dexreader.presentation.screens.common.onClick
 import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmerLoading
@@ -78,7 +77,7 @@ fun ReadingHistoryItem(
     enableDismissFromStartToEnd = false,
     enableDismissFromEndToStart = true,
     gesturesEnabled = true,
-    modifier = modifier.animateItemOnAppear(),
+    modifier = modifier,
   ) {
     Card(
       modifier = Modifier.fillMaxSize(),

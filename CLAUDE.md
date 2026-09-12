@@ -1236,9 +1236,8 @@ established shape as `observeHistoryJob`/`cancelObserveHistoryJob()`.
 - Custom animation modifiers that drive `graphicsLayer { }` or `drawWithContent { }` must read the
   animated `State<Float>` via `.value` **inside** that deferred block — never destructure via `by`
   at the top of the function. A `by` read there re-triggers full recomposition on every animation
-  frame instead of a cheap redraw/relayout-only pass. `onClick`, `shimmerLoading`,
-  `shimmerHighlight`,
-  and `animateItemOnAppear` in `common/Modifiers.kt` all follow this correctly — use them as the
+  frame instead of a cheap redraw/relayout-only pass. `onClick`, `shimmerLoading` and
+  `shimmerHighlight` in `common/Modifiers.kt` all follow this correctly — use them as the
   reference pattern for any new animated modifier
 - `Modifier.onClick(...)` is a plain `@Composable fun Modifier.onClick(...): Modifier` (not
   `composed { }`) — matches the other three modifiers above; avoid `composed { }` for new modifiers
@@ -1260,15 +1259,27 @@ established shape as `observeHistoryJob`/`cancelObserveHistoryJob()`.
   `Modifier` companion and were never affected. When a shared modifier is suspected, read its
   `.then()` receivers first — no padding literal changes, so grepping diffs for `padding`/`spacedBy`
   will not find it.
-- **Never animate `scaleX`/`scaleY` in a list/grid item's entrance animation.** A `graphicsLayer`
-  scale does not shrink the layout slot — only the drawn content — so a mid-animation item renders
-  small inside a full-size slot and reads as extra padding around every item.
-  `animateItemOnAppear()`
-  animates only `alpha` + `translationY` for this reason. The entrance also replays whenever a
-  LazyList item is re-composed (i.e. every time it scrolls back into view), so any such artifact
-  shows during normal scrolling, not just on first load — `remember { }` inside the modifier cannot
-  survive that. Transient scale is fine for press feedback (`onClick`), where the element is not one
-  of many in a list.
+- **There is no per-item entrance animation, and adding one back needs a very good reason.**
+  `Modifier.animateItemOnAppear()` (a `MutableTransitionState` + `rememberTransition` driving
+  `alpha` + `translationY` through `graphicsLayer`) was **deleted** from `common/Modifiers.kt`
+  along with all 7 call sites (`MangaItem`, `FavoriteMangaItem`, `ReadingHistoryItem`,
+  `ProfileHistoryItem`, `MangaChapterItem`, `CategoryCard`, `MangaBanner`) because it made every
+  list measurably worse. Its cost was structural, not a tuning problem: it is `@Composable`, so
+  **each item paid a `Transition` plus two `animateFloat` animation objects**, and Compose keeps a
+  frame callback running for every unfinished transition — scroll fast through a grid and dozens
+  run at once, on top of each item's image decode and shimmer. Worse, the entrance **replays every
+  time an item scrolls back into view** (a LazyList re-composes items it reuses, and `remember { }`
+  inside the modifier cannot survive that), so it was never actually a once-per-item "on appear"
+  effect — it was a permanent per-scroll tax that also made items visibly fade in again on the way
+  back up. If per-item entrance animation is ever wanted again, use `Modifier.animateItem()` from
+  Compose Foundation (the built-in, which handles placement/appearance/disappearance at the lazy
+  layout level instead of per-composable) rather than re-hand-rolling this.
+- **Never animate `scaleX`/`scaleY` in a list/grid item's entrance animation** if one is ever
+  reintroduced. A `graphicsLayer` scale does not shrink the layout slot — only the drawn content —
+  so a mid-animation item renders small inside a full-size slot and reads as extra padding around
+  every item. That is exactly why the deleted modifier above animated only `alpha` +
+  `translationY`. Transient scale is fine for press feedback (`onClick`), where the element is not
+  one of many in a list.
 - `MangaBanner`'s pager applies `scale`/`alpha` = `lerp(0.92f/0.6f, 1f, 1f - pageOffset)` per page
   in `graphicsLayer` — a banner screenshotted mid-auto-scroll is legitimately ~0.92× size and
   dimmer.

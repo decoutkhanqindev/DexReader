@@ -1,15 +1,11 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.common
 
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.rememberTransition
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -188,27 +184,3 @@ fun Modifier.blurBackground(
     endY = endY,
   )
 )
-
-@Composable
-fun Modifier.animateItemOnAppear(): Modifier {
-//  val visibleState = remember {
-//    MutableTransitionState(false).apply { targetState = true }
-//  }
-//  val transition = rememberTransition(visibleState, label = "ItemAppearance")
-//  val alpha = transition.animateFloat(
-//    transitionSpec = { spring(stiffness = Spring.StiffnessLow) },
-//    label = "Alpha"
-//  ) { if (it) 1f else 0f }
-//
-//  val translationY = transition.animateFloat(
-//    transitionSpec = { spring(stiffness = Spring.StiffnessLow) },
-//    label = "TranslationY"
-//  ) { if (it) 0f else 50f }
-//
-//  return this.graphicsLayer {
-//    this.alpha = alpha.value
-//    this.translationY = translationY.value
-//  }
-
-  return this
-}

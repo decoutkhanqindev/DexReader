@@ -25,7 +25,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.category.CategoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.categories.CategoryCoverUiState
-import com.decoutkhanqindev.dexreader.presentation.screens.common.animateItemOnAppear
 import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.screens.common.image.MangaCoverArt
 import com.decoutkhanqindev.dexreader.presentation.screens.common.onClick
@@ -51,7 +50,6 @@ fun CategoryCard(
 
   Card(
     modifier = modifier
-      .animateItemOnAppear()
       .onClick(shape = shape) {
         onCategoryClick(
           category.id,

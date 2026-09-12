@@ -21,7 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.manga.ChapterModel
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
-import com.decoutkhanqindev.dexreader.presentation.screens.common.animateItemOnAppear
 import com.decoutkhanqindev.dexreader.presentation.screens.common.indicators.ReadingProgressBar
 import com.decoutkhanqindev.dexreader.presentation.screens.common.onClick
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
@@ -47,7 +46,6 @@ fun MangaChapterItem(
 
   Surface(
     modifier = modifier
-      .animateItemOnAppear()
       .onClick(shape = shape) { onChapterClick() },
     shape = shape,
     color = MaterialTheme.colorScheme.surfaceVariant,

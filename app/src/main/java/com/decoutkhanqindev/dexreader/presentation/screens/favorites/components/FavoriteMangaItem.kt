@@ -21,7 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.presentation.model.manga.FavoriteMangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
-import com.decoutkhanqindev.dexreader.presentation.screens.common.animateItemOnAppear
 import com.decoutkhanqindev.dexreader.presentation.screens.common.badges.MangaRatingChip
 import com.decoutkhanqindev.dexreader.presentation.screens.common.badges.MangaStatusBadge
 import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
@@ -43,7 +42,6 @@ fun FavoriteMangaItem(
 
   Card(
     modifier = modifier
-      .animateItemOnAppear()
       .onClick(shape = MaterialTheme.shapes.medium) { onClick() },
     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     shape = MaterialTheme.shapes.medium,

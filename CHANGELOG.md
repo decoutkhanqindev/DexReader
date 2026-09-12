@@ -4,6 +4,33 @@ Dated log of notable multi-file / cross-cutting work sessions. Newest entry firs
 
 ---
 
+## 2026-09-12 — Xoá `animateItemOnAppear()`: entrance animation per-item làm list giật
+
+Modifier tự viết chạy hiệu ứng vào-màn cho từng item (`MutableTransitionState` +
+`rememberTransition` → `alpha` + `translationY` qua `graphicsLayer`) đã bị **xoá hoàn toàn**,
+cùng 7 call site.
+
+- Xoá định nghĩa khỏi `common/Modifiers.kt`, kèm 4 import chết theo
+  (`MutableTransitionState`, `rememberTransition`, `Spring`, `spring`). `animateFloat` và
+  `graphicsLayer` **giữ lại** — `shimmerLoading`/`shimmerHighlight`/`onClick` vẫn dùng.
+- Gỡ khỏi `MangaItem`, `FavoriteMangaItem`, `ReadingHistoryItem`, `ProfileHistoryItem`,
+  `MangaChapterItem`, `CategoryCard`, `MangaBanner`.
+
+**Lý do — chi phí mang tính cấu trúc, không phải chuyện tinh chỉnh.** Modifier là
+`@Composable`, nên **mỗi item gánh một `Transition` + hai đối tượng `animateFloat`**, và Compose
+giữ frame callback chạy cho mọi transition chưa kết thúc — cuộn nhanh qua grid là hàng chục cái
+chạy đồng thời, chồng lên decode ảnh và shimmer của chính item đó.
+
+Tệ hơn: entrance **replay mỗi lần item cuộn trở lại vào viewport** (LazyList re-compose item khi
+tái sử dụng slot, và `remember { }` bên trong modifier không sống sót qua đó). Nên nó chưa bao giờ
+thực sự là hiệu ứng "một lần khi xuất hiện" như tên gọi — nó là thuế thường trực trên mỗi lần
+cuộn, và còn khiến item fade lại khi cuộn ngược lên.
+
+Nếu sau này muốn có entrance animation, dùng `Modifier.animateItem()` của Compose Foundation
+(xử lý ở tầng lazy layout) thay vì viết lại modifier per-composable như cũ.
+
+---
+
 ## 2026-09-06 — Navigation: screen tự navigate, bỏ chuỗi callback qua NavGraph
 
 **Vấn đề**: mọi `*Screen.kt` nhận `onNavigateToXxxScreen: () -> Unit` do `NavGraph` truyền
