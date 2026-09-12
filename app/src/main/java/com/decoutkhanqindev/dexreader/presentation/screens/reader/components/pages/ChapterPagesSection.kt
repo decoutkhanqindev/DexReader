@@ -8,7 +8,9 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,8 +32,10 @@ fun ChapterPagesSection(
     pageCount = { totalPages }
   )
 
-  SideEffect(pagerState.currentPage) {
-    onUpdateChapterPage(pagerState.currentPage + 1)
+  val latestOnUpdateChapterPage by rememberUpdatedState(onUpdateChapterPage)
+
+  LaunchedEffect(Unit) {
+    snapshotFlow { pagerState.currentPage }.collect { latestOnUpdateChapterPage(it + 1) }
   }
 
   LaunchedEffect(reset) {

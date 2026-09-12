@@ -38,12 +38,11 @@ fun MangaItem(
   modifier: Modifier = Modifier,
   onClick: (String) -> Unit,
 ) {
-  val onClick = remember(item.id) { { onClick(item.id) } }
   var isImageLoaded by remember { mutableStateOf(false) }
 
   Card(
     modifier = modifier
-      .onClick(shape = MaterialTheme.shapes.medium) { onClick() },
+      .onClick(shape = MaterialTheme.shapes.medium) { onClick(item.id) },
     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     shape = MaterialTheme.shapes.medium,
     colors = CardDefaults.cardColors(

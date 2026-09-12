@@ -11,7 +11,6 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -41,9 +40,7 @@ fun ReadingProgressBar(
     animationSpec = tween(durationMillis = 500),
     label = "readingProgress"
   )
-  val progressInt by remember {
-    derivedStateOf { (animatedProgress * 100).toInt() }
-  }
+  val progressInt = remember(progressFloat) { (progressFloat * 100).toInt() }
 
   Column(
     modifier = modifier,

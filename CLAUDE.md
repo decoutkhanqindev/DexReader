@@ -993,8 +993,14 @@ three fit across a phone without truncating.
 **Forcing a same-screen `HorizontalPager` jump from the ViewModel**:
 `rememberPagerState(initialPage = ...)` only reads `initialPage` once — there's no built-in channel
 for the ViewModel to move the pager afterward. `ChapterPagesSection` (Reader) reports the pager's
-position outward via `LaunchedEffect(pagerState.currentPage) { onUpdateChapterPage(...) }` but has
-no
+position outward via
+`LaunchedEffect(Unit) { snapshotFlow { pagerState.currentPage }.collect { latestOnUpdateChapterPage(it + 1) } }`
+— `snapshotFlow` rather than a keyed `SideEffect`/`LaunchedEffect`, because a hot state used as an
+effect key is a composition-phase read and made the section recompose on **every page swipe**, the
+single most frequent gesture in the app; the callback goes through `rememberUpdatedState` so the
+long-lived collector never holds a stale lambda (same reasoning as `SplashScreen`). `snapshotFlow`
+also emits the initial page on collection start, so the "report page on mount" behaviour the keyed
+effect gave for free is preserved, including after the remount trick below — but it has no
 listener for external page changes. To force a jump within the same chapter (e.g.
 `ReaderViewModel.resetChapterProgress()` snapping back to page 1), reuse the same unmount/remount
 trick `navigateToPreviousChapter()`/`navigateToNextChapter()` already rely on: set
@@ -1131,7 +1137,17 @@ established shape as `observeHistoryJob`/`cancelObserveHistoryJob()`.
   M3 1.4's `LinearProgressIndicator` defaults to the "expressive" style (a gap near the end + a
   small
   stop-indicator dot) — pass `gapSize = 0.dp` and `drawStopIndicator = {}` to get the classic
-  continuous bar needed for a compact list-row indicator
+  continuous bar needed for a compact list-row indicator. **Only the bar animates; the "NN%" label
+  jumps straight to the target.** The bar reads the animated value through the lambda form
+  `progress = { animatedProgress }`, so its 500ms fill is draw-only, but a `Text` can only take a
+  `String` — the label used to be `derivedStateOf { (animatedProgress * 100).toInt() }`, which
+  still recomposed this composable once per integer step (~30 times per fill), and the hot caller
+  is the Reader's bottom bar on every page swipe. It is now
+  `remember(progressFloat) { (progressFloat * 100).toInt() }` — one recomposition per real
+  progress change, zero per frame. The count-up was dropped deliberately: a swipe moves progress
+  by 2-5%, so the "animation" was three digit changes in half a second. If a counting label is
+  ever wanted back, the only frame-free way is `drawText` in a `Canvas` reading
+  `animatedProgress` in draw — never reintroduce the `derivedStateOf` + `Text` shape
 - `AppTopBar` (`presentation/screens/common/top_bars/`) — single composable replacing the former
   `MainTopBar`/`DetailsTopBar` pair; serves both `BaseScreen`'s tab-root variant (title + optional
   search icon, **no left slot** now that the hamburger is gone) and
