@@ -4,6 +4,7 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -61,32 +63,42 @@ import com.decoutkhanqindev.dexreader.presentation.theme.OnScrim
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlin.math.absoluteValue
 
 @Composable
 fun MangaBanner(
   items: ImmutableList<MangaModel>,
   modifier: Modifier = Modifier,
+  isScreenScrolling: () -> Boolean = { false },
   onItemClick: (String) -> Unit,
 ) {
   val pagerState = rememberPagerState(pageCount = { items.size })
   val autoScrollDurationMillis = 3000
+  val resumeAfterInteractionMillis = 2000L
   val autoScrollProgress = remember { Animatable(0f) }
+  val isPagerDragged = pagerState.interactionSource.collectIsDraggedAsState()
 
   LaunchedEffect(Unit) {
-    while (true) {
-      delay(autoScrollDurationMillis.toLong())
-      val nextPage = (pagerState.currentPage + 1) % items.size
-      pagerState.animateScrollToPage(nextPage)
-    }
-  }
+    var hasInteracted = false
 
-  LaunchedEffect(pagerState.currentPage) {
-    autoScrollProgress.snapTo(0f)
-    autoScrollProgress.animateTo(
-      targetValue = 1f,
-      animationSpec = tween(durationMillis = autoScrollDurationMillis, easing = LinearEasing)
-    )
+    snapshotFlow { isScreenScrolling() || isPagerDragged.value }.collectLatest { isInteracting ->
+      if (isInteracting) {
+        hasInteracted = true
+        autoScrollProgress.snapTo(0f)
+        return@collectLatest
+      }
+      if (hasInteracted) delay(resumeAfterInteractionMillis)
+
+      while (true) {
+        autoScrollProgress.snapTo(0f)
+        autoScrollProgress.animateTo(
+          targetValue = 1f,
+          animationSpec = tween(durationMillis = autoScrollDurationMillis, easing = LinearEasing)
+        )
+        pagerState.animateScrollToPage((pagerState.currentPage + 1) % items.size)
+      }
+    }
   }
 
   HorizontalPager(
@@ -152,7 +164,7 @@ fun MangaBanner(
       ) {
         AutoScrollProgressIndicator(
           pageCount = items.size,
-          currentPage = pagerState.currentPage,
+          currentPage = { pagerState.currentPage },
           progress = { autoScrollProgress.value },
           modifier = Modifier.fillMaxWidth()
         )
@@ -235,7 +247,7 @@ fun MangaBanner(
 @Composable
 private fun AutoScrollProgressIndicator(
   pageCount: Int,
-  currentPage: Int,
+  currentPage: () -> Int,
   progress: () -> Float,
   modifier: Modifier = Modifier,
 ) {
@@ -252,9 +264,10 @@ private fun AutoScrollProgressIndicator(
           .background(OnScrim.copy(alpha = 0.35f))
           .drawWithContent {
             drawContent()
+            val page = currentPage()
             val fraction = when {
-              index < currentPage -> 1f
-              index == currentPage -> progress()
+              index < page -> 1f
+              index == page -> progress()
               else -> 0f
             }
             drawRect(color = OnScrim, size = size.copy(width = size.width * fraction))

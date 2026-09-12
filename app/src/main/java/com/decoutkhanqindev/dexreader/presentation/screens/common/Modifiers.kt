@@ -1,9 +1,9 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.common
 
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
@@ -16,12 +16,14 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
@@ -33,6 +35,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.coroutines.flow.collectLatest
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -43,13 +46,18 @@ fun Modifier.onClick(
   ripple: Boolean = true,
   action: () -> Unit,
 ): Modifier {
-  var isPressed by remember { mutableStateOf(false) }
+  val isPressed = remember { mutableStateOf(false) }
   val interactionSource = remember { MutableInteractionSource() }
-  val scale = animateFloatAsState(
-    targetValue = if (isPressed) 0.95f else 1f,
-    animationSpec = tween(durationMillis = 100),
-    label = "OnScalableClickScaleAnimation"
-  )
+  val scale = remember { Animatable(1f) }
+
+  LaunchedEffect(Unit) {
+    snapshotFlow { isPressed.value }.collectLatest { pressed ->
+      scale.animateTo(
+        targetValue = if (pressed) 0.95f else 1f,
+        animationSpec = tween(durationMillis = 100),
+      )
+    }
+  }
 
   var lastClickTime by remember { mutableLongStateOf(0L) }
   val latestOnAction by rememberUpdatedState(action)
@@ -70,9 +78,9 @@ fun Modifier.onClick(
     .pointerInput(Unit) {
       awaitEachGesture {
         awaitFirstDown(requireUnconsumed = false)
-        isPressed = true
+        isPressed.value = true
         waitForUpOrCancellation()
-        isPressed = false
+        isPressed.value = false
       }
     }
     .then(

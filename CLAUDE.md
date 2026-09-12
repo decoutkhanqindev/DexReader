@@ -957,7 +957,7 @@ family at the top of most `*Screen.kt` files, and one-shot side-effect calls lik
 **Keep `LaunchedEffect` when the body does any suspend work** — `delay()`, `Animatable.animateTo()`/
 `.snapTo()`, `.collect()` on a flow, or calling a `suspend fun` — `SideEffect`'s `effect` is
 `() -> Unit` with no `CoroutineScope`, so it cannot do any of that (`AnimatedLogoAndSlogan`,
-`SplashScreen`, `MangaBanner`'s two pager-animation effects, `ReadingActivityChart`'s
+`SplashScreen`, `MangaBanner`'s auto-scroll loop, `ReadingActivityChart`'s
 `modelProducer.runTransaction { }` are all `LaunchedEffect` for exactly this reason, not
 oversights).
 `SideEffect` also runs earlier than `LaunchedEffect`/`DisposableEffect` in the frame (during
@@ -1272,6 +1272,42 @@ established shape as `observeHistoryJob`/`cancelObserveHistoryJob()`.
   animated float means a **multi-page jump** would sweep the highlight through the intermediate
   dots instead of cross-fading only the two endpoints — fine here because the pager only ever
   advances one page at a time (Next button or swipe), so re-check this if paging ever jumps
+- **A `LaunchedEffect(key)` whose key is hot state is a composition-phase read of that state.**
+  The key expression is evaluated while composing, so `LaunchedEffect(pagerState.currentPage)` made
+  `MangaBanner` recompose on every auto-advance (Layout Inspector: 14 recompositions in ~40s, one
+  per page change) even though nothing else in its body reads the page. The fix moved every read
+  into a coroutine via `snapshotFlow` (see the auto-scroll bullet below for the current shape) —
+  `collectLatest` (not `collect`) is what preserves cancel-and-restart semantics: a state change
+  mid-animation must abort the running `autoScrollProgress.animateTo` exactly as a key change used
+  to. The same screen had the second
+  form of this mistake: `AutoScrollProgressIndicator(currentPage = pagerState.currentPage, …)` was
+  called **inside each pager page's content lambda**, so every composed page (up to
+  `beyondViewportPageCount + 1`) re-ran on each page change (child counts 12/10/9/12) — even though
+  the indicator already drew in `drawWithContent` and already deferred `progress` as a lambda. The
+  `Int` param pulled the read back up to the call site. It now takes `currentPage: () -> Int` and
+  reads it inside the draw block, matching `progress`. Audit rule that follows: after any such fix,
+  `grep pagerState.currentPage` and confirm every hit sits inside a coroutine, `snapshotFlow`,
+  `graphicsLayer`/`drawWithContent`, or a lambda — never bare in a composable body or as an effect key
+- **`MangaBanner` auto-scroll is one interaction-gated loop, not a timer plus a page observer.**
+  The whole behaviour lives in a single `LaunchedEffect(Unit)`:
+  `snapshotFlow { isScreenScrolling() || isPagerDragged.value }.collectLatest { … }` — an
+  interaction (`true`) snaps `autoScrollProgress` to 0 and returns, which cancels whatever the loop
+  was doing; idle (`false`) waits `resumeAfterInteractionMillis` (2000) **only if an interaction
+  has happened before** (a local `hasInteracted` flag, so the first advance after entering Home is
+  still 3s away, not 5s), then loops `snapTo(0f)` → `animateTo(1f, tween(3000))` →
+  `animateScrollToPage(next)`. **The 3-second `animateTo` is the delay** — progress bar and page
+  change are the same coroutine step, so a pause can never leave the bar full while the page sits
+  still (which is exactly what a separate `delay(3000)` timer plus a separate
+  `snapshotFlow { currentPage }` progress effect did once pausing was added). Two inputs, and why
+  each is the one it is: `isScreenScrolling` is `{ scrollState.isScrollInProgress }` handed down
+  from `HomeContent` (its `rememberScrollState()` is hoisted into a `val` for this) — Home has no
+  programmatic vertical scroll, so in-progress means the user, fling included; and the pager side
+  is `pagerState.interactionSource.collectIsDraggedAsState()` — **not**
+  `pagerState.isScrollInProgress`, because that flag also goes `true` during the loop's own
+  `animateScrollToPage`, and feeding it back in would make the loop cancel its own animation the
+  instant it started. `collectIsDraggedAsState` only reacts to `DragInteraction`, i.e. a finger.
+  Keep the returned `State` un-destructured (no `by`) and read `.value` only inside the
+  `snapshotFlow`, so a drag start/stop never recomposes `MangaBanner`
 - Custom animation modifiers that drive `graphicsLayer { }` or `drawWithContent { }` must read the
   animated `State<Float>` via `.value` **inside** that deferred block — never destructure via `by`
   at the top of the function. A `by` read there re-triggers full recomposition on every animation
@@ -1281,6 +1317,21 @@ established shape as `observeHistoryJob`/`cancelObserveHistoryJob()`.
 - `Modifier.onClick(...)` is a plain `@Composable fun Modifier.onClick(...): Modifier` (not
   `composed { }`) — matches the other three modifiers above; avoid `composed { }` for new modifiers
   in this file, it adds a subcomposition per usage that a direct `@Composable` function doesn't need
+- **A value-returning `@Composable` (like every modifier in `Modifiers.kt`) has no restart scope of
+  its own — every state it reads in composition is charged to the caller.** `onClick` used to do
+  `var isPressed by remember { … }` + `animateFloatAsState(targetValue = if (isPressed) 0.95f else
+  1f)`: that `if` is a composition-phase read, so the *calling composable* (a `MangaItem`, a
+  `LanguageItem`, a tab, a top-bar icon…) recomposed twice per touch. And because the press
+  tracker uses `awaitFirstDown(requireUnconsumed = false)` (deliberately — the shrink feedback
+  should show even when a scroll takes the gesture), "per touch" includes **every drag that starts
+  on the item**, so scrolling a `LazyRow` was recomposing whichever item was under the finger, plus
+  invalidating all its children, on every fling. `isPressed` is now an un-destructured
+  `MutableState`, `scale` is a `remember { Animatable(1f) }`, and the only read is
+  `snapshotFlow { isPressed.value }.collectLatest { scale.animateTo(…) }` inside a
+  `LaunchedEffect(Unit)`; `graphicsLayer { scaleX = scale.value }` was already deferred. A press
+  now costs a redraw, never a recomposition. The `animate*AsState` family is the trap here: it
+  looks declarative, but its `targetValue` expression is evaluated in composition, so feeding it a
+  hot `State` is exactly as bad as reading that state bare
 - **Inside a plain `@Composable fun Modifier.foo(): Modifier`, `this` is the caller's entire
   incoming chain — never hand `this` to `.then(...)`.** Always build the appended segment from the
   `Modifier` companion: `.then(if (shape != null) Modifier.clip(shape) else Modifier)`, never

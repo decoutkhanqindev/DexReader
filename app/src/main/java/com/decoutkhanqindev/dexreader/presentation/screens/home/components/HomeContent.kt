@@ -66,11 +66,13 @@ fun HomeContent(
       MangaSectionUiState.Loading -> LoadingScreen(modifier = Modifier.fillMaxSize())
 
       is MangaSectionUiState.Success -> {
+        val scrollState = rememberScrollState()
+
         Column(
           modifier = Modifier
             .fillMaxSize()
             .testTag(TestTags.HOME_SCROLL)
-            .verticalScroll(rememberScrollState()),
+            .verticalScroll(scrollState),
           verticalArrangement = Arrangement.Top,
           horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -81,6 +83,7 @@ fun HomeContent(
                 .fillMaxWidth()
                 .height(365.dp)
                 .padding(top = 8.dp),
+              isScreenScrolling = { scrollState.isScrollInProgress },
               onItemClick = onItemClick
             )
           }
