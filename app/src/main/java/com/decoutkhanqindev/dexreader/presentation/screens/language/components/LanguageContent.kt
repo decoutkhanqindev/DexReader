@@ -43,10 +43,13 @@ fun LanguageContent(
 ) {
   val displayLanguage = LanguageManager.current
   val deviceLanguageCode = LanguageManager.deviceLanguageCode()
+  val displayNames = remember(displayLanguage) {
+    LanguageValue.displayNamesFor(displayIn = displayLanguage)
+  }
   val languages = remember(displayLanguage, deviceLanguageCode) {
     LanguageValue.sortedForDisplay(
       deviceLanguageCode = deviceLanguageCode,
-      displayIn = displayLanguage,
+      displayNames = displayNames,
     )
   }
   val isDoneEnabled = when (type) {
@@ -74,6 +77,7 @@ fun LanguageContent(
 
         LanguageItem(
           language = language,
+          displayName = displayNames.getValue(language),
           isSelected = isSelected,
           modifier = Modifier.fillMaxWidth(),
           onClick = onClick,

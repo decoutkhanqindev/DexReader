@@ -38,10 +38,11 @@ object LanguageManager {
 
   fun displayNameOf(code: String, displayIn: LanguageValue): String {
     val locale = localeOf(code)
+    val displayLocale = localeOf(displayIn.code)
     val name =
-      if (locale.country.isNotEmpty()) locale.getDisplayName(localeOf(displayIn.code))
-      else locale.getDisplayLanguage(localeOf(displayIn.code))
-    return name.replaceFirstChar { it.uppercase(localeOf(displayIn.code)) }
+      if (locale.country.isNotEmpty()) locale.getDisplayName(displayLocale)
+      else locale.getDisplayLanguage(displayLocale)
+    return name.replaceFirstChar { it.uppercase(displayLocale) }
   }
 
   @Composable

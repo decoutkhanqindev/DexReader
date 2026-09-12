@@ -658,10 +658,26 @@ both the app UI locale and the MangaDex content language** — the separate `App
 **deleted**. It once mirrored every `LanguageValue` except `UNKNOWN` (wrapping each for
 `code`/`flag`), but with `UNKNOWN` gone from both the domain `MangaLanguage` and `LanguageValue`
 the two enums became a byte-identical 64-entry set with no reason to stay split. `LanguageValue`
-now carries the picker helpers too — `DEFAULT` (= `ENGLISH`), `fromCode(code)`, and
-`sortedForDisplay(deviceLanguageCode, displayIn)` — as companion members; the language picker
-(`screens/language/`), `LanguageManager`, and `LanguageUiState`/`LanguageViewModel` all type on it
-directly. `LanguageMapper` is down to `MangaLanguage.toLanguageValue()` /
+now carries the picker helpers too — `DEFAULT` (= `ENGLISH`), `fromCode(code)`,
+`displayNamesFor(displayIn)` and `sortedForDisplay(deviceLanguageCode, displayNames)` — as
+companion members; the language picker (`screens/language/`), `LanguageManager`, and
+`LanguageUiState`/`LanguageViewModel` all type on it directly.
+
+**Display names are computed once and threaded down, never derived inside a list item.**
+`LanguageManager.displayNameOf` is expensive for something on a scroll path — two
+`Locale.forLanguageTag` parses plus an ICU `getDisplayName`/`getDisplayLanguage` lookup plus a
+`replaceFirstChar` allocation — so `LanguageContent` builds the whole
+`ImmutableMap<LanguageValue, String>` in one `remember(displayLanguage)` and passes each entry
+into `LanguageItem(displayName = ...)` as a plain `String`. Two reasons this shape matters, both
+learned from Layout Inspector on the 64-row picker: (1) a `LazyColumn` **reuses item slots**, so
+every row that scrolls in rebinds an existing slot — that recomposition is correct and
+unavoidable, and the only lever is making each rebind cheap, which it now is (`LanguageItem` does
+zero `Locale` work and no longer reads the `LanguageManager.current` CompositionLocal); and (2)
+`sortedForDisplay` takes the prebuilt map instead of calling `displayNameOf` inside its `thenBy`
+selector — a comparator selector runs on both operands of every comparison, so sorting 64 entries
+was making on the order of 700 `displayNameOf` calls where 64 suffice. Keep both `remember`s keyed
+on `displayLanguage` (not on the map itself — an `ImmutableMap` key would make Compose structurally
+compare 64 entries on every recomposition). `LanguageMapper` is down to `MangaLanguage.toLanguageValue()` /
 `LanguageValue.toMangaLanguage()` (the two `AppLanguageValue` bridges are gone). **Adding a
 MangaDex language is now a single edit** in `MangaLanguage` + `LanguageValue` — no second enum
 to keep in step.
@@ -1209,12 +1225,18 @@ established shape as `observeHistoryJob`/`cancelObserveHistoryJob()`.
 - `contentType` is only worth adding to a **mixed** feed — a lazy layout whose slots hold
   structurally different composables — so the layout reuses a slot for the same kind of item
   instead of tearing down and re-composing. `CategoriesGrid` is the one real case (4 full-span
-  `Text` headers interleaved with 250dp `CategoryCard`s) and uses a `private enum class
-  CategoriesGridContentType { HEADER, CARD }` declared at the top of that file — a private enum,
-  not a `String` (typo-proof) and not a top-level `private val` (which the Comments/Compose rules
+  `Text` headers interleaved with 250dp `CategoryCard`s) and uses an `@Immutable enum class
+  CategoriesGridContentType { HEADER, CARD }` in `presentation/model/category/` — an enum, not a
+  `String` (typo-proof) and not a top-level `private val` (which the Comments/Compose rules
   forbid). Homogeneous lists (`HorizontalMangaList`, `FavoritesContent`, `ReadingHistoryList`) do
   **not** need it; a list whose only extra slot is a single header or load-more footer gains
-  nothing measurable, so don't add it there by reflex
+  nothing measurable, so don't add it there by reflex.
+
+  **`contentType` does not keep an item alive** — a recurring misconception. It only groups items
+  into slot pools so a disposed slot gets reused by a *same-type* item (structure reused, state
+  still reset). What survives disposal is `rememberSaveable` state, and only when the item has a
+  stable `key` (the lazy layout restores it through a per-key `SaveableStateHolder`). Plain
+  `remember { }` and every `LaunchedEffect` are recreated/restarted
 - Hoist `remember(list) { list.associateBy { it.id } }` before `items { }` — never `find { }` inside
 - No backwards writes: never write to `MutableState` already read in the same composition pass
 - `remember` keys must include ALL captured values that can change —
@@ -1233,6 +1255,23 @@ established shape as `observeHistoryJob`/`cancelObserveHistoryJob()`.
   every
   banner page as soon as a single image finished loading, and re-triggered recomposition of every
   composed page on each toggle)
+- **The same `by`-vs-`.value` rule applies to ordinary composables, not just custom modifiers** —
+  and `OnboardingPageIndicator` is the measured example. It used to be a `Row` of N `Box`es, each
+  with its own `val width by animateDpAsState(...)` + `val color by animateColorAsState(...)`
+  driving `Modifier.width(width).background(color)`. Both `by` reads sit in the composable body,
+  so every animation frame invalidated **Composition** for the whole subtree: Layout Inspector
+  showed **531** recompositions on the indicator and 130-378 per dot for a 250ms transition.
+  It is now a single `Canvas` that keeps `animateFloatAsState` as a `State<Float>` (no `by`) and
+  reads `.value` **inside** the draw lambda, deriving each dot's width and colour from one
+  animated page position via `lerp`. Two things make that safe to draw rather than lay out:
+  exactly one dot is selected at a time and both tweens share a duration, so the outgoing dot
+  shrinks at the rate the incoming one grows and the **total width is provably constant** (76dp
+  for 4 pages, verified across the whole 0..3 sweep) — nothing ever invalidates Layout; and the
+  caller passes `fillMaxWidth()`, so the old `Arrangement.spacedBy(8.dp, CenterHorizontally)` is
+  reproduced by starting the draw at `(size.width - totalWidth) / 2f`. Trade-off to know: one
+  animated float means a **multi-page jump** would sweep the highlight through the intermediate
+  dots instead of cross-fading only the two endpoints — fine here because the pager only ever
+  advances one page at a time (Next button or swipe), so re-check this if paging ever jumps
 - Custom animation modifiers that drive `graphicsLayer { }` or `drawWithContent { }` must read the
   animated `State<Float>` via `.value` **inside** that deferred block — never destructure via `by`
   at the top of the function. A `by` read there re-triggers full recomposition on every animation

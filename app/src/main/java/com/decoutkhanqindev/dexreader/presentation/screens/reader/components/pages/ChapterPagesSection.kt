@@ -41,7 +41,7 @@ fun ChapterPagesSection(
   HorizontalPager(
     state = pagerState,
     modifier = modifier,
-    beyondViewportPageCount = 4
+    beyondViewportPageCount = 2
   ) { pageIndex ->
     ChapterPageImage(
       url = chapterPages[pageIndex],

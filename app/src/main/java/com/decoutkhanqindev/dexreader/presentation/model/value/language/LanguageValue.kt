@@ -3,7 +3,9 @@ package com.decoutkhanqindev.dexreader.presentation.model.value.language
 import androidx.compose.runtime.Immutable
 import com.decoutkhanqindev.dexreader.util.LanguageManager
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toImmutableMap
 
 @Immutable
 enum class LanguageValue(
@@ -81,9 +83,14 @@ enum class LanguageValue(
     fun fromCode(code: String?): LanguageValue =
       entries.find { it.code.equals(other = code, ignoreCase = true) } ?: DEFAULT
 
+    fun displayNamesFor(displayIn: LanguageValue): ImmutableMap<LanguageValue, String> =
+      entries
+        .associateWith { LanguageManager.displayNameOf(code = it.code, displayIn = displayIn) }
+        .toImmutableMap()
+
     fun sortedForDisplay(
       deviceLanguageCode: String,
-      displayIn: LanguageValue,
+      displayNames: ImmutableMap<LanguageValue, String>,
     ): ImmutableList<LanguageValue> {
       val deviceLanguage = entries.find { it.code.equals(deviceLanguageCode, ignoreCase = true) }
 
@@ -94,7 +101,7 @@ enum class LanguageValue(
             ENGLISH -> 1
             else -> 2
           }
-        }.thenBy { LanguageManager.displayNameOf(code = it.code, displayIn = displayIn) }
+        }.thenBy { displayNames.getValue(it) }
       ).toImmutableList()
     }
   }

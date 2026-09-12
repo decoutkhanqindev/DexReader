@@ -91,7 +91,7 @@ fun MangaBanner(
 
   HorizontalPager(
     state = pagerState,
-    beyondViewportPageCount = 2,
+    beyondViewportPageCount = 1,
     modifier = modifier
   ) { page ->
     val manga = items[page]
@@ -172,7 +172,10 @@ fun MangaBanner(
 
         if (manga.categories.isNotEmpty()) {
           Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            manga.categories.take(2).forEach { category ->
+            val categoriesToShow = remember (manga.categories) {
+              if (manga.categories.size > 2) manga.categories.take(2) else manga.categories
+            }
+            categoriesToShow.forEach { category ->
               MangaGenreChip(label = category.title)
             }
           }
