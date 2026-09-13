@@ -5,9 +5,9 @@ import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.ObserveFavori
 import com.decoutkhanqindev.dexreader.presentation.mapper.FavoriteMangaMapper.toFavoriteMangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.FavoriteMangaModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
-import com.decoutkhanqindev.dexreader.util.CoroutineHandler.collectCatching
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.collectCatching
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Job

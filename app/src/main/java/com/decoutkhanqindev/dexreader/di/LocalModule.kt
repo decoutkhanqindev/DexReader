@@ -6,6 +6,8 @@ import com.decoutkhanqindev.dexreader.data.local.database.ChapterCacheDatabase
 import com.decoutkhanqindev.dexreader.data.local.database.dao.ChapterCacheDao
 import com.decoutkhanqindev.dexreader.data.local.datastore.DataStoreManager
 import com.decoutkhanqindev.dexreader.data.local.datastore.DataStoreManagerImpl
+import com.decoutkhanqindev.dexreader.data.local.locale.LanguageManager
+import com.decoutkhanqindev.dexreader.data.local.locale.LanguageManagerImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,4 +37,8 @@ object LocalModule {
   @Provides
   @Singleton
   fun provideDataStoreManager(impl: DataStoreManagerImpl): DataStoreManager = impl
+
+  @Provides
+  @Singleton
+  fun provideLanguageManager(impl: LanguageManagerImpl): LanguageManager = impl
 }

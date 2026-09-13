@@ -1,11 +1,11 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.categories
 
 
+import com.decoutkhanqindev.dexreader.data.local.datastore.DataStoreManager
 import com.decoutkhanqindev.dexreader.domain.entity.value.category.CategoryType
 import com.decoutkhanqindev.dexreader.domain.entity.value.criteria.MangaSortCriteria
 import com.decoutkhanqindev.dexreader.domain.usecase.category.GetCategoryListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaListUseCase
-import com.decoutkhanqindev.dexreader.data.local.datastore.DataStoreManager
 import com.decoutkhanqindev.dexreader.presentation.mapper.CategoryMapper.toCategoryModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.value.category.CategoryTypeValue
@@ -22,7 +22,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
 import timber.log.Timber
 import javax.inject.Inject

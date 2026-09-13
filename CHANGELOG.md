@@ -87,6 +87,20 @@ phải xâu tham số qua `NavGraph` nữa.
   `start_reading`/`continue_reading` giữ cho dialog History. Đã chụp trên emulator: "☰ Sắp xếp /
   ▼ Lọc", "📖 Bắt đầu / ♡ Yêu thích"; sau đó đổi icon sang **bên phải** text theo yêu cầu
   ("Sắp xếp ☰ / Lọc ▼", "Bắt đầu 📖 / Yêu thích ♡"), chụp lại xác nhận.
+- **`LanguageManager` thành manager thứ ba, `MainActivity` là composition root**:
+  `util/LanguageManager` (object trộn hàm thuần + `LocalAppLanguage` + `ProvideAppLanguage`) →
+  `data/local/locale/LanguageManager` interface + `LanguageManagerImpl(app)` (stateless:
+  `deviceLanguageCode`, `configurationFor(code)`, `resourcesFor(configuration)`,
+  `displayNameOf(code, displayIn)` — API dùng `String` code, không `LanguageValue`),
+  `@Provides` trong `LocalModule`, `LocalLanguageManager` trong `ManagerLocals`. `MainActivity`
+  collect `selectedLangCode`/`isDark`, tự dựng `Configuration`/`Resources` và provide
+  `LocalConfiguration`/`LocalResources` + 3 manager + `DexReaderTheme`; `NavGraph` chỉ còn
+  `isAvailable`. Bỏ `LocalAppLanguage`: ngôn ngữ đang áp dụng = `LocalConfiguration.current
+  .locales[0].toLanguageTag()` → `fromCode`. `LanguageValue` thêm `labelFor(displayIn, manager)`,
+  `displayNamesFor` nhận thêm manager. Xoá 5 `@Preview` phụ thuộc local (`LanguageContent` ×2,
+  `ChapterLanguageListBottomSheet` ×2, `MangaChaptersHeader`) thay vì giữ fake manager. Test
+  emulator: picker tên tiếng Anh → chọn Vietnamese → UI + tên picker sang tiếng Việt ("Tiếng
+  Anh"), label ngôn ngữ chương "🇬🇧 Tiếng Anh", theme toggle 0 GET, cold restart giữ.
 - **`CoroutineHandler` rename theo chức năng + loại overload trùng**: `runSuspendResultCatching`
   → `suspendRunCatching` (55 site; xoá overload có `context` — bản sao, 0 site dùng),
   `runSuspendCatching` → `withContextCatching` (39 site; giữ `context` vì 27/28 site truyền

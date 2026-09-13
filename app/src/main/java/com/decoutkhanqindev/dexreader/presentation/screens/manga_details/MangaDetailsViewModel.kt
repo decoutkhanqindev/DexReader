@@ -4,6 +4,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.manga_details
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.decoutkhanqindev.dexreader.data.local.datastore.DataStoreManager
 import com.decoutkhanqindev.dexreader.domain.entity.manga.Manga
 import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.entity.value.criteria.MangaSortOrder
@@ -11,7 +12,6 @@ import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetChapterListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaDetailsUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.ResolveChapterLanguageUseCase
-import com.decoutkhanqindev.dexreader.data.local.datastore.DataStoreManager
 import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.AddToFavoritesUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.ObserveIsFavoriteUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.RemoveFromFavoritesUseCase
@@ -27,9 +27,9 @@ import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryMode
 import com.decoutkhanqindev.dexreader.presentation.model.value.language.LanguageValue
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
-import com.decoutkhanqindev.dexreader.util.CoroutineHandler.collectCatching
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.collectCatching
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -43,8 +43,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
 import timber.log.Timber
 import javax.inject.Inject

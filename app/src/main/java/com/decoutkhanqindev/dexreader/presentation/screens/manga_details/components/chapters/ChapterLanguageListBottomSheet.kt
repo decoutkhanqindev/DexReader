@@ -1,6 +1,5 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.chapters
 
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,19 +13,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.value.language.LanguageValue
+import com.decoutkhanqindev.dexreader.presentation.screens.common.locals.LocalLanguageManager
 import com.decoutkhanqindev.dexreader.presentation.screens.common.onClick
-import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
-import com.decoutkhanqindev.dexreader.util.LanguageManager
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,6 +34,9 @@ fun ChapterLanguageListBottomSheet(
   onItemClick: (LanguageValue) -> Unit,
   onDismissClick: () -> Unit,
 ) {
+  val languageManager = LocalLanguageManager.current
+  val displayLanguage = LanguageValue.fromCode(LocalConfiguration.current.locales[0].toLanguageTag())
+
   ModalBottomSheet(
     onDismissRequest = onDismissClick,
     modifier = modifier,
@@ -70,7 +70,7 @@ fun ChapterLanguageListBottomSheet(
           val onClick = remember(it) { { onItemClick(it) } }
 
           Text(
-            text = LanguageManager.labelOf(code = it.code, flag = it.flag),
+            text = it.labelFor(displayIn = displayLanguage, languageManager = languageManager),
             modifier = Modifier
               .padding(bottom = 8.dp)
               .onClick {
@@ -83,38 +83,5 @@ fun ChapterLanguageListBottomSheet(
         }
       }
     }
-  }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview
-@Composable
-private fun ChapterLanguageListBottomSheetPreview() {
-  DexReaderTheme {
-    ChapterLanguageListBottomSheet(
-      selectedItem = LanguageValue.ENGLISH,
-      items = persistentListOf(
-        LanguageValue.ENGLISH,
-        LanguageValue.JAPANESE,
-        LanguageValue.FRENCH,
-        LanguageValue.SPANISH,
-      ),
-      onItemClick = {},
-      onDismissClick = {}
-    )
-  }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview
-@Composable
-private fun ChapterLanguageListBottomSheetEmptyPreview() {
-  DexReaderTheme {
-    ChapterLanguageListBottomSheet(
-      selectedItem = LanguageValue.ENGLISH,
-      items = persistentListOf(),
-      onItemClick = {},
-      onDismissClick = {}
-    )
   }
 }

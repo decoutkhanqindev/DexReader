@@ -1,10 +1,10 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.manga_section
 
+import com.decoutkhanqindev.dexreader.data.local.datastore.DataStoreManager
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetLatestUpdateMangaListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetNewReleaseMangaListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetTopRatedMangaListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetTrendingMangaListUseCase
-import com.decoutkhanqindev.dexreader.data.local.datastore.DataStoreManager
 import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaModel
@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.mapNotNull
 import timber.log.Timber
 import javax.inject.Inject
 

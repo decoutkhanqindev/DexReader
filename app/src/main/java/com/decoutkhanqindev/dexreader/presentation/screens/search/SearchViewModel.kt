@@ -2,9 +2,9 @@ package com.decoutkhanqindev.dexreader.presentation.screens.search
 
 
 import androidx.lifecycle.viewModelScope
+import com.decoutkhanqindev.dexreader.data.local.datastore.DataStoreManager
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaSuggestionsUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.SearchMangaUseCase
-import com.decoutkhanqindev.dexreader.data.local.datastore.DataStoreManager
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
@@ -23,9 +23,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn

@@ -1,6 +1,5 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.manga_details.components.chapters
 
-
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -13,16 +12,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.value.language.LanguageValue
+import com.decoutkhanqindev.dexreader.presentation.screens.common.locals.LocalLanguageManager
 import com.decoutkhanqindev.dexreader.presentation.screens.common.onClick
-import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
-import com.decoutkhanqindev.dexreader.util.LanguageManager
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun MangaChaptersHeader(
@@ -31,6 +28,8 @@ fun MangaChaptersHeader(
   modifier: Modifier = Modifier,
   onLanguageItemClick: (LanguageValue) -> Unit,
 ) {
+  val languageManager = LocalLanguageManager.current
+  val displayLanguage = LanguageValue.fromCode(LocalConfiguration.current.locales[0].toLanguageTag())
   var isShowLanguageBottomSheet by remember { mutableStateOf(false) }
 
   if (isShowLanguageBottomSheet) {
@@ -57,26 +56,10 @@ fun MangaChaptersHeader(
       style = MaterialTheme.typography.titleLarge,
     )
     Text(
-      text = LanguageManager.labelOf(
-        code = selectedLanguage.code,
-        flag = selectedLanguage.flag,
-      ),
+      text = selectedLanguage.labelFor(displayIn = displayLanguage, languageManager = languageManager),
       modifier = Modifier.onClick { isShowLanguageBottomSheet = true },
       fontWeight = FontWeight.Bold,
       style = MaterialTheme.typography.titleMedium,
-    )
-  }
-}
-
-@Preview
-@Composable
-private fun MangaChaptersHeaderPreview() {
-  DexReaderTheme {
-    MangaChaptersHeader(
-      selectedLanguage = LanguageValue.ENGLISH,
-      languageList = persistentListOf(LanguageValue.ENGLISH, LanguageValue.JAPANESE),
-      modifier = Modifier.fillMaxWidth(),
-      onLanguageItemClick = {}
     )
   }
 }

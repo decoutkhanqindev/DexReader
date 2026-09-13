@@ -74,13 +74,14 @@ Three-layer Clean Architecture + MVVM. Dependency Rule: outer layers depend inwa
 
 ```
 domain/       Pure Kotlin. Entities, exceptions, repository interfaces, use cases.
-data/         Implements domain interfaces. Retrofit, Room, Firebase, DataStore — plus the two
+data/         Implements domain interfaces. Retrofit, Room, Firebase, DataStore — plus the three
               infrastructure managers (`local/datastore/DataStoreManager`,
-              `network/connectivity/NetworkManager`) that presentation injects directly.
+              `local/locale/LanguageManager`, `network/connectivity/NetworkManager`) that
+              presentation reaches through CompositionLocals provided by `MainActivity`.
 presentation/ Jetpack Compose UI, ViewModels, NavGraph.
 di/           5 Hilt modules: LocalModule, RepositoryModule, ApiModule, FirebaseModule, ConnectivityModule.
-util/         CoroutineHandler, DateTimeHandler, NavTransitions, LanguageManager.
-              (`LocalDataStoreManager`/`LocalNetworkManager` live in
+util/         CoroutineHandler, DateTimeHandler, NavTransitions.
+              (`LocalDataStoreManager`/`LocalNetworkManager`/`LocalLanguageManager` live in
               `presentation/screens/common/locals/`, provided from `MainActivity`.)
 ```
 
@@ -302,7 +303,7 @@ value changed.)
 
 | Module             | Type            | Provides                                                                 |
 |--------------------|-----------------|--------------------------------------------------------------------------|
-| `LocalModule`        | `object`        | Room `ChapterCacheDatabase`, `ChapterCacheDao`, `DataStoreManager` (`@Provides impl`) |
+| `LocalModule`        | `object`        | Room `ChapterCacheDatabase`, `ChapterCacheDao`, `DataStoreManager`, `LanguageManager` (`@Provides impl`) |
 | `RepositoryModule`   | **`interface`** | 7 `@Binds` for all repository interface → impl bindings                                |
 | `ApiModule`          | `object`        | Moshi, OkHttp (30s timeouts), Retrofit, `ApiService`                                   |
 | `FirebaseModule`     | `object`        | `FirebaseAuth`, `FirebaseFirestore`, 4 Firebase source `@Provides`                     |
@@ -409,10 +410,17 @@ The Settings *screen* and its values keep the `settings` name (`screens/settings
 `ThemeModeValue` and `ThemeModeMapper` are **deleted** — see "primitives only" below.) Rule going forward: a new cross-cutting runtime signal
 (battery, metered network, whatever) is a `data/<area>/<Name>Manager` interface + impl + one
 `@Provides`, injected directly — **not** a domain repository, **not** a use case, **not** a
-`util/XxxManager` singleton (`LanguageManager` is the one `util/` exception, and only because it
-provides CompositionLocals, which is a Compose concern rather than a data source). Presentation
-depending on a `data/` *interface* for infrastructure is the accepted exception to the Dependency
-Rule here; it must stay an interface so consumers remain fakeable.
+`util/XxxManager` singleton. There is no `util/` exception any more: `util/LanguageManager`
+(an `object` mixing pure locale functions with a `LocalAppLanguage` CompositionLocal and a
+`ProvideAppLanguage` composable) became the third manager, `data/local/locale/LanguageManager`
++ `LanguageManagerImpl`. **A manager does not have to hold state or observe anything** —
+`LanguageManager` is a stateless service (`deviceLanguageCode()`, `configurationFor(code)`,
+`resourcesFor(configuration)`, `displayNameOf(code, displayIn)`) whose only dependency is
+`Application`; the pattern is about *where infrastructure lives and how Compose reaches it*, not
+about `StateFlow`. Its API speaks ISO-code `String`s, never `LanguageValue` — `data/` must not
+know presentation enums, so callers pass `.code`. Presentation depending on a `data/`
+*interface* for infrastructure is the accepted exception to the Dependency Rule here; it must
+stay an interface so consumers remain fakeable.
 
 **The managers are state holders, not just data sources — and that is what lets Compose read
 them directly with no ViewModel in between.** Each owns a private
@@ -473,10 +481,22 @@ nothing consumed the old `InfrastructureException.Unexpected` mapping, so it is 
 `NetworkManagerImpl` adds its own `.catch { …; emit(true) }` before `stateIn` since the callback
 flow has no such fallback.
 
-**Compose reaches both managers through CompositionLocals, not ViewModels.**
-`presentation/screens/common/locals/ManagerLocals.kt` declares `LocalDataStoreManager` and
-`LocalNetworkManager` (`staticCompositionLocalOf { error(…) }`); `MainActivity` field-injects both
-(`@Inject lateinit var`) and wraps `NavGraph()` in a `CompositionLocalProvider` — the Hilt
+**Compose reaches all three managers through CompositionLocals, not ViewModels — and
+`MainActivity` is the composition root.** `presentation/screens/common/locals/ManagerLocals.kt`
+declares `LocalDataStoreManager`, `LocalNetworkManager` and `LocalLanguageManager`
+(`staticCompositionLocalOf { error(…) }`); `MainActivity` field-injects all three (`@Inject
+lateinit var`), collects `selectedLangCode`/`isDark` itself, derives the locale `Configuration`
++ `Resources` through `LanguageManager`, and wraps `NavGraph()` in one `CompositionLocalProvider`
+(the three managers + `LocalConfiguration` + `LocalResources`) inside `DexReaderTheme`. `NavGraph`
+therefore collects nothing from a manager except `isAvailable` for `NoInternetDialog` — there is
+no `ProvideAppLanguage` composable and no `LocalAppLanguage` any more: the *applied* language
+is simply `LocalConfiguration.current.locales[0].toLanguageTag()` run through
+`LanguageValue.fromCode()`, which is what `LanguageContent`, `MangaChaptersHeader` and
+`ChapterLanguageListBottomSheet` do (`Locale.toLanguageTag()` normalises the legacy `in`/`iw`
+codes back to `id`/`he`, so `fromCode` matches). The `error(…)` defaults mean any `@Preview`
+below these locals would throw; the previews of those three composables were **deleted** rather
+than given a fake manager (a `PreviewLanguageManager` object was tried and removed the same
+session — not worth a second implementation of `displayNameOf`). This is the Hilt
 equivalent of Koin's `koinInject()`, and it is only sound because the managers are `@Singleton`
 *and* hold their own state: a composable that collected a cold flow with
 `collectAsStateWithLifecycle(initialValue)` would flash the initial value on every rotation, and one
@@ -487,8 +507,9 @@ removed in the same session): each call site does
 one primitive it needs at the point of use — `data.isDark ?: true`,
 `LanguageValue.fromCode(data.selectedLangCode)`, `saveSelectedLangCode(it.code)` — so
 `*Content` composables still only ever see `*Value` types and nothing needs a mapper. `PrefsViewModel`, `NetworkViewModel` and the old `PrefsData` are
-**deleted** (packages and all). `NavGraph` reads `data` for `DexReaderTheme`/`ProvideAppLanguage`/
-Splash routing; `LanguageSelectionScreen`, `LanguageSettingScreen`, `OnboardingScreen` and
+**deleted** (packages and all). `MainActivity` reads `isDark`/`selectedLangCode` for
+`DexReaderTheme` and the locale, `SplashScreen` reads `isFirstOpen`;
+`LanguageSelectionScreen`, `LanguageSettingScreen`, `OnboardingScreen` and
 `SettingsScreen` read `LocalDataStoreManager.current` themselves and take **no** prefs param —
 adding a screen that reads prefs no longer touches `NavGraph`.
 
@@ -787,11 +808,11 @@ passed into `HomeScreen(viewModel = ...)` as a required param (no `= hiltViewMod
 rename drops the Home-specific name so the same instance/type can be reused by other manga-listing
 screens later.
 
-**Full state vs. narrow flow at a wide-reach call site**: `NavGraph` collects the two
+**Full state vs. narrow flow at a wide-reach call site**: `MainActivity` collects the two
 `DataStoreManager` flows it needs separately (`isDark`, `selectedLangCode`; `isFirstOpen` is
-read by `SplashScreen` itself), so a theme
-toggle invalidates only the `DexReaderTheme` read and a language save only `ProvideAppLanguage`
-— that came for free from splitting the manager's state per key. `UserViewModel` still
+read by `SplashScreen` itself), so a theme toggle invalidates only the `DexReaderTheme` read and
+a language save only the `remember(languageCode)` that rebuilds `Configuration`/`Resources` —
+that came for free from splitting the manager's state per key. `UserViewModel` still
 exposes `isUserLoggedIn`/`userProfile` as two separate flows instead of one bundled state — that
 split
 earns its keep because those fields are read broadly across every screen, not just at `NavGraph`.
@@ -874,7 +895,7 @@ the life of `NavGraph`). If the flag ever goes back to being a parameter, the
 `rememberUpdatedState` must come back with it. Verified on device after the move: fresh install
 → Language → Onboarding → Skip → Main, then cold restart → Main.
 
-**App language (`util/LanguageManager.kt` + `screens/language/`)**: one stored value drives **both**
+**App language (`data/local/locale/LanguageManager` + `screens/language/`)**: one stored value drives **both**
 the UI locale and the MangaDex content language — it is
 `DataStoreManager.selectedLangCode`
 (an ISO code `String`), resolved with `LanguageValue.fromCode()` where it is read.
@@ -885,9 +906,11 @@ both the app UI locale and the MangaDex content language** — the separate `App
 `code`/`flag`), but with `UNKNOWN` gone from both the domain `MangaLanguage` and `LanguageValue`
 the two enums became a byte-identical 64-entry set with no reason to stay split. `LanguageValue`
 now carries the picker helpers too — `DEFAULT` (= `ENGLISH`), `fromCode(code)`,
-`displayNamesFor(displayIn)` and `sortedForDisplay(deviceLanguageCode, displayNames)` — as
-companion members; the language picker (`screens/language/`) and `LanguageManager` both type
-on it directly.
+`displayNamesFor(displayIn, languageManager)` and `sortedForDisplay(deviceLanguageCode,
+displayNames)` as companion members, plus the instance `labelFor(displayIn, languageManager)`
+(`"$flag  <display name>"`, used by the chapter-language header and bottom sheet). The
+`languageManager` parameter is the injected `data/local/locale/LanguageManager`; `LanguageValue`
+never resolves a display name on its own.
 
 **Display names are computed once and threaded down, never derived inside a list item.**
 `LanguageManager.displayNameOf` is expensive for something on a scroll path — two
@@ -898,7 +921,7 @@ into `LanguageItem(displayName = ...)` as a plain `String`. Two reasons this sha
 learned from Layout Inspector on the 64-row picker: (1) a `LazyColumn` **reuses item slots**, so
 every row that scrolls in rebinds an existing slot — that recomposition is correct and
 unavoidable, and the only lever is making each rebind cheap, which it now is (`LanguageItem` does
-zero `Locale` work and no longer reads the `LanguageManager.current` CompositionLocal); and (2)
+zero `Locale` work and reads no CompositionLocal at all); and (2)
 `sortedForDisplay` takes the prebuilt map instead of calling `displayNameOf` inside its `thenBy`
 selector — a comparator selector runs on both operands of every comparison, so sorting 64 entries
 was making on the order of 700 `displayNameOf` calls where 64 suffice. Keep both `remember`s keyed
@@ -919,16 +942,18 @@ the UI locale switches from the shipped `values-XX/`.
 
 `LanguageValue` no longer carries `@StringRes`: it carries `code` + `flag` (regional-indicator
 emoji), and the display name comes from `Locale.forLanguageTag(code).getDisplayLanguage(...)` via
-`LanguageManager.displayNameOf` / `labelOf`. That deleted all 65 `lang_*` string resources and makes
+`LanguageManager.displayNameOf` / `LanguageValue.labelFor`. That deleted all 65 `lang_*` string resources and makes
 language names localize themselves — a Vietnamese UI shows "Tiếng Anh" without a single new string.
 
-**`ProvideAppLanguage` must not override `LocalContext`.** The obvious recipe
+**The locale override in `MainActivity` must not touch `LocalContext`.** The obvious recipe
 (`LocalContext provides context.createConfigurationContext(config)`) **crashes this app**:
 `createConfigurationContext` returns a plain `ContextImpl`, and every `hiltViewModel()` below the
 provider then dies with `Expected an activity context for creating a HiltViewModelFactory`
-(`MainScreen` creates three). Provide **`LocalResources`** (plus `LocalConfiguration` for
-invalidation) instead — `stringResource` reads `LocalResources`, and the Activity context stays
-intact for Hilt.
+(`MainScreen` creates three). Provide **`LocalResources`** (via `languageManager.resourcesFor(
+configuration)`, which calls `createConfigurationContext` on the `Application` and keeps only
+its `resources`) plus `LocalConfiguration` for invalidation — `stringResource` reads
+`LocalResources`, and the Activity context stays intact for Hilt. This used to live in
+`LanguageManager.ProvideAppLanguage`; it is now inline in `MainActivity.setContent`.
 
 **63 `values-XX/` locales ship a full UI translation** (plus English `values/` = 64 total, matching
 the 64-language picker exactly — **no fallback locales left**). Each carries all 149 translatable
@@ -1237,7 +1262,7 @@ updates
 only after the write succeeds) — never let one field serve both roles.
 the language picker's `selectedLanguage` (a `rememberSaveable` in `LanguageSelectionScreen`/
 `LanguageSettingScreen`, drives the highlight and the Done button) vs.
-`DataStoreManager.selectedLangCode` (persisted value, read by `NavGraph` to drive `ProvideAppLanguage`
+`DataStoreManager.selectedLangCode` (persisted value, read by `MainActivity` to drive the locale
 and by every repository) is the established example — the staged half is plain screen UI state,
 the applied half lives in the manager, and only Done crosses from one to the other. Theme has
 **no staged twin** (`selectedThemeOption` was dropped when the prefs ViewModel went away): it

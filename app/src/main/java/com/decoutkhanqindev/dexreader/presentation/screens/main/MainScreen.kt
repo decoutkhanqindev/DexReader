@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -52,12 +53,14 @@ fun MainScreen(
 ) {
   val tabNavController = rememberNavController()
   val currentBackStackEntry by tabNavController.currentBackStackEntryAsState()
-  val selectedTab = remember(currentBackStackEntry) {
-    val destination = currentBackStackEntry?.destination
-    when {
-      destination?.hasRoute(NavRoute.Categories::class) == true -> BottomTabItemValue.CATEGORIES
-      destination?.hasRoute(NavRoute.Profile::class) == true -> BottomTabItemValue.PROFILE
-      else -> BottomTabItemValue.HOME
+  val selectedTab by remember {
+    derivedStateOf {
+      val destination = currentBackStackEntry?.destination
+      when {
+        destination?.hasRoute(NavRoute.Categories::class) == true -> BottomTabItemValue.CATEGORIES
+        destination?.hasRoute(NavRoute.Profile::class) == true -> BottomTabItemValue.PROFILE
+        else -> BottomTabItemValue.HOME
+      }
     }
   }
 

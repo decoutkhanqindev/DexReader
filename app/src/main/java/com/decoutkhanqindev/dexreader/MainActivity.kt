@@ -6,17 +6,26 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ComposeUiFlags
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalResources
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.decoutkhanqindev.dexreader.data.local.datastore.DataStoreManager
+import com.decoutkhanqindev.dexreader.data.local.locale.LanguageManager
 import com.decoutkhanqindev.dexreader.data.network.connectivity.NetworkManager
+import com.decoutkhanqindev.dexreader.presentation.model.value.language.LanguageValue
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavGraph
 import com.decoutkhanqindev.dexreader.presentation.screens.common.locals.LocalDataStoreManager
+import com.decoutkhanqindev.dexreader.presentation.screens.common.locals.LocalLanguageManager
 import com.decoutkhanqindev.dexreader.presentation.screens.common.locals.LocalNetworkManager
+import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.analytics
 import com.google.firebase.crashlytics.crashlytics
@@ -33,6 +42,9 @@ class MainActivity : ComponentActivity() {
   @Inject
   lateinit var networkManager: NetworkManager
 
+  @Inject
+  lateinit var languageManager: LanguageManager
+
   @OptIn(ExperimentalComposeUiApi::class)
   override fun onCreate(savedInstanceState: Bundle?) {
     ComposeUiFlags.isBypassUnfocusableComposeViewEnabled = false
@@ -40,11 +52,26 @@ class MainActivity : ComponentActivity() {
     runCatching { enableEdgeToEdge() }
     runCatching { requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT }
     setContent {
+      val selectedLangCode by dataStoreManager.selectedLangCode.collectAsStateWithLifecycle()
+      val isDark by dataStoreManager.isDark.collectAsStateWithLifecycle()
+      val languageCode = LanguageValue.fromCode(selectedLangCode).code
+      val configuration = remember(languageCode) {
+        languageManager.configurationFor(languageCode)
+      }
+      val resources = remember(configuration) {
+        languageManager.resourcesFor(configuration)
+      }
+
       CompositionLocalProvider(
         LocalDataStoreManager provides dataStoreManager,
         LocalNetworkManager provides networkManager,
+        LocalLanguageManager provides languageManager,
+        LocalConfiguration provides configuration,
+        LocalResources provides resources,
       ) {
-        NavGraph()
+        DexReaderTheme(isDarkTheme = isDark ?: true) {
+          NavGraph()
+        }
       }
     }
     setUpFirebaseSdk()

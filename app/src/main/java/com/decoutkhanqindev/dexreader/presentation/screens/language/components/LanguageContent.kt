@@ -19,17 +19,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.model.value.language.LanguageTypeValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.language.LanguageValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
-import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
-import com.decoutkhanqindev.dexreader.util.LanguageManager
+import com.decoutkhanqindev.dexreader.presentation.screens.common.locals.LocalLanguageManager
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
@@ -41,10 +40,11 @@ fun LanguageContent(
   onLanguageClick: (LanguageValue) -> Unit,
   onDoneClick: () -> Unit,
 ) {
-  val displayLanguage = LanguageManager.current
-  val deviceLanguageCode = LanguageManager.deviceLanguageCode()
+  val languageManager = LocalLanguageManager.current
+  val displayLanguage = LanguageValue.fromCode(LocalConfiguration.current.locales[0].toLanguageTag())
+  val deviceLanguageCode = remember { languageManager.deviceLanguageCode() }
   val displayNames = remember(displayLanguage) {
-    LanguageValue.displayNamesFor(displayIn = displayLanguage)
+    LanguageValue.displayNamesFor(displayIn = displayLanguage, languageManager = languageManager)
   }
   val languages = remember(displayLanguage, deviceLanguageCode) {
     LanguageValue.sortedForDisplay(
@@ -113,35 +113,5 @@ fun LanguageContent(
           .padding(start = 8.dp)
       )
     }
-  }
-}
-
-@Preview
-@Composable
-private fun LanguageContentPreview() {
-  DexReaderTheme {
-    LanguageContent(
-      type = LanguageTypeValue.SETTING,
-      selectedLanguage = LanguageValue.VIETNAMESE,
-      appliedLanguage = LanguageValue.ENGLISH,
-      modifier = Modifier.fillMaxSize(),
-      onLanguageClick = {},
-      onDoneClick = {},
-    )
-  }
-}
-
-@Preview
-@Composable
-private fun LanguageContentNothingSelectedPreview() {
-  DexReaderTheme {
-    LanguageContent(
-      type = LanguageTypeValue.SELECTION,
-      selectedLanguage = null,
-      appliedLanguage = LanguageValue.ENGLISH,
-      modifier = Modifier.fillMaxSize(),
-      onLanguageClick = {},
-      onDoneClick = {},
-    )
   }
 }
