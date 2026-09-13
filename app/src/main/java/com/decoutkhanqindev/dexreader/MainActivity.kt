@@ -29,6 +29,7 @@ import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.analytics
 import com.google.firebase.crashlytics.crashlytics
+import com.google.firebase.perf.performance
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -82,6 +83,7 @@ class MainActivity : ComponentActivity() {
       runCatching {
         Firebase.crashlytics.isCrashlyticsCollectionEnabled = !BuildConfig.DEBUG
         Firebase.analytics.setAnalyticsCollectionEnabled(!BuildConfig.DEBUG)
+        Firebase.performance.isPerformanceCollectionEnabled = !BuildConfig.DEBUG
       }
     }
   }

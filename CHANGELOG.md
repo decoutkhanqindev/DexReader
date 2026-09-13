@@ -87,6 +87,11 @@ phải xâu tham số qua `NavGraph` nữa.
   `start_reading`/`continue_reading` giữ cho dialog History. Đã chụp trên emulator: "☰ Sắp xếp /
   ▼ Lọc", "📖 Bắt đầu / ♡ Yêu thích"; sau đó đổi icon sang **bên phải** text theo yêu cầu
   ("Sắp xếp ☰ / Lọc ▼", "Bắt đầu 📖 / Yêu thích ♡"), chụp lại xác nhận.
+- **Firebase Performance tắt ở debug** — `MainActivity.setUpFirebaseSdk()` thêm
+  `Firebase.performance.isPerformanceCollectionEnabled = !BuildConfig.DEBUG` cạnh Crashlytics/
+  Analytics (trước đó quên Perf → mọi cold start emulator debug hôm nay đều đẩy trace "app start"
+  ~1.79s lên dashboard, thành "+1,232%"; debug và release chung `v1.0.1 (1)` nên không lọc được).
+  Chỉ sửa runtime; không đổi Gradle instrumentation, không thêm `versionNameSuffix`.
 - **`LanguageManager` thành manager thứ ba, `MainActivity` là composition root**:
   `util/LanguageManager` (object trộn hàm thuần + `LocalAppLanguage` + `ProvideAppLanguage`) →
   `data/local/locale/LanguageManager` interface + `LanguageManagerImpl(app)` (stateless:
