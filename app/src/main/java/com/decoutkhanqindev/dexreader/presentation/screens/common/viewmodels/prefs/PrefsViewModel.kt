@@ -1,8 +1,7 @@
-package com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.settings
+package com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.prefs
 
-import com.decoutkhanqindev.dexreader.domain.usecase.settings.ObserveNetworkAvailabilityUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.settings.ObserveThemeModeUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.settings.SaveThemeModeUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.prefs.ObserveThemeModeUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.prefs.SaveThemeModeUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.ThemeModeMapper.toThemeMode
 import com.decoutkhanqindev.dexreader.presentation.mapper.ThemeModeMapper.toThemeModeValue
 import com.decoutkhanqindev.dexreader.presentation.model.value.settings.ThemeModeValue
@@ -16,45 +15,26 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor(
+class PrefsViewModel @Inject constructor(
   private val observeThemeModeUseCase: ObserveThemeModeUseCase,
   private val saveThemeModeUseCase: SaveThemeModeUseCase,
-  private val observeNetworkAvailabilityUseCase: ObserveNetworkAvailabilityUseCase,
 ) : BaseViewModel() {
-  private val _uiState = MutableStateFlow(SettingsUiState())
-  val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
-
-  private val _isNetworkAvailable = MutableStateFlow(true)
-  val isNetworkAvailable: StateFlow<Boolean> = _isNetworkAvailable.asStateFlow()
+  private val _data = MutableStateFlow(PrefsData())
+  val data: StateFlow<PrefsData> = _data.asStateFlow()
 
   init {
     observeThemeOption()
-    observeNetworkAvailability()
-  }
-
-  private fun observeNetworkAvailability() {
-    vmLaunch {
-      observeNetworkAvailabilityUseCase().collect { result ->
-        result
-          .onSuccess { _isNetworkAvailable.value = it }
-          .onFailure { throwable ->
-            _isNetworkAvailable.value = true
-            Timber.tag(this::class.java.simpleName)
-              .e("observeNetworkAvailability have error: ${throwable.stackTraceToString()}")
-          }
-      }
-    }
   }
 
   private fun observeThemeOption() {
     vmLaunch {
-      _uiState.update { it.copy(isLoading = true) }
+      _data.update { it.copy(isLoading = true) }
 
       observeThemeModeUseCase().collect { result ->
         result
           .onSuccess { mode ->
             val value = mode.toThemeModeValue()
-            _uiState.update {
+            _data.update {
               it.copy(
                 isLoading = false,
                 appliedThemeOption = value,
@@ -63,7 +43,7 @@ class SettingsViewModel @Inject constructor(
             }
           }
           .onFailure { throwable ->
-            _uiState.update {
+            _data.update {
               it.copy(
                 isLoading = false,
                 appliedThemeOption = ThemeModeValue.DARK,
@@ -79,11 +59,11 @@ class SettingsViewModel @Inject constructor(
   }
 
   fun saveThemeOption() {
-    val currentUiState = _uiState.value
+    val currentUiState = _data.value
     if (currentUiState.isLoading) return
 
     vmLaunch {
-      _uiState.update {
+      _data.update {
         it.copy(
           isLoading = true,
           isSuccess = false,
@@ -93,7 +73,7 @@ class SettingsViewModel @Inject constructor(
 
       saveThemeModeUseCase(currentUiState.selectedThemeOption.toThemeMode())
         .onSuccess {
-          _uiState.update {
+          _data.update {
             it.copy(
               isLoading = false,
               appliedThemeOption = currentUiState.selectedThemeOption,
@@ -103,7 +83,7 @@ class SettingsViewModel @Inject constructor(
           }
         }
         .onFailure { throwable ->
-          _uiState.update {
+          _data.update {
             it.copy(
               isLoading = false,
               isSuccess = false,
@@ -117,8 +97,8 @@ class SettingsViewModel @Inject constructor(
   }
 
   fun updateThemeOption(value: ThemeModeValue) {
-    if (_uiState.value.selectedThemeOption == value) return
-    _uiState.update {
+    if (_data.value.selectedThemeOption == value) return
+    _data.update {
       it.copy(
         isLoading = false,
         selectedThemeOption = value,
@@ -129,6 +109,6 @@ class SettingsViewModel @Inject constructor(
   }
 
   fun retry() {
-    if (_uiState.value.isError) saveThemeOption()
+    if (_data.value.isError) saveThemeOption()
   }
 }

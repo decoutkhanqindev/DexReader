@@ -24,8 +24,9 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NoInter
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.UserViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.language.LanguageViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.manga_section.MangaSectionViewModel
+import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.network.NetworkViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.onboarding.OnboardingViewModel
-import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.settings.SettingsViewModel
+import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.prefs.PrefsViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.favorites.FavoritesScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.history.HistoryScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.language.LanguageSelectionScreen
@@ -53,9 +54,8 @@ fun NavGraph() {
   val isUserLoggedIn by userViewModel.isUserLoggedIn.collectAsStateWithLifecycle()
   val currentUser by userViewModel.userProfile.collectAsStateWithLifecycle()
 
-  val settingsViewModel: SettingsViewModel = hiltViewModel()
-  val settingsUiState by settingsViewModel.uiState.collectAsStateWithLifecycle()
-  val isNetworkAvailable by settingsViewModel.isNetworkAvailable.collectAsStateWithLifecycle()
+  val prefsViewModel: PrefsViewModel = hiltViewModel()
+  val prefsData by prefsViewModel.data.collectAsStateWithLifecycle()
 
   val onboardingViewModel: OnboardingViewModel = hiltViewModel()
   val onboardingUiState by onboardingViewModel.uiState.collectAsStateWithLifecycle()
@@ -63,8 +63,11 @@ fun NavGraph() {
   val languageViewModel: LanguageViewModel = hiltViewModel()
   val languageUiState by languageViewModel.uiState.collectAsStateWithLifecycle()
 
+  val networkViewModel: NetworkViewModel = hiltViewModel()
+  val isNetworkAvailable by networkViewModel.isAvailable.collectAsStateWithLifecycle()
+
   LanguageManager.ProvideAppLanguage(language = languageUiState.appliedLanguage) {
-    DexReaderTheme(themeOption = settingsUiState.appliedThemeOption) {
+    DexReaderTheme(themeOption = prefsData.appliedThemeOption) {
       NavHost(
         navController = navController,
         startDestination = NavRoute.Splash,
@@ -175,7 +178,7 @@ fun NavGraph() {
         composable<NavRoute.Settings> {
           SettingsScreen(
             navController = navController,
-            settingsViewModel = settingsViewModel,
+            prefsViewModel = prefsViewModel,
             modifier = Modifier.fillMaxSize(),
           )
         }

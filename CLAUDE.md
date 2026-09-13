@@ -77,7 +77,7 @@ domain/       Pure Kotlin. Entities, exceptions, repository interfaces, use case
 data/         Implements domain interfaces. Retrofit, Room, Firebase, DataStore.
 presentation/ Jetpack Compose UI, ViewModels, NavGraph.
 di/           4 Hilt modules: LocalModule, RepositoryModule, ApiModule, FirebaseModule.
-util/         CoroutineHandler, DateTimeHandler, NavTransitions.
+util/         CoroutineHandler, DateTimeHandler, NavTransitions, LanguageManager.
 ```
 
 ---
@@ -194,24 +194,10 @@ observed, never inferred from a failed response.** `InfrastructureException.Netw
 `FeatureError.NetworkUnavailable` and `UserError.NetworkUnavailable` were all deleted; an
 `IOException` from Retrofit and a Firestore `UNAVAILABLE`/`DEADLINE_EXCEEDED` now map to
 `ServerUnavailable` ("Server is not responding" — accurate for a transport failure *while a
-network exists*). Connectivity itself comes from
-`SettingsRepository.observeIsNetworkAvailable(): Flow<Boolean>` (same repository as the theme /
-language / onboarding flags — deliberate, so no DI change; the impl already injects
-`Application`). The impl is a `callbackFlow` around
-`ConnectivityManager.registerDefaultNetworkCallback`, emitting from `onCapabilitiesChanged` and
-`onLost` plus one initial read, where "available" means
-`NET_CAPABILITY_INTERNET && NET_CAPABILITY_VALIDATED` — `VALIDATED` is the OS's own
-captive-portal/reachability check, so a Wi-Fi with no upstream reads as offline, which is what the
-user experiences. Three details that are load-bearing: (1) it does **not** emit from
-`onAvailable` — that fires before capabilities are known and would produce a spurious `true`;
-`onCapabilitiesChanged` always follows it. (2) `.debounce { if (it) 0L else 500L }` before
-`distinctUntilChanged()` — `true` is instant, `false` has to survive 500ms, so a Wi-Fi→cellular
-hand-off (`onLost` on the old default, `onCapabilitiesChanged` on the new one a few hundred ms
-later) never flashes the dialog. `debounce` is `@FlowPreview`, hence the `@OptIn`. (3)
-`ACCESS_NETWORK_STATE` is declared in the manifest — without it the callback registration throws
-`SecurityException`. The consumer is `SettingsViewModel.isNetworkAvailable: StateFlow<Boolean>`
-(a separate flow, not a `SettingsUiState` field, since `NavGraph` is its only reader), seeded
-`true` so nothing flashes before the first real emission; `NavGraph` renders
+network exists*). Connectivity itself is **not a repository or use-case concern at all** — it
+has its own full vertical slice — `NetworkRepository` → `ObserveNetworkAvailabilityUseCase` →
+`NetworkViewModel` (see Util, "One concern per slice") — and `NavGraph` reads
+`val isNetworkAvailable by networkViewModel.isAvailable.collectAsStateWithLifecycle()` and renders
 `if (!isNetworkAvailable) NoInternetDialog()` after the `NavHost`, inside `DexReaderTheme`, so it
 sits over every destination. `NoInternetDialog` (`common/dialog/`) is **non-cancellable by
 design** — `isEnableDismiss = false` and the `AlertDialog` wrapper's default
@@ -261,10 +247,10 @@ Measured:
 language and check `total == 0`, then re-request English. Do **not** send two languages in one call:
 the feed mixes them with no priority (10 `en` + 7 `vi` in one page) and pagination interleaves them.
 
-**Where the preferred language comes from**: `SettingsRepository.observeContentLanguage()` (same
+**Where the preferred language comes from**: `PrefsRepository.observeContentLanguage()` (same
 DataStore as the theme pair, so no DI change), read *inside* the data layer —
 `MangaRepositoryImpl`, `CategoryRepositoryImpl` and `ChapterRepositoryImpl` inject
-`SettingsRepository` and resolve it themselves. That is deliberate: threading a `preferredLanguage`
+`PrefsRepository` and resolve it themselves. That is deliberate: threading a `preferredLanguage`
 param up through every use case and ViewModel would have touched ~8 repository methods and every
 caller, for a value none of them actually decide. Read it **once per repository method**, never
 inside a `mapNotNull` lambda — `MangaRepositoryImpl.toMangaList()` exists exactly so the `.first()`
@@ -296,7 +282,7 @@ value changed.)
 | Module             | Type            | Provides                                                                 |
 |--------------------|-----------------|--------------------------------------------------------------------------|
 | `LocalModule`      | `object`        | Room `ChapterCacheDatabase`, `ChapterCacheDao`, `DataStore<Preferences>` |
-| `RepositoryModule` | **`interface`** | 8 `@Binds` for all repository interface → impl bindings                  |
+| `RepositoryModule` | **`interface`** | 9 `@Binds` for all repository interface → impl bindings                  |
 | `ApiModule`        | `object`        | Moshi, OkHttp (30s timeouts), Retrofit, `ApiService`                     |
 | `FirebaseModule`   | `object`        | `FirebaseAuth`, `FirebaseFirestore`, 4 Firebase source `@Provides`       |
 
@@ -329,6 +315,63 @@ value changed.)
 
 **`DateTimeHandler`**: `String?.parseIso8601ToEpoch(): Long?` | `Long?.toTimeAgo(): String` — both
 `SimpleDateFormat` use `ThreadLocal` (not thread-safe without it).
+
+**One concern per slice — `PrefsRepository` is the DataStore, `NetworkRepository` is
+connectivity, `LanguageManager` is locale.** The DataStore-backed repository used to be `SettingsRepository`
+(with `SettingsRepositoryImpl`, `domain/usecase/settings/`, `SettingsViewModel`, `SettingsUiState`,
+and a `viewmodels/settings/` package) and had started to absorb anything vaguely "settings-shaped",
+including the connectivity flow. It was renamed to make its actual job explicit: it is the
+**preferences store**, nothing more. Current names — `domain/repository/prefs/PrefsRepository`,
+`data/repository/prefs/PrefsRepositoryImpl`, `domain/usecase/prefs/{Observe,Save}{ThemeMode,
+ContentLanguage,IsOnboardingCompleted}UseCase`, `viewmodels/prefs/PrefsViewModel` exposing
+`data: StateFlow<PrefsData>` (not `uiState` — it is persisted preference data with a save-status
+tail, not screen state), and `RepositoryModule.bindPrefsRepository`. The Settings *screen* and its
+values keep the `settings` name (`screens/settings/`, `model/value/settings/ThemeModeValue`,
+`SettingItemValue`, `entity/value/settings/ThemeMode`) — those are the feature, not the store.
+Rule going forward: a new cross-cutting runtime signal (connectivity, battery, whatever) gets
+**the same shape as prefs under its own name** — `domain/repository/<name>/<Name>Repository`,
+`data/repository/<name>/<Name>RepositoryImpl`, `domain/usecase/<name>/…UseCase`, a
+`@Binds` in `RepositoryModule`, and a shared `viewmodels/<name>/<Name>ViewModel` — never a
+method bolted onto `PrefsRepository`, and not a
+`util/XxxManager` singleton either (`LanguageManager` is the one exception, and only because it
+provides CompositionLocals, which is a Compose concern rather than a data source).
+
+**Network slice** — mirrors prefs exactly, with `network` in place of `prefs`:
+`domain/repository/network/NetworkRepository { fun observeIsAvailable(): Flow<Boolean> }`,
+`data/repository/network/NetworkRepositoryImpl` (injects `Application`, bound by
+`RepositoryModule.bindNetworkRepository`), `domain/usecase/network/ObserveNetworkAvailabilityUseCase`
+(`Flow<Result<Boolean>>` via `toFlowResult()`), and the shared
+`viewmodels/network/NetworkViewModel` exposing `isAvailable: StateFlow<Boolean>` — a plain
+Boolean, not a wrapper data class: the slice has exactly one value and no save-status tail, so
+a `NetworkData` holder would be ceremony (one was added and removed in the same session). Add a
+second `StateFlow` if a second signal ever appears; don't retrofit a data class. It is built
+with `stateIn`, not the `MutableStateFlow` + `vmLaunch { collect { … } }` shape the other shared
+VMs use, because there is nothing to *merge* — the flow is the state:
+`useCase().map { it.onFailure { Timber… }.getOrDefault(true) }.stateIn(viewModelScope,
+WhileSubscribed(5_000), true)`. `WhileSubscribed(5_000)` is deliberate: the `ConnectivityManager`
+callback is registered only while something collects (`NavGraph`'s
+`collectAsStateWithLifecycle` stops at `STARTED`), so it is unregistered ~5s after the app goes
+to the background and re-registered — with a fresh initial read — on resume. `NavGraph`
+creates the VM with `hiltViewModel()` at the composition root (so it is Activity-scoped and lives
+as long as the UI), collects `isAvailable`, and shows `NoInternetDialog` when it is `false`. Any
+other ViewModel that needs connectivity injects the use case and collects it itself — there is no
+global singleton to read `.value` from; a repository that needs it injects `NetworkRepository`.
+The impl's `observeIsAvailable()`
+is a `callbackFlow` around `ConnectivityManager.registerDefaultNetworkCallback`, emitting from
+`onCapabilitiesChanged` and `onLost` plus one initial read, where "available" means
+`NET_CAPABILITY_INTERNET && NET_CAPABILITY_VALIDATED` — `VALIDATED` is the OS's own
+captive-portal/reachability check, so a Wi-Fi with no upstream reads as offline, which is what the
+user experiences. Three details that are load-bearing: (1) it does **not** emit from
+`onAvailable` — that fires before capabilities are known and would produce a spurious `true`;
+`onCapabilitiesChanged` always follows it. (2) `.debounce { if (it) 0L else 500L }` before
+`distinctUntilChanged()` — `true` is instant, `false` has to survive 500ms, so a Wi-Fi→cellular
+hand-off (`onLost` on the old default, `onCapabilitiesChanged` on the new one a few hundred ms
+later) never flashes the dialog. `debounce` is `@FlowPreview`, hence the `@OptIn`. (3)
+`ACCESS_NETWORK_STATE` is declared in the manifest — without it the callback registration throws
+`SecurityException`. `stateIn`'s `initialValue = true` means nothing flashes before the first
+real emission (the initial read lands within the first frames anyway), and the `map` turns a
+failed `Result` into `true` after logging — a broken observer must never lock the user behind
+the non-cancellable dialog.
 
 **`NavTransitions`**: `navigatePreserveState<Root>(route)` is the **bottom-tab switch**
 (preserves each tab's state) via `popUpTo<Root> { saveState = true }` + `launchSingleTop` +
@@ -581,20 +624,20 @@ screen (see
 Onboarding above) — `NavGraph` both consumes it and passes it down.
 `UserViewModel` (moved from top-level `presentation/`) exposes `isUserLoggedIn`/
 `userProfile`, read by `NavGraph` and passed down as plain `isUserLoggedIn`/`currentUser` params to
-every screen. `viewmodels/settings/SettingsViewModel` + `SettingsUiState` (moved from
-`screens/settings/`, grouped under their own subpackage like `manga_section/` below) is read by
+every screen. `viewmodels/prefs/PrefsViewModel` + `PrefsData` (renamed from
+`PrefsViewModel`/`PrefsData` — see the Prefs paragraph under Util for why — and before
+that moved from `screens/settings/`, grouped under their own subpackage like `manga_section/`
+below) is read by
 `NavGraph` to drive the app-wide `DexReaderTheme(themeOption = ...)` wrapping the whole `NavHost`,
 and
-that same instance is passed into `ProfileScreen(settingsViewModel = ...)` — both consumers share
+that same instance is passed into `ProfileScreen(prefsViewModel = ...)` — both consumers share
 one
-instance instead of each calling its own `hiltViewModel()`; it also exposes
-`isNetworkAvailable: StateFlow<Boolean>` for `NavGraph`'s `NoInternetDialog` (see Data Layer) (the original bug: `MainActivity` and the
+instance instead of each calling its own `hiltViewModel()` (the original bug: `MainActivity` and the
 old `SettingsScreen` each created an independent instance, so the two could desync). **There is no
 Settings screen any more** — it was deleted and its only content (the theme picker) became
 `ProfileSettingsSection` inside the Profile hub, so `NavRoute.Settings` and `MenuValue.SETTINGS` are
-gone too; the tab bar is down to Home / Categories / Profile. `SettingsViewModel` itself is
-untouched
-and still lives in `common/viewmodels/settings/` because `NavGraph` needs `appliedThemeOption`
+gone too; the tab bar is down to Home / Categories / Profile. The prefs VM stays in
+`common/viewmodels/prefs/` because `NavGraph` needs `appliedThemeOption`
 regardless of where the picker UI sits.
 `viewmodels/manga_section/MangaSectionViewModel` + `MangaSectionUiState` (renamed from
 `HomeViewModel`/`HomeUiState`, moved out of `screens/home/`) is instantiated once in `NavGraph` and
@@ -602,8 +645,8 @@ passed into `HomeScreen(viewModel = ...)` as a required param (no `= hiltViewMod
 rename drops the Home-specific name so the same instance/type can be reused by other manga-listing
 screens later.
 
-**Full `uiState` vs. narrow flow at a wide-reach call site**: `NavGraph` collects
-`settingsViewModel.uiState` directly (not a dedicated per-field flow) and reads
+**Full state vs. narrow flow at a wide-reach call site**: `NavGraph` collects
+`prefsViewModel.data` directly (not a dedicated per-field flow) and reads
 `.appliedThemeOption`
 off it for `DexReaderTheme` — kept simple on purpose, since `isLoading`/`isSuccess`/`isError` only
 churn while the user is already on the Settings screen (which is recomposing for that anyway), so a
@@ -666,7 +709,7 @@ onboarding grows the native heap by ~5.5 MB with pages 1-2 composed, which match
 `BitmapDrawable` would — at 3× a single page would cost ~49 MB on its own. Don't move these into
 `drawable-xxhdpi/` on the theory that they need it.
 
-**The "already seen it" flag lives in `SettingsRepository`**, not a new repository — same DataStore,
+**The "already seen it" flag lives in `PrefsRepository`**, not a new repository — same DataStore,
 so `observeIsOnboardingCompleted()` / `saveIsOnboardingCompleted()` sit next to the theme pair and
 need **no DI change** (`RepositoryModule` already binds it). `OnboardingViewModel`
 (`common/viewmodels/onboarding/`) is a **shared** VM: `NavGraph` creates it, reads
@@ -687,7 +730,7 @@ user would silently skip onboarding. Don't simplify those two `rememberUpdatedSt
 
 **App language (`util/LanguageManager.kt` + `screens/language/`)**: one stored value drives **both**
 the UI locale and the MangaDex content language — it is
-`SettingsRepository.observeContentLanguage()`
+`PrefsRepository.observeContentLanguage()`
 (a `MangaLanguage`).
 
 **There is ONE language enum, `LanguageValue` (`model/value/language/`, 64 entries), used for
@@ -1008,7 +1051,7 @@ into
 a staged field (updates the moment the user taps, for in-screen feedback) and an applied field (
 updates
 only after the write succeeds) — never let one field serve both roles.
-`SettingsUiState.selectedThemeOption` (tapped option, drives the radio highlight in
+`PrefsData.selectedThemeOption` (tapped option, drives the radio highlight in
 `ProfileSettingsSection`) vs. `appliedThemeOption` (persisted value, read by `NavGraph` to drive
 `DexReaderTheme` — see Screen Structure) is the established example. Theme now **applies on tap**:
 `ProfileScreen` calls `updateThemeOption(it)` then `saveThemeOption()` back to back (safe — the

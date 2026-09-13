@@ -8,7 +8,7 @@ import com.decoutkhanqindev.dexreader.data.network.api.response.manga.MangaRespo
 import com.decoutkhanqindev.dexreader.domain.entity.manga.Manga
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.repository.manga.MangaRepository
-import com.decoutkhanqindev.dexreader.domain.repository.settings.SettingsRepository
+import com.decoutkhanqindev.dexreader.domain.repository.prefs.PrefsRepository
 import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -16,10 +16,10 @@ import javax.inject.Inject
 
 class MangaRepositoryImpl @Inject constructor(
   private val apiService: ApiService,
-  private val settingsRepository: SettingsRepository,
+  private val prefsRepository: PrefsRepository,
 ) : MangaRepository {
   private suspend fun List<MangaResponse>?.toMangaList(): List<Manga> {
-    val preferredLanguage = settingsRepository.observeContentLanguage().first()
+    val preferredLanguage = prefsRepository.observeContentLanguage().first()
     return this?.mapNotNull {
       it.toManga(uploadUrl = BuildConfig.UPLOAD_URL, preferredLanguage = preferredLanguage)
     } ?: emptyList()
@@ -71,7 +71,7 @@ class MangaRepositoryImpl @Inject constructor(
       block = {
         apiService.getMangaDetails(mangaId).data?.toManga(
           uploadUrl = BuildConfig.UPLOAD_URL,
-          preferredLanguage = settingsRepository.observeContentLanguage().first(),
+          preferredLanguage = prefsRepository.observeContentLanguage().first(),
         )
           ?: throw BusinessException.Resource.MangaNotFound()
       },

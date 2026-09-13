@@ -5,7 +5,8 @@ import com.decoutkhanqindev.dexreader.data.repository.manga.CacheRepositoryImpl
 import com.decoutkhanqindev.dexreader.data.repository.manga.ChapterRepositoryImpl
 import com.decoutkhanqindev.dexreader.data.repository.manga.MangaRepositoryImpl
 import com.decoutkhanqindev.dexreader.data.repository.manga.MangaStatsRepositoryImpl
-import com.decoutkhanqindev.dexreader.data.repository.settings.SettingsRepositoryImpl
+import com.decoutkhanqindev.dexreader.data.repository.network.NetworkRepositoryImpl
+import com.decoutkhanqindev.dexreader.data.repository.prefs.PrefsRepositoryImpl
 import com.decoutkhanqindev.dexreader.data.repository.user.FavoritesRepositoryImpl
 import com.decoutkhanqindev.dexreader.data.repository.user.HistoryRepositoryImpl
 import com.decoutkhanqindev.dexreader.data.repository.user.StatisticsRepositoryImpl
@@ -15,7 +16,8 @@ import com.decoutkhanqindev.dexreader.domain.repository.manga.CacheRepository
 import com.decoutkhanqindev.dexreader.domain.repository.manga.ChapterRepository
 import com.decoutkhanqindev.dexreader.domain.repository.manga.MangaRepository
 import com.decoutkhanqindev.dexreader.domain.repository.manga.MangaStatsRepository
-import com.decoutkhanqindev.dexreader.domain.repository.settings.SettingsRepository
+import com.decoutkhanqindev.dexreader.domain.repository.network.NetworkRepository
+import com.decoutkhanqindev.dexreader.domain.repository.prefs.PrefsRepository
 import com.decoutkhanqindev.dexreader.domain.repository.user.FavoritesRepository
 import com.decoutkhanqindev.dexreader.domain.repository.user.HistoryRepository
 import com.decoutkhanqindev.dexreader.domain.repository.user.StatisticsRepository
@@ -63,7 +65,11 @@ interface RepositoryModule {
 
   @Binds
   @Singleton
-  fun bindSettingsRepository(impl: SettingsRepositoryImpl): SettingsRepository
+  fun bindPrefsRepository(impl: PrefsRepositoryImpl): PrefsRepository
+
+  @Binds
+  @Singleton
+  fun bindNetworkRepository(impl: NetworkRepositoryImpl): NetworkRepository
 
   @Binds
   @Singleton

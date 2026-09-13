@@ -4,6 +4,42 @@ Dated log of notable multi-file / cross-cutting work sessions. Newest entry firs
 
 ---
 
+## 2026-09-13 — Tách trách nhiệm: `SettingsRepository` → `PrefsRepository`, network ra `NetworkManager`
+
+**Lý do**: `SettingsRepository`/`SettingsViewModel` đang gom mọi thứ "giống settings" — theme,
+ngôn ngữ, cờ onboarding, và cả quan sát kết nối mạng vừa thêm đợt trước. Tên "Settings" làm nó
+thành nơi đổ chung. Đổi tên cho đúng việc: nó là **kho preferences (DataStore)**, không hơn.
+
+- Rename (cả package): `domain.repository.settings.SettingsRepository` → `domain.repository.prefs.PrefsRepository`;
+  `data.repository.settings.SettingsRepositoryImpl` → `data.repository.prefs.PrefsRepositoryImpl`;
+  `domain.usecase.settings.*` → `domain.usecase.prefs.*` (6 use case);
+  `viewmodels.settings.SettingsViewModel`/`SettingsUiState` → `viewmodels.prefs.PrefsViewModel`/`PrefsData`;
+  `RepositoryModule.bindSettingsRepository` → `bindPrefsRepository`. 23 file sửa import/identifier.
+- `PrefsViewModel.uiState` → **`data`** — nó là dữ liệu preference đã lưu (kèm trạng thái save),
+  không phải screen state.
+- **Giữ nguyên** `screens/settings/`, `model/value/settings/`, `entity/value/settings/` — đó là
+  feature màn Settings, không phải kho.
+- **Network tách thành slice riêng, đúng pattern của prefs với tên `network`**: xoá
+  `observeIsNetworkAvailable()` khỏi `PrefsRepository`/impl và `isNetworkAvailable` khỏi
+  `PrefsViewModel`. Thay bằng `domain/repository/network/NetworkRepository`,
+  `data/repository/network/NetworkRepositoryImpl` (giữ nguyên logic: VALIDATED, không emit từ
+  `onAvailable`, debounce 500ms cho `false`), `domain/usecase/network/ObserveNetworkAvailabilityUseCase`,
+  `RepositoryModule.bindNetworkRepository` (9 `@Binds`), và shared VM
+  `viewmodels/network/NetworkViewModel` với `isAvailable: StateFlow<Boolean>` — Boolean trần,
+  không bọc data class (một `NetworkData` đã thêm rồi bỏ trong cùng phiên: slice chỉ có đúng
+  một giá trị, bọc lại là thừa). Dựng bằng `stateIn(viewModelScope, WhileSubscribed(5_000), true)`
+  thay vì `MutableStateFlow` + collect thủ công — flow chính là state, không có gì để merge;
+  `WhileSubscribed` để callback mạng chỉ đăng ký khi có người collect, tự huỷ ~5s sau khi app
+  xuống background. `NavGraph` tạo VM bằng `hiltViewModel()`, collect `isAvailable`, hiện
+  `NoInternetDialog` khi `false`. Một bản trung gian `util/NetworkManager` (object +
+  `start(context)` từ `App.onCreate`) đã được thử rồi bỏ trong cùng phiên — nó là singleton toàn
+  cục ngoài DI, không test được và lệch khỏi kiến trúc repo/use case/VM của phần còn lại.
+- Quy tắc từ giờ: tín hiệu runtime cross-cutting mới (pin, metered...) → slice đầy đủ theo đúng
+  khuôn prefs/network dưới tên riêng, không phải method trên `PrefsRepository`, cũng không phải
+  `util/XxxManager` (`LanguageManager` là ngoại lệ duy nhất vì nó cung cấp CompositionLocal).
+
+---
+
 ## 2026-09-13 — Scrim loading đúng z-order, IME Done, "no internet" thành dialog quan sát kết nối
 
 **1. Scrim khi loading không hiện — lỗi thứ tự vẽ, không phải thiếu gọi.** `blurBackground` là

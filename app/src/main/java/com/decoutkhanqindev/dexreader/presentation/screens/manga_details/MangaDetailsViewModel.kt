@@ -11,7 +11,7 @@ import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetChapterListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaDetailsUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.ResolveChapterLanguageUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.settings.ObserveContentLanguageUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.prefs.ObserveContentLanguageUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.AddToFavoritesUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.ObserveIsFavoriteUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.RemoveFromFavoritesUseCase

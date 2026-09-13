@@ -4,7 +4,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.category_details
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaListUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.settings.ObserveContentLanguageUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.prefs.ObserveContentLanguageUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortCriteria
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortOrder
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError

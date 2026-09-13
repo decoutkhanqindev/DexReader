@@ -11,7 +11,7 @@ import com.decoutkhanqindev.dexreader.domain.entity.value.criteria.MangaSortOrde
 import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaLanguage
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.repository.manga.ChapterRepository
-import com.decoutkhanqindev.dexreader.domain.repository.settings.SettingsRepository
+import com.decoutkhanqindev.dexreader.domain.repository.prefs.PrefsRepository
 import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -19,13 +19,13 @@ import javax.inject.Inject
 
 class ChapterRepositoryImpl @Inject constructor(
   private val apiService: ApiService,
-  private val settingsRepository: SettingsRepository,
+  private val prefsRepository: PrefsRepository,
 ) : ChapterRepository {
   override suspend fun resolveChapterLanguage(mangaId: String): MangaLanguage =
     runSuspendCatching(
       context = Dispatchers.IO,
       block = {
-        val preferredLanguage = settingsRepository.observeContentLanguage().first()
+        val preferredLanguage = prefsRepository.observeContentLanguage().first()
         if (preferredLanguage == MangaLanguage.ENGLISH) return@runSuspendCatching preferredLanguage
 
         val hasPreferredChapter = apiService.getChapterList(

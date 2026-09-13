@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.onboarding
 
-import com.decoutkhanqindev.dexreader.domain.usecase.settings.ObserveIsOnboardingCompletedUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.settings.SaveIsOnboardingCompletedUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.prefs.ObserveIsOnboardingCompletedUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.prefs.SaveIsOnboardingCompletedUseCase
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

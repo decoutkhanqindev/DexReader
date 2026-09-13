@@ -5,7 +5,7 @@ import com.decoutkhanqindev.dexreader.domain.entity.value.category.CategoryType
 import com.decoutkhanqindev.dexreader.domain.entity.value.criteria.MangaSortCriteria
 import com.decoutkhanqindev.dexreader.domain.usecase.category.GetCategoryListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaListUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.settings.ObserveContentLanguageUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.prefs.ObserveContentLanguageUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.CategoryMapper.toCategoryModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.value.category.CategoryTypeValue

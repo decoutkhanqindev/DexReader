@@ -13,7 +13,7 @@ import com.decoutkhanqindev.dexreader.domain.entity.value.criteria.MangaSortOrde
 import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaContentRating
 import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaStatus
 import com.decoutkhanqindev.dexreader.domain.repository.category.CategoryRepository
-import com.decoutkhanqindev.dexreader.domain.repository.settings.SettingsRepository
+import com.decoutkhanqindev.dexreader.domain.repository.prefs.PrefsRepository
 import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -21,13 +21,13 @@ import javax.inject.Inject
 
 class CategoryRepositoryImpl @Inject constructor(
   private val apiService: ApiService,
-  private val settingsRepository: SettingsRepository,
+  private val prefsRepository: PrefsRepository,
 ) : CategoryRepository {
   override suspend fun getCategoryList(): List<Category> =
     runSuspendCatching(
       context = Dispatchers.IO,
       block = {
-        val preferredLanguage = settingsRepository.observeContentLanguage().first()
+        val preferredLanguage = prefsRepository.observeContentLanguage().first()
         apiService.getTagList().data?.mapNotNull {
           it.toCategory(preferredLanguage = preferredLanguage)
         } ?: emptyList()
@@ -47,7 +47,7 @@ class CategoryRepositoryImpl @Inject constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       block = {
-        val preferredLanguage = settingsRepository.observeContentLanguage().first()
+        val preferredLanguage = prefsRepository.observeContentLanguage().first()
         val orderValue = sortOrder.toApiParam()
         val lastUpdated: String?
         val followedCount: String?

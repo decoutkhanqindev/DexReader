@@ -4,7 +4,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.search
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaSuggestionsUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.SearchMangaUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.settings.ObserveContentLanguageUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.prefs.ObserveContentLanguageUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel

@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.language
 
-import com.decoutkhanqindev.dexreader.domain.usecase.settings.ObserveContentLanguageUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.settings.SaveContentLanguageUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.prefs.ObserveContentLanguageUseCase
+import com.decoutkhanqindev.dexreader.domain.usecase.prefs.SaveContentLanguageUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toLanguageValue
 import com.decoutkhanqindev.dexreader.presentation.mapper.LanguageMapper.toMangaLanguage
 import com.decoutkhanqindev.dexreader.presentation.model.value.language.LanguageValue
