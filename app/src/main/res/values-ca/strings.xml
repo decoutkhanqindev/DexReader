@@ -85,6 +85,10 @@
   <string name="continue_reading">Continua llegint</string>
   <string name="favorite">Preferit</string>
   <string name="unfavorite">Treu de preferits</string>
+  <string name="start_button">Comença</string>
+  <string name="continue_button">Continua</string>
+  <string name="sort_button">Ordena</string>
+  <string name="filter_button">Filtra</string>
   <string name="you_must_sign_in_to_favorite_this_manga">Has d\'iniciar sessió per afegir aquest manga a preferits.</string>
   <string name="no_chapter_pages_available">No hi ha pàgines de capítol disponibles.</string>
   <string name="reader_title">%1$s/%2$s</string>

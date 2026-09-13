@@ -85,6 +85,10 @@
   <string name="continue_reading">Verder lezen</string>
   <string name="favorite">Favoriet</string>
   <string name="unfavorite">Verwijder uit favorieten</string>
+  <string name="start_button">Starten</string>
+  <string name="continue_button">Doorgaan</string>
+  <string name="sort_button">Sorteren</string>
+  <string name="filter_button">Filteren</string>
   <string name="you_must_sign_in_to_favorite_this_manga">U moet inloggen om deze manga als favoriet op te slaan.</string>
   <string name="no_chapter_pages_available">Geen hoofdstukpagina\'s beschikbaar.</string>
   <string name="reader_title">%1$s/%2$s</string>

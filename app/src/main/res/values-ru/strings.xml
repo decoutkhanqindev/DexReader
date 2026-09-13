@@ -85,6 +85,10 @@
   <string name="continue_reading">Продолжить чтение</string>
   <string name="favorite">Избранное</string>
   <string name="unfavorite">Убрать из избранного</string>
+  <string name="start_button">Начать</string>
+  <string name="continue_button">Продолжить</string>
+  <string name="sort_button">Сортировка</string>
+  <string name="filter_button">Фильтр</string>
   <string name="you_must_sign_in_to_favorite_this_manga">Вы должны войти в систему, чтобы добавить эту мангу в избранное.</string>
   <string name="no_chapter_pages_available">Страницы главы недоступны.</string>
   <string name="reader_title">%1$s/%2$s</string>

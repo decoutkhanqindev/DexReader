@@ -85,6 +85,10 @@
   <string name="continue_reading">继续阅读</string>
   <string name="favorite">收藏</string>
   <string name="unfavorite">取消收藏</string>
+  <string name="start_button">开始</string>
+  <string name="continue_button">继续</string>
+  <string name="sort_button">排序</string>
+  <string name="filter_button">筛选</string>
   <string name="you_must_sign_in_to_favorite_this_manga">您必须登录才能收藏此漫画。</string>
   <string name="no_chapter_pages_available">没有可用的章节页面。</string>
   <string name="reader_title">%1$s/%2$s</string>

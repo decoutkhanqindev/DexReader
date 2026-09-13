@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.data.repository.manga
 
+import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toMangaLanguage
 import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toApiParam
 import com.decoutkhanqindev.dexreader.data.mapper.ChapterMapper.toChapter
 import com.decoutkhanqindev.dexreader.data.mapper.ChapterPagesMapper.toChapterPages
@@ -11,21 +12,22 @@ import com.decoutkhanqindev.dexreader.domain.entity.value.criteria.MangaSortOrde
 import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaLanguage
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.repository.manga.ChapterRepository
-import com.decoutkhanqindev.dexreader.domain.repository.prefs.PrefsRepository
+import com.decoutkhanqindev.dexreader.data.local.datastore.DataStoreManager
 import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class ChapterRepositoryImpl @Inject constructor(
   private val apiService: ApiService,
-  private val prefsRepository: PrefsRepository,
+  private val dataStoreManager: DataStoreManager,
 ) : ChapterRepository {
   override suspend fun resolveChapterLanguage(mangaId: String): MangaLanguage =
     runSuspendCatching(
       context = Dispatchers.IO,
       block = {
-        val preferredLanguage = prefsRepository.observeContentLanguage().first()
+        val preferredLanguage = dataStoreManager.selectedLangCode.filterNotNull().first().toMangaLanguage()
         if (preferredLanguage == MangaLanguage.ENGLISH) return@runSuspendCatching preferredLanguage
 
         val hasPreferredChapter = apiService.getChapterList(

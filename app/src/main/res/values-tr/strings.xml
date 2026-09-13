@@ -85,6 +85,10 @@
   <string name="continue_reading">Okumaya Devam Et</string>
   <string name="favorite">Favori</string>
   <string name="unfavorite">Favorilerden Kaldır</string>
+  <string name="start_button">Başla</string>
+  <string name="continue_button">Devam et</string>
+  <string name="sort_button">Sırala</string>
+  <string name="filter_button">Filtrele</string>
   <string name="you_must_sign_in_to_favorite_this_manga">Bu mangayı favorilere eklemek için giriş yapmalısınız.</string>
   <string name="no_chapter_pages_available">Bölüm sayfaları mevcut değil.</string>
   <string name="reader_title">%1$s/%2$s</string>

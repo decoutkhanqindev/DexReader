@@ -126,6 +126,10 @@
   <string name="continue_reading">Continue Reading</string>
   <string name="favorite">Favorite</string>
   <string name="unfavorite">Unfavorite</string>
+  <string name="start_button">Start</string>
+  <string name="continue_button">Continue</string>
+  <string name="sort_button">Sort</string>
+  <string name="filter_button">Filter</string>
   <string name="you_must_sign_in_to_favorite_this_manga">You must sign in to favorite this manga.</string>
 
   <!-- Reader Screen -->

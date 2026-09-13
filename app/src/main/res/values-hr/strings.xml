@@ -85,6 +85,10 @@
   <string name="continue_reading">Nastavi čitati</string>
   <string name="favorite">Omiljeno</string>
   <string name="unfavorite">Poništi omiljeno</string>
+  <string name="start_button">Započni</string>
+  <string name="continue_button">Nastavi</string>
+  <string name="sort_button">Sortiraj</string>
+  <string name="filter_button">Filtriraj</string>
   <string name="you_must_sign_in_to_favorite_this_manga">Morate se prijaviti da biste označili ovu mangu kao omiljenu.</string>
   <string name="no_chapter_pages_available">Nema dostupnih stranica poglavlja.</string>
   <string name="reader_title">%1$s/%2$s</string>

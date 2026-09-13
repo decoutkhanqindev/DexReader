@@ -85,6 +85,10 @@
   <string name="continue_reading">చదవడం కొనసాగించండి</string>
   <string name="favorite">ఇష్టమైనది</string>
   <string name="unfavorite">ఇష్టమైన వాటి నుండి తొలగించు</string>
+  <string name="start_button">ప్రారంభించు</string>
+  <string name="continue_button">కొనసాగించు</string>
+  <string name="sort_button">క్రమబద్ధీకరించు</string>
+  <string name="filter_button">ఫిల్టర్</string>
   <string name="you_must_sign_in_to_favorite_this_manga">ఈ మాంగాను ఇష్టమైనదిగా గుర్తించడానికి మీరు సైన్ ఇన్ చేయాలి.</string>
   <string name="no_chapter_pages_available">అధ్యాయ పేజీలు అందుబాటులో లేవు.</string>
   <string name="reader_title">%1$s/%2$s</string>

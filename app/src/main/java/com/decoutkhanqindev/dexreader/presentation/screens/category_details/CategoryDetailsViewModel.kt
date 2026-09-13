@@ -4,7 +4,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.category_details
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaListUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.prefs.ObserveContentLanguageUseCase
+import com.decoutkhanqindev.dexreader.data.local.datastore.DataStoreManager
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortCriteria
 import com.decoutkhanqindev.dexreader.presentation.mapper.CriteriaMapper.toMangaSortOrder
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
@@ -27,6 +27,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
 import timber.log.Timber
 import javax.inject.Inject
@@ -35,7 +37,7 @@ import javax.inject.Inject
 class CategoryDetailsViewModel @Inject constructor(
   savedStateHandle: SavedStateHandle,
   private val getMangaListUseCase: GetMangaListUseCase,
-  private val observeContentLanguageUseCase: ObserveContentLanguageUseCase,
+  private val dataStoreManager: DataStoreManager,
 ) : BaseViewModel() {
   private val route: NavRoute.CategoryDetails = savedStateHandle.toRoute()
   private val categoryIdFromArg: String? = route.categoryId
@@ -61,9 +63,10 @@ class CategoryDetailsViewModel @Inject constructor(
 
   private fun observeContentLanguageChange() {
     vmLaunch {
-      observeContentLanguageUseCase()
+      dataStoreManager.selectedLangCode
+        .filterNotNull()
         .drop(1)
-        .collect { result -> result.onSuccess { fetchMangaListByCategoryFirstPage() } }
+        .collect { fetchMangaListByCategoryFirstPage() }
     }
   }
 

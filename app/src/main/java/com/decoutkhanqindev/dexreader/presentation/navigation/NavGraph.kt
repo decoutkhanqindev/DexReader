@@ -20,13 +20,12 @@ import com.decoutkhanqindev.dexreader.presentation.screens.auth.forgot_password.
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.login.LoginScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.register.RegisterScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailScreen
+import com.decoutkhanqindev.dexreader.presentation.model.value.language.LanguageValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NoInternetDialog
+import com.decoutkhanqindev.dexreader.presentation.screens.common.locals.LocalDataStoreManager
+import com.decoutkhanqindev.dexreader.presentation.screens.common.locals.LocalNetworkManager
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.UserViewModel
-import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.language.LanguageViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.manga_section.MangaSectionViewModel
-import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.network.NetworkViewModel
-import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.onboarding.OnboardingViewModel
-import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.prefs.PrefsViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.favorites.FavoritesScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.history.HistoryScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.language.LanguageSelectionScreen
@@ -54,20 +53,13 @@ fun NavGraph() {
   val isUserLoggedIn by userViewModel.isUserLoggedIn.collectAsStateWithLifecycle()
   val currentUser by userViewModel.userProfile.collectAsStateWithLifecycle()
 
-  val prefsViewModel: PrefsViewModel = hiltViewModel()
-  val prefsData by prefsViewModel.data.collectAsStateWithLifecycle()
+  val dataStoreManager = LocalDataStoreManager.current
+  val isDark by dataStoreManager.isDark.collectAsStateWithLifecycle()
+  val selectedLangCode by dataStoreManager.selectedLangCode.collectAsStateWithLifecycle()
+  val isNetworkAvailable by LocalNetworkManager.current.isAvailable.collectAsStateWithLifecycle()
 
-  val onboardingViewModel: OnboardingViewModel = hiltViewModel()
-  val onboardingUiState by onboardingViewModel.uiState.collectAsStateWithLifecycle()
-
-  val languageViewModel: LanguageViewModel = hiltViewModel()
-  val languageUiState by languageViewModel.uiState.collectAsStateWithLifecycle()
-
-  val networkViewModel: NetworkViewModel = hiltViewModel()
-  val isNetworkAvailable by networkViewModel.isAvailable.collectAsStateWithLifecycle()
-
-  LanguageManager.ProvideAppLanguage(language = languageUiState.appliedLanguage) {
-    DexReaderTheme(themeOption = prefsData.appliedThemeOption) {
+  LanguageManager.ProvideAppLanguage(language = LanguageValue.fromCode(selectedLangCode)) {
+    DexReaderTheme(isDarkTheme = isDark ?: true) {
       NavHost(
         navController = navController,
         startDestination = NavRoute.Splash,
@@ -79,7 +71,6 @@ fun NavGraph() {
         composable<NavRoute.Splash> {
           SplashScreen(
             navController = navController,
-            isOnboardingCompleted = onboardingUiState.isCompleted,
             modifier = Modifier.fillMaxSize(),
           )
         }
@@ -87,7 +78,6 @@ fun NavGraph() {
         composable<NavRoute.LanguageSelection> {
           LanguageSelectionScreen(
             navController = navController,
-            languageViewModel = languageViewModel,
             modifier = Modifier.fillMaxSize(),
           )
         }
@@ -95,7 +85,6 @@ fun NavGraph() {
         composable<NavRoute.Onboarding> {
           OnboardingScreen(
             navController = navController,
-            onboardingViewModel = onboardingViewModel,
             modifier = Modifier.fillMaxSize(),
           )
         }
@@ -178,7 +167,6 @@ fun NavGraph() {
         composable<NavRoute.Settings> {
           SettingsScreen(
             navController = navController,
-            prefsViewModel = prefsViewModel,
             modifier = Modifier.fillMaxSize(),
           )
         }
@@ -186,7 +174,6 @@ fun NavGraph() {
         composable<NavRoute.LanguageSetting> {
           LanguageSettingScreen(
             navController = navController,
-            languageViewModel = languageViewModel,
             modifier = Modifier.fillMaxSize(),
           )
         }

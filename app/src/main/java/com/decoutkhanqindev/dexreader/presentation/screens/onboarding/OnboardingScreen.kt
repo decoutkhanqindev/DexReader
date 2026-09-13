@@ -7,22 +7,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
-import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.onboarding.OnboardingViewModel
+import com.decoutkhanqindev.dexreader.presentation.screens.common.locals.LocalDataStoreManager
 import com.decoutkhanqindev.dexreader.presentation.screens.onboarding.components.OnboardingContent
 import com.decoutkhanqindev.dexreader.util.NavTransitions.navigateClearStack
 
 @Composable
 fun OnboardingScreen(
   navController: NavHostController,
-  onboardingViewModel: OnboardingViewModel,
   modifier: Modifier = Modifier,
 ) {
+  val dataStoreManager = LocalDataStoreManager.current
+
   BackHandler { }
 
   OnboardingContent(
     modifier = modifier.background(MaterialTheme.colorScheme.background),
     onGetStartedClick = {
-      onboardingViewModel.completeOnboarding()
+      dataStoreManager.saveIsFirstOpen(false)
       navController.navigateClearStack<NavRoute.Onboarding>(NavRoute.Main)
     },
   )

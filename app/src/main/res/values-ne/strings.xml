@@ -104,6 +104,10 @@
   <string name="continue_reading">पढ्न जारी राख्नुहोस्</string>
   <string name="favorite">मनपर्ने</string>
   <string name="unfavorite">मनपर्नेबाट हटाउनुहोस्</string>
+  <string name="start_button">सुरु गर्नुहोस्</string>
+  <string name="continue_button">जारी राख्नुहोस्</string>
+  <string name="sort_button">क्रमबद्ध</string>
+  <string name="filter_button">फिल्टर</string>
   <string name="you_must_sign_in_to_favorite_this_manga">यो मंगा मनपर्नेमा राख्न तपाईंले साइन इन गर्नुपर्छ।</string>
   <string name="no_chapter_pages_available">कुनै अध्याय पृष्ठ उपलब्ध छैन।</string>
   <string name="reader_title">%1$s/%2$s</string>

@@ -53,4 +53,10 @@ object CoroutineHandler {
         if (t is CancellationException) throw t
         else emit(Result.failure(t))
       }
+
+  fun <T> Flow<T>.toFlowCatching(): Flow<T> =
+    this.map { it }
+      .catch { t ->
+        if (t is CancellationException) throw t
+      }
 }

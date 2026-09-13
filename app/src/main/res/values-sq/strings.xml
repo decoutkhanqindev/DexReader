@@ -85,6 +85,10 @@
   <string name="continue_reading">Vazhdo leximin</string>
   <string name="favorite">E preferuar</string>
   <string name="unfavorite">Hiq nga të preferuarat</string>
+  <string name="start_button">Fillo</string>
+  <string name="continue_button">Vazhdo</string>
+  <string name="sort_button">Rendit</string>
+  <string name="filter_button">Filtro</string>
   <string name="you_must_sign_in_to_favorite_this_manga">Duhet të identifikoheni për ta bërë këtë manga të preferuar.</string>
   <string name="no_chapter_pages_available">Nuk ka faqe kapitulli në dispozicion.</string>
   <string name="reader_title">%1$s/%2$s</string>

@@ -74,10 +74,14 @@ Three-layer Clean Architecture + MVVM. Dependency Rule: outer layers depend inwa
 
 ```
 domain/       Pure Kotlin. Entities, exceptions, repository interfaces, use cases.
-data/         Implements domain interfaces. Retrofit, Room, Firebase, DataStore.
+data/         Implements domain interfaces. Retrofit, Room, Firebase, DataStore — plus the two
+              infrastructure managers (`local/datastore/DataStoreManager`,
+              `network/connectivity/NetworkManager`) that presentation injects directly.
 presentation/ Jetpack Compose UI, ViewModels, NavGraph.
-di/           4 Hilt modules: LocalModule, RepositoryModule, ApiModule, FirebaseModule.
+di/           5 Hilt modules: LocalModule, RepositoryModule, ApiModule, FirebaseModule, ConnectivityModule.
 util/         CoroutineHandler, DateTimeHandler, NavTransitions, LanguageManager.
+              (`LocalDataStoreManager`/`LocalNetworkManager` live in
+              `presentation/screens/common/locals/`, provided from `MainActivity`.)
 ```
 
 ---
@@ -194,10 +198,12 @@ observed, never inferred from a failed response.** `InfrastructureException.Netw
 `FeatureError.NetworkUnavailable` and `UserError.NetworkUnavailable` were all deleted; an
 `IOException` from Retrofit and a Firestore `UNAVAILABLE`/`DEADLINE_EXCEEDED` now map to
 `ServerUnavailable` ("Server is not responding" — accurate for a transport failure *while a
-network exists*). Connectivity itself is **not a repository or use-case concern at all** — it
-has its own full vertical slice — `NetworkRepository` → `ObserveNetworkAvailabilityUseCase` →
-`NetworkViewModel` (see Util, "One concern per slice") — and `NavGraph` reads
-`val isNetworkAvailable by networkViewModel.isAvailable.collectAsStateWithLifecycle()` and renders
+network exists*). Connectivity itself is **not a domain concern at all** — it is
+`data/network/connectivity/NetworkManager`, reached from Compose through the
+`LocalNetworkManager` CompositionLocal with no ViewModel or use case in between (see "Managers,
+not use cases" under Data Layer) — and `NavGraph` reads
+`val isNetworkAvailable by LocalNetworkManager.current.isAvailable.collectAsStateWithLifecycle()`
+and renders
 `if (!isNetworkAvailable) NoInternetDialog()` after the `NavHost`, inside `DexReaderTheme`, so it
 sits over every destination. `NoInternetDialog` (`common/dialog/`) is **non-cancellable by
 design** — `isEnableDismiss = false` and the `AlertDialog` wrapper's default
@@ -247,10 +253,16 @@ Measured:
 language and check `total == 0`, then re-request English. Do **not** send two languages in one call:
 the feed mixes them with no priority (10 `en` + 7 `vi` in one page) and pagination interleaves them.
 
-**Where the preferred language comes from**: `PrefsRepository.observeContentLanguage()` (same
-DataStore as the theme pair, so no DI change), read *inside* the data layer —
-`MangaRepositoryImpl`, `CategoryRepositoryImpl` and `ChapterRepositoryImpl` inject
-`PrefsRepository` and resolve it themselves. That is deliberate: threading a `preferredLanguage`
+**Where the preferred language comes from**: `DataStoreManager.selectedLangCode`
+(a `StateFlow<String?>`, same store as the theme flag, so no DI change), read *inside* the data
+layer — `MangaRepositoryImpl`, `CategoryRepositoryImpl` and `ChapterRepositoryImpl` inject
+`DataStoreManager` and resolve it themselves as
+`dataStoreManager.selectedLangCode.filterNotNull().first().toMangaLanguage()` —
+`filterNotNull` is what makes the call **suspend until the real value has been read**:
+`selectedLangCode` is `null` until the first DataStore emission lands, and a plain
+`data.value.selectedLangCode ?: "en"` at cold start would fetch Home in the wrong language and
+then refetch a moment later. The stored value is the ISO code, so the enum comes from the
+existing `ApiParamMapper.toMangaLanguage()` (unknown code → `ENGLISH`) — no new mapper. That is deliberate: threading a `preferredLanguage`
 param up through every use case and ViewModel would have touched ~8 repository methods and every
 caller, for a value none of them actually decide. Read it **once per repository method**, never
 inside a `mapNotNull` lambda — `MangaRepositoryImpl.toMangaList()` exists exactly so the `.first()`
@@ -277,14 +289,15 @@ value changed.)
 
 ## DI Layer
 
-4 modules, all `@InstallIn(SingletonComponent::class)`, all `@Singleton`.
+5 modules, all `@InstallIn(SingletonComponent::class)`, all `@Singleton`.
 
 | Module             | Type            | Provides                                                                 |
 |--------------------|-----------------|--------------------------------------------------------------------------|
-| `LocalModule`      | `object`        | Room `ChapterCacheDatabase`, `ChapterCacheDao`, `DataStore<Preferences>` |
-| `RepositoryModule` | **`interface`** | 9 `@Binds` for all repository interface → impl bindings                  |
-| `ApiModule`        | `object`        | Moshi, OkHttp (30s timeouts), Retrofit, `ApiService`                     |
-| `FirebaseModule`   | `object`        | `FirebaseAuth`, `FirebaseFirestore`, 4 Firebase source `@Provides`       |
+| `LocalModule`        | `object`        | Room `ChapterCacheDatabase`, `ChapterCacheDao`, `DataStoreManager` (`@Provides impl`) |
+| `RepositoryModule`   | **`interface`** | 7 `@Binds` for all repository interface → impl bindings                                |
+| `ApiModule`          | `object`        | Moshi, OkHttp (30s timeouts), Retrofit, `ApiService`                                   |
+| `FirebaseModule`     | `object`        | `FirebaseAuth`, `FirebaseFirestore`, 4 Firebase source `@Provides`                     |
+| `ConnectivityModule` | `object`        | `NetworkManager` (`@Provides impl`)                                                    |
 
 **Critical rules**:
 
@@ -316,49 +329,124 @@ value changed.)
 **`DateTimeHandler`**: `String?.parseIso8601ToEpoch(): Long?` | `Long?.toTimeAgo(): String` — both
 `SimpleDateFormat` use `ThreadLocal` (not thread-safe without it).
 
-**One concern per slice — `PrefsRepository` is the DataStore, `NetworkRepository` is
-connectivity, `LanguageManager` is locale.** The DataStore-backed repository used to be `SettingsRepository`
-(with `SettingsRepositoryImpl`, `domain/usecase/settings/`, `SettingsViewModel`, `SettingsUiState`,
-and a `viewmodels/settings/` package) and had started to absorb anything vaguely "settings-shaped",
-including the connectivity flow. It was renamed to make its actual job explicit: it is the
-**preferences store**, nothing more. Current names — `domain/repository/prefs/PrefsRepository`,
-`data/repository/prefs/PrefsRepositoryImpl`, `domain/usecase/prefs/{Observe,Save}{ThemeMode,
-ContentLanguage,IsOnboardingCompleted}UseCase`, `viewmodels/prefs/PrefsViewModel` exposing
-`data: StateFlow<PrefsData>` (not `uiState` — it is persisted preference data with a save-status
-tail, not screen state), and `RepositoryModule.bindPrefsRepository`. The Settings *screen* and its
-values keep the `settings` name (`screens/settings/`, `model/value/settings/ThemeModeValue`,
-`SettingItemValue`, `entity/value/settings/ThemeMode`) — those are the feature, not the store.
-Rule going forward: a new cross-cutting runtime signal (connectivity, battery, whatever) gets
-**the same shape as prefs under its own name** — `domain/repository/<name>/<Name>Repository`,
-`data/repository/<name>/<Name>RepositoryImpl`, `domain/usecase/<name>/…UseCase`, a
-`@Binds` in `RepositoryModule`, and a shared `viewmodels/<name>/<Name>ViewModel` — never a
-method bolted onto `PrefsRepository`, and not a
-`util/XxxManager` singleton either (`LanguageManager` is the one exception, and only because it
-provides CompositionLocals, which is a Compose concern rather than a data source).
+**Managers, not use cases — `DataStoreManager` and `NetworkManager` are infrastructure, and
+they are injected where they are used.** Theme, content language, the onboarding flag and
+connectivity are app-shell state, not manga-reading business; the use cases that used to wrap
+them were seven identical one-liners (`repository.observeX().toFlowResult()`) with no logic, and
+calling them "use cases" next to `GetMangaListUseCase` overstated them. So they are gone, and
+with them the domain-layer interfaces: **the domain layer now has zero references to prefs or
+connectivity**, which is the honest shape — it never decided anything about them. What replaced
+them, following the Firebase-source pattern (interface + `Impl` side by side in `data/`, provided
+with `@Provides` from a module):
 
-**Network slice** — mirrors prefs exactly, with `network` in place of `prefs`:
-`domain/repository/network/NetworkRepository { fun observeIsAvailable(): Flow<Boolean> }`,
-`data/repository/network/NetworkRepositoryImpl` (injects `Application`, bound by
-`RepositoryModule.bindNetworkRepository`), `domain/usecase/network/ObserveNetworkAvailabilityUseCase`
-(`Flow<Result<Boolean>>` via `toFlowResult()`), and the shared
-`viewmodels/network/NetworkViewModel` exposing `isAvailable: StateFlow<Boolean>` — a plain
-Boolean, not a wrapper data class: the slice has exactly one value and no save-status tail, so
-a `NetworkData` holder would be ceremony (one was added and removed in the same session). Add a
-second `StateFlow` if a second signal ever appears; don't retrofit a data class. It is built
-with `stateIn`, not the `MutableStateFlow` + `vmLaunch { collect { … } }` shape the other shared
-VMs use, because there is nothing to *merge* — the flow is the state:
-`useCase().map { it.onFailure { Timber… }.getOrDefault(true) }.stateIn(viewModelScope,
-WhileSubscribed(5_000), true)`. `WhileSubscribed(5_000)` is deliberate: the `ConnectivityManager`
-callback is registered only while something collects (`NavGraph`'s
-`collectAsStateWithLifecycle` stops at `STARTED`), so it is unregistered ~5s after the app goes
-to the background and re-registered — with a fresh initial read — on resume. `NavGraph`
-creates the VM with `hiltViewModel()` at the composition root (so it is Activity-scoped and lives
-as long as the UI), collects `isAvailable`, and shows `NoInternetDialog` when it is `false`. Any
-other ViewModel that needs connectivity injects the use case and collects it itself — there is no
-global singleton to read `.value` from; a repository that needs it injects `NetworkRepository`.
-The impl's `observeIsAvailable()`
-is a `callbackFlow` around `ConnectivityManager.registerDefaultNetworkCallback`, emitting from
-`onCapabilitiesChanged` and `onLost` plus one initial read, where "available" means
+- `data/local/datastore/DataStoreManager` + `DataStoreManagerImpl` — the
+  DataStore, provided by `LocalModule.provideDataStoreManager`. Consumers: the three content
+  repositories (`Manga`/`Category`/`ChapterRepositoryImpl`, for the preferred language), the five
+  content ViewModels (refetch on language change), and — through `LocalDataStoreManager` — the
+  four prefs screens plus `NavGraph`.
+- `data/network/connectivity/NetworkManager` + `NetworkManagerImpl` — connectivity, provided by
+  `di/network/ConnectivityModule.provideNetworkManager`. Consumer: `NavGraph`, through
+  `LocalNetworkManager`.
+
+The lineage, so old names in commits/CHANGELOG make sense: `SettingsRepository` → `PrefsRepository`
+(same session) → `DataStoreManager`; the network flow went `PrefsRepository.observeIsNetworkAvailable`
+→ `util/NetworkManager` object → `NetworkRepository` + use case → `NetworkManager` in `data/`.
+The Settings *screen* and its values keep the `settings` name (`screens/settings/`,
+`model/value/settings/SettingItemValue`) — those are the feature, not the store. (`ThemeMode`,
+`ThemeModeValue` and `ThemeModeMapper` are **deleted** — see "primitives only" below.) Rule going forward: a new cross-cutting runtime signal
+(battery, metered network, whatever) is a `data/<area>/<Name>Manager` interface + impl + one
+`@Provides`, injected directly — **not** a domain repository, **not** a use case, **not** a
+`util/XxxManager` singleton (`LanguageManager` is the one `util/` exception, and only because it
+provides CompositionLocals, which is a Compose concern rather than a data source). Presentation
+depending on a `data/` *interface* for infrastructure is the accepted exception to the Dependency
+Rule here; it must stay an interface so consumers remain fakeable.
+
+**The managers are state holders, not just data sources — and that is what lets Compose read
+them directly with no ViewModel in between.** Each owns a private
+`CoroutineScope(SupervisorJob() + Dispatchers.IO/Default)` created inline (no DI binding for an
+application scope) and exposes hot state:
+
+- `DataStoreManager` exposes **one `StateFlow` per key, primitives only, persisted values
+  only**: `isDark: StateFlow<Boolean?>`, `selectedLangCode: StateFlow<String?>` (ISO code, e.g.
+  `"vi"`), `isFirstOpen: StateFlow<Boolean?>`. **Separate flows, not one data class** — a
+  `DataStoreData(isDark, selectedLangCode, isFirstOpen)` bundle existed for a few hours and was
+  split apart because a `StateFlow` is distinct on its *whole* value: every consumer that sliced
+  one field off it had to add `distinctUntilChanged()` or refetch on unrelated changes (measured
+  — see "Content ViewModels refetch"). With a flow per key, each one dedups its own value and
+  the call sites need nothing. **No enums in the store, no mapper for
+  the store**: theme is a `Boolean` because `DexReaderTheme(isDarkTheme)` and the Settings
+  `Switch` are both Boolean already — the `ThemeMode`/`ThemeModeValue` pair and `ThemeModeMapper`
+  existed only to round-trip that bit and were deleted with it; language is the ISO code because
+  both sides already have a code→enum helper (`LanguageValue.fromCode()` in presentation,
+  `ApiParamMapper.toMangaLanguage()` in data) and saving is just `LanguageValue.code`. Keys are
+  `is_dark` / `selected_lang_code` / `is_first_open`, matching the field and `save*` names 1:1
+  (all three are **new keys** — the older `theme_mode`/`content_language`/`is_onboarding_completed`
+  stored enum *names* and the inverse flag; an existing install therefore comes up dark + English
+  and replays onboarding once, then keeps whatever it saves next). **`isFirstOpen` is the inverse
+  of the old `isOnboardingCompleted`**: `true` = never finished onboarding, default `true`,
+  `OnboardingScreen` saves `false`, and Splash routes to `LanguageSelection` only on an explicit
+  `true`. Defaults live in the impl as constants (`true` / `"en"` / `true`). There are **no
+  `observeX()` functions and no `MutableStateFlow`**: each flow is built by one private helper,
+  `Preferences.Key<T>.asStateFlow(default)` =
+  `prefs.data.map { it[key] ?: default }.catch { … }.stateIn(scope, SharingStarted.Eagerly,
+  null)` — three collectors on the same DataStore `data` flow, which is fine (DataStore shares
+  its reads), and `Eagerly` so the reads start the moment Hilt builds the singleton, not on
+  first collector. Every flow starts `null` = "not read yet"; that nullability is load-bearing
+  for the repositories' `filterNotNull().first()` (see "Where the preferred language comes
+  from") and for Splash routing. Mutations are plain non-suspend `fun`s — `saveIsDark(value)`,
+  `saveSelectedLangCode(value)`, `saveIsFirstOpen(value)` — and they `launch` on the manager's scope through
+  `runSuspendCatching(block, catch = { log })`, so **a save can never be cancelled by the caller
+  leaving the screen** (a `rememberCoroutineScope` launch would be — this is the reason saves must
+  not be collected into composition). Saves do not set the field eagerly; the DataStore emission
+  does. The language picker's *staged* pick is **not** in the manager — it is `rememberSaveable`
+  UI state inside `LanguageSelectionScreen`/`LanguageSettingScreen`, and only Done calls
+  `saveSelectedLangCode(it.code)`; a tap never touches the store.
+- `NetworkManager.isAvailable: StateFlow<Boolean>` — the callback flow `.catch { …; emit(true) }`
+  `.stateIn(scope, WhileSubscribed(5_000), true)`, unchanged in semantics from the ViewModel it
+  replaced (see below for the load-bearing details).
+
+**No `Result` on the manager boundary.** Error policy sits in exactly two places, both inside the
+impls: (1) `DataStoreManagerImpl.asStateFlow` has a `.catch` before `stateIn` that rethrows
+`CancellationException`, logs via plain `Timber.e` (no tag helper), and emits the key's
+`default` (`isDark` → `true`, `selectedLangCode` → `"en"`, `isFirstOpen` → `true`) — so a
+corrupted DataStore never leaves a flow at `null`. There is deliberately **no separate
+read-failure fallback** any more (an earlier version routed `isFirstOpen` to `false` on read
+failure so a returning user could not be sent back through onboarding; that was dropped as
+over-engineering for a case nobody has hit — onboarding is skippable in one tap anyway and Skip
+persists `false`). Saves go through a single private `edit { prefs -> … }` (no per-call name —
+the log line is just "DataStore edit failed"), log through `runSuspendCatching`, and are
+otherwise fire-and-forget —
+nothing consumed the old `InfrastructureException.Unexpected` mapping, so it is gone. (2)
+`NetworkManagerImpl` adds its own `.catch { …; emit(true) }` before `stateIn` since the callback
+flow has no such fallback.
+
+**Compose reaches both managers through CompositionLocals, not ViewModels.**
+`presentation/screens/common/locals/ManagerLocals.kt` declares `LocalDataStoreManager` and
+`LocalNetworkManager` (`staticCompositionLocalOf { error(…) }`); `MainActivity` field-injects both
+(`@Inject lateinit var`) and wraps `NavGraph()` in a `CompositionLocalProvider` — the Hilt
+equivalent of Koin's `koinInject()`, and it is only sound because the managers are `@Singleton`
+*and* hold their own state: a composable that collected a cold flow with
+`collectAsStateWithLifecycle(initialValue)` would flash the initial value on every rotation, and one
+that launched a save in `rememberCoroutineScope` would lose it on Back. There is **no
+presentation-side wrapper** (a `rememberPrefsData()` + `PrefsData` helper was written and
+removed in the same session): each call site does
+`val data by LocalDataStoreManager.current.data.collectAsStateWithLifecycle()` and reads the
+one primitive it needs at the point of use — `data.isDark ?: true`,
+`LanguageValue.fromCode(data.selectedLangCode)`, `saveSelectedLangCode(it.code)` — so
+`*Content` composables still only ever see `*Value` types and nothing needs a mapper. `PrefsViewModel`, `NetworkViewModel` and the old `PrefsData` are
+**deleted** (packages and all). `NavGraph` reads `data` for `DexReaderTheme`/`ProvideAppLanguage`/
+Splash routing; `LanguageSelectionScreen`, `LanguageSettingScreen`, `OnboardingScreen` and
+`SettingsScreen` read `LocalDataStoreManager.current` themselves and take **no** prefs param —
+adding a screen that reads prefs no longer touches `NavGraph`.
+
+**Connectivity details that are load-bearing.** `WhileSubscribed(5_000)` is deliberate: the
+`ConnectivityManager` callback is registered only while something collects (`NavGraph`'s
+`collectAsStateWithLifecycle` stops at `STARTED`), so it is unregistered ~5s after the app goes to
+the background and re-registered — with a fresh initial read — on resume. `NavGraph` collects
+`isAvailable` at the composition root and shows `NoInternetDialog` when it is `false`. The flow
+behind `NetworkManagerImpl.isAvailable` is a `callbackFlow` around
+`ConnectivityManager.registerDefaultNetworkCallback`, emitting from `onCapabilitiesChanged` and
+`onLost` plus one initial read, where "available" means
 `NET_CAPABILITY_INTERNET && NET_CAPABILITY_VALIDATED` — `VALIDATED` is the OS's own
 captive-portal/reachability check, so a Wi-Fi with no upstream reads as offline, which is what the
 user experiences. Three details that are load-bearing: (1) it does **not** emit from
@@ -368,10 +456,22 @@ user experiences. Three details that are load-bearing: (1) it does **not** emit 
 hand-off (`onLost` on the old default, `onCapabilitiesChanged` on the new one a few hundred ms
 later) never flashes the dialog. `debounce` is `@FlowPreview`, hence the `@OptIn`. (3)
 `ACCESS_NETWORK_STATE` is declared in the manifest — without it the callback registration throws
-`SecurityException`. `stateIn`'s `initialValue = true` means nothing flashes before the first
-real emission (the initial read lands within the first frames anyway), and the `map` turns a
-failed `Result` into `true` after logging — a broken observer must never lock the user behind
-the non-cancellable dialog.
+`SecurityException`. (4) **`onLost` sends `false` unconditionally — never
+`connectivityManager.activeNetwork` from inside the callback.** The first version did exactly
+that (`trySend(isInternetAvailable())` in `onLost`), and on the emulator the dialog simply never
+appeared with airplane mode on, even though `dumpsys connectivity` showed the app's callback
+registered and `Active default network: none`: `activeNetwork`/`getNetworkCapabilities` read
+from `ConnectivityService` still return the network that is being lost (with `VALIDATED` still
+set) at the moment `onLost` is dispatched, so the flow saw `true`, `distinctUntilChanged`
+dropped it, and nothing ever emitted again. `onLost` on a *default-network* callback already
+means "the default is gone"; if another network takes over, its `onCapabilitiesChanged` arrives
+next and the debounce above absorbs the gap. Synchronous `ConnectivityManager` reads are fine
+only for the single initial value taken before the callback is registered. Verified on device
+after the fix: airplane on → dialog within ~1s, Back does not dismiss it, airplane off → gone.
+`stateIn`'s `initialValue = true` means nothing flashes before the first
+real emission (the initial read lands within the first frames anyway), and the `.catch` turns a
+failed flow into `true` after logging — a broken observer must never lock the user behind the
+non-cancellable dialog.
 
 **`NavTransitions`**: `navigatePreserveState<Root>(route)` is the **bottom-tab switch**
 (preserves each tab's state) via `popUpTo<Root> { saveState = true }` + `launchSingleTop` +
@@ -619,38 +719,26 @@ outlive a single screen lives here instead of under its owning screen's package.
 params, called as `setContent { NavGraph() }` from `MainActivity` — there is no `DexReaderApp.kt`
 composable anymore) is the single composition root that instantiates every shared ViewModel via
 `hiltViewModel()` and threads it down as a param — a screen never calls `hiltViewModel()` for one of
-these itself. `viewmodels/onboarding/OnboardingViewModel` + `OnboardingUiState` gate the onboarding
-screen (see
-Onboarding above) — `NavGraph` both consumes it and passes it down.
+these itself. There is no prefs, onboarding, language or network ViewModel any more — theme,
+language, the onboarding flag and connectivity are read straight off `LocalDataStoreManager` /
+`LocalNetworkManager` (see "Managers, not use cases" under Data Layer; the shared-VM lineage was
+`SettingsViewModel` → `PrefsViewModel`, which absorbed `LanguageViewModel` + `OnboardingViewModel`,
+then was deleted in favour of the CompositionLocals — the desync bug that originally motivated a
+single shared instance is moot when the instance is a `@Singleton` manager).
 `UserViewModel` (moved from top-level `presentation/`) exposes `isUserLoggedIn`/
 `userProfile`, read by `NavGraph` and passed down as plain `isUserLoggedIn`/`currentUser` params to
-every screen. `viewmodels/prefs/PrefsViewModel` + `PrefsData` (renamed from
-`PrefsViewModel`/`PrefsData` — see the Prefs paragraph under Util for why — and before
-that moved from `screens/settings/`, grouped under their own subpackage like `manga_section/`
-below) is read by
-`NavGraph` to drive the app-wide `DexReaderTheme(themeOption = ...)` wrapping the whole `NavHost`,
-and
-that same instance is passed into `ProfileScreen(prefsViewModel = ...)` — both consumers share
-one
-instance instead of each calling its own `hiltViewModel()` (the original bug: `MainActivity` and the
-old `SettingsScreen` each created an independent instance, so the two could desync). **There is no
-Settings screen any more** — it was deleted and its only content (the theme picker) became
-`ProfileSettingsSection` inside the Profile hub, so `NavRoute.Settings` and `MenuValue.SETTINGS` are
-gone too; the tab bar is down to Home / Categories / Profile. The prefs VM stays in
-`common/viewmodels/prefs/` because `NavGraph` needs `appliedThemeOption`
-regardless of where the picker UI sits.
+every screen.
 `viewmodels/manga_section/MangaSectionViewModel` + `MangaSectionUiState` (renamed from
 `HomeViewModel`/`HomeUiState`, moved out of `screens/home/`) is instantiated once in `NavGraph` and
 passed into `HomeScreen(viewModel = ...)` as a required param (no `= hiltViewModel()` default) — the
 rename drops the Home-specific name so the same instance/type can be reused by other manga-listing
 screens later.
 
-**Full state vs. narrow flow at a wide-reach call site**: `NavGraph` collects
-`prefsViewModel.data` directly (not a dedicated per-field flow) and reads
-`.appliedThemeOption`
-off it for `DexReaderTheme` — kept simple on purpose, since `isLoading`/`isSuccess`/`isError` only
-churn while the user is already on the Settings screen (which is recomposing for that anyway), so a
-narrow slice would avoid recomposition that has no real-world payoff here. `UserViewModel` still
+**Full state vs. narrow flow at a wide-reach call site**: `NavGraph` collects the two
+`DataStoreManager` flows it needs separately (`isDark`, `selectedLangCode`; `isFirstOpen` is
+read by `SplashScreen` itself), so a theme
+toggle invalidates only the `DexReaderTheme` read and a language save only `ProvideAppLanguage`
+— that came for free from splitting the manager's state per key. `UserViewModel` still
 exposes `isUserLoggedIn`/`userProfile` as two separate flows instead of one bundled state — that
 split
 earns its keep because those fields are read broadly across every screen, not just at `NavGraph`.
@@ -709,29 +797,34 @@ onboarding grows the native heap by ~5.5 MB with pages 1-2 composed, which match
 `BitmapDrawable` would — at 3× a single page would cost ~49 MB on its own. Don't move these into
 `drawable-xxhdpi/` on the theory that they need it.
 
-**The "already seen it" flag lives in `PrefsRepository`**, not a new repository — same DataStore,
-so `observeIsOnboardingCompleted()` / `saveIsOnboardingCompleted()` sit next to the theme pair and
-need **no DI change** (`RepositoryModule` already binds it). `OnboardingViewModel`
-(`common/viewmodels/onboarding/`) is a **shared** VM: `NavGraph` creates it, reads
-`uiState.isCompleted` to route Splash, and hands the same instance to `OnboardingScreen`.
-`OnboardingUiState.isCompleted` is `Boolean?` on purpose — `null` means the DataStore read hasn't
-landed yet, and Splash routes to **Main** for anything that isn't an explicit `false`, so a slow or
-failed read can never trap a returning user in onboarding (the VM's `onFailure` sets it to `true`
-for
-the same reason). There is no in-app reset: to see onboarding again during development, clear app
+**The "first open" flag lives in `DataStoreManager`**, not a new store — same DataStore, so
+`DataStoreManager.isFirstOpen` / `saveIsFirstOpen(value)` sit next to the theme flag and
+need **no DI change**. `SplashScreen` collects `isFirstOpen` itself (it takes only
+`navController`; `NavGraph` no longer touches the flag), and `OnboardingScreen`'s Get Started/Skip call
+`LocalDataStoreManager.current.saveIsFirstOpen(false)`.
+`DataStoreManager.isFirstOpen` is `StateFlow<Boolean?>` on purpose — `null` means the DataStore read hasn't
+landed yet, and Splash routes to **Main** for anything that isn't an explicit `true`, so a *slow*
+read can never trap a returning user in onboarding. (A *failed* read now emits the default
+`true` — see "No `Result` on the manager boundary" — which is accepted: Skip is one tap.) There is no in-app reset: to see onboarding again during development, clear app
 data (`adb shell pm clear com.decoutkhanqindev.dexreader`).
 
-`SplashScreen` reads that flag — and its `navController` — through `rememberUpdatedState`, and that
-is **load-bearing, not ceremony**: its `LaunchedEffect(Unit)` is composed before DataStore has
-emitted, so a plain parameter capture would still be `null` three seconds later and every first-run
-user would silently skip onboarding. Don't simplify those two `rememberUpdatedState` calls away.
-(It used to be three — the two `onNavigateTo*Screen` lambdas collapsed into the single
-`navController` when screens started navigating themselves.)
+`SplashScreen` reads the flag as
+`val isFirstOpen by LocalDataStoreManager.current.isFirstOpen.collectAsStateWithLifecycle()` and
+checks it inside its `LaunchedEffect(Unit)` **after** the 3-second `delay`. That read is live
+even though the effect was composed before DataStore emitted: a `by` delegate on a `State`
+compiles to `state.value` at the point of access, not at lambda capture, so the coroutine sees
+whatever landed during the delay. This replaced the earlier `rememberUpdatedState(isFirstOpen)`
+that was needed when the flag arrived as a plain `Boolean?` *parameter* from `NavGraph` — a
+parameter is captured by value, a `State` delegate is not. The `navController` lost its
+`rememberUpdatedState` at the same time (it is a `rememberNavController()` instance, stable for
+the life of `NavGraph`). If the flag ever goes back to being a parameter, the
+`rememberUpdatedState` must come back with it. Verified on device after the move: fresh install
+→ Language → Onboarding → Skip → Main, then cold restart → Main.
 
 **App language (`util/LanguageManager.kt` + `screens/language/`)**: one stored value drives **both**
 the UI locale and the MangaDex content language — it is
-`PrefsRepository.observeContentLanguage()`
-(a `MangaLanguage`).
+`DataStoreManager.selectedLangCode`
+(an ISO code `String`), resolved with `LanguageValue.fromCode()` where it is read.
 
 **There is ONE language enum, `LanguageValue` (`model/value/language/`, 64 entries), used for
 both the app UI locale and the MangaDex content language** — the separate `AppLanguageValue` was
@@ -740,8 +833,8 @@ both the app UI locale and the MangaDex content language** — the separate `App
 the two enums became a byte-identical 64-entry set with no reason to stay split. `LanguageValue`
 now carries the picker helpers too — `DEFAULT` (= `ENGLISH`), `fromCode(code)`,
 `displayNamesFor(displayIn)` and `sortedForDisplay(deviceLanguageCode, displayNames)` — as
-companion members; the language picker (`screens/language/`), `LanguageManager`, and
-`LanguageUiState`/`LanguageViewModel` all type on it directly.
+companion members; the language picker (`screens/language/`) and `LanguageManager` both type
+on it directly.
 
 **Display names are computed once and threaded down, never derived inside a list item.**
 `LanguageManager.displayNameOf` is expensive for something on a scroll path — two
@@ -823,11 +916,47 @@ Five ViewModels therefore observe it and refetch: `MangaSectionViewModel`, `Cate
 `CategoryDetailsViewModel`, `SearchViewModel`, `MangaDetailsViewModel`. The shape is always
 
 ```kotlin
-observeContentLanguageUseCase().drop(1).collect { it.onSuccess { <refetch > () } }
+dataStoreManager.selectedLangCode
+  .filterNotNull()
+  .drop(1)
+  .collect { <refetch>() }
 ```
 
-**`.drop(1)` is load-bearing** — the DataStore flow replays its current value on collection, so
-without it every one of these screens would fire a second fetch immediately on creation.
+(`DataStoreManager` is injected directly — no use case, no `Result`; the impl's read fallback
+means this flow never throws into the ViewModel.) `filterNotNull` skips the `null` "not read
+yet" value. There is deliberately **no `distinctUntilChanged`** — `selectedLangCode` is its own
+`StateFlow<String?>`, so it only ever emits when the code itself changes; a theme toggle or the
+first-open flag flipping never touches it. That is exactly why the manager exposes a flow per
+key instead of one `StateFlow<DataStoreData>`: with the bundled data class this chain needed
+`.mapNotNull { it.selectedLangCode }.distinctUntilChanged()`, and **the cost of forgetting it
+was measured, not assumed** — with the operator removed, one Dark Mode toggle in Settings
+produced **9 `GET`s** (4 Home sections + `/manga/tag` + 4 `/statistics/manga`); with it, 0.
+The general rule that came out of that — **a `StateFlow` is distinct on its whole value, not on
+a field you slice out of it.** `StateFlow` skips an assignment only when the *entire* new value
+`==` the old one; the moment you `.map { it.field }` / `.mapNotNull { … }` off it, every
+unrelated field change becomes a duplicate emission of `field`, and a downstream
+`.collect { refetch() }` pays for it. So when you *must* slice a field off a bundled state, the
+shape is `stateFlow.map/mapNotNull { it.field }.distinctUntilChanged().collect { … }`; when you
+own the producer, prefer one flow per independently-changing value, as the manager now does.
+Two things that never need the operator: `.map { … }.stateIn(…)` (the new `StateFlow` dedups on
+assignment — `UserViewModel.userProfile`, `MangaDetailsViewModel`'s three `stateIn` slices)
+and `.first()` (takes one value and stops — the repositories' `filterNotNull().first()`).
+The one other site in this codebase that slices a field off a `StateFlow` and keeps
+collecting is `MangaDetailsViewModel.observeIsFavorite`, which used to `collect` the whole
+`_mangaDetailsUiState` and pull `manga.id` out inside the lambda — masked only because the
+nested `_userId.collectLatest` never returns, so the outer collector saw exactly one state. It
+is now `_mangaDetailsUiState.mapNotNull { (it as? Success)?.manga?.id }.distinctUntilChanged()
+.collectLatest { mangaId -> _userId.collectLatest userId@{ … } }` — same behaviour, honest
+shape (the inner lambda is labelled `userId@` because two nested `collectLatest` make a bare
+`return@collectLatest` ambiguous). `ReaderViewModel.observeIsFetchDataDone`'s `combine` of
+three Boolean flags can also emit the same Boolean twice, but its body is guarded by
+`isAllDataDone && … is Loading`, so the duplicates are idempotent and it was left alone.
+
+**`.drop(1)` is load-bearing** — the `StateFlow` replays its current value on collection, so
+without it every one of these screens would fire a second fetch immediately on creation. Both
+orderings are covered: a ViewModel created **before** the first DataStore read (Home at cold
+start) sees `null` filtered out and the first real value dropped; one created **after** sees the
+real value replayed and dropped. Neither refetches on creation.
 `SearchViewModel` additionally guards on a non-blank query (nothing to re-search otherwise), and
 `MangaDetailsViewModel` re-runs `resolveChapterLanguageThenFetch()` as well as
 `fetchMangaDetails()`,
@@ -848,8 +977,10 @@ flag — there is no separate "language chosen" flag, so clearing app data repla
 inside Profile (`ProfileSettingsSection`/`ThemeOptionItem` are deleted). `BaseScreen` grew
 `isSettingsEnabled`/`onNavigateToSettingsScreen`; its right slot is search when `isSearchEnabled`,
 else the gear, else nothing. Items come from `SettingItemValue` (THEME/LANGUAGE/PRIVACY) —
-theme is a `Switch`, the other two navigate. **`ThemeMode` lost `SYSTEM`** (Light/Dark only), so
-`DexReaderTheme` is now `themeOption == DARK` with no `isSystemInDarkTheme()`.
+theme is a `Switch`, the other two navigate. Theme is a plain **`Boolean`** end to end —
+`DexReaderTheme(isDarkTheme: Boolean = true)`, `SettingsContent(isDarkTheme)`,
+`DataStoreManager.isDark` — with no `isSystemInDarkTheme()` (the `SYSTEM` option went first,
+then the Light/Dark enum pair went too once it was only ever compared to `DARK`).
 
 `PrivacyPolicyScreen` is a `WebView` in an `AndroidView` pointed at `R.string.privacy_policy_url`
 (the GitHub Pages copy of `privacy-policy.html` at the repo root). JavaScript and DOM storage are
@@ -1051,20 +1182,21 @@ into
 a staged field (updates the moment the user taps, for in-screen feedback) and an applied field (
 updates
 only after the write succeeds) — never let one field serve both roles.
-`PrefsData.selectedThemeOption` (tapped option, drives the radio highlight in
-`ProfileSettingsSection`) vs. `appliedThemeOption` (persisted value, read by `NavGraph` to drive
-`DexReaderTheme` — see Screen Structure) is the established example. Theme now **applies on tap**:
-`ProfileScreen` calls `updateThemeOption(it)` then `saveThemeOption()` back to back (safe — the
-former
-is a synchronous `MutableStateFlow.update`, so the latter reads the new staged value). There is
+the language picker's `selectedLanguage` (a `rememberSaveable` in `LanguageSelectionScreen`/
+`LanguageSettingScreen`, drives the highlight and the Done button) vs.
+`DataStoreManager.selectedLangCode` (persisted value, read by `NavGraph` to drive `ProvideAppLanguage`
+and by every repository) is the established example — the staged half is plain screen UI state,
+the applied half lives in the manager, and only Done crosses from one to the other. Theme has
+**no staged twin** (`selectedThemeOption` was dropped when the prefs ViewModel went away): it
+**applies on tap**, so `SettingsScreen` calls `dataStoreManager.saveIsDark(it)` and the
+Switch shows `data.isDark` — the DataStore emission flips it a few ms later. There is
 deliberately **no confirm dialog and no success dialog** any more: a theme switch inside a profile
 page
 is a toggle, not a commitment, and the app repainting is its own confirmation — two modals to flip a
-theme was the old Settings-screen behaviour and it did not survive the move. `resetThemeOption()`
-still
-earns its keep: on a failed write it snaps `selectedThemeOption` back to `appliedThemeOption` so the
-selection can't sit on a value that was never saved. The write error surfaces inline via
-`LoadPageErrorMessage` with retry, matching the rest of the hub's sections. The picker itself is a
+theme was the old Settings-screen behaviour and it did not survive the move. A failed write is
+only logged (there is no `resetThemeOption`, no inline error, no retry any more — see "The
+managers are state holders" under Data Layer); the DataStore collector keeps `appliedThemeOption` truthful
+regardless, so the worst case is a Switch that shows the tapped value until the next emission. The picker itself is a
 `Row` of three `ThemeOptionItem`s at `weight(1f)` each (icon + short label, centred) — the labels
 are
 deliberately one word (`R.string.light`/`dark` are "Light"/"Dark", not "Light Mode"/"Dark Mode") so
@@ -1192,6 +1324,22 @@ established shape as `observeHistoryJob`/`cancelObserveHistoryJob()`.
   and the "More »" row simply isn't rendered. Never re-hand-roll this row — the "More »" affordance
   must
   stay visually identical everywhere it appears
+- **Bottom-anchored `ActionButton` clusters carry both an icon and a short label.**
+  `SortAndFilterButtons` (CategoryDetails) is `Text` + `Spacer(8.dp)` + `Icon` per button, and
+  `ReadingAndFavoriteButtons` (MangaDetails) is the same shape — text first, icon **right** of
+  the text (it started icon-left and was flipped on request), text
+  in `titleMedium + ExtraBold`, both tinted the same colour as before (`onPrimaryContainer` for
+  sort/filter, `inverseSurface` for the reading button, `Color.White` on the `FavoriteRed`
+  favorite button). The reading button's icon is `Icons.AutoMirrored.Filled.MenuBook` for
+  "Start" and `Icons.Default.PlayArrow` for "Continue"; the favorite button's is
+  `Icons.Default.Favorite` (filled) when already favorited, `FavoriteBorder` otherwise. The
+  labels are four **new** short strings in all 64 locales — `start_button`, `continue_button`,
+  `sort_button`, `filter_button` ("Start" / "Continue" / "Sort" / "Filter") — inserted right
+  after `unfavorite`; they are named `*_button` because a bare `continue` is a Java keyword
+  and AAPT rejects it as a resource name, and the suffix then keeps the four uniform. They do
+  **not** replace `start_reading`/`continue_reading` (`HistoryContent` and
+  `ProfileHistorySection` still use the long "Continue Reading" as a dialog button) nor
+  `sort_options`/`filter_options` (the bottom-sheet titles).
 - `AnimatedLogoAndSlogan` (`presentation/screens/common/animation/`) — shared hero logo used by both
   `SplashContent` and `AuthContent` (Login/Register/ForgotPassword). Takes `logoSize: Dp = 100.dp`
   (Splash passes `120.dp`; `AuthContent` uses the default, centered inside its own

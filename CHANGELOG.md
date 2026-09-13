@@ -4,6 +4,131 @@ Dated log of notable multi-file / cross-cutting work sessions. Newest entry firs
 
 ---
 
+## 2026-09-13 — Manager thành state holder + CompositionLocal, xoá `PrefsViewModel`/`NetworkViewModel`
+
+**Lý do**: hai VM chỉ còn là lớp trung gian chuyển Flow của manager thành `StateFlow` và giữ
+scope cho save. Chuyển cả hai việc đó xuống chính manager (singleton) thì Compose đọc thẳng
+được qua CompositionLocal — tương đương `koinInject()` bên Hilt — và màn nào cần prefs không
+phải xâu tham số qua `NavGraph` nữa.
+
+- `DataStoreManager`: bỏ hết `observeX()`/`suspend saveX()`. Giờ là **3 `StateFlow` riêng, chỉ
+  primitive**: `isDark: StateFlow<Boolean?>`, `selectedLangCode: StateFlow<String?>` (ISO),
+  `isFirstOpen: StateFlow<Boolean?>` — `null` = chưa đọc xong — + 3 hàm thường đồng bộ tên
+  `saveIsDark(value)`, `saveSelectedLangCode(value)`, `saveIsFirstOpen(value)`; key
+  `is_dark`/`selected_lang_code`/`is_first_open` khớp 1:1. `isFirstOpen` đảo nghĩa so với
+  `isOnboardingCompleted` cũ (default `true`, onboarding xong lưu `false`). (Một
+  `DataStoreData` gộp 3 field làm `StateFlow<DataStoreData>` đã tồn tại vài giờ rồi tách ra — xem
+  mục `distinctUntilChanged` bên dưới.) Impl tự tạo `CoroutineScope(SupervisorJob() +
+  Dispatchers.IO)`; mỗi flow = helper `Key<T>.asStateFlow(default, readFailureFallback)` =
+  `prefs.data.map { it[key] ?: default }.catch{}.stateIn(scope, Eagerly, null)`; save qua một
+  `edit { }` private (không tên) `launch` trên scope đó với `runSuspendCatching(block, catch =
+  { Timber.e })` — không bao giờ bị cancel khi rời màn. Đọc lỗi → emit `default` (bỏ
+  `readFailureFallback` riêng; `isFirstOpen` lỗi đọc → `true`, chấp nhận vì Skip là 1 tap).
+- `NetworkManager`: `isAvailable: StateFlow<Boolean>` — nguyên chain `.catch { emit(true) }`
+  `.stateIn(scope, WhileSubscribed(5_000), true)` dời từ VM xuống, scope `Dispatchers.Default`.
+- Mới: `presentation/screens/common/locals/ManagerLocals.kt` (`LocalDataStoreManager`,
+  `LocalNetworkManager`, `staticCompositionLocalOf { error() }`); `MainActivity` `@Inject lateinit
+  var` cả hai và bọc `NavGraph()` trong `CompositionLocalProvider`.
+- **Không enum trong store, không mapper cho store**: theme là `Boolean` (`DexReaderTheme(
+  isDarkTheme)`, `SettingsContent` vốn đã Boolean) → xoá `domain/…/ThemeMode`,
+  `model/value/settings/ThemeModeValue`, `presentation/mapper/ThemeModeMapper`. Ngôn ngữ lưu ISO
+  code → presentation dùng `LanguageValue.fromCode()`/`.code`, repo dùng
+  `ApiParamMapper.toMangaLanguage()` có sẵn. Key mới `is_dark`/`selected_lang_code`/`is_first_open`
+  (key cũ lưu tên enum, `fromCode` không hiểu) — máy đã cài sẽ về dark + English một lần.
+- **Không có wrapper presentation** (một `Prefs.kt` với `rememberPrefsData()`/`PrefsData` được
+  viết rồi bỏ ngay trong session): mỗi nơi dùng tự
+  `LocalDataStoreManager.current.data.collectAsStateWithLifecycle()` và đọc thẳng primitive —
+  `*Content` vẫn chỉ thấy `*Value`. `PrefsData` xoá hẳn.
+- `selectedLanguage` (staged của picker) **không** ở manager: là `rememberSaveable` trong
+  `LanguageSelectionScreen`/`LanguageSettingScreen`; tap chỉ đổi UI, Done mới gọi
+  `saveSelectedLangCode`.
+- Xoá `viewmodels/prefs/`, `viewmodels/network/`. `NavGraph` bớt 2 `hiltViewModel()`, 4 màn
+  (`LanguageSelection`, `LanguageSetting`, `Onboarding`, `Settings`) bỏ param `prefsViewModel`,
+  đọc `LocalDataStoreManager.current` tại chỗ.
+- 3 repo: `dataStoreManager.selectedLangCode.filterNotNull().first().toMangaLanguage()` — vẫn
+  suspend chờ giá trị thật ở cold start. 5 content VM: `selectedLangCode.filterNotNull().drop(1)`
+  — không cần `distinctUntilChanged` vì flow riêng tự distinct; `drop(1)` đúng cho cả hai thứ
+  tự tạo VM trước/sau lần đọc đầu.
+- `MainActivity`: field `@Inject lateinit var` **không được `private`** — Dagger không inject
+  vào private field (`Dagger does not support injection into private fields`).
+- **Bug có sẵn tìm ra khi test trên emulator**: `NetworkManagerImpl.onLost` gọi
+  `connectivityManager.activeNetwork` ngay trong callback → vẫn thấy network đang mất với
+  `VALIDATED` → gửi `true` → dialog không bao giờ hiện dù đã airplane. Sửa: `onLost` gửi `false`
+  thẳng (default-network callback `onLost` = mất default; network mới sẽ tới qua
+  `onCapabilitiesChanged`, debounce 500ms lo phần chuyển tiếp).
+- **Test trên emulator (không đăng nhập)**: `pm clear` → Splash → Language Selection → chọn
+  Vietnamese (highlight + Done) → Onboarding đã đổi sang tiếng Việt → Skip → Main có tiêu đề
+  tiếng Việt; Settings tắt dark → light ngay; force-stop + mở lại → light + tiếng Việt + vào
+  thẳng Main; toggle theme 2 lần → **0 GET**; đổi ngôn ngữ về English → 9 GET (4 section + tag
+  + stats, đúng 1 lần mỗi VM); airplane on → dialog, Back không tắt, airplane off → tự biến mất.
+  Không có FATAL nào trong `logcat -b crash`. Sau khi đổi tên key/field/func và chuyển sang
+  `stateIn`: test lại onboarding cả hai nhánh (Get Started và Skip) → Main, cold restart vào
+  thẳng Main — pass. Test Settings: theme toggle ×2 → 0 GET; đổi ngôn ngữ (Done) → 9 GET,
+  tap thử ngôn ngữ (chưa Done) → 0 GET.
+- **`distinctUntilChanged` sau `mapNotNull { it.selectedLangCode }` là bắt buộc — đã đo**: thử
+  bỏ ở 5 content VM → **một** lần toggle theme = 9 GET (4 section Home + tag + 4 stats). Khôi
+  phục lại → 0. Quy tắc: `StateFlow` chỉ distinct trên **cả** value, slice một field ra thì
+  phải tự `distinctUntilChanged`. Audit toàn project theo quy tắc đó: `map{}.stateIn` (User VM,
+  MangaDetails ×3) và `.first()` (3 repo) không cần; `ReaderViewModel` `combine` 3 cờ có guard
+  nên để nguyên; **sửa 1 chỗ**: `MangaDetailsViewModel.observeIsFavorite` từ `collect` cả
+  uiState rồi lấy `manga.id` bên trong (outer collector thực tế chỉ chạy 1 lần vì inner
+  `_userId.collectLatest` không bao giờ kết thúc) → `mapNotNull { (it as? Success)?.manga?.id }
+  .distinctUntilChanged().collectLatest`, inner lambda gắn nhãn `userId@`.
+- **Tách `DataStoreData` thành 3 `StateFlow` riêng** (theo yêu cầu, hệ quả trực tiếp của phát
+  hiện trên): producer tự chia flow theo từng giá trị đổi độc lập thì callsite không phải
+  `distinctUntilChanged` nữa, và `NavGraph` chỉ recompose đúng field đọc. Test lại: theme ×2 → 0
+  GET, đổi ngôn ngữ → 9 GET, cold restart giữ; favorite ở Manga Details (đăng nhập):
+  Favorite → Unfavorite → cold restart giữ → toggle về → cold restart giữ, không lỗi.
+- **Nút action có icon + text**: `SortAndFilterButtons` thêm text ("Sort"/"Filter"),
+  `ReadingAndFavoriteButtons` thêm icon (MenuBook/PlayArrow cho Start/Continue,
+  Favorite/FavoriteBorder cho favorite) và rút label "Start Reading"/"Continue Reading" thành
+  "Start"/"Continue". 4 string mới `start_button`/`continue_button`/`sort_button`/`filter_button`
+  ở cả 64 locale (hậu tố `_button` vì `continue` là Java keyword, AAPT từ chối);
+  `start_reading`/`continue_reading` giữ cho dialog History. Đã chụp trên emulator: "☰ Sắp xếp /
+  ▼ Lọc", "📖 Bắt đầu / ♡ Yêu thích"; sau đó đổi icon sang **bên phải** text theo yêu cầu
+  ("Sắp xếp ☰ / Lọc ▼", "Bắt đầu 📖 / Yêu thích ♡"), chụp lại xác nhận.
+- **`SplashScreen` tự đọc `isFirstOpen`** qua `LocalDataStoreManager` (bỏ param + 2
+  `rememberUpdatedState`; `by` delegate trên `State` đọc live trong `LaunchedEffect` sau `delay`,
+  không cần giữ latest). `NavGraph` chỉ còn collect `isDark`/`selectedLangCode`. Test: cài mới →
+  Language → Onboarding → Skip → Main; cold restart → Main.
+- `assembleDebug` BUILD SUCCESSFUL. CLAUDE.md cập nhật các đoạn Managers / No Result /
+  CompositionLocal / Shared ViewModels / Onboarding flag / App language / refetch snippet /
+  Staged vs applied.
+
+---
+
+## 2026-09-13 — Bỏ use case prefs/network, chuyển thành `DataStoreManager` + `NetworkManager` trong `data/`, gộp Language/Onboarding VM vào `PrefsViewModel`
+
+**Lý do**: 7 use case prefs/network đều là one-liner `repository.observeX().toFlowResult()` —
+không có logic, và theme/locale/cờ onboarding/kết nối là app-shell, không phải nghiệp vụ. Xoá
+hết; domain giờ **không còn tham chiếu gì** tới prefs hay connectivity.
+
+- Xoá `domain/repository/{prefs,network}/`, `domain/usecase/{prefs,network}/`,
+  `data/repository/{prefs,network}/`, 2 `@Binds` trong `RepositoryModule` (còn 7).
+- Thêm theo pattern Firebase source (interface + Impl cạnh nhau, `@Provides` từ module):
+  `data/local/datastore/DataStoreManager` + `Impl` (`LocalModule.provideDataStoreManager`);
+  `data/network/connectivity/NetworkManager` + `Impl` (`di/network/ConnectivityModule` mới, 5
+  module). Presentation inject thẳng interface — ngoại lệ có chủ ý của Dependency Rule cho
+  infra; giữ interface để VM vẫn fake được.
+- **Không `Result`** ở ranh giới manager. `DataStoreManagerImpl` bọc mọi observe flow bằng
+  `fallbackOnReadFailure(default)` (`.catch` → log → emit fallback; onboarding fallback = `true`
+  để không nhốt user vào onboarding khi DataStore hỏng). VM bọc save bằng
+  `runSuspendCatching(block, catch = { log })`, collect observe flow trần. `NetworkViewModel`
+  tự `.catch { emit(true) }` trước `stateIn`.
+- 3 data repo + 5 content VM đổi sang inject `DataStoreManager`; refetch-on-language giờ là
+  `dataStoreManager.observeContentLanguage().drop(1).collect { refetch() }`.
+- **Gộp `LanguageViewModel` + `OnboardingViewModel` vào `PrefsViewModel`** (xoá 2 package).
+  `PrefsData` chỉ còn giá trị đã lưu + bản staged: `applied/selectedThemeOption`,
+  `applied/selectedLanguage`, `isOnboardingCompleted: Boolean?`. Bỏ `isLoading/isSuccess/isError`
+  và `retry()` — audit cho thấy không màn nào render và không ai gọi. `save*` không set
+  `applied*` eager nữa, DataStore emit lo. `NavGraph` từ 3 shared VM prefs-shaped xuống 1;
+  `LanguageSelectionScreen`/`LanguageSettingScreen`/`OnboardingScreen` nhận `prefsViewModel`.
+- Lineage tên trong cùng ngày: `SettingsRepository` → `PrefsRepository` → `DataStoreManager`;
+  network: method trên prefs repo → `util/NetworkManager` object → `NetworkRepository` + use case
+  → `data/network/connectivity/NetworkManager`. Đây là điểm dừng.
+
+---
+
 ## 2026-09-13 — Tách trách nhiệm: `SettingsRepository` → `PrefsRepository`, network ra `NetworkManager`
 
 **Lý do**: `SettingsRepository`/`SettingsViewModel` đang gom mọi thứ "giống settings" — theme,

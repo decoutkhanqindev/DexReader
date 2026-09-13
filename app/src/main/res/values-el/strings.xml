@@ -85,6 +85,10 @@
   <string name="continue_reading">Συνέχιση ανάγνωσης</string>
   <string name="favorite">Αγαπημένο</string>
   <string name="unfavorite">Κατάργηση αγαπημένου</string>
+  <string name="start_button">Έναρξη</string>
+  <string name="continue_button">Συνέχεια</string>
+  <string name="sort_button">Ταξινόμηση</string>
+  <string name="filter_button">Φίλτρο</string>
   <string name="you_must_sign_in_to_favorite_this_manga">Πρέπει να συνδεθείτε για να προσθέσετε αυτό το manga στα αγαπημένα σας.</string>
   <string name="no_chapter_pages_available">Δεν υπάρχουν διαθέσιμες σελίδες κεφαλαίου.</string>
   <string name="reader_title">%1$s/%2$s</string>

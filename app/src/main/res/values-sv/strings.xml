@@ -85,6 +85,10 @@
   <string name="continue_reading">Fortsätt läsa</string>
   <string name="favorite">Favorit</string>
   <string name="unfavorite">Ta bort favorit</string>
+  <string name="start_button">Starta</string>
+  <string name="continue_button">Fortsätt</string>
+  <string name="sort_button">Sortera</string>
+  <string name="filter_button">Filtrera</string>
   <string name="you_must_sign_in_to_favorite_this_manga">Du måste logga in för att favorisera denna manga.</string>
   <string name="no_chapter_pages_available">Inga kapitelsidor tillgängliga.</string>
   <string name="reader_title">%1$s/%2$s</string>

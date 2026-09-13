@@ -85,6 +85,10 @@
   <string name="continue_reading">Teruskan Membaca</string>
   <string name="favorite">Kegemaran</string>
   <string name="unfavorite">Batal Kegemaran</string>
+  <string name="start_button">Mula</string>
+  <string name="continue_button">Teruskan</string>
+  <string name="sort_button">Isih</string>
+  <string name="filter_button">Tapis</string>
   <string name="you_must_sign_in_to_favorite_this_manga">Anda mesti log masuk untuk menambah manga ini ke kegemaran.</string>
   <string name="no_chapter_pages_available">Tiada halaman bab tersedia.</string>
   <string name="reader_title">%1$s/%2$s</string>

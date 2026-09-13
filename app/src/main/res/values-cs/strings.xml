@@ -85,6 +85,10 @@
   <string name="continue_reading">Pokračovat ve čtení</string>
   <string name="favorite">Oblíbené</string>
   <string name="unfavorite">Odebrat z oblíbených</string>
+  <string name="start_button">Začít</string>
+  <string name="continue_button">Pokračovat</string>
+  <string name="sort_button">Seřadit</string>
+  <string name="filter_button">Filtr</string>
   <string name="you_must_sign_in_to_favorite_this_manga">Pro přidání mangy do oblíbených se musíte přihlásit.</string>
   <string name="no_chapter_pages_available">Nejsou k dispozici žádné stránky kapitoly.</string>
   <string name="reader_title">%1$s/%2$s</string>

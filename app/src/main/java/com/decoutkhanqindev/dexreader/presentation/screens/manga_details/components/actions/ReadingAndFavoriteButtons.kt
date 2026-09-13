@@ -2,7 +2,15 @@ package com.decoutkhanqindev.dexreader.presentation.screens.manga_details.compon
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -62,11 +70,19 @@ fun ReadingAndFavoriteButtons(
     ) {
       Text(
         text =
-          if (isContinueReading) stringResource(R.string.continue_reading)
-          else stringResource(R.string.start_reading),
+          if (isContinueReading) stringResource(R.string.continue_button)
+          else stringResource(R.string.start_button),
         color = MaterialTheme.colorScheme.inverseSurface,
         fontWeight = FontWeight.ExtraBold,
         style = MaterialTheme.typography.titleMedium,
+      )
+      Spacer(modifier = Modifier.width(8.dp))
+      Icon(
+        imageVector =
+          if (isContinueReading) Icons.Default.PlayArrow
+          else Icons.AutoMirrored.Filled.MenuBook,
+        contentDescription = null,
+        tint = MaterialTheme.colorScheme.inverseSurface,
       )
     }
 
@@ -84,6 +100,12 @@ fun ReadingAndFavoriteButtons(
         color = Color.White,
         fontWeight = FontWeight.ExtraBold,
         style = MaterialTheme.typography.titleMedium,
+      )
+      Spacer(modifier = Modifier.width(8.dp))
+      Icon(
+        imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+        contentDescription = null,
+        tint = Color.White,
       )
     }
   }

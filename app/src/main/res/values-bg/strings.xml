@@ -85,6 +85,10 @@
   <string name="continue_reading">Продължи четене</string>
   <string name="favorite">Любими</string>
   <string name="unfavorite">Премахни от любими</string>
+  <string name="start_button">Старт</string>
+  <string name="continue_button">Продължи</string>
+  <string name="sort_button">Сортиране</string>
+  <string name="filter_button">Филтър</string>
   <string name="you_must_sign_in_to_favorite_this_manga">Трябва да влезете, за да добавите тази манга към любими.</string>
   <string name="no_chapter_pages_available">Няма налични страници за главата.</string>
   <string name="reader_title">%1$s/%2$s</string>

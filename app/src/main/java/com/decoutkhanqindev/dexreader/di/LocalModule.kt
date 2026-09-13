@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import com.decoutkhanqindev.dexreader.data.local.database.ChapterCacheDatabase
 import com.decoutkhanqindev.dexreader.data.local.database.dao.ChapterCacheDao
+import com.decoutkhanqindev.dexreader.data.local.datastore.DataStoreManager
+import com.decoutkhanqindev.dexreader.data.local.datastore.DataStoreManagerImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,4 +31,8 @@ object LocalModule {
   @Singleton
   fun provideChapterCacheDao(db: ChapterCacheDatabase): ChapterCacheDao =
     db.chapterCacheDao()
+
+  @Provides
+  @Singleton
+  fun provideDataStoreManager(impl: DataStoreManagerImpl): DataStoreManager = impl
 }

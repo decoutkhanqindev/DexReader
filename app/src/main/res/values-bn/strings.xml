@@ -85,6 +85,10 @@
   <string name="continue_reading">পড়া চালিয়ে যান</string>
   <string name="favorite">প্রিয়</string>
   <string name="unfavorite">প্রিয় থেকে সরান</string>
+  <string name="start_button">শুরু</string>
+  <string name="continue_button">চালিয়ে যান</string>
+  <string name="sort_button">সাজান</string>
+  <string name="filter_button">ফিল্টার</string>
   <string name="you_must_sign_in_to_favorite_this_manga">এই মাঙ্গাটি পছন্দ করতে আপনাকে সাইন ইন করতে হবে।</string>
   <string name="no_chapter_pages_available">কোনো অধ্যায়ের পৃষ্ঠা উপলব্ধ নেই।</string>
   <string name="reader_title">%1$s/%2$s</string>

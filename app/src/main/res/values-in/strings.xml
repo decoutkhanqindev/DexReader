@@ -85,6 +85,10 @@
   <string name="continue_reading">Lanjutkan Membaca</string>
   <string name="favorite">Favorit</string>
   <string name="unfavorite">Batalkan Favorit</string>
+  <string name="start_button">Mulai</string>
+  <string name="continue_button">Lanjutkan</string>
+  <string name="sort_button">Urutkan</string>
+  <string name="filter_button">Filter</string>
   <string name="you_must_sign_in_to_favorite_this_manga">Anda harus masuk untuk memfavoritkan manga ini.</string>
   <string name="no_chapter_pages_available">Tidak ada halaman bab yang tersedia.</string>
   <string name="reader_title">%1$s/%2$s</string>

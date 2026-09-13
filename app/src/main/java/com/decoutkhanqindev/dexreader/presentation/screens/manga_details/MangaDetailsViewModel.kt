@@ -11,7 +11,7 @@ import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetChapterListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaDetailsUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.ResolveChapterLanguageUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.prefs.ObserveContentLanguageUseCase
+import com.decoutkhanqindev.dexreader.data.local.datastore.DataStoreManager
 import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.AddToFavoritesUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.ObserveIsFavoriteUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.RemoveFromFavoritesUseCase
@@ -39,7 +39,10 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import timber.log.Timber
@@ -56,7 +59,7 @@ class MangaDetailsViewModel @Inject constructor(
   private val removeFromFavoritesUseCase: RemoveFromFavoritesUseCase,
   private val observeIsFavoriteUseCase: ObserveIsFavoriteUseCase,
   private val observeHistoryUseCase: ObserveHistoryUseCase,
-  private val observeContentLanguageUseCase: ObserveContentLanguageUseCase,
+  private val dataStoreManager: DataStoreManager,
 ) : BaseViewModel() {
   private val mangaIdFromArg: String =
     savedStateHandle.toRoute<NavRoute.MangaDetails>().mangaId
@@ -128,13 +131,12 @@ class MangaDetailsViewModel @Inject constructor(
 
   private fun observeContentLanguageChange() {
     vmLaunch {
-      observeContentLanguageUseCase()
+      dataStoreManager.selectedLangCode
+        .filterNotNull()
         .drop(1)
-        .collect { result ->
-          result.onSuccess {
-            fetchMangaDetails()
-            resolveChapterLanguageThenFetch()
-          }
+        .collect {
+          fetchMangaDetails()
+          resolveChapterLanguageThenFetch()
         }
     }
   }
@@ -271,40 +273,40 @@ class MangaDetailsViewModel @Inject constructor(
     cancelObserveIsFavoriteJob()
     observeIsFavoriteJob =
       vmLaunch {
-        _mangaDetailsUiState.collect { currentUiState ->
-          if (currentUiState !is MangaDetailsUiState.Success) return@collect
-          val mangaId = currentUiState.manga.id
-
-          _userId.collectLatest { userId ->
-            if (userId == null) {
-              _isFavorite.value = false
-              cancelObserveIsFavoriteJob()
-              return@collectLatest
-            }
-
-            try {
-              observeIsFavoriteUseCase(userId = userId, mangaId = mangaId).collect { result ->
-                result
-                  .onSuccess { _isFavorite.value = it }
-                  .onFailure { throwable ->
-                    _isFavorite.value = false
-
-                    if (throwable is BusinessException.Resource.AccessDenied && _userId.value == null)
-                      return@onFailure
-
-                    Timber.tag(this::class.java.simpleName)
-                      .d("observeIsFavorite have error: ${throwable.stackTraceToString()}")
-                  }
+        _mangaDetailsUiState
+          .mapNotNull { (it as? MangaDetailsUiState.Success)?.manga?.id }
+          .distinctUntilChanged()
+          .collectLatest { mangaId ->
+            _userId.collectLatest userId@{ userId ->
+              if (userId == null) {
+                _isFavorite.value = false
+                cancelObserveIsFavoriteJob()
+                return@userId
               }
-            } catch (c: CancellationException) {
-              throw c
-            } catch (e: Exception) {
-              _isFavorite.value = false
-              Timber.tag(this::class.java.simpleName)
-                .d("observeIsFavorite have error: ${e.stackTraceToString()}")
+
+              try {
+                observeIsFavoriteUseCase(userId = userId, mangaId = mangaId).collect { result ->
+                  result
+                    .onSuccess { _isFavorite.value = it }
+                    .onFailure { throwable ->
+                      _isFavorite.value = false
+
+                      if (throwable is BusinessException.Resource.AccessDenied && _userId.value == null)
+                        return@onFailure
+
+                      Timber.tag(this::class.java.simpleName)
+                        .d("observeIsFavorite have error: ${throwable.stackTraceToString()}")
+                    }
+                }
+              } catch (c: CancellationException) {
+                throw c
+              } catch (e: Exception) {
+                _isFavorite.value = false
+                Timber.tag(this::class.java.simpleName)
+                  .d("observeIsFavorite have error: ${e.stackTraceToString()}")
+              }
             }
           }
-        }
       }
   }
 

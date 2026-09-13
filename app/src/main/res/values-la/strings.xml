@@ -104,6 +104,10 @@
   <string name="continue_reading">Perge legere</string>
   <string name="favorite">Gratum</string>
   <string name="unfavorite">Remove ex gratis</string>
+  <string name="start_button">Incipe</string>
+  <string name="continue_button">Perge</string>
+  <string name="sort_button">Ordina</string>
+  <string name="filter_button">Cola</string>
   <string name="you_must_sign_in_to_favorite_this_manga">Ineas oportet ut hanc mangam gratam facias.</string>
   <string name="no_chapter_pages_available">Nullae paginae capituli praesto.</string>
   <string name="reader_title">%1$s/%2$s</string>

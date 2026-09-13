@@ -5,7 +5,7 @@ import com.decoutkhanqindev.dexreader.domain.entity.value.category.CategoryType
 import com.decoutkhanqindev.dexreader.domain.entity.value.criteria.MangaSortCriteria
 import com.decoutkhanqindev.dexreader.domain.usecase.category.GetCategoryListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaListUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.prefs.ObserveContentLanguageUseCase
+import com.decoutkhanqindev.dexreader.data.local.datastore.DataStoreManager
 import com.decoutkhanqindev.dexreader.presentation.mapper.CategoryMapper.toCategoryModel
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.value.category.CategoryTypeValue
@@ -21,6 +21,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
 import timber.log.Timber
 import javax.inject.Inject
@@ -29,7 +31,7 @@ import javax.inject.Inject
 class CategoriesViewModel @Inject constructor(
   private val getCategoryListUseCase: GetCategoryListUseCase,
   private val getMangaListUseCase: GetMangaListUseCase,
-  private val observeContentLanguageUseCase: ObserveContentLanguageUseCase,
+  private val dataStoreManager: DataStoreManager,
 ) : BaseViewModel() {
   private val _categoryListUiState =
     MutableStateFlow<CategoryListUiState>(CategoryListUiState.Loading)
@@ -47,9 +49,10 @@ class CategoriesViewModel @Inject constructor(
 
   private fun observeContentLanguageChange() {
     vmLaunch {
-      observeContentLanguageUseCase()
+      dataStoreManager.selectedLangCode
+        .filterNotNull()
         .drop(1)
-        .collect { result -> result.onSuccess { fetchTagList() } }
+        .collect { fetchTagList() }
     }
   }
 

@@ -4,7 +4,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetLatestUpdateMangaL
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetNewReleaseMangaListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetTopRatedMangaListUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetTrendingMangaListUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.prefs.ObserveContentLanguageUseCase
+import com.decoutkhanqindev.dexreader.data.local.datastore.DataStoreManager
 import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaModel
@@ -19,6 +19,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.mapNotNull
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -28,7 +30,7 @@ class MangaSectionViewModel @Inject constructor(
   private val getTrendingMangaListUseCase: GetTrendingMangaListUseCase,
   private val getNewReleaseMangaListUseCase: GetNewReleaseMangaListUseCase,
   private val getCompletedMangaListUseCase: GetTopRatedMangaListUseCase,
-  private val observeContentLanguageUseCase: ObserveContentLanguageUseCase,
+  private val dataStoreManager: DataStoreManager,
 ) : BaseViewModel() {
   private val _uiState = MutableStateFlow<MangaSectionUiState>(MangaSectionUiState.Loading)
   val uiState: StateFlow<MangaSectionUiState> = _uiState.asStateFlow()
@@ -40,9 +42,10 @@ class MangaSectionViewModel @Inject constructor(
 
   private fun observeContentLanguageChange() {
     vmLaunch {
-      observeContentLanguageUseCase()
+      dataStoreManager.selectedLangCode
+        .filterNotNull()
         .drop(1)
-        .collect { result -> result.onSuccess { fetchMangaLists() } }
+        .collect { fetchMangaLists() }
     }
   }
 

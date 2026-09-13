@@ -85,6 +85,10 @@
   <string name="continue_reading">Continua a leggere</string>
   <string name="favorite">Preferito</string>
   <string name="unfavorite">Rimuovi dai preferiti</string>
+  <string name="start_button">Inizia</string>
+  <string name="continue_button">Continua</string>
+  <string name="sort_button">Ordina</string>
+  <string name="filter_button">Filtra</string>
   <string name="you_must_sign_in_to_favorite_this_manga">Devi accedere per aggiungere questo manga ai preferiti.</string>
   <string name="no_chapter_pages_available">Nessuna pagina del capitolo disponibile.</string>
   <string name="reader_title">%1$s/%2$s</string>

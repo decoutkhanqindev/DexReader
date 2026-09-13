@@ -4,7 +4,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.search
 import androidx.lifecycle.viewModelScope
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.GetMangaSuggestionsUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.manga.SearchMangaUseCase
-import com.decoutkhanqindev.dexreader.domain.usecase.prefs.ObserveContentLanguageUseCase
+import com.decoutkhanqindev.dexreader.data.local.datastore.DataStoreManager
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.mapper.MangaMapper.toMangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.MangaModel
@@ -23,6 +23,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
@@ -34,7 +36,7 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
   private val searchMangaUseCase: SearchMangaUseCase,
   private val getMangaSuggestionsUseCase: GetMangaSuggestionsUseCase,
-  private val observeContentLanguageUseCase: ObserveContentLanguageUseCase,
+  private val dataStoreManager: DataStoreManager,
 ) : BaseViewModel() {
   private val _suggestionsUiState = MutableStateFlow<SuggestionsUiState>(SuggestionsUiState.Loading)
   val suggestionsUiState: StateFlow<SuggestionsUiState> = _suggestionsUiState.asStateFlow()
@@ -80,11 +82,10 @@ class SearchViewModel @Inject constructor(
 
   private fun observeContentLanguageChange() {
     vmLaunch {
-      observeContentLanguageUseCase()
+      dataStoreManager.selectedLangCode
+        .filterNotNull()
         .drop(1)
-        .collect { result ->
-          result.onSuccess { if (query.value.isNotBlank()) fetchMangaListFirstPage() }
-        }
+        .collect { if (query.value.isNotBlank()) fetchMangaListFirstPage() }
     }
   }
 

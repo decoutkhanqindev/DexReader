@@ -2,16 +2,22 @@ package com.decoutkhanqindev.dexreader.presentation.screens.category_details.com
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.screens.common.buttons.ActionButton
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 
@@ -30,6 +36,13 @@ fun SortAndFilterButtons(
       modifier = Modifier.weight(1f),
       onClick = onSortClick
     ) {
+      Text(
+        text = stringResource(R.string.sort_button),
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
+        fontWeight = FontWeight.ExtraBold,
+        style = MaterialTheme.typography.titleMedium,
+      )
+      Spacer(modifier = Modifier.width(8.dp))
       Icon(
         imageVector = Icons.AutoMirrored.Filled.Sort,
         contentDescription = null,
@@ -41,6 +54,13 @@ fun SortAndFilterButtons(
       modifier = Modifier.weight(1f),
       onClick = onFilterClick
     ) {
+      Text(
+        text = stringResource(R.string.filter_button),
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
+        fontWeight = FontWeight.ExtraBold,
+        style = MaterialTheme.typography.titleMedium,
+      )
+      Spacer(modifier = Modifier.width(8.dp))
       Icon(
         imageVector = Icons.Default.FilterAlt,
         contentDescription = null,

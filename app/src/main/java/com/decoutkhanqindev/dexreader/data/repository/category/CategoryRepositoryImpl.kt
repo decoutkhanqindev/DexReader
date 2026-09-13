@@ -1,6 +1,7 @@
 package com.decoutkhanqindev.dexreader.data.repository.category
 
 import com.decoutkhanqindev.dexreader.BuildConfig
+import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toMangaLanguage
 import com.decoutkhanqindev.dexreader.data.mapper.ApiParamMapper.toApiParam
 import com.decoutkhanqindev.dexreader.data.mapper.CategoryMapper.toCategory
 import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toDomainException
@@ -13,21 +14,22 @@ import com.decoutkhanqindev.dexreader.domain.entity.value.criteria.MangaSortOrde
 import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaContentRating
 import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaStatus
 import com.decoutkhanqindev.dexreader.domain.repository.category.CategoryRepository
-import com.decoutkhanqindev.dexreader.domain.repository.prefs.PrefsRepository
+import com.decoutkhanqindev.dexreader.data.local.datastore.DataStoreManager
 import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class CategoryRepositoryImpl @Inject constructor(
   private val apiService: ApiService,
-  private val prefsRepository: PrefsRepository,
+  private val dataStoreManager: DataStoreManager,
 ) : CategoryRepository {
   override suspend fun getCategoryList(): List<Category> =
     runSuspendCatching(
       context = Dispatchers.IO,
       block = {
-        val preferredLanguage = prefsRepository.observeContentLanguage().first()
+        val preferredLanguage = dataStoreManager.selectedLangCode.filterNotNull().first().toMangaLanguage()
         apiService.getTagList().data?.mapNotNull {
           it.toCategory(preferredLanguage = preferredLanguage)
         } ?: emptyList()
@@ -47,7 +49,7 @@ class CategoryRepositoryImpl @Inject constructor(
     runSuspendCatching(
       context = Dispatchers.IO,
       block = {
-        val preferredLanguage = prefsRepository.observeContentLanguage().first()
+        val preferredLanguage = dataStoreManager.selectedLangCode.filterNotNull().first().toMangaLanguage()
         val orderValue = sortOrder.toApiParam()
         val lastUpdated: String?
         val followedCount: String?

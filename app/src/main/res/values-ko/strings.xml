@@ -85,6 +85,10 @@
   <string name="continue_reading">계속 읽기</string>
   <string name="favorite">즐겨찾기</string>
   <string name="unfavorite">즐겨찾기 해제</string>
+  <string name="start_button">시작</string>
+  <string name="continue_button">이어보기</string>
+  <string name="sort_button">정렬</string>
+  <string name="filter_button">필터</string>
   <string name="you_must_sign_in_to_favorite_this_manga">이 만화를 즐겨찾기에 추가하려면 로그인해야 합니다.</string>
   <string name="no_chapter_pages_available">이 챕터는 사용 가능한 페이지가 없습니다.</string>
   <string name="reader_title">%1$s/%2$s</string>

@@ -125,6 +125,10 @@
   <string name="continue_reading">Đọc tiếp</string>
   <string name="favorite">Yêu thích</string>
   <string name="unfavorite">Bỏ yêu thích</string>
+  <string name="start_button">Bắt đầu</string>
+  <string name="continue_button">Đọc tiếp</string>
+  <string name="sort_button">Sắp xếp</string>
+  <string name="filter_button">Lọc</string>
   <string name="you_must_sign_in_to_favorite_this_manga">Bạn cần đăng nhập để lưu truyện này vào yêu thích.</string>
 
   <!-- Reader Screen -->

@@ -85,6 +85,10 @@
   <string name="continue_reading">متابعة القراءة</string>
   <string name="favorite">المفضلة</string>
   <string name="unfavorite">إزالة من المفضلة</string>
+  <string name="start_button">ابدأ</string>
+  <string name="continue_button">متابعة</string>
+  <string name="sort_button">ترتيب</string>
+  <string name="filter_button">تصفية</string>
   <string name="you_must_sign_in_to_favorite_this_manga">يجب عليك تسجيل الدخول لتفضيل هذه المانجا.</string>
   <string name="no_chapter_pages_available">لا توجد صفحات فصل متاحة.</string>
   <string name="reader_title">%1$s/%2$s</string>

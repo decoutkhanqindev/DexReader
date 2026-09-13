@@ -104,6 +104,10 @@
   <string name="continue_reading">კითხვის გაგრძელება</string>
   <string name="favorite">რჩეული</string>
   <string name="unfavorite">რჩეულებიდან ამოღება</string>
+  <string name="start_button">დაწყება</string>
+  <string name="continue_button">გაგრძელება</string>
+  <string name="sort_button">დალაგება</string>
+  <string name="filter_button">ფილტრი</string>
   <string name="you_must_sign_in_to_favorite_this_manga">ამ მანგის რჩეულებში დასამატებლად უნდა შეხვიდეთ.</string>
   <string name="no_chapter_pages_available">თავის გვერდები არ არის ხელმისაწვდომი.</string>
   <string name="reader_title">%1$s/%2$s</string>
