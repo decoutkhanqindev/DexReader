@@ -4,6 +4,7 @@ import android.app.Application
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.recoverCatching
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -12,13 +13,11 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.stateIn
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.coroutines.cancellation.CancellationException
 
 class NetworkManagerImpl @Inject constructor(
   private val app: Application,
@@ -47,8 +46,7 @@ class NetworkManagerImpl @Inject constructor(
   }
     .debounce { isAvailable -> if (isAvailable) 0L else NETWORK_LOST_DEBOUNCE_MILLIS }
     .distinctUntilChanged()
-    .catch { throwable ->
-      if (throwable is CancellationException) throw throwable
+    .recoverCatching { throwable ->
       Timber.tag(this@NetworkManagerImpl::class.java.simpleName)
         .e("isAvailable have error: ${throwable.stackTraceToString()}")
       emit(true)

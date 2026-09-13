@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.domain.usecase.user
 
 import com.decoutkhanqindev.dexreader.domain.entity.user.User
 import com.decoutkhanqindev.dexreader.domain.repository.user.UserRepository
-import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendResultCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.suspendRunCatching
 import javax.inject.Inject
 
 class RegisterUseCase @Inject constructor(
@@ -13,7 +13,7 @@ class RegisterUseCase @Inject constructor(
     password: String,
     confirmPassword: String,
     name: String,
-  ): Result<Unit> = runSuspendResultCatching {
+  ): Result<Unit> = suspendRunCatching {
     User.validateEmail(email)
     User.validatePassword(password)
     User.validateConfirmPassword(password, confirmPassword)

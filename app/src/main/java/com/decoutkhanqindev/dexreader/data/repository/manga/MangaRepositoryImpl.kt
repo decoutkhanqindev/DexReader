@@ -10,7 +10,7 @@ import com.decoutkhanqindev.dexreader.domain.entity.manga.Manga
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.repository.manga.MangaRepository
 import com.decoutkhanqindev.dexreader.data.local.datastore.DataStoreManager
-import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.withContextCatching
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -28,9 +28,9 @@ class MangaRepositoryImpl @Inject constructor(
   }
 
   override suspend fun getLatestUpdateMangaList(): List<Manga> =
-    runSuspendCatching(
+    withContextCatching(
       context = Dispatchers.IO,
-      block = {
+      action = {
         apiService.getLatestUpdateMangaList().data
           .toMangaList()
       },
@@ -38,9 +38,9 @@ class MangaRepositoryImpl @Inject constructor(
     )
 
   override suspend fun getTrendingMangaList(): List<Manga> =
-    runSuspendCatching(
+    withContextCatching(
       context = Dispatchers.IO,
-      block = {
+      action = {
         apiService.getTrendingMangaList().data
           .toMangaList()
       },
@@ -48,9 +48,9 @@ class MangaRepositoryImpl @Inject constructor(
     )
 
   override suspend fun getNewReleaseMangaList(): List<Manga> =
-    runSuspendCatching(
+    withContextCatching(
       context = Dispatchers.IO,
-      block = {
+      action = {
         apiService.getNewReleaseMangaList().data
           .toMangaList()
       },
@@ -58,9 +58,9 @@ class MangaRepositoryImpl @Inject constructor(
     )
 
   override suspend fun getTopRatedMangaList(): List<Manga> =
-    runSuspendCatching(
+    withContextCatching(
       context = Dispatchers.IO,
-      block = {
+      action = {
         apiService.getTopRatedMangaList().data
           .toMangaList()
       },
@@ -68,9 +68,9 @@ class MangaRepositoryImpl @Inject constructor(
     )
 
   override suspend fun getMangaDetails(mangaId: String): Manga =
-    runSuspendCatching(
+    withContextCatching(
       context = Dispatchers.IO,
-      block = {
+      action = {
         apiService.getMangaDetails(mangaId).data?.toManga(
           uploadUrl = BuildConfig.UPLOAD_URL,
           preferredLanguage = dataStoreManager.selectedLangCode.filterNotNull().first().toMangaLanguage(),
@@ -85,9 +85,9 @@ class MangaRepositoryImpl @Inject constructor(
     offset: Int,
     limit: Int,
   ): List<Manga> =
-    runSuspendCatching(
+    withContextCatching(
       context = Dispatchers.IO,
-      block = {
+      action = {
         apiService.searchManga(
           query = query,
           offset = offset,

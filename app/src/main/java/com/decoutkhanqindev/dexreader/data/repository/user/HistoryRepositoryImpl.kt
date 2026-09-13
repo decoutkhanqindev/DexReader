@@ -7,7 +7,7 @@ import com.decoutkhanqindev.dexreader.data.mapper.ReadingHistoryMapper.toReading
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.history.FirebaseHistoryFirestoreSource
 import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.repository.user.HistoryRepository
-import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.withContextCatching
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -41,9 +41,9 @@ class HistoryRepositoryImpl @Inject constructor(
     userId: String,
     readingHistory: ReadingHistory,
   ) =
-    runSuspendCatching(
+    withContextCatching(
       context = Dispatchers.IO,
-      block = {
+      action = {
         firestoreSource.upsertHistory(
           userId = userId,
           readingHistory = readingHistory.toReadingHistoryRequest()
@@ -56,9 +56,9 @@ class HistoryRepositoryImpl @Inject constructor(
     userId: String,
     readingHistoryId: String,
   ) =
-    runSuspendCatching(
+    withContextCatching(
       context = Dispatchers.IO,
-      block = {
+      action = {
         firestoreSource.removeFromHistory(
           userId = userId,
           readingHistoryId = readingHistoryId

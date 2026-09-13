@@ -9,19 +9,18 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.withContextCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.recoverCatching
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.coroutines.cancellation.CancellationException
 
 class DataStoreManagerImpl @Inject constructor(
   private val app: Application,
@@ -53,8 +52,7 @@ class DataStoreManagerImpl @Inject constructor(
   private fun <T : Any> Preferences.Key<T>.asStateFlow(default: T): StateFlow<T?> =
     app.prefs.data
       .map { prefs -> prefs[this] ?: default }
-      .catch { throwable ->
-        if (throwable is CancellationException) throw throwable
+      .recoverCatching { throwable ->
         Timber.e("DataStore read $name failed, falling back to $default: ${throwable.stackTraceToString()}")
         emit(default)
       }
@@ -66,8 +64,8 @@ class DataStoreManagerImpl @Inject constructor(
 
   private fun edit(transform: (MutablePreferences) -> Unit) {
     scope.launch {
-      runSuspendCatching(
-        block = { app.prefs.edit(transform) },
+      withContextCatching(
+        action = { app.prefs.edit(transform) },
         catch = { throwable -> Timber.e("DataStore edit failed: ${throwable.stackTraceToString()}") },
       )
     }

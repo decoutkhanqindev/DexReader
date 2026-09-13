@@ -13,7 +13,7 @@ import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaLanguage
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.repository.manga.ChapterRepository
 import com.decoutkhanqindev.dexreader.data.local.datastore.DataStoreManager
-import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.withContextCatching
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -24,11 +24,11 @@ class ChapterRepositoryImpl @Inject constructor(
   private val dataStoreManager: DataStoreManager,
 ) : ChapterRepository {
   override suspend fun resolveChapterLanguage(mangaId: String): MangaLanguage =
-    runSuspendCatching(
+    withContextCatching(
       context = Dispatchers.IO,
-      block = {
+      action = {
         val preferredLanguage = dataStoreManager.selectedLangCode.filterNotNull().first().toMangaLanguage()
-        if (preferredLanguage == MangaLanguage.ENGLISH) return@runSuspendCatching preferredLanguage
+        if (preferredLanguage == MangaLanguage.ENGLISH) return@withContextCatching preferredLanguage
 
         val hasPreferredChapter = apiService.getChapterList(
           mangaId = mangaId,
@@ -48,9 +48,9 @@ class ChapterRepositoryImpl @Inject constructor(
     language: MangaLanguage,
     sortOrder: MangaSortOrder,
   ): List<Chapter> =
-    runSuspendCatching(
+    withContextCatching(
       context = Dispatchers.IO,
-      block = {
+      action = {
         apiService.getChapterList(
           mangaId = mangaId,
           limit = limit,
@@ -67,9 +67,9 @@ class ChapterRepositoryImpl @Inject constructor(
     )
 
   override suspend fun getChapterDetails(chapterId: String): Chapter =
-    runSuspendCatching(
+    withContextCatching(
       context = Dispatchers.IO,
-      block = {
+      action = {
         apiService.getChapterDetails(chapterId).data?.toChapter()
           ?: throw BusinessException.Resource.ChapterNotFound()
       },
@@ -77,9 +77,9 @@ class ChapterRepositoryImpl @Inject constructor(
     )
 
   override suspend fun getChapterPages(chapterId: String, mangaId: String): ChapterPages =
-    runSuspendCatching(
+    withContextCatching(
       context = Dispatchers.IO,
-      block = {
+      action = {
         apiService.getChapterPages(chapterId).toChapterPages(chapterId, mangaId)
           ?: throw BusinessException.Resource.ChapterDataNotFound()
       },

@@ -146,14 +146,23 @@ One-shot:
 
 ```kotlin
 suspend operator fun invoke(id: String): Result<T> =
-  CoroutineHandler.runSuspendResultCatching { repository.method(id) }
+  CoroutineHandler.suspendRunCatching { repository.method(id) }
 ```
 
-Reactive:
+Reactive — **raw `Flow<T>`, no `Result` wrapper**:
 
 ```kotlin
-operator fun invoke(): Flow<Result<List<T>>> = repository.observe().toFlowResult()
+operator fun invoke(): Flow<List<T>> = repository.observe()
 ```
+
+`Flow<Result<T>>` (via a `toFlowResult()` helper) was the shape until this session and was
+dropped on purpose. A Flow error is terminal — after `catch` the flow completes — so wrapping
+items in `Result` never bought "keep receiving after an error"; all it did was hand the
+ViewModel a `Result.failure` **and** still require a `try/catch` around `collect` for anything
+thrown in the collect body, i.e. two error paths per site that were near-duplicates of each
+other. `kotlin.Result` is a one-shot type; for streams the error path is the collector's
+(`Flow<T>.collectCatching`, below). One-shot use cases keep `Result<T>` — with a single call
+there is no operator to replace it.
 
 ---
 
@@ -317,14 +326,58 @@ value changed.)
 
 **`CoroutineHandler`** — function selection:
 
-- `runSuspendResultCatching { }` → `Result<T>`, catches `Throwable` — use in **use cases**
-- `runSuspendCatching(context, block, catch)` → `T` directly, catches `Exception` only — use in *
-  *repos** with exception remapping
-- `Flow<T>.toFlowResult()` → `Flow<Result<T>>` — rethrows `CancellationException` — use in *
-  *reactive use cases**
+- `suspendRunCatching { }` → `Result<T>`, catches `Throwable` — use in **one-shot use cases**.
+  Named after Now in Android's helper of the same shape: stdlib `runCatching`, but suspend and
+  cancellation-safe. It takes **no `context`** — a second overload with
+  `context: CoroutineContext = EmptyCoroutineContext` used to exist, was a strict duplicate
+  (0 of 55 call sites passed a context, and `withContext(EmptyCoroutineContext)` only adds an
+  empty coroutine) and was deleted.
+- `withContextCatching(context, action, catch)` → `T` directly, catches `Exception` only — use
+  in **repos** with exception remapping (`catch = { it.toDomainException() }` etc.; 27 of 28
+  sites pass `context = Dispatchers.IO`, which is why `context` stays). Named after what it
+  does: `withContext(context)` + try/catch. The lambda parameter is `action` on all four
+  helpers, never `block`.
 
-**`CancellationException` guard**: must appear **before** any `catch (e: Exception)` in VMs —
-`toFlowResult()` rethrows it through `collect { }`.
+The four helpers share one naming rule: the **`-Catching` suffix means "rethrows
+`CancellationException`, catches the rest"**, and the prefix says what runs — `suspendRun`
+(→ `Result`), `withContext` (→ `T`), `collect` (terminal on a `Flow`), `recover` (intermediate
+`.catch` whose block emits a fallback). `recoverCatching` was first named `catchNonCancellation`
+— renamed because it was the one helper outside the `-Catching` family; `catchingOn` was
+considered and rejected since an `On` suffix in Flow means a `CoroutineContext` (`flowOn`), not
+a handler. The old names were
+`runSuspendResultCatching`/`runSuspendCatching`; "Suspend" was noise (everything here suspends)
+and "Result" vs not is now carried by the `runCatching`/`withContext` halves.
+- `Flow<T>.collectCatching(action, catch)` — **terminal**; `try { collect { action(it) } }
+  catch (CancellationException) { rethrow } catch (e: Exception) { catch(e) }`. Use in
+  **ViewModels** to consume a reactive use case: it covers errors from upstream *and* from the
+  `action` body (mapping, state updates), which the `.catch` operator cannot. Both lambdas are
+  passed **named, `action` first**, never as a trailing lambda:
+  ```kotlin
+  observeXxxUseCase(…).collectCatching(
+    action = { list -> _uiState.value = … },
+    catch = catch@{ throwable ->
+      if (throwable is AccessDenied && _userId.value == null) return@catch
+      _uiState.value = …Error()
+    },
+  )
+  ```
+  Label the `catch` lambda `catch@` whenever it needs an early return — both lambdas would
+  otherwise share the implicit `@collectCatching` label.
+- `Flow<T>.recoverCatching { }` — **intermediate**; `.catch` that rethrows
+  `CancellationException` and runs the block for everything else. Use where a flow has to *stay*
+  a flow, i.e. before `stateIn` in the two managers (`DataStoreManagerImpl.asStateFlow`,
+  `NetworkManagerImpl.isAvailable`). Do not confuse the two: `collectCatching` cannot sit before
+  `stateIn` (it returns `Unit`), and `recoverCatching` cannot see exceptions thrown by a
+  downstream collector.
+
+**`CancellationException` guard lives in those two helpers and nowhere else.** No ViewModel has
+a hand-written `catch (c: CancellationException) { throw c }` any more (12 collect sites in
+`Favorites`/`History`/`Statistics`/`User`/`MangaDetails`/`ReaderViewModel` were converted); if
+you find yourself writing one, you should be calling `collectCatching` instead. The three sites
+that used to have **no** `try/catch` at all (`UserViewModel` ×2, `StatisticsViewModel`) relied on
+the `Result` wrapper to swallow Firestore errors — after the unwrap they go through
+`collectCatching` like everyone else, otherwise a Firestore permission error would crash the VM
+scope.
 
 **`DateTimeHandler`**: `String?.parseIso8601ToEpoch(): Long?` | `Long?.toTimeAgo(): String` — both
 `SimpleDateFormat` use `ThreadLocal` (not thread-safe without it).
@@ -332,7 +385,7 @@ value changed.)
 **Managers, not use cases — `DataStoreManager` and `NetworkManager` are infrastructure, and
 they are injected where they are used.** Theme, content language, the onboarding flag and
 connectivity are app-shell state, not manga-reading business; the use cases that used to wrap
-them were seven identical one-liners (`repository.observeX().toFlowResult()`) with no logic, and
+them were seven identical one-liners (`repository.observeX()` wrapped in a `Result` flow) with no logic, and
 calling them "use cases" next to `GetMangaListUseCase` overstated them. So they are gone, and
 with them the domain-layer interfaces: **the domain layer now has zero references to prefs or
 connectivity**, which is the honest shape — it never decided anything about them. What replaced
@@ -395,7 +448,7 @@ application scope) and exposes hot state:
   for the repositories' `filterNotNull().first()` (see "Where the preferred language comes
   from") and for Splash routing. Mutations are plain non-suspend `fun`s — `saveIsDark(value)`,
   `saveSelectedLangCode(value)`, `saveIsFirstOpen(value)` — and they `launch` on the manager's scope through
-  `runSuspendCatching(block, catch = { log })`, so **a save can never be cancelled by the caller
+  `withContextCatching(action, catch = { log })`, so **a save can never be cancelled by the caller
   leaving the screen** (a `rememberCoroutineScope` launch would be — this is the reason saves must
   not be collected into composition). Saves do not set the field eagerly; the DataStore emission
   does. The language picker's *staged* pick is **not** in the manager — it is `rememberSaveable`
@@ -414,7 +467,7 @@ read-failure fallback** any more (an earlier version routed `isFirstOpen` to `fa
 failure so a returning user could not be sent back through onboarding; that was dropped as
 over-engineering for a case nobody has hit — onboarding is skippable in one tap anyway and Skip
 persists `false`). Saves go through a single private `edit { prefs -> … }` (no per-call name —
-the log line is just "DataStore edit failed"), log through `runSuspendCatching`, and are
+the log line is just "DataStore edit failed"), log through `withContextCatching`, and are
 otherwise fire-and-forget —
 nothing consumed the old `InfrastructureException.Unexpected` mapping, so it is gone. (2)
 `NetworkManagerImpl` adds its own `.catch { …; emit(true) }` before `stateIn` since the callback

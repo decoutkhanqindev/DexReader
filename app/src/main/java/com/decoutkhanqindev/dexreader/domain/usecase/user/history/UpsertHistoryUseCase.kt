@@ -2,7 +2,7 @@ package com.decoutkhanqindev.dexreader.domain.usecase.user.history
 
 import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.repository.user.HistoryRepository
-import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendResultCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.suspendRunCatching
 import javax.inject.Inject
 
 class UpsertHistoryUseCase @Inject constructor(
@@ -19,7 +19,7 @@ class UpsertHistoryUseCase @Inject constructor(
     chapterVolume: String,
     lastReadPage: Int,
     pageCount: Int,
-  ): Result<Unit> = runSuspendResultCatching {
+  ): Result<Unit> = suspendRunCatching {
     val readingHistory = ReadingHistory(
       id = ReadingHistory.generateId(mangaId, chapterId),
       mangaId = mangaId,

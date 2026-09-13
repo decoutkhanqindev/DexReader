@@ -4,7 +4,7 @@ import com.decoutkhanqindev.dexreader.domain.entity.manga.Manga
 import com.decoutkhanqindev.dexreader.domain.entity.manga.MangaStats
 import com.decoutkhanqindev.dexreader.domain.repository.manga.MangaRepository
 import com.decoutkhanqindev.dexreader.domain.repository.manga.MangaStatsRepository
-import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendResultCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.suspendRunCatching
 import javax.inject.Inject
 
 class GetTopRatedMangaListUseCase @Inject constructor(
@@ -12,7 +12,7 @@ class GetTopRatedMangaListUseCase @Inject constructor(
   private val statsRepository: MangaStatsRepository,
 ) {
   suspend operator fun invoke(): Result<List<Manga>> =
-    runSuspendResultCatching {
+    suspendRunCatching {
       val list: List<Manga> = mangaRepository.getTopRatedMangaList()
       val listIds: List<String> = list.map { it.id }
       val stats: List<MangaStats> = statsRepository.getMangaStats(listIds)

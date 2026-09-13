@@ -7,6 +7,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.user.profile.ObserveUserPro
 import com.decoutkhanqindev.dexreader.presentation.mapper.UserMapper.toUserModel
 import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.collectCatching
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,37 +44,35 @@ class UserViewModel @Inject constructor(
 
   private fun observeCurrentUser() {
     vmLaunch {
-      observeCurrentUserUseCase().collect { result ->
-        result
-          .onSuccess {
-            _isUserLoggedIn.value = it != null
-            if (it != null) observeUserProfile(userId = it.id)
-            else {
-              cancelUserProfileJob()
-              _domainUserProfile.value = null
-            }
+      observeCurrentUserUseCase().collectCatching(
+        action = {
+          _isUserLoggedIn.value = it != null
+          if (it != null) observeUserProfile(userId = it.id)
+          else {
+            cancelUserProfileJob()
+            _domainUserProfile.value = null
           }
-          .onFailure {
-            _isUserLoggedIn.value = false
-            Timber.tag(this::class.java.simpleName)
-              .d("observeCurrentUser have error: ${it.stackTraceToString()}")
-          }
-      }
+        },
+        catch = {
+          _isUserLoggedIn.value = false
+          Timber.tag(this::class.java.simpleName)
+            .d("observeCurrentUser have error: ${it.stackTraceToString()}")
+        },
+      )
     }
   }
 
   private fun observeUserProfile(userId: String) {
     cancelUserProfileJob()
     userProfileJob = vmLaunch {
-      observeUserProfileUseCase(userId).collect { result ->
-        result
-          .onSuccess { _domainUserProfile.value = it }
-          .onFailure {
-            _domainUserProfile.value = null
-            Timber.tag(this::class.java.simpleName)
-              .d("observeUserProfile have error: ${it.stackTraceToString()}")
-          }
-      }
+      observeUserProfileUseCase(userId).collectCatching(
+        action = { _domainUserProfile.value = it },
+        catch = {
+          _domainUserProfile.value = null
+          Timber.tag(this::class.java.simpleName)
+            .d("observeUserProfile have error: ${it.stackTraceToString()}")
+        },
+      )
     }
   }
 

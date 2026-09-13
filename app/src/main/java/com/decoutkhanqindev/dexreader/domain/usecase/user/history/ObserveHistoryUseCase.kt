@@ -2,7 +2,6 @@ package com.decoutkhanqindev.dexreader.domain.usecase.user.history
 
 import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingHistory
 import com.decoutkhanqindev.dexreader.domain.repository.user.HistoryRepository
-import com.decoutkhanqindev.dexreader.util.CoroutineHandler.toFlowResult
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -14,11 +13,11 @@ class ObserveHistoryUseCase @Inject constructor(
     limit: Int = 10,
     mangaId: String? = null,
     lastReadingHistoryId: String? = null,
-  ): Flow<Result<List<ReadingHistory>>> =
+  ): Flow<List<ReadingHistory>> =
     repository.observeHistory(
       userId = userId,
       limit = limit,
       mangaId = mangaId,
       lastReadingHistoryId = lastReadingHistoryId
-    ).toFlowResult()
+    )
 }

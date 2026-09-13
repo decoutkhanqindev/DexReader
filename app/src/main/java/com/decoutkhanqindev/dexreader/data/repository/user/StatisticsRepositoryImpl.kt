@@ -6,7 +6,7 @@ import com.decoutkhanqindev.dexreader.data.mapper.ReadingStatsMapper.toReadingSt
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.statistics.FirebaseStatisticsFirestoreSource
 import com.decoutkhanqindev.dexreader.domain.entity.user.ReadingStats
 import com.decoutkhanqindev.dexreader.domain.repository.user.StatisticsRepository
-import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.withContextCatching
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -21,9 +21,9 @@ class StatisticsRepositoryImpl @Inject constructor(
   override suspend fun incrementReadingDuration(
     userId: String,
     readingStats: ReadingStats,
-  ) = runSuspendCatching(
+  ) = withContextCatching(
     context = Dispatchers.IO,
-    block = {
+    action = {
       firestoreSource.incrementReadingDuration(
         userId,
         readingStats.date,

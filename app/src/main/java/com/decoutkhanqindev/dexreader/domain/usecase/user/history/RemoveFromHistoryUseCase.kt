@@ -1,7 +1,7 @@
 package com.decoutkhanqindev.dexreader.domain.usecase.user.history
 
 import com.decoutkhanqindev.dexreader.domain.repository.user.HistoryRepository
-import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendResultCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.suspendRunCatching
 import javax.inject.Inject
 
 class RemoveFromHistoryUseCase @Inject constructor(
@@ -10,7 +10,7 @@ class RemoveFromHistoryUseCase @Inject constructor(
   suspend operator fun invoke(
     userId: String,
     readingHistoryId: String,
-  ): Result<Unit> = runSuspendResultCatching {
+  ): Result<Unit> = suspendRunCatching {
     repository.removeFromHistory(
       userId = userId,
       readingHistoryId = readingHistoryId

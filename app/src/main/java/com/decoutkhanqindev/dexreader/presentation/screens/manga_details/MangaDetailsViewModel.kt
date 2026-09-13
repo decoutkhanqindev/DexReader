@@ -27,6 +27,7 @@ import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryMode
 import com.decoutkhanqindev.dexreader.presentation.model.value.language.LanguageValue
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.collectCatching
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -47,7 +48,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.coroutines.cancellation.CancellationException
 
 @HiltViewModel
 class MangaDetailsViewModel @Inject constructor(
@@ -284,27 +284,18 @@ class MangaDetailsViewModel @Inject constructor(
                 return@userId
               }
 
-              try {
-                observeIsFavoriteUseCase(userId = userId, mangaId = mangaId).collect { result ->
-                  result
-                    .onSuccess { _isFavorite.value = it }
-                    .onFailure { throwable ->
-                      _isFavorite.value = false
+              observeIsFavoriteUseCase(userId = userId, mangaId = mangaId).collectCatching(
+                action = { _isFavorite.value = it },
+                catch = catch@{ throwable ->
+                  _isFavorite.value = false
 
-                      if (throwable is BusinessException.Resource.AccessDenied && _userId.value == null)
-                        return@onFailure
+                  if (throwable is BusinessException.Resource.AccessDenied && _userId.value == null)
+                    return@catch
 
-                      Timber.tag(this::class.java.simpleName)
-                        .d("observeIsFavorite have error: ${throwable.stackTraceToString()}")
-                    }
-                }
-              } catch (c: CancellationException) {
-                throw c
-              } catch (e: Exception) {
-                _isFavorite.value = false
-                Timber.tag(this::class.java.simpleName)
-                  .d("observeIsFavorite have error: ${e.stackTraceToString()}")
-              }
+                  Timber.tag(this::class.java.simpleName)
+                    .d("observeIsFavorite have error: ${throwable.stackTraceToString()}")
+                },
+              )
             }
           }
       }
@@ -356,44 +347,31 @@ class MangaDetailsViewModel @Inject constructor(
             return@collectLatest
           }
 
-          try {
-            observeHistoryUseCase(
-              userId = userId,
-              mangaId = mangaIdFromArg,
-              limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
-            )
-              .collect { result ->
-                result
-                  .onSuccess { readingHistoryList ->
-                    isObservingReadingHistoryList = false
-                    _readingHistoryList.value = readingHistoryList.toPersistentList()
-                    hasNextReadingHistoryListPage =
-                      readingHistoryList.size >= READING_HISTORY_LIST_PER_PAGE_SIZE
+          observeHistoryUseCase(
+            userId = userId,
+            mangaId = mangaIdFromArg,
+            limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
+          ).collectCatching(
+            action = { readingHistoryList ->
+              isObservingReadingHistoryList = false
+              _readingHistoryList.value = readingHistoryList.toPersistentList()
+              hasNextReadingHistoryListPage =
+                readingHistoryList.size >= READING_HISTORY_LIST_PER_PAGE_SIZE
 
-                    if (hasNextReadingHistoryListPage) observeHistoryNextPage()
-                    else return@onSuccess
-                  }
-                  .onFailure { throwable ->
-                    isObservingReadingHistoryList = false
+              if (hasNextReadingHistoryListPage) observeHistoryNextPage()
+            },
+            catch = catch@{ throwable ->
+              isObservingReadingHistoryList = false
 
-                    if (throwable is BusinessException.Resource.AccessDenied && _userId.value == null)
-                      return@onFailure
+              if (throwable is BusinessException.Resource.AccessDenied && _userId.value == null)
+                return@catch
 
-                    _readingHistoryList.value = persistentListOf()
-                    hasNextReadingHistoryListPage = false
-                    Timber.tag(this::class.java.simpleName)
-                      .d("observeHistoryFirstPage have error: ${throwable.stackTraceToString()}")
-                  }
-              }
-          } catch (c: CancellationException) {
-            throw c
-          } catch (e: Exception) {
-            isObservingReadingHistoryList = false
-            _readingHistoryList.value = persistentListOf()
-            hasNextReadingHistoryListPage = false
-            Timber.tag(this::class.java.simpleName)
-              .d("observeHistoryFirstPage have error: ${e.stackTraceToString()}")
-          }
+              _readingHistoryList.value = persistentListOf()
+              hasNextReadingHistoryListPage = false
+              Timber.tag(this::class.java.simpleName)
+                .d("observeHistoryFirstPage have error: ${throwable.stackTraceToString()}")
+            },
+          )
         }
       }
   }
@@ -413,44 +391,32 @@ class MangaDetailsViewModel @Inject constructor(
 
           val lastReadingHistoryId = _readingHistoryList.value.lastOrNull()?.id
 
-          try {
-            observeHistoryUseCase(
-              userId = userId,
-              limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
-              mangaId = mangaIdFromArg,
-              lastReadingHistoryId = lastReadingHistoryId
-            )
-              .collect { result ->
-                result
-                  .onSuccess { readingHistoryList ->
-                    isObservingReadingHistoryList = false
-                    _readingHistoryList.value =
-                      (_readingHistoryList.value + readingHistoryList).toPersistentList()
-                    hasNextReadingHistoryListPage =
-                      readingHistoryList.size >= READING_HISTORY_LIST_PER_PAGE_SIZE
+          observeHistoryUseCase(
+            userId = userId,
+            limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
+            mangaId = mangaIdFromArg,
+            lastReadingHistoryId = lastReadingHistoryId
+          ).collectCatching(
+            action = { readingHistoryList ->
+              isObservingReadingHistoryList = false
+              _readingHistoryList.value =
+                (_readingHistoryList.value + readingHistoryList).toPersistentList()
+              hasNextReadingHistoryListPage =
+                readingHistoryList.size >= READING_HISTORY_LIST_PER_PAGE_SIZE
 
-                    if (hasNextReadingHistoryListPage) observeHistoryNextPage()
-                    else return@onSuccess
-                  }
-                  .onFailure { throwable ->
-                    isObservingReadingHistoryList = false
+              if (hasNextReadingHistoryListPage) observeHistoryNextPage()
+            },
+            catch = catch@{ throwable ->
+              isObservingReadingHistoryList = false
 
-                    if (throwable is BusinessException.Resource.AccessDenied && _userId.value == null)
-                      return@onFailure
+              if (throwable is BusinessException.Resource.AccessDenied && _userId.value == null)
+                return@catch
 
-                    hasNextReadingHistoryListPage = false
-                    Timber.tag(this::class.java.simpleName)
-                      .d("observeHistoryNextPage have error: ${throwable.stackTraceToString()}")
-                  }
-              }
-          } catch (c: CancellationException) {
-            throw c
-          } catch (e: Exception) {
-            isObservingReadingHistoryList = false
-            hasNextReadingHistoryListPage = false
-            Timber.tag(this::class.java.simpleName)
-              .d("observeHistoryNextPage have error: ${e.stackTraceToString()}")
-          }
+              hasNextReadingHistoryListPage = false
+              Timber.tag(this::class.java.simpleName)
+                .d("observeHistoryNextPage have error: ${throwable.stackTraceToString()}")
+            },
+          )
         }
       }
   }

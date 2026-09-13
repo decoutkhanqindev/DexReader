@@ -4,7 +4,7 @@ import com.decoutkhanqindev.dexreader.domain.entity.manga.Chapter
 import com.decoutkhanqindev.dexreader.domain.entity.value.criteria.MangaSortOrder
 import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaLanguage
 import com.decoutkhanqindev.dexreader.domain.repository.manga.ChapterRepository
-import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendResultCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.suspendRunCatching
 import javax.inject.Inject
 
 class GetChapterListUseCase @Inject constructor(
@@ -16,7 +16,7 @@ class GetChapterListUseCase @Inject constructor(
     offset: Int = 0,
     language: MangaLanguage = MangaLanguage.ENGLISH,
     sortOrder: MangaSortOrder = MangaSortOrder.DESC,
-  ): Result<List<Chapter>> = runSuspendResultCatching {
+  ): Result<List<Chapter>> = suspendRunCatching {
     repository.getChapterList(
       mangaId = mangaId,
       limit = limit,

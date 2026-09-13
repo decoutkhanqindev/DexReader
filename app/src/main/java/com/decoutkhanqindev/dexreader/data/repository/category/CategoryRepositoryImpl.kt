@@ -15,7 +15,7 @@ import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaContentRati
 import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaStatus
 import com.decoutkhanqindev.dexreader.domain.repository.category.CategoryRepository
 import com.decoutkhanqindev.dexreader.data.local.datastore.DataStoreManager
-import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.withContextCatching
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -26,9 +26,9 @@ class CategoryRepositoryImpl @Inject constructor(
   private val dataStoreManager: DataStoreManager,
 ) : CategoryRepository {
   override suspend fun getCategoryList(): List<Category> =
-    runSuspendCatching(
+    withContextCatching(
       context = Dispatchers.IO,
-      block = {
+      action = {
         val preferredLanguage = dataStoreManager.selectedLangCode.filterNotNull().first().toMangaLanguage()
         apiService.getTagList().data?.mapNotNull {
           it.toCategory(preferredLanguage = preferredLanguage)
@@ -46,9 +46,9 @@ class CategoryRepositoryImpl @Inject constructor(
     statusFilter: List<MangaStatus>,
     contentRatingFilter: List<MangaContentRating>,
   ): List<Manga> =
-    runSuspendCatching(
+    withContextCatching(
       context = Dispatchers.IO,
-      block = {
+      action = {
         val preferredLanguage = dataStoreManager.selectedLangCode.filterNotNull().first().toMangaLanguage()
         val orderValue = sortOrder.toApiParam()
         val lastUpdated: String?

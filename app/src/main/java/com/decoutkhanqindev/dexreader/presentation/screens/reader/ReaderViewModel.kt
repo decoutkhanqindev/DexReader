@@ -23,6 +23,7 @@ import com.decoutkhanqindev.dexreader.presentation.mapper.ChapterPagesMapper.toC
 import com.decoutkhanqindev.dexreader.presentation.mapper.ErrorMapper.toFeatureError
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavRoute
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.collectCatching
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -37,7 +38,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.coroutines.cancellation.CancellationException
 
 @HiltViewModel
 class ReaderViewModel @Inject constructor(
@@ -458,47 +458,34 @@ class ReaderViewModel @Inject constructor(
             return@collectLatest
           }
 
-          try {
-            observeHistoryUseCase(
-              userId = userId,
-              mangaId = mangaIdFromArg,
-              limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
-            )
-              .collect { result ->
-                result
-                  .onSuccess { readingHistoryList ->
-                    isObservingReadingHistoryList = false
-                    currentReadingHistoryList = readingHistoryList.toPersistentList()
-                    hasNextReadingHistoryListPage =
-                      readingHistoryList.size >=
-                          READING_HISTORY_LIST_PER_PAGE_SIZE
-                    updateCurrentReadingHistory(isFromHistory = true)
-                  }
-                  .onFailure { throwable ->
-                    isObservingReadingHistoryList = false
+          observeHistoryUseCase(
+            userId = userId,
+            mangaId = mangaIdFromArg,
+            limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
+          ).collectCatching(
+            action = { readingHistoryList ->
+              isObservingReadingHistoryList = false
+              currentReadingHistoryList = readingHistoryList.toPersistentList()
+              hasNextReadingHistoryListPage =
+                readingHistoryList.size >=
+                    READING_HISTORY_LIST_PER_PAGE_SIZE
+              updateCurrentReadingHistory(isFromHistory = true)
+            },
+            catch = catch@{ throwable ->
+              isObservingReadingHistoryList = false
 
-                    if (throwable is BusinessException.Resource.AccessDenied &&
-                      _userId.value == null
-                    )
-                      return@onFailure
+              if (throwable is BusinessException.Resource.AccessDenied &&
+                _userId.value == null
+              )
+                return@catch
 
-                    currentReadingHistoryList = persistentListOf()
-                    hasNextReadingHistoryListPage = false
-                    _isObserveHistoryDone.value = true
-                    Timber.tag(this::class.java.simpleName)
-                      .d("observeHistoryFirstPage have error: ${throwable.stackTraceToString()}")
-                  }
-              }
-          } catch (c: CancellationException) {
-            throw c
-          } catch (e: Exception) {
-            isObservingReadingHistoryList = false
-            currentReadingHistoryList = persistentListOf()
-            hasNextReadingHistoryListPage = false
-            _isObserveHistoryDone.value = true
-            Timber.tag(this::class.java.simpleName)
-              .d("observeHistoryFirstPage have error: ${e.stackTraceToString()}")
-          }
+              currentReadingHistoryList = persistentListOf()
+              hasNextReadingHistoryListPage = false
+              _isObserveHistoryDone.value = true
+              Timber.tag(this::class.java.simpleName)
+                .d("observeHistoryFirstPage have error: ${throwable.stackTraceToString()}")
+            },
+          )
         }
       }
   }
@@ -521,45 +508,33 @@ class ReaderViewModel @Inject constructor(
 
           val lastReadingHistoryId = currentReadingHistoryList.lastOrNull()?.id
 
-          try {
-            observeHistoryUseCase(
-              userId = userId,
-              limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
-              mangaId = mangaIdFromArg,
-              lastReadingHistoryId = lastReadingHistoryId
-            )
-              .collect { result ->
-                result
-                  .onSuccess { readingHistoryList ->
-                    isObservingReadingHistoryList = false
-                    currentReadingHistoryList =
-                      (currentReadingHistoryList + readingHistoryList).toPersistentList()
-                    hasNextReadingHistoryListPage =
-                      readingHistoryList.size >= READING_HISTORY_LIST_PER_PAGE_SIZE
-                    updateCurrentReadingHistory(isFromHistory = true)
-                  }
-                  .onFailure { throwable ->
-                    isObservingReadingHistoryList = false
+          observeHistoryUseCase(
+            userId = userId,
+            limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
+            mangaId = mangaIdFromArg,
+            lastReadingHistoryId = lastReadingHistoryId
+          ).collectCatching(
+            action = { readingHistoryList ->
+              isObservingReadingHistoryList = false
+              currentReadingHistoryList =
+                (currentReadingHistoryList + readingHistoryList).toPersistentList()
+              hasNextReadingHistoryListPage =
+                readingHistoryList.size >= READING_HISTORY_LIST_PER_PAGE_SIZE
+              updateCurrentReadingHistory(isFromHistory = true)
+            },
+            catch = catch@{ throwable ->
+              isObservingReadingHistoryList = false
 
-                    if (throwable is BusinessException.Resource.AccessDenied &&
-                      _userId.value == null
-                    ) return@onFailure
+              if (throwable is BusinessException.Resource.AccessDenied &&
+                _userId.value == null
+              ) return@catch
 
-                    hasNextReadingHistoryListPage = false
-                    _isObserveHistoryDone.value = previousState
-                    Timber.tag(this::class.java.simpleName)
-                      .d("observeHistoryNextPage have error: ${throwable.stackTraceToString()}")
-                  }
-              }
-          } catch (c: CancellationException) {
-            throw c
-          } catch (e: Exception) {
-            isObservingReadingHistoryList = false
-            hasNextReadingHistoryListPage = false
-            _isObserveHistoryDone.value = previousState
-            Timber.tag(this::class.java.simpleName)
-              .d("observeHistoryNextPage have error: ${e.stackTraceToString()}")
-          }
+              hasNextReadingHistoryListPage = false
+              _isObserveHistoryDone.value = previousState
+              Timber.tag(this::class.java.simpleName)
+                .d("observeHistoryNextPage have error: ${throwable.stackTraceToString()}")
+            },
+          )
         }
       }
   }

@@ -1,14 +1,14 @@
 package com.decoutkhanqindev.dexreader.domain.usecase.manga.cache
 
 import com.decoutkhanqindev.dexreader.domain.repository.manga.CacheRepository
-import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendResultCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.suspendRunCatching
 import javax.inject.Inject
 
 class ClearExpiredCacheUseCase @Inject constructor(
   private val repository: CacheRepository,
 ) {
   suspend operator fun invoke(): Result<Unit> =
-    runSuspendResultCatching {
+    suspendRunCatching {
       val expiryTimestamp = System.currentTimeMillis() - CACHE_EXPIRY_MILLIS
       repository.clearExpiredCache(expiryTimestamp)
     }

@@ -12,7 +12,7 @@ import com.decoutkhanqindev.dexreader.domain.entity.user.User
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.exception.InfrastructureException
 import com.decoutkhanqindev.dexreader.domain.repository.user.UserRepository
-import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.withContextCatching
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -31,9 +31,9 @@ class UserRepositoryImpl @Inject constructor(
     password: String,
     name: String,
   ) =
-    runSuspendCatching(
+    withContextCatching(
       context = Dispatchers.IO,
-      block = {
+      action = {
         val registeredUser =
           authSource
             .register(email, password)
@@ -62,23 +62,23 @@ class UserRepositoryImpl @Inject constructor(
     email: String,
     password: String,
   ) =
-    runSuspendCatching(
+    withContextCatching(
       context = Dispatchers.IO,
-      block = { authSource.login(email, password) },
+      action = { authSource.login(email, password) },
       catch = { e -> e.toFirebaseAuthException() }
     )
 
   override suspend fun logout() =
-    runSuspendCatching(
+    withContextCatching(
       context = Dispatchers.IO,
-      block = { authSource.logout() },
+      action = { authSource.logout() },
       catch = { e -> e.toFirebaseAuthException() }
     )
 
   override suspend fun sendResetPassword(email: String) =
-    runSuspendCatching(
+    withContextCatching(
       context = Dispatchers.IO,
-      block = { authSource.sendResetPassword(email) },
+      action = { authSource.sendResetPassword(email) },
       catch = { e -> e.toFirebaseAuthException() }
     )
 
@@ -90,9 +90,9 @@ class UserRepositoryImpl @Inject constructor(
       .distinctUntilChanged()
 
   override suspend fun updateUserProfile(user: User) =
-    runSuspendCatching(
+    withContextCatching(
       context = Dispatchers.IO,
-      block = {
+      action = {
         firestoreSource.upsertUserProfile(
           userProfile = user.toUserProfileRequest()
         )

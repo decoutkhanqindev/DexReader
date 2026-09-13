@@ -21,7 +21,7 @@ phải xâu tham số qua `NavGraph` nữa.
   mục `distinctUntilChanged` bên dưới.) Impl tự tạo `CoroutineScope(SupervisorJob() +
   Dispatchers.IO)`; mỗi flow = helper `Key<T>.asStateFlow(default, readFailureFallback)` =
   `prefs.data.map { it[key] ?: default }.catch{}.stateIn(scope, Eagerly, null)`; save qua một
-  `edit { }` private (không tên) `launch` trên scope đó với `runSuspendCatching(block, catch =
+  `edit { }` private (không tên) `launch` trên scope đó với `withContextCatching(action, catch =
   { Timber.e })` — không bao giờ bị cancel khi rời màn. Đọc lỗi → emit `default` (bỏ
   `readFailureFallback` riêng; `isFirstOpen` lỗi đọc → `true`, chấp nhận vì Skip là 1 tap).
 - `NetworkManager`: `isAvailable: StateFlow<Boolean>` — nguyên chain `.catch { emit(true) }`
@@ -87,6 +87,21 @@ phải xâu tham số qua `NavGraph` nữa.
   `start_reading`/`continue_reading` giữ cho dialog History. Đã chụp trên emulator: "☰ Sắp xếp /
   ▼ Lọc", "📖 Bắt đầu / ♡ Yêu thích"; sau đó đổi icon sang **bên phải** text theo yêu cầu
   ("Sắp xếp ☰ / Lọc ▼", "Bắt đầu 📖 / Yêu thích ♡"), chụp lại xác nhận.
+- **`CoroutineHandler` rename theo chức năng + loại overload trùng**: `runSuspendResultCatching`
+  → `suspendRunCatching` (55 site; xoá overload có `context` — bản sao, 0 site dùng),
+  `runSuspendCatching` → `withContextCatching` (39 site; giữ `context` vì 27/28 site truyền
+  `Dispatchers.IO`). Param lambda thống nhất `action`. Quy ước: hậu tố `-Catching` = rethrow
+  cancellation + bắt phần còn lại; tiền tố nói cái gì chạy (`suspendRun` → `Result`,
+  `withContext` → `T`, `collect` → terminal Flow).
+- **Bỏ `Flow<Result<T>>` ở reactive use case** (6 use case `Observe*` giờ trả `Flow<T>` thô;
+  xoá `toFlowResult`). Lý do: lỗi Flow là terminal nên `Result` không mua được gì, mà VM vẫn phải
+  try/catch quanh `collect` → 2 đường lỗi trùng nhau. Thay bằng 2 helper trong
+  `CoroutineHandler`: `Flow<T>.collectCatching(action, catch)` (terminal, try/catch quanh
+  `collect`, rethrow `CancellationException`, bắt `Exception` — dùng ở VM, gọi named-arg `action`
+  trước `catch` sau, `catch@` khi cần return sớm) và `Flow<T>.recoverCatching { }` (trung
+  gian, `.catch` + rethrow cancellation — dùng trước `stateIn` ở 2 manager). 12 site trong 6 VM
+  chuyển đổi; guard `CancellationException` giờ chỉ ở 2 helper. 3 site trước không có try/catch
+  (`UserViewModel` ×2, `StatisticsViewModel`) nay bắt buộc qua `collectCatching`.
 - **`SplashScreen` tự đọc `isFirstOpen`** qua `LocalDataStoreManager` (bỏ param + 2
   `rememberUpdatedState`; `by` delegate trên `State` đọc live trong `LaunchedEffect` sau `delay`,
   không cần giữ latest). `NavGraph` chỉ còn collect `isDark`/`selectedLangCode`. Test: cài mới →

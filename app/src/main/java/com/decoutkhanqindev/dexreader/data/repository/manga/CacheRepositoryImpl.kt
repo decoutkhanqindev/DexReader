@@ -7,7 +7,7 @@ import com.decoutkhanqindev.dexreader.data.mapper.ExceptionMapper.toUnexpectedEx
 import com.decoutkhanqindev.dexreader.domain.entity.manga.ChapterPages
 import com.decoutkhanqindev.dexreader.domain.exception.BusinessException
 import com.decoutkhanqindev.dexreader.domain.repository.manga.CacheRepository
-import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.withContextCatching
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
@@ -15,9 +15,9 @@ class CacheRepositoryImpl @Inject constructor(
   private val cacheDao: ChapterCacheDao,
 ) : CacheRepository {
   override suspend fun addChapterCache(chapterPages: ChapterPages) =
-    runSuspendCatching(
+    withContextCatching(
       context = Dispatchers.IO,
-      block = {
+      action = {
         cacheDao.addChapterCache(
           chapterCacheEntity = chapterPages.toChapterCacheEntity()
         )
@@ -26,9 +26,9 @@ class CacheRepositoryImpl @Inject constructor(
     )
 
   override suspend fun getChapterCache(chapterId: String): ChapterPages =
-    runSuspendCatching(
+    withContextCatching(
       context = Dispatchers.IO,
-      block = {
+      action = {
         cacheDao.getChapterCache(chapterId)?.toChapterPages()
           ?: throw BusinessException.Resource.ChapterDataNotFound()
       },
@@ -36,16 +36,16 @@ class CacheRepositoryImpl @Inject constructor(
     )
 
   override suspend fun deleteChapterCache(chapterId: String) =
-    runSuspendCatching(
+    withContextCatching(
       context = Dispatchers.IO,
-      block = { cacheDao.deleteChapterCache(chapterId) },
+      action = { cacheDao.deleteChapterCache(chapterId) },
       catch = { it.toUnexpectedException() }
     )
 
   override suspend fun clearExpiredCache(olderThan: Long) =
-    runSuspendCatching(
+    withContextCatching(
       context = Dispatchers.IO,
-      block = { cacheDao.clearExpiredCache(olderThan) },
+      action = { cacheDao.clearExpiredCache(olderThan) },
       catch = { it.toUnexpectedException() }
     )
 }

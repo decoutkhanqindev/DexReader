@@ -5,6 +5,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.user.favorite.ObserveFavori
 import com.decoutkhanqindev.dexreader.presentation.mapper.FavoriteMangaMapper.toFavoriteMangaModel
 import com.decoutkhanqindev.dexreader.presentation.model.manga.FavoriteMangaModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.collectCatching
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +17,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.coroutines.cancellation.CancellationException
 
 @HiltViewModel
 class FavoritesViewModel @Inject constructor(
@@ -47,47 +47,37 @@ class FavoritesViewModel @Inject constructor(
             return@collectLatest
           }
 
-          try {
-            observeFavoritesUseCase(
-              userId = userId,
-              limit = MANGA_LIST_PER_PAGE_SIZE,
-              lastFavoriteMangaId = null
-            )
-              .collect { result ->
-                result
-                  .onSuccess { favoriteMangaList ->
-                    _uiState.value =
-                      BasePaginationUiState.Content(
-                        currentList = favoriteMangaList.map { it.toFavoriteMangaModel() }
-                          .toPersistentList(),
-                        currentPage = FIRST_PAGE,
-                        nextPageState =
-                          BaseNextPageState.fromPageSize(
-                            favoriteMangaList.size,
-                            MANGA_LIST_PER_PAGE_SIZE
-                          )
-                      )
-                  }
-                  .onFailure { throwable ->
-                    if (throwable is BusinessException.Resource.AccessDenied &&
-                      _userId.value == null
-                    ) {
-                      _uiState.value = BasePaginationUiState.FirstPageLoading
-                      return@onFailure
-                    }
-
-                    _uiState.value = BasePaginationUiState.FirstPageError()
-                    Timber.tag(this::class.java.simpleName)
-                      .d("observeFavoritesFirstPage have error: ${throwable.stackTraceToString()}")
-                  }
+          observeFavoritesUseCase(
+            userId = userId,
+            limit = MANGA_LIST_PER_PAGE_SIZE,
+            lastFavoriteMangaId = null
+          ).collectCatching(
+            action = { favoriteMangaList ->
+              _uiState.value =
+                BasePaginationUiState.Content(
+                  currentList = favoriteMangaList.map { it.toFavoriteMangaModel() }
+                    .toPersistentList(),
+                  currentPage = FIRST_PAGE,
+                  nextPageState =
+                    BaseNextPageState.fromPageSize(
+                      favoriteMangaList.size,
+                      MANGA_LIST_PER_PAGE_SIZE
+                    )
+                )
+            },
+            catch = catch@{ throwable ->
+              if (throwable is BusinessException.Resource.AccessDenied &&
+                _userId.value == null
+              ) {
+                _uiState.value = BasePaginationUiState.FirstPageLoading
+                return@catch
               }
-          } catch (c: CancellationException) {
-            throw c
-          } catch (e: Exception) {
-            _uiState.value = BasePaginationUiState.FirstPageError()
-            Timber.tag(this::class.java.simpleName)
-              .d("observeFavoritesFirstPage have error: ${e.stackTraceToString()}")
-          }
+
+              _uiState.value = BasePaginationUiState.FirstPageError()
+              Timber.tag(this::class.java.simpleName)
+                .d("observeFavoritesFirstPage have error: ${throwable.stackTraceToString()}")
+            },
+          )
         }
       }
   }
@@ -123,44 +113,34 @@ class FavoritesViewModel @Inject constructor(
             return@collectLatest
           }
 
-          try {
-            observeFavoritesUseCase(
-              userId = userId,
-              limit = MANGA_LIST_PER_PAGE_SIZE,
-              lastFavoriteMangaId = lastFavoriteMangaId
-            )
-              .collect { result ->
-                result
-                  .onSuccess { nextPageFavoriteMangaList ->
-                    val allFavoriteMangaList =
-                      (favoriteMangaList + nextPageFavoriteMangaList.map { it.toFavoriteMangaModel() }).toPersistentList()
-                    _uiState.value =
-                      currentUiState.copy(
-                        currentList = allFavoriteMangaList,
-                        currentPage = nextPage,
-                        nextPageState =
-                          BaseNextPageState.fromPageSize(
-                            resultSize = nextPageFavoriteMangaList.size,
-                            pageSize = MANGA_LIST_PER_PAGE_SIZE
-                          )
-                      )
-                  }
-                  .onFailure { throwable ->
-                    if (throwable is BusinessException.Resource.AccessDenied && _userId.value == null)
-                      return@onFailure
+          observeFavoritesUseCase(
+            userId = userId,
+            limit = MANGA_LIST_PER_PAGE_SIZE,
+            lastFavoriteMangaId = lastFavoriteMangaId
+          ).collectCatching(
+            action = { nextPageFavoriteMangaList ->
+              val allFavoriteMangaList =
+                (favoriteMangaList + nextPageFavoriteMangaList.map { it.toFavoriteMangaModel() }).toPersistentList()
+              _uiState.value =
+                currentUiState.copy(
+                  currentList = allFavoriteMangaList,
+                  currentPage = nextPage,
+                  nextPageState =
+                    BaseNextPageState.fromPageSize(
+                      resultSize = nextPageFavoriteMangaList.size,
+                      pageSize = MANGA_LIST_PER_PAGE_SIZE
+                    )
+                )
+            },
+            catch = catch@{ throwable ->
+              if (throwable is BusinessException.Resource.AccessDenied && _userId.value == null)
+                return@catch
 
-                    _uiState.value = currentUiState.copy(nextPageState = BaseNextPageState.ERROR)
-                    Timber.tag(this::class.java.simpleName)
-                      .d("observeFavoritesNextPageInternal have error: ${throwable.stackTraceToString()}")
-                  }
-              }
-          } catch (c: CancellationException) {
-            throw c
-          } catch (e: Exception) {
-            _uiState.value = currentUiState.copy(nextPageState = BaseNextPageState.ERROR)
-            Timber.tag(this::class.java.simpleName)
-              .d("observeFavoritesNextPageInternal setup error: ${e.stackTraceToString()}")
-          }
+              _uiState.value = currentUiState.copy(nextPageState = BaseNextPageState.ERROR)
+              Timber.tag(this::class.java.simpleName)
+                .d("observeFavoritesNextPageInternal have error: ${throwable.stackTraceToString()}")
+            },
+          )
         }
       }
   }

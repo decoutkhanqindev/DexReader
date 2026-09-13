@@ -8,7 +8,7 @@ import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaContentRati
 import com.decoutkhanqindev.dexreader.domain.entity.value.manga.MangaStatus
 import com.decoutkhanqindev.dexreader.domain.repository.category.CategoryRepository
 import com.decoutkhanqindev.dexreader.domain.repository.manga.MangaStatsRepository
-import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendResultCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.suspendRunCatching
 import javax.inject.Inject
 
 class GetMangaListUseCase @Inject constructor(
@@ -24,7 +24,7 @@ class GetMangaListUseCase @Inject constructor(
     statusFilter: List<MangaStatus> = listOf(MangaStatus.ON_GOING),
     contentRatingFilter: List<MangaContentRating> = listOf(MangaContentRating.SAFE),
     includeStats: Boolean = true,
-  ): Result<List<Manga>> = runSuspendResultCatching {
+  ): Result<List<Manga>> = suspendRunCatching {
     val list: List<Manga> = categoryRepository.getMangaList(
       categoryId = categoryId,
       limit = limit,

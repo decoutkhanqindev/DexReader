@@ -6,6 +6,7 @@ import com.decoutkhanqindev.dexreader.domain.usecase.user.history.RemoveFromHist
 import com.decoutkhanqindev.dexreader.presentation.mapper.ReadingHistoryMapper.toReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.collectCatching
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +19,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.coroutines.cancellation.CancellationException
 
 @HiltViewModel
 class HistoryViewModel
@@ -57,45 +57,35 @@ constructor(
             return@collectLatest
           }
 
-          try {
-            observeHistoryUseCase(
-              userId = userId,
-              limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
-            )
-              .collect { result ->
-                result
-                  .onSuccess { readingHistoryList ->
-                    _historyUiState.value =
-                      BasePaginationUiState.Content(
-                        currentList = readingHistoryList.map { it.toReadingHistoryModel() }
-                          .toPersistentList(),
-                        currentPage = FIRST_PAGE,
-                        nextPageState =
-                          BaseNextPageState.fromPageSize(
-                            resultSize = readingHistoryList.size,
-                            pageSize = READING_HISTORY_LIST_PER_PAGE_SIZE
-                          )
-                      )
-                  }
-                  .onFailure { throwable ->
-                    if (throwable is BusinessException.Resource.AccessDenied && _userId.value == null) {
-                      _historyUiState.value =
-                        BasePaginationUiState.FirstPageLoading
-                      return@onFailure
-                    }
-
-                    _historyUiState.value = BasePaginationUiState.FirstPageError()
-                    Timber.tag(this::class.java.simpleName)
-                      .d("observeHistoryFirstPage have error: ${throwable.stackTraceToString()}")
-                  }
+          observeHistoryUseCase(
+            userId = userId,
+            limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
+          ).collectCatching(
+            action = { readingHistoryList ->
+              _historyUiState.value =
+                BasePaginationUiState.Content(
+                  currentList = readingHistoryList.map { it.toReadingHistoryModel() }
+                    .toPersistentList(),
+                  currentPage = FIRST_PAGE,
+                  nextPageState =
+                    BaseNextPageState.fromPageSize(
+                      resultSize = readingHistoryList.size,
+                      pageSize = READING_HISTORY_LIST_PER_PAGE_SIZE
+                    )
+                )
+            },
+            catch = catch@{ throwable ->
+              if (throwable is BusinessException.Resource.AccessDenied && _userId.value == null) {
+                _historyUiState.value =
+                  BasePaginationUiState.FirstPageLoading
+                return@catch
               }
-          } catch (c: CancellationException) {
-            throw c
-          } catch (e: Exception) {
-            _historyUiState.value = BasePaginationUiState.FirstPageError()
-            Timber.tag(this::class.java.simpleName)
-              .d("observeHistoryFirstPage have error: ${e.stackTraceToString()}")
-          }
+
+              _historyUiState.value = BasePaginationUiState.FirstPageError()
+              Timber.tag(this::class.java.simpleName)
+                .d("observeHistoryFirstPage have error: ${throwable.stackTraceToString()}")
+            },
+          )
         }
       }
   }
@@ -131,50 +121,39 @@ constructor(
             return@collectLatest
           }
 
-          try {
-            observeHistoryUseCase(
-              userId = userId,
-              limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
-              lastReadingHistoryId = lastReadingHistoryId
-            )
-              .collect { result ->
-                result
-                  .onSuccess { readingHistoryList ->
-                    val allReadingHistoryList =
-                      (currentReadingHistoryList + readingHistoryList.map { it.toReadingHistoryModel() }).toPersistentList()
-                    _historyUiState.value =
-                      currentUiState.copy(
-                        currentList = allReadingHistoryList,
-                        currentPage = nextPage,
-                        nextPageState =
-                          BaseNextPageState.fromPageSize(
-                            readingHistoryList.size,
-                            READING_HISTORY_LIST_PER_PAGE_SIZE
-                          )
-                      )
-                  }
-                  .onFailure { throwable ->
-                    if (throwable is BusinessException.Resource.AccessDenied &&
-                      _userId.value == null
+          observeHistoryUseCase(
+            userId = userId,
+            limit = READING_HISTORY_LIST_PER_PAGE_SIZE,
+            lastReadingHistoryId = lastReadingHistoryId
+          ).collectCatching(
+            action = { readingHistoryList ->
+              val allReadingHistoryList =
+                (currentReadingHistoryList + readingHistoryList.map { it.toReadingHistoryModel() }).toPersistentList()
+              _historyUiState.value =
+                currentUiState.copy(
+                  currentList = allReadingHistoryList,
+                  currentPage = nextPage,
+                  nextPageState =
+                    BaseNextPageState.fromPageSize(
+                      readingHistoryList.size,
+                      READING_HISTORY_LIST_PER_PAGE_SIZE
                     )
-                      return@onFailure
+                )
+            },
+            catch = catch@{ throwable ->
+              if (throwable is BusinessException.Resource.AccessDenied &&
+                _userId.value == null
+              )
+                return@catch
 
-                    _historyUiState.value =
-                      currentUiState.copy(
-                        nextPageState = BaseNextPageState.ERROR
-                      )
-                    Timber.tag(this::class.java.simpleName)
-                      .d("observeHistoryNextPageInternal have error: ${throwable.stackTraceToString()}")
-                  }
-              }
-          } catch (c: CancellationException) {
-            throw c
-          } catch (e: Exception) {
-            _historyUiState.value =
-              currentUiState.copy(nextPageState = BaseNextPageState.ERROR)
-            Timber.tag(this::class.java.simpleName)
-              .d("observeHistoryNextPageInternal setup error: ${e.stackTraceToString()}")
-          }
+              _historyUiState.value =
+                currentUiState.copy(
+                  nextPageState = BaseNextPageState.ERROR
+                )
+              Timber.tag(this::class.java.simpleName)
+                .d("observeHistoryNextPageInternal have error: ${throwable.stackTraceToString()}")
+            },
+          )
         }
       }
   }

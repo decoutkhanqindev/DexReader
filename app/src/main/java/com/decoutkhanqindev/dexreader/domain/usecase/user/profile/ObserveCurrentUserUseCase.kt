@@ -2,12 +2,11 @@ package com.decoutkhanqindev.dexreader.domain.usecase.user.profile
 
 import com.decoutkhanqindev.dexreader.domain.entity.user.User
 import com.decoutkhanqindev.dexreader.domain.repository.user.UserRepository
-import com.decoutkhanqindev.dexreader.util.CoroutineHandler.toFlowResult
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ObserveCurrentUserUseCase @Inject constructor(
   private val repository: UserRepository,
 ) {
-  operator fun invoke(): Flow<Result<User?>> = repository.observeCurrentUser().toFlowResult()
+  operator fun invoke(): Flow<User?> = repository.observeCurrentUser()
 }

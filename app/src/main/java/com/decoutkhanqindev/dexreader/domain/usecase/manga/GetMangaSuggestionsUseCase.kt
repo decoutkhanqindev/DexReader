@@ -1,14 +1,14 @@
 package com.decoutkhanqindev.dexreader.domain.usecase.manga
 
 import com.decoutkhanqindev.dexreader.domain.repository.manga.MangaRepository
-import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendResultCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.suspendRunCatching
 import javax.inject.Inject
 
 class GetMangaSuggestionsUseCase @Inject constructor(
   private val repository: MangaRepository,
 ) {
   suspend operator fun invoke(query: String): Result<List<String>> =
-    runSuspendResultCatching {
+    suspendRunCatching {
       repository
         .searchManga(query = query, offset = 0, limit = SUGGESTION_LIMIT)
         .map { it.title }

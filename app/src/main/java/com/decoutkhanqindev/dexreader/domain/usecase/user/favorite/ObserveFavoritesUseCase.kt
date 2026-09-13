@@ -4,7 +4,6 @@ import com.decoutkhanqindev.dexreader.domain.entity.manga.FavoriteManga
 import com.decoutkhanqindev.dexreader.domain.entity.manga.MangaStats
 import com.decoutkhanqindev.dexreader.domain.repository.manga.MangaStatsRepository
 import com.decoutkhanqindev.dexreader.domain.repository.user.FavoritesRepository
-import com.decoutkhanqindev.dexreader.util.CoroutineHandler.toFlowResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -17,7 +16,7 @@ class ObserveFavoritesUseCase @Inject constructor(
     userId: String,
     limit: Int = 20,
     lastFavoriteMangaId: String? = null,
-  ): Flow<Result<List<FavoriteManga>>> =
+  ): Flow<List<FavoriteManga>> =
     favoritesRepository.observeFavorites(
       userId = userId,
       limit = limit,
@@ -26,5 +25,5 @@ class ObserveFavoritesUseCase @Inject constructor(
       val listIds: List<String> = list.map { it.id }
       val stats: List<MangaStats> = statsRepository.getMangaStats(listIds)
       FavoriteManga.mergeStats(list, stats)
-    }.toFlowResult()
+    }
 }

@@ -4,7 +4,7 @@ import com.decoutkhanqindev.dexreader.domain.entity.manga.Manga
 import com.decoutkhanqindev.dexreader.domain.entity.manga.MangaStats
 import com.decoutkhanqindev.dexreader.domain.repository.manga.MangaRepository
 import com.decoutkhanqindev.dexreader.domain.repository.manga.MangaStatsRepository
-import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendResultCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.suspendRunCatching
 import javax.inject.Inject
 
 class SearchMangaUseCase @Inject constructor(
@@ -16,7 +16,7 @@ class SearchMangaUseCase @Inject constructor(
     offset: Int = 0,
     limit: Int = 20,
   ): Result<List<Manga>> =
-    runSuspendResultCatching {
+    suspendRunCatching {
       val list: List<Manga> = mangaRepository.searchManga(
         query = query,
         offset = offset,

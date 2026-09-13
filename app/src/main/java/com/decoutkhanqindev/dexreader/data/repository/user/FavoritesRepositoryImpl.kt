@@ -7,7 +7,7 @@ import com.decoutkhanqindev.dexreader.data.mapper.FavoriteMangaMapper.toFavorite
 import com.decoutkhanqindev.dexreader.data.network.firebase.firestore.favorite.FirebaseFavoriteFirestoreSource
 import com.decoutkhanqindev.dexreader.domain.entity.manga.FavoriteManga
 import com.decoutkhanqindev.dexreader.domain.repository.user.FavoritesRepository
-import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.withContextCatching
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -39,9 +39,9 @@ class FavoritesRepositoryImpl @Inject constructor(
     userId: String,
     manga: FavoriteManga,
   ) =
-    runSuspendCatching(
+    withContextCatching(
       context = Dispatchers.IO,
-      block = {
+      action = {
         firestoreSource.addToFavorites(userId, manga.toFavoriteMangaRequest())
       },
       catch = { it.toFirebaseFirestoreException() }
@@ -51,9 +51,9 @@ class FavoritesRepositoryImpl @Inject constructor(
     userId: String,
     mangaId: String,
   ) =
-    runSuspendCatching(
+    withContextCatching(
       context = Dispatchers.IO,
-      block = { firestoreSource.removeFromFavorites(userId, mangaId) },
+      action = { firestoreSource.removeFromFavorites(userId, mangaId) },
       catch = { it.toFirebaseFirestoreException() }
     )
 

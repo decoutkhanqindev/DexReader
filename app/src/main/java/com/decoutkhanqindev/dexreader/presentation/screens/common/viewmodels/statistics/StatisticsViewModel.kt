@@ -7,6 +7,7 @@ import com.decoutkhanqindev.dexreader.presentation.mapper.StatisticsMapper.toMon
 import com.decoutkhanqindev.dexreader.presentation.mapper.StatisticsMapper.toWeeklyChartPoint
 import com.decoutkhanqindev.dexreader.presentation.mapper.StatisticsMapper.toYearlyChartPoint
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.BaseViewModel
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.collectCatching
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,14 +45,14 @@ class StatisticsViewModel @Inject constructor(
 
         _uiState.value = StatisticsUiState.Loading
 
-        observeStatisticsUseCase(userId).collect { result ->
-          result.onSuccess { statsList -> calculateStats(statsList) }
-          result.onFailure { throwable ->
+        observeStatisticsUseCase(userId).collectCatching(
+          action = { statsList -> calculateStats(statsList) },
+          catch = { throwable ->
             _uiState.value = StatisticsUiState.Error(throwable.toFeatureError())
             Timber.tag(this::class.java.simpleName)
               .e("observeStatistics have error: ${throwable.stackTraceToString()}")
-          }
-        }
+          },
+        )
       }
     }
   }

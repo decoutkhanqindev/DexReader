@@ -2,12 +2,12 @@ package com.decoutkhanqindev.dexreader.domain.usecase.manga.cache
 
 import com.decoutkhanqindev.dexreader.domain.entity.manga.ChapterPages
 import com.decoutkhanqindev.dexreader.domain.repository.manga.CacheRepository
-import com.decoutkhanqindev.dexreader.util.CoroutineHandler.runSuspendResultCatching
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.suspendRunCatching
 import javax.inject.Inject
 
 class GetChapterCacheUseCase @Inject constructor(
   private val repository: CacheRepository,
 ) {
   suspend operator fun invoke(chapterId: String): Result<ChapterPages> =
-    runSuspendResultCatching { repository.getChapterCache(chapterId) }
+    suspendRunCatching { repository.getChapterCache(chapterId) }
 }
