@@ -1,5 +1,6 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.settings
 
+import com.decoutkhanqindev.dexreader.domain.usecase.settings.ObserveNetworkAvailabilityUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.settings.ObserveThemeModeUseCase
 import com.decoutkhanqindev.dexreader.domain.usecase.settings.SaveThemeModeUseCase
 import com.decoutkhanqindev.dexreader.presentation.mapper.ThemeModeMapper.toThemeMode
@@ -18,12 +19,31 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
   private val observeThemeModeUseCase: ObserveThemeModeUseCase,
   private val saveThemeModeUseCase: SaveThemeModeUseCase,
+  private val observeNetworkAvailabilityUseCase: ObserveNetworkAvailabilityUseCase,
 ) : BaseViewModel() {
   private val _uiState = MutableStateFlow(SettingsUiState())
   val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
 
+  private val _isNetworkAvailable = MutableStateFlow(true)
+  val isNetworkAvailable: StateFlow<Boolean> = _isNetworkAvailable.asStateFlow()
+
   init {
     observeThemeOption()
+    observeNetworkAvailability()
+  }
+
+  private fun observeNetworkAvailability() {
+    vmLaunch {
+      observeNetworkAvailabilityUseCase().collect { result ->
+        result
+          .onSuccess { _isNetworkAvailable.value = it }
+          .onFailure { throwable ->
+            _isNetworkAvailable.value = true
+            Timber.tag(this::class.java.simpleName)
+              .e("observeNetworkAvailability have error: ${throwable.stackTraceToString()}")
+          }
+      }
+    }
   }
 
   private fun observeThemeOption() {

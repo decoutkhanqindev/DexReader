@@ -8,6 +8,7 @@
   <string name="statistics_menu_item">آمار مطالعه</string>
   <string name="profile_menu_item">پروفایل</string>
   <string name="settings_menu_item">تنظیمات</string>
+  <string name="open_settings">باز کردن تنظیمات</string>
   <string name="ok">تأیید</string>
   <string name="cancel">لغو</string>
   <string name="load_more">بارگذاری بیشتر</string>

@@ -7,6 +7,7 @@
   <string name="history_menu_item">تاریخ</string>
   <string name="profile_menu_item">پروفائل</string>
   <string name="settings_menu_item">ترتیبات</string>
+  <string name="open_settings">ترتیبات کھولیں</string>
   <string name="ok">ٹھیک ہے</string>
   <string name="cancel">منسوخ کریں</string>
   <string name="load_more">مزید لوڈ کریں</string>

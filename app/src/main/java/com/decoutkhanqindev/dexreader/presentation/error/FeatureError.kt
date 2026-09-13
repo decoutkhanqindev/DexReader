@@ -6,8 +6,6 @@ import com.decoutkhanqindev.dexreader.R
 
 @Immutable
 sealed class FeatureError(@param:StringRes val messageRes: Int) {
-  data object NetworkUnavailable : FeatureError(R.string.no_internet_connection)
-
   data object ServerUnavailable : FeatureError(R.string.error_server_unavailable)
 
   data object AccessDenied : FeatureError(R.string.error_access_denied)

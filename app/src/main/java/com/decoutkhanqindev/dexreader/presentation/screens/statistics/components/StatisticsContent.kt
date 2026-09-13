@@ -193,7 +193,7 @@ private fun StatisticsContentLoadingPreview() {
 private fun StatisticsContentErrorPreview() {
   DexReaderTheme {
     StatisticsContent(
-      uiState = StatisticsUiState.Error(FeatureError.NetworkUnavailable),
+      uiState = StatisticsUiState.Error(FeatureError.ServerUnavailable),
       modifier = Modifier.fillMaxSize(),
       onRetry = {},
       onRefresh = {}

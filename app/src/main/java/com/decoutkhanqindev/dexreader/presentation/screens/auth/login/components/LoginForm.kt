@@ -18,6 +18,7 @@ import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -84,6 +85,7 @@ fun LoginForm(
         PasswordInputField(
           value = password,
           error = passwordError,
+          imeAction = ImeAction.Done,
           modifier = Modifier.fillMaxWidth(),
           onValueChange = onPasswordChange,
         )

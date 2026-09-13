@@ -8,6 +8,7 @@
   <string name="statistics_menu_item">Mga Istatistika</string>
   <string name="profile_menu_item">Profile</string>
   <string name="settings_menu_item">Mga Setting</string>
+  <string name="open_settings">Buksan ang Mga Setting</string>
   <string name="language">Wika</string>
   <string name="done">Tapos</string>
   <string name="dark_mode">Dark mode</string>

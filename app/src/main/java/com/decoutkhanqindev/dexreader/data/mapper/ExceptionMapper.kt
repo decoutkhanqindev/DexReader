@@ -20,7 +20,7 @@ object ExceptionMapper {
         if (code() >= 500) throw InfrastructureException.ServerUnavailable(cause = this)
         else throw InfrastructureException.Unexpected(cause = this)
 
-      is IOException -> throw InfrastructureException.NetworkUnavailable(cause = this)
+      is IOException -> throw InfrastructureException.ServerUnavailable(cause = this)
       else -> throw InfrastructureException.Unexpected(cause = this)
     }
 
@@ -51,7 +51,7 @@ object ExceptionMapper {
       is FirebaseFirestoreException
         if (code == FirebaseFirestoreException.Code.UNAVAILABLE ||
             code == FirebaseFirestoreException.Code.DEADLINE_EXCEEDED) ->
-        throw InfrastructureException.NetworkUnavailable(cause = this)
+        throw InfrastructureException.ServerUnavailable(cause = this)
 
       is FirebaseFirestoreException -> throw InfrastructureException.Unexpected(cause = this)
       else -> throw this

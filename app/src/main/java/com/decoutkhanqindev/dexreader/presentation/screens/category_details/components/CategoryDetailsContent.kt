@@ -256,7 +256,7 @@ private fun CategoryDetailsContentFirstPageLoadingPreview() {
 private fun CategoryDetailsContentFirstPageErrorPreview() {
   DexReaderTheme {
     CategoryDetailsContent(
-      detailsUiState = BasePaginationUiState.FirstPageError(FeatureError.NetworkUnavailable),
+      detailsUiState = BasePaginationUiState.FirstPageError(FeatureError.ServerUnavailable),
       criteriaUiState = previewCriteriaState,
       categoryDescription = "Titles that focus on physical conflict, such as fighting, war, or crime.",
       onSortApplyClick = { _, _ -> },

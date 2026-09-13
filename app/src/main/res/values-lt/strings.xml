@@ -8,6 +8,7 @@
   <string name="statistics_menu_item">Statistika</string>
   <string name="profile_menu_item">Profilis</string>
   <string name="settings_menu_item">Nustatymai</string>
+  <string name="open_settings">Atidaryti nustatymus</string>
   <string name="language">Kalba</string>
   <string name="done">Atlikta</string>
   <string name="dark_mode">Tamsus režimas</string>

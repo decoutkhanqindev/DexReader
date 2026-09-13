@@ -7,6 +7,7 @@
   <string name="history_menu_item">ইতিহাস</string>
   <string name="profile_menu_item">প্রোফাইল</string>
   <string name="settings_menu_item">সেটিংস</string>
+  <string name="open_settings">সেটিংস খুলুন</string>
   <string name="ok">ঠিক আছে</string>
   <string name="cancel">বাতিল করুন</string>
   <string name="load_more">আরও লোড করুন</string>

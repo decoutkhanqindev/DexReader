@@ -8,6 +8,7 @@
   <string name="statistics_menu_item">Статистика</string>
   <string name="profile_menu_item">Профиль</string>
   <string name="settings_menu_item">Параметрлер</string>
+  <string name="open_settings">Параметрлерді ашу</string>
   <string name="language">Тіл</string>
   <string name="done">Дайын</string>
   <string name="dark_mode">Қараңғы режим</string>

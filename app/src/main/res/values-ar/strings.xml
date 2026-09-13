@@ -7,6 +7,7 @@
   <string name="history_menu_item">السجل</string>
   <string name="profile_menu_item">الملف الشخصي</string>
   <string name="settings_menu_item">الإعدادات</string>
+  <string name="open_settings">فتح الإعدادات</string>
   <string name="ok">موافق</string>
   <string name="cancel">إلغاء</string>
   <string name="load_more">تحميل المزيد</string>

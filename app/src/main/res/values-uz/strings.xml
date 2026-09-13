@@ -7,6 +7,7 @@
   <string name="history_menu_item">Tarix</string>
   <string name="profile_menu_item">Profil</string>
   <string name="settings_menu_item">Sozlamalar</string>
+  <string name="open_settings">Sozlamalarni ochish</string>
   <string name="ok">OK</string>
   <string name="cancel">Bekor qilish</string>
   <string name="load_more">Yana yuklash</string>

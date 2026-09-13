@@ -7,6 +7,7 @@
   <string name="history_menu_item">Historia</string>
   <string name="profile_menu_item">Profil</string>
   <string name="settings_menu_item">Ustawienia</string>
+  <string name="open_settings">Otwórz ustawienia</string>
   <string name="ok">OK</string>
   <string name="cancel">Anuluj</string>
   <string name="load_more">Wczytaj więcej</string>

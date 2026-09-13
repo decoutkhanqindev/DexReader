@@ -16,11 +16,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.components.AuthContent
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.register.RegisterUiState
-import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
-import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun RegisterContent(
@@ -48,13 +46,7 @@ fun RegisterContent(
 
   Box(modifier = modifier) {
     AuthContent(
-      modifier = Modifier
-        .fillMaxSize()
-        .then(
-          if (uiState.isLoading) {
-            Modifier.blurBackground(alphas = persistentListOf(0.7f, 0.7f))
-          } else Modifier
-        )
+      modifier = Modifier.fillMaxSize()
     ) {
       RegisterForm(
         email = uiState.email,
@@ -76,7 +68,10 @@ fun RegisterContent(
     }
 
     when {
-      uiState.isLoading -> LoadingScreen(modifier = Modifier.fillMaxSize())
+      uiState.isLoading -> LoadingScreen(
+        modifier = Modifier.fillMaxSize(),
+        isScrimEnabled = true,
+      )
 
       uiState.isError -> {
         if (isShowErrorDialog) {

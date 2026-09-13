@@ -4,6 +4,42 @@ Dated log of notable multi-file / cross-cutting work sessions. Newest entry firs
 
 ---
 
+## 2026-09-13 — Scrim loading đúng z-order, IME Done, "no internet" thành dialog quan sát kết nối
+
+**1. Scrim khi loading không hiện — lỗi thứ tự vẽ, không phải thiếu gọi.** `blurBackground` là
+`Modifier.background(brush)`, mà `background` vẽ *phía sau* node nó gắn vào. Gắn lên
+`AuthContent`/`PullToRefreshBox`/list rồi để `LoadingScreen` trần làm sibling kế tiếp ⇒ scrim nằm
+dưới form, bị form che kín. Chuyển scrim thành `LoadingScreen(isScrimEnabled: Boolean = false)`
+gắn lên root `Box` của chính nó: thứ tự vẽ giờ là form → scrim → icon + bar. 5 call site đổi
+(Login, Register, ForgotPassword, History remove, Profile update/logout); alpha 0.7 cố định
+trong `LoadingScreen` vì mọi nơi đều dùng cùng giá trị.
+
+**2. IME Done cho auth form.** 3 input field nhận `imeAction: ImeAction = ImeAction.Next`; field
+cuối mỗi form truyền `Done` (Login → password, Register → name, ForgotPassword → email). Không
+cần `FocusManager`/`KeyboardActions`: runner mặc định của Compose đã tự chuyển focus với `Next`
+và ẩn bàn phím với `Done`.
+
+**3. Bỏ hoàn toàn `NetworkUnavailable`, chuyển sang quan sát kết nối.** Xoá
+`InfrastructureException.NetworkUnavailable`, `FeatureError.NetworkUnavailable`,
+`UserError.NetworkUnavailable` và 2 nhánh mapper; `IOException` + Firestore
+`UNAVAILABLE`/`DEADLINE_EXCEEDED` giờ map sang `ServerUnavailable`; 11 preview đổi theo.
+- Thêm `SettingsRepository.observeIsNetworkAvailable(): Flow<Boolean>` +
+  `ObserveNetworkAvailabilityUseCase`. Impl là `callbackFlow` quanh
+  `ConnectivityManager.registerDefaultNetworkCallback`, "có mạng" =
+  `NET_CAPABILITY_INTERNET && NET_CAPABILITY_VALIDATED`. **Không** emit từ `onAvailable` (bắn
+  trước khi biết capabilities); `.debounce { if (it) 0L else 500L }` để hand-off Wi-Fi→4G không
+  nháy dialog. Thêm `ACCESS_NETWORK_STATE` vào manifest.
+- `SettingsViewModel.isNetworkAvailable: StateFlow<Boolean>` (seed `true`), `NavGraph` render
+  `if (!isNetworkAvailable) NoInternetDialog()` sau `NavHost`, trong `DexReaderTheme`.
+- `NoInternetDialog` (`common/dialog/`): **không cancel được** (`isEnableDismiss = false`, outside
+  tap + Back bị nuốt bởi `onDismissOuterClick = {}` mặc định), **không retry** — nút duy nhất mở
+  `Settings.Panel.ACTION_INTERNET_CONNECTIVITY` (API 29+) / `ACTION_WIRELESS_SETTINGS`, nhãn
+  là string mới `open_settings` ("Open Settings"), thêm vào cả 64 file locale ngay sau
+  `settings_menu_item`, dịch theo đúng từ "Settings" mỗi locale đang dùng. Tự biến mất khi có
+  mạng lại.
+
+---
+
 ## 2026-09-12 — Xoá `animateItemOnAppear()`: entrance animation per-item làm list giật
 
 Modifier tự viết chạy hiệu ứng vào-màn cho từng item (`MutableTransitionState` +

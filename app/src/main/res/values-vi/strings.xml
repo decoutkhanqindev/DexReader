@@ -12,6 +12,7 @@
   <string name="profile_menu_item">Hồ sơ</string>
   <string name="settings_menu_item">Cài đặt</string>
 
+  <string name="open_settings">Mở Cài đặt</string>
   <!-- Language / Settings Screen -->
   <string name="language">Ngôn ngữ</string>
   <string name="done">Xong</string>

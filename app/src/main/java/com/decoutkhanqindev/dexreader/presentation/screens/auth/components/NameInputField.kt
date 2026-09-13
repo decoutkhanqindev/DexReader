@@ -26,11 +26,12 @@ import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
 fun NameInputField(
   value: String,
   error: UserError? = null,
+  imeAction: ImeAction = ImeAction.Next,
   modifier: Modifier = Modifier,
   onValueChange: (String) -> Unit,
 ) {
-  val keyboardOptions = remember {
-    KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next)
+  val keyboardOptions = remember(imeAction) {
+    KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = imeAction)
   }
 
   OutlinedTextField(

@@ -8,6 +8,7 @@
   <string name="statistics_menu_item">Statistica</string>
   <string name="profile_menu_item">Profilus</string>
   <string name="settings_menu_item">Configuratio</string>
+  <string name="open_settings">Aperire configurationem</string>
   <string name="language">Lingua</string>
   <string name="done">Factum</string>
   <string name="dark_mode">Modus obscurus</string>

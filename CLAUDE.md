@@ -133,7 +133,7 @@ DomainException
 │                         ConfirmPassword.{Empty|Mismatch}, Name.Empty
 ├── BusinessException  — Auth.{InvalidCredentials|UserNotFound|UserAlreadyExists|RegistrationFailed}
 │                         Resource.{MangaNotFound|ChapterNotFound|ChapterDataNotFound|AccessDenied}
-└── InfrastructureException — NetworkUnavailable (IOException), ServerUnavailable (HttpException), Unexpected
+└── InfrastructureException — ServerUnavailable (HttpException 5xx, IOException, Firestore UNAVAILABLE/DEADLINE_EXCEEDED), Unexpected
 ```
 
 ### Use Case Pattern
@@ -188,6 +188,42 @@ collection shape is the exception, not the string-literal discipline.)
 
 **Cursor pagination**: all paginated Firestore queries use `startAfter(lastDocument).limit(n)` —
 `null` lastItemId = first page.
+
+**There is no `NetworkUnavailable` exception, error, or mapper branch any more — "no internet" is
+observed, never inferred from a failed response.** `InfrastructureException.NetworkUnavailable`,
+`FeatureError.NetworkUnavailable` and `UserError.NetworkUnavailable` were all deleted; an
+`IOException` from Retrofit and a Firestore `UNAVAILABLE`/`DEADLINE_EXCEEDED` now map to
+`ServerUnavailable` ("Server is not responding" — accurate for a transport failure *while a
+network exists*). Connectivity itself comes from
+`SettingsRepository.observeIsNetworkAvailable(): Flow<Boolean>` (same repository as the theme /
+language / onboarding flags — deliberate, so no DI change; the impl already injects
+`Application`). The impl is a `callbackFlow` around
+`ConnectivityManager.registerDefaultNetworkCallback`, emitting from `onCapabilitiesChanged` and
+`onLost` plus one initial read, where "available" means
+`NET_CAPABILITY_INTERNET && NET_CAPABILITY_VALIDATED` — `VALIDATED` is the OS's own
+captive-portal/reachability check, so a Wi-Fi with no upstream reads as offline, which is what the
+user experiences. Three details that are load-bearing: (1) it does **not** emit from
+`onAvailable` — that fires before capabilities are known and would produce a spurious `true`;
+`onCapabilitiesChanged` always follows it. (2) `.debounce { if (it) 0L else 500L }` before
+`distinctUntilChanged()` — `true` is instant, `false` has to survive 500ms, so a Wi-Fi→cellular
+hand-off (`onLost` on the old default, `onCapabilitiesChanged` on the new one a few hundred ms
+later) never flashes the dialog. `debounce` is `@FlowPreview`, hence the `@OptIn`. (3)
+`ACCESS_NETWORK_STATE` is declared in the manifest — without it the callback registration throws
+`SecurityException`. The consumer is `SettingsViewModel.isNetworkAvailable: StateFlow<Boolean>`
+(a separate flow, not a `SettingsUiState` field, since `NavGraph` is its only reader), seeded
+`true` so nothing flashes before the first real emission; `NavGraph` renders
+`if (!isNetworkAvailable) NoInternetDialog()` after the `NavHost`, inside `DexReaderTheme`, so it
+sits over every destination. `NoInternetDialog` (`common/dialog/`) is **non-cancellable by
+design** — `isEnableDismiss = false` and the `AlertDialog` wrapper's default
+`onDismissOuterClick = {}` swallows both outside-tap and Back — and has **no retry**: its single
+button opens the system connectivity UI (`Settings.Panel.ACTION_INTERNET_CONNECTIVITY` on API
+29+ = Android 10, the slim in-app panel; `Settings.ACTION_WIRELESS_SETTINGS` below) labelled
+`R.string.open_settings` — a new string added to all 64 locale files in the same session,
+inserted right after `settings_menu_item` and phrased as "Open + <that locale's existing
+Settings term>" so the two stay consistent per language. It disappears on its own
+the moment the flow flips back to `true`. Consequence to keep in mind: screens no longer get a
+distinguishable "you're offline" error — they get `ServerUnavailable`/`Generic` like any other
+failure, and the dialog is the offline signal.
 
 **Enum wiring**: domain enums → `*Value` enums via `valueOf(name)` — names are identical across
 layers. `ApiParamMapper` owns ISO codes/API strings; never put them in domain enums.
@@ -551,7 +587,8 @@ every screen. `viewmodels/settings/SettingsViewModel` + `SettingsUiState` (moved
 and
 that same instance is passed into `ProfileScreen(settingsViewModel = ...)` — both consumers share
 one
-instance instead of each calling its own `hiltViewModel()` (the original bug: `MainActivity` and the
+instance instead of each calling its own `hiltViewModel()`; it also exposes
+`isNetworkAvailable: StateFlow<Boolean>` for `NavGraph`'s `NoInternetDialog` (see Data Layer) (the original bug: `MainActivity` and the
 old `SettingsScreen` each created an independent instance, so the two could desync). **There is no
 Settings screen any more** — it was deleted and its only content (the theme picker) became
 `ProfileSettingsSection` inside the Profile hub, so `NavRoute.Settings` and `MenuValue.SETTINGS` are
@@ -705,7 +742,7 @@ invalidation) instead — `stringResource` reads `LocalResources`, and the Activ
 intact for Hilt.
 
 **63 `values-XX/` locales ship a full UI translation** (plus English `values/` = 64 total, matching
-the 64-language picker exactly — **no fallback locales left**). Each carries all 148 translatable
+the 64-language picker exactly — **no fallback locales left**). Each carries all 149 translatable
 strings (the two `translatable="false"` entries, `app_name` and `privacy_policy_url`, are correctly
 absent everywhere). The **last 19 added** — `af`, `be`, `cv`, `eo`, `es-la` (folder `values-es-rLA`,
 since `Locale.forLanguageTag("es-la")` → `es-LA`), `et`, `eu`, `ga`, `jv`, `ka`, `kk`, `la`, `lt`,
@@ -1128,6 +1165,31 @@ established shape as `observeHistoryJob`/`cancelObserveHistoryJob()`.
   in — the form region below keeps a plain `colorScheme.surface`, no gradient). Keep the gradient a
   per-screen background choice, not baked into `AnimatedLogoAndSlogan` itself, since each host may
   need a different glow extent.
+- **A modal loading overlay dims via `LoadingScreen(isScrimEnabled = true)`, never via a
+  `blurBackground` on the content underneath.** `blurBackground` is `Modifier.background(brush)`,
+  and `background` always paints *behind* the node it is attached to — so the old shape
+  (`AuthContent(modifier = if (isLoading) Modifier.blurBackground(…) else Modifier)` with a bare
+  `LoadingScreen` as the next sibling) painted the scrim under the form, where the form's own
+  surfaces covered it completely: "the blur never shows" was a z-order bug, not a missing call.
+  `LoadingScreen` now takes `isScrimEnabled: Boolean = false` and applies the
+  `blurBackground(alphas = persistentListOf(0.7f, 0.7f))` to its **own root `Box`**, so the paint
+  order is form → scrim → icon + bar — the icon sits *on* the dimmed form, as intended. Login /
+  Register / ForgotPassword / History (remove-from-history) / Profile (update/logout) all pass
+  `isScrimEnabled = true`; plain full-screen loads (Home, Categories, …) keep the default. The
+  0.7 alpha is fixed inside `LoadingScreen` on purpose: every site used the same value, and a
+  Boolean keeps call sites uniform. Note the overlay still does not swallow touches — the form
+  underneath stays tappable during a load; add a `clickable(indication = null) {}` on the root
+  only if that turns out to matter.
+- **Auth forms: the last field carries `ImeAction.Done`, the rest `Next`, and there are no
+  `KeyboardActions`.** `EmailInputField` / `NameInputField` / `PasswordInputField` take
+  `imeAction: ImeAction = ImeAction.Next` (the `KeyboardOptions` is `remember(imeAction)`), and
+  each form's final field passes `Done` — `PasswordInputField` in `LoginForm`, `NameInputField` in
+  `RegisterForm`, `EmailInputField` in `ForgotPasswordForm`. No `FocusManager` plumbing is needed:
+  Compose's default keyboard-action runner already moves focus forward on `Next` and hides the
+  keyboard on `Done` when `keyboardActions` is left at `KeyboardActions.Default`. `Done` hides the
+  keyboard only; it does not submit — submitting stays on the button. `ProfileNameEdit` and
+  `SearchBar` predate this and wire their own `KeyboardActions` (`Done` → `clearFocus`, `Search` →
+  submit) because they want more than the default.
 - `ReadingProgressBar` (`presentation/screens/common/indicators/`) — shared page-count + percent +
   animated `LinearProgressIndicator` for reading progress, used by `MangaChapterItem` (manga details
   chapter list), `ReadingHistoryInfo` (history list), and `NavigateChapterBottomBar` (Reader's

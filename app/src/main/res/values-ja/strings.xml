@@ -7,6 +7,7 @@
   <string name="history_menu_item">履歴</string>
   <string name="profile_menu_item">プロフィール</string>
   <string name="settings_menu_item">設定</string>
+  <string name="open_settings">設定を開く</string>
   <string name="ok">OK</string>
   <string name="cancel">キャンセル</string>
   <string name="load_more">もっと読み込む</string>

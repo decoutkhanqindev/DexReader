@@ -8,6 +8,7 @@
   <string name="statistics_menu_item">Statistika</string>
   <string name="profile_menu_item">Profiil</string>
   <string name="settings_menu_item">Seaded</string>
+  <string name="open_settings">Ava seaded</string>
   <string name="language">Keel</string>
   <string name="done">Valmis</string>
   <string name="dark_mode">Tume režiim</string>

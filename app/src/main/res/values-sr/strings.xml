@@ -8,6 +8,7 @@
   <string name="statistics_menu_item">Statistika</string>
   <string name="profile_menu_item">Profil</string>
   <string name="settings_menu_item">Podešavanja</string>
+  <string name="open_settings">Otvori podešavanja</string>
   <string name="language">Jezik</string>
   <string name="done">Gotovo</string>
   <string name="dark_mode">Tamni režim</string>

@@ -7,6 +7,7 @@
   <string name="history_menu_item">Kasaysayan</string>
   <string name="profile_menu_item">Profile</string>
   <string name="settings_menu_item">Mga Setting</string>
+  <string name="open_settings">Buksan ang Mga Setting</string>
   <string name="ok">OK</string>
   <string name="cancel">Kanselahin</string>
   <string name="load_more">Mag-load Pa</string>

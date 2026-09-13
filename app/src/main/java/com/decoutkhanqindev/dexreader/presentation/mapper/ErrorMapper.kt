@@ -9,7 +9,6 @@ import com.decoutkhanqindev.dexreader.presentation.error.UserError
 object ErrorMapper {
   fun Throwable.toFeatureError() =
     when (this) {
-      is InfrastructureException.NetworkUnavailable -> FeatureError.NetworkUnavailable
       is InfrastructureException.ServerUnavailable -> FeatureError.ServerUnavailable
       is BusinessException.Resource.AccessDenied -> FeatureError.AccessDenied
       is BusinessException.Resource.MangaNotFound -> FeatureError.MangaNotFound
@@ -31,7 +30,6 @@ object ErrorMapper {
       is BusinessException.Auth.UserAlreadyExists -> UserError.Email.AlreadyInUse
       is BusinessException.Auth.InvalidCredentials -> UserError.Password.Incorrect
       is BusinessException.Auth.RegistrationFailed -> UserError.RegistrationFailed
-      is InfrastructureException.NetworkUnavailable -> UserError.NetworkUnavailable
       else -> UserError.Unexpected
     }
 }

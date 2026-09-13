@@ -8,6 +8,7 @@
   <string name="statistics_menu_item">Estadísticas</string>
   <string name="profile_menu_item">Perfil</string>
   <string name="settings_menu_item">Configuración</string>
+  <string name="open_settings">Abrir configuración</string>
   <string name="language">Idioma</string>
   <string name="done">Listo</string>
   <string name="dark_mode">Modo oscuro</string>

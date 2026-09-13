@@ -376,7 +376,7 @@ private fun MangaDetailsContentLoadingPreview() {
 private fun MangaDetailsContentErrorPreview() {
   DexReaderTheme {
     MangaDetailsContent(
-      mangaDetailsUiState = MangaDetailsUiState.Error(FeatureError.NetworkUnavailable),
+      mangaDetailsUiState = MangaDetailsUiState.Error(FeatureError.ServerUnavailable),
       mangaChaptersUiState = BasePaginationUiState.FirstPageLoading,
       isFavorite = false,
       chapterLanguage = LanguageValue.ENGLISH,

@@ -8,6 +8,7 @@
   <string name="statistics_menu_item">統計</string>
   <string name="profile_menu_item">個人檔案</string>
   <string name="settings_menu_item">設定</string>
+  <string name="open_settings">開啟設定</string>
   <string name="language">語言</string>
   <string name="done">完成</string>
   <string name="dark_mode">深色模式</string>

@@ -8,6 +8,7 @@
   <string name="statistics_menu_item">Statistieke</string>
   <string name="profile_menu_item">Profiel</string>
   <string name="settings_menu_item">Instellings</string>
+  <string name="open_settings">Maak instellings oop</string>
   <string name="language">Taal</string>
   <string name="done">Klaar</string>
   <string name="dark_mode">Donker modus</string>

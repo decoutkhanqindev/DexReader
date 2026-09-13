@@ -8,6 +8,7 @@
   <string name="statistics_menu_item">Statistika</string>
   <string name="profile_menu_item">Profils</string>
   <string name="settings_menu_item">Iestatījumi</string>
+  <string name="open_settings">Atvērt iestatījumus</string>
   <string name="language">Valoda</string>
   <string name="done">Gatavs</string>
   <string name="dark_mode">Tumšais režīms</string>

@@ -7,6 +7,7 @@
   <string name="history_menu_item">Historia</string>
   <string name="profile_menu_item">Profiili</string>
   <string name="settings_menu_item">Asetukset</string>
+  <string name="open_settings">Avaa asetukset</string>
   <string name="ok">OK</string>
   <string name="cancel">Peruuta</string>
   <string name="load_more">Lataa lisää</string>

@@ -111,7 +111,7 @@ private fun ReaderContentLoadingPreview() {
 private fun ReaderContentErrorPreview() {
   DexReaderTheme {
     ReaderContent(
-      chapterPageUiState = ChapterPagesUiState.Error(FeatureError.NetworkUnavailable),
+      chapterPageUiState = ChapterPagesUiState.Error(FeatureError.ServerUnavailable),
       resetProgressUiState = ResetProgressUiState(isSuccess = false, isError = false),
       modifier = Modifier.fillMaxSize(),
       onUpdateChapterPage = {},

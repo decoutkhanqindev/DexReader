@@ -17,12 +17,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decoutkhanqindev.dexreader.R
+import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.theme.DexReaderTheme
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun LoadingScreen(modifier: Modifier = Modifier) {
+fun LoadingScreen(
+  modifier: Modifier = Modifier,
+  isScrimEnabled: Boolean = false,
+) {
   Box(
-    modifier = modifier,
+    modifier = modifier.then(
+      if (isScrimEnabled) Modifier.blurBackground(alphas = persistentListOf(0.7f, 0.7f))
+      else Modifier
+    ),
     contentAlignment = Alignment.Center
   ) {
     Column(

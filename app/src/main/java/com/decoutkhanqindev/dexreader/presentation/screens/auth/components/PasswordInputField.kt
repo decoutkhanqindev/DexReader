@@ -35,11 +35,12 @@ fun PasswordInputField(
   value: String,
   isConfirmed: Boolean = false,
   error: UserError? = null,
+  imeAction: ImeAction = ImeAction.Next,
   modifier: Modifier = Modifier,
   onValueChange: (String) -> Unit,
 ) {
-  val keyboardOptions = remember {
-    KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next)
+  val keyboardOptions = remember(imeAction) {
+    KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = imeAction)
   }
   val passwordTransformation = remember { PasswordVisualTransformation() }
   var isShowPassword by remember { mutableStateOf(false) }

@@ -8,6 +8,7 @@
   <string name="statistics_menu_item">სტატისტიკა</string>
   <string name="profile_menu_item">პროფილი</string>
   <string name="settings_menu_item">პარამეტრები</string>
+  <string name="open_settings">პარამეტრების გახსნა</string>
   <string name="language">ენა</string>
   <string name="done">მზადაა</string>
   <string name="dark_mode">მუქი რეჟიმი</string>

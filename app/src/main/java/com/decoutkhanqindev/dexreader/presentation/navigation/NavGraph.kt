@@ -20,6 +20,7 @@ import com.decoutkhanqindev.dexreader.presentation.screens.auth.forgot_password.
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.login.LoginScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.register.RegisterScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.category_details.CategoryDetailScreen
+import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.NoInternetDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.UserViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.language.LanguageViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.manga_section.MangaSectionViewModel
@@ -54,6 +55,7 @@ fun NavGraph() {
 
   val settingsViewModel: SettingsViewModel = hiltViewModel()
   val settingsUiState by settingsViewModel.uiState.collectAsStateWithLifecycle()
+  val isNetworkAvailable by settingsViewModel.isNetworkAvailable.collectAsStateWithLifecycle()
 
   val onboardingViewModel: OnboardingViewModel = hiltViewModel()
   val onboardingUiState by onboardingViewModel.uiState.collectAsStateWithLifecycle()
@@ -214,6 +216,8 @@ fun NavGraph() {
           )
         }
       }
+
+      if (!isNetworkAvailable) NoInternetDialog()
     }
   }
 }

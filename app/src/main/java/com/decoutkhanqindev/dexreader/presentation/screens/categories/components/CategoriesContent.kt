@@ -161,7 +161,7 @@ private fun CategoriesContentLoadingPreview() {
 private fun CategoriesContentErrorPreview() {
   DexReaderTheme {
     CategoriesContent(
-      categoryListUiState = CategoryListUiState.Error(FeatureError.NetworkUnavailable),
+      categoryListUiState = CategoryListUiState.Error(FeatureError.ServerUnavailable),
       categoryCoverUiState = persistentMapOf(),
       modifier = Modifier.fillMaxSize(),
       onCategoryClick = { _, _, _ -> },

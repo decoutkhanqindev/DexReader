@@ -8,6 +8,7 @@
   <string name="statistics_menu_item">Estatistikak</string>
   <string name="profile_menu_item">Profila</string>
   <string name="settings_menu_item">Ezarpenak</string>
+  <string name="open_settings">Ireki ezarpenak</string>
   <string name="language">Hizkuntza</string>
   <string name="done">Eginda</string>
   <string name="dark_mode">Modu iluna</string>

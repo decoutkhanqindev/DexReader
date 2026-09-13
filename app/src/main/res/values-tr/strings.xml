@@ -7,6 +7,7 @@
   <string name="history_menu_item">Geçmiş</string>
   <string name="profile_menu_item">Profil</string>
   <string name="settings_menu_item">Ayarlar</string>
+  <string name="open_settings">Ayarları aç</string>
   <string name="ok">Tamam</string>
   <string name="cancel">İptal</string>
   <string name="load_more">Daha Fazla Yükle</string>

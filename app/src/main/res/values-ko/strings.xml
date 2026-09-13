@@ -7,6 +7,7 @@
   <string name="history_menu_item">기록</string>
   <string name="profile_menu_item">프로필</string>
   <string name="settings_menu_item">설정</string>
+  <string name="open_settings">설정 열기</string>
   <string name="ok">확인</string>
   <string name="cancel">취소</string>
   <string name="load_more">더 불러오기</string>

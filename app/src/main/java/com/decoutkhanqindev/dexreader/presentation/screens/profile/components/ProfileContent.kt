@@ -35,7 +35,6 @@ import com.decoutkhanqindev.dexreader.presentation.model.user.UserModel
 import com.decoutkhanqindev.dexreader.presentation.model.value.manga.MangaStatusValue
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
-import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.statistics.StatisticsUiState
@@ -105,9 +104,7 @@ fun ProfileContent(
     state = pullToRefreshState,
     isRefreshing = false,
     onRefresh = onRefresh,
-    modifier = if (profileUiState.isLoading) {
-      modifier.blurBackground(alphas = persistentListOf(0.7f, 0.7f))
-    } else modifier,
+    modifier = modifier,
   ) {
     Column(
       modifier = Modifier
@@ -172,7 +169,10 @@ fun ProfileContent(
   }
 
   when {
-    profileUiState.isLoading -> LoadingScreen(modifier = Modifier.fillMaxSize())
+    profileUiState.isLoading -> LoadingScreen(
+      modifier = Modifier.fillMaxSize(),
+      isScrimEnabled = true,
+    )
 
     profileUiState.isUpdateUserError -> {
       if (isShowUpdateUserErrorDialog) {

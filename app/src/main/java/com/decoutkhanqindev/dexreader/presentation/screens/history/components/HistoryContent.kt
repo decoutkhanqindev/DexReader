@@ -20,7 +20,6 @@ import com.decoutkhanqindev.dexreader.presentation.error.FeatureError
 import com.decoutkhanqindev.dexreader.presentation.model.user.ReadingHistoryModel
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BaseNextPageState
 import com.decoutkhanqindev.dexreader.presentation.screens.common.base.state.BasePaginationUiState
-import com.decoutkhanqindev.dexreader.presentation.screens.common.blurBackground
 import com.decoutkhanqindev.dexreader.presentation.screens.common.dialog.AlertDialog
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.IdleScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.common.states.LoadingScreen
@@ -117,17 +116,15 @@ fun HistoryContent(
             },
             onObserveHistoryNextPage = onObserveHistoryNextPage,
             onRetryObserveHistoryNextPage = onRetryObserveHistoryNextPage,
-            modifier =
-              if (removeFromHistoryUiState.isLoading) {
-                Modifier
-                  .fillMaxSize()
-                  .blurBackground(alphas = persistentListOf(0.7f, 0.7f))
-              } else Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize()
           )
         }
 
         when {
-          removeFromHistoryUiState.isLoading -> LoadingScreen(modifier = Modifier.fillMaxSize())
+          removeFromHistoryUiState.isLoading -> LoadingScreen(
+            modifier = Modifier.fillMaxSize(),
+            isScrimEnabled = true,
+          )
 
           removeFromHistoryUiState.isError -> {
             if (isShowRemoveFromHistoryErrorDialog) {
@@ -251,7 +248,7 @@ private fun HistoryContentFirstPageLoadingPreview() {
 private fun HistoryContentFirstPageErrorPreview() {
   DexReaderTheme {
     HistoryContent(
-      historyUiState = BasePaginationUiState.FirstPageError(FeatureError.NetworkUnavailable),
+      historyUiState = BasePaginationUiState.FirstPageError(FeatureError.ServerUnavailable),
       removeFromHistoryUiState = RemoveFromHistoryUiState(),
       onContinueReadingClick = { _, _, _ -> },
       onMangaDetailsClick = {},

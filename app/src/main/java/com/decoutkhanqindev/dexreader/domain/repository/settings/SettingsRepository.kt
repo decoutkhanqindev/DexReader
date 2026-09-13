@@ -11,4 +11,5 @@ interface SettingsRepository {
   suspend fun saveContentLanguage(value: MangaLanguage)
   fun observeIsOnboardingCompleted(): Flow<Boolean>
   suspend fun saveIsOnboardingCompleted(value: Boolean)
+  fun observeIsNetworkAvailable(): Flow<Boolean>
 }

@@ -7,6 +7,7 @@
   <string name="history_menu_item">Zgodovina</string>
   <string name="profile_menu_item">Profil</string>
   <string name="settings_menu_item">Nastavitve</string>
+  <string name="open_settings">Odpri nastavitve</string>
   <string name="ok">V redu</string>
   <string name="cancel">Prekliči</string>
   <string name="load_more">Naloži več</string>

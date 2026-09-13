@@ -234,7 +234,7 @@ private fun FavoritesContentFirstPageLoadingPreview() {
 private fun FavoritesContentFirstPageErrorPreview() {
   DexReaderTheme {
     FavoritesContent(
-      uiState = BasePaginationUiState.FirstPageError(FeatureError.NetworkUnavailable),
+      uiState = BasePaginationUiState.FirstPageError(FeatureError.ServerUnavailable),
       onSelectedManga = {},
       onObserveFavoriteMangaListNextPage = {},
       onRetryObserveFavoriteMangaListNextPage = {},

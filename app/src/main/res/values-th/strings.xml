@@ -7,6 +7,7 @@
   <string name="history_menu_item">ประวัติ</string>
   <string name="profile_menu_item">โปรไฟล์</string>
   <string name="settings_menu_item">การตั้งค่า</string>
+  <string name="open_settings">เปิดการตั้งค่า</string>
   <string name="ok">ตกลง</string>
   <string name="cancel">ยกเลิก</string>
   <string name="load_more">โหลดเพิ่มเติม</string>

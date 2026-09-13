@@ -195,7 +195,7 @@ private fun HomeContentLoadingPreview() {
 private fun HomeContentErrorPreview() {
   DexReaderTheme {
     HomeContent(
-      mangaSectionUiState = MangaSectionUiState.Error(FeatureError.NetworkUnavailable),
+      mangaSectionUiState = MangaSectionUiState.Error(FeatureError.ServerUnavailable),
       modifier = Modifier.fillMaxSize(),
       onItemClick = {},
       onMoreClick = { _, _ -> },

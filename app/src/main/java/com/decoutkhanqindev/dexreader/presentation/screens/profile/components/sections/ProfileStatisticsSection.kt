@@ -103,7 +103,7 @@ private fun ProfileStatisticsSectionContentPreview() {
 private fun ProfileStatisticsSectionErrorPreview() {
   DexReaderTheme {
     ProfileStatisticsSection(
-      uiState = StatisticsUiState.Error(FeatureError.NetworkUnavailable),
+      uiState = StatisticsUiState.Error(FeatureError.ServerUnavailable),
       modifier = Modifier.fillMaxWidth(),
       onMoreClick = {},
       onRetry = {}

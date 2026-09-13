@@ -231,7 +231,7 @@ private fun ProfileHistorySectionEmptyPreview() {
 private fun ProfileHistorySectionErrorPreview() {
   DexReaderTheme {
     ProfileHistorySection(
-      uiState = BasePaginationUiState.FirstPageError(FeatureError.NetworkUnavailable),
+      uiState = BasePaginationUiState.FirstPageError(FeatureError.ServerUnavailable),
       modifier = Modifier.fillMaxWidth(),
       onContinueReadingClick = { _, _, _ -> },
       onMangaDetailsClick = {},

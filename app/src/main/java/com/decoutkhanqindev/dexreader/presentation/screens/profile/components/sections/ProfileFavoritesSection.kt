@@ -179,7 +179,7 @@ private fun ProfileFavoritesSectionEmptyPreview() {
 private fun ProfileFavoritesSectionErrorPreview() {
   DexReaderTheme {
     ProfileFavoritesSection(
-      uiState = BasePaginationUiState.FirstPageError(FeatureError.NetworkUnavailable),
+      uiState = BasePaginationUiState.FirstPageError(FeatureError.ServerUnavailable),
       modifier = Modifier.fillMaxWidth(),
       onMangaClick = {},
       onMoreClick = {},
