@@ -31,11 +31,14 @@ class DataStoreManagerImpl @Inject constructor(
   private val isDarkKey: Preferences.Key<Boolean> = booleanPreferencesKey(IS_DARK_KEY)
   override val isDark: StateFlow<Boolean?> = isDarkKey.asStateFlow(default = DEFAULT_IS_DARK)
 
-  private val selectedLangCodeKey: Preferences.Key<String> = stringPreferencesKey(SELECTED_LANG_CODE_KEY)
-  override val selectedLangCode: StateFlow<String?> = selectedLangCodeKey.asStateFlow(default = DEFAULT_SELECTED_LANG_CODE)
+  private val selectedLangCodeKey: Preferences.Key<String> =
+    stringPreferencesKey(SELECTED_LANG_CODE_KEY)
+  override val selectedLangCode: StateFlow<String?> =
+    selectedLangCodeKey.asStateFlow(default = DEFAULT_SELECTED_LANG_CODE)
 
   private val isFirstOpenKey: Preferences.Key<Boolean> = booleanPreferencesKey(IS_FIRST_OPEN_KEY)
-  override val isFirstOpen: StateFlow<Boolean?> = isFirstOpenKey.asStateFlow(default = DEFAULT_IS_FIRST_OPEN)
+  override val isFirstOpen: StateFlow<Boolean?> =
+    isFirstOpenKey.asStateFlow(default = DEFAULT_IS_FIRST_OPEN)
 
   override fun saveIsDark(value: Boolean) {
     edit { prefs -> prefs[isDarkKey] = value }
@@ -55,8 +58,7 @@ class DataStoreManagerImpl @Inject constructor(
       .recoverCatching { throwable ->
         Timber.e("DataStore read $name failed, falling back to $default: ${throwable.stackTraceToString()}")
         emit(default)
-      }
-      .stateIn(
+      }.stateIn(
         scope = scope,
         started = SharingStarted.Eagerly,
         initialValue = null,

@@ -17,11 +17,13 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.decoutkhanqindev.dexreader.ads.AdsManager
 import com.decoutkhanqindev.dexreader.data.local.datastore.DataStoreManager
 import com.decoutkhanqindev.dexreader.data.local.locale.LanguageManager
 import com.decoutkhanqindev.dexreader.data.network.connectivity.NetworkManager
 import com.decoutkhanqindev.dexreader.presentation.model.value.language.LanguageValue
 import com.decoutkhanqindev.dexreader.presentation.navigation.NavGraph
+import com.decoutkhanqindev.dexreader.presentation.screens.common.locals.LocalAdsManager
 import com.decoutkhanqindev.dexreader.presentation.screens.common.locals.LocalDataStoreManager
 import com.decoutkhanqindev.dexreader.presentation.screens.common.locals.LocalLanguageManager
 import com.decoutkhanqindev.dexreader.presentation.screens.common.locals.LocalNetworkManager
@@ -46,6 +48,9 @@ class MainActivity : ComponentActivity() {
   @Inject
   lateinit var languageManager: LanguageManager
 
+  @Inject
+  lateinit var adsManager: AdsManager
+
   @OptIn(ExperimentalComposeUiApi::class)
   override fun onCreate(savedInstanceState: Bundle?) {
     ComposeUiFlags.isBypassUnfocusableComposeViewEnabled = false
@@ -67,6 +72,7 @@ class MainActivity : ComponentActivity() {
         LocalDataStoreManager provides dataStoreManager,
         LocalNetworkManager provides networkManager,
         LocalLanguageManager provides languageManager,
+        LocalAdsManager provides adsManager,
         LocalConfiguration provides configuration,
         LocalResources provides resources,
       ) {
@@ -95,10 +101,8 @@ class MainActivity : ComponentActivity() {
 
   private fun hideSystemBar() {
     runCatching {
-      WindowCompat.setDecorFitsSystemWindows(window, false)
       WindowCompat.getInsetsController(window, window.decorView).apply {
         systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        isAppearanceLightNavigationBars = false
         hide(WindowInsetsCompat.Type.navigationBars())
       }
     }

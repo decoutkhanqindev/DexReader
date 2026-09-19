@@ -2,4 +2,12 @@
 <resources>
 
   <style name="Theme.DexReader" parent="android:Theme.Material.Light.NoActionBar" />
+
+  <style name="AdTheme" parent="android:Theme.Material.Light.NoActionBar">
+    <item name="android:background">@android:color/white</item>
+    <item name="android:windowBackground">@android:color/white</item>
+    <item name="android:windowExitAnimation">@null</item>
+    <item name="android:windowEnterAnimation">@null</item>
+    <item name="android:windowTranslucentNavigation">true</item>
+  </style>
 </resources>

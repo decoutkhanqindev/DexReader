@@ -21,6 +21,10 @@
         android:shell="true"
         tools:targetApi="29" />
 
+    <meta-data
+        android:name="com.google.android.gms.ads.APPLICATION_ID"
+        android:value="ca-app-pub-9635401910651855~2460018047"/>
+
     <activity
         android:name=".MainActivity"
         android:exported="true"
@@ -31,6 +35,11 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
+
+    <activity
+        android:name="com.google.android.gms.ads.AdActivity"
+        android:theme="@style/AdTheme"
+        tools:replace="android:theme" />
   </application>
 
 </manifest>

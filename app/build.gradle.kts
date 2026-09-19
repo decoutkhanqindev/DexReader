@@ -42,6 +42,12 @@ android {
       name = "UPLOAD_URL",
       value = "\"${localProps.getProperty("UPLOAD_URL")}\""
     )
+
+    buildConfigField("String", "ADMOB_BANNER_TEST_ID", "\"ca-app-pub-3940256099942544/9214589741\"")
+    buildConfigField("String", "ADMOB_NATIVE_TEST_ID", "\"ca-app-pub-3940256099942544/2247696110\"")
+    buildConfigField("String", "ADMOB_INTERSTITIAL_TEST_ID", "\"ca-app-pub-3940256099942544/1033173712\"")
+    buildConfigField("String", "ADMOB_REWARDED_TEST_ID", "\"ca-app-pub-3940256099942544/5224354917\"")
+    buildConfigField("String", "ADMOB_APP_OPEN_TEST_ID", "\"ca-app-pub-3940256099942544/9257395921\"")
   }
 
   val keystoreProps = Properties().apply {
@@ -64,6 +70,8 @@ android {
       isDebuggable = false
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
       signingConfig = signingConfigs.getByName("release")
+
+      buildConfigField("String", "INTER_SPLASH_ALL_ID", "\"ca-app-pub-9635401910651855/1499511352\"")
     }
 
     debug {
@@ -72,6 +80,8 @@ android {
       isDebuggable = true
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
       signingConfig = signingConfigs.getByName("debug")
+
+      buildConfigField("String", "INTER_SPLASH_ALL_ID", "\"ca-app-pub-3940256099942544/1033173712\"")
     }
   }
 
@@ -180,4 +190,8 @@ dependencies {
 
   // Vico Charts
   implementation(libs.vico.compose.m3)
+
+  // Ads
+  implementation(libs.play.services.ads)
+  implementation(libs.androidx.constraintlayout)
 }

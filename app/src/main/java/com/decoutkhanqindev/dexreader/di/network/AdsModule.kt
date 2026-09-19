@@ -1,9 +1,9 @@
 package com.decoutkhanqindev.dexreader.di.network
 
 import android.app.Application
+import android.content.Context
 import com.decoutkhanqindev.dexreader.ads.AdsManager
 import com.decoutkhanqindev.dexreader.data.network.connectivity.NetworkManager
-import com.decoutkhanqindev.dexreader.data.network.connectivity.NetworkManagerImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,8 +13,12 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object ConnectivityModule {
+object AdsModule {
+
   @Provides
   @Singleton
-  fun provideNetworkManager(impl: NetworkManagerImpl): NetworkManager = impl
+  fun provideAdsManager(
+    application: Application,
+    networkManager: NetworkManager,
+  ): AdsManager = AdsManager(application, networkManager)
 }

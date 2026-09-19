@@ -83,6 +83,49 @@ di/           5 Hilt modules: LocalModule, RepositoryModule, ApiModule, Firebase
 util/         CoroutineHandler, DateTimeHandler, NavTransitions.
               (`LocalDataStoreManager`/`LocalNetworkManager`/`LocalLanguageManager` live in
               `presentation/screens/common/locals/`, provided from `MainActivity`.)
+ads/          AdMob scaffolding ported from a sister project (`lich_viet_loc_phat`) — **provisional,
+              not yet wired into this app's screens or Hilt graph**. `model/AdUnit` (waterfall +
+              generation-counter state machine, constructor takes a
+              `data/network/connectivity/NetworkManager`) checks `networkManager.isAvailable.value`
+              **once**, synchronously, right before a load — no network ⇒ state goes straight to
+              `FAILED` and `load()` returns (there is **no** `NO_NETWORK` `AdUnitState` any more —
+              the enum is just `NONE`/`LOADING`/`LOADED`/`FAILED`/`IMPRESSION`; "offline" is
+              treated as one more way a load fails, not a distinguishable state); there is
+              deliberately **no** observe-and-auto-retry-on-reconnect either (that existed in the
+              source project, was ported, then removed for being more machinery than this app
+              needs — a caller that wants a retry just calls `.load()` again, and since `FAILED`
+              does not block `load()` it will re-attempt). `model/AdUnitState`; `ad_unit/`
+              has the 5 concrete formats (`Banner`/`Native`/`Interstitial`/`Reward`/
+              `AppOpenAdUnit`); `AdsManager` is currently just an `Application
+              .ActivityLifecycleCallbacks` shell tracking `currentActivity` — it does **not**
+              construct any concrete ad unit (no real ad unit ids exist yet) and is not
+              constructed anywhere itself. 5 generic-by-format test ids
+              (`BuildConfig.ADMOB_{BANNER,NATIVE,INTERSTITIAL,REWARDED,APP_OPEN}_TEST_ID`, Google's
+              public sample ids) live in `defaultConfig` next to `BASE_URL`/`UPLOAD_URL` — no
+              per-placement ids, no release/local.properties split, until real placements are
+              designed. Compose display components in
+              `presentation/screens/common/ads/` (`BannerAd`, `NativeMedia43Ad`,
+              `NativeMedia169Ad`) self-trigger their own load — `SideEffect { if (!preview &&
+              adState == AdUnitState.NONE) adUnit.load(context) }` right after reading `adState`
+              (before the early-return guards, otherwise the `NONE` branch would never be reached
+              to trigger it) — so simply composing a screen that holds an `AdUnit` loads it, no
+              separate preload step anywhere. `SideEffect` (not `LaunchedEffect`) is correct here
+              per the same reasoning as the rest of this codebase's `SideEffect` uses (see State
+              Management below): `adUnit.load()` is a plain non-suspend fire-and-forget call.
+              **`SideEffect` takes no key** — `SideEffect(effect: () -> Unit)` is its only
+              signature (verified against the pinned `androidx.compose.runtime:runtime` 1.11.2
+              source), so it runs on every successful recomposition unconditionally; the
+              `adState == AdUnitState.NONE` check inside the lambda (plus `AdUnit.load()`'s own
+              `LOADING`/`LOADED` guard) is what keeps repeated firing harmless — there is no
+              `SideEffect(key) { }` overload to reach for instead. Do **not** add a `LocalNetworkManager`
+              read to these composables to hide the ad when offline — they no longer do that; an
+              `AdUnit` with no network just never leaves `NONE`, so it silently doesn't render (the
+              `NONE`/`FAILED` early-return already covers it), rather than reacting to a second,
+              redundant connectivity signal. `AdLoadingDialog` is unaffected by any of this
+              (no `AdUnit` param). Read `LocalNetworkManager`/DexReader's own
+              `shimmerLoading`/`MaterialTheme` — no
+              screen calls them yet. See CHANGELOG for the full list of what was and wasn't
+              adapted during the move.
 ```
 
 ---

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.gms.ads.nativead.NativeAdView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_native_ad_card"
+    android:clipToOutline="true"
+    android:padding="12dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+      <com.google.android.gms.ads.nativead.MediaView
+          android:id="@+id/ad_media"
+          android:layout_width="214dp"
+          android:layout_height="120dp"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/ad_icon"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="10dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toEndOf="@id/ad_media"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/ad_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_ad_label"
+            android:gravity="center"
+            android:paddingStart="3dp"
+            android:paddingTop="1dp"
+            android:paddingEnd="3dp"
+            android:paddingBottom="1dp"
+            android:text="@string/ad_label"
+            android:textColor="#FFC87941"
+            android:textSize="9sp"
+            app:layout_constraintBottom_toBottomOf="@id/ad_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/ad_icon"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/ad_headline"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="#FF2C1A0E"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="5dp"
+            app:layout_constraintBottom_toBottomOf="@id/ad_icon"
+            app:layout_constraintEnd_toStartOf="@id/ad_label"
+            app:layout_constraintStart_toEndOf="@id/ad_icon"
+            app:layout_constraintTop_toTopOf="@id/ad_icon"
+            tools:text="Tên ứng dụng quảng cáo" />
+
+        <TextView
+            android:id="@+id/ad_body"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="#B26B4426"
+            android:textSize="11sp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ad_media"
+            app:layout_constraintTop_toBottomOf="@id/ad_icon"
+            tools:text="Mô tả ngắn về ứng dụng hoặc sản phẩm được quảng cáo" />
+
+      <TextView
+          android:id="@+id/ad_cta"
+          android:layout_width="0dp"
+          android:layout_height="34dp"
+          android:layout_marginStart="10dp"
+          android:layout_marginTop="8dp"
+          android:background="@drawable/bg_cta_native_ad"
+          android:gravity="center"
+          android:textColor="#FFFFFFFF"
+          android:textSize="11sp"
+          android:textStyle="bold"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toEndOf="@id/ad_media"
+          app:layout_constraintTop_toBottomOf="@id/ad_body"
+          tools:text="Tải về ngay" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.gms.ads.nativead.NativeAdView>

@@ -1,6 +1,7 @@
 package com.decoutkhanqindev.dexreader.presentation.screens.common.locals
 
 import androidx.compose.runtime.staticCompositionLocalOf
+import com.decoutkhanqindev.dexreader.ads.AdsManager
 import com.decoutkhanqindev.dexreader.data.local.datastore.DataStoreManager
 import com.decoutkhanqindev.dexreader.data.local.locale.LanguageManager
 import com.decoutkhanqindev.dexreader.data.network.connectivity.NetworkManager
@@ -15,4 +16,8 @@ val LocalNetworkManager = staticCompositionLocalOf<NetworkManager> {
 
 val LocalLanguageManager = staticCompositionLocalOf<LanguageManager> {
   error("No LanguageManager provided")
+}
+
+val LocalAdsManager = staticCompositionLocalOf<AdsManager> {
+  error("No AdsManager provided")
 }

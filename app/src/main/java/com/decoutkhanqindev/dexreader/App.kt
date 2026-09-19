@@ -6,6 +6,7 @@ import coil3.PlatformContext
 import coil3.SingletonImageLoader
 import coil3.disk.DiskCache
 import coil3.memory.MemoryCache
+import com.google.android.gms.ads.MobileAds
 import dagger.hilt.android.HiltAndroidApp
 import okio.Path.Companion.toOkioPath
 import timber.log.Timber
@@ -16,6 +17,7 @@ class App : Application(), SingletonImageLoader.Factory {
   override fun onCreate() {
     super.onCreate()
     setupTimber()
+    initAdMob()
   }
 
   override fun newImageLoader(context: PlatformContext): ImageLoader =
@@ -37,6 +39,12 @@ class App : Application(), SingletonImageLoader.Factory {
 
   private fun setupTimber() {
     if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
+  }
+
+  private fun initAdMob() {
+    MobileAds.initialize(this) { status ->
+      Timber.tag(this::class.java.simpleName).d("AdMob initialized: ${status.adapterStatusMap}")
+    }
   }
 
   private companion object {

@@ -4,6 +4,72 @@ Dated log of notable multi-file / cross-cutting work sessions. Newest entry firs
 
 ---
 
+## 2026-09-19 — Move AdMob scaffolding from `lich_viet_loc_phat`, provisional (not wired in)
+
+**Lý do**: user có sẵn cơ chế ads (waterfall + network-retry + Compose display) đã chạy tốt ở
+project lịch âm khác, muốn mang nguyên cơ chế qua DexReader để dùng lại, tự thêm ad unit id và
+tự quyết định đặt quảng cáo ở màn nào sau.
+
+- **Move nguyên vẹn** (chỉ đổi package + import): `ads/model/{AdUnit,AdUnitState}.kt`,
+  `ads/ad_unit/{Banner,Native,Interstitial,Reward,AppOpen}AdUnit.kt`,
+  `presentation/screens/common/ads/{BannerAd,NativeMedia43Ad,NativeMedia169Ad,AdLoadingDialog}.kt`,
+  2 layout XML (`native_media_4_3_ad`/`native_media_16_9_ad`, cần `ConstraintLayout` — dependency
+  mới), 3 drawable (`bg_native_ad_card`/`bg_ad_label`/`bg_cta_native_ad`, giữ nguyên hex màu gốc
+  — **chưa** theo màu DexReader), string `ad_loading`/`ad_label` (mới thêm `values/` — **chưa**
+  dịch 63 locale còn lại).
+- **Thay bằng facility có sẵn của DexReader** (không mang bản sao thứ hai):
+  `device/NetworkManager` (Koin) + `by inject()` trong `AdUnit` → constructor nhận thẳng
+  `data/network/connectivity/NetworkManager` (đã có, `isAvailable` thay vì `available`); 3
+  composable dùng `koinInject()` → `LocalNetworkManager.current`; `utils.Tag` interface → 1
+  property `tag` inline trong `AdUnit`/`AdsManager` (`Timber.tag(tag)` ở mọi subclass giữ
+  nguyên không đổi); `.shimmerLoading().background(ShimmerBg)` → `.shimmerLoading(backgroundColor
+  = MaterialTheme.colorScheme.surfaceVariant)` (shimmerLoading của DexReader đã có param này);
+  `AppCard` + màu brand riêng (`VangDong`/`NauAmAlpha70`) trong `AdLoadingDialog` → M3 `Card` +
+  `MaterialTheme.colorScheme.primary`/`onSurfaceVariant`.
+- **`AdsManager` bị bóc hết phần cụ thể, chỉ còn shell generic**: sau vài lần chỉnh theo yêu cầu,
+  bản cuối **không** còn 8 property `by lazy { XxxAdUnit(...) }` (bannerSplash/bannerHome/
+  nativeToday/nativeCalendar/interSplash/interHome/rewardWidget/appOpenResume — tên theo màn của
+  app lịch, không áp dụng cho DexReader) — lý do: chưa có ad unit id thật cho placement nào.
+  Cùng với đó mất luôn `DefaultLifecycleObserver`/`ProcessLifecycleOwner` (chỉ tồn tại để tự
+  show app-open ad lúc resume — không có instance để show) và `destroyAll()`. Còn lại đúng
+  `Application.ActivityLifecycleCallbacks` track `currentActivity` — sẵn sàng cho ai đó nối
+  `AdUnit` cụ thể vào sau. **`AdsManager` hiện không được khởi tạo ở đâu cả** (không Hilt, không
+  gọi tay) — bản thân nó chỉ là shell chờ.
+- **Gradle**: `play-services-ads` (25.3.0) + `androidx-constraintlayout` (2.2.1) thêm vào
+  `libs.versions.toml` + `app/build.gradle.kts`. `defaultConfig` (dùng chung mọi build type, như
+  `BASE_URL`/`UPLOAD_URL`) thêm 5 field **generic theo format**, không theo placement:
+  `ADMOB_BANNER_TEST_ID`/`ADMOB_NATIVE_TEST_ID`/`ADMOB_INTERSTITIAL_TEST_ID`/
+  `ADMOB_REWARDED_TEST_ID`/`ADMOB_APP_OPEN_TEST_ID` — toàn bộ là sample id công khai của Google,
+  không đọc `local.properties` (không còn máy `releaseAdId`/per-buildType phân biệt debug/release
+  như bản gốc — không có gì thật để phân biệt lúc này).
+- **Manifest**: `com.google.android.gms.ads.APPLICATION_ID` = sample App ID công khai của Google
+  (`ca-app-pub-3940256099942544~3347511713`, **không phải** App ID thật của app lịch — đó là tài
+  khoản AdMob của người khác) + khai báo `AdActivity` với `themes.xml` → `AdTheme` mới (copy
+  nguyên, chỉ set nền trắng + tắt animation, không có màu brand nào để lo).
+- **`AdUnit` bỏ cơ chế observe-network-để-retry**: trước đó, hết mạng lúc `load()` sẽ set
+  `NO_NETWORK` rồi mở một coroutine `networkManager.isAvailable.collect { }` chờ mạng về để tự
+  gọi lại `attemptLoad()` — và `onLoadFailed()` cũng mở lại coroutine đó nếu hoá ra fail vì mất
+  mạng. Bỏ hết: `attemptLoad()` giờ chỉ đọc `networkManager.isAvailable.value` **một lần**, hết
+  mạng thì set `NO_NETWORK` và dừng — không tự load lại, màn nào cần thì tự gọi `.load()` lần
+  nữa (VD sau pull-to-refresh, hoặc khi `LocalNetworkManager.current.isAvailable` ở tầng
+  Compose báo có mạng trở lại). Xoá theo: field `networkObserveJob`, hàm
+  `observeNetworkAndRetry()`, nhánh gọi nó trong `onLoadFailed()`, và phần cancel job trong
+  `cancelPendingLoad()` (giờ chỉ bump generation + reset state). 3 composable hiển thị
+  (`BannerAd`/`NativeMedia43Ad`/`NativeMedia169Ad`) không đổi — chúng vốn đã tự ẩn UI khi
+  `LocalNetworkManager.current.isAvailable == false`, không liên quan tới cơ chế bị bỏ này.
+- `App.kt`: thêm `initAdMob()` (chỉ `MobileAds.initialize`, bỏ `setRequestConfiguration`
+  test-device-id vì id đó gắn với máy dev cụ thể của app kia, vô nghĩa ở đây) gọi từ `onCreate()`
+  — **không** đặt trong `AdsManager.init` vì `AdsManager` hiện chưa được khởi tạo ở đâu, đặt ở đó
+  sẽ khiến SDK không bao giờ init cho tới khi có người wiring Hilt.
+- `assembleDebug` **và** `compileReleaseKotlin` đều BUILD SUCCESSFUL.
+- **Còn lại cho lần sau** (chưa làm, chưa được yêu cầu): wiring `AdsManager`/`AdUnit` vào Hilt
+  (`@Provides`, ai giữ instance, ai gọi `.load()`); ad unit id thật theo từng placement; đặt banner/
+  native/interstitial vào màn nào của DexReader; đổi màu 3 drawable + English string sang phong
+  cách DexReader; dịch 2 string mới sang 63 locale; sửa `getCurrentOrientationAnchoredAdaptiveBannerAdSize`
+  đang deprecated (nguyên trạng từ project nguồn, chưa đổi vì không được yêu cầu).
+
+---
+
 ## 2026-09-13 — Manager thành state holder + CompositionLocal, xoá `PrefsViewModel`/`NetworkViewModel`
 
 **Lý do**: hai VM chỉ còn là lớp trung gian chuyển Flow của manager thành `StateFlow` và giữ
