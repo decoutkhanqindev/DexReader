@@ -9,6 +9,7 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.appopen.AppOpenAd
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -18,34 +19,33 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 class AppOpenAdUnit(
-  id: Pair<String, String>,
-  name: Pair<String, String>,
+  floors: List<Pair<String, String>>,
   networkManager: NetworkManager,
-) : AdUnit(id, name, networkManager) {
+) : AdUnit(floors, networkManager) {
 
   private var _appOpenAd: AppOpenAd? = null
 
   override fun requestLoad(context: Context, generation: Int) {
     scope.launch {
-      if (!job.isActive || !isCurrentGeneration(generation)) return@launch
+      if (!isCurrentGeneration(generation)) return@launch
 
       _state.value = AdUnitState.LOADING
       Timber.tag(tag).d("$currentName - Loading")
 
       try {
         val ad = withTimeout(LOAD_TIMEOUT) { awaitLoad(context) }
-        if (!job.isActive || !isCurrentGeneration(generation)) return@launch
+        if (!isCurrentGeneration(generation)) return@launch
         Timber.tag(tag).d("$currentName - Loaded")
         _appOpenAd = ad
         _state.value = AdUnitState.LOADED
       } catch (e: TimeoutCancellationException) {
-        if (!job.isActive || !isCurrentGeneration(generation)) return@launch
+        if (!isCurrentGeneration(generation)) return@launch
         Timber.tag(tag).d("$currentName - Timeout")
         onLoadFailed(context, generation)
       } catch (e: CancellationException) {
         throw e
       } catch (e: Exception) {
-        if (!job.isActive || !isCurrentGeneration(generation)) return@launch
+        if (!isCurrentGeneration(generation)) return@launch
         Timber.tag(tag).d("$currentName - Failed: ${e.message}")
         onLoadFailed(context, generation)
       }
@@ -102,7 +102,7 @@ class AppOpenAdUnit(
   }
 
   override fun destroy() {
-    job.cancel()
+    scope.cancel()
     _appOpenAd = null
     _state.value = AdUnitState.NONE
   }

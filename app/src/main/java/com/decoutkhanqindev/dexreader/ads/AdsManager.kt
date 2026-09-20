@@ -17,8 +17,7 @@ class AdsManager @Inject constructor(
 
   val interSplash: InterstitialAdUnit by lazy {
     InterstitialAdUnit(
-      id = BuildConfig.INTER_SPLASH_ALL_ID to BuildConfig.INTER_SPLASH_ALL_ID,
-      name = "inter_splash_all" to "inter_splash_all",
+      floors = listOf(BuildConfig.INTER_SPLASH_ALL_ID to "inter_splash_all"),
       networkManager = networkManager,
       onShowed = { isAdShowing = true },
       onClosed = { isAdShowing = false },

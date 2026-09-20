@@ -10,6 +10,7 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -19,37 +20,36 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 class RewardAdUnit(
-  id: Pair<String, String>,
-  name: Pair<String, String>,
+  floors: List<Pair<String, String>>,
   networkManager: NetworkManager,
   private val onShowed: () -> Unit = {},
   private val onClosed: () -> Unit = {},
   private val onFailedToShow: () -> Unit = {},
-) : AdUnit(id, name, networkManager) {
+) : AdUnit(floors, networkManager) {
 
   private var _rewardedAd: RewardedAd? = null
 
   override fun requestLoad(context: Context, generation: Int) {
     scope.launch {
-      if (!job.isActive || !isCurrentGeneration(generation)) return@launch
+      if (!isCurrentGeneration(generation)) return@launch
 
       _state.value = AdUnitState.LOADING
       Timber.tag(tag).d("$currentName - Loading")
 
       try {
         val ad = withTimeout(LOAD_TIMEOUT) { awaitLoad(context) }
-        if (!job.isActive || !isCurrentGeneration(generation)) return@launch
+        if (!isCurrentGeneration(generation)) return@launch
         Timber.tag(tag).d("$currentName - Loaded")
         _rewardedAd = ad
         _state.value = AdUnitState.LOADED
       } catch (e: TimeoutCancellationException) {
-        if (!job.isActive || !isCurrentGeneration(generation)) return@launch
+        if (!isCurrentGeneration(generation)) return@launch
         Timber.tag(tag).d("$currentName - Timeout")
         onLoadFailed(context, generation)
       } catch (e: CancellationException) {
         throw e
       } catch (e: Exception) {
-        if (!job.isActive || !isCurrentGeneration(generation)) return@launch
+        if (!isCurrentGeneration(generation)) return@launch
         Timber.tag(tag).d("$currentName - Failed: ${e.message}")
         onLoadFailed(context, generation)
       }
@@ -119,7 +119,7 @@ class RewardAdUnit(
   }
 
   override fun destroy() {
-    job.cancel()
+    scope.cancel()
     _rewardedAd = null
     _state.value = AdUnitState.NONE
   }

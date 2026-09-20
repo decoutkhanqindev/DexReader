@@ -79,53 +79,126 @@ data/         Implements domain interfaces. Retrofit, Room, Firebase, DataStore 
               `local/locale/LanguageManager`, `network/connectivity/NetworkManager`) that
               presentation reaches through CompositionLocals provided by `MainActivity`.
 presentation/ Jetpack Compose UI, ViewModels, NavGraph.
-di/           5 Hilt modules: LocalModule, RepositoryModule, ApiModule, FirebaseModule, ConnectivityModule.
+di/           6 Hilt modules: LocalModule, RepositoryModule, ApiModule, FirebaseModule, ConnectivityModule,
+              AdsModule.
 util/         CoroutineHandler, DateTimeHandler, NavTransitions.
-              (`LocalDataStoreManager`/`LocalNetworkManager`/`LocalLanguageManager` live in
-              `presentation/screens/common/locals/`, provided from `MainActivity`.)
-ads/          AdMob scaffolding ported from a sister project (`lich_viet_loc_phat`) — **provisional,
-              not yet wired into this app's screens or Hilt graph**. `model/AdUnit` (waterfall +
-              generation-counter state machine, constructor takes a
-              `data/network/connectivity/NetworkManager`) checks `networkManager.isAvailable.value`
-              **once**, synchronously, right before a load — no network ⇒ state goes straight to
-              `FAILED` and `load()` returns (there is **no** `NO_NETWORK` `AdUnitState` any more —
-              the enum is just `NONE`/`LOADING`/`LOADED`/`FAILED`/`IMPRESSION`; "offline" is
-              treated as one more way a load fails, not a distinguishable state); there is
-              deliberately **no** observe-and-auto-retry-on-reconnect either (that existed in the
-              source project, was ported, then removed for being more machinery than this app
-              needs — a caller that wants a retry just calls `.load()` again, and since `FAILED`
-              does not block `load()` it will re-attempt). `model/AdUnitState`; `ad_unit/`
-              has the 5 concrete formats (`Banner`/`Native`/`Interstitial`/`Reward`/
-              `AppOpenAdUnit`); `AdsManager` is currently just an `Application
-              .ActivityLifecycleCallbacks` shell tracking `currentActivity` — it does **not**
-              construct any concrete ad unit (no real ad unit ids exist yet) and is not
-              constructed anywhere itself. 5 generic-by-format test ids
-              (`BuildConfig.ADMOB_{BANNER,NATIVE,INTERSTITIAL,REWARDED,APP_OPEN}_TEST_ID`, Google's
-              public sample ids) live in `defaultConfig` next to `BASE_URL`/`UPLOAD_URL` — no
-              per-placement ids, no release/local.properties split, until real placements are
-              designed. Compose display components in
-              `presentation/screens/common/ads/` (`BannerAd`, `NativeMedia43Ad`,
-              `NativeMedia169Ad`) self-trigger their own load — `SideEffect { if (!preview &&
-              adState == AdUnitState.NONE) adUnit.load(context) }` right after reading `adState`
-              (before the early-return guards, otherwise the `NONE` branch would never be reached
-              to trigger it) — so simply composing a screen that holds an `AdUnit` loads it, no
-              separate preload step anywhere. `SideEffect` (not `LaunchedEffect`) is correct here
-              per the same reasoning as the rest of this codebase's `SideEffect` uses (see State
-              Management below): `adUnit.load()` is a plain non-suspend fire-and-forget call.
-              **`SideEffect` takes no key** — `SideEffect(effect: () -> Unit)` is its only
-              signature (verified against the pinned `androidx.compose.runtime:runtime` 1.11.2
-              source), so it runs on every successful recomposition unconditionally; the
-              `adState == AdUnitState.NONE` check inside the lambda (plus `AdUnit.load()`'s own
-              `LOADING`/`LOADED` guard) is what keeps repeated firing harmless — there is no
-              `SideEffect(key) { }` overload to reach for instead. Do **not** add a `LocalNetworkManager`
-              read to these composables to hide the ad when offline — they no longer do that; an
-              `AdUnit` with no network just never leaves `NONE`, so it silently doesn't render (the
-              `NONE`/`FAILED` early-return already covers it), rather than reacting to a second,
-              redundant connectivity signal. `AdLoadingDialog` is unaffected by any of this
-              (no `AdUnit` param). Read `LocalNetworkManager`/DexReader's own
-              `shimmerLoading`/`MaterialTheme` — no
-              screen calls them yet. See CHANGELOG for the full list of what was and wasn't
-              adapted during the move.
+              (`LocalDataStoreManager`/`LocalNetworkManager`/`LocalLanguageManager`/`LocalAdsManager`
+              live in `presentation/screens/common/locals/`, provided from `MainActivity`.)
+ads/          AdMob, ported from a sister project (`lich_viet_loc_phat`). Two sub-packages and one
+              class, **not** under `presentation/` even though half of it is Compose:
+              `ad_unit/` = the `AdUnit` base + `AdUnitState` + the 5 concrete formats
+              (`Banner`/`Native`/`Interstitial`/`Reward`/`AppOpenAdUnit`); `composables/` = the
+              display components (`BannerAd`, `NativeMedia43Ad`, `NativeMedia169Ad`,
+              `AdLoadingDialog`); `AdsManager` at the package root. The base class is a waterfall + generation-counter
+              state machine. **The waterfall is one constructor param, `floors:
+              List<Pair<String, String>>`** — each entry is `(adUnitId, name)`, ordered highest
+              floor first (`listOf(HIGH_ID to "inter_home_high", ALL_ID to "inter_home_all")`),
+              walked by a private `floorIndex`: `load()` resets to `0`, `onLoadFailed()` advances
+              to the next entry and re-requests, and runs out of entries ⇒ `FAILED`. A
+              **one-id placement is a one-entry list** and therefore fails after exactly one
+              request — this replaced the earlier `id: Pair<high, all>` + `name: Pair<…>` shape,
+              whose `tryFallback()` only tracked a boolean and so re-requested the *same* id a
+              second time whenever both halves were equal (which is how `interSplash` was
+              declared), doubling every no-fill and every timeout. `currentId`/`currentName` are
+              `floors[floorIndex]`, and the fallback log line names both the floor that failed
+              and the one being tried next. The list is not de-duplicated: repeating an id across
+              entries is the caller's mistake, not something the base class silently absorbs. The
+              constructor also takes `data/network/connectivity/NetworkManager` and reads
+              `networkManager.isAvailable.value` **once, synchronously, at the top of `load()`**:
+              no network ⇒ `_state = FAILED` and return; otherwise reset the waterfall and
+              `requestLoad(context, nextGeneration())`. That is the *whole* of `load()` — there is
+              **no** `LOADING`/`LOADED` re-entry guard, no `cancelPendingLoad()`, no
+              `attemptLoad()` indirection (all three existed briefly during the port and were
+              removed): every call is a fresh load that bumps the generation, so an in-flight
+              result from an earlier call is discarded by `isCurrentGeneration()` rather than
+              raced against. Callers therefore own "load once" — which is exactly what the
+              composables' `SideEffect(Unit)` gives them (below). There is **no** `NO_NETWORK`
+              state (`AdUnitState` is `NONE`/`LOADING`/`LOADED`/`FAILED`/`IMPRESSION`; offline is
+              one more way a load fails) and **no** observe-and-auto-retry-on-reconnect (existed
+              in the source project, ported, then removed as more machinery than this app needs
+              — a caller that wants a retry calls `.load()` again). Timeout is the shared
+              `AdUnit.LOAD_TIMEOUT = 20_000L` around each SDK callback via
+              `suspendCancellableCoroutine` + `withTimeout`. The scope is a bare
+              `CoroutineScope(Dispatchers.Main)` — **no `SupervisorJob`, no
+              `CoroutineExceptionHandler`, no `job` field, and no `job.isActive` checks** (all
+              four came over from the source project and were removed together): the supervisor
+              + handler pair only earned its keep there because the same scope hosted the
+              long-lived `isAvailable.collect {}` retry coroutine next to the load coroutines;
+              with the observer gone and no handler, an uncaught exception in a load coroutine
+              crashes the process either way, so supervisor isolation buys nothing. The
+              `job.isActive` guards were dead by structured concurrency — a cancelled scope never
+              runs a new `launch` body, and cancellation during `withTimeout` resumes with a
+              `CancellationException` that the `catch (e: CancellationException) { throw e }`
+              rethrows before any later line — and doubly dead because nothing calls
+              `destroy()`. `isCurrentGeneration(generation)` is the only in-body guard left and
+              is load-bearing (two synchronous `load()` calls ⇒ the first coroutine is stale
+              before it runs). `destroy()` is terminal: `scope.cancel()` + drop the SDK object +
+              `_state = NONE`; a unit cannot `load()` again afterwards.
+
+              **`AdsManager` is a Hilt `@Singleton`** — `@Inject constructor(Application,
+              NetworkManager)`, *also* bound explicitly by `di/network/AdsModule.provideAdsManager`
+              (the explicit `@Provides` is the binding Hilt uses; the `@Inject` constructor is
+              redundant with it) — reached from Compose through `LocalAdsManager` (a fourth
+              `staticCompositionLocalOf` in `ManagerLocals.kt`, field-injected and provided by
+              `MainActivity` next to the three data managers). It registers itself as
+              `Application.ActivityLifecycleCallbacks` in `init` to track `currentActivity` and
+              owns the app's ad units as `by lazy` properties — currently exactly one,
+              `interSplash: InterstitialAdUnit`, a single-floor waterfall
+              `floors = listOf(BuildConfig.INTER_SPLASH_ALL_ID to "inter_splash_all")` (no
+              high-floor id yet — add it as a first entry when there is one) with
+              `onShowed`/`onClosed`/`onFailedToShow` toggling a private `isAdShowing`. Two things
+              to know before extending it: `currentActivity` and `isAdShowing` are private and
+              **nothing reads them yet**; and `onActivityDestroyed` calls
+              `unregisterActivityLifecycleCallbacks(this)`, which in a single-Activity app fires
+              on the **first configuration change**, after which `currentActivity` is never
+              tracked again — harmless today only because it is unread. Ad ids: 5
+              generic-by-format Google sample ids live in `defaultConfig`
+              (`BuildConfig.ADMOB_{BANNER,NATIVE,INTERSTITIAL,REWARDED,APP_OPEN}_TEST_ID`) for
+              wiring new placements before they have a real id, and each *real* placement gets
+              its own field declared **per build type, inline in `app/build.gradle.kts`** (not
+              `local.properties`): `INTER_SPLASH_ALL_ID` is the real
+              `ca-app-pub-9635401910651855/…` id under `release {}` and Google's interstitial
+              sample id under `debug {}`, so a debug build never serves (or clicks) a live ad.
+              Follow that pattern for the next placement — field per placement, real under
+              release, sample under debug — rather than the `ADMOB_*_TEST_ID` generic set.
+
+              **The display composables take `adUnit: () -> XxxAdUnit`** (a lambda, not the
+              instance) and self-trigger their own load with `SideEffect(Unit) {
+              adUnit().load(context) }` — keyed on `Unit`, so it runs **once** on first
+              composition and never again for that composition, which is the only re-entry guard
+              there is now that `load()` has none. Composing a screen that holds an ad unit *is*
+              the preload; there is no separate `preload()` step anywhere. This is the keyed
+              `SideEffect(key, effect)` overload the rest of the codebase already uses for the
+              error-dialog pattern (see State Management — `compose.runtime:runtime` **1.12.0**
+              as resolved through `composeBom 2026.08.00`; `EffectsKt` carries the 1-, 2-, 3-key
+              and `vararg` overloads, verified with `javap` on the resolved aar — an earlier
+              version of this paragraph claimed the keyed overload did not exist after reading a
+              stale 1.11.2 sources jar from the Gradle cache; it does). `SideEffect`, not
+              `LaunchedEffect`, because `load()` is a plain non-suspend fire-and-forget call.
+              After the effect, the composable early-returns on `NONE`/`FAILED` (and `preview`),
+              so an ad that never loads simply occupies no space; it does **not** read
+              `LocalNetworkManager` to hide itself when offline — offline is already `FAILED`
+              via `load()`, and `NoInternetDialog` is the app's one offline signal. `BannerAd`
+              adds `LifecycleResumeEffect(Unit)` → `adUnit().resume()/pause()`; the two native
+              ones inflate `R.layout.native_media_{4_3,16_9}_ad` (`ConstraintLayout`-based
+              `NativeAdView`, hence the `androidx-constraintlayout` dependency — the app's only
+              XML layouts) in `AndroidView.factory` and bind in `update`. `AdLoadingDialog` takes
+              the same `adUnit: () -> AdUnit` lambda, renders **only while that unit is
+              `LOADING`** (early-returns otherwise) as a non-dismissable `Dialog` with an M3
+              `Card` + `CircularProgressIndicator` + `R.string.ad_loading`, and does **not** call
+              `load()` itself — it is a passive indicator for a unit some other composable or
+              screen is loading (nothing calls it yet).
+
+              **One placement is live: the splash interstitial.** `SplashScreen` no longer
+              waits a fixed 3 s — see Onboarding below for the exact flow. `App.onCreate()` calls
+              `MobileAds.initialize` (`initAdMob()`); the manifest carries Google's sample
+              `APPLICATION_ID` meta-data and an `AdActivity` declaration with the `AdTheme`
+              style. Still open: the 3 drawables (`bg_native_ad_card`/`bg_ad_label`/
+              `bg_cta_native_ad`) keep the source project's hardcoded bronze/gold hex colours,
+              `ad_loading`/`ad_label` exist only in `values/` (not the 63 other locales), and
+              `BannerAdUnit` still calls the deprecated
+              `getCurrentOrientationAnchoredAdaptiveBannerAdSize`. See CHANGELOG 2026-09-19 for
+              the full move log.
 ```
 
 ---
@@ -342,13 +415,14 @@ value changed.)
 
 ## DI Layer
 
-5 modules, all `@InstallIn(SingletonComponent::class)`, all `@Singleton`.
+6 modules, all `@InstallIn(SingletonComponent::class)`, all `@Singleton`.
 
 | Module             | Type            | Provides                                                                 |
 |--------------------|-----------------|--------------------------------------------------------------------------|
 | `LocalModule`        | `object`        | Room `ChapterCacheDatabase`, `ChapterCacheDao`, `DataStoreManager`, `LanguageManager` (`@Provides impl`) |
 | `RepositoryModule`   | **`interface`** | 7 `@Binds` for all repository interface → impl bindings                                |
 | `ApiModule`          | `object`        | Moshi, OkHttp (30s timeouts), Retrofit, `ApiService`                                   |
+| `AdsModule`          | `object`        | `AdsManager` (`@Provides`, in `di/network/` next to `ConnectivityModule` since its only dependency besides `Application` is `NetworkManager`) |
 | `FirebaseModule`     | `object`        | `FirebaseAuth`, `FirebaseFirestore`, 4 Firebase source `@Provides`                     |
 | `ConnectivityModule` | `object`        | `NetworkManager` (`@Provides impl`)                                                    |
 
@@ -526,11 +600,13 @@ flow has no such fallback.
 
 **Compose reaches all three managers through CompositionLocals, not ViewModels — and
 `MainActivity` is the composition root.** `presentation/screens/common/locals/ManagerLocals.kt`
-declares `LocalDataStoreManager`, `LocalNetworkManager` and `LocalLanguageManager`
-(`staticCompositionLocalOf { error(…) }`); `MainActivity` field-injects all three (`@Inject
-lateinit var`), collects `selectedLangCode`/`isDark` itself, derives the locale `Configuration`
-+ `Resources` through `LanguageManager`, and wraps `NavGraph()` in one `CompositionLocalProvider`
-(the three managers + `LocalConfiguration` + `LocalResources`) inside `DexReaderTheme`. `NavGraph`
+declares `LocalDataStoreManager`, `LocalNetworkManager`, `LocalLanguageManager` — and, since the
+AdMob port, `LocalAdsManager` for `ads/AdsManager`, which follows the same shape even though it is
+not a `data/` manager — (`staticCompositionLocalOf { error(…) }`); `MainActivity` field-injects all
+four (`@Inject lateinit var`), collects `selectedLangCode`/`isDark` itself, derives the locale
+`Configuration` + `Resources` through `LanguageManager`, and wraps `NavGraph()` in one
+`CompositionLocalProvider` (the four managers + `LocalConfiguration` + `LocalResources`) inside
+`DexReaderTheme`. `NavGraph`
 therefore collects nothing from a manager except `isAvailable` for `NoInternetDialog` — there is
 no `ProvideAppLanguage` composable and no `LocalAppLanguage` any more: the *applied* language
 is simply `LocalConfiguration.current.locales[0].toLanguageTag()` run through
@@ -925,18 +1001,41 @@ read can never trap a returning user in onboarding. (A *failed* read now emits t
 `true` — see "No `Result` on the manager boundary" — which is accepted: Skip is one tap.) There is no in-app reset: to see onboarding again during development, clear app
 data (`adb shell pm clear com.decoutkhanqindev.dexreader`).
 
-`SplashScreen` reads the flag as
+**Splash is gated on the splash interstitial, not a timer.** The old `LaunchedEffect(Unit) {
+delay(3000); navigate }` is gone. `SplashScreen` now reads
+`LocalAdsManager.current.interSplash`, fires `SideEffect(Unit) { interSplash.load(context) }`
+once, and drives navigation from `LifecycleResumeEffect(interSplashState, isNetworkAvailable)`:
+while `isNetworkAvailable`, `LOADED` ⇒ `interSplash.show(activity, onAdShowed = handleNext,
+onAdFailedToShow = handleNext)`, `FAILED` ⇒ `handleNext()`, anything else ⇒ wait; while
+offline the effect does nothing at all. `handleNext` is the one place that reads `isFirstOpen`
+(`true` ⇒ `LanguageSelection`, else `Main`, both via `navigateClearStack<NavRoute.Splash>`).
+Consequences worth knowing: (1) **the ad's `onAdShowed` (fires from
+`onAdShowedFullScreenContent`) — not `show()`'s `onAdClosed` — is what navigates**, so
+`Main`/`LanguageSelection` is composed *behind* the full-screen ad and is already there when
+the user closes it; switch to `onAdClosed = handleNext` if Splash should stay until dismissal;
+(2) with no network, `load()` sets `FAILED` immediately
+but the effect is gated on `isNetworkAvailable`, so Splash sits under `NoInternetDialog` until
+connectivity returns, at which point the effect re-runs, sees `FAILED`, and proceeds **without
+the ad** (no reload is attempted — retrying would need an explicit `load()` in that branch);
+(3) `activity` comes from `LocalActivity.current` and a `null` there falls through to
+`handleNext()` rather than blocking; (4) there is no minimum splash duration any more — a fast
+`FAILED` (bad id, no fill) lands the user on Main almost instantly, and a slow fill can hold
+Splash for up to `AdUnit.LOAD_TIMEOUT` (20 s) before the timeout maps to `FAILED`. `BackHandler
+{}` still swallows Back for the whole wait.
+
+`isFirstOpen` is read as
 `val isFirstOpen by LocalDataStoreManager.current.isFirstOpen.collectAsStateWithLifecycle()` and
-checks it inside its `LaunchedEffect(Unit)` **after** the 3-second `delay`. That read is live
-even though the effect was composed before DataStore emitted: a `by` delegate on a `State`
-compiles to `state.value` at the point of access, not at lambda capture, so the coroutine sees
-whatever landed during the delay. This replaced the earlier `rememberUpdatedState(isFirstOpen)`
-that was needed when the flag arrived as a plain `Boolean?` *parameter* from `NavGraph` — a
-parameter is captured by value, a `State` delegate is not. The `navController` lost its
+only dereferenced *inside* `handleNext`, which runs from the effect body or an SDK callback long
+after first composition. That read is live even though the lambda was created before DataStore
+emitted: a `by` delegate on a `State` compiles to `state.value` at the point of access, not at
+lambda capture. This replaced the earlier `rememberUpdatedState(isFirstOpen)` that was needed
+when the flag arrived as a plain `Boolean?` *parameter* from `NavGraph` — a parameter is
+captured by value, a `State` delegate is not. The `navController` lost its
 `rememberUpdatedState` at the same time (it is a `rememberNavController()` instance, stable for
 the life of `NavGraph`). If the flag ever goes back to being a parameter, the
-`rememberUpdatedState` must come back with it. Verified on device after the move: fresh install
-→ Language → Onboarding → Skip → Main, then cold restart → Main.
+`rememberUpdatedState` must come back with it. The routing itself was verified on device back
+when it was timer-driven (fresh install → Language → Onboarding → Skip → Main, then cold
+restart → Main); the interstitial-gated version has **not** been run on a device yet.
 
 **App language (`data/local/locale/LanguageManager` + `screens/language/`)**: one stored value drives **both**
 the UI locale and the MangaDex content language — it is

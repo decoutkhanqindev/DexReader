@@ -61,7 +61,7 @@ fun SplashScreen(
         else -> Unit
       }
     }
-    onPauseOrDispose {  }
+    onPauseOrDispose { }
   }
 
   BackHandler { }

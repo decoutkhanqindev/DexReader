@@ -10,6 +10,7 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -19,17 +20,16 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 class BannerAdUnit(
-  id: Pair<String, String>,
-  name: Pair<String, String>,
+  floors: List<Pair<String, String>>,
   networkManager: NetworkManager,
-) : AdUnit(id, name, networkManager) {
+) : AdUnit(floors, networkManager) {
 
   private var _adView: AdView? = null
   val adView: AdView? get() = _adView
 
   override fun requestLoad(context: Context, generation: Int) {
     scope.launch {
-      if (!job.isActive || !isCurrentGeneration(generation)) return@launch
+      if (!isCurrentGeneration(generation)) return@launch
 
       _state.value = AdUnitState.LOADING
       Timber.tag(tag).d("$currentName - Loading")
@@ -49,17 +49,17 @@ class BannerAdUnit(
 
       try {
         withTimeout(LOAD_TIMEOUT) { awaitLoad(view) }
-        if (!job.isActive || !isCurrentGeneration(generation)) return@launch
+        if (!isCurrentGeneration(generation)) return@launch
         Timber.tag(tag).d("$currentName - Loaded")
         _state.value = AdUnitState.LOADED
       } catch (e: TimeoutCancellationException) {
-        if (!job.isActive || !isCurrentGeneration(generation)) return@launch
+        if (!isCurrentGeneration(generation)) return@launch
         Timber.tag(tag).d("$currentName - Timeout")
         onLoadFailed(context, generation)
       } catch (e: CancellationException) {
         throw e
       } catch (e: Exception) {
-        if (!job.isActive || !isCurrentGeneration(generation)) return@launch
+        if (!isCurrentGeneration(generation)) return@launch
         Timber.tag(tag).d("$currentName - Failed: ${e.message}")
         onLoadFailed(context, generation)
       }
@@ -77,7 +77,6 @@ class BannerAdUnit(
       }
 
       override fun onAdImpression() {
-        if (!job.isActive) return
         Timber.tag(tag).d("$currentName - Impression")
         _state.value = AdUnitState.IMPRESSION
       }
@@ -94,7 +93,7 @@ class BannerAdUnit(
   }
 
   override fun destroy() {
-    job.cancel()
+    scope.cancel()
     _adView?.destroy()
     _adView = null
     _state.value = AdUnitState.NONE

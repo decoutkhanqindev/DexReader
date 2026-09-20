@@ -4,27 +4,24 @@ import android.content.Context
 import com.decoutkhanqindev.dexreader.data.network.connectivity.NetworkManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import timber.log.Timber
 
 abstract class AdUnit(
-  val id: Pair<String, String>,
-  val name: Pair<String, String>,
+  val floors: List<Pair<String, String>>,
   private val networkManager: NetworkManager,
 ) {
   protected val tag: String get() = javaClass.simpleName
 
-  protected val job = SupervisorJob()
-  protected val scope = CoroutineScope(Dispatchers.Main + job)
+  protected val scope = CoroutineScope(Dispatchers.Main)
 
-  private var usingFallback = false
+  private var floorIndex = 0
   private var loadGeneration = 0
 
-  protected val currentId: String get() = if (usingFallback) id.second else id.first
-  protected val currentName: String get() = if (usingFallback) name.second else name.first
+  protected val currentId: String get() = floors[floorIndex].first
+  protected val currentName: String get() = floors[floorIndex].second
 
   protected val _state = MutableStateFlow(AdUnitState.NONE)
   val state: StateFlow<AdUnitState> = _state.asStateFlow()
@@ -40,12 +37,12 @@ abstract class AdUnit(
   }
 
   private fun resetWaterfall() {
-    usingFallback = false
+    floorIndex = 0
   }
 
   private fun tryFallback(): Boolean {
-    if (usingFallback) return false
-    usingFallback = true
+    if (floorIndex + 1 >= floors.size) return false
+    floorIndex++
     return true
   }
 
@@ -58,8 +55,9 @@ abstract class AdUnit(
 
   protected fun onLoadFailed(context: Context, generation: Int) {
     if (!isCurrentGeneration(generation)) return
+    val failedName = currentName
     if (tryFallback()) {
-      Timber.tag(tag).d("$currentName - Falling back to ${name.second}")
+      Timber.tag(tag).d("$failedName - Falling back to $currentName")
       requestLoad(context, generation)
     } else {
       Timber.tag(tag).d("$currentName - No fallback left, giving up")
