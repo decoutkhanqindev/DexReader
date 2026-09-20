@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">Το προφίλ σας ενημερώθηκε επιτυχώς.</string>
   <string name="dark">Σκοτεινή λειτουργία</string>
   <string name="light">Φωτεινή λειτουργία</string>
+  <string name="may_contain_ads">Αυτή η ενέργεια ενδέχεται να περιέχει διαφημίσεις</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">Θέλεις σίγουρα να μηδενίσεις την πρόοδο αυτού του κεφαλαίου; Θα αφαιρεθεί από το ιστορικό ανάγνωσης.</string>
   <string name="daily_reading_time">Ημερήσιος χρόνος ανάγνωσης</string>
   <string name="dark_mode">Σκοτεινή λειτουργία</string>

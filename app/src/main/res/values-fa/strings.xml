@@ -125,6 +125,7 @@
   <string name="your_profile_has_been_updated_successfully">نمایه شما با موفقیت به‌روزرسانی شد.</string>
   <string name="dark">حالت تاریک</string>
   <string name="light">حالت روشن</string>
+  <string name="may_contain_ads">این عملیات ممکن است حاوی تبلیغات باشد</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">مطمئنی می‌خواهی پیشرفت این فصل را بازنشانی کنی؟ از تاریخچهٔ مطالعه‌ات حذف می‌شود.</string>
   <string name="dark_mode">حالت تیره</string>
   <string name="done">انجام شد</string>

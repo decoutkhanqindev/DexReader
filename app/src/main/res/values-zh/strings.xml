@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">您的个人资料已成功更新。</string>
   <string name="dark">深色模式</string>
   <string name="light">浅色模式</string>
+  <string name="may_contain_ads">此操作可能包含广告</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">确定要重置本话的阅读进度吗？它会从你的阅读记录中移除。</string>
   <string name="daily_reading_time">每日阅读时长</string>
   <string name="dark_mode">深色模式</string>

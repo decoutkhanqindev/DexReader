@@ -2,7 +2,6 @@ package com.decoutkhanqindev.dexreader.ads.ad_unit
 
 import android.app.Activity
 import android.content.Context
-import com.decoutkhanqindev.dexreader.data.network.connectivity.NetworkManager
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -10,7 +9,6 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -21,25 +19,14 @@ import kotlin.coroutines.resumeWithException
 
 class InterstitialAdUnit(
   floors: List<Pair<String, String>>,
-  networkManager: NetworkManager,
+  isNetworkAvailable: () -> Boolean,
+  canRequestAds: () -> Boolean,
   private val onShowed: () -> Unit = {},
   private val onClosed: () -> Unit = {},
   private val onFailedToShow: () -> Unit = {},
-) : AdUnit(floors, networkManager) {
+) : AdUnit(floors, isNetworkAvailable, canRequestAds) {
 
   private var _interstitialAd: InterstitialAd? = null
-  private var currentTabCount = 0
-  private var lastShowTime = 0L
-
-  fun incrementTabCount() {
-    currentTabCount++
-  }
-
-  fun readyToLoad(): Boolean {
-    val now = System.currentTimeMillis()
-    val intervalPassed = lastShowTime == 0L || now - lastShowTime >= INTERVAL
-    return currentTabCount >= TAB_THRESHOLD && intervalPassed
-  }
 
   override fun requestLoad(context: Context, generation: Int) {
     scope.launch {
@@ -104,8 +91,6 @@ class InterstitialAdUnit(
 
       override fun onAdImpression() {
         Timber.tag(tag).d("$currentName - Impression")
-        lastShowTime = System.currentTimeMillis()
-        currentTabCount = 0
         _state.value = AdUnitState.IMPRESSION
         onAdImpression()
         onShowed()
@@ -131,14 +116,7 @@ class InterstitialAdUnit(
     ad.show(activity)
   }
 
-  override fun destroy() {
-    scope.cancel()
+  override fun releaseAd() {
     _interstitialAd = null
-    _state.value = AdUnitState.NONE
-  }
-
-  companion object {
-    private const val TAB_THRESHOLD = 3
-    private const val INTERVAL = 60_000L
   }
 }

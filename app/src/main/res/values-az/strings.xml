@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">Profiliniz uğurla yeniləndi.</string>
   <string name="dark">Tünd Rejim</string>
   <string name="light">İşıq Rejim</string>
+  <string name="may_contain_ads">Bu əməliyyatda reklam ola bilər</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">Bu fəslin gedişatını sıfırlamaq istədiyinizə əminsiniz? O, oxu tarixçənizdən silinəcək.</string>
   <string name="daily_reading_time">Gündəlik oxu vaxtı</string>
   <string name="dark_mode">Qaranlıq rejim</string>

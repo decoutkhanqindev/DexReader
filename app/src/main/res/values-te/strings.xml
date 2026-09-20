@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">మీ ప్రొఫైల్ విజయవంతంగా నవీకరించబడింది.</string>
   <string name="dark">డార్క్ మోడ్</string>
   <string name="light">లైట్ మోడ్</string>
+  <string name="may_contain_ads">ఈ చర్యలో ప్రకటనలు ఉండవచ్చు</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">ఈ అధ్యాయం పురోగతిని రీసెట్ చేయాలనుకుంటున్నారా? ఇది మీ చదివిన చరిత్ర నుండి తొలగించబడుతుంది.</string>
   <string name="daily_reading_time">రోజువారీ పఠన సమయం</string>
   <string name="dark_mode">డార్క్ మోడ్</string>

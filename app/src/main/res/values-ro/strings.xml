@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">Profilul tău a fost actualizat cu succes.</string>
   <string name="dark">Mod întunecat</string>
   <string name="light">Mod luminos</string>
+  <string name="may_contain_ads">Această acțiune poate conține reclame</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">Sigur vrei să resetezi progresul acestui capitol? Va fi eliminat din istoricul de lectură.</string>
   <string name="daily_reading_time">Timp de citire zilnic</string>
   <string name="dark_mode">Mod întunecat</string>

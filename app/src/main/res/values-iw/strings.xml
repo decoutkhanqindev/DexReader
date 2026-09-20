@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">הפרופיל שלך עודכן בהצלחה.</string>
   <string name="dark">מצב כהה</string>
   <string name="light">מצב בהיר</string>
+  <string name="may_contain_ads">פעולה זו עשויה להכיל פרסומות</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">בטוח שברצונך לאפס את ההתקדמות בפרק הזה? הוא יוסר מהיסטוריית הקריאה שלך.</string>
   <string name="daily_reading_time">זמן קריאה יומי</string>
   <string name="dark_mode">מצב כהה</string>

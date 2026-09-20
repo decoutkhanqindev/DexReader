@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">プロフィールが正常に更新されました。</string>
   <string name="dark">ダークモード</string>
   <string name="light">ライトモード</string>
+  <string name="may_contain_ads">この操作には広告が含まれる場合があります</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">このチャプターの進捗をリセットしますか？閲覧履歴からも削除されます。</string>
   <string name="daily_reading_time">1日の閲覧時間</string>
   <string name="dark_mode">ダークモード</string>

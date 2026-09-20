@@ -2,14 +2,12 @@ package com.decoutkhanqindev.dexreader.ads.ad_unit
 
 import android.app.Activity
 import android.content.Context
-import com.decoutkhanqindev.dexreader.data.network.connectivity.NetworkManager
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.appopen.AppOpenAd
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -20,8 +18,9 @@ import kotlin.coroutines.resumeWithException
 
 class AppOpenAdUnit(
   floors: List<Pair<String, String>>,
-  networkManager: NetworkManager,
-) : AdUnit(floors, networkManager) {
+  isNetworkAvailable: () -> Boolean,
+  canRequestAds: () -> Boolean,
+) : AdUnit(floors, isNetworkAvailable, canRequestAds) {
 
   private var _appOpenAd: AppOpenAd? = null
 
@@ -101,9 +100,7 @@ class AppOpenAdUnit(
     ad.show(activity)
   }
 
-  override fun destroy() {
-    scope.cancel()
+  override fun releaseAd() {
     _appOpenAd = null
-    _state.value = AdUnitState.NONE
   }
 }

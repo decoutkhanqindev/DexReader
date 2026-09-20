@@ -148,4 +148,5 @@
   <string name="your_profile_has_been_updated_successfully">Sinu profiil on edukalt uuendatud.</string>
   <string name="dark">Tume</string>
   <string name="light">Hele</string>
+  <string name="may_contain_ads">See toiming võib sisaldada reklaame</string>
 </resources>

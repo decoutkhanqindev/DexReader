@@ -3,14 +3,12 @@ package com.decoutkhanqindev.dexreader.ads.ad_unit
 import android.content.Context
 import android.util.DisplayMetrics
 import androidx.compose.runtime.Stable
-import com.decoutkhanqindev.dexreader.data.network.connectivity.NetworkManager
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -21,8 +19,9 @@ import kotlin.coroutines.resumeWithException
 
 class BannerAdUnit(
   floors: List<Pair<String, String>>,
-  networkManager: NetworkManager,
-) : AdUnit(floors, networkManager) {
+  isNetworkAvailable: () -> Boolean,
+  canRequestAds: () -> Boolean,
+) : AdUnit(floors, isNetworkAvailable, canRequestAds) {
 
   private var _adView: AdView? = null
   val adView: AdView? get() = _adView
@@ -92,10 +91,8 @@ class BannerAdUnit(
     _adView?.resume()
   }
 
-  override fun destroy() {
-    scope.cancel()
+  override fun releaseAd() {
     _adView?.destroy()
     _adView = null
-    _state.value = AdUnitState.NONE
   }
 }

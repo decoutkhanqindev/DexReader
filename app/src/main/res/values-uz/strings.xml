@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">Profilingiz muvaffaqiyatli yangilandi.</string>
   <string name="dark">Tungi rejim</string>
   <string name="light">Yorug\' rejim</string>
+  <string name="may_contain_ads">Bu amalda reklama bo\'lishi mumkin</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">Bu bobning holatini tiklashni xohlaysizmi? U o‘qish tarixingizdan o‘chiriladi.</string>
   <string name="daily_reading_time">Kunlik o‘qish vaqti</string>
   <string name="dark_mode">Tungi rejim</string>

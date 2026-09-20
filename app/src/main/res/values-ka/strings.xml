@@ -148,4 +148,5 @@
   <string name="your_profile_has_been_updated_successfully">თქვენი პროფილი წარმატებით განახლდა.</string>
   <string name="dark">მუქი</string>
   <string name="light">ღია</string>
+  <string name="may_contain_ads">ამ მოქმედებას შეიძლება რეკლამა ახლდეს</string>
 </resources>

@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">உங்கள் சுயவிவரம் வெற்றிகரமாகப் புதுப்பிக்கப்பட்டது.</string>
   <string name="dark">இருண்ட பயன்முறை</string>
   <string name="light">ஒளி பயன்முறை</string>
+  <string name="may_contain_ads">இந்தச் செயலில் விளம்பரங்கள் இருக்கலாம்</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">இந்த அத்தியாயத்தின் முன்னேற்றத்தை மீட்டமைக்க விரும்புகிறீர்களா? இது உங்கள் வாசிப்பு வரலாற்றிலிருந்து நீக்கப்படும்.</string>
   <string name="daily_reading_time">தினசரி வாசிப்பு நேரம்</string>
   <string name="dark_mode">இருண்ட பயன்முறை</string>

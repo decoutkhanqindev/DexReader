@@ -2,14 +2,12 @@ package com.decoutkhanqindev.dexreader.ads.ad_unit
 
 import android.content.Context
 import androidx.compose.runtime.Stable
-import com.decoutkhanqindev.dexreader.data.network.connectivity.NetworkManager
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.nativead.NativeAd
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -20,8 +18,9 @@ import kotlin.coroutines.resumeWithException
 
 class NativeAdUnit(
   floors: List<Pair<String, String>>,
-  networkManager: NetworkManager,
-) : AdUnit(floors, networkManager) {
+  isNetworkAvailable: () -> Boolean,
+  canRequestAds: () -> Boolean,
+) : AdUnit(floors, isNetworkAvailable, canRequestAds) {
 
   private var _nativeAd: NativeAd? = null
   val nativeAd: NativeAd? get() = _nativeAd
@@ -35,7 +34,10 @@ class NativeAdUnit(
 
       try {
         val ad = withTimeout(LOAD_TIMEOUT) { awaitLoad(context) }
-        if (!isCurrentGeneration(generation)) return@launch
+        if (!isCurrentGeneration(generation)) {
+          ad.destroy()
+          return@launch
+        }
         Timber.tag(tag).d("$currentName - Loaded")
         _nativeAd?.destroy()
         _nativeAd = ad
@@ -76,10 +78,8 @@ class NativeAdUnit(
         .loadAd(AdRequest.Builder().build())
     }
 
-  override fun destroy() {
-    scope.cancel()
+  override fun releaseAd() {
     _nativeAd?.destroy()
     _nativeAd = null
-    _state.value = AdUnitState.NONE
   }
 }

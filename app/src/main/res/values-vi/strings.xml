@@ -183,4 +183,5 @@
   <!-- Settings Screen -->
   <string name="dark">Tối</string>
   <string name="light">Sáng</string>
+  <string name="may_contain_ads">Thao tác này có thể chứa quảng cáo</string>
 </resources>

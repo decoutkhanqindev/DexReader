@@ -148,4 +148,5 @@
   <string name="your_profile_has_been_updated_successfully">Jūsu profils ir veiksmīgi atjaunināts.</string>
   <string name="dark">Tumšs</string>
   <string name="light">Gaišs</string>
+  <string name="may_contain_ads">Šī darbība var saturēt reklāmas</string>
 </resources>

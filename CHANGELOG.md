@@ -4,7 +4,7 @@ Dated log of notable multi-file / cross-cutting work sessions. Newest entry firs
 
 ---
 
-## 2026-09-20 — Dọn giàn giáo còn sót của observe-network-retry trong `ads/`, waterfall thành `floors` list
+## 2026-09-20 — Dọn giàn giáo observe-network-retry, waterfall `floors`, release/destroy, UMP consent → MobileAds init
 
 **Lý do**: cơ chế "hết mạng thì observe `isAvailable` rồi tự load lại" đã bỏ khỏi `AdUnit` ở
 session trước, nhưng phần khung dựng lên để phục vụ nó vẫn nằm rải rác. Trace lại toàn bộ `ads/`
@@ -43,13 +43,142 @@ session trước, nhưng phần khung dựng lên để phục vụ nó vẫn n�
   của caller. Log fallback giờ nêu cả floor vừa fail lẫn floor sắp thử (`failedName` chụp
   trước khi `tryFallback()` đổi index). Đụng 7 file: `AdUnit`, 5 subclass (chỉ constructor +
   `super`), `AdsManager` (`floors = listOf(INTER_SPLASH_ALL_ID to "inter_splash_all")`).
-- `compileDebugKotlin` + `compileReleaseKotlin` BUILD SUCCESSFUL (cả hai đợt).
+- **Tách `release()` khỏi `destroy()`** (mô hình "singleton + release"): `AdUnit.release()`
+  **không terminal** — `nextGeneration()` để kết quả load đang bay bị bỏ khi về, gọi hook
+  `releaseAd()` của subclass thả object SDK (`AdView.destroy()` / `NativeAd.destroy()` / `= null`
+  với 3 loại full-screen vì không có API destroy), `state = NONE`; scope còn sống nên unit
+  singleton `load()` lại được ở lần vào màn sau. `AdUnit.destroy()` giờ là hàm cụ thể trên base
+  = `scope.cancel()` + `release()`, terminal, chưa ai gọi. 5 subclass đổi `override fun destroy()`
+  → `override fun releaseAd()` chỉ còn phần thả object. Lý do: unit là `@Singleton` sống suốt
+  process trong `AdsManager`, còn Banner/Native ôm object gắn với View/Context — `AdView` tạo
+  từ `LocalContext` (Activity) mà giữ qua xoay màn thì pin Activity chết và gắn lại cùng một
+  `View` instance vào composition mới. 3 loại full-screen không cần destroy (one-shot, đã null
+  sau show/dismiss) nhưng `release()` vẫn có nghĩa: bỏ ad đã preload mà không muốn show nữa.
+- **3 composable hiển thị `release()` khi rời màn**: gộp load + release vào **một**
+  `DisposableEffect(Unit) { adUnit().load(context); onDispose { adUnit().release() } }` (thay
+  cho `SideEffect(Unit)` load + `DisposableEffect` release rời — cùng chạy ở apply phase sau
+  composition, gộp lại thì cặp load/release nhìn thấy nhau), đặt trước các early-return theo
+  state để phủ mọi state: `return` chỉ bỏ phần *sau* nó, effect khai báo phía trên vẫn nằm
+  trong slot table nên `load()` chạy sau composition đầu (lúc `adState` còn `NONE` và body
+  không vẽ gì), `LOADING` về ở message main-loop kế tiếp mới recompose qua guard. Đổi lại: một request mỗi lần vào màn, không cache ad qua lần đổi tab. 2 native
+  composable thêm `AndroidView(onRelease = { it.destroy() })` cho `NativeAdView` inflate từ XML
+  (object khác với `NativeAd` unit đang giữ). `NativeAdUnit` destroy `NativeAd` về cho generation
+  đã cũ thay vì chỉ bỏ tham chiếu — leak này có sẵn từ trước (2 lần `load()` sát nhau), giờ
+  `release()` làm nó dễ xảy ra hơn nên sửa luôn.
+- **Khôi phục guard re-entry ở đầu `AdUnit.load()`** — `if (_state != NONE && _state != FAILED)
+  return` (bị bỏ nhầm trong `b4292d0c`). Không có nó thì unit đã preload bị composable gọi
+  `load()` lần nữa làm hỏng: `LOADING` ⇒ kết quả preload bị generation mới bỏ, 2 request chạy
+  song song; `LOADED` ⇒ Banner `_adView?.destroy()` ngay ad đã tải rồi shimmer lại, Native tốn
+  thêm 1 request; `IMPRESSION` với full-screen ⇒ ad mới load gán vào `_xxxAd` rồi bị
+  `onAdDismissedFullScreenContent` set `null` mất trắng — nên `IMPRESSION` cũng nằm trong guard.
+  Ngữ nghĩa `load()` giờ là "đảm bảo có ad đang tải hoặc sẵn sàng": `NONE`/`FAILED` mới load,
+  còn lại no-op; retry sau fail vẫn chỉ là gọi `load()` lại.
+- **Gộp `NativeMedia43Ad` + `NativeMedia169Ad` thành một `NativeAdView(adUnit, layoutType,
+  modifier)`** — hai file chỉ khác layout res và bo góc icon (8dp / 6dp), phần bind giống hệt.
+  Enum mới `NativeLayoutType { MEDIA_4_3, MEDIA_16_9 }` (khai báo đầu `NativeAdView.kt`, không file riêng), một
+  `when` private `NativeLayoutType.viewBuilder(): (Context) -> NativeAdView` trả về lambda
+  factory cho `AndroidView`, cả hai nhánh gọi chung `buildNativeAdView(context, layoutRes,
+  iconCornerDp)` + `bindNativeAd(view, ad)`. Tên composable trùng class `NativeAdView` của
+  Google import trong cùng file, **không alias** (đã thử `GmsNativeAd` rồi bỏ theo yêu cầu):
+  vị trí kiểu là class Google, vị trí gọi với `(adUnit, layoutType, modifier)` là composable,
+  resolve theo chữ ký. `BannerAd` đổi tên thành `BannerAdView` cho cùng hậu tố (bỏ luôn import
+  `SideEffect` thừa). Chưa màn nào gọi nên không có call site phải đổi.
+- **Chưa làm, ghi lại để biết**: `AppOpenAdUnit` không lưu thời điểm load — Google quy định app
+  open ad hết hạn sau 4 giờ, khi dùng tới cần timestamp + bỏ ad quá hạn.
+- `compileDebugKotlin` + `compileReleaseKotlin` BUILD SUCCESSFUL (cả ba đợt).
 - **Giữ nguyên theo quyết định của user**: gate `isNetworkAvailable` trong `SplashScreen` là chủ
   đích, không phải di sản — Splash phải đứng dưới `NoInternetDialog` chứ không vào Main khi
   offline.
 - **Không đụng, để user quyết**: `InterstitialAdUnit.incrementTabCount()`/`readyToLoad()`/
   `TAB_THRESHOLD`/`INTERVAL`/`currentTabCount`/`lastShowTime` — policy "show inter sau 3 lần
   đổi tab, cách nhau ≥ 60 s" của app gốc, chưa ai gọi, không liên quan network.
+- **`AdsManager.onActivityDestroyed` bỏ `unregisterActivityLifecycleCallbacks(this)`** — app
+  single-Activity nên nó chạy ngay lần đổi configuration đầu tiên, sau đó `currentActivity`
+  không được track nữa. Đăng ký giờ sống suốt process (đúng với singleton). (Một bản `BaseAds`
+  gom `currentActivity`/`isAdShowing` cho cả `AdsManager` lẫn `AdUnit` kế thừa đã thử rồi
+  rollback cùng session — không static thì unit tạo `by lazy` sau `onResume` không biết activity,
+  phải mồi tay; không đáng.)
+- **UMP consent → `MobileAds.initialize`, toàn bộ trong `AdsManager`; `App.kt` bỏ `initAdMob()`.**
+  Theo sample `GoogleMobileAdsConsentManager` của Google: gom consent mỗi lần process lên, chỉ
+  init SDK khi `canRequestAds()`. Trigger là `onActivityCreated` (quyết định của user, Splash
+  không phải gọi) — đúng thứ tự vì Hilt inject `AdsManager` trong `OnContextAvailableListener`
+  của `Hilt_MainActivity`, tức trong `ComponentActivity.onCreate` **trước** `super.onCreate` →
+  `Activity.onCreate` → `dispatchActivityCreated` (xác minh trong source `activity-1.13.0` +
+  `android-36`). Guard: bỏ qua `AdActivity`, cờ `isConsentRequested` per-process (không gate theo
+  `savedInstanceState` — xoay màn không gọi lại, process mới thì gọi lại). `gatherConsent()`: nếu
+  `canRequestAds()` đã `true` từ cache phiên trước thì init **ngay, song song** với round-trip
+  `requestConsentInfoUpdate` (đo trên emulator: init xong ~1.2 s trước khi consent info về);
+  thành công ⇒ `loadAndShowConsentFormIfRequired(currentActivity ?: activity)`; cả nhánh form
+  đóng lẫn nhánh lỗi đều vào `onConsentGatheringComplete()` ⇒ re-check `canRequestAds()` → init,
+  rồi `isConsentGathered = true` — luôn kết thúc, màn chờ không kẹt. `initializeMobileAds()`
+  idempotent bằng `AtomicBoolean`; `MobileAds.initialize` chạy trên `Dispatchers.IO` (khuyến
+  nghị của Google chống ANR cold start). Expose cho Splash: `isConsentGathered`,
+  `isMobileAdsInitialized` (2 `StateFlow<Boolean>`) + getter `canRequestAds`.
+- **Wiring Splash (bản cuối, chủ ý của user: ad Splash là bắt buộc)**: load =
+  `SideEffect(isConsentGathered, isMobileAdsInitialized, isNetworkAvailable) { if (cả ba) load() }`;
+  navigation = `LifecycleResumeEffect(interSplashState, isNetworkAvailable)`: `LOADED` ⇒ show,
+  `FAILED` ⇒ đi tiếp. Không có nhánh "consent gom xong nhưng không được request ⇒ đi tiếp không
+  ad" (đã thêm rồi bỏ). Lý do vẫn cần điều kiện ở Splash dù `AdUnit.load()` đã gate: gate của
+  unit là "lần thử này có được phép không" và set `FAILED` khi không — không phân biệt "chưa" với
+  "không"; navigation coi `FAILED` là đi tiếp nên thử sớm = user lọt vào app không ad (đo: `load()`
+  vô điều kiện ở composition đầu ⇒ fresh install `FAILED` +6 s ⇒ form consent đè lên màn Language
+  thay vì Splash; launch ấm load trước init 3 s). `isNetworkAvailable` trong điều kiện load trùng
+  gate mạng của unit, giữ cho đối xứng. **Đường kẹt còn lại**: consent gom xong mà
+  `canRequestAds()` false (mở lần đầu offline — verify airplane mode: `Consent info update: 2
+  Error making request`; hoặc form lỗi) ⇒ không init ⇒ không `load()` ⇒ Splash chờ mãi kể cả khi
+  có mạng lại vì `isConsentRequested` khoá gom lại. **Đây là chủ đích của user ("buộc phải kẹt
+  rồi, đó là tactics của tôi")** — không thêm bypass, không nhánh đi tiếp không ad, không tự
+  gom consent lại.
+- **`canRequestAds` truyền xuống `AdUnit`** làm gate đầu `load()` (`canRequestAds: () -> Boolean`,
+  `AdsManager` truyền `consentInformation::canRequestAds` — provider chứ không phải Boolean chụp
+  lúc tạo, vì consent đổi sau khi unit đã tồn tại): không được phép ⇒ `FAILED` + log
+  `Consent not granted, not loading`, trước cả gate mạng. Mọi composable gọi `load()` (Banner/
+  Native sau này) tự tôn trọng consent mà không cần wiring riêng. Cùng lúc **`NetworkManager`
+  trong constructor `AdUnit` đổi thành `isNetworkAvailable: () -> Boolean`** (`AdsManager` truyền
+  `{ networkManager.isAvailable.value }`) — đối xứng với `canRequestAds`, `ads/ad_unit` không còn
+  import gì từ `data/`, tạo unit trong test/preview chỉ cần 2 lambda.
+- **Test device / debug consent**: `buildConfigField ADMOB_TEST_DEVICE_IDS` đọc từ
+  `local.properties` (phẩy phân cách, default rỗng, không commit; hash lấy từ `adb logcat -s Ads
+  | grep setTestDeviceIds`; máy ảo không cần). Không rỗng thì `MobileAds.setRequestConfiguration(
+  setTestDeviceIds)` ở mọi build type (chỉ ảnh hưởng máy có hash — cho phép test id thật trên
+  máy mình không thành invalid traffic). Debug build thêm `ConsentDebugSettings` với
+  `DEBUG_GEOGRAPHY_EEA` + cùng list hash để ép form hiện.
+- Khai báo tường minh `com.google.android.ump:user-messaging-platform` (`ump = "4.0.0"`) trong
+  catalog dù `play-services-ads` 25.3.0 đã kéo transitive (`strictly 4.0.0`).
+- **Không thêm privacy-options entry point** theo quyết định của user — Google yêu cầu cho user
+  EEA có `privacyOptionsRequirementStatus == REQUIRED`; có thể bị flag khi review policy; thêm
+  sau = 1 getter + `showPrivacyOptionsForm(activity)` + 1 item Settings.
+- **Kết quả chạy emulator, trước khi có message trên console** (`pm clear` → cold start): UMP
+  trả lỗi 3 *"Publisher misconfiguration: no form(s) configured for the input app ID
+  ca-app-pub-9635401910651855~2460018047"* — form không thể hiện với bất kỳ ai, `DEBUG_GEOGRAPHY_EEA`
+  không giúp; nhánh lỗi chạy đúng (`isConsentGathered = true`, `canRequestAds()` vẫn `true`,
+  init, inter Loading → Loaded → Showed → Impression → Closed). Lần mở thứ 2: init từ cache trước
+  consent info 1.2 s. Xoay màn 2 lần: không request consent thứ hai.
+- **Sau khi publish European regulations message trên AdMob** (Consent / Do not consent — bật
+  cho mọi nước, vì nhiều DPA EU yêu cầu nút từ chối ngang nút đồng ý / Manage options): form
+  hiện trên Splash sau ~15 s (UMP fetch + WebView, emulator lạnh). **Consent** ⇒
+  `IABTCF_PurposeConsents 11111111111` → init → `Loading` 15 ms sau → Loaded → Showed.
+  **Do not consent** ⇒ `PurposeConsents 00000000000` nhưng `canRequestAds()` **vẫn `true`** —
+  từ chối cũng là lựa chọn đã thu thập (`OBTAINED`), SDK được request và nhận *limited ads* theo
+  TC string (sample id debug fill được; id thật có thể no-fill). Hàng "gathered ∧ !canRequestAds
+  ⇒ không ad" của bảng chỉ xảy ra khi consent `REQUIRED` mà không thu được (form không hiện được,
+  request đầu fail mà chưa có cache), không phải khi user bấm từ chối. Text mặc định của message
+  hứa "a link or button in the app menu to manage or withdraw consent" — app chưa có entry point
+  đó, cần thêm hoặc sửa text ở Styling.
+- **Splash: caption "This action may contain ads" + tách `LoadingProgress`.** String mới
+  `may_contain_ads` thêm vào **cả 64 locale** (khác `ad_loading`/`ad_label` chỉ có tiếng Anh —
+  caption này hiện mỗi lần mở app, hai string kia chưa có caller); chèn sau `ad_label` ở
+  `values/`, sau `light` ở 63 locale còn lại; `ga`/`uz` có `\'`. `SplashContent` giờ là glow +
+  logo + `Column(spacedBy(8.dp))` gồm `LoadingProgress` và caption (`bodySmall + Italic + Center
+  + onSurfaceVariant`). `LoadingProgress(progress: () -> Float, modifier)` = label "Loading …" +
+  "NN%" + `LinearProgressIndicator`, đặt ở `screens/splash/components/` (ban đầu để
+  `common/indicators/`, user yêu cầu chuyển về vì chỉ Splash dùng). Progress là lambda nên
+  recomposition mỗi frame của giá trị animate giờ chỉ tính cho `LoadingProgress`, không còn cho
+  cả `SplashContent` (trước đây `progress.value` đọc thẳng trong body màn hình, `Row`/`Column`
+  inline nên restart scope là cả màn). Animation giả 0→99 % / 5 s vẫn ở `SplashContent`.
+  Verify emulator: caption nằm đúng dưới thanh (chụp lúc form consent đè lên Splash); Consent →
+  init → `Loading` 8 ms sau → Loaded → Showed → `AdActivity`, không đổi.
+- `compileDebugKotlin` + `compileReleaseKotlin` + `installDebug` BUILD SUCCESSFUL.
 
 ---
 

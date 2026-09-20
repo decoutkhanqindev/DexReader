@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">Profil Anda telah berhasil diperbarui.</string>
   <string name="dark">Mode Gelap</string>
   <string name="light">Mode Terang</string>
+  <string name="may_contain_ads">Tindakan ini mungkin berisi iklan</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">Yakin ingin mengatur ulang progres bab ini? Bab ini akan dihapus dari riwayat bacaanmu.</string>
   <string name="daily_reading_time">Waktu baca harian</string>
   <string name="dark_mode">Mode gelap</string>

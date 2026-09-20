@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">Vaš profil je uspješno ažuriran.</string>
   <string name="dark">Tamni način</string>
   <string name="light">Svijetli način</string>
+  <string name="may_contain_ads">Ova radnja može sadržavati oglase</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">Jesi li siguran da želiš poništiti napredak ovog poglavlja? Bit će uklonjeno iz povijesti čitanja.</string>
   <string name="daily_reading_time">Dnevno vrijeme čitanja</string>
   <string name="dark_mode">Tamni način</string>

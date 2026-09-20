@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">Profiilisi on päivitetty onnistuneesti.</string>
   <string name="dark">Tumma tila</string>
   <string name="light">Vaalea tila</string>
+  <string name="may_contain_ads">Tämä toiminto voi sisältää mainoksia</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">Haluatko varmasti nollata tämän luvun edistymisen? Se poistetaan lukuhistoriastasi.</string>
   <string name="daily_reading_time">Päivittäinen lukuaika</string>
   <string name="dark_mode">Tumma tila</string>

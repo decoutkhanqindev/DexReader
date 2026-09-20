@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">Profilen din er oppdatert.</string>
   <string name="dark">Mørk modus</string>
   <string name="light">Lys modus</string>
+  <string name="may_contain_ads">Denne handlingen kan inneholde annonser</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">Er du sikker på at du vil tilbakestille framdriften for dette kapittelet? Det fjernes fra leseloggen din.</string>
   <string name="daily_reading_time">Daglig lesetid</string>
   <string name="dark_mode">Mørk modus</string>

@@ -148,4 +148,5 @@
   <string name="your_profile_has_been_updated_successfully">Jūsų profilis sėkmingai atnaujintas.</string>
   <string name="dark">Tamsi</string>
   <string name="light">Šviesi</string>
+  <string name="may_contain_ads">Šiame veiksme gali būti reklamų</string>
 </resources>

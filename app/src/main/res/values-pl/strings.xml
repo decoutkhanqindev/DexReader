@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">Twój profil został pomyślnie zaktualizowany.</string>
   <string name="dark">Tryb ciemny</string>
   <string name="light">Tryb jasny</string>
+  <string name="may_contain_ads">Ta czynność może zawierać reklamy</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">Czy na pewno chcesz zresetować postęp tego rozdziału? Zostanie usunięty z historii czytania.</string>
   <string name="daily_reading_time">Dzienny czas czytania</string>
   <string name="dark_mode">Tryb ciemny</string>

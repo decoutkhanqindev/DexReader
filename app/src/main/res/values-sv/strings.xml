@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">Din profil har uppdaterats framgångsrikt.</string>
   <string name="dark">Mörkt läge</string>
   <string name="light">Ljust läge</string>
+  <string name="may_contain_ads">Den här åtgärden kan innehålla annonser</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">Är du säker på att du vill återställa kapitlets framsteg? Det tas bort från din läshistorik.</string>
   <string name="daily_reading_time">Daglig lästid</string>
   <string name="dark_mode">Mörkt läge</string>

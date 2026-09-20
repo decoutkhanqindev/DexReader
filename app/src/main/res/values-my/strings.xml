@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">သင်၏ကိုယ်ရေးအချက်အလက်ကို အောင်မြင်စွာ အပ်ဒိတ်လုပ်ပြီးပါပြီ။</string>
   <string name="dark">အမှောင်စနစ်</string>
   <string name="light">အလင်းစနစ်</string>
+  <string name="may_contain_ads">ဤလုပ်ဆောင်ချက်တွင် ကြော်ငြာများ ပါဝင်နိုင်သည်</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">ဤအခန်း၏ တိုးတက်မှုကို ပြန်လည်သတ်မှတ်လိုသည်မှာ သေချာပါသလား။ သင့်ဖတ်ရှုမှတ်တမ်းမှ ဖယ်ရှားသွားပါမည်။</string>
   <string name="daily_reading_time">နေ့စဉ် ဖတ်ရှုချိန်</string>
   <string name="dark_mode">အမှောင်ပုံစံ</string>

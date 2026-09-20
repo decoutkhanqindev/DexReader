@@ -148,4 +148,5 @@
   <string name="your_profile_has_been_updated_successfully">Таны профайл амжилттай шинэчлэгдлээ.</string>
   <string name="dark">Харанхуй</string>
   <string name="light">Гэрэл</string>
+  <string name="may_contain_ads">Энэ үйлдэлд зар сурталчилгаа агуулагдаж болно</string>
 </resources>

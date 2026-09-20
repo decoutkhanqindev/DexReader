@@ -148,4 +148,5 @@
   <string name="your_profile_has_been_updated_successfully">तपाईंको प्रोफाइल सफलतापूर्वक अपडेट भयो।</string>
   <string name="dark">अँध्यारो</string>
   <string name="light">उज्यालो</string>
+  <string name="may_contain_ads">यो कार्यमा विज्ञापनहरू हुन सक्छन्</string>
 </resources>

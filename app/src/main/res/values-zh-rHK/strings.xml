@@ -148,4 +148,5 @@
   <string name="your_profile_has_been_updated_successfully">你的個人檔案已成功更新。</string>
   <string name="dark">深色</string>
   <string name="light">淺色</string>
+  <string name="may_contain_ads">此操作可能包含廣告</string>
 </resources>

@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">Profiliniz başarıyla güncellendi.</string>
   <string name="dark">Karanlık Mod</string>
   <string name="light">Aydınlık Mod</string>
+  <string name="may_contain_ads">Bu işlem reklam içerebilir</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">Bu bölümün ilerlemesini sıfırlamak istediğinden emin misin? Okuma geçmişinden kaldırılacak.</string>
   <string name="daily_reading_time">Günlük okuma süresi</string>
   <string name="dark_mode">Koyu mod</string>

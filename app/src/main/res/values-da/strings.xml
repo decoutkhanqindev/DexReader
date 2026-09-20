@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">Din profil er blevet opdateret med succes.</string>
   <string name="dark">Mørk tilstand</string>
   <string name="light">Lys tilstand</string>
+  <string name="may_contain_ads">Denne handling kan indeholde annoncer</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">Er du sikker på, at du vil nulstille dette kapitels fremskridt? Det fjernes fra din læsehistorik.</string>
   <string name="daily_reading_time">Daglig læsetid</string>
   <string name="dark_mode">Mørk tilstand</string>

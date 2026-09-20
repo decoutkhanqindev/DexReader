@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">Вашият профил е актуализиран успешно.</string>
   <string name="dark">Тъмен режим</string>
   <string name="light">Светъл режим</string>
+  <string name="may_contain_ads">Това действие може да съдържа реклами</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">Сигурен ли си, че искаш да нулираш напредъка по тази глава? Тя ще бъде премахната от историята ти на четене.</string>
   <string name="daily_reading_time">Дневно време за четене</string>
   <string name="dark_mode">Тъмен режим</string>

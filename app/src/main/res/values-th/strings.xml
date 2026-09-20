@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">โปรไฟล์ของคุณได้รับการอัปเดตเรียบร้อยแล้ว</string>
   <string name="dark">โหมดมืด</string>
   <string name="light">โหมดสว่าง</string>
+  <string name="may_contain_ads">การดำเนินการนี้อาจมีโฆษณา</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">แน่ใจไหมว่าต้องการรีเซ็ตความคืบหน้าของตอนนี้ ระบบจะลบออกจากประวัติการอ่านของคุณ</string>
   <string name="daily_reading_time">เวลาอ่านต่อวัน</string>
   <string name="dark_mode">โหมดมืด</string>

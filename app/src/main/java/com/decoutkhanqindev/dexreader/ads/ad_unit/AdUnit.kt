@@ -1,17 +1,18 @@
 package com.decoutkhanqindev.dexreader.ads.ad_unit
 
 import android.content.Context
-import com.decoutkhanqindev.dexreader.data.network.connectivity.NetworkManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import timber.log.Timber
 
 abstract class AdUnit(
-  val floors: List<Pair<String, String>>,
-  private val networkManager: NetworkManager,
+  private val floors: List<Pair<String, String>>,
+  private val isNetworkAvailable: () -> Boolean,
+  private val canRequestAds: () -> Boolean,
 ) {
   protected val tag: String get() = javaClass.simpleName
 
@@ -27,7 +28,13 @@ abstract class AdUnit(
   val state: StateFlow<AdUnitState> = _state.asStateFlow()
 
   fun load(context: Context) {
-    if (!networkManager.isAvailable.value) {
+    if (_state.value != AdUnitState.NONE && _state.value != AdUnitState.FAILED) return
+    if (!canRequestAds()) {
+      Timber.tag(tag).d("$currentName - Consent not granted, not loading")
+      _state.value = AdUnitState.FAILED
+      return
+    }
+    if (!isNetworkAvailable()) {
       Timber.tag(tag).d("$currentName - No network, not loading")
       _state.value = AdUnitState.FAILED
       return
@@ -65,8 +72,20 @@ abstract class AdUnit(
     }
   }
 
+  fun release() {
+    Timber.tag(tag).d("$currentName - Released")
+    nextGeneration()
+    releaseAd()
+    _state.value = AdUnitState.NONE
+  }
+
+  fun destroy() {
+    scope.cancel()
+    release()
+  }
+
   protected abstract fun requestLoad(context: Context, generation: Int)
-  abstract fun destroy()
+  protected abstract fun releaseAd()
 
   companion object {
     const val LOAD_TIMEOUT = 20_000L

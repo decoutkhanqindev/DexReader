@@ -38,7 +38,6 @@ fun ReadingProgressBar(
   val animatedProgress by animateFloatAsState(
     targetValue = progressFloat,
     animationSpec = tween(durationMillis = 500),
-    label = "readingProgress"
   )
   val progressInt = remember(progressFloat) { (progressFloat * 100).toInt() }
 

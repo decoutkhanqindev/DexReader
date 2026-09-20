@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">Votre profil a été mis à jour avec succès.</string>
   <string name="dark">Mode sombre</string>
   <string name="light">Mode clair</string>
+  <string name="may_contain_ads">Cette action peut contenir des publicités</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">Voulez-vous vraiment réinitialiser la progression de ce chapitre ? Il sera retiré de votre historique de lecture.</string>
   <string name="daily_reading_time">Temps de lecture quotidien</string>
   <string name="dark_mode">Mode sombre</string>

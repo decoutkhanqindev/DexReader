@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">Ваш профиль успешно обновлен.</string>
   <string name="dark">Темная тема</string>
   <string name="light">Светлая тема</string>
+  <string name="may_contain_ads">Это действие может содержать рекламу</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">Точно сбросить прогресс этой главы? Она будет удалена из истории чтения.</string>
   <string name="daily_reading_time">Время чтения за день</string>
   <string name="dark_mode">Тёмная тема</string>

@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">Profili juaj është përditësuar me sukses.</string>
   <string name="dark">Modaliteti i errët</string>
   <string name="light">Modaliteti i ndriçuar</string>
+  <string name="may_contain_ads">Ky veprim mund të përmbajë reklama</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">Je i sigurt që dëshiron ta rivendosësh progresin e këtij kapitulli? Do të hiqet nga historiku i leximit.</string>
   <string name="daily_reading_time">Koha ditore e leximit</string>
   <string name="dark_mode">Modaliteti i errët</string>

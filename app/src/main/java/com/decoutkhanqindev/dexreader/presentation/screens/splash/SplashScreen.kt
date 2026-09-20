@@ -33,6 +33,8 @@ fun SplashScreen(
   val isFirstOpen by LocalDataStoreManager.current.isFirstOpen.collectAsStateWithLifecycle()
   val isNetworkAvailable by LocalNetworkManager.current.isAvailable.collectAsStateWithLifecycle()
   val adsManager = LocalAdsManager.current
+  val isConsentGathered by adsManager.isConsentGathered.collectAsStateWithLifecycle()
+  val isMobileAdsInitialized by adsManager.isMobileAdsInitialized.collectAsStateWithLifecycle()
   val interSplash = adsManager.interSplash
   val interSplashState by interSplash.state.collectAsStateWithLifecycle()
   val handleNext = {
@@ -43,7 +45,9 @@ fun SplashScreen(
     }
   }
 
-  SideEffect(Unit) { interSplash.load(context) }
+  SideEffect(isConsentGathered, isMobileAdsInitialized, isNetworkAvailable) {
+    if (isConsentGathered && isMobileAdsInitialized && isNetworkAvailable) interSplash.load(context)
+  }
 
   LifecycleResumeEffect(interSplashState, isNetworkAvailable) {
     if (isNetworkAvailable) {
@@ -61,6 +65,7 @@ fun SplashScreen(
         else -> Unit
       }
     }
+
     onPauseOrDispose { }
   }
 

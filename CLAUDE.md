@@ -88,8 +88,9 @@ ads/          AdMob, ported from a sister project (`lich_viet_loc_phat`). Two su
               class, **not** under `presentation/` even though half of it is Compose:
               `ad_unit/` = the `AdUnit` base + `AdUnitState` + the 5 concrete formats
               (`Banner`/`Native`/`Interstitial`/`Reward`/`AppOpenAdUnit`); `composables/` = the
-              display components (`BannerAd`, `NativeMedia43Ad`, `NativeMedia169Ad`,
-              `AdLoadingDialog`); `AdsManager` at the package root. The base class is a waterfall + generation-counter
+              display components (`BannerAdView`, `NativeAdView` with its `NativeLayoutType` enum declared at the top of the same file,
+              `AdLoadingDialog` — the two ad composables carry a `View` suffix on purpose, they
+              wrap an `AndroidView`); `AdsManager` at the package root. The base class is a waterfall + generation-counter
               state machine. **The waterfall is one constructor param, `floors:
               List<Pair<String, String>>`** — each entry is `(adUnitId, name)`, ordered highest
               floor first (`listOf(HIGH_ID to "inter_home_high", ALL_ID to "inter_home_all")`),
@@ -103,16 +104,35 @@ ads/          AdMob, ported from a sister project (`lich_viet_loc_phat`). Two su
               `floors[floorIndex]`, and the fallback log line names both the floor that failed
               and the one being tried next. The list is not de-duplicated: repeating an id across
               entries is the caller's mistake, not something the base class silently absorbs. The
-              constructor also takes `data/network/connectivity/NetworkManager` and reads
-              `networkManager.isAvailable.value` **once, synchronously, at the top of `load()`**:
-              no network ⇒ `_state = FAILED` and return; otherwise reset the waterfall and
-              `requestLoad(context, nextGeneration())`. That is the *whole* of `load()` — there is
-              **no** `LOADING`/`LOADED` re-entry guard, no `cancelPendingLoad()`, no
-              `attemptLoad()` indirection (all three existed briefly during the port and were
-              removed): every call is a fresh load that bumps the generation, so an in-flight
-              result from an earlier call is discarded by `isCurrentGeneration()` rather than
-              raced against. Callers therefore own "load once" — which is exactly what the
-              composables' `SideEffect(Unit)` gives them (below). There is **no** `NO_NETWORK`
+              constructor's other two parameters are **plain `() -> Boolean` providers, not
+              manager objects**: `isNetworkAvailable` (`AdsManager` passes `{
+              networkManager.isAvailable.value }`) and `canRequestAds` (`AdsManager` passes
+              `consentInformation::canRequestAds`). Providers rather than snapshots because both
+              answers change after the unit exists (consent is gathered later, networks drop),
+              and providers rather than `NetworkManager`/`ConsentInformation` so `ads/ad_unit`
+              imports nothing from `data/` or UMP and a unit can be built in a test or preview
+              with two lambdas. Both are read **once, synchronously, inside `load()`**. `load()`
+              in full: **`if (_state != NONE && _state != FAILED) return`** — then no consent
+              (`!canRequestAds()`) ⇒ `_state = FAILED` and return (logged as `Consent not
+              granted, not loading`); then no network ⇒ `_state = FAILED` and return; otherwise
+              reset the waterfall and `requestLoad(context, nextGeneration())`. Consent is
+              checked before network on purpose — it is the legal gate, and it is what makes
+              every future `BannerAdView`/`NativeAdView` `load()` consent-aware with no wiring
+              at the call site. The first line is the re-entry guard and
+              it means "make sure an ad is loading or ready", not "load now": `NONE`/`FAILED`
+              proceed (so a retry after a failure is just `load()` again), `LOADING`/`LOADED`/
+              `IMPRESSION` are no-ops. It is what makes **preloading safe** — a unit that
+              `AdsManager` (or a previous screen) already started can be handed to a composable
+              whose effect calls `load()` again without the preload being thrown away. Without
+              it (the guard was dropped by mistake in `b4292d0c` and restored the next day):
+              `LOADING` ⇒ the preload's result is discarded by the generation bump and a second
+              request runs in parallel; `LOADED` ⇒ `BannerAdUnit.requestLoad` destroys the
+              loaded `AdView` on the spot and shows shimmer again; `IMPRESSION` on a full-screen
+              format ⇒ the newly loaded ad is assigned to `_xxxAd` and then wiped by
+              `onAdDismissedFullScreenContent`'s `= null`, which is why `IMPRESSION` is in the
+              guard too. There is still no `cancelPendingLoad()` and no `attemptLoad()`
+              indirection; the generation counter remains so that `release()` can drop an
+              in-flight result (below). There is **no** `NO_NETWORK`
               state (`AdUnitState` is `NONE`/`LOADING`/`LOADED`/`FAILED`/`IMPRESSION`; offline is
               one more way a load fails) and **no** observe-and-auto-retry-on-reconnect (existed
               in the source project, ported, then removed as more machinery than this app needs
@@ -132,8 +152,21 @@ ads/          AdMob, ported from a sister project (`lich_viet_loc_phat`). Two su
               rethrows before any later line — and doubly dead because nothing calls
               `destroy()`. `isCurrentGeneration(generation)` is the only in-body guard left and
               is load-bearing (two synchronous `load()` calls ⇒ the first coroutine is stale
-              before it runs). `destroy()` is terminal: `scope.cancel()` + drop the SDK object +
-              `_state = NONE`; a unit cannot `load()` again afterwards.
+              before it runs). **Two teardown levels, both on the base class**: `release()` is
+              **non-terminal** — bumps the generation (so an in-flight load's result is dropped
+              on arrival), calls the subclass hook `releaseAd()` to let go of the SDK object
+              (`AdView.destroy()` / `NativeAd.destroy()` / `= null` for the three full-screen
+              formats, which have no destroy API), and sets `_state = NONE`; the scope stays
+              alive so the same singleton unit can `load()` again on the next visit. `destroy()`
+              is **terminal**: `scope.cancel()` + `release()`; nothing calls it today. The split
+              exists because the units are process-long `@Singleton` members of `AdsManager`
+              while Banner/Native hold View-bound SDK objects: an `AdView` is built from the
+              composable's `LocalContext` (the Activity), so a singleton that kept it across a
+              configuration change would pin the dead Activity and try to re-attach the same
+              `View` instance to a new composition. `NativeAdUnit` also destroys a `NativeAd`
+              that arrives for a stale generation instead of just dropping the reference — that
+              object is the leak otherwise, and it was already possible before `release()`
+              existed (two quick `load()` calls).
 
               **`AdsManager` is a Hilt `@Singleton`** — `@Inject constructor(Application,
               NetworkManager)`, *also* bound explicitly by `di/network/AdsModule.provideAdsManager`
@@ -147,11 +180,13 @@ ads/          AdMob, ported from a sister project (`lich_viet_loc_phat`). Two su
               `floors = listOf(BuildConfig.INTER_SPLASH_ALL_ID to "inter_splash_all")` (no
               high-floor id yet — add it as a first entry when there is one) with
               `onShowed`/`onClosed`/`onFailedToShow` toggling a private `isAdShowing`. Two things
-              to know before extending it: `currentActivity` and `isAdShowing` are private and
-              **nothing reads them yet**; and `onActivityDestroyed` calls
-              `unregisterActivityLifecycleCallbacks(this)`, which in a single-Activity app fires
-              on the **first configuration change**, after which `currentActivity` is never
-              tracked again — harmless today only because it is unread. Ad ids: 5
+              to know before extending it: `isAdShowing` is private and **nothing reads it yet**
+              (`currentActivity` has exactly one reader — the consent form, below); and the
+              registration is **for the life of the process** — `onActivityDestroyed` only clears
+              `currentActivity` (an earlier version also called
+              `unregisterActivityLifecycleCallbacks(this)` there, which in a single-Activity app
+              fires on the first configuration change and silently stopped tracking for good; it
+              was removed). Ad ids: 5
               generic-by-format Google sample ids live in `defaultConfig`
               (`BuildConfig.ADMOB_{BANNER,NATIVE,INTERSTITIAL,REWARDED,APP_OPEN}_TEST_ID`) for
               wiring new placements before they have a real id, and each *real* placement gets
@@ -163,37 +198,155 @@ ads/          AdMob, ported from a sister project (`lich_viet_loc_phat`). Two su
               release, sample under debug — rather than the `ADMOB_*_TEST_ID` generic set.
 
               **The display composables take `adUnit: () -> XxxAdUnit`** (a lambda, not the
-              instance) and self-trigger their own load with `SideEffect(Unit) {
-              adUnit().load(context) }` — keyed on `Unit`, so it runs **once** on first
-              composition and never again for that composition, which is the only re-entry guard
-              there is now that `load()` has none. Composing a screen that holds an ad unit *is*
-              the preload; there is no separate `preload()` step anywhere. This is the keyed
-              `SideEffect(key, effect)` overload the rest of the codebase already uses for the
-              error-dialog pattern (see State Management — `compose.runtime:runtime` **1.12.0**
-              as resolved through `composeBom 2026.08.00`; `EffectsKt` carries the 1-, 2-, 3-key
-              and `vararg` overloads, verified with `javap` on the resolved aar — an earlier
-              version of this paragraph claimed the keyed overload did not exist after reading a
-              stale 1.11.2 sources jar from the Gradle cache; it does). `SideEffect`, not
-              `LaunchedEffect`, because `load()` is a plain non-suspend fire-and-forget call.
-              After the effect, the composable early-returns on `NONE`/`FAILED` (and `preview`),
+              instance) and own the unit's load/release as **one symmetric effect**:
+              `DisposableEffect(Unit) { adUnit().load(context); onDispose { adUnit().release() }
+              }` — keyed on `Unit`, so the composable asks for a load **once** per composition
+              (and `load()`'s own state guard makes that call a no-op when the unit was
+              preloaded) and `release()` runs exactly once on dispose. Composing a screen that holds an ad unit *is* the preload; there is no
+              separate `preload()` step anywhere. (It started as a keyed `SideEffect(Unit)` for
+              the load plus a separate `DisposableEffect` for the release and was merged: both
+              run in the apply phase after the same composition, and one effect keeps the pair
+              visibly paired. The keyed `SideEffect(key, effect)` overload does exist —
+              `compose.runtime:runtime` **1.12.0** via `composeBom 2026.08.00`, verified with
+              `javap` on the resolved aar after an earlier version of this paragraph wrongly
+              denied it from a stale 1.11.2 sources jar — it just isn't needed here.) **The
+              effect is declared before the state early-returns, and that ordering is the whole
+              mechanism**: on the first composition `adState` is still `NONE`, so the body
+              `return`s without emitting UI, but a `return` only skips what comes *after* it —
+              the effect above it is already in the slot table, runs after that composition is
+              applied, calls `load()`, whose `scope.launch` on `Dispatchers.Main` flips
+              `_state` to `LOADING` on the next main-loop message, which recomposes past the
+              guard into the shimmer, then `LOADED` into the `AndroidView`. So "load right away"
+              and "return on state" are the same composable doing two jobs in two phases, not a
+              contradiction — and because the effect sits above the `return`, `onDispose`
+              fires on leaving the screen whatever the state is (including `FAILED`, where the
+              body never emits). Known cosmetic consequence: the slot is 0dp for the first frame
+              and jumps to the shimmer height one message later; rendering the shimmer for
+              `NONE` too (returning only on `FAILED`) would remove the jump. Leaving the screen
+              (or rotating, which disposes the whole composition) releases the SDK object and
+              resets the singleton to `NONE`, and the next visit's effect loads afresh. That is the deliberate trade-off of the
+              "singleton + release" model: one request per visit, no cached ad across tab
+              switches, in exchange for never holding a View-bound ad object outside a
+              composition. `NativeAdView` additionally passes
+              `AndroidView(onRelease = { it.destroy() })` for the inflated SDK `NativeAdView`,
+              which is a separate object from the SDK `NativeAd` the unit owns. After the effects, the
+              composable early-returns on `NONE`/`FAILED` (and `preview`),
               so an ad that never loads simply occupies no space; it does **not** read
               `LocalNetworkManager` to hide itself when offline — offline is already `FAILED`
-              via `load()`, and `NoInternetDialog` is the app's one offline signal. `BannerAd`
-              adds `LifecycleResumeEffect(Unit)` → `adUnit().resume()/pause()`; the two native
-              ones inflate `R.layout.native_media_{4_3,16_9}_ad` (`ConstraintLayout`-based
+              via `load()`, and `NoInternetDialog` is the app's one offline signal. `BannerAdView`
+              adds `LifecycleResumeEffect(Unit)` → `adUnit().resume()/pause()`. **There is one
+              native composable, `NativeAdView(adUnit, layoutType: NativeLayoutType, modifier)`**
+              (it replaced a `NativeMedia43Ad`/`NativeMedia169Ad` pair that differed only in
+              layout resource and icon corner radius): `NativeLayoutType { MEDIA_4_3,
+              MEDIA_16_9 }` is resolved by a private `NativeLayoutType.viewBuilder(): (Context)
+              -> NativeAdView` `when` that returns the factory lambda for `AndroidView` —
+              `MEDIA_4_3` ⇒ `R.layout.native_media_4_3_ad` + 8dp icon corners, `MEDIA_16_9` ⇒
+              `R.layout.native_media_16_9_ad` + 6dp — both feeding one shared
+              `buildNativeAdView(context, layoutRes, iconCornerDp)` (`ConstraintLayout`-based
               `NativeAdView`, hence the `androidx-constraintlayout` dependency — the app's only
-              XML layouts) in `AndroidView.factory` and bind in `update`. `AdLoadingDialog` takes
+              XML layouts) and one shared `bindNativeAd(view, ad)` in `update`. Adding a third
+              native layout is a new enum entry + a `when` branch, nothing else. **The composable
+              shares its simple name with Google's `com.google.android.gms.ads.nativead
+              .NativeAdView` class, imported un-aliased in the same file** — deliberate, same
+              precedent as Compose's `Color()` function next to the `Color` class: in a type
+              position (`: NativeAdView`, `as NativeAdView`, `(Context) -> NativeAdView`) the
+              name is Google's View, in a call position with `(adUnit, layoutType, modifier)` it
+              is our composable, and overload resolution keeps them apart because Google's
+              constructors take `(Context[, AttributeSet…])`. Don't "fix" it with an import
+              alias. `AdLoadingDialog` takes
               the same `adUnit: () -> AdUnit` lambda, renders **only while that unit is
               `LOADING`** (early-returns otherwise) as a non-dismissable `Dialog` with an M3
               `Card` + `CircularProgressIndicator` + `R.string.ad_loading`, and does **not** call
               `load()` itself — it is a passive indicator for a unit some other composable or
               screen is loading (nothing calls it yet).
 
+              **Consent (UMP) gates SDK initialization, and `AdsManager` owns the whole
+              flow — `App.kt` no longer touches `MobileAds`.** Google's rule: gather consent
+              with the User Messaging Platform SDK on **every** app launch and only call
+              `MobileAds.initialize` (and load ads) once `consentInformation.canRequestAds()` is
+              `true`. The trigger is `AdsManager.onActivityCreated` — not a call from Splash —
+              which works because Hilt injects `AdsManager` from `Hilt_MainActivity`'s
+              `OnContextAvailableListener`, i.e. inside `ComponentActivity.onCreate` *before*
+              `super.onCreate` reaches `Activity.onCreate` → `dispatchActivityCreated` (verified in
+              `activity-1.13.0` and `android-36` sources), so the manager is registered in time
+              for the very event it wants. Guards on that callback: skip Google's `AdActivity`,
+              and a per-process `isConsentRequested` flag (deliberately **not** keyed on
+              `savedInstanceState`) so a rotation does not re-request but a fresh process after
+              death does — matches "every launch". `gatherConsent(activity)` then does two things
+              at once, straight from Google's `GoogleMobileAdsConsentManager` sample: (1) if
+              `canRequestAds()` is already `true` from the **cached consent of a previous
+              session** (UMP keeps it in SharedPreferences, no network needed) it initializes the
+              SDK immediately, in parallel with the network round-trip — measured on the
+              emulator: `MobileAds initialized` ~1.2 s before `requestConsentInfoUpdate`
+              returned; (2) it calls `requestConsentInfoUpdate(activity, params, …)`, and on
+              success `loadAndShowConsentFormIfRequired(currentActivity ?: activity)` (the form
+              is shown only when UMP says `REQUIRED`; `currentActivity` is preferred so the form
+              attaches to whatever Activity is resumed if the original was recreated while
+              waiting). **Both** the form-dismissed callback and the failure callback funnel into
+              `onConsentGatheringComplete()`, which re-checks `canRequestAds()` → init, then flips
+              `isConsentGathered` — so the flow always terminates (offline, publisher
+              misconfiguration, form error) and a screen waiting on it can never hang;
+              `initializeMobileAds()` is idempotent through an `AtomicBoolean`, which is what
+              makes calling it from both branches safe. `MobileAds.initialize` runs on
+              `Dispatchers.IO` (Google's recommendation against cold-start ANRs); before it, if
+              `BuildConfig.ADMOB_TEST_DEVICE_IDS` (comma-separated hashes read from
+              `local.properties`, default empty, **never committed**) is non-empty,
+              `MobileAds.setRequestConfiguration(setTestDeviceIds(…))` is applied in every build
+              type — it only affects the listed devices and is what lets a real phone test real
+              ad unit ids without generating invalid traffic; emulators need no id, the SDKs treat
+              them as test devices automatically. Debug builds additionally pass
+              `ConsentDebugSettings` with `DEBUG_GEOGRAPHY_EEA` (+ the same hashes) so the form
+              can be exercised from anywhere. **Public surface for screens — exactly what Splash
+              wires (see the Splash paragraph under Onboarding for the wiring itself)**:
+              `isConsentGathered: StateFlow<Boolean>`, `isMobileAdsInitialized:
+              StateFlow<Boolean>`, and a plain `canRequestAds: Boolean` getter. Decision table:
+              gathered=false ⇒ wait (a form may be up); gathered=true ∧ !canRequestAds ⇒ go on
+              without ads; gathered=true ∧ canRequestAds ∧ !initialized ⇒ wait; initialized=true ⇒
+              `interSplash.load()` and the existing LOADED/FAILED flow. Measured on the emulator
+              after `pm clear`: consent update failed at +5 s (publisher misconfiguration, below)
+              with `canRequestAds()` **true** afterwards, `MobileAds initialized` at +9 s, `Loading`
+              15 ms later, `Loaded` + `AdActivity` at +13 s — a fresh cold start on the emulator
+              spends ~13 s on Splash; a device is faster, but there is no cap on the consent
+              round-trip other than UMP's own. **Deliberately absent: a privacy-options
+              entry point** (`privacyOptionsRequirementStatus` / `showPrivacyOptionsForm`) — the
+              user chose not to offer consent withdrawal; Google requires one for EEA users whose
+              status is `REQUIRED`, so expect this to come up at policy review; adding it later is
+              one getter + one function here + one Settings item. **The form's content lives in the AdMob
+              console, not in code**: the manifest carries the real `APPLICATION_ID`
+              (`ca-app-pub-9635401910651855~…`) and a European-regulations message is published
+              for it under Privacy & messaging (buttons: Consent / Do not consent / Manage
+              options — "Do not consent" switched on for every country on purpose, several EU
+              DPAs require a reject button as easy as accept). Before it was published UMP failed
+              with error 3 *"Publisher misconfiguration: no form(s) configured for the input app
+              ID"* and **no user anywhere would ever see a form** — `DEBUG_GEOGRAPHY_EEA` cannot
+              conjure one; the failure path above is what kept the app usable meanwhile
+              (interestingly `canRequestAds()` came back `true` after that error, so ads still
+              ran). Verified on the emulator once published (`pm clear` → cold start, debug
+              build): the form renders over Splash ~15 s in (UMP fetch + WebView), **Consent** ⇒
+              `IABTCF_PurposeConsents 11111111111` → `MobileAds initialized` → `Loading` 15 ms
+              later → Loaded → Showed; **Do not consent** ⇒ `PurposeConsents 00000000000` and
+              `canRequestAds()` is **still `true`** — a refusal is a *gathered* choice
+              (`ConsentStatus.OBTAINED`), so the SDK is allowed to request and serves *limited
+              ads* per the TC string (the debug sample id filled; a real id may no-fill). So the
+              "gathered ∧ !canRequestAds ⇒ no ads" row of the table is reached only when consent
+              is `REQUIRED` but could not be collected (form failed to show, first-launch request
+              failed with nothing cached), not when the user says no. The default message copy
+              promises *"a link or button in the app menu to manage or withdraw consent"* — with
+              no privacy-options entry point that sentence is currently untrue; either add the
+              entry point or edit the copy under Styling.
+              `com.google.android.ump:user-messaging-platform` is declared explicitly in the
+              catalog (`ump = "4.0.0"`) even though `play-services-ads` 25.3.0 already pins it
+              transitively (`strictly 4.0.0`), so the version is visible and bumpable in one
+              place.
+
               **One placement is live: the splash interstitial.** `SplashScreen` no longer
-              waits a fixed 3 s — see Onboarding below for the exact flow. `App.onCreate()` calls
-              `MobileAds.initialize` (`initAdMob()`); the manifest carries Google's sample
-              `APPLICATION_ID` meta-data and an `AdActivity` declaration with the `AdTheme`
-              style. Still open: the 3 drawables (`bg_native_ad_card`/`bg_ad_label`/
+              waits a fixed 3 s — see Onboarding below for the exact flow. The manifest carries
+              the real `APPLICATION_ID` meta-data and an `AdActivity` declaration with the
+              `AdTheme` style. Splash also tells the user what it is waiting for: a
+              `may_contain_ads` caption ("This action may contain ads") sits directly under the
+              loading bar, in all 64 locales — unlike `ad_loading`/`ad_label`, which are
+              English-only, because this one is on screen on every launch while those two have
+              no live caller yet. Still open: the 3 drawables (`bg_native_ad_card`/`bg_ad_label`/
               `bg_cta_native_ad`) keep the source project's hardcoded bronze/gold hex colours,
               `ad_loading`/`ad_label` exist only in `values/` (not the 63 other locales), and
               `BannerAdUnit` still calls the deprecated
@@ -1001,13 +1154,41 @@ read can never trap a returning user in onboarding. (A *failed* read now emits t
 `true` — see "No `Result` on the manager boundary" — which is accepted: Skip is one tap.) There is no in-app reset: to see onboarding again during development, clear app
 data (`adb shell pm clear com.decoutkhanqindev.dexreader`).
 
-**Splash is gated on the splash interstitial, not a timer.** The old `LaunchedEffect(Unit) {
-delay(3000); navigate }` is gone. `SplashScreen` now reads
-`LocalAdsManager.current.interSplash`, fires `SideEffect(Unit) { interSplash.load(context) }`
-once, and drives navigation from `LifecycleResumeEffect(interSplashState, isNetworkAvailable)`:
-while `isNetworkAvailable`, `LOADED` ⇒ `interSplash.show(activity, onAdShowed = handleNext,
-onAdFailedToShow = handleNext)`, `FAILED` ⇒ `handleNext()`, anything else ⇒ wait; while
-offline the effect does nothing at all. `handleNext` is the one place that reads `isFirstOpen`
+**Splash is gated on the splash interstitial, not a timer — and the interstitial is
+mandatory by product decision: a user gets into the app only after the ad has been shown (or
+genuinely could not be filled).** The old `LaunchedEffect(Unit) { delay(3000); navigate }` is
+gone. `SplashScreen` reads `LocalAdsManager.current.interSplash` plus the manager's
+`isConsentGathered` / `isMobileAdsInitialized` flows and is wired in two effects. **Load** is
+`SideEffect(isConsentGathered, isMobileAdsInitialized, isNetworkAvailable) { if
+(isConsentGathered && isMobileAdsInitialized && isNetworkAvailable) interSplash.load(context) }`.
+**Navigation** is `LifecycleResumeEffect(interSplashState, isNetworkAvailable)`: while
+`isNetworkAvailable`, `LOADED` ⇒ `interSplash.show(activity, onAdShowed = handleNext,
+onAdFailedToShow = handleNext)`, `FAILED` ⇒ `handleNext()`, anything else ⇒ wait.
+
+Why the load condition exists even though `AdUnit.load()` already gates on consent and
+network: the unit's gate answers *"is this one attempt permitted right now"* and, when not,
+sets `FAILED` — it cannot tell **"not yet"** from **"not allowed"**. The screen's condition answers
+*"is it time to attempt"*. Because navigation treats `FAILED` as "go on", an attempt made while
+things are merely not ready would let the user in **without the ad** — measured: with an
+unconditional `load()` on first composition, a fresh install produced `Consent not granted, not
+loading` → `FAILED` → `handleNext()` at +6 s and the consent form then rendered over the
+*Language* screen instead of Splash; on a warm launch the ad loaded 3 s before `MobileAds
+initialized`. `isConsentGathered` and `isMobileAdsInitialized` are therefore timing gates only
+Splash can know (the unit has no view of the consent lifecycle or SDK init), and init-before-load
+is Google's required order. `isNetworkAvailable` inside the load condition *is* redundant with
+the unit's network gate (offline ⇒ `FAILED`, navigation waits, the effect re-runs when the
+network returns) and is kept only for symmetry. A `|| !adsManager.canRequestAds` escape (load
+anyway so `FAILED` lets the user through without an ad) was added and **deliberately removed** —
+it contradicts "mandatory". **Known consequence of "mandatory"**: when consent gathering
+completes with `canRequestAds() == false` — in practice a **first launch while offline**
+(`requestConsentInfoUpdate` fails with error 2 and there is no cached consent; verified with
+airplane mode) or a form that errors out — the SDK never initializes, `load()` is never called,
+the state stays `NONE`, and Splash waits **forever**, even after connectivity returns, because
+`isConsentRequested` prevents a second gathering. **That is the intended tactic, stated
+explicitly by the owner ("buộc phải kẹt rồi, đó là tactics của tôi") — do not add a bypass, a
+"proceed without ads" branch, or an automatic consent retry to get around it.** Note also that
+"Do not consent" is **not** this case — `canRequestAds()` stays `true` after a refusal and the
+(limited) ad still shows. `handleNext` is the one place that reads `isFirstOpen`
 (`true` ⇒ `LanguageSelection`, else `Main`, both via `navigateClearStack<NavRoute.Splash>`).
 Consequences worth knowing: (1) **the ad's `onAdShowed` (fires from
 `onAdShowedFullScreenContent`) — not `show()`'s `onAdClosed` — is what navigates**, so
@@ -1036,6 +1217,25 @@ the life of `NavGraph`). If the flag ever goes back to being a parameter, the
 `rememberUpdatedState` must come back with it. The routing itself was verified on device back
 when it was timer-driven (fresh install → Language → Onboarding → Skip → Main, then cold
 restart → Main); the interstitial-gated version has **not** been run on a device yet.
+
+**`SplashContent` is three stacked pieces, and the loading bar is its own file.** The root
+`Box` paints the radial glow and centres `AnimatedLogoAndSlogan(logoSize = 120.dp)`; a
+bottom-aligned `Column(spacedBy(8.dp))` then holds `LoadingProgress` and, under it, the
+`may_contain_ads` caption (`bodySmall + Italic + Center + onSurfaceVariant` — the quiet-caption
+convention from Compose Conventions). `LoadingProgress(progress: () -> Float, modifier)` lives
+in `screens/splash/components/` **next to `SplashContent`, not in `common/indicators/`** — it
+was first placed there and moved on request, since Splash is its only caller; promote it only
+when a second screen needs a labelled bar. It is the "Loading …" label + "NN%" + M3
+`LinearProgressIndicator` (`onPrimaryContainer` on `onSurface` α0.2) that used to be inlined in
+`SplashContent`. The progress is a **lambda**, same as `ReadingProgressBar` and
+`AutoScrollProgressIndicator`: the bar forwards it straight to `LinearProgressIndicator`'s
+lambda overload (draw-phase read), and the percent `Text` invokes it in `LoadingProgress`'s own
+body — so the per-frame recomposition that the animating value costs is charged to
+`LoadingProgress` alone, whereas the inlined version charged it to all of `SplashContent`
+(logo included), because `Row`/`Column` are inline and the nearest restart scope was the screen.
+The 5-second fake fill (`loadingTarget` `0f → 0.99f` via `animateFloatAsState(tween(5000))`,
+kicked by `SideEffect(Unit)`) stays in `SplashContent`: it is Splash's choice of what "progress"
+means while waiting on consent + SDK init + the ad, not something the bar should assume.
 
 **App language (`data/local/locale/LanguageManager` + `screens/language/`)**: one stored value drives **both**
 the UI locale and the MangaDex content language — it is

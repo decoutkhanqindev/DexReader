@@ -2,7 +2,6 @@ package com.decoutkhanqindev.dexreader.ads.ad_unit
 
 import android.app.Activity
 import android.content.Context
-import com.decoutkhanqindev.dexreader.data.network.connectivity.NetworkManager
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -10,7 +9,6 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -21,11 +19,12 @@ import kotlin.coroutines.resumeWithException
 
 class RewardAdUnit(
   floors: List<Pair<String, String>>,
-  networkManager: NetworkManager,
+  isNetworkAvailable: () -> Boolean,
+  canRequestAds: () -> Boolean,
   private val onShowed: () -> Unit = {},
   private val onClosed: () -> Unit = {},
   private val onFailedToShow: () -> Unit = {},
-) : AdUnit(floors, networkManager) {
+) : AdUnit(floors, isNetworkAvailable, canRequestAds) {
 
   private var _rewardedAd: RewardedAd? = null
 
@@ -118,9 +117,7 @@ class RewardAdUnit(
     }
   }
 
-  override fun destroy() {
-    scope.cancel()
+  override fun releaseAd() {
     _rewardedAd = null
-    _state.value = AdUnitState.NONE
   }
 }

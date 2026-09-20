@@ -148,4 +148,5 @@
   <string name="your_profile_has_been_updated_successfully">Профиліңіз сәтті жаңартылды.</string>
   <string name="dark">Қараңғы</string>
   <string name="light">Ашық</string>
+  <string name="may_contain_ads">Бұл әрекетте жарнама болуы мүмкін</string>
 </resources>

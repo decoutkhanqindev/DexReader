@@ -148,4 +148,5 @@
   <string name="your_profile_has_been_updated_successfully">Tu perfil se actualizó correctamente.</string>
   <string name="dark">Oscuro</string>
   <string name="light">Claro</string>
+  <string name="may_contain_ads">Esta acción puede contener anuncios</string>
 </resources>

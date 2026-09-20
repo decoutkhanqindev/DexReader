@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">Matagumpay na na-update ang iyong profile.</string>
   <string name="dark">Madilim na Mode</string>
   <string name="light">Maliwanag na Mode</string>
+  <string name="may_contain_ads">Ang aksyong ito ay maaaring maglaman ng mga ad</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">Sigurado ka bang gusto mong i-reset ang progreso ng kabanatang ito? Maaalis ito sa iyong kasaysayan ng pagbabasa.</string>
   <string name="daily_reading_time">Araw-araw na oras ng pagbabasa</string>
   <string name="dark_mode">Dark mode</string>

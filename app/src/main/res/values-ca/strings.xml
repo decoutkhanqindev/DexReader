@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">El teu perfil s\'ha actualitzat correctament.</string>
   <string name="dark">Mode fosc</string>
   <string name="light">Mode clar</string>
+  <string name="may_contain_ads">Aquesta acció pot contenir anuncis</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">Segur que vols restablir el progrés d\'aquest capítol? S\'eliminarà de l\'historial de lectura.</string>
   <string name="daily_reading_time">Temps de lectura diari</string>
   <string name="dark_mode">Mode fosc</string>

@@ -43,6 +43,12 @@ android {
       value = "\"${localProps.getProperty("UPLOAD_URL")}\""
     )
 
+    buildConfigField(
+      type = "String",
+      name = "ADMOB_TEST_DEVICE_IDS",
+      value = "\"${localProps.getProperty("ADMOB_TEST_DEVICE_IDS", "")}\""
+    )
+
     buildConfigField("String", "ADMOB_BANNER_TEST_ID", "\"ca-app-pub-3940256099942544/9214589741\"")
     buildConfigField("String", "ADMOB_NATIVE_TEST_ID", "\"ca-app-pub-3940256099942544/2247696110\"")
     buildConfigField("String", "ADMOB_INTERSTITIAL_TEST_ID", "\"ca-app-pub-3940256099942544/1033173712\"")
@@ -193,5 +199,6 @@ dependencies {
 
   // Ads
   implementation(libs.play.services.ads)
+  implementation(libs.user.messaging.platform)
   implementation(libs.androidx.constraintlayout)
 }

@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -19,7 +19,7 @@ import com.decoutkhanqindev.dexreader.ads.ad_unit.BannerAdUnit
 import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmerLoading
 
 @Composable
-fun BannerAd(
+fun BannerAdView(
   adUnit: () -> BannerAdUnit,
   modifier: Modifier = Modifier,
 ) {
@@ -28,7 +28,10 @@ fun BannerAd(
   val adState by adUnit().state.collectAsStateWithLifecycle()
   val adView = adUnit().adView
 
-  SideEffect(Unit) { adUnit().load(context) }
+  DisposableEffect(Unit) {
+    adUnit().load(context)
+    onDispose { adUnit().release() }
+  }
 
   if (preview) return
   if (adState == AdUnitState.NONE || adState == AdUnitState.FAILED) return

@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">Il tuo profilo è stato aggiornato con successo.</string>
   <string name="dark">Modalità Scura</string>
   <string name="light">Modalità Chiara</string>
+  <string name="may_contain_ads">Questa azione potrebbe contenere annunci</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">Vuoi davvero reimpostare i progressi di questo capitolo? Verrà rimosso dalla cronologia di lettura.</string>
   <string name="daily_reading_time">Tempo di lettura giornaliero</string>
   <string name="dark_mode">Modalità scura</string>

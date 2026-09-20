@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">Váš profil bol úspešne aktualizovaný.</string>
   <string name="dark">Tmavý režim</string>
   <string name="light">Svetlý režim</string>
+  <string name="may_contain_ads">Táto akcia môže obsahovať reklamy</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">Naozaj chceš resetovať postup tejto kapitoly? Bude odstránená z histórie čítania.</string>
   <string name="daily_reading_time">Denný čas čítania</string>
   <string name="dark_mode">Tmavý režim</string>

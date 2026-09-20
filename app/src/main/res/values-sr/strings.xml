@@ -148,4 +148,5 @@
   <string name="your_profile_has_been_updated_successfully">Vaš profil je uspešno ažuriran.</string>
   <string name="dark">Tamna</string>
   <string name="light">Svetla</string>
+  <string name="may_contain_ads">Ova radnja može sadržati oglase</string>
 </resources>

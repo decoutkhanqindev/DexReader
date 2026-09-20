@@ -116,6 +116,7 @@
   <string name="your_profile_has_been_updated_successfully">تم تحديث ملفك الشخصي بنجاح.</string>
   <string name="dark">الوضع الداكن</string>
   <string name="light">الوضع الفاتح</string>
+  <string name="may_contain_ads">قد يحتوي هذا الإجراء على إعلانات</string>
   <string name="are_you_sure_you_want_to_reset_this_chapter_s_progress">هل تريد بالتأكيد إعادة تعيين تقدّم هذا الفصل؟ سيُحذف من سجل القراءة لديك.</string>
   <string name="daily_reading_time">وقت القراءة اليومي</string>
   <string name="dark_mode">الوضع الداكن</string>
