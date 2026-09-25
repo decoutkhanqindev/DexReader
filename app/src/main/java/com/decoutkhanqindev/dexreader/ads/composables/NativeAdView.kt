@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -28,9 +27,6 @@ import com.google.android.gms.ads.nativead.MediaView
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 
-@Immutable
-enum class NativeLayoutType { MEDIA_4_3, MEDIA_16_9 }
-
 @Composable
 fun NativeAdView(
   adUnit: () -> NativeAdUnit,
@@ -42,7 +38,7 @@ fun NativeAdView(
   val adState by adUnit().state.collectAsStateWithLifecycle()
   val nativeAd = adUnit().nativeAd
 
-  DisposableEffect(Unit) {
+  DisposableEffect(adUnit()) {
     adUnit().load(context)
     onDispose { adUnit().release() }
   }

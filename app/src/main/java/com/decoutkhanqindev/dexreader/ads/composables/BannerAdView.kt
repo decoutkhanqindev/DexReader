@@ -28,7 +28,7 @@ fun BannerAdView(
   val adState by adUnit().state.collectAsStateWithLifecycle()
   val adView = adUnit().adView
 
-  DisposableEffect(Unit) {
+  DisposableEffect(adUnit()) {
     adUnit().load(context)
     onDispose { adUnit().release() }
   }
@@ -39,10 +39,14 @@ fun BannerAdView(
 
   val adHeight = adView.adSize?.height ?: 50
 
-  LifecycleResumeEffect(Unit) {
-    if (adState == AdUnitState.LOADED || adState == AdUnitState.IMPRESSION) adUnit().resume()
+  LifecycleResumeEffect(adUnit()) {
+    if (adState == AdUnitState.LOADED || adState == AdUnitState.IMPRESSION) {
+      adUnit().resume()
+    }
     onPauseOrDispose {
-      if (adState == AdUnitState.LOADED || adState == AdUnitState.IMPRESSION) adUnit().pause()
+      if (adState == AdUnitState.LOADED || adState == AdUnitState.IMPRESSION) {
+        adUnit().pause()
+      }
     }
   }
 

@@ -95,7 +95,13 @@ ads/          AdMob, ported from a sister project (`lich_viet_loc_phat`). Two su
               List<Pair<String, String>>`** — each entry is `(adUnitId, name)`, ordered highest
               floor first (`listOf(HIGH_ID to "inter_home_high", ALL_ID to "inter_home_all")`),
               walked by a private `floorIndex`: `load()` resets to `0`, `onLoadFailed()` advances
-              to the next entry and re-requests, and runs out of entries ⇒ `FAILED`. A
+              to the next entry and re-requests, and runs out of entries ⇒ `FAILED`. **Every
+              `load()` restarts at floor 0** — including a retry after `FAILED` and the next
+              screen visit after a `release()`. `floorIndex` is a cursor *within one* waterfall
+              walk, never durable state: the list is a price-floor priority order, and a no-fill
+              on the high floor at 10:00 says nothing about 10:05, so carrying the index across
+              loads would permanently demote the placement to its cheapest floor for the rest of
+              the process with no way back. A
               **one-id placement is a one-entry list** and therefore fails after exactly one
               request — this replaced the earlier `id: Pair<high, all>` + `name: Pair<…>` shape,
               whose `tryFallback()` only tracked a boolean and so re-requested the *same* id a
@@ -112,10 +118,23 @@ ads/          AdMob, ported from a sister project (`lich_viet_loc_phat`). Two su
               and providers rather than `NetworkManager`/`ConsentInformation` so `ads/ad_unit`
               imports nothing from `data/` or UMP and a unit can be built in a test or preview
               with two lambdas. Both are read **once, synchronously, inside `load()`**. `load()`
-              in full: **`if (_state != NONE && _state != FAILED) return`** — then no consent
-              (`!canRequestAds()`) ⇒ `_state = FAILED` and return (logged as `Consent not
-              granted, not loading`); then no network ⇒ `_state = FAILED` and return; otherwise
-              reset the waterfall and `requestLoad(context, nextGeneration())`. Consent is
+              in full: **`if (_state != NONE && _state != FAILED) return`** — then
+              `resetWaterfall()`; then no consent (`!canRequestAds()`) ⇒ `_state = FAILED` and
+              return (logged as `Consent not granted, not loading`); then no network ⇒
+              `_state = FAILED` and return; otherwise `requestLoad(context, nextGeneration())`.
+              **`resetWaterfall()` sits between the state guard and the two gates, and both
+              neighbours are load-bearing.** It used to sit last, right before `requestLoad` —
+              which is correct for behaviour but made the two gate log lines name a stale floor:
+              `currentId`/`currentName` are `floors[floorIndex]`, and nothing resets
+              `floorIndex` when a waterfall ends (neither `onLoadFailed`'s give-up branch nor
+              `release()`), so a placement that had walked down to `inter_home_all` and failed
+              would log `inter_home_all - No network` for an attempt whose next request is
+              actually `inter_home_high`. It must **not** move above the state guard either: at
+              `LOADING` the guard returns, but a reset before it would rewind `floorIndex` under
+              the in-flight coroutine, whose `onLoadFailed`/`tryFallback` then re-walk the
+              waterfall from the wrong floor. Note `release()` deliberately still does not
+              reset, so its own `"$currentName - Released"` line names the floor that was
+              actually live. Consent is
               checked before network on purpose — it is the legal gate, and it is what makes
               every future `BannerAdView`/`NativeAdView` `load()` consent-aware with no wiring
               at the call site. The first line is the re-entry guard and
@@ -198,12 +217,64 @@ ads/          AdMob, ported from a sister project (`lich_viet_loc_phat`). Two su
               release, sample under debug — rather than the `ADMOB_*_TEST_ID` generic set.
 
               **The display composables take `adUnit: () -> XxxAdUnit`** (a lambda, not the
-              instance) and own the unit's load/release as **one symmetric effect**:
-              `DisposableEffect(Unit) { adUnit().load(context); onDispose { adUnit().release() }
-              }` — keyed on `Unit`, so the composable asks for a load **once** per composition
-              (and `load()`'s own state guard makes that call a no-op when the unit was
-              preloaded) and `release()` runs exactly once on dispose. Composing a screen that holds an ad unit *is* the preload; there is no
-              separate `preload()` step anywhere. (It started as a keyed `SideEffect(Unit)` for
+              instance), call it inline everywhere, and own the unit's load/release as **one
+              symmetric effect keyed on the unit itself**: `DisposableEffect(adUnit()) {
+              adUnit().load(context); onDispose { adUnit().release() } }`. `load()`'s own state
+              guard makes the call a no-op when the unit was already loading or loaded, and
+              `release()` runs exactly once per unit on dispose. The `adUnit()` calls inside the
+              effect are safe precisely *because* the key is `adUnit()`: the effect is recreated
+              exactly when the returned unit changes, so the `effect` lambda a given
+              `DisposableEffectImpl` holds always resolves to the unit it was keyed on. (A local
+              `val currentAdUnit = adUnit()` reads identically and additionally survives a
+              caller whose lambda returns a *different* unit on each invocation; it was tried and
+              dropped in favour of the inline style the rest of the file — and
+              `AdLoadingDialog` — already uses.) Composing a screen that holds an ad unit *is*
+              the preload; there is no separate `preload()` step anywhere. `BannerAdView`'s
+              second effect is keyed the same way — `LifecycleResumeEffect(adUnit())` →
+              `resume()`/`pause()`, guarded by `adState == LOADED || adState == IMPRESSION` — and
+              that guard reads the composable's `adState` **directly, which is a live read, not a
+              frozen capture**: `adState` is a `by` delegate over the `State` that
+              `collectAsStateWithLifecycle()` returns, so each access inside the effect body
+              compiles to `state.value` at that moment (same mechanism as `SplashScreen`'s
+              `isFirstOpen` — see Onboarding). What needed the key here was the **`adUnit`
+              lambda**, not the state: with `LifecycleResumeEffect(Unit)` the effect kept the
+              first composition's lambda, so after a unit swap it would `resume()`/`pause()` the
+              *outgoing* unit. An earlier version of this paragraph claimed the captured
+              `adState` was stale and that the banner would therefore never `pause()` on
+              backgrounding; that was wrong, and the `adUnit().state.value` rewrite it justified
+              was reverted. `BannerAdView` still has no caller.
+
+              **The key is the unit, not `Unit`, because a caller may swap units inside one
+              slot** — `LanguageSelectionScreen` does exactly that: `val nativeAd = if
+              (isSelected) nativeLangAlt else nativeLang` feeding one `NativeAdView` in
+              `BaseDetailsScreen`'s `bottomBar`, so tapping a language exchanges the ad under the
+              same slot. With `DisposableEffect(Unit)` the effect is created once and
+              `remember(Unit)` keeps the **first** `DisposableEffectImpl`, i.e. the first
+              `effect` lambda, which closed over the first composition's `adUnit` parameter
+              value; the swap therefore moved the *display* (`adState`/`nativeAd` are re-read
+              every composition) but left the *lifecycle* on the old unit. Measured on the
+              emulator: `native_lang_all - Released` on leaving the screen and **no** release for
+              `native_lang_alt_all` ever — alt sat at `IMPRESSION` holding a live `NativeAd` in a
+              process-long singleton, where its own later `load()` is a no-op (state guard), so a
+              second visit would re-display an already-impressed ad object. Keying on the unit
+              disposes the outgoing unit (release ⇒ `NONE`, so the next visit loads fresh) and
+              runs a fresh effect for the incoming one.
+
+              **`rememberUpdatedState` is the wrong tool here and was rejected.** A
+              `latestAdUnit by rememberUpdatedState(adUnit)` inside a `DisposableEffect(Unit)`
+              only moves the leak: `load()` still ran on the first unit while `onDispose` reads
+              the *latest* value and releases the other one — the loaded unit is never released,
+              and the released one gets released again later by its own effect.
+              `rememberUpdatedState` means "always invoke the newest lambda", which is right for
+              a long-lived dispatcher (`ChapterPagesSection`'s `snapshotFlow` collector holding
+              `latestOnUpdateChapterPage`) and wrong for an **acquire/release pair over an
+              identity**, whose invariant is that `release()` hits the same object `load()` did.
+              Keying on identity is how that invariant is expressed. This is sound only because
+              the units are `by lazy` singletons on `AdsManager` (`DisposableEffect` compares
+              with `==`, `AdUnit` does not override `equals`, so it is identity); a caller that
+              built a unit inline per recomposition would thrash the effect — and would show it
+              immediately as repeating `Released`/`Loading` log lines rather than leaking
+              quietly. (It started as a keyed `SideEffect(Unit)` for
               the load plus a separate `DisposableEffect` for the release and was merged: both
               run in the apply phase after the same composition, and one effect keeps the pair
               visibly paired. The keyed `SideEffect(key, effect)` overload does exist —
@@ -234,7 +305,7 @@ ads/          AdMob, ported from a sister project (`lich_viet_loc_phat`). Two su
               so an ad that never loads simply occupies no space; it does **not** read
               `LocalNetworkManager` to hide itself when offline — offline is already `FAILED`
               via `load()`, and `NoInternetDialog` is the app's one offline signal. `BannerAdView`
-              adds `LifecycleResumeEffect(Unit)` → `adUnit().resume()/pause()`. **There is one
+              adds the `LifecycleResumeEffect` described above. **There is one
               native composable, `NativeAdView(adUnit, layoutType: NativeLayoutType, modifier)`**
               (it replaced a `NativeMedia43Ad`/`NativeMedia169Ad` pair that differed only in
               layout resource and icon corner radius): `NativeLayoutType { MEDIA_4_3,
@@ -271,9 +342,19 @@ ads/          AdMob, ported from a sister project (`lich_viet_loc_phat`). Two su
               `activity-1.13.0` and `android-36` sources), so the manager is registered in time
               for the very event it wants. Guards on that callback: skip Google's `AdActivity`,
               and a per-process `isConsentRequested` flag (deliberately **not** keyed on
-              `savedInstanceState`) so a rotation does not re-request but a fresh process after
-              death does — matches "every launch". `gatherConsent(activity)` then does two things
-              at once, straight from Google's `GoogleMobileAdsConsentManager` sample: (1) if
+              `savedInstanceState`) so a rotation does not start a second collector but a fresh
+              process after death does — matches "every launch". Instead of calling
+              `gatherConsent` directly, the callback starts a long-lived
+              `collectCatching(networkManager.isAvailable)` that calls `gatherConsent(activity)`
+              every time network is `true` — so a first-launch-offline that fails consent
+              retries automatically when connectivity returns, with no separate retry mechanism.
+              `gatherConsent` is idempotent through `initializeMobileAds`'s `AtomicBoolean`
+              and UMP's tolerance for repeated `requestConsentInfoUpdate` calls. The scope is
+              `Dispatchers.Main` because UMP's `requestConsentInfoUpdate` and
+              `loadAndShowConsentFormIfRequired` require the main thread; `MobileAds.initialize`
+              dispatches to `Dispatchers.IO` inside `initializeMobileAds` via
+              `withContextCatching`. `gatherConsent(activity)` does two things at once, straight
+              from Google's `GoogleMobileAdsConsentManager` sample: (1) if
               `canRequestAds()` is already `true` from the **cached consent of a previous
               session** (UMP keeps it in SharedPreferences, no network needed) it initializes the
               SDK immediately, in parallel with the network round-trip — measured on the
@@ -1179,14 +1260,13 @@ is Google's required order. `isNetworkAvailable` inside the load condition *is* 
 the unit's network gate (offline ⇒ `FAILED`, navigation waits, the effect re-runs when the
 network returns) and is kept only for symmetry. A `|| !adsManager.canRequestAds` escape (load
 anyway so `FAILED` lets the user through without an ad) was added and **deliberately removed** —
-it contradicts "mandatory". **Known consequence of "mandatory"**: when consent gathering
-completes with `canRequestAds() == false` — in practice a **first launch while offline**
-(`requestConsentInfoUpdate` fails with error 2 and there is no cached consent; verified with
-airplane mode) or a form that errors out — the SDK never initializes, `load()` is never called,
-the state stays `NONE`, and Splash waits **forever**, even after connectivity returns, because
-`isConsentRequested` prevents a second gathering. **That is the intended tactic, stated
-explicitly by the owner ("buộc phải kẹt rồi, đó là tactics của tôi") — do not add a bypass, a
-"proceed without ads" branch, or an automatic consent retry to get around it.** Note also that
+it contradicts "mandatory". **Network-aware consent retry**: `onActivityCreated`'s
+`collectCatching` on `networkManager.isAvailable` means a first-launch-offline
+(consent fails with error 2, no cached consent) is no longer permanently stuck —
+when connectivity returns the collector fires `gatherConsent` again, which re-runs
+`requestConsentInfoUpdate` and initializes the SDK on success. Splash still waits
+while offline (no bypass, no "proceed without ads" branch), but recovers
+automatically once network is available. Note also that
 "Do not consent" is **not** this case — `canRequestAds()` stays `true` after a refusal and the
 (limited) ad still shows. `handleNext` is the one place that reads `isFirstOpen`
 (`true` ⇒ `LanguageSelection`, else `Main`, both via `navigateClearStack<NavRoute.Splash>`).
@@ -1233,9 +1313,21 @@ lambda overload (draw-phase read), and the percent `Text` invokes it in `Loading
 body — so the per-frame recomposition that the animating value costs is charged to
 `LoadingProgress` alone, whereas the inlined version charged it to all of `SplashContent`
 (logo included), because `Row`/`Column` are inline and the nearest restart scope was the screen.
-The 5-second fake fill (`loadingTarget` `0f → 0.99f` via `animateFloatAsState(tween(5000))`,
-kicked by `SideEffect(Unit)`) stays in `SplashContent`: it is Splash's choice of what "progress"
+The 5-second fake fill stays in `SplashContent`: it is Splash's choice of what "progress"
 means while waiting on consent + SDK init + the ad, not something the bar should assume.
+**It is network-gated, and that is why it is an `Animatable` rather than
+`animateFloatAsState`.** `SplashContent` takes `isNetworkAvailable: () -> Boolean` (a lambda,
+so a connectivity flip never recomposes it — same shape as `MangaBanner`'s `isScreenScrolling`)
+and drives `remember { Animatable(0f) }` from one
+`LaunchedEffect(Unit) { snapshotFlow { isNetworkAvailable() }.collectLatest { … } }`:
+`false` ⇒ the block returns without animating, and because `collectLatest` cancels the previous
+invocation, a cancelled `animateTo` **freezes the bar at its current value** — offline is a
+pause, not a reset. `true` ⇒ `animateTo(0.99f)` with the duration scaled to the remaining
+distance (`5000 * (0.99f - progress.value) / 0.99f`), so a resume finishes the original
+5 seconds instead of restarting them. `animateFloatAsState` cannot express this: its returned
+`State<Float>` is read-only (assigning `progress.value` does not compile) and it has no
+cancellable handle to freeze mid-flight. The percent label and the bar both still read through
+the `{ progress.value }` lambda, so the per-frame cost stays charged to `LoadingProgress`.
 
 **App language (`data/local/locale/LanguageManager` + `screens/language/`)**: one stored value drives **both**
 the UI locale and the MangaDex content language — it is

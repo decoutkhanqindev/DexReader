@@ -178,6 +178,36 @@ session trước, nhưng phần khung dựng lên để phục vụ nó vẫn n�
   inline nên restart scope là cả màn). Animation giả 0→99 % / 5 s vẫn ở `SplashContent`.
   Verify emulator: caption nằm đúng dưới thanh (chụp lúc form consent đè lên Splash); Consent →
   init → `Loading` 8 ms sau → Loaded → Showed → `AdActivity`, không đổi.
+- **`AdUnit.load()`: `resetWaterfall()` chuyển từ cuối hàm lên ngay sau guard state**, trước hai
+  gate consent/network. Hành vi request không đổi (mỗi `load()` vẫn bắt đầu từ floor 0), chỉ là
+  log của hai gate không còn gọi tên floor cũ: `currentName` đọc `floors[floorIndex]` mà không ai
+  reset `floorIndex` khi một lượt waterfall kết thúc, nên một placement đã tụt xuống floor thấp
+  rồi fail sẽ log `..._all - No network` cho lần thử mà request kế tiếp thực ra là `..._high`.
+  Không được đẩy lên trước guard state: lúc `LOADING` guard return, nhưng reset trước đó sẽ rewind
+  `floorIndex` dưới chân coroutine đang bay, làm `onLoadFailed`/`tryFallback` đi lại thác từ sai
+  floor. `release()` vẫn cố tình không reset để dòng `"$currentName - Released"` gọi đúng floor
+  đang sống.
+- **`NativeAdView`/`BannerAdView`: `DisposableEffect` key đổi từ `Unit` sang `adUnit()`.** Bug lộ
+  ra từ log của màn Language, nơi một slot đổi unit giữa chừng (`val nativeAd = if (isSelected)
+  nativeLangAlt else nativeLang`): key `Unit` ⇒ `remember(Unit)` giữ **`DisposableEffectImpl` đầu
+  tiên**, tức `effect` lambda của composition đầu, đã capture giá trị tham số `adUnit` lúc đó ⇒
+  swap làm *hiển thị* nhảy sang alt (`adState`/`nativeAd` đọc lại mỗi composition) nhưng *lifecycle*
+  vẫn ở nativeLang. Log thực đo: `native_lang_all - Released` khi bấm Done, **không có** dòng nào
+  cho `native_lang_alt_all` — alt nằm ở `IMPRESSION` giữ một `NativeAd` sống trong singleton, và
+  `load()` sau đó no-op vì guard state nên lần vào lại sẽ render đúng ad đã impression. Key theo
+  unit ⇒ unit rời slot được release (về `NONE`, lần sau load mới), unit vào slot có effect riêng
+  gọi `load()` (no-op nếu màn đã preload). `rememberUpdatedState` **không** sửa được, chỉ đổi bên
+  rò (load trên unit đầu, `onDispose` release unit mới nhất) — nó có nghĩa "gọi lambda mới nhất",
+  đúng cho dispatcher sống dài kiểu `snapshotFlow` của `ChapterPagesSection`, sai cho cặp
+  acquire/release vốn cần `release()` trúng đúng object đã `load()`.
+- **`BannerAdView`: `LifecycleResumeEffect` cũng key theo `adUnit()`** vì cùng lý do (key `Unit`
+  ⇒ effect giữ lambda của composition đầu ⇒ sau swap sẽ `resume()`/`pause()` unit đã rời slot).
+  Guard `adState == LOADED || adState == IMPRESSION` **giữ nguyên**: `adState` là `by` delegate
+  trên `State` của `collectAsStateWithLifecycle()`, nên đọc trong thân effect biên dịch thành
+  `state.value` tại thời điểm đọc — live, không phải giá trị đóng băng lúc tạo effect (đúng cơ chế
+  đã ghi cho `isFirstOpen` ở `SplashScreen`). Giữa session tôi có đổi guard sang
+  `adUnit().state.value` với lập luận sai rằng capture bị stale và banner sẽ không bao giờ
+  `pause()`; user revert lại và bản `adState` là bản đúng. `BannerAdView` vẫn chưa có caller.
 - `compileDebugKotlin` + `compileReleaseKotlin` + `installDebug` BUILD SUCCESSFUL.
 
 ---

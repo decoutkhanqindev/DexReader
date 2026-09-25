@@ -37,6 +37,7 @@ fun SplashScreen(
   val isMobileAdsInitialized by adsManager.isMobileAdsInitialized.collectAsStateWithLifecycle()
   val interSplash = adsManager.interSplash
   val interSplashState by interSplash.state.collectAsStateWithLifecycle()
+  val nativeLang = adsManager.nativeLang
   val handleNext = {
     if (isFirstOpen == true) {
       navController.navigateClearStack<NavRoute.Splash>(NavRoute.LanguageSelection)
@@ -53,6 +54,7 @@ fun SplashScreen(
     if (isNetworkAvailable) {
       when (interSplashState) {
         AdUnitState.LOADED -> activity?.let {
+          nativeLang.load(it)
           interSplash.show(
             activity = it,
             onAdShowed = handleNext,
@@ -72,6 +74,7 @@ fun SplashScreen(
   BackHandler { }
 
   SplashContent(
+    isNetworkAvailable = { isNetworkAvailable },
     modifier = modifier
       .fillMaxSize()
       .background(MaterialTheme.colorScheme.background)

@@ -53,7 +53,7 @@ fun LanguageContent(
     )
   }
   val isDoneEnabled = when (type) {
-    LanguageTypeValue.SELECTION -> selectedLanguage != null
+    LanguageTypeValue.NORMAL, LanguageTypeValue.ALT -> selectedLanguage != null
     LanguageTypeValue.SETTING -> selectedLanguage != null && selectedLanguage != appliedLanguage
   }
 
@@ -70,7 +70,7 @@ fun LanguageContent(
     ) {
       items(languages, key = LanguageValue::name) { language ->
         val isSelected = when (type) {
-          LanguageTypeValue.SELECTION -> language == selectedLanguage
+          LanguageTypeValue.NORMAL, LanguageTypeValue.ALT -> language == selectedLanguage
           LanguageTypeValue.SETTING -> language == (selectedLanguage ?: appliedLanguage)
         }
         val onClick = remember(language) { { onLanguageClick(language) } }

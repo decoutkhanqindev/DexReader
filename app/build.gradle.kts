@@ -78,6 +78,8 @@ android {
       signingConfig = signingConfigs.getByName("release")
 
       buildConfigField("String", "INTER_SPLASH_ALL_ID", "\"ca-app-pub-9635401910651855/1499511352\"")
+      buildConfigField("String", "NATIVE_LANG_ALL_ID", "\"ca-app-pub-9635401910651855/3060605074\"")
+      buildConfigField("String", "NATIVE_LANG_ALT_ALL_ID", "\"ca-app-pub-9635401910651855/8125229493\"")
     }
 
     debug {
@@ -88,6 +90,8 @@ android {
       signingConfig = signingConfigs.getByName("debug")
 
       buildConfigField("String", "INTER_SPLASH_ALL_ID", "\"ca-app-pub-3940256099942544/1033173712\"")
+      buildConfigField("String", "NATIVE_LANG_ALL_ID", "\"ca-app-pub-3940256099942544/2247696110\"")
+      buildConfigField("String", "NATIVE_LANG_ALT_ALL_ID", "\"ca-app-pub-3940256099942544/2247696110\"")
     }
   }
 

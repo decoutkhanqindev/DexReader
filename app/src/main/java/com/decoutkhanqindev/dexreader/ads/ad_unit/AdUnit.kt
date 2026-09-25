@@ -29,6 +29,7 @@ abstract class AdUnit(
 
   fun load(context: Context) {
     if (_state.value != AdUnitState.NONE && _state.value != AdUnitState.FAILED) return
+    resetWaterfall()
     if (!canRequestAds()) {
       Timber.tag(tag).d("$currentName - Consent not granted, not loading")
       _state.value = AdUnitState.FAILED
@@ -39,7 +40,6 @@ abstract class AdUnit(
       _state.value = AdUnitState.FAILED
       return
     }
-    resetWaterfall()
     requestLoad(context, nextGeneration())
   }
 

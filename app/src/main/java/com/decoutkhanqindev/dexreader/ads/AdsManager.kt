@@ -7,7 +7,9 @@ import android.os.Bundle
 import com.decoutkhanqindev.dexreader.BuildConfig
 import com.decoutkhanqindev.dexreader.MainActivity
 import com.decoutkhanqindev.dexreader.ads.ad_unit.InterstitialAdUnit
+import com.decoutkhanqindev.dexreader.ads.ad_unit.NativeAdUnit
 import com.decoutkhanqindev.dexreader.data.network.connectivity.NetworkManager
+import com.decoutkhanqindev.dexreader.util.CoroutineHandler.collectCatching
 import com.decoutkhanqindev.dexreader.util.CoroutineHandler.withContextCatching
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
@@ -31,7 +33,7 @@ class AdsManager @Inject constructor(
   private val tag: String get() = javaClass.simpleName
 
   private val consentInformation = UserMessagingPlatform.getConsentInformation(application)
-  private val scope = CoroutineScope(Dispatchers.IO)
+  private val scope = CoroutineScope(Dispatchers.Main)
   private val isMobileAdsInitializeCalled = AtomicBoolean(false)
   private var isConsentRequested = false
   private val testDeviceIds =
@@ -59,6 +61,22 @@ class AdsManager @Inject constructor(
     )
   }
 
+  val nativeLang: NativeAdUnit by lazy {
+    NativeAdUnit(
+      floors = listOf(BuildConfig.NATIVE_LANG_ALL_ID to "native_lang_all"),
+      isNetworkAvailable = { networkManager.isAvailable.value },
+      canRequestAds = consentInformation::canRequestAds
+    )
+  }
+
+  val nativeLangAlt: NativeAdUnit by lazy {
+    NativeAdUnit(
+      floors = listOf(BuildConfig.NATIVE_LANG_ALT_ALL_ID to "native_lang_alt_all"),
+      isNetworkAvailable = { networkManager.isAvailable.value },
+      canRequestAds = consentInformation::canRequestAds
+    )
+  }
+
   init {
     application.registerActivityLifecycleCallbacks(this)
   }
@@ -71,6 +89,7 @@ class AdsManager @Inject constructor(
       .apply { if (BuildConfig.DEBUG) setConsentDebugSettings(debugSettings(activity)) }
       .build()
 
+    Timber.tag(tag).d("Requesting consent info update with params: $params")
     consentInformation.requestConsentInfoUpdate(
       activity,
       params,
@@ -105,7 +124,9 @@ class AdsManager @Inject constructor(
 
     scope.launch {
       withContextCatching(
+        context = Dispatchers.IO,
         action = {
+          Timber.tag(tag).d("Initializing MobileAds...")
           MobileAds.initialize(application) { status ->
             Timber.tag(tag).d("MobileAds initialized: ${status.adapterStatusMap}")
             _isMobileAdsInitialized.value = true
@@ -126,9 +147,17 @@ class AdsManager @Inject constructor(
       .build()
 
   override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-    if (activity !is MainActivity || isConsentRequested) return
-    isConsentRequested = true
-    gatherConsent(activity)
+    scope.launch {
+      if (activity !is MainActivity || isConsentRequested) return@launch
+      isConsentRequested = true
+      networkManager.isAvailable.collectCatching(
+        action = {
+          if (!it || isMobileAdsInitializeCalled.get()) return@collectCatching
+          gatherConsent(activity)
+        },
+        catch = { Timber.tag(tag).w("Network availability check failed: ${it.message}") }
+      )
+    }
   }
 
   override fun onActivityStarted(activity: Activity) = Unit
