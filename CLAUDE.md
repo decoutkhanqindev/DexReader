@@ -194,11 +194,15 @@ ads/          AdMob, ported from a sister project (`lich_viet_loc_phat`). Two su
               `staticCompositionLocalOf` in `ManagerLocals.kt`, field-injected and provided by
               `MainActivity` next to the three data managers). It registers itself as
               `Application.ActivityLifecycleCallbacks` in `init` to track `currentActivity` and
-              owns the app's ad units as `by lazy` properties — currently exactly one,
-              `interSplash: InterstitialAdUnit`, a single-floor waterfall
-              `floors = listOf(BuildConfig.INTER_SPLASH_ALL_ID to "inter_splash_all")` (no
-              high-floor id yet — add it as a first entry when there is one) with
-              `onShowed`/`onClosed`/`onFailedToShow` toggling a private `isAdShowing`. Two things
+              owns the app's ad units as `by lazy` properties — **7 today, every one a
+              single-floor waterfall** (no high-floor id anywhere yet; add one as a first entry
+              when there is one): `interSplash: InterstitialAdUnit` (`INTER_SPLASH_ALL_ID`, with
+              `onShowed`/`onClosed`/`onFailedToShow` toggling a private `isAdShowing`) plus six
+              `NativeAdUnit`s — `nativeLang`, `nativeLangAlt`, `nativeOb1`, `nativeOb2`,
+              `nativeOb3`, `nativeObFullScreen`. Each placement has its own
+              `BuildConfig.<NAME>_ALL_ID` declared per build type in `app/build.gradle.kts`
+              (real `ca-app-pub-9635401910651855/…` under `release {}`, Google's native sample
+              id under `debug {}`). Two things
               to know before extending it: `isAdShowing` is private and **nothing reads it yet**
               (`currentActivity` has exactly one reader — the consent form, below); and the
               registration is **for the life of the process** — `onActivityDestroyed` only clears
@@ -245,9 +249,13 @@ ads/          AdMob, ported from a sister project (`lich_viet_loc_phat`). Two su
               was reverted. `BannerAdView` still has no caller.
 
               **The key is the unit, not `Unit`, because a caller may swap units inside one
-              slot** — `LanguageSelectionScreen` does exactly that: `val nativeAd = if
-              (isSelected) nativeLangAlt else nativeLang` feeding one `NativeAdView` in
-              `BaseDetailsScreen`'s `bottomBar`, so tapping a language exchanges the ad under the
+              slot.** No caller does today — the one that did, `LanguageSelectionScreen`, was
+              since split into `LanguageNormalScreen`/`LanguageAltScreen` (below), each with its
+              own fixed unit — but the keying must stay: it is one word, and the failure it
+              prevents is silent. The original bug, kept here because it is the clearest
+              statement of what goes wrong: that screen did `val nativeAd = if (isSelected)
+              nativeLangAlt else nativeLang` feeding one `NativeAdView` in `BaseDetailsScreen`'s
+              `bottomBar`, so tapping a language exchanged the ad under the
               same slot. With `DisposableEffect(Unit)` the effect is created once and
               `remember(Unit)` keeps the **first** `DisposableEffectImpl`, i.e. the first
               `effect` lambda, which closed over the first composition's `adUnit` parameter
@@ -330,6 +338,34 @@ ads/          AdMob, ported from a sister project (`lich_viet_loc_phat`). Two su
               `Card` + `CircularProgressIndicator` + `R.string.ad_loading`, and does **not** call
               `load()` itself — it is a passive indicator for a unit some other composable or
               screen is loading (nothing calls it yet).
+
+              **Native ad colors are applied at runtime from `MaterialTheme.colorScheme`, never
+              from `values-night/` XML resources — because this app's dark mode is not the
+              system's.** `DataStoreManager.isDark` is an explicit in-app boolean fed straight
+              into `DexReaderTheme(isDarkTheme)` (see "Managers, not use cases" under Data
+              Layer); `MainActivity` never calls `AppCompatDelegate.setDefaultNightMode` or
+              touches `Configuration.uiMode`, so a `values-night/colors.xml` would key off the
+              *system's* dark setting, not the app's — exactly the kind of desync this app's
+              theme design otherwise avoids (same reasoning as the locale override: presentation
+              state must not leak into a mechanism Compose doesn't control). So `native_media_4_3_ad.xml`/`native_media_16_9_ad.xml` and their three
+              `<shape>` drawables (`bg_native_ad_card`/`bg_ad_label`/`bg_cta_native_ad`) keep only
+              a static **light-theme** baseline (inlined hex matching `surfaceContainerLight`/
+              `outlineVariantLight`/`primaryLight`/`onSurfaceLight`/`onSurfaceVariantLight` —
+              replacing the source project's hardcoded bronze/gold), and `NativeAdView`
+              overwrites those colors on every `update` via a private `applyNativeAdColors(view,
+              colors)`: `colors` is a `NativeAdColors` struct built fresh each recomposition from
+              `MaterialTheme.colorScheme.{surfaceContainer, outlineVariant, primary, onSurface,
+              onSurfaceVariant, onPrimary}`, so it automatically tracks `isDark` the same way any
+              other themed composable does — no `LaunchedEffect`, no manual invalidation. The
+              apply function calls `.mutate()` on each inflated `GradientDrawable`
+              (`view.background`, `ad_label`'s background, `ad_cta`'s background) before
+              `setColor`/`setStroke`: `mutate()` is required here specifically because these
+              drawables come from shared XML resources with cached constant state — skipping it
+              would recolor every other inflated instance of the same drawable resource, not
+              just this one view. `bindNativeAd` (the SDK content binding: headline/body/media/
+              icon/CTA text and visibility) stays a separate function and runs right after
+              `applyNativeAdColors` in the same `update` block — recoloring and rebinding content
+              are independent concerns and happen to both need to re-run on every `update`, nothing more.
 
               **Consent (UMP) gates SDK initialization, and `AdsManager` owns the whole
               flow — `App.kt` no longer touches `MobileAds`.** Google's rule: gather consent
@@ -427,8 +463,11 @@ ads/          AdMob, ported from a sister project (`lich_viet_loc_phat`). Two su
               `may_contain_ads` caption ("This action may contain ads") sits directly under the
               loading bar, in all 64 locales — unlike `ad_loading`/`ad_label`, which are
               English-only, because this one is on screen on every launch while those two have
-              no live caller yet. Still open: the 3 drawables (`bg_native_ad_card`/`bg_ad_label`/
-              `bg_cta_native_ad`) keep the source project's hardcoded bronze/gold hex colours,
+              no live caller yet. The 3 drawables (`bg_native_ad_card`/`bg_ad_label`/
+              `bg_cta_native_ad`) and the layout XMLs' `textColor` attributes were rebased off
+              the source project's bronze/gold onto this app's M3 tokens (light hex values
+              inlined directly, see the `NativeAdView` paragraph above for why there is no
+              `values-night/` variant and how dark mode is actually applied). Still open:
               `ad_loading`/`ad_label` exist only in `values/` (not the 63 other locales), and
               `BannerAdUnit` still calls the deprecated
               `getCurrentOrientationAnchoredAdaptiveBannerAdSize`. See CHANGELOG 2026-09-19 for
@@ -796,7 +835,7 @@ application scope) and exposes hot state:
   stored enum *names* and the inverse flag; an existing install therefore comes up dark + English
   and replays onboarding once, then keeps whatever it saves next). **`isFirstOpen` is the inverse
   of the old `isOnboardingCompleted`**: `true` = never finished onboarding, default `true`,
-  `OnboardingScreen` saves `false`, and Splash routes to `LanguageSelection` only on an explicit
+  `OnboardingScreen` saves `false`, and Splash routes to `LanguageNormal` only on an explicit
   `true`. Defaults live in the impl as constants (`true` / `"en"` / `true`). There are **no
   `observeX()` functions and no `MutableStateFlow`**: each flow is built by one private helper,
   `Preferences.Key<T>.asStateFlow(default)` =
@@ -811,8 +850,11 @@ application scope) and exposes hot state:
   leaving the screen** (a `rememberCoroutineScope` launch would be — this is the reason saves must
   not be collected into composition). Saves do not set the field eagerly; the DataStore emission
   does. The language picker's *staged* pick is **not** in the manager — it is `rememberSaveable`
-  UI state inside `LanguageSelectionScreen`/`LanguageSettingScreen`, and only Done calls
-  `saveSelectedLangCode(it.code)`; a tap never touches the store.
+  UI state inside `LanguageAltScreen`/`LanguageSettingScreen` (plain `remember`, not
+  `rememberSaveable` — Alt re-seeds from its `langCode` route arg after a configuration change,
+  Setting falls back to the applied value), and only Done calls `saveSelectedLangCode(it.code)`;
+  a tap never touches the store. `LanguageNormalScreen` holds no staged pick at all — a tap
+  there navigates instead of selecting.
 - `NetworkManager.isAvailable: StateFlow<Boolean>` — the callback flow `.catch { …; emit(true) }`
   `.stateIn(scope, WhileSubscribed(5_000), true)`, unchanged in semantics from the ViewModel it
   replaced (see below for the load-bearing details).
@@ -862,7 +904,7 @@ one primitive it needs at the point of use — `data.isDark ?: true`,
 `*Content` composables still only ever see `*Value` types and nothing needs a mapper. `PrefsViewModel`, `NetworkViewModel` and the old `PrefsData` are
 **deleted** (packages and all). `MainActivity` reads `isDark`/`selectedLangCode` for
 `DexReaderTheme` and the locale, `SplashScreen` reads `isFirstOpen`;
-`LanguageSelectionScreen`, `LanguageSettingScreen`, `OnboardingScreen` and
+`LanguageNormalScreen`, `LanguageAltScreen`, `LanguageSettingScreen`, `OnboardingScreen` and
 `SettingsScreen` read `LocalDataStoreManager.current` themselves and take **no** prefs param —
 adding a screen that reads prefs no longer touches `NavGraph`.
 
@@ -1269,10 +1311,10 @@ while offline (no bypass, no "proceed without ads" branch), but recovers
 automatically once network is available. Note also that
 "Do not consent" is **not** this case — `canRequestAds()` stays `true` after a refusal and the
 (limited) ad still shows. `handleNext` is the one place that reads `isFirstOpen`
-(`true` ⇒ `LanguageSelection`, else `Main`, both via `navigateClearStack<NavRoute.Splash>`).
+(`true` ⇒ `LanguageNormal`, else `Main`, both via `navigateClearStack<NavRoute.Splash>`).
 Consequences worth knowing: (1) **the ad's `onAdShowed` (fires from
 `onAdShowedFullScreenContent`) — not `show()`'s `onAdClosed` — is what navigates**, so
-`Main`/`LanguageSelection` is composed *behind* the full-screen ad and is already there when
+`Main`/`LanguageNormal` is composed *behind* the full-screen ad and is already there when
 the user closes it; switch to `onAdClosed = handleNext` if Splash should stay until dismissal;
 (2) with no network, `load()` sets `FAILED` immediately
 but the effect is gated on `isNetworkAvailable`, so Splash sits under `NoInternetDialog` until
@@ -1476,14 +1518,42 @@ since the chapter-language fallback has to be re-resolved for the new preference
 are deliberately **not** in the list: their titles are denormalised copies stored in Firestore, not
 MangaDex responses, so a language change cannot affect them.
 
-`LanguageTypeValue` (SELECTION/SETTING) is not cosmetic — it decides when Done enables:
-`SELECTION` (first run, nothing applied yet) enables as soon as a language is tapped; `SETTING`
-enables only when the tapped language *differs* from the applied one. Both screens render the same
-`LanguageContent`; they differ only in top bar (Selection has no Back — the first-run flow must not
-be escapable) and in that value.
+`LanguageTypeValue` (NORMAL/ALT/SETTING) is not cosmetic — it decides when Done enables:
+`NORMAL`/`ALT` enable as soon as a language is tapped; `SETTING` enables only when the tapped
+language *differs* from the applied one. All three screens render the same `LanguageContent`,
+whose `selectedLanguage` and `appliedLanguage` both default to `null` so a screen passes only
+what it actually has — `appliedLanguage` is read by the `SETTING` branch alone.
 
-**First-run order is `Splash → LanguageSelection → Onboarding → Main`**, gated by the *onboarding*
-flag — there is no separate "language chosen" flag, so clearing app data replays both.
+**The first-run picker is two screens, and the split exists for ad inventory, not for UX.**
+`LanguageNormalScreen` and `LanguageAltScreen` (`screens/language/`) replaced a single
+`LanguageSelectionScreen` that swapped `nativeLang`/`nativeLangAlt` under one `bottomBar` slot
+as soon as a language was tapped (the bug that shape caused is under "The key is the unit" in
+the ads section). Each screen now owns **one fixed unit** in its own `BaseDetailsScreen`
+`bottomBar`, so two placements get a real impression instead of one slot being reused:
+
+- **Normal** is the empty state — it passes no `selectedLanguage`, so Done is provably always
+  disabled and its `onDoneClick` is `{ }`. Tapping *any* language navigates straight to Alt via
+  `navigateClearStack<NavRoute.LanguageNormal>(NavRoute.LanguageAlt(it.code))`. Bottom bar is
+  `nativeLang`; it preloads `nativeLangAlt` so Alt's ad is already there on arrival.
+- **Alt** takes `langCode: String` off the route (`NavRoute.LanguageAlt` is the only
+  `data class` route in the first-run flow) and seeds `selectedLanguage` from it, so the tapped
+  language arrives highlighted. Further taps just move the selection — Alt never navigates on
+  tap. Bottom bar is `nativeLangAlt`; it preloads `nativeOb1` + `nativeObFullScreen` for
+  Onboarding. Done saves the code and goes to `Onboarding`.
+
+Both keep `BackHandler { }` and `isBackEnabled = false` — the first-run flow must not be
+escapable, and since each hop is `navigateClearStack` there is nothing to go back to anyway.
+The preloads are `SideEffect(Unit)` on Alt and `LifecycleResumeEffect(Unit)` on Normal;
+`AdUnit.load()` is not a suspend function, so `SideEffect` is sufficient wherever the preload
+should happen exactly once per composition.
+
+**First-run order is `Splash → LanguageNormal → LanguageAlt → Onboarding → Main`**, gated by the
+*onboarding* flag — there is no separate "language chosen" flag, so clearing app data replays
+both. The ad preload chain runs one screen ahead of itself the whole way down:
+`SplashScreen` loads `nativeLang` (in the `LOADED` branch, just before showing `interSplash`) →
+Normal loads `nativeLangAlt` → Alt loads `nativeOb1` + `nativeObFullScreen`. A skipped link
+degrades to a normal in-place load, never to a missing ad: every `NativeAdView` calls `load()`
+in its own `DisposableEffect` regardless, and the state guard makes the preloaded case a no-op.
 
 **Settings (`screens/settings/`)**: reached from a gear in **Profile's top bar**, not from a section
 inside Profile (`ProfileSettingsSection`/`ThemeOptionItem` are deleted). `BaseScreen` grew
@@ -1694,7 +1764,7 @@ into
 a staged field (updates the moment the user taps, for in-screen feedback) and an applied field (
 updates
 only after the write succeeds) — never let one field serve both roles.
-the language picker's `selectedLanguage` (a `rememberSaveable` in `LanguageSelectionScreen`/
+the language picker's `selectedLanguage` (a `remember` in `LanguageAltScreen`/
 `LanguageSettingScreen`, drives the highlight and the Done button) vs.
 `DataStoreManager.selectedLangCode` (persisted value, read by `MainActivity` to drive the locale
 and by every repository) is the established example — the staged half is plain screen UI state,

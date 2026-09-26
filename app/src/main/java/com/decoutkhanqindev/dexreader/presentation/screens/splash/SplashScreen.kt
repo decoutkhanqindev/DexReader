@@ -40,7 +40,7 @@ fun SplashScreen(
   val nativeLang = adsManager.nativeLang
   val handleNext = {
     if (isFirstOpen == true) {
-      navController.navigateClearStack<NavRoute.Splash>(NavRoute.LanguageSelection)
+      navController.navigateClearStack<NavRoute.Splash>(NavRoute.LanguageNormal)
     } else {
       navController.navigateClearStack<NavRoute.Splash>(NavRoute.Main)
     }

@@ -3,6 +3,7 @@ package com.decoutkhanqindev.dexreader.presentation.screens.onboarding.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -45,9 +46,7 @@ fun OnboardingContent(
   modifier: Modifier = Modifier,
   onGetStartedClick: () -> Unit,
 ) {
-  val pages: ImmutableList<OnboardingPageValue> = remember {
-    OnboardingPageValue.entries.toPersistentList()
-  }
+  val pages = OnboardingPageValue.entries
   val pagerState = rememberPagerState(pageCount = { pages.size })
   val coroutineScope = rememberCoroutineScope()
   val isLastPage by remember {
@@ -61,6 +60,7 @@ fun OnboardingContent(
     HorizontalPager(
       state = pagerState,
       beyondViewportPageCount = 1,
+      contentPadding = PaddingValues(horizontal = 1.dp),
       modifier = Modifier
         .fillMaxWidth()
         .weight(1f)

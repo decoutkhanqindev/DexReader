@@ -77,6 +77,38 @@ class AdsManager @Inject constructor(
     )
   }
 
+  val nativeOb1 by lazy {
+    NativeAdUnit(
+      floors = listOf(BuildConfig.NATIVE_OB1_ALL_ID to "native_ob1_all"),
+      isNetworkAvailable = { networkManager.isAvailable.value },
+      canRequestAds = consentInformation::canRequestAds
+    )
+  }
+
+  val nativeOb2 by lazy {
+    NativeAdUnit(
+      floors = listOf(BuildConfig.NATIVE_OB2_ALL_ID to "native_ob2_all"),
+      isNetworkAvailable = { networkManager.isAvailable.value },
+      canRequestAds = consentInformation::canRequestAds
+    )
+  }
+
+  val nativeOb3 by lazy {
+    NativeAdUnit(
+      floors = listOf(BuildConfig.NATIVE_OB3_ALL_ID to "native_ob3_all"),
+      isNetworkAvailable = { networkManager.isAvailable.value },
+      canRequestAds = consentInformation::canRequestAds
+    )
+  }
+
+  val nativeObFullScreen by lazy {
+    NativeAdUnit(
+      floors = listOf(BuildConfig.NATIVE_OB_FULL_SCREEN_ALL_ID to "native_ob_full_screen_all"),
+      isNetworkAvailable = { networkManager.isAvailable.value },
+      canRequestAds = consentInformation::canRequestAds
+    )
+  }
+
   init {
     application.registerActivityLifecycleCallbacks(this)
   }

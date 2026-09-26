@@ -16,6 +16,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.forgot_password.ForgotPasswordScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.login.LoginScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.auth.register.RegisterScreen
@@ -26,7 +27,8 @@ import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.Use
 import com.decoutkhanqindev.dexreader.presentation.screens.common.viewmodels.manga_section.MangaSectionViewModel
 import com.decoutkhanqindev.dexreader.presentation.screens.favorites.FavoritesScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.history.HistoryScreen
-import com.decoutkhanqindev.dexreader.presentation.screens.language.LanguageSelectionScreen
+import com.decoutkhanqindev.dexreader.presentation.screens.language.LanguageAltScreen
+import com.decoutkhanqindev.dexreader.presentation.screens.language.LanguageNormalScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.language.LanguageSettingScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.main.MainScreen
 import com.decoutkhanqindev.dexreader.presentation.screens.manga_details.MangaDetailsScreen
@@ -66,9 +68,17 @@ fun NavGraph() {
       )
     }
 
-    composable<NavRoute.LanguageSelection> {
-      LanguageSelectionScreen(
+    composable<NavRoute.LanguageNormal> {
+      LanguageNormalScreen(
         navController = navController,
+        modifier = Modifier.fillMaxSize(),
+      )
+    }
+
+    composable<NavRoute.LanguageAlt> {
+      LanguageAltScreen(
+        navController = navController,
+        langCode = it.toRoute<NavRoute.LanguageAlt>().langCode,
         modifier = Modifier.fillMaxSize(),
       )
     }

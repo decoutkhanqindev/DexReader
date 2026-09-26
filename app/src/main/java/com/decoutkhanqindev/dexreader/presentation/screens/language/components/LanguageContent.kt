@@ -34,8 +34,8 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 fun LanguageContent(
   type: LanguageTypeValue,
-  selectedLanguage: LanguageValue?,
-  appliedLanguage: LanguageValue,
+  selectedLanguage: LanguageValue? = null,
+  appliedLanguage: LanguageValue? = null,
   modifier: Modifier = Modifier,
   onLanguageClick: (LanguageValue) -> Unit,
   onDoneClick: () -> Unit,

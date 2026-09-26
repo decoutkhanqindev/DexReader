@@ -2,6 +2,7 @@ package com.decoutkhanqindev.dexreader.ads.composables
 
 import android.content.Context
 import android.graphics.Outline
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewOutlineProvider
@@ -13,8 +14,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.viewinterop.AndroidView
@@ -37,6 +41,14 @@ fun NativeAdView(
   val context = LocalContext.current
   val adState by adUnit().state.collectAsStateWithLifecycle()
   val nativeAd = adUnit().nativeAd
+  val colors = NativeAdColors(
+    cardBackground = MaterialTheme.colorScheme.surfaceContainer,
+    cardBorder = MaterialTheme.colorScheme.outlineVariant,
+    accent = MaterialTheme.colorScheme.primary,
+    headline = MaterialTheme.colorScheme.onSurface,
+    body = MaterialTheme.colorScheme.onSurfaceVariant,
+    ctaText = MaterialTheme.colorScheme.onPrimary,
+  )
 
   DisposableEffect(adUnit()) {
     adUnit().load(context)
@@ -51,6 +63,7 @@ fun NativeAdView(
       factory = layoutType.viewBuilder(),
       onRelease = { view -> view.destroy() },
       update = { view ->
+        applyNativeAdColors(view, colors)
         if (nativeAd != null) bindNativeAd(view, nativeAd)
       },
       modifier = Modifier.fillMaxWidth(),
@@ -107,6 +120,43 @@ private fun buildNativeAdView(
   view.callToActionView = view.findViewById(R.id.ad_cta)
 
   return view
+}
+
+@Immutable
+private data class NativeAdColors(
+  val cardBackground: Color,
+  val cardBorder: Color,
+  val accent: Color,
+  val headline: Color,
+  val body: Color,
+  val ctaText: Color,
+)
+
+private fun applyNativeAdColors(
+  view: NativeAdView,
+  colors: NativeAdColors,
+) {
+  val strokeWidthPx = (1 * view.resources.displayMetrics.density).toInt()
+
+  (view.background?.mutate() as? GradientDrawable)?.apply {
+    setColor(colors.cardBackground.toArgb())
+    setStroke(strokeWidthPx, colors.cardBorder.toArgb())
+  }
+
+  val label = view.findViewById<TextView>(R.id.ad_label)
+  (label.background?.mutate() as? GradientDrawable)?.setStroke(
+    strokeWidthPx,
+    colors.accent.toArgb()
+  )
+  label.setTextColor(colors.accent.toArgb())
+
+  (view.headlineView as? TextView)?.setTextColor(colors.headline.toArgb())
+  (view.bodyView as? TextView)?.setTextColor(colors.body.toArgb())
+
+  (view.callToActionView as? TextView)?.apply {
+    (background?.mutate() as? GradientDrawable)?.setColor(colors.accent.toArgb())
+    setTextColor(colors.ctaText.toArgb())
+  }
 }
 
 private fun bindNativeAd(view: NativeAdView, nativeAd: NativeAd) {

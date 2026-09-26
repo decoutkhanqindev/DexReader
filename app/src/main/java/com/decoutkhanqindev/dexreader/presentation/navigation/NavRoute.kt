@@ -9,7 +9,10 @@ sealed interface NavRoute {
   data object Splash : NavRoute
 
   @Serializable
-  data object LanguageSelection : NavRoute
+  data object LanguageNormal : NavRoute
+
+  @Serializable
+  data class LanguageAlt(val langCode: String) : NavRoute
 
   @Serializable
   data object Onboarding : NavRoute
