@@ -101,6 +101,18 @@ class AdsManager @Inject constructor(
     )
   }
 
+  val nativeOb4 by lazy {
+    NativeAdUnit(
+      floors = listOf(BuildConfig.NATIVE_OB4_ALL_ID to "native_ob4_all"),
+      isNetworkAvailable = { networkManager.isAvailable.value },
+      canRequestAds = consentInformation::canRequestAds
+    )
+  }
+
+  val nativeObs: List<NativeAdUnit> by lazy {
+    listOf(nativeOb1, nativeOb2, nativeOb3, nativeOb4)
+  }
+
   val nativeObFullScreen by lazy {
     NativeAdUnit(
       floors = listOf(BuildConfig.NATIVE_OB_FULL_SCREEN_ALL_ID to "native_ob_full_screen_all"),
@@ -150,7 +162,9 @@ class AdsManager @Inject constructor(
 
     if (testDeviceIds.isNotEmpty()) {
       MobileAds.setRequestConfiguration(
-        RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build()
+        RequestConfiguration.Builder()
+          .setTestDeviceIds(testDeviceIds)
+          .build()
       )
     }
 

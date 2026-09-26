@@ -118,38 +118,60 @@ ads/          AdMob, ported from a sister project (`lich_viet_loc_phat`). Two su
               and providers rather than `NetworkManager`/`ConsentInformation` so `ads/ad_unit`
               imports nothing from `data/` or UMP and a unit can be built in a test or preview
               with two lambdas. Both are read **once, synchronously, inside `load()`**. `load()`
-              in full: **`if (_state != NONE && _state != FAILED) return`** — then
-              `resetWaterfall()`; then no consent (`!canRequestAds()`) ⇒ `_state = FAILED` and
-              return (logged as `Consent not granted, not loading`); then no network ⇒
-              `_state = FAILED` and return; otherwise `requestLoad(context, nextGeneration())`.
-              **`resetWaterfall()` sits between the state guard and the two gates, and both
-              neighbours are load-bearing.** It used to sit last, right before `requestLoad` —
-              which is correct for behaviour but made the two gate log lines name a stale floor:
-              `currentId`/`currentName` are `floors[floorIndex]`, and nothing resets
-              `floorIndex` when a waterfall ends (neither `onLoadFailed`'s give-up branch nor
-              `release()`), so a placement that had walked down to `inter_home_all` and failed
-              would log `inter_home_all - No network` for an attempt whose next request is
-              actually `inter_home_high`. It must **not** move above the state guard either: at
-              `LOADING` the guard returns, but a reset before it would rewind `floorIndex` under
-              the in-flight coroutine, whose `onLoadFailed`/`tryFallback` then re-walk the
-              waterfall from the wrong floor. Note `release()` deliberately still does not
-              reset, so its own `"$currentName - Released"` line names the floor that was
-              actually live. Consent is
-              checked before network on purpose — it is the legal gate, and it is what makes
-              every future `BannerAdView`/`NativeAdView` `load()` consent-aware with no wiring
-              at the call site. The first line is the re-entry guard and
-              it means "make sure an ad is loading or ready", not "load now": `NONE`/`FAILED`
-              proceed (so a retry after a failure is just `load()` again), `LOADING`/`LOADED`/
-              `IMPRESSION` are no-ops. It is what makes **preloading safe** — a unit that
+              in full, current order: **`if (_state == LOADING || _state == LOADED) return`** —
+              then no consent (`!canRequestAds()`) ⇒ `_state = FAILED` and return (logged as
+              `Consent not granted, not loading`); then no network ⇒ `_state = FAILED` and
+              return; otherwise `resetWaterfall()` then `requestLoad(context,
+              nextGeneration())`. **The guard is a block-list, not an allow-list** — this
+              inverted from `if (_state != NONE && _state != FAILED) return` (allow only
+              `NONE`/`FAILED` through) specifically so `IMPRESSION` also passes: Onboarding
+              (below) reloads a unit that is already showing an impressed ad — the adjacent
+              pager page peeked it via the 1dp `contentPadding` — and `IMPRESSION` had to stop
+              being a no-op for that reload to do anything. `NONE`/`FAILED`/`IMPRESSION` now all
+              proceed (a retry after a failure, or after a peek-impression, is just `load()`
+              again); `LOADING`/`LOADED` remain no-ops (a load in flight or an unseen loaded ad
+              must not be thrown away). Consent is checked before network on purpose — it is the
+              legal gate, and it is what makes every future `BannerAdView`/`NativeAdView`
+              `load()` consent-aware with no wiring at the call site.
+
+              **`resetWaterfall()` currently sits right before `requestLoad`, not between the
+              state guard and the two gates — and that positioning is a known regression, not a
+              deliberate choice.** The two gate log lines (`"$currentName - Consent not
+              granted"` / `"$currentName - No network"`) now read `currentName` *before* the
+              reset, so on a unit that had previously walked its waterfall down to a lower floor
+              and failed, a later gate failure logs the stale floor name instead of floor 0 —
+              exactly the bug this file used to document as fixed (`inter_home_all - No network`
+              for an attempt whose next request is actually `inter_home_high`). It is currently
+              **silent** because every placement declared in `AdsManager` today is single-floor
+              (`floorIndex` never leaves 0), so there is no stale name to show. **Move
+              `resetWaterfall()` back to immediately after the state guard, before the two
+              gates, before adding any placement with more than one floor** — otherwise the log
+              line lies the moment a fallback has ever happened. It must not move above the
+              state guard: at `LOADING` the guard returns, but a reset before it would rewind
+              `floorIndex` under the in-flight coroutine, whose `onLoadFailed`/`tryFallback`
+              would then re-walk the waterfall from the wrong floor. `release()` deliberately
+              still does not reset, so its own `"$currentName - Released"` line names the floor
+              that was actually live.
+
+              It is what makes **preloading safe** — a unit that
               `AdsManager` (or a previous screen) already started can be handed to a composable
               whose effect calls `load()` again without the preload being thrown away. Without
-              it (the guard was dropped by mistake in `b4292d0c` and restored the next day):
-              `LOADING` ⇒ the preload's result is discarded by the generation bump and a second
-              request runs in parallel; `LOADED` ⇒ `BannerAdUnit.requestLoad` destroys the
-              loaded `AdView` on the spot and shows shimmer again; `IMPRESSION` on a full-screen
-              format ⇒ the newly loaded ad is assigned to `_xxxAd` and then wiped by
-              `onAdDismissedFullScreenContent`'s `= null`, which is why `IMPRESSION` is in the
-              guard too. There is still no `cancelPendingLoad()` and no `attemptLoad()`
+              the `LOADING`/`LOADED` half of the guard (it was dropped by mistake in `b4292d0c`
+              and restored the next day): `LOADING` ⇒ the preload's result is discarded by the
+              generation bump and a second request runs in parallel; `LOADED` ⇒
+              `BannerAdUnit.requestLoad` destroys the loaded `AdView` on the spot and shows
+              shimmer again. **`IMPRESSION` no longer being guarded is a live risk specifically
+              for the three full-screen formats** (Interstitial/Reward/AppOpen), where a second
+              `load()` while the ad is on screen assigns the newly loaded ad to `_xxxAd` and
+              then risks being wiped by `onAdDismissedFullScreenContent`'s `= null` the moment
+              the user dismisses the *old* one — or, worse, silently swaps the backing ad object
+              out from under a full-screen ad the user is currently looking at. Only
+              `NativeAdUnit` is exercised this way today (Onboarding, below); the one
+              full-screen unit with a caller, `interSplash`, is not currently reloaded by
+              anything after its first `load()`, so the window is theoretical for now — but
+              adding a reload call on any full-screen unit needs its own guard in front of
+              `AdUnit.load()`, not a revert of this change. There is still no
+              `cancelPendingLoad()` and no `attemptLoad()`
               indirection; the generation counter remains so that `release()` can drop an
               in-flight result (below). There is **no** `NO_NETWORK`
               state (`AdUnitState` is `NONE`/`LOADING`/`LOADED`/`FAILED`/`IMPRESSION`; offline is
@@ -194,15 +216,24 @@ ads/          AdMob, ported from a sister project (`lich_viet_loc_phat`). Two su
               `staticCompositionLocalOf` in `ManagerLocals.kt`, field-injected and provided by
               `MainActivity` next to the three data managers). It registers itself as
               `Application.ActivityLifecycleCallbacks` in `init` to track `currentActivity` and
-              owns the app's ad units as `by lazy` properties — **7 today, every one a
+              owns the app's ad units as `by lazy` properties — **8 today, every one a
               single-floor waterfall** (no high-floor id anywhere yet; add one as a first entry
               when there is one): `interSplash: InterstitialAdUnit` (`INTER_SPLASH_ALL_ID`, with
-              `onShowed`/`onClosed`/`onFailedToShow` toggling a private `isAdShowing`) plus six
+              `onShowed`/`onClosed`/`onFailedToShow` toggling a private `isAdShowing`) plus seven
               `NativeAdUnit`s — `nativeLang`, `nativeLangAlt`, `nativeOb1`, `nativeOb2`,
-              `nativeOb3`, `nativeObFullScreen`. Each placement has its own
+              `nativeOb3`, `nativeOb4`, `nativeObFullScreen`. Each placement has its own
               `BuildConfig.<NAME>_ALL_ID` declared per build type in `app/build.gradle.kts`
               (real `ca-app-pub-9635401910651855/…` under `release {}`, Google's native sample
-              id under `debug {}`). Two things
+              id under `debug {}`). `nativeObs: List<NativeAdUnit>` is a fourth `by lazy` right
+              after `nativeOb4` — `listOf(nativeOb1, nativeOb2, nativeOb3, nativeOb4)`, in that
+              order. It exists purely so the Onboarding pager can index by page: `nativeObs[i]`
+              is page `i`'s ad. **Invariant: length and order must track
+              `OnboardingPageValue.entries` 1:1** — the two lists are not otherwise linked, so
+              adding/removing an onboarding page without touching `nativeObs` silently
+              desyncs which ad shows on which page (or throws `IndexOutOfBoundsException` in
+              `OnboardingContent`'s `adUnits[index]`, if `nativeObs` is shorter).
+              `nativeObFullScreen` still has no caller — reserved for a future full-screen
+              onboarding placement. Two things
               to know before extending it: `isAdShowing` is private and **nothing reads it yet**
               (`currentActivity` has exactly one reader — the consent form, below); and the
               registration is **for the life of the process** — `onActivityDestroyed` only clears
@@ -1239,15 +1270,63 @@ controller and the tabs correctly restart at Home.
 
 **Onboarding (`screens/onboarding/`)**: a 4-page `HorizontalPager` shown **once**, sitting between
 Splash and Main on the outer host (`Splash → Onboarding → Main`, each hop via `navigateClearStack`,
-so
-Back never returns to it). Each page is one `OnboardingPageValue` entry
+so Back never returns to it). Each page is one `OnboardingPageValue` entry
 (`model/value/onboarding/`: `@param:DrawableRes imageRes` + `@param:StringRes titleRes` +
 `descriptionRes` — same shape as `BottomTabItemValue`), rendered top-to-bottom as image → title
-(`headlineMedium`) → description (`bodyLarge`). The page indicator and the Skip / Next / Get Started
-row live **below** the pager in `OnboardingContent`, not inside `OnboardingPage`, so they stay put
-while pages slide. The last page swaps Next for Get Started and drops Skip (`isLastPage` drives the
-label, the button action, and Skip's visibility); Skip and Get Started both call the same
-`onCompleteClick`.
+(`headlineMedium`) → description (`bodyLarge`).
+
+**The page indicator, the Skip / Next / Get Started row, and a native ad now live *inside* each
+pager page, stacked below the image/title/description** — they used to be siblings *below* the
+pager (outside it, so they stayed put while pages slid); moved inside so the ad could sit under
+the buttons and still be part of the swipeable page, per-page ad placement being the whole point.
+Consequence accepted knowingly: the indicator and buttons now slide with the page instead of
+staying fixed. `OnboardingContent`'s per-page `Column` (inside the `HorizontalPager`'s content
+lambda, one instance per page): `OnboardingPage(modifier = Modifier.weight(1f).fillMaxWidth())` →
+`OnboardingPageIndicator` → `OnboardingActions` → `NativeAdView(layoutType =
+NativeLayoutType.MEDIA_16_9)`. `statusBarsPadding()`/`navigationBarsPadding()` moved from the
+pager/button-row onto this per-page `Column` for the same reason — there is no shared
+outside-the-pager container left to hold them. `OnboardingPage` itself is unchanged; only its
+call-site modifier changed (`fillMaxSize()` → `weight(1f).fillMaxWidth()`, since it now shares
+the page `Column` with three more children instead of being the page's sole content).
+
+**`OnboardingActions`** (`onboarding/components/`, new — extracted from what used to be inline in
+`OnboardingContent`): `OnboardingActions(isLastPage: Boolean, modifier: Modifier = Modifier,
+onSkipClick: () -> Unit, onNextClick: () -> Unit)`. Same behaviour as before the extraction: Skip
+hides on the last page, `ActionButton` becomes `fillMaxWidth()` there and its label swaps
+Next→Get Started; both `onSkipClick` and the last-page `onNextClick` are wired by the caller to
+the same completion action (`onGetStartedClick`), matching the original "Skip and Get Started
+both finish onboarding" behaviour — `OnboardingActions` itself has no opinion on what either
+callback does, `OnboardingContent` decides per page (`onNextClick` is either
+`animateScrollToPage(index + 1)` or `onGetStartedClick`, based on `index == pages.lastIndex`).
+`isLastPage` is now computed per page (`index == pages.lastIndex`) instead of a
+`derivedStateOf { pagerState.currentPage == pages.lastIndex }` — simpler once the row lives
+inside the page lambda, and one fewer composition-phase read of `pagerState.currentPage`.
+
+**The pager's `contentPadding = PaddingValues(horizontal = 1.dp)` is now load-bearing for ads,
+not just a peek hint.** Combined with `beyondViewportPageCount = 1`, the adjacent page on each
+side is always composed and 1dp of it is on-screen — enough for its `NativeAdView` to register
+an impression. `OnboardingContent` reads `LocalAdsManager.current.nativeObs` (a
+`List<NativeAdUnit>` on `AdsManager`, index-aligned with `OnboardingPageValue.entries`) and each
+page shows `nativeObs[index]`. A `LaunchedEffect(Unit) { snapshotFlow { pagerState.currentPage
+}.collect { … } }` reloads both neighbours of the current page on every page change (and once
+immediately on entry, since `snapshotFlow` replays the current page on collection start):
+standing on page *i* calls `nativeObs.getOrNull(i - 1)?.load(context)` and
+`nativeObs.getOrNull(i + 1)?.load(context)` — `getOrNull` absorbs the two edges (page 0 has no
+`i - 1`, the last page has no `i + 1`). This is a plain `load()` call, not a new function: the
+`AdUnit.load()` guard change above (`IMPRESSION` now passes) is what makes this reload actually
+do something instead of silently no-op against a unit the neighbour page already impressed.
+`snapshotFlow`, not a keyed `LaunchedEffect(pagerState.currentPage)`, for the usual reason (see
+`MangaBanner`'s auto-scroll under Compose Performance) — the key expression would be a
+composition-phase read and recompose `OnboardingContent` on every page change.
+
+**Preload chain**, one screen ahead of itself the whole way down, same pattern as the ad-splash
+chain: `LanguageAltScreen` preloads `nativeOb1` + `nativeOb2` (`SideEffect(Unit)`, changed from
+the `nativeOb1` + `nativeObFullScreen` it preloaded before this pass — `nativeObFullScreen` has
+no caller yet, reserved); `OnboardingScreen` preloads `nativeOb3` + `nativeOb4` the same way. So
+by the time Onboarding is entered, pages 0 and 1's ads (`ob1`/`ob2`) are already warm from the
+previous screen, and pages 2 and 3's (`ob3`/`ob4`) are warming in parallel with whatever the user
+does on pages 0-1. A skipped link degrades to a normal in-place load via `NativeAdView`'s own
+`DisposableEffect(adUnit()) { adUnit().load(context) }` — never to a missing ad.
 
 The illustrations (`drawable/ob_discover|ob_browse|ob_read|ob_track.webp`, ~1000×1380 each) are
 **real screenshots of this app** taken on the emulator, composited into phone mockups (rounded
@@ -1538,8 +1617,8 @@ the ads section). Each screen now owns **one fixed unit** in its own `BaseDetail
 - **Alt** takes `langCode: String` off the route (`NavRoute.LanguageAlt` is the only
   `data class` route in the first-run flow) and seeds `selectedLanguage` from it, so the tapped
   language arrives highlighted. Further taps just move the selection — Alt never navigates on
-  tap. Bottom bar is `nativeLangAlt`; it preloads `nativeOb1` + `nativeObFullScreen` for
-  Onboarding. Done saves the code and goes to `Onboarding`.
+  tap. Bottom bar is `nativeLangAlt`; it preloads `nativeOb1` + `nativeOb2` for
+  Onboarding's first two pages. Done saves the code and goes to `Onboarding`.
 
 Both keep `BackHandler { }` and `isBackEnabled = false` — the first-run flow must not be
 escapable, and since each hop is `navigateClearStack` there is nothing to go back to anyway.
@@ -1551,9 +1630,11 @@ should happen exactly once per composition.
 *onboarding* flag — there is no separate "language chosen" flag, so clearing app data replays
 both. The ad preload chain runs one screen ahead of itself the whole way down:
 `SplashScreen` loads `nativeLang` (in the `LOADED` branch, just before showing `interSplash`) →
-Normal loads `nativeLangAlt` → Alt loads `nativeOb1` + `nativeObFullScreen`. A skipped link
-degrades to a normal in-place load, never to a missing ad: every `NativeAdView` calls `load()`
-in its own `DisposableEffect` regardless, and the state guard makes the preloaded case a no-op.
+Normal loads `nativeLangAlt` → Alt loads `nativeOb1` + `nativeOb2` → Onboarding itself loads
+`nativeOb3` + `nativeOb4` (see the Onboarding paragraph below for why ob1-4 map onto its 4
+pages). A skipped link degrades to a normal in-place load, never to a missing ad: every
+`NativeAdView` calls `load()` in its own `DisposableEffect` regardless, and the state guard
+makes the preloaded case a no-op.
 
 **Settings (`screens/settings/`)**: reached from a gear in **Profile's top bar**, not from a section
 inside Profile (`ProfileSettingsSection`/`ThemeOptionItem` are deleted). `BaseScreen` grew

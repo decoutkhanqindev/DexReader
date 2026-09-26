@@ -34,13 +34,13 @@ fun LanguageAltScreen(
   val adsManager = LocalAdsManager.current
   val nativeLangAlt = adsManager.nativeLangAlt
   val nativeOb1 = adsManager.nativeOb1
-  val nativeObFullScreen = adsManager.nativeObFullScreen
+  val nativeOb2 = adsManager.nativeOb2
   val dataStoreManager = LocalDataStoreManager.current
   var selectedLanguage by remember { mutableStateOf(LanguageValue.fromCode(langCode)) }
 
   SideEffect(Unit) {
     nativeOb1.load(context)
-    nativeObFullScreen.load(context)
+    nativeOb2.load(context)
   }
 
   BackHandler { }

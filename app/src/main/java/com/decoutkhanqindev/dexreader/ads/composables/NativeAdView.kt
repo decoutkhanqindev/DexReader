@@ -69,7 +69,7 @@ fun NativeAdView(
       modifier = Modifier.fillMaxWidth(),
     )
 
-    if (adState == AdUnitState.LOADING) {
+    if (adState == AdUnitState.LOADING && nativeAd == null) {
       Box(
         modifier = Modifier
           .matchParentSize()
