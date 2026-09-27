@@ -1367,20 +1367,25 @@ simultaneously regardless of which page is showing, a deliberately more aggressi
 strategy than a `beyondViewportPageCount = 1`/`2` window would give. `OnboardingContent` reads
 `LocalAdsManager.current.nativeObs` (index-aligned with `OnboardingPagerItem.entries`, not
 `OnboardingPageValue.entries`) and each page shows `nativeObs[index]`. Neighbour reload lives in
-its own effect, separate from the close-timer effect: `LifecycleResumeEffect(Unit) {
+its own `LifecycleResumeEffect(Unit)`, separate from the close-timer effect (same shape, two
+independent effects — one reloads ads, the other counts down the close button): `val job =
 scope.launch { snapshotFlow { pagerState.currentPage }.collectLatest { page ->
 adUnits.getOrNull(page - 1)?.load(context); adUnits.getOrNull(page)?.load(context);
-adUnits.getOrNull(page + 1)?.load(context) } }; onPauseOrDispose { } }` — `getOrNull` absorbs the
-two edges. This is a plain `load()` call, not a new function: the `AdUnit.load()` guard change
-above (`IMPRESSION` now passes) is what makes this reload actually do something instead of
-silently no-op against a unit a neighbour page already impressed. **Known bug in this exact
-shape**: the `scope.launch { … }` is launched into `rememberCoroutineScope()`, not into a
-lifecycle-scoped coroutine, and `onPauseOrDispose { }` is empty — so the `collectLatest`
-collector this starts is never cancelled on pause, and every resume launches another one that
-runs forever alongside it. Prefer a plain `LaunchedEffect(Unit) { snapshotFlow { … }.collectLatest
-{ … } }` here (no `LifecycleResumeEffect`, no manual `scope.launch`) the next time this file is
-touched — `LaunchedEffect` is already cancelled and relaunched by Compose across the same
-lifecycle events, with no separate scope to leak.
+adUnits.getOrNull(page + 1)?.load(context) } }` then `onPauseOrDispose { job.cancel() }` —
+`getOrNull` absorbs the two edges. This is a plain `load()` call, not a new function: the
+`AdUnit.load()` guard change above (`IMPRESSION` now passes) is what makes this reload actually
+do something instead of silently no-op against a unit a neighbour page already impressed.
+**`onPauseOrDispose` must cancel the `Job` returned by `scope.launch`, never call `scope.cancel()`
+directly.** `scope` here is the single `rememberCoroutineScope()` shared by both
+`LifecycleResumeEffect`s, `handleNext`, and `BackHandler`; `CoroutineScope.cancel()` kills that
+scope's underlying `Job` permanently; every later `scope.launch { … }` on a cancelled scope
+starts a child that is immediately cancelled without running its body. An earlier version of this
+file called `scope.cancel()` in both `onPauseOrDispose` blocks — it compiled, and it fixed the
+original leak (a collector that was never cancelled on pause and duplicated on every resume,
+since `onPauseOrDispose { }` was empty), but the very first background/foreground cycle then
+permanently killed the shared scope, silently breaking Next/Skip/close/Back for the rest of the
+screen's life. Keying each effect's cancellation to its own `job` — not the shared `scope` — is
+what avoids both bugs at once.
 
 **Preload chain**, one screen ahead of itself the whole way down, same pattern as the ad-splash
 chain: `LanguageAltScreen` preloads `nativeOb1` + `nativeOb2` (`SideEffect(Unit)`, changed from

@@ -31,7 +31,6 @@ import com.decoutkhanqindev.dexreader.ads.composables.NativeAdView
 import com.decoutkhanqindev.dexreader.ads.composables.NativeLayoutType
 import com.decoutkhanqindev.dexreader.presentation.model.value.onboarding.OnboardingPagerItem
 import com.decoutkhanqindev.dexreader.presentation.screens.common.locals.LocalAdsManager
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -51,26 +50,24 @@ fun OnboardingContent(
   var isCloseVisible by remember { mutableStateOf(false) }
   val isFsLocked = pagerState.currentPage == fsIndex && !isCloseVisible
   val handleNext = {
-    if (pagerState.currentPage < pagerState.pageCount - 1) {
-      scope.launch {
-        pagerState.animateScrollToPage(pagerState.currentPage + 1)
-      }
+    if (pagerState.currentPage < pagerState.pageCount - 1) scope.launch {
+      pagerState.animateScrollToPage(pagerState.currentPage + 1)
     }
   }
 
   LifecycleResumeEffect(Unit) {
-    scope.launch {
+    val job = scope.launch {
       snapshotFlow { pagerState.currentPage }.collectLatest { page ->
         adUnits.getOrNull(page - 1)?.load(context)
         adUnits.getOrNull(page)?.load(context)
         adUnits.getOrNull(page + 1)?.load(context)
       }
     }
-    onPauseOrDispose { scope.cancel() }
+    onPauseOrDispose { job.cancel() }
   }
 
   LifecycleResumeEffect(Unit) {
-    scope.launch {
+    val job = scope.launch {
       snapshotFlow { pagerState.currentPage }.collectLatest { page ->
         isCloseVisible = false
         if (page == fsIndex) {
@@ -79,7 +76,7 @@ fun OnboardingContent(
         }
       }
     }
-    onPauseOrDispose { scope.cancel() }
+    onPauseOrDispose { job.cancel() }
   }
 
   BackHandler(true) {
