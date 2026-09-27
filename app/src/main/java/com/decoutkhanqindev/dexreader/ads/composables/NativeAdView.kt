@@ -9,23 +9,34 @@ import android.view.ViewOutlineProvider
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.LayoutRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.decoutkhanqindev.dexreader.R
 import com.decoutkhanqindev.dexreader.ads.ad_unit.AdUnitState
 import com.decoutkhanqindev.dexreader.ads.ad_unit.NativeAdUnit
+import com.decoutkhanqindev.dexreader.presentation.screens.common.onClick
 import com.decoutkhanqindev.dexreader.presentation.screens.common.shimmerLoading
 import com.google.android.gms.ads.nativead.MediaView
 import com.google.android.gms.ads.nativead.NativeAd
@@ -36,6 +47,8 @@ fun NativeAdView(
   adUnit: () -> NativeAdUnit,
   layoutType: NativeLayoutType,
   modifier: Modifier = Modifier,
+  isCloseVisible: Boolean = false,
+  onCloseClick: (() -> Unit)? = null,
 ) {
   val preview = LocalInspectionMode.current
   val context = LocalContext.current
@@ -56,20 +69,53 @@ fun NativeAdView(
   }
 
   if (preview) return
-  if (adState == AdUnitState.NONE || adState == AdUnitState.FAILED) return
 
-  Box(modifier = modifier.fillMaxWidth()) {
+  val isFullScreen = layoutType == NativeLayoutType.FULL_SCREEN
+  if (!isFullScreen && (adState == AdUnitState.NONE || adState == AdUnitState.FAILED)) return
+
+  Box(modifier = modifier) {
+    NativeAdContent(
+      layoutType = layoutType,
+      nativeAd = { nativeAd },
+      adState = adState,
+      colors = colors,
+      modifier = Modifier.then(
+        if (isFullScreen) Modifier.fillMaxSize()
+        else Modifier.fillMaxWidth()
+      ),
+    )
+
+    if (isCloseVisible && onCloseClick != null) {
+      CloseButton(
+        onClick = onCloseClick,
+        modifier = Modifier
+          .align(Alignment.TopEnd)
+          .padding(12.dp),
+      )
+    }
+  }
+}
+
+@Composable
+private fun NativeAdContent(
+  layoutType: NativeLayoutType,
+  nativeAd: () -> NativeAd?,
+  adState: AdUnitState,
+  colors: NativeAdColors,
+  modifier: Modifier = Modifier,
+) {
+  Box {
     AndroidView(
       factory = layoutType.viewBuilder(),
       onRelease = { view -> view.destroy() },
       update = { view ->
         applyNativeAdColors(view, colors)
-        if (nativeAd != null) bindNativeAd(view, nativeAd)
+        nativeAd()?.let { bindNativeAd(view, it) }
       },
-      modifier = Modifier.fillMaxWidth(),
+      modifier = modifier,
     )
 
-    if (adState == AdUnitState.LOADING && nativeAd == null) {
+    if (adState == AdUnitState.LOADING && nativeAd() == null) {
       Box(
         modifier = Modifier
           .matchParentSize()
@@ -79,13 +125,38 @@ fun NativeAdView(
   }
 }
 
+@Composable
+private fun CloseButton(
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+) {
+  Box(
+    modifier = modifier
+      .size(36.dp)
+      .onClick(shape = CircleShape, action = onClick)
+      .background(color = Color.Black.copy(alpha = 0.5f), shape = CircleShape),
+    contentAlignment = Alignment.Center,
+  ) {
+    Icon(
+      imageVector = Icons.Filled.Close,
+      contentDescription = null,
+      tint = Color.White,
+      modifier = Modifier.size(20.dp),
+    )
+  }
+}
+
 private fun NativeLayoutType.viewBuilder(): (Context) -> NativeAdView = when (this) {
   NativeLayoutType.MEDIA_4_3 -> { context ->
-    buildNativeAdView(context, R.layout.native_media_4_3_ad, iconCornerDp = 8)
+    buildNativeAdView(context, R.layout.native_ad_media_4_3, iconCornerDp = 8)
   }
 
   NativeLayoutType.MEDIA_16_9 -> { context ->
-    buildNativeAdView(context, R.layout.native_media_16_9_ad, iconCornerDp = 6)
+    buildNativeAdView(context, R.layout.native_ad_media_16_9, iconCornerDp = 6)
+  }
+
+  NativeLayoutType.FULL_SCREEN -> { context ->
+    buildNativeAdView(context, R.layout.native_ad_full_screen, iconCornerDp = 10)
   }
 }
 

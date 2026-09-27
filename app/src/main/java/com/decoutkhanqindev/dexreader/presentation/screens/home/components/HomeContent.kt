@@ -44,6 +44,7 @@ import kotlinx.collections.immutable.persistentMapOf
 fun HomeContent(
   mangaSectionUiState: MangaSectionUiState,
   modifier: Modifier = Modifier,
+  nativeAd: @Composable () -> Unit ,
   onItemClick: (String) -> Unit,
   onMoreClick: (sectionTitle: String, sortCriteria: MangaSortCriteriaValue) -> Unit,
   onRetry: () -> Unit,
@@ -100,6 +101,8 @@ fun HomeContent(
                 onItemClick = onItemClick,
                 onMoreClick = onMoreClick,
               )
+
+              if (section == MangaSectionValue.TRENDING) nativeAd()
             }
           }
         }
@@ -182,6 +185,7 @@ private fun HomeContentLoadingPreview() {
     HomeContent(
       mangaSectionUiState = MangaSectionUiState.Loading,
       modifier = Modifier.fillMaxSize(),
+      nativeAd = {},
       onItemClick = {},
       onMoreClick = { _, _ -> },
       onRetry = {},
@@ -197,6 +201,7 @@ private fun HomeContentErrorPreview() {
     HomeContent(
       mangaSectionUiState = MangaSectionUiState.Error(FeatureError.ServerUnavailable),
       modifier = Modifier.fillMaxSize(),
+      nativeAd = {},
       onItemClick = {},
       onMoreClick = { _, _ -> },
       onRetry = {},
@@ -222,6 +227,7 @@ private fun HomeContentSuccessPreview() {
       modifier = Modifier.fillMaxSize(),
       onItemClick = {},
       onMoreClick = { _, _ -> },
+      nativeAd = {},
       onRetry = {},
       onRefresh = {}
     )

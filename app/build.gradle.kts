@@ -85,6 +85,7 @@ android {
       buildConfigField("String", "NATIVE_OB3_ALL_ID", "\"ca-app-pub-9635401910651855/3119781995\"")
       buildConfigField("String", "NATIVE_OB4_ALL_ID", "\"ca-app-pub-9635401910651855/9753473101\"")
       buildConfigField("String", "NATIVE_OB_FULL_SCREEN_ALL_ID", "\"ca-app-pub-9635401910651855/7661487220\"")
+      buildConfigField("String", "NATIVE_HOME_ALL_ID", "\"ca-app-pub-9635401910651855/4188613242\"")
     }
 
     debug {
@@ -102,6 +103,7 @@ android {
       buildConfigField("String", "NATIVE_OB3_ALL_ID", "\"ca-app-pub-3940256099942544/2247696110\"")
       buildConfigField("String", "NATIVE_OB4_ALL_ID", "\"ca-app-pub-3940256099942544/2247696110\"")
       buildConfigField("String", "NATIVE_OB_FULL_SCREEN_ALL_ID", "\"ca-app-pub-3940256099942544/2247696110\"")
+      buildConfigField("String", "NATIVE_HOME_ALL_ID", "\"ca-app-pub-3940256099942544/9214589741\"")
     }
   }
 

@@ -52,7 +52,7 @@ fun LanguageAltScreen(
     bottomBar = {
       NativeAdView(
         adUnit = { nativeLangAlt },
-        layoutType = NativeLayoutType.MEDIA_4_3
+        layoutType = NativeLayoutType.MEDIA_16_9
       )
     },
     modifier = modifier,

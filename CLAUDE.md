@@ -224,16 +224,18 @@ ads/          AdMob, ported from a sister project (`lich_viet_loc_phat`). Two su
               `nativeOb3`, `nativeOb4`, `nativeObFullScreen`. Each placement has its own
               `BuildConfig.<NAME>_ALL_ID` declared per build type in `app/build.gradle.kts`
               (real `ca-app-pub-9635401910651855/…` under `release {}`, Google's native sample
-              id under `debug {}`). `nativeObs: List<NativeAdUnit>` is a fourth `by lazy` right
-              after `nativeOb4` — `listOf(nativeOb1, nativeOb2, nativeOb3, nativeOb4)`, in that
-              order. It exists purely so the Onboarding pager can index by page: `nativeObs[i]`
-              is page `i`'s ad. **Invariant: length and order must track
-              `OnboardingPageValue.entries` 1:1** — the two lists are not otherwise linked, so
-              adding/removing an onboarding page without touching `nativeObs` silently
-              desyncs which ad shows on which page (or throws `IndexOutOfBoundsException` in
-              `OnboardingContent`'s `adUnits[index]`, if `nativeObs` is shorter).
-              `nativeObFullScreen` still has no caller — reserved for a future full-screen
-              onboarding placement. Two things
+              id under `debug {}`). `nativeObs: List<NativeAdUnit>` is declared right after
+              `nativeObFullScreen` — `listOf(nativeOb1, nativeOb2, nativeObFullScreen, nativeOb3,
+              nativeOb4)`, in that order. It exists purely so the Onboarding pager can index by
+              page: `nativeObs[i]` is page `i`'s ad. **Invariant: length and order must track
+              `OnboardingPagerItem.entries` 1:1** (not `OnboardingPageValue.entries` — that enum
+              is only the 4 content pages; `OnboardingPagerItem` is the 5-item pager list that
+              interleaves the full-screen ad between `BROWSE` and `READ`, see the Onboarding
+              paragraph below) — the two lists are not otherwise linked, so adding/removing a
+              pager item without touching `nativeObs` silently desyncs which ad shows on which
+              page (or throws `IndexOutOfBoundsException` in `OnboardingContent`'s
+              `adUnits[index]`, if `nativeObs` is shorter). `nativeObFullScreen` now has a
+              caller — Onboarding's ad page, below. Two things
               to know before extending it: `isAdShowing` is private and **nothing reads it yet**
               (`currentActivity` has exactly one reader — the consent form, below); and the
               registration is **for the life of the process** — `onActivityDestroyed` only clears
@@ -339,22 +341,25 @@ ads/          AdMob, ported from a sister project (`lich_viet_loc_phat`). Two su
               switches, in exchange for never holding a View-bound ad object outside a
               composition. `NativeAdView` additionally passes
               `AndroidView(onRelease = { it.destroy() })` for the inflated SDK `NativeAdView`,
-              which is a separate object from the SDK `NativeAd` the unit owns. After the effects, the
-              composable early-returns on `NONE`/`FAILED` (and `preview`),
-              so an ad that never loads simply occupies no space; it does **not** read
-              `LocalNetworkManager` to hide itself when offline — offline is already `FAILED`
-              via `load()`, and `NoInternetDialog` is the app's one offline signal. `BannerAdView`
-              adds the `LifecycleResumeEffect` described above. **There is one
-              native composable, `NativeAdView(adUnit, layoutType: NativeLayoutType, modifier)`**
-              (it replaced a `NativeMedia43Ad`/`NativeMedia169Ad` pair that differed only in
-              layout resource and icon corner radius): `NativeLayoutType { MEDIA_4_3,
-              MEDIA_16_9 }` is resolved by a private `NativeLayoutType.viewBuilder(): (Context)
-              -> NativeAdView` `when` that returns the factory lambda for `AndroidView` —
-              `MEDIA_4_3` ⇒ `R.layout.native_media_4_3_ad` + 8dp icon corners, `MEDIA_16_9` ⇒
-              `R.layout.native_media_16_9_ad` + 6dp — both feeding one shared
+              which is a separate object from the SDK `NativeAd` the unit owns. It does **not**
+              read `LocalNetworkManager` to hide itself when offline — offline is already
+              `FAILED` via `load()`, and `NoInternetDialog` is the app's one offline signal.
+              `BannerAdView` adds the `LifecycleResumeEffect` described above. **There is one
+              native composable, `NativeAdView(adUnit, layoutType: NativeLayoutType, modifier,
+              isCloseVisible: Boolean = false, onCloseClick: (() -> Unit)? = null)`**, split into
+              a public shell and a private `NativeAdContent` that owns just the
+              `Box { AndroidView + shimmer }` pair — the split exists so a close button (below)
+              can be composed as a sibling of the ad content instead of living inside the same
+              `Box` as the shimmer overlay, which is what let it also be reasoned about and
+              type-checked independently for the native-vs-full-screen distinction.
+              `NativeLayoutType { MEDIA_4_3, MEDIA_16_9, FULL_SCREEN }` is resolved by a private
+              `NativeLayoutType.viewBuilder(): (Context) -> NativeAdView` `when` — `MEDIA_4_3` ⇒
+              `R.layout.native_ad_media_4_3` + 8dp icon corners, `MEDIA_16_9` ⇒
+              `R.layout.native_ad_media_16_9` + 6dp, `FULL_SCREEN` ⇒
+              `R.layout.native_ad_full_screen` + 10dp — all three feeding one shared
               `buildNativeAdView(context, layoutRes, iconCornerDp)` (`ConstraintLayout`-based
               `NativeAdView`, hence the `androidx-constraintlayout` dependency — the app's only
-              XML layouts) and one shared `bindNativeAd(view, ad)` in `update`. Adding a third
+              XML layouts) and one shared `bindNativeAd(view, ad)` in `update`. Adding a fourth
               native layout is a new enum entry + a `when` branch, nothing else. **The composable
               shares its simple name with Google's `com.google.android.gms.ads.nativead
               .NativeAdView` class, imported un-aliased in the same file** — deliberate, same
@@ -363,7 +368,35 @@ ads/          AdMob, ported from a sister project (`lich_viet_loc_phat`). Two su
               name is Google's View, in a call position with `(adUnit, layoutType, modifier)` it
               is our composable, and overload resolution keeps them apart because Google's
               constructors take `(Context[, AttributeSet…])`. Don't "fix" it with an import
-              alias. `AdLoadingDialog` takes
+              alias.
+
+              **`FULL_SCREEN` is the one layout whose root is `match_parent` height** — the
+              other two are `wrap_content` (they're cards embedded in a bottom bar or a page
+              column); `native_ad_full_screen.xml` fills the whole page, media in the vertical
+              middle (`ad_media` constrained between a 56dp top margin — clearance for the close
+              button, which is **not** in this XML — and `ad_icon` below it) with the
+              icon/label/headline/body/CTA block pinned to the bottom, larger type than the other
+              two (18sp headline, 14sp body, 15sp CTA) since it owns the whole screen instead of
+              a card. **Which layout type early-returns on `NONE`/`FAILED` now differs by
+              type — this is the one behavioural fork in `NativeAdView` itself**: `if
+              (!isFullScreen && (adState == NONE || adState == FAILED)) return` — native cards
+              still collapse to zero space on failure as before, but a `FULL_SCREEN` unit does
+              **not** early-return, because Onboarding's close button (below) is drawn as a
+              sibling of `NativeAdContent` inside the same outer `Box`, and an early `return`
+              would delete that sibling along with the ad — a no-fill or failed full-screen ad
+              would silently strand the user on a page with no visible way forward except the
+              3-second swipe unlock. `NativeAdContent`'s own `modifier` is chosen by the shell
+              based on type — `Modifier.fillMaxSize()` for `FULL_SCREEN`, `Modifier.fillMaxWidth()`
+              otherwise — and is threaded straight onto the `AndroidView`, not onto the wrapping
+              `Box`, so the shimmer overlay's `Modifier.matchParentSize()` still tracks whichever
+              size the `AndroidView` resolved to. `CloseButton` (private, same file) is a 36dp
+              circle (`Color.Black.copy(alpha = 0.5f)`, translucent so it reads over any
+              creative) using the shared `Modifier.onClick(shape = CircleShape)` (debounce +
+              press-scale, same as every other tappable surface in the app) with a white
+              `Icons.Filled.Close`; `NativeAdView` renders it `Modifier.align(Alignment.TopEnd)`
+              only when both `isCloseVisible` and `onCloseClick` are non-null, so a caller that
+              never passes them (every non-Onboarding call site) gets no close button at all.
+              `AdLoadingDialog` takes
               the same `adUnit: () -> AdUnit` lambda, renders **only while that unit is
               `LOADING`** (early-returns otherwise) as a non-dismissable `Dialog` with an M3
               `Card` + `CircularProgressIndicator` + `R.string.ad_loading`, and does **not** call
@@ -378,7 +411,9 @@ ads/          AdMob, ported from a sister project (`lich_viet_loc_phat`). Two su
               touches `Configuration.uiMode`, so a `values-night/colors.xml` would key off the
               *system's* dark setting, not the app's — exactly the kind of desync this app's
               theme design otherwise avoids (same reasoning as the locale override: presentation
-              state must not leak into a mechanism Compose doesn't control). So `native_media_4_3_ad.xml`/`native_media_16_9_ad.xml` and their three
+              state must not leak into a mechanism Compose doesn't control). So all three
+              layouts (`native_ad_media_4_3.xml`/`native_ad_media_16_9.xml`/
+              `native_ad_full_screen.xml`) and their three
               `<shape>` drawables (`bg_native_ad_card`/`bg_ad_label`/`bg_cta_native_ad`) keep only
               a static **light-theme** baseline (inlined hex matching `surfaceContainerLight`/
               `outlineVariantLight`/`primaryLight`/`onSurfaceLight`/`onSurfaceVariantLight` —
@@ -1268,65 +1303,94 @@ call`. That is not hypothetical — it is the sign-in path: Profile → Sign In 
 inside `MainScreen` ties the controller to Main's composition, so a re-pushed Main gets a fresh tab
 controller and the tabs correctly restart at Home.
 
-**Onboarding (`screens/onboarding/`)**: a 4-page `HorizontalPager` shown **once**, sitting between
+**Onboarding (`screens/onboarding/`)**: a 5-item `HorizontalPager` shown **once**, sitting between
 Splash and Main on the outer host (`Splash → Onboarding → Main`, each hop via `navigateClearStack`,
-so Back never returns to it). Each page is one `OnboardingPageValue` entry
-(`model/value/onboarding/`: `@param:DrawableRes imageRes` + `@param:StringRes titleRes` +
-`descriptionRes` — same shape as `BottomTabItemValue`), rendered top-to-bottom as image → title
-(`headlineMedium`) → description (`bodyLarge`).
+so Back never returns to it). The pager is driven by `OnboardingPagerItem.entries`
+(`model/value/onboarding/`, an `ImmutableList` on a `sealed interface`'s companion — not
+`OnboardingPageValue.entries`, which is only the 4 content pages), interleaving one full-screen
+native ad page between `BROWSE` and `READ`:
 
-**The page indicator, the Skip / Next / Get Started row, and a native ad now live *inside* each
-pager page, stacked below the image/title/description** — they used to be siblings *below* the
-pager (outside it, so they stayed put while pages slid); moved inside so the ad could sit under
-the buttons and still be part of the swipeable page, per-page ad placement being the whole point.
-Consequence accepted knowingly: the indicator and buttons now slide with the page instead of
-staying fixed. `OnboardingContent`'s per-page `Column` (inside the `HorizontalPager`'s content
-lambda, one instance per page): `OnboardingPage(modifier = Modifier.weight(1f).fillMaxWidth())` →
-`OnboardingPageIndicator` → `OnboardingActions` → `NativeAdView(layoutType =
-NativeLayoutType.MEDIA_16_9)`. `statusBarsPadding()`/`navigationBarsPadding()` moved from the
-pager/button-row onto this per-page `Column` for the same reason — there is no shared
-outside-the-pager container left to hold them. `OnboardingPage` itself is unchanged; only its
-call-site modifier changed (`fillMaxSize()` → `weight(1f).fillMaxWidth()`, since it now shares
-the page `Column` with three more children instead of being the page's sole content).
+```kotlin
+sealed interface OnboardingPagerItem {
+  data class Content(val page: OnboardingPageValue) : OnboardingPagerItem
+  data object FullScreenAd : OnboardingPagerItem
+  companion object { val entries = persistentListOf(Content(DISCOVER), Content(BROWSE),
+    FullScreenAd, Content(READ), Content(TRACK)) }
+}
+```
 
-**`OnboardingActions`** (`onboarding/components/`, new — extracted from what used to be inline in
-`OnboardingContent`): `OnboardingActions(isLastPage: Boolean, modifier: Modifier = Modifier,
-onSkipClick: () -> Unit, onNextClick: () -> Unit)`. Same behaviour as before the extraction: Skip
-hides on the last page, `ActionButton` becomes `fillMaxWidth()` there and its label swaps
-Next→Get Started; both `onSkipClick` and the last-page `onNextClick` are wired by the caller to
-the same completion action (`onGetStartedClick`), matching the original "Skip and Get Started
-both finish onboarding" behaviour — `OnboardingActions` itself has no opinion on what either
-callback does, `OnboardingContent` decides per page (`onNextClick` is either
-`animateScrollToPage(index + 1)` or `onGetStartedClick`, based on `index == pages.lastIndex`).
-`isLastPage` is now computed per page (`index == pages.lastIndex`) instead of a
-`derivedStateOf { pagerState.currentPage == pages.lastIndex }` — simpler once the row lives
-inside the page lambda, and one fewer composition-phase read of `pagerState.currentPage`.
+`OnboardingPageValue` itself is untouched — still 4 entries, still `@param:DrawableRes imageRes` +
+`@param:StringRes titleRes` + `descriptionRes`. The sealed interface exists so index math for the
+inserted ad page lives in exactly one place (`OnboardingPagerItem.entries`) instead of being
+derived ad hoc inside `OnboardingContent` — adding/removing a pager item is a one-line edit there,
+and `AdsManager.nativeObs` (below) must track it 1:1 or `adUnits[index]` throws.
 
-**The pager's `contentPadding = PaddingValues(horizontal = 1.dp)` is now load-bearing for ads,
-not just a peek hint.** Combined with `beyondViewportPageCount = 1`, the adjacent page on each
-side is always composed and 1dp of it is on-screen — enough for its `NativeAdView` to register
-an impression. `OnboardingContent` reads `LocalAdsManager.current.nativeObs` (a
-`List<NativeAdUnit>` on `AdsManager`, index-aligned with `OnboardingPageValue.entries`) and each
-page shows `nativeObs[index]`. A `LaunchedEffect(Unit) { snapshotFlow { pagerState.currentPage
-}.collect { … } }` reloads both neighbours of the current page on every page change (and once
-immediately on entry, since `snapshotFlow` replays the current page on collection start):
-standing on page *i* calls `nativeObs.getOrNull(i - 1)?.load(context)` and
-`nativeObs.getOrNull(i + 1)?.load(context)` — `getOrNull` absorbs the two edges (page 0 has no
-`i - 1`, the last page has no `i + 1`). This is a plain `load()` call, not a new function: the
-`AdUnit.load()` guard change above (`IMPRESSION` now passes) is what makes this reload actually
-do something instead of silently no-op against a unit the neighbour page already impressed.
-`snapshotFlow`, not a keyed `LaunchedEffect(pagerState.currentPage)`, for the usual reason (see
-`MangaBanner`'s auto-scroll under Compose Performance) — the key expression would be a
-composition-phase read and recompose `OnboardingContent` on every page change.
+**Each `Content` page renders the same `Column` as before** — `OnboardingPage(modifier =
+Modifier.weight(1f).fillMaxWidth())` → `OnboardingPageIndicator` → `OnboardingActions` →
+`NativeAdView(layoutType = NativeLayoutType.MEDIA_16_9)`, with `statusBarsPadding()`/
+`navigationBarsPadding()` on the per-page `Column` (there is no shared outside-the-pager
+container to hold them; indicator and buttons slide with the page, a known and accepted
+consequence). `OnboardingPageIndicator(pageCount = items.size /* 5 */, selectedPage =
+pagerState.currentPage)` — the ad page still counts as one dot, no index remapping.
+`isLastPage = index == items.lastIndex` (index 4 = `TRACK`). **The `FullScreenAd` page renders
+nothing else** — no indicator, no Skip/Next, no image/title/description, just
+`NativeAdView(layoutType = FULL_SCREEN)` filling the whole page (see below).
+
+**`OnboardingActions`** (`onboarding/components/`, extracted from what used to be inline):
+`OnboardingActions(isLastPage: Boolean, modifier: Modifier = Modifier, onSkipClick: () -> Unit,
+onNextClick: () -> Unit)`. Skip hides on the last page, `ActionButton` becomes `fillMaxWidth()`
+there and its label swaps Next→Get Started; both `onSkipClick` and the last-page `onNextClick`
+are wired by the caller to the same completion action (`onGetStartedClick`) — `OnboardingActions`
+has no opinion on what either callback does, `OnboardingContent` decides per page (`onNextClick`
+is either `animateScrollToPage(index + 1)` or `onGetStartedClick`).
+
+**The full-screen ad page is gated by a 3-second close timer, and the pager is locked while it's
+running.** `OnboardingContent` tracks `var isCloseVisible by remember { mutableStateOf(false) }`
+and `fsIndex = items.indexOf(OnboardingPagerItem.FullScreenAd)`, driven by its own
+`LaunchedEffect(Unit) { snapshotFlow { pagerState.currentPage }.collectLatest { page ->
+isCloseVisible = false; if (page == fsIndex) { delay(3_000); isCloseVisible = true } } }` — the
+timer starts the moment the ad page **becomes** the current page (not when it first composes,
+which under `beyondViewportPageCount` below can be much earlier), and `collectLatest` restarts it
+from zero every time `currentPage` changes, including swiping back to the ad page a second time.
+`isFsLocked = pagerState.currentPage == fsIndex && !isCloseVisible` gates two things:
+`HorizontalPager`'s `userScrollEnabled = !isFsLocked` (a whole-pager param, safe here because the
+condition already pins it to the ad page) and `BackHandler(true) { if (isFsLocked) return; … }` —
+without the `BackHandler` guard, Back would let the user skip the 3-second wait the swipe lock is
+supposed to enforce. The close button itself is `NativeAdView`'s own `isCloseVisible`/
+`onCloseClick` params (see the `NativeAdView` paragraph above), wired here to
+`animateScrollToPage(index + 1)`.
+
+**`beyondViewportPageCount = pagerState.pageCount`** — every one of the 5 pages is composed at
+all times, not just the immediate neighbours. Combined with `contentPadding =
+PaddingValues(1.dp)`, this means every ad in the pager is loading and racking up impressions
+simultaneously regardless of which page is showing, a deliberately more aggressive impression
+strategy than a `beyondViewportPageCount = 1`/`2` window would give. `OnboardingContent` reads
+`LocalAdsManager.current.nativeObs` (index-aligned with `OnboardingPagerItem.entries`, not
+`OnboardingPageValue.entries`) and each page shows `nativeObs[index]`. Neighbour reload lives in
+its own effect, separate from the close-timer effect: `LifecycleResumeEffect(Unit) {
+scope.launch { snapshotFlow { pagerState.currentPage }.collectLatest { page ->
+adUnits.getOrNull(page - 1)?.load(context); adUnits.getOrNull(page)?.load(context);
+adUnits.getOrNull(page + 1)?.load(context) } }; onPauseOrDispose { } }` — `getOrNull` absorbs the
+two edges. This is a plain `load()` call, not a new function: the `AdUnit.load()` guard change
+above (`IMPRESSION` now passes) is what makes this reload actually do something instead of
+silently no-op against a unit a neighbour page already impressed. **Known bug in this exact
+shape**: the `scope.launch { … }` is launched into `rememberCoroutineScope()`, not into a
+lifecycle-scoped coroutine, and `onPauseOrDispose { }` is empty — so the `collectLatest`
+collector this starts is never cancelled on pause, and every resume launches another one that
+runs forever alongside it. Prefer a plain `LaunchedEffect(Unit) { snapshotFlow { … }.collectLatest
+{ … } }` here (no `LifecycleResumeEffect`, no manual `scope.launch`) the next time this file is
+touched — `LaunchedEffect` is already cancelled and relaunched by Compose across the same
+lifecycle events, with no separate scope to leak.
 
 **Preload chain**, one screen ahead of itself the whole way down, same pattern as the ad-splash
 chain: `LanguageAltScreen` preloads `nativeOb1` + `nativeOb2` (`SideEffect(Unit)`, changed from
-the `nativeOb1` + `nativeObFullScreen` it preloaded before this pass — `nativeObFullScreen` has
-no caller yet, reserved); `OnboardingScreen` preloads `nativeOb3` + `nativeOb4` the same way. So
-by the time Onboarding is entered, pages 0 and 1's ads (`ob1`/`ob2`) are already warm from the
-previous screen, and pages 2 and 3's (`ob3`/`ob4`) are warming in parallel with whatever the user
-does on pages 0-1. A skipped link degrades to a normal in-place load via `NativeAdView`'s own
-`DisposableEffect(adUnit()) { adUnit().load(context) }` — never to a missing ad.
+the `nativeOb1` + `nativeObFullScreen` it preloaded before this pass); `OnboardingScreen` preloads
+`nativeObFullScreen` + `nativeOb3` + `nativeOb4` the same way — the full-screen ad is warmed
+first in that list since its page is a mandatory 3-second wait, the worst place in the whole flow
+to show an empty ad slot. So by the time Onboarding is entered, `ob1`/`ob2` are already warm from
+the previous screen, and `obFullScreen`/`ob3`/`ob4` are warming in parallel with whatever the user
+does on the first two pages. A skipped link degrades to a normal in-place load via `NativeAdView`'s
+own `DisposableEffect(adUnit()) { adUnit().load(context) }` — never to a missing ad.
 
 The illustrations (`drawable/ob_discover|ob_browse|ob_read|ob_track.webp`, ~1000×1380 each) are
 **real screenshots of this app** taken on the emulator, composited into phone mockups (rounded

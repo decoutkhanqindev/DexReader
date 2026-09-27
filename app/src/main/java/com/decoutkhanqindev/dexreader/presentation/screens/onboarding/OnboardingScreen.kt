@@ -21,11 +21,13 @@ fun OnboardingScreen(
 ) {
   val context = LocalContext.current
   val adsManager = LocalAdsManager.current
+  val nativeObFullScreen = adsManager.nativeObFullScreen
   val nativeOb3 = adsManager.nativeOb3
   val nativeOb4 = adsManager.nativeOb4
   val dataStoreManager = LocalDataStoreManager.current
 
   SideEffect(Unit) {
+    nativeObFullScreen.load(context)
     nativeOb3.load(context)
     nativeOb4.load(context)
   }

@@ -109,13 +109,21 @@ class AdsManager @Inject constructor(
     )
   }
 
-  val nativeObs: List<NativeAdUnit> by lazy {
-    listOf(nativeOb1, nativeOb2, nativeOb3, nativeOb4)
-  }
-
   val nativeObFullScreen by lazy {
     NativeAdUnit(
       floors = listOf(BuildConfig.NATIVE_OB_FULL_SCREEN_ALL_ID to "native_ob_full_screen_all"),
+      isNetworkAvailable = { networkManager.isAvailable.value },
+      canRequestAds = consentInformation::canRequestAds
+    )
+  }
+
+  val nativeObs: List<NativeAdUnit> by lazy {
+    listOf(nativeOb1, nativeOb2, nativeObFullScreen, nativeOb3, nativeOb4)
+  }
+
+  val nativeHome: NativeAdUnit by lazy {
+    NativeAdUnit(
+      floors = listOf(BuildConfig.NATIVE_HOME_ALL_ID to "native_home_all"),
       isNetworkAvailable = { networkManager.isAvailable.value },
       canRequestAds = consentInformation::canRequestAds
     )
@@ -130,7 +138,16 @@ class AdsManager @Inject constructor(
 
     val params = ConsentRequestParameters.Builder()
       .setTagForUnderAgeOfConsent(false)
-      .apply { if (BuildConfig.DEBUG) setConsentDebugSettings(debugSettings(activity)) }
+      .apply {
+        if (BuildConfig.DEBUG) {
+          setConsentDebugSettings(
+            ConsentDebugSettings.Builder(activity)
+              .setDebugGeography(ConsentDebugSettings.DebugGeography.DEBUG_GEOGRAPHY_EEA)
+              .apply { testDeviceIds.forEach(::addTestDeviceHashedId) }
+              .build()
+          )
+        }
+      }
       .build()
 
     Timber.tag(tag).d("Requesting consent info update with params: $params")
@@ -185,12 +202,6 @@ class AdsManager @Inject constructor(
       )
     }
   }
-
-  private fun debugSettings(context: Context): ConsentDebugSettings =
-    ConsentDebugSettings.Builder(context)
-      .setDebugGeography(ConsentDebugSettings.DebugGeography.DEBUG_GEOGRAPHY_EEA)
-      .apply { testDeviceIds.forEach(::addTestDeviceHashedId) }
-      .build()
 
   override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
     scope.launch {
